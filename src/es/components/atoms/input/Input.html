@@ -1,88 +1,53 @@
 <!DOCTYPE html>
 <html lang=en>
+
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="../../../../css/fonts.css">
   <link rel="stylesheet" href="../../../../css/style.css">
   <title>Input.js</title>
 </head>
+
 <body>
   <h1>Input.js</h1>
   <component-list>
     <dt>
-      <mui-input
-        inputId="inputDefault"
-        placeholder="My Placeholder"
-        type="number"
-        autocomplete="postal-code"
-      >
+      <mui-input inputId="inputDefault" placeholder="My Placeholder" type="number" autocomplete="postal-code">
         My Label for the Input Field
       </mui-input>
     </dt>
     <dt>
-      <mui-input
-        inputId="inputDisabled"
-        disabled
-      >
+      <mui-input inputId="inputDisabled" disabled>
         Input Field Disabled
       </mui-input>
     </dt>
     <dt>
-      <mui-input
-        inputId="inputReadOnly"
-        readonly
-      >
+      <mui-input inputId="inputReadOnly" readonly>
         Input Field ReadOnly
       </mui-input>
     </dt>
     <dt>
-      <mui-input
-        inputId="inputError"
-        error
-        placeholder="My Placeholder"
-      >
+      <mui-input inputId="inputError" error placeholder="My Placeholder">
         Input Field Error
       </mui-input>
     </dt>
     <dt>
-      <mui-input
-        inputId="inputSearch"
-        placeholder="Ihre Suche..."
-        search
-      >
+      <mui-input inputId="inputSearch" placeholder="Ihre Suche..." search>
         Input Search Field
       </mui-input>
     </dt>
     <dt>
-      <mui-input
-        inputId="inputSearchDisabled"
-        placeholder="Ihre Suche..."
-        search
-        type="search"
-        disabled
-      >
+      <mui-input inputId="inputSearchDisabled" placeholder="Ihre Suche..." search type="search" disabled>
         Input Search Field Disabled
       </mui-input>
     </dt>
     <dt>
-      <mui-input
-        inputId="inputSearchReadOnly"
-        placeholder="Ihre Suche..."
-        search
-        type="search"
-        readonly
-      >
+      <mui-input inputId="inputSearchReadOnly" placeholder="Ihre Suche..." search type="search" readonly>
         Input Search Field Readonly
       </mui-input>
     </dt>
     <dt>
-      <mui-input
-        inputId="inputSearchError"
-        placeholder="Ihre Suche..."
-        search
-        type="search"
-        error
-      >
+      <mui-input inputId="inputSearchError" placeholder="Ihre Suche..." search type="search" error>
         Input Search Field Error
       </mui-input>
     </dt>
@@ -102,8 +67,8 @@
       // don't define already existing customElements
       if (element && !customElements.get(element[0])) customElements.define(...element)
     })
-
     document.querySelectorAll('[search]').forEach((element) => element.addEventListener('submitSearch', (e) => console.log(e.detail)))
   </script>
 </body>
+
 </html>

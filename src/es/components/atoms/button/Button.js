@@ -1,8 +1,7 @@
 // @ts-check
+import { Shadow } from '../../web-components-cms-template/src/es/components/prototypes/Shadow.js'
 
 /* global self */
-
-import { Shadow } from '../../web-components/src/es/components/prototypes/Shadow.js'
 
 /**
  * Creates an MSWC Button by the blueprints of:

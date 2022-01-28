@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang=en>
+
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="../../../../css/fonts.css">
   <link rel="stylesheet" href="../../../../css/style.css">
   <title>Button.js</title>
 </head>
+
 <body>
   <h1>Button.js</h1>
   <component-list>
-    <dt><mui-button small>small</mui-button></dt>
-    <dt><mui-button label="default"></mui-button></dt>
-    <dt><mui-button large label="large">label trumps innerText</mui-button></dt>
-    <dt><mui-button disabled>disabled</mui-button></dt>
-    <dt><p>Button with button-width variable namespaced</p>
+    <dt>
+      <mui-button small>small</mui-button>
+    </dt>
+    <dt>
+      <mui-button label="default"></mui-button>
+    </dt>
+    <dt>
+      <mui-button large label="large">label trumps innerText</mui-button>
+    </dt>
+    <dt>
+      <mui-button disabled>disabled</mui-button>
+    </dt>
+    <dt>
+      <p>Button with button-width variable namespaced</p>
       <style>
         :host {
           --width-button-width: 100%;
@@ -69,9 +80,15 @@
         <i type="file" slot="right-icon">&#9728;</i>
       </mui-button>
     </dt>
-    <dt><mui-button outline label="outline"></mui-button></dt>
-    <dt><mui-button raised label="raised"></mui-button></dt>
-    <dt><mui-button raised disabled label="raised disabled"></mui-button></dt>
+    <dt>
+      <mui-button outline label="outline"></mui-button>
+    </dt>
+    <dt>
+      <mui-button raised label="raised"></mui-button>
+    </dt>
+    <dt>
+      <mui-button raised disabled label="raised disabled"></mui-button>
+    </dt>
     <dt>
       <p>Button with one slot file-input</p>
       <mui-button label="file-input">
@@ -94,7 +111,6 @@
       // don't define already existing customElements
       if (element && !customElements.get(element[0])) customElements.define(...element)
     })
-
   </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../web-components-cms-template/src/es/components/prototypes/Shadow.js'
+import { Shadow } from '../../web-components-cms-template/src/es/components/prototypes/Shadow.js'
 
 /* global self */
 
