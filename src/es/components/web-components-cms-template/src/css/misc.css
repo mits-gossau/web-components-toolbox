@@ -1,0 +1,22 @@
+/* IE10+ CSS styles go here */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  html {
+    background-color: transparent !important;
+  }
+  body:before {
+    color: red;
+    content: "Warning! You are using Internet Explorer; hence this page is intentionally left ugly ;-)";
+    display: block;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 50px;
+  }
+}
+/* hide component stuff before it is rendered to avoid the blitz (flashing white) also set the --background-color in the variables...css */
+html {
+  background-color: var(--background-color, transparent);
+}
+
+:not(:defined) {
+  display: none;
+}

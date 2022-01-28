@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang=de>
+<head>
+  <meta charset=UTF-8>
+  <meta name="user-scalable=no, viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="Erfahre hier die neusten Informationen über die Klub-Konzerte des Migros-Kulturprozent-Classics.">
+  <link href=../../../favicon/classics/FAVICON_CLASSICS_YELLOW.ico rel="shortcut icon" type=image/x-icon>
+  <link href=../../../css/variablesClassics.css rel=stylesheet>
+  <link href=../../../css/initial.css rel=stylesheet>
+  <link href=../../../css/fonts.css rel=stylesheet>
+  <!-- NOTE: Remove line Debugging.js below for none localhost -->
+  <script rel=preload type=module>import('../../../es/helpers/Debugging.js')</script>
+  <script type="text/javascript" src="../../../../wc-config.js"></script>
+  <title>Classics</title>
+</head>
+<body>
+  <p-general>
+    <o-body>
+      <h2>NEWSLETTER</h2>
+      <p>Hier gibts den Newsletter</p>
+      <br>
+      <m-form type="newsletter" namespace="search-" namespace-children="search-field-" use-html-submit>
+          <style>
+            :host {
+              --search-field-radio-height: auto;
+              --search-field-checkbox-height: auto;
+              --search-field-input-radio-margin: 10px 0;
+              --search-field-input-checkbox-margin: 10px 0;
+            }
+            :host form {
+              display: inline !important;
+            }
+          </style>
+          <form action="https://nlink.migros-kulturprozent-classics.ch/dispatcher/service" method="post" id="online_form">
+            <input type="hidden" name="ac" value="reg">
+            <input type="hidden" name="clientCode" value="ASrrB9ASTmKaGVqEBe">
+            <input type="hidden" name="doubleOptin" value="1">
+            <input type="hidden" name="xp_sendBackParams" value="0">
+            <input type="hidden" name="trackId" value="null" id="trackId">
+            <input type="hidden" name="Sprache" value="en" id="Sprache">
+            <label for="anrede1">Herr</label>
+            <input id="anrede1" name="Anrede" type="radio" value="2" checked />
+            <label for="anrede2">Frau</label>
+            <input id="anrede2" name="Anrede" type="radio" value="1" />
+            <label for="anrede3">Other</label>
+            <input id="anrede3" name="Anrede" type="radio" value="3" />
+            <label for="Name">Name</label>
+            <input id="Name" type="text" required="" value="" name="Name" placeholder="Name hier eingeben..."  autocomplete="off" validation-message="Name ist ungültig">
+            <label for="Firstname">Vorname</label>
+            <input id="Firstname" type="text" required="" value="" name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" validation-message="Vorname ist ungültig">
+            <label for="Email">E-Mail</label>
+            <input id="Email" type="email" required="" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" validation-message="Ungültige Email Ungültige Email Ungültige Email">
+            <label class="normal" for="Policy">Ich bestätige, dass ich die <a href="https://www.migros.ch/de/datenschutz.html" target="_blank">Datenschutzerklärung</a> und die darin umschriebene Bearbeitung meiner Personendaten zur Kenntnis genommen haben.</label>
+            <input reverse id="Policy" name="Policy" required="" type="checkbox" value="false" validation-message="datenschutz einverstanden?" />
+            <button type="submit">Registrieren</button>
+          </form>
+      </m-form>
+    </o-body>
+  </p-general>
+  <script rel=preload type=module>
+    self.Environment = {
+      mobileBreakpoint: '600px'
+    }
+  </script>
+  <!-- fonts -->
+  <script type="text/javascript" async src="https://fast.fonts.net/jsapi/2b52b456-d052-418d-8595-f1c46d3439fb.js"></script>
+  <!-- /fonts -->
+</body>
+</html>

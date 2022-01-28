@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang=de>
+<head>
+  <meta charset=UTF-8>
+  <meta name=viewport content="width=device-width, initial-scale=1.0">
+  <link href=../../../../favicon.ico rel="shortcut icon" type=image/x-icon>
+  <!-- NOTE: Remove line Debugging.js below for none localhost -->
+  <script rel=preload type=module>import('../../../es/helpers/Debugging.js')</script>
+  <script type="text/javascript" src="../../../../wc-config.js"></script>
+  <title>teaser</title>
+</head>
+<body>
+  <p-general>
+    <div>
+      <style>
+        main {
+          width: 80%;
+          margin: 0 auto;
+          border: 1px solid black;
+        }
+        main h1 {
+          font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+        o-teaser-wrapper {
+          --m-teaser-margin: 20px;
+          --m-teaser-min-width: 370px;
+
+
+          /* When I want to re-use the variables like width, height, etc. for other components in a CSS-Variables file for example
+          *  Do I have to namespace each a-picture component separately ?
+          */
+          --display: block;
+          --height: 300px;
+          --overflow: hidden;
+
+          --img-width: 100%;
+          --img-height: auto;
+          --img-min-height: 100%;
+          --img-object-fit: cover;
+        }
+      </style>
+      <main>
+
+        <!-------------------- SINGLE TEASER -------------------->
+        <h1>SINGLE TEASER</h1>
+        <o-teaser-wrapper>
+          <style>
+            m-teaser {
+              --background-color: #c2262f;
+              --h3-color: white;
+              --p-color: white;
+              --background-color-light-theme: white;
+              --h3-color-light-theme: #c2262f;
+              --p-color-light-theme: black;
+              --figcaption-padding: 15px 15px 20px 15px; 
+              --figcaption-padding-light-theme: 15px 0;
+              --h3-font-size: 1.2rem;
+              --p-font-size: 1rem;
+              --font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            }
+          </style>
+          <m-teaser>
+            <figure>
+              <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "small" 
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "medium"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "large"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "extra-large"
+              }]'></a-picture>
+              <figcaption>
+                <h3>Teaser Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              </figcaption>
+            </figure>
+          </m-teaser>
+        </o-teaser-wrapper>
+
+        <!-------------------- EVEN NUMBER OF TEASERS -------------------->
+        <h1>EVEN NUMBER OF TEASERS</h1>
+        <o-teaser-wrapper>
+          <style>
+            m-teaser {
+              --background-color: #c2262f;
+              --h3-color: white;
+              --p-color: white;
+              --background-color-light-theme: white;
+              --h3-color-light-theme: #c2262f;
+              --p-color-light-theme: black;
+              --figcaption-padding: 15px 15px 20px 15px; 
+              --figcaption-padding-light-theme: 15px 0;
+              --h3-font-size: 1.2rem;
+              --p-font-size: 1rem;
+              --font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            }
+          </style>
+          <m-teaser>
+            <figure>
+              <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "small" 
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "medium"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "large"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "extra-large"
+              }]'></a-picture>
+              <figcaption>
+                <h3>Teaser Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              </figcaption>
+            </figure>
+          </m-teaser>
+          <m-teaser>
+            <figure>
+              <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "small" 
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "medium"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "large"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "extra-large"
+              }]'></a-picture>
+              <figcaption>
+                <h3>Teaser Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              </figcaption>
+            </figure>
+          </m-teaser>
+          <m-teaser>
+            <figure>
+              <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "small" 
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "medium"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "large"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "extra-large"
+              }]'></a-picture>
+              <figcaption>
+                <h3>Teaser Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              </figcaption>
+            </figure>
+          </m-teaser>
+          <m-teaser>
+            <figure>
+              <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "small" 
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "medium"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "large"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "extra-large"
+              }]'></a-picture>
+              <figcaption>
+                <h3>Teaser Title</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+              </figcaption>
+            </figure>
+          </m-teaser>
+          </o-teaser-wrapper>
+        
+          <!-------------------- ODD NUMBER OF TEASERS + LIGHT THEME -------------------->
+        <h1>ODD NUMBER OF TEASERS + LIGHT THEME</h1>
+          <o-teaser-wrapper>
+            <style>
+              m-teaser {
+                --background-color: #c2262f;
+                --h3-color: white;
+                --p-color: white;
+                --background-color-light-theme: white;
+                --h3-color-light-theme: #c2262f;
+                --p-color-light-theme: black;
+                --figcaption-padding: 15px 15px 20px 15px; 
+                --figcaption-padding-light-theme: 15px 0;
+                --h3-font-size: 1.2rem;
+                --p-font-size: 1rem;
+                --font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+              }
+            </style>
+            <m-teaser theme="light">
+              <figure>
+                <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "small" 
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "medium"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "large"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "extra-large"
+                }]'></a-picture>
+                <figcaption>
+                  <h3>Teaser Title</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                </figcaption>
+              </figure>
+            </m-teaser>
+            <m-teaser theme="light">
+              <figure>
+                <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "small" 
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "medium"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "large"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "extra-large"
+                }]'></a-picture>
+                <figcaption>
+                  <h3>Teaser Title</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                </figcaption>
+              </figure>
+            </m-teaser>
+            <m-teaser theme="light">
+              <figure>
+                <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "small" 
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "medium"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "large"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "extra-large"
+                }]'></a-picture>
+                <figcaption>
+                  <h3>Teaser Title</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                </figcaption>
+              </figure>
+            </m-teaser>
+            <m-teaser>
+              <figure>
+                <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "small" 
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "medium"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "large"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "extra-large"
+                }]'></a-picture>
+                <figcaption>
+                  <h3>Teaser Title</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                </figcaption>
+              </figure>
+            </m-teaser>
+            <m-teaser>
+              <figure>
+                <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "small" 
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "medium"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "large"
+                },{
+                  "src": "https://picsum.photos/900/770",
+                  "type": "image/jpg",
+                  "size": "extra-large"
+                }]'></a-picture>
+                <figcaption>
+                  <h3>Teaser Title</h3>
+                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                </figcaption>
+              </figure>
+            </m-teaser>
+          </o-teaser-wrapper>
+          <!-------------------- WIDE TEASER -------------------->
+          <h1 style="font-family: Roboto;">WIDE TEASER</h1>
+          <style>
+            m-wide-teaser {
+              --background-color: #333333;
+              --background-color-hover: #810917;
+              --color: white;
+              --p-font-size: 1.2rem;
+              --p-font-weight: 300;
+              --h4-font-size: 1.1rem;
+              --font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            }
+          </style>
+          <m-wide-teaser href=helloWorld>
+            <!-- TODO:
+              Redirect is currently being handled by JavaScript, check if this is UX/Accessibility compliant
+            -->
+            <figure>
+              <a-picture defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "small" 
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "medium"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "large"
+              },{
+                "src": "https://picsum.photos/900/770",
+                "type": "image/jpg",
+                "size": "extra-large"
+              }]'></a-picture>
+              <figcaption>
+                <h4>Teaser Title</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit fugit aliquam, explicabo vero dignissimos laborum doloremque esse inventore quaerat itaque eaque eveniet, odio tempore neque recusandae quibusdam officiis voluptatibus qui.</h4>
+                <p class="moreLink">
+                  <a-arrow direction=right></a-arrow>
+                  <span>Home</span>
+                </p>
+              </figcaption>
+            </figure>
+          </m-wide-teaser>
+      </main> 
+    </div>
+  </p-general>
+</body>
+</html>

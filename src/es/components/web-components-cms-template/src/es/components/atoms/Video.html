@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang=de>
+<head>
+  <meta charset=UTF-8>
+  <meta name=viewport content="width=device-width, initial-scale=1.0">
+  <link href=../../../../favicon.ico rel="shortcut icon" type=image/x-icon>
+  <!-- NOTE: Remove line Debugging.js below for none localhost -->
+  <script rel=preload type=module>import('../../../es/helpers/Debugging.js')</script>
+  <script type="text/javascript" src="../../../../wc-config.js"></script>
+  <title>video</title>
+</head>
+<body>
+  <p-general>
+    <o-body>
+      <style>
+        main {
+          width: 80%;
+          min-height: 100vh;
+          margin: 0 auto;
+          border: 1px solid black;
+        }
+      </style>
+      <main>
+          <a-video>
+            <style>
+              :host {
+                --width: 300px;
+                --height: 200px;
+                --filter: grayscale(100%);
+                --filter-hover: grayscale(0%);
+              }
+            </style>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/J---aiyznGQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </a-video>
+          <br><hr /><br>
+          <a-video>
+            <style>
+              :host {
+                --width: 100%;
+                --height: 400px;
+                --filter: grayscale(0%);
+                --filter-hover: grayscale(100%);
+              }
+            </style>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/J---aiyznGQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </a-video>
+          <br><hr /><br>
+          <a-video controls>
+            <source type="video/mp4" src="https://gateway.ipfs.io/ipfs/QmRjXPrLb4wyvNQNfqaeZxT7tchAcznbTJimdey8aLRmJ9?filename=no_coast_drift_hd_stock_video.mp4">
+          </a-video>
+          <br><hr /><br>
+          <a-video muted autoplay controls sources="[{'src':'https://gateway.ipfs.io/ipfs/QmRjXPrLb4wyvNQNfqaeZxT7tchAcznbTJimdey8aLRmJ9?filename=no_coast_drift_hd_stock_video.mp4', 'type':'video/mp4'}]">
+            <style>
+              :host {
+                --width: 200px;
+                --filter: grayscale(100%);
+                --filter-hover: grayscale(0%);
+                --outline: 2px pink solid;
+              }
+            </style>
+          </a-video>
+        </third-party-macro-carousel>
+      </main> 
+    </o-body>
+  </p-general>
+</body>
+</html>

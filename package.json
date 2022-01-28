@@ -1,0 +1,16 @@
+{
+  "name": "web-components-toolbox",
+  "version": "0.0.1",
+  "description": "web components toolbox to be used in a CMS",
+  "main": "./index.html",
+  "scripts": {
+    "fix": "standard --fix",
+    "serve": "live-server --port=4200 --host=localhost"
+  },
+  "author": "weedshaker@gmail.com, dino",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "*",
+    "standard": "*"
+  }
+}
