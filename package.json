@@ -7,7 +7,7 @@
     "fix": "standard --fix",
     "serve": "live-server --port=4200 --host=localhost"
   },
-  "author": "weedshaker@gmail.com, dino",
+  "author": "weedshaker@gmail.com, edx.mgb@gmail.com",
   "license": "MIT",
   "devDependencies": {
     "live-server": "*",
