@@ -1,5 +1,5 @@
 // @ts-check
-import { Intersection } from '../../web-components-cms-template/src/es/components/prototypes/Intersection.js'
+import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global self */
 

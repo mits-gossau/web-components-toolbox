@@ -101,7 +101,7 @@ export default class Body extends Shadow() {
         text-align: var(--h1-text-align, start);
         word-break: var(--h1-word-break, normal);
         text-transform: var(--h1-text-transform, none);
-        margin: var(--h1-margin, 1rem auto 1.143em);
+        margin: var(--h1-margin, var(--content-spacing, unset)) auto;
         padding: var(--h1-padding, unset);
       }
       :host > main h2 {
@@ -113,7 +113,7 @@ export default class Body extends Shadow() {
         text-align: var(--h2-text-align, start);
         word-break: var(--h2-word-break, normal);
         text-transform: var(--h2-text-transform, none);
-        margin: var(--h2-margin, 1rem auto 1.143em);
+        margin: var(--h2-margin, var(--content-spacing, unset)) auto;
         padding: var(--h2-padding, unset);
       }
       :host > main h3 {
@@ -125,7 +125,7 @@ export default class Body extends Shadow() {
         text-align: var(--h3-text-align, start);
         word-break: var(--h3-word-break, normal);
         text-transform: var(--h3-text-transform, none);
-        margin: var(--h3-margin, 1rem auto 1.143em);
+        margin: var(--h3-margin, var(--content-spacing, unset)) auto;
         padding: var(--h3-padding, unset);
       }
       :host > main h4 {
@@ -137,7 +137,7 @@ export default class Body extends Shadow() {
         text-align: var(--h4-text-align, start);
         word-break: var(--h4-word-break, normal);
         text-transform: var(--h4-text-transform, none);
-        margin: var(--h4-margin, 1rem auto 1.143em);
+        margin: var(--h4-margin, var(--content-spacing, unset)) auto;
         padding: var(--h4-padding, unset);
       }
       :host > main h5 {

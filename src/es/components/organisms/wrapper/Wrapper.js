@@ -1,5 +1,5 @@
 // @ts-check
-import Body from '../../web-components-cms-template/src/es/components/organisms/Body.js'
+import Body from '../../organisms/body/Body.js'
 
 /* global self */
 

@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../web-components-cms-template/src/es/components/prototypes/Shadow.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
 /* global Link */
@@ -624,12 +624,12 @@ export default class Navigation extends Shadow() {
     try {
       linkPromise = Promise.resolve({ default: Link })
     } catch (error) {
-      linkPromise = import('../atoms/Link.js')
+      linkPromise = import('../../atoms/link/Link.js')
     }
     try {
       arrowPromise = Promise.resolve({ default: Arrow })
     } catch (error) {
-      arrowPromise = import('../atoms/Arrow.js')
+      arrowPromise = import('../../atoms/arrow/Arrow.js')
     }
     try {
       wrapperPromise = Promise.resolve({ Wrapper: Wrapper })

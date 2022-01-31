@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../web-components-cms-template/src/es/components/prototypes/Shadow.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 import Button from '../web-components/src/es/components/atoms/buttons/Button.js'
 
 /* global customElements */

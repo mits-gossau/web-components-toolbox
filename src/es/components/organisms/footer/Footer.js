@@ -1,6 +1,6 @@
 // @ts-check
 import Body from './Body.js'
-import { Shadow } from '../../web-components-cms-template/src/es/components/prototypes/Shadow.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
 /* global Link */
@@ -251,13 +251,13 @@ export default class Footer extends Shadow() {
     try {
       linkPromise = Promise.resolve({ default: Link })
     } catch (error) {
-      linkPromise = import('../web-components-cms-template/src/es/components/atoms/Link.js')
+      linkPromise = import('../../atoms/link/Link.js')
     }
     let wrapperPromise
     try {
       wrapperPromise = Promise.resolve({ Wrapper: Wrapper })
     } catch (error) {
-      wrapperPromise = import('../../web-components-cms-template/src/es/components/organisms/Wrapper.js')
+      wrapperPromise = import('../../organisms/wrapper/Wrapper.js')
     }
     return (this.childComponentsPromise = Promise.all([
       linkPromise.then(

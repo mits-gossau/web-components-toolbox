@@ -68,7 +68,8 @@
       importEl.then(element => {
         if (Array.isArray(element)) {
           // @ts-ignore
-          if (typeof element[1] === 'object') element[1] = element[1][Object.keys(element[1])[0]]() // helps to load functions which return the component class eg: src/es/components/web-components-cms-template/src/es/components/organisms/Wrapper.js
+          if (typeof element[1] === 'object') element[1] = element[1][Object.keys(element[1])[0]]() // helps to load functions which return the component class eg: src/es/components/src/es/components/organisms/Wrapper.js,
+          separateFolder: true
           if (customElements.get(element[0])) return imports.splice(i, 1, Promise.resolve(`${element[0]} is already defined @resolve`))
           customElements.define(...element)
         }
@@ -104,7 +105,7 @@
          * @type {string}
          */
         const fileName = /.[m]{0,1}js/.test(url) ? '' : `${(tagName.replace(directory.selector, '') || tagName).charAt(0).toUpperCase()}${(tagName.replace(directory.selector, '') || tagName).slice(1).replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())}.${fileEnding}`
-        if (directory.separateFolder) url += `${fileName.replace(`.${fileEnding}`, '').toLowerCase()}${directory.separateFolderPlural ? 's' : ''}/`
+        if (directory.separateFolder) url += `${`${fileName.slice(0, 1).toLowerCase()}${fileName.slice(1)}`.replace(`.${fileEnding}`, '')}${directory.separateFolderPlural ? 's' : ''}/`
         /** @type {ImportEl} */
         const importEl = import(`${/[./]{1}/.test(url.charAt(0)) ? '' : baseUrl}${url}${fileName}${query}`).then(module => /** @returns {[string, CustomElementConstructor]} */ [tagName, module.default || module])
         if (src.searchParams.get('resolveImmediately') === 'true') resolve([importEl])
@@ -162,52 +163,38 @@
   [
     {
       selector: 'a-',
-      url: 'web-components-cms-template/src/es/components/atoms/'
-    },
-    {
-      selector: 'c-',
-      url: 'web-components-cms-template/src/es/components/controllers/'
-    },
-    {
-      selector: 'm-',
-      url: 'web-components-cms-template/src/es/components/molecules/'
-    },
-    {
-      selector: 'msrc-',
-      url: 'web-components-cms-template/src/es/components/msrc/'
-    },
-    {
-      selector: 'o-',
-      url: 'web-components-cms-template/src/es/components/organisms/'
-    },
-    {
-      selector: 'p-',
-      url: 'web-components-cms-template/src/es/components/pages/'
-    },
-    {
-      selector: 'third-party-',
-      url: 'web-components-cms-template/src/es/components/thirdParty/'
-    },
-    {
-      selector: 'wc-a-',
-      url: 'web-components/src/es/components/atoms/',
+      url: 'atoms/',
       separateFolder: true
     },
     {
-      selector: 'wc-f-',
-      url: 'web-components/src/es/components/atoms/forms/'
+      selector: 'c-',
+      url: 'controllers/',
+      separateFolder: true
     },
     {
-      selector: 'logistik-a-',
-      url: 'atoms/'
+      selector: 'm-',
+      url: 'molecules/',
+      separateFolder: true
     },
     {
-      selector: 'logistik-m-',
-      url: 'molecules/'
+      selector: 'msrc-',
+      url: 'msrc/',
+      separateFolder: true
     },
     {
-      selector: 'logistik-o-',
-      url: 'organisms/'
+      selector: 'o-',
+      url: 'organisms/',
+      separateFolder: true
+    },
+    {
+      selector: 'p-',
+      url: 'pages/',
+      separateFolder: true
+    },
+    {
+      selector: 'third-party-',
+      url: 'thirdParty/',
+      separateFolder: true
     }
   ] // directories
   // ↑↑↑ adjustable ↑↑↑
