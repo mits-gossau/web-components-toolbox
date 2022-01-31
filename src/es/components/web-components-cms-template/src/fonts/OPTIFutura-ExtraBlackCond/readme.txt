@@ -1,1 +1,0 @@
-1. Downloaded OPTIFutura-ExtraBlackCond Font from https://webfonts.ffonts.net/
