@@ -9,3 +9,4 @@ TODO setup:
 - [x] merge src/es/components/web-components-cms-template down
 - [ ] variablesMigros.css move default styles into body if possible
 - [ ] body.js css to separate file which can be fetched and setCss through shadow with namespace
+- [ ] body.js css to import reset.css
