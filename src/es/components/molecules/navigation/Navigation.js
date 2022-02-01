@@ -141,7 +141,7 @@ export default class Navigation extends Shadow() {
         --font-weight: var(--a-link-font-weight);
         --line-height: var(--a-link-line-height);
         --text-transform: var(--a-link-text-transform);
-        font-family: var(--a-link-font-family);
+        font-family: var(--a-link-font-family, var(--font-family));
         font-weight: var(--a-font-weight, var(--font-weight, normal));
       }
       :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) a-link {
@@ -155,7 +155,7 @@ export default class Navigation extends Shadow() {
         --font-size: var(--a-link-second-level-font-size, 1rem);
         --font-weight: var(--a-link-second-level-font-weight, var(--a-link-font-weight));
         --line-height: var(--a-link-second-level-line-height);
-        font-family: var(--a-link-second-level-font-family);
+        font-family: var(--a-link-second-level-font-family, var(--font-family));
         font-weight: var(--a-font-weight, var(--font-weight, normal));
       }
       ${(this.getAttribute('hover') === 'true' &&
@@ -219,7 +219,6 @@ export default class Navigation extends Shadow() {
         border-top: var(--border-top, 1px solid) var(--hr-color, var(--color, white));
       }
       :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
-        --font-family: var(--font-family-open);
         --color: var(--color-open);
       }
       @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
@@ -276,7 +275,6 @@ export default class Navigation extends Shadow() {
           margin-bottom: var(--li-ul-margin-bottom-mobile, 0);
         }
         :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
-          --font-family: var(--font-family-open-mobile, var(--font-family-open));
           --color: var(--color-open-mobile, var(--color-open));
         }
       }

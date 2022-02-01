@@ -1,5 +1,5 @@
 // @ts-check
-import Body from '../../organisms/body/Body.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
 
@@ -17,7 +17,7 @@ import Body from '../../organisms/body/Body.js'
  * }
  * @return {CustomElementConstructor | *}
  */
-export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends ChosenHTMLElement {
+export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends ChosenHTMLElement {
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
@@ -47,13 +47,6 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
    * @return {void}
    */
   renderCSS () {
-    // extend body styles
-    if (typeof super.renderCSS === 'function') {
-      super.renderCSS()
-      const bodyCss = this.css.replace(/\s>\smain/g, '')
-      this.css = ''
-      this.setCss(bodyCss, undefined, '') // already received its namespace and for that gets set without any ''
-    }
     // general flex styles
     this.css = /* css */`
       :host {

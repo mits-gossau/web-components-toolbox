@@ -134,13 +134,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    * @return {void}
    */
   renderCSS () {
-    // extend body styles
-    if (typeof super.renderCSS === 'function') {
-      super.renderCSS()
-      const bodyCss = this.css.replace(/\s>\smain/g, '')
-      this.css = ''
-      this.setCss(bodyCss, undefined, '') // already received its namespace and for that gets set without any ''
-    }
     this.css = /* css */` 
       :host {
         border-bottom:var(--border-bottom, 0);

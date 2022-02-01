@@ -7,7 +7,7 @@
 }
 :where(:root) {
   cursor: default;
-  line-height: 1.25;
+  line-height: var(--line-height, 1.5);
   overflow-wrap: break-word;
   -moz-tab-size: 4;
   tab-size: 4;

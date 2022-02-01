@@ -1,5 +1,5 @@
 // @ts-check
-import Body from '../../organisms/body/Body.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
 
@@ -41,7 +41,7 @@ import Body from '../../organisms/body/Body.js'
  *  </figure>
  * }
  */
-export default class Teaser extends Body {
+export default class Teaser extends Shadow() {
   constructor (...args) {
     super(...args)
 
@@ -88,11 +88,6 @@ export default class Teaser extends Body {
       figcaptionPadding = '--figcaption-padding-light-theme'
       figcaptionPaddingMobile = '--figcaption-padding-mobile-light-theme'
     }
-    // extend body styles
-    super.renderCSS()
-    const bodyCss = this.css.replace(/\s>\smain/g, '')
-    this.css = ''
-    this._css.textContent = bodyCss
     this.css = /* css */`
       :host {
         cursor: ${this.getAttribute('href') ? 'pointer' : 'auto'};
