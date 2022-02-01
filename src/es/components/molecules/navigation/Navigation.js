@@ -166,13 +166,6 @@ export default class Navigation extends Shadow() {
         --font-weight: var(--a-link-second-level-font-weight-${this.getAttribute('no-scroll') || 'no-scroll'}, var(--a-link-font-weight-${this.getAttribute('no-scroll') || 'no-scroll'}));
         --line-height: var(--a-link-second-level-line-height-${this.getAttribute('no-scroll') || 'no-scroll'});
       }
-      :host ul{
-        background-color: var(--background-color, black);
-        list-style: var(--list-style, none);
-        margin: 0;
-        padding: 0;
-        transition: var(--transition, all 0.2s ease);
-      }
       :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) ul {
         background-color: var(--background-color-${this.getAttribute('no-scroll') || 'no-scroll'}, var(--background-color, black));
       }
@@ -191,29 +184,10 @@ export default class Navigation extends Shadow() {
         display: block;
         padding: var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4));
       }
-      :host > nav > ul li{
-        position: relative;
-        margin-bottom: var(--margin-bottom, 0);
-      }
       :host > nav > ul li > a-arrow {
         display: none;
         user-select: none;
         visibility: hidden;
-      }
-      :host > nav > ul li ul{
-        display: var(--li-ul-display, none);
-        padding: var(--li-ul-padding, 0);
-        border-radius: var(--li-ul-border-radius, 0);
-        padding-top: calc(var(--content-spacing, 40px) / 2 + 1px);
-        margin: var(--li-ul-margin);
-        position: var(--li-ul-position, absolute);
-        top: var(--li-ul-top, unset);
-        right: var(--li-ul-right, unset);
-        bottom: var(--li-ul-bottom, unset);
-        left: var(--li-ul-left, unset);
-        width: var(--li-ul-width, max-content);
-        transition: var(--transition, all 0.2s ease);
-        z-index: var(--li-ul-z-index, auto);
       }
       :host > nav > ul li:nth-child(n+${firstLevelCount / 2 + 1}) ul{
         top: var(--li-ul-top-second-half, unset);
@@ -274,15 +248,6 @@ export default class Navigation extends Shadow() {
           flex-direction: var(--flex-direction-mobile, var(--flex-direction, column));
           padding: 0;
         }
-        :host > nav > ul li{
-          border-top: 1px solid var(--hr-color, var(--color, white));
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: var(--justify-content-mobile, center);
-          padding: 0;
-          width: 100%;
-          margin-bottom: var(--margin-bottom-mobile, 0);
-        }
         :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
           --color: var(--a-arrow-color-hover, var(--color-hover));
         }
@@ -297,12 +262,6 @@ export default class Navigation extends Shadow() {
           display: var(--arrow-display, 'block');
           min-height: var(--min-height-mobile, 50px);
           min-width: var(--min-width-mobile, 50px);
-        }
-        :host > nav > ul li ul{
-          --font-weight: calc(var(--font-weight) / 2);
-          padding: 0;
-          position: unset;
-          width: 100%;
         }
         :host > nav > ul li:hover ul,
         :host > nav > ul li:not(.open) a-link.open ~ ul,
@@ -322,13 +281,7 @@ export default class Navigation extends Shadow() {
         }
       }
     `
-    // TODO: Migrated two Navigations, this should be cleaned and merged properly!
-    const bodyCss = this.css
-      .replace(/:host\s*ul\s*{[^}]*}/g, '')
-      .replace(/:host\s*>\s*nav\s*>\s*ul\s*li\s*ul\s*{[^}]*}/g, '')
-      .replace(/:host\s*>\s*nav\s*>\s*ul\s*li\s*{[^}]*}/g, '')
-    this.css = ''
-    this.setCss(bodyCss, undefined, '') // already received its namespace and for that gets set without any ''
+    // TODO: Migrated two Navigations into one, these should be cleaned and merged properly!
     this.css = /* css */`
       :host > nav > ul {
         background-color: var(--background-color);
