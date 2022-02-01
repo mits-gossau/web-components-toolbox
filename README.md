@@ -5,7 +5,7 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 
 TODO setup:
 - [x] move each web component in its own folder
-- [ ] reset file setup
+- [x] reset file setup
 - [x] merge src/es/components/web-components-cms-template down
 - [ ] variablesMigros.css move default styles into body if possible
 - [ ] body.js css to separate file which can be fetched and setCss through shadow with namespace
