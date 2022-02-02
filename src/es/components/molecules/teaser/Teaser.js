@@ -122,7 +122,7 @@ export default class Teaser extends Shadow() {
       :host figure > *:not(${this.getAttribute('a-picture') || 'a-picture'} ~ figcaption):not(picture ~ figcaption) {
         padding-top: 0;
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host figure figcaption {
           padding: var(${figcaptionPaddingMobile}, var(${figcaptionPadding}, 15px 15px 20px 15px));
         }

@@ -280,7 +280,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {boolean} namespaceFallback
    * @param {HTMLStyleElement} styleNode
    * @param {boolean} [hide = true]
-   * @return {Promise<string>}
+   * @return {Promise<[string, HTMLStyleElement]> | Promise<any>}
    */
   fetchCSS (path, cssSelector, namespace, namespaceFallback, styleNode, hide = true) {
     if (hide) this.setAttribute('hidden', 'true')
@@ -289,12 +289,20 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       throw new Error(response.statusText)
     }).then(style => {
       if (hide) this.removeAttribute('hidden')
-      return this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode)
+      if (!styleNode) {
+        /** @type {HTMLStyleElement} */
+        styleNode = document.createElement('style')
+        styleNode.setAttribute('_css', path)
+        styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
+        this.root.appendChild(styleNode)
+      }
+      return [this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode), styleNode]
     // @ts-ignore
     }).catch(error => {
       if (hide) this.removeAttribute('hidden')
       error = `${path} ${error}!!!`
-      return this.html = console.warn(error, this) || `<code style="color: red;">${error}</code>`
+      // @ts-ignore
+      return Promise.reject(this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`)
     })
   }
 

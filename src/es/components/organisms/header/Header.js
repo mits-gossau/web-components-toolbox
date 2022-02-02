@@ -235,7 +235,7 @@ export default class Header extends Shadow() {
         0% {left: 0}
         100% {left: -100vw}
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host > * {
           --header-logo-justify-content: flex-end;
           margin: var(--content-spacing-mobile, 0) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */

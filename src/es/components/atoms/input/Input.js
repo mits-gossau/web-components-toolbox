@@ -250,7 +250,7 @@ export default class Input extends Shadow() {
         }
       }
 
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         .mui-form-group {
           max-width: var(--max-width-mobile, var(--max-width, none));
         }

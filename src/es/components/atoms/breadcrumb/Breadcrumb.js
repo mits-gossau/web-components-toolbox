@@ -77,7 +77,7 @@ export default class Breadcrumb extends Shadow() {
         ${this.getAttribute('icon') !== 'false' ? 'color: transparent;' : ''}
         min-width: 1em;
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host {
           margin: var(--margin-mobile, var(--margin, 0)) !important;
           width: var(--width-mobile, var(--width, 0)) !important;

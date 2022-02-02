@@ -217,7 +217,7 @@ export default class Button extends Shadow() {
         width: 100%;
         z-index: 9;
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         button {
           margin: var(--margin-mobile, var(--margin, 0));
         }

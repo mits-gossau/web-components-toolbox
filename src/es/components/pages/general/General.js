@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../prototypes/Shadow.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
 
@@ -100,7 +100,7 @@ export default class General extends Shadow() {
       html.${this.getAttribute('no-scroll') || 'no-scroll'} body {
         overflow: hidden;
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host {
           grid-template-rows: var(--header-height-mobile, 50px) 1fr minmax(var(--footer-min-height-mobile, 150px), auto);
         }

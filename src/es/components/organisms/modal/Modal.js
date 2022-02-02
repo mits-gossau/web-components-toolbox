@@ -196,7 +196,7 @@ export default class Modal extends Shadow() {
         font-size: var(--a-font-size-open, var(--font-size-open, var(--a-font-size, var(--font-size))));
         transform: translate(-0.9em, max(-8vw, -1.5em));
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host([open]) > section {
           padding: var(--padding-mobile, min(50px, 4vw));
         }

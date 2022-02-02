@@ -97,7 +97,7 @@ export default class Video extends Shadow() {
       object-fit: var(--video-object-fit, cover);
     }
 
-    @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+    @media only screen and (max-width: _max-width_) {
       :host video, :host iframe {
         filter: var(--filter-mobile, none);
         transform: var(--transform-mobile, none);

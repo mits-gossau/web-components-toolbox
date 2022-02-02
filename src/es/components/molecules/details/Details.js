@@ -234,7 +234,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         0% {font-size: 0}
         100% {font-size: inherit}
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host {
           margin: 0 5% !important;
           width: 90% !important;

@@ -60,7 +60,7 @@ export default class Logo extends Shadow() {
           :host > ${this.textSelector}{
             width: var(--text-width, ${this.img.getBoundingClientRect().width}px);
           }
-          @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+          @media only screen and (max-width: _max-width_) {
             :host > ${this.textSelector}{
               width: var(--text-width-mobile, ${this.img.getBoundingClientRect().width}px);
             }
@@ -160,7 +160,7 @@ export default class Logo extends Shadow() {
         text-decoration: var(--text-a-text-decoration-hover, var(--text-decoration-hover, var(--text-decoration, none)));
         font-family: var(--text-a-font-family-hover);
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host {
           margin: var(--margin-mobile, var(--margin, 0px));
           padding: var(--padding-mobile, var(--padding, 0px));

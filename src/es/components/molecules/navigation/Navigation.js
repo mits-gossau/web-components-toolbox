@@ -221,7 +221,7 @@ export default class Navigation extends Shadow() {
       :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
         --color: var(--color-open);
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host {
           --font-weight: var(--font-weight-mobile, normal);
         }
@@ -351,7 +351,7 @@ export default class Navigation extends Shadow() {
         padding: var(--search-li-padding, var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4)));
         margin-top: -1.5rem;
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host {
           --a-link-content-spacing-no-scroll: 1.1429rem 1.2143rem;
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);

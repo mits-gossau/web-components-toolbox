@@ -142,7 +142,7 @@ export default class Footer extends Shadow() {
         list-style: var(--list-style, none);
         width: auto;
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host {
           --font-size: var(--font-size-mobile);
         }
@@ -189,7 +189,7 @@ export default class Footer extends Shadow() {
         --${this.namespace || ''}font-size: 1.25rem;
         padding-bottom: 0.875rem;
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host {
           padding: 0 !important;
         }

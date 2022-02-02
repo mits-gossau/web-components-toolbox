@@ -211,7 +211,7 @@ export default class MacroCarousel extends Shadow() {
         color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
         text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
       }
-      @media only screen and (max-width: ${this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'}) {
+      @media only screen and (max-width: _max-width_) {
         :host > macro-carousel {
           width: var(--content-width-mobile, 100%);
           margin: var(--margin-mobile, 0 auto);

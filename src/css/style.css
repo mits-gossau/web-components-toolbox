@@ -1,26 +1,3 @@
-:host {
-  background-color: var(--background-color, white);
-  grid-area: body;
-}
-:host {
-  padding: var(--main-padding, 0);
-}
-:host > * {
-  margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-  width: var(--content-width, 80%);
-}
-:host > *:not(style) {
-  display: var(--any-display, block);
-}
-:host > span, :host > div, :host > p, :host > a, :host > article, :host > ul, :host > ol, :host > section, :host > h1, :host > h2, :host > h3, :host > h4, :host > h5, :host > h6 {
-  width: var(--content-width-not-web-component, 80%);
-}
-:host(.content-max-width) > *:not(.ignore-max-width), :host> main > *.content-max-width {
-  max-width: var(--content-max-width, none);
-}
-:host(.content-max-width-two) > *:not(.ignore-max-width), :host > *.content-max-width-two {
-  max-width: var(--content-max-width-two, none);
-}
 :host h1 {
   color: var(--h1-color, var(--color, black));
   font-size: var(--h1-font-size, 1.75rem);
@@ -151,9 +128,9 @@
   box-sizing: var(--ol-box-sizing, var(--ul-box-sizing, border-box));
 }
 :host .bold, :host strong {
-  font-family: var(--strong-font-family, var(--font-family-bold, var(--font-family)));
-  font-weight: var(--strong-font-weight, bold);
-  text-transform: var(--strong-text-transform, none);
+  font-family: var(--font-family-strong, var(--font-family-bold, var(--font-family)));
+  font-weight: var(--font-weight-strong, bold);
+  text-transform: var(--text-transform-strong, none);
 }
 :host hr {
   border: var(--hr-border, 0);
@@ -214,23 +191,10 @@
   padding: 0;
   width: 100%;
 }
-:host wc-a-button {
-  width: var(--content-width-not-web-component, 80%);
-}
 :host wc-a-button ~ wc-a-button {
   padding-top: var(--content-spacing);
 }
 @media only screen and (max-width: _max-width_) {
-  :host {
-    padding: var(--main-padding-mobile, var(--main-padding, 0));
-  }
-  :host > * {
-    margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-    width: var(--content-width-mobile, var(--content-width, 90%));
-  }
-  :host > span, :host > div, :host > p, :host > a, :host > article, :host > ul, :host > ol, :host > section, :host > h1, :host > h2, :host > h3, :host > h4, :host > h5, :host > h6 {
-    width: var(--content-width-not-web-component-mobile, var(--content-width-not-web-component, var(--content-width-mobile, var(--content-width, 90%))));
-  }
   :host h1 {
     font-size: var(--h1-font-size-mobile, var(--h1-font-size, 1.75rem));
     line-height: var(--h1-line-height-mobile, var(--h1-line-height, normal));
@@ -282,9 +246,6 @@
   }
   .spacer {
     height: var(--spacer-height-mobile, 15vw);
-  }
-  :host wc-a-button {
-    width: var(--content-width-not-web-component-mobile, var(--content-width-not-web-component, var(--content-width-mobile, var(--content-width, 90%))));
   }
   :host wc-a-button ~ wc-a-button {
     padding-top: var(--content-spacing-mobile, var(--content-spacing));
