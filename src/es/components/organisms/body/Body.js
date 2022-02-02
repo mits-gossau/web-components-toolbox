@@ -68,7 +68,8 @@ export default class Body extends Shadow() {
    * @return {void}
    */
   renderCSS () {
-    fetch('../../../css/style.css').then(res => res.text()).then(css => this.setCss(css.replace('${maxWidth}', this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px')))
+    // TODO: fetch by default to a separate node
+    this.fetchCSS('../../../css/style.css')
   }
 
   /**

@@ -220,7 +220,7 @@
 :host wc-a-button ~ wc-a-button {
   padding-top: var(--content-spacing);
 }
-@media only screen and (max-width: ${maxWidth}) {
+@media only screen and (max-width: _max-width_) {
   :host {
     padding: var(--main-padding-mobile, var(--main-padding, 0));
   }

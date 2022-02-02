@@ -185,6 +185,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (!style) {
       return (styleNode.textContent = '')
     } else {
+      style = this.cssMaxWidth(style)
       if (!this.hasShadowRoot) style = Shadow.cssHostFallback(style, cssSelector)
       if (namespace) {
         if (style.includes('---')) console.error('this.css has illegal dash characters at:', this)
@@ -257,6 +258,44 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    */
   static cssNamespaceToVar (style, namespace) {
     return style.replace(/--/g, `--${namespace}`)
+  }
+
+  /**
+   * maxWidth replaced by media query declaration
+   *
+   * @static
+   * @param {string} style
+   * @param {string} [maxWidth = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px']
+   * @return {string}
+   */
+  cssMaxWidth (style, maxWidth = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px') {
+    return style.replace(/_max-width_/g, maxWidth)
+  }
+
+  /**
+   * renders the o-highlight-list css
+   * @param {string} path
+   * @param {string} cssSelector
+   * @param {string} namespace
+   * @param {boolean} namespaceFallback
+   * @param {HTMLStyleElement} styleNode
+   * @param {boolean} [hide = true]
+   * @return {Promise<string>}
+   */
+  fetchCSS (path, cssSelector, namespace, namespaceFallback, styleNode, hide = true) {
+    if (hide) this.setAttribute('hidden', 'true')
+    return fetch(path).then(response => {
+      if (response.status >= 200 && response.status <= 299) return response.text()
+      throw new Error(response.statusText)
+    }).then(style => {
+      if (hide) this.removeAttribute('hidden')
+      return this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode)
+    // @ts-ignore
+    }).catch(error => {
+      if (hide) this.removeAttribute('hidden')
+      error = `${path} ${error}!!!`
+      return this.html = console.warn(error, this) || `<code style="color: red;">${error}</code>`
+    })
   }
 
   /**
