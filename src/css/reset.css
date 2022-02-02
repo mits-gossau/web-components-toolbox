@@ -1,3 +1,7 @@
+/* hide component stuff before it is rendered to avoid the blitz (flashing white) */
+:not(:defined) {
+  display: none;
+}
 /* https://github.com/csstools/sanitize.css/blob/main/sanitize.css */
 *,
 ::before,

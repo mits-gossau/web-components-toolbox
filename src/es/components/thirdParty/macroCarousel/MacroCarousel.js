@@ -220,9 +220,10 @@ export default class MacroCarousel extends Shadow() {
     `
     // inject style which can't be controlled through css vars
     // style which must be inside macro-carousel shadowDom
+    // TODO: review how to apply the namespaces properly, usually we would use setCss but here vars like --macro-carousel-pagination-color must not get namespaced with cssNamespaceToVar / cssNamespaceToVarDec
     this.injectStyle = document.createElement('style')
     // get more from here: https://github.com/ciampo/macro-carousel/blob/master/src/macro-carousel/macro-carousel.css
-    this.injectStyle.innerHTML = /* css */`
+    this.injectStyle.textContent = /* css */`
       :host {
         --macro-carousel-transition-duration: var(--transition-duration, 0.5s);
       }

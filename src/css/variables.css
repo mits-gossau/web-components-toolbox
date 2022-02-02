@@ -4,7 +4,7 @@
  * - if a component holds other components or nodes you can declare or remap classes eg. :host > h1 {--color: var(--h1-color, white);}
  * - if a component holds other components you should share the attribute namespace with its children
  */
- html {
+ :root {
   --a-color: var(--color-secondary);
   --a-margin: 0;
   --a-text-align: center;
@@ -21,8 +21,6 @@
   --font-size-mobile: min(14px, 5vw);
   --font-size: max(16px, 0.8vw);
   --font-weight: 400;
-  --html-background-color: var(--background-color);
   --line-height: 1.5rem;
-  --spacer-height-mobile: 1.53rem;
-  --spacer-height: 4.41rem;
+  --root-background-color: var(--background-color);
 }

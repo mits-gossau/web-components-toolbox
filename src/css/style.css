@@ -186,7 +186,7 @@
 }
 .spacer {
   display: block;
-  height: var(--spacer-height, 15vw);
+  height: var(--spacer-height, 4.41rem);
   margin: 0 auto;
   padding: 0;
   width: 100%;
@@ -245,7 +245,7 @@
     margin: var(--a-margin-mobile, var(--a-margin, var(--content-spacing-mobile, var(--content-spacing) auto)));
   }
   .spacer {
-    height: var(--spacer-height-mobile, 15vw);
+    height: var(--spacer-height-mobile, 1.53rem);
   }
   :host wc-a-button ~ wc-a-button {
     padding-top: var(--content-spacing-mobile, var(--content-spacing));

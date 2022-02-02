@@ -111,7 +111,7 @@ export default class Body extends Shadow() {
         }
       }
     `
-    this.fetchCSS('../../../css/style.css')
+    this.fetchCSS(['../../../css/reset.css', '../../../css/style.css'])
   }
 
   /**

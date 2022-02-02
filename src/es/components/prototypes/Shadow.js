@@ -28,11 +28,15 @@
     cssSelector,
     css,
     _css,
+    _cssHidden,
     setCss,
     Shadow.cssHostFallback,
     Shadow.cssNamespaceToVarFunc,
     Shadow.cssNamespaceToVarDec,
     Shadow.cssNamespaceToVar,
+    cssMaxWidth,
+    fetchCSS,
+    Shadow.cssTextDecorationShortHandFix,
     html
   }
  * @return {CustomElementConstructor | *}
@@ -275,35 +279,40 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
 
   /**
    * renders the o-highlight-list css
-   * @param {string} path
+   * @param {string | string[]} paths
    * @param {string} cssSelector
    * @param {string} namespace
    * @param {boolean} namespaceFallback
-   * @param {HTMLStyleElement} styleNode
+   * @param {HTMLStyleElement | HTMLStyleElement[]} styleNode
    * @param {boolean} [hide = true]
-   * @return {Promise<[string, HTMLStyleElement]> | Promise<any>}
+   * @return {Promise<[string, HTMLStyleElement][]> | Promise<string[]>}
    */
-  fetchCSS (path, cssSelector, namespace, namespaceFallback, styleNode, hide = true) {
-    if (hide) this.setAttribute('hidden', 'true')
-    return fetch(path).then(response => {
+  fetchCSS (paths, cssSelector, namespace, namespaceFallback, styleNode, hide = true) {
+    if (hide) this.hidden = true
+    if (!Array.isArray(paths)) paths = [paths]
+    if (!Array.isArray(styleNode)) styleNode = [styleNode]
+    return Promise.all(paths.map((path, i) => fetch(path).then(response => {
       if (response.status >= 200 && response.status <= 299) return response.text()
       throw new Error(response.statusText)
     }).then(style => {
-      if (hide) this.removeAttribute('hidden')
-      if (!styleNode) {
+      if (!styleNode[i]) {
         /** @type {HTMLStyleElement} */
-        styleNode = document.createElement('style')
-        styleNode.setAttribute('_css', path)
-        styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-        this.root.appendChild(styleNode)
+        styleNode[i] = document.createElement('style')
+        styleNode[i].setAttribute('_css', path)
+        styleNode[i].setAttribute('protected', 'true') // this will avoid deletion by html=''
+        if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
+        this.root.appendChild(styleNode[i])
       }
-      return [this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode), styleNode]
+      return [this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode[i]), styleNode[i]]
     // @ts-ignore
     }).catch(error => {
-      if (hide) this.removeAttribute('hidden')
+      if (hide) this.hidden = false
       error = `${path} ${error}!!!`
       // @ts-ignore
       return Promise.reject(this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`)
+    // @ts-ignore
+    }))).finally(() => {
+      if (hide) this.hidden = false
     })
   }
 
@@ -375,5 +384,28 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     Array.from(innerHTML).forEach(node => {
       if (node) this.root.appendChild(node)
     })
+  }
+
+  set hidden (value) {
+    if (!value && !this._cssHidden) {
+      /** @type {HTMLStyleElement} */
+      this._cssHidden = document.createElement('style')
+      this._cssHidden.setAttribute('_cssHidden', '')
+      this.setCss(/* css */`
+          :host, :host > *, :host > * > * {
+            animation: var(--show, show .2s ease-out);
+          }
+          @keyframes show {
+            0%{opacity: 0}
+            100%{opacity: 1}
+          }
+        `, undefined, undefined, undefined, this._cssHidden)
+      this.root.appendChild(this._cssHidden)
+    }
+    super.hidden = value
+  }
+
+  get hidden () {
+    return super.hidden
   }
 }

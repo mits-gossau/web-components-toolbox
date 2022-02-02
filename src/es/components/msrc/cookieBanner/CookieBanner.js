@@ -76,8 +76,7 @@ export default class CookieBanner extends Shadow() {
    * @return {void}
    */
   render () {
-    const style = document.createElement('style')
-    style.textContent = /* css */`
+    this.css = /* css */`
       #msrc-widget div, #msrc-widget a, #msrc-widget button {
         color: var(--color, black) !important;
         font-size: var(--font-size, 0.73rem) !important;
@@ -134,7 +133,7 @@ export default class CookieBanner extends Shadow() {
     `
     const msrcCookieBanner = document.createElement('div')
     this.loadDependency().then(msrc => msrc.components.privacy.cookieBanner(msrcCookieBanner, this.constructor.parseAttribute(this.getAttribute('props'))))
-    this.html = [style, msrcCookieBanner]
+    this.html = msrcCookieBanner
   }
 
   /**

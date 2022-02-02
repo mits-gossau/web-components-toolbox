@@ -25,7 +25,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class General extends Shadow() {
   constructor (...args) {
-    super({ mode: 'false' }, ...args) // disabling shadow-DOM to control root font-size on html-tag
+    super({ mode: 'false' }, ...args) // disabling shadow-DOM to control root font-size on :root-tag
 
     if (this.detectIOS()) document.documentElement.classList.add('ios')
   }
@@ -60,8 +60,8 @@ export default class General extends Shadow() {
         min-height: 100vh;
       }
       /* global css set by page */
-      html {
-        background-color: var(--html-background-color, transparent);
+      :root {
+        background-color: var(--root-background-color, transparent);
         font-size: var(--font-size, 10px);
         font-weight: var(--font-weight, normal);
         line-height: var(--line-height, normal);
@@ -70,18 +70,18 @@ export default class General extends Shadow() {
       }
       /* to counteract initial.css */
       /* hide component stuff before it is rendered to avoid the blitz (flashing white) also set the --background-color in the variables...css */
-      :host, html {
+      :host, :root {
         color: var(--color, black);
         font-family: var(--font-family, "FuturaT", Arial, sans-serif);
         font-weight: var(--font-weight, normal);
       }
-      html a {
+      :root a {
         color: var(--a-color, var(--color-secondary, var(--color, blue)));
         font-family: var(--font-family, "FuturaT", Arial, sans-serif);
         font-weight: var(--font-weight, normal);
         text-decoration: var(--a-text-decoration, var(--text-decoration, none));
       }
-      html a:hover {
+      :root a:hover {
         color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, blue))));
         text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
       }
@@ -92,10 +92,10 @@ export default class General extends Shadow() {
         overflow-x: hidden;
       }
       /* navigation open */
-      html.${this.getAttribute('no-scroll') || 'no-scroll'} {
+      :root.${this.getAttribute('no-scroll') || 'no-scroll'} {
         overflow: hidden;
       }
-      html.${this.getAttribute('no-scroll') || 'no-scroll'} body {
+      :root.${this.getAttribute('no-scroll') || 'no-scroll'} body {
         overflow: hidden;
       }
       @media only screen and (max-width: _max-width_) {
@@ -103,7 +103,7 @@ export default class General extends Shadow() {
           grid-template-rows: var(--header-height-mobile, 50px) 1fr minmax(var(--footer-min-height-mobile, 150px), auto);
         }
         /* global css set by page */
-        html {
+        :root {
           font-size: var(--font-size-mobile, 10px);
           font-weight: var(--font-weight-mobile, var(--font-weight, normal));
           line-height: var(--line-height-mobile, var(--line-height, normal));

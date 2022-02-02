@@ -12,10 +12,7 @@
     margin-bottom: 50px;
   }
 }
-/* hide component stuff before it is rendered to avoid the blitz (flashing white) also set the --background-color in the variables...css */
-html {
+/* set the --background-color from the variables.css */
+:root {
   background-color: var(--background-color, transparent);
-}
-:not(:defined) {
-  display: none;
 }
