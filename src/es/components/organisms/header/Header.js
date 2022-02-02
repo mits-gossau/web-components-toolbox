@@ -1,9 +1,10 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
 /* global MenuIcon */
 /* global customElements */
+/* global self */
+/* global MutationObserver */
 
 /**
  * Header can be sticky and hosts as a flex mostly a logo and a navigation

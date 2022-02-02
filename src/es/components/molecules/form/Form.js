@@ -3,7 +3,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
 import Button from '../web-components/src/es/components/atoms/buttons/Button.js'
 
 /* global customElements */
-/* global self */
 
 /**
  * As a molecule, this component shall hold Atoms

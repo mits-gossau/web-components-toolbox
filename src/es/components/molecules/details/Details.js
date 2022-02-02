@@ -2,7 +2,6 @@
 import { Mutation } from '../../prototypes/Mutation.js'
 
 /* global CustomEvent */
-/* global self */
 /* global Image */
 
 /**

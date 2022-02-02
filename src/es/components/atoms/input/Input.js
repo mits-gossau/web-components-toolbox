@@ -3,7 +3,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global CustomEvent */
 /* global location */
-/* global self */
 
 /**
  * Creates an MSWC Textarea by the blueprints of:
@@ -273,13 +272,15 @@ export default class Input extends Shadow() {
   }
 
   renderSearchHTML () {
-    return this.search ? `
+    return this.search
+      ? `
     <button type="button" title="Search">
       <svg width="100%" height="100%" viewBox="0 0 24 24" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
       <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" class="icon-stroke-width" stroke-linecap="round" stroke-linejoin="round"></path>
       <path d="M21 21L16.65 16.65" class="icon-stroke-width" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
-    </button>` : ''
+    </button>`
+      : ''
   }
 
   get inputId () {

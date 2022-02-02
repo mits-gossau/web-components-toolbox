@@ -1,8 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
-
 /**
  * Breadcrumb
  * An example at: src/es/components/pages/Home.html

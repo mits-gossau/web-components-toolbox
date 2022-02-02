@@ -2,7 +2,6 @@
 import Body from './Body.js'
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
 /* global Link */
 /* global customElements */
 /* global Wrapper */

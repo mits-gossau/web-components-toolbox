@@ -4,6 +4,7 @@
 /* global HTMLElement */
 /* global document */
 /* global self */
+/* global fetch */
 
 /**
  * Shadow is a helper with a few functions for every web component which possibly allows a shadowRoot (atom, organism and molecule)

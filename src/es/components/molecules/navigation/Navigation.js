@@ -6,6 +6,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global Arrow */
 /* global customElements */
 /* global CustomEvent */
+/* global Wrapper */
 
 /**
  * Navigation hosts uls

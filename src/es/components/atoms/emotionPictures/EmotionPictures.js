@@ -1,8 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
-
 /**
  * EmotionPictures
  * A picture shuffle example at: src/es/components/pages/Kontakt.html

@@ -69,7 +69,6 @@
         if (Array.isArray(element)) {
           // @ts-ignore
           if (typeof element[1] === 'object') element[1] = element[1][Object.keys(element[1])[0]]() // helps to load functions which return the component class eg: src/es/components/src/es/components/organisms/Wrapper.js,
-          separateFolder: true
           if (customElements.get(element[0])) return imports.splice(i, 1, Promise.resolve(`${element[0]} is already defined @resolve`))
           customElements.define(...element)
         }
