@@ -70,7 +70,7 @@ export default class Body extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        background-color: var(--background-color, white);
+        background-color: var(--background-color, transparent);
         grid-area: body;
       }
       :host > main {

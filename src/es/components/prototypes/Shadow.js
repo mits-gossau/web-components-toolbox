@@ -386,22 +386,31 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     })
   }
 
+  // display trumps hidden property, which we resolve here
   set hidden (value) {
-    if (!value && !this._cssHidden) {
+    if (!this._cssHidden) {
       /** @type {HTMLStyleElement} */
       this._cssHidden = document.createElement('style')
       this._cssHidden.setAttribute('_cssHidden', '')
-      this.setCss(/* css */`
-          :host, :host > *, :host > * > * {
-            animation: var(--show, show .2s ease-out);
-          }
-          @keyframes show {
-            0%{opacity: 0}
-            100%{opacity: 1}
-          }
-        `, undefined, undefined, undefined, this._cssHidden)
+      this._cssHidden.setAttribute('protected', 'true') // this will avoid deletion by html=''
       this.root.appendChild(this._cssHidden)
     }
+    this._cssHidden.textContent = ''
+    this.setCss(value
+      ? /* css */`
+        :host {
+          display: none !important;
+        }
+      `
+      : /* css */`
+        :host, :host > *, :host > * > * {
+          animation: var(--show, show .2s ease-out);
+        }
+        @keyframes show {
+          0%{opacity: 0}
+          100%{opacity: 1}
+        }
+      `, undefined, undefined, undefined, this._cssHidden)
     super.hidden = value
   }
 

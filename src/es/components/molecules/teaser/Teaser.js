@@ -9,37 +9,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @export
  * @class Teaser
  * @type {CustomElementConstructor}
- * @attribute {
- *  {boolean} [theme=false] there is only one theme, light
- * }
- * @css {
- *  --background-color [#c2262f]
- *  --background-color-light-theme
- *  --h3-color [white]
- *  --h3-color-light-theme [#c2262f]
- *  --p-color [white]
- *  --p-color-light-theme [black]
- *  --figcaption-padding [15px 15px 20px 15px]
- *  --figcaption-padding-light-theme [15px 0]
- *  --h3-font-size [1.2rem]
- *  --p-font-size [1rem]
- *  --font-family
- *  --height [300px] picture tag resp. whole teaser height
- *  --min-height [100%] if set the image covers all of the teaser resp. picture tag
- *  --object-fit [cover] image tag object fit
- *  --opacity [1]
- * }
- * @html {
- *  <figure>
- *    <picture>
- *     <img src="" alt="" width="" height="">
- *    </picture>
- *    <figcaption>
- *      <h3>Teaser Title</h3>
- *      <p>Teaser Text</p>
- *    </figcaption>
- *  </figure>
- * }
  */
 export default class Teaser extends Shadow() {
   constructor (...args) {
@@ -53,10 +22,13 @@ export default class Teaser extends Shadow() {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
+    this.addEventListener('picture-load', event => this.hidden = false, { once: true })
+    this.hidden = true
   }
-
+  
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldComponentRenderHTML()) this.renderHTML()
     this.addEventListener('click', this.clickListener)
   }
 
@@ -74,20 +46,20 @@ export default class Teaser extends Shadow() {
   }
 
   /**
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
+  shouldComponentRenderHTML () {
+    return this.hidden
+  }
+
+  /**
    * renders the m-Teaser css
    *
    * @return {void}
    */
   renderCSS () {
-    const theme = this.getAttribute('theme')
-    let backgroundColor = '--background-color'
-    let figcaptionPadding = '--figcaption-padding'
-    let figcaptionPaddingMobile = '--figcaption-padding-mobile'
-    if (theme) {
-      backgroundColor = '--background-color-light-theme'
-      figcaptionPadding = '--figcaption-padding-light-theme'
-      figcaptionPaddingMobile = '--figcaption-padding-mobile-light-theme'
-    }
     this.css = /* css */`
       :host {
         cursor: ${this.getAttribute('href') ? 'pointer' : 'auto'};
@@ -100,7 +72,7 @@ export default class Teaser extends Shadow() {
         display: flex;
         flex-direction: column;
         margin: 0;
-        background-color: var(${backgroundColor}, #c2262f);
+        background-color: #c2262f;
         width: 100%;
       }
       /* fallback if a-picture is not used */
@@ -115,21 +87,31 @@ export default class Teaser extends Shadow() {
         width: 100%;
       }
       :host figure figcaption {
-        background-color: var(${backgroundColor}, #c2262f);
+        background-color: #c2262f;
         opacity: var(--opacity, 1);
-        padding: var(${figcaptionPadding}, 15px 15px 20px 15px);
+        padding: 15px 15px 20px 15px;
       }
       :host figure > *:not(${this.getAttribute('a-picture') || 'a-picture'} ~ figcaption):not(picture ~ figcaption) {
         padding-top: 0;
       }
       @media only screen and (max-width: _max-width_) {
         :host figure figcaption {
-          padding: var(${figcaptionPaddingMobile}, var(${figcaptionPadding}, 15px 15px 20px 15px));
+          padding: 15px 15px 20px 15px;
         }
         :host figure > *:not(${this.getAttribute('a-picture') || 'a-picture'} ~ figcaption):not(picture ~ figcaption) {
           padding-top: 0;
         }
       }
     `
+    this.fetchCSS(['../../../css/reset.css', '../../../css/style.css'], undefined, undefined, undefined, undefined, false)
+  }
+
+  /**
+   * renders the a-link html
+   *
+   * @return {void}
+   */
+  renderHTML () {
+    this.root.querySelector('a-picture').setAttribute('picture-load', '')
   }
 }
