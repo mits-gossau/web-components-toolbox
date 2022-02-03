@@ -75,7 +75,7 @@
   font-weight: var(--p-font-weight, var(--font-weight, normal));
   text-align: var(--p-text-align, start);
   text-transform: var(--p-text-transform, none);
-  margin: var(--p-margin, 0 var(--content-spacing) auto);
+  margin: var(--p-margin, 0 auto var(--content-spacing));
 }
 :host a {
   color: var(--a-color, var(--color-secondary, var(--color, pink)));

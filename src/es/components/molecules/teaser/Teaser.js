@@ -22,14 +22,16 @@ export default class Teaser extends Shadow() {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
-    this.addEventListener('picture-load', event => this.hidden = false, { once: true })
-    this.hidden = true
   }
   
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     this.addEventListener('click', this.clickListener)
+    if (!this.aPicture.hasAttribute('loaded')) {
+      this.hidden = true
+      this.addEventListener('picture-load', event => this.hidden = false, { once: true })
+    }
   }
 
   disconnectedCallback () {
@@ -112,6 +114,10 @@ export default class Teaser extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.root.querySelector('a-picture').setAttribute('picture-load', '')
+    
+  }
+
+  get aPicture () {
+    return this.root.querySelector('a-picture')
   }
 }
