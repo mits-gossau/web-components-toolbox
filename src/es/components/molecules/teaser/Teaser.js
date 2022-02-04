@@ -26,9 +26,8 @@ export default class Teaser extends Shadow() {
   
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
     this.addEventListener('click', this.clickListener)
-    if (!this.aPicture.hasAttribute('loaded')) {
+    if (this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
       this.hidden = true
       this.addEventListener('picture-load', event => this.hidden = false, { once: true })
     }
@@ -45,15 +44,6 @@ export default class Teaser extends Shadow() {
    */
   shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
-  }
-
-  /**
-   * evaluates if a render is necessary
-   *
-   * @return {boolean}
-   */
-  shouldComponentRenderHTML () {
-    return this.hidden
   }
 
   /**
@@ -106,15 +96,6 @@ export default class Teaser extends Shadow() {
       }
     `
     this.fetchCSS(['../../../css/reset.css', '../../../css/style.css'], undefined, undefined, undefined, undefined, false)
-  }
-
-  /**
-   * renders the a-link html
-   *
-   * @return {void}
-   */
-  renderHTML () {
-    
   }
 
   get aPicture () {
