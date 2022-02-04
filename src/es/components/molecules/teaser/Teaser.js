@@ -73,10 +73,11 @@ export default class Teaser extends Shadow() {
     `
     switch (this.getAttribute('namespace')) {
       case 'tile-':
-        this.fetchCSS([`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`], undefined, undefined, false, undefined, false)
+        this.fetchCSS([`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`], undefined, undefined, false, undefined, false) // apply namespace since it is specific and no fallback
         break
     }
-    this.fetchCSS([`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`], undefined, undefined, true, undefined, false)
+    this.fetchCSS(`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, undefined, false, false, undefined, false) // no namespace nor fallback
+    this.fetchCSS(`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, undefined, undefined, true, undefined, false) // needs to apply to namespace and fallback
   }
 
   get aPicture () {
