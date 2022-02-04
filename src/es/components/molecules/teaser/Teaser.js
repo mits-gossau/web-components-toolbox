@@ -73,10 +73,10 @@ export default class Teaser extends Shadow() {
     `
     switch (this.getAttribute('namespace')) {
       case 'tile-':
-        this.fetchCSS([`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`], undefined, undefined, undefined, undefined, false)
+        this.fetchCSS([`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`], undefined, undefined, false, undefined, false)
         break
     }
-    this.fetchCSS([`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`], undefined, undefined, undefined, undefined, false)
+    this.fetchCSS([`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`], undefined, undefined, true, undefined, false)
   }
 
   get aPicture () {

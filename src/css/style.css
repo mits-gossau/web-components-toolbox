@@ -78,6 +78,7 @@
   margin: var(--p-margin, 0 auto var(--content-spacing));
 }
 :host a {
+  cursor: pointer;
   color: var(--a-color, var(--color-secondary, var(--color, pink)));
   font-weight: var(--a-font-weight, var(--font-weight, normal));
   text-align: var(--a-text-align, unset);
