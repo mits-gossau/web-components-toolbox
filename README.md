@@ -10,4 +10,9 @@ TODO setup:
 - [x] variablesMigros.css move default styles into body if possible
 - [x] body.js css to separate file which can be fetched and setCss through shadow with namespace
 - [x] body.js css to import reset.css
-- [ ] teaser templates by namespace
+- [x] teaser templates by namespace
+- [ ] live-server reload on css file changes
+- [ ] title https://www.betriebsrestaurants-migros.ch/de/referenzen.html
+- [ ] tile https://www.betriebsrestaurants-migros.ch/de/referenzen.html
+- [ ] background https://www.betriebsrestaurants-migros.ch/de/referenzen.html
+- [ ] other teaser versions

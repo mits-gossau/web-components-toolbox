@@ -1,0 +1,4 @@
+:host {
+  --background-color: var(--background-color-custom, pink);
+  --padding: 3rem;
+}

@@ -404,7 +404,12 @@
             </figcaption>
           </figure>
         </m-teaser>
-        <m-teaser>
+        <m-teaser namespace=tile->
+          <style>
+            :host {
+              --tile-background-color-custom: blue;
+            }
+          </style>
           <figure>
             <a-picture picture-load defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
               "src": "https://picsum.photos/900/770",
@@ -429,7 +434,7 @@
             </figcaption>
           </figure>
         </m-teaser>
-        <m-teaser>
+        <m-teaser namespace=tile->
           <figure>
             <a-picture picture-load defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
               "src": "https://picsum.photos/900/770",
