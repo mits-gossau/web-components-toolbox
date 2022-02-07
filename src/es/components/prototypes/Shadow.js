@@ -300,15 +300,15 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       fetchCSSParam => fetch(fetchCSSParam.path).then(response => {
         if (response.status >= 200 && response.status <= 299) return Promise.all([response.text(), Promise.resolve(fetchCSSParam)])
         throw new Error(response.statusText)
-      }).then(([style, fetchCSSParam]) => ({style, ...fetchCSSParam})).catch(error => {
+      }).then(([style, fetchCSSParam]) => ({ style, ...fetchCSSParam })).catch(error => {
         if (hide) this.hidden = false
         error = `${fetchCSSParam.path} ${error}!!!`
         // @ts-ignore
-        return {error: this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`, ...fetchCSSParam}
+        return { error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`), ...fetchCSSParam }
       })
     )).then(fetchCSSParams => {
       if (hide) this.hidden = false
-      return fetchCSSParams.map(({path, cssSelector, namespace, namespaceFallback, styleNode, style, error}) => {
+      return fetchCSSParams.map(({ path, cssSelector, namespace, namespaceFallback, styleNode, style, error }) => {
         if (error) return fetchCSSParams
         // create a new style node if none is supplied
         if (!styleNode) {
@@ -319,7 +319,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
         }
         this.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
-        return {...fetchCSSParams, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode)}
+        return { ...fetchCSSParams, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode) }
       })
     }).catch(error => error)
   }
