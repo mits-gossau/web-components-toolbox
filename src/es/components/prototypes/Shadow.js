@@ -273,6 +273,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {string} [maxWidth = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px']
    * @return {string}
    */
+  // @ts-ignore
   cssMaxWidth (style, maxWidth = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px') {
     return style.replace(/_max-width_/g, maxWidth)
   }
@@ -291,6 +292,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (hide) this.hidden = true
     if (!Array.isArray(paths)) paths = [paths]
     if (!Array.isArray(styleNode)) styleNode = [styleNode]
+    // @ts-ignore
     return Promise.all(paths.map((path, i) => fetch(path).then(response => {
       if (response.status >= 200 && response.status <= 299) return response.text()
       throw new Error(response.statusText)
@@ -304,13 +306,11 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         this.root.appendChild(styleNode[i])
       }
       return [this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode[i]), styleNode[i]]
-    // @ts-ignore
     }).catch(error => {
       if (hide) this.hidden = false
       error = `${path} ${error}!!!`
       // @ts-ignore
       return Promise.reject(this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`)
-    // @ts-ignore
     }))).finally(() => {
       if (hide) this.hidden = false
     })
@@ -382,6 +382,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (innerHTML.length === undefined) innerHTML = [innerHTML]
     // @ts-ignore
     Array.from(innerHTML).forEach(node => {
+      // @ts-ignore
       if (node) this.root.appendChild(node)
     })
   }
