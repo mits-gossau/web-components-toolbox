@@ -308,18 +308,19 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       })
     )).then(fetchCSSParams => {
       if (hide) this.hidden = false
-      return fetchCSSParams.map(({ path, cssSelector, namespace, namespaceFallback, styleNode, style, error }) => {
-        if (error) return fetchCSSParams
+      return fetchCSSParams.map(({ path, cssSelector, namespace, namespaceFallback, styleNode, style, error }, i) => {
+        if (error) return fetchCSSParams[i]
         // create a new style node if none is supplied
         if (!styleNode) {
           /** @type {HTMLStyleElement} */
           styleNode = document.createElement('style')
           styleNode.setAttribute('_css', path)
           styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
+          fetchCSSParams[i].styleNode = styleNode
           if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
         }
         this.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
-        return { ...fetchCSSParams, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode) }
+        return { ...fetchCSSParams[i], style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode) }
       })
     }).catch(error => error)
   }
