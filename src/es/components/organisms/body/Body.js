@@ -111,7 +111,15 @@ export default class Body extends Shadow() {
         }
       }
     `
-    this.fetchCSS(['../../../css/reset.css', '../../../css/style.css'])
+    this.fetchCSS([
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`,
+        namespace: false
+      },
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`
+      }
+    ])
   }
 
   /**

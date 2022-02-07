@@ -1,5 +1,14 @@
 // @ts-check
 /** @typedef {ShadowRootMode | 'false'} mode */
+/** @typedef {{
+ path: string,
+ cssSelector?: string,
+ namespace?: string|false,
+ namespaceFallback?: boolean,
+ styleNode?: HTMLStyleElement,
+ style?: string,
+ error?: string
+}} fetchCSSParams */
 
 /* global HTMLElement */
 /* global document */
@@ -169,11 +178,11 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   }
 
   /**
-   * setCss is an alternative to the this.css setter and returns a Promise with the string once done
+   * setCss is an alternative to the this.css setter and returns a string once done
    *
    * @param {string} style
    * @param {string} [cssSelector = this.cssSelector]
-   * @param {string} [namespace = this.namespace]
+   * @param {string|false} [namespace = this.namespace]
    * @param {boolean} [namespaceFallback = this.namespaceFallback]
    * @param {HTMLStyleElement} [styleNode = this._css]
    * @return {string}
@@ -280,40 +289,39 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
 
   /**
    * renders the o-highlight-list css
-   * @param {string | string[]} paths
-   * @param {string} cssSelector
-   * @param {string} namespace
-   * @param {boolean} namespaceFallback
-   * @param {HTMLStyleElement | HTMLStyleElement[]} styleNode
+   * @param {fetchCSSParams | [fetchCSSParams]} fetchCSSParams
    * @param {boolean} [hide = true]
-   * @return {Promise<[string, HTMLStyleElement][]> | Promise<string[]>}
+   * @return {Promise<fetchCSSParams[]>}
    */
-  fetchCSS (paths, cssSelector, namespace, namespaceFallback, styleNode, hide = true) {
+  fetchCSS (fetchCSSParams, hide = true) {
     if (hide) this.hidden = true
-    if (!Array.isArray(paths)) paths = [paths]
-    if (!Array.isArray(styleNode)) styleNode = [styleNode]
-    // @ts-ignore
-    return Promise.all(paths.map((path, i) => fetch(path).then(response => {
-      if (response.status >= 200 && response.status <= 299) return response.text()
-      throw new Error(response.statusText)
-    }).then(style => {
-      if (!styleNode[i]) {
-        /** @type {HTMLStyleElement} */
-        styleNode[i] = document.createElement('style')
-        styleNode[i].setAttribute('_css', path)
-        styleNode[i].setAttribute('protected', 'true') // this will avoid deletion by html=''
-        if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
-        this.root.appendChild(styleNode[i])
-      }
-      return [this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode[i]), styleNode[i]]
-    }).catch(error => {
+    if (!Array.isArray(fetchCSSParams)) fetchCSSParams = [fetchCSSParams]
+    return Promise.all(fetchCSSParams.map(
+      fetchCSSParam => fetch(fetchCSSParam.path).then(response => {
+        if (response.status >= 200 && response.status <= 299) return Promise.all([response.text(), Promise.resolve(fetchCSSParam)])
+        throw new Error(response.statusText)
+      }).then(([style, fetchCSSParam]) => ({style, ...fetchCSSParam})).catch(error => {
+        if (hide) this.hidden = false
+        error = `${fetchCSSParam.path} ${error}!!!`
+        // @ts-ignore
+        return {error: this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`, ...fetchCSSParam}
+      })
+    )).then(fetchCSSParams => {
       if (hide) this.hidden = false
-      error = `${path} ${error}!!!`
-      // @ts-ignore
-      return Promise.reject(this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`)
-    }))).finally(() => {
-      if (hide) this.hidden = false
-    })
+      return fetchCSSParams.map(({path, cssSelector, namespace, namespaceFallback, styleNode, style, error}) => {
+        if (error) return fetchCSSParams
+        // create a new style node if none is supplied
+        if (!styleNode) {
+          /** @type {HTMLStyleElement} */
+          styleNode = document.createElement('style')
+          styleNode.setAttribute('_css', path)
+          styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
+          if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
+        }
+        this.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
+        return {...fetchCSSParams, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode)}
+      })
+    }).catch(error => error)
   }
 
   /**
@@ -382,7 +390,6 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (innerHTML.length === undefined) innerHTML = [innerHTML]
     // @ts-ignore
     Array.from(innerHTML).forEach(node => {
-      // @ts-ignore
       if (node) this.root.appendChild(node)
     })
   }

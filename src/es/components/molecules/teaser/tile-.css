@@ -1,5 +1,5 @@
 :host {
-  --background-color: var(--background-color-custom, pink);
+  --background-color: var(--background-color-custom, lightblue);
   --padding: 3rem;
   --h3-margin: 0;
 }

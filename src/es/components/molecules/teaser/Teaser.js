@@ -71,13 +71,34 @@ export default class Teaser extends Shadow() {
         
       }
     `
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`,
+        namespace: false
+      },
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`,
+        namespaceFallback: true
+      }
+    ]
     switch (this.getAttribute('namespace')) {
       case 'tile-':
-        this.fetchCSS([`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`], undefined, undefined, false, undefined, false) // apply namespace since it is specific and no fallback
+        this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`,
+          namespaceFallback: false
+        }, ...styles], false) // apply namespace since it is specific and no fallback
+        break
+      case 'tile-pink-':
+        this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`,
+          namespaceFallback: false
+        }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-pink-.css`,
+          namespaceFallback: false
+        }, ...styles], false) // apply namespace since it is specific and no fallback
         break
     }
-    this.fetchCSS(`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, undefined, false, false, undefined, false) // no namespace nor fallback
-    this.fetchCSS(`${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, undefined, undefined, true, undefined, false) // needs to apply to namespace and fallback
   }
 
   get aPicture () {
