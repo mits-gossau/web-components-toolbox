@@ -74,29 +74,32 @@ export default class Teaser extends Shadow() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`,
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`,
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
     ]
     switch (this.getAttribute('namespace')) {
       case 'tile-':
         this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`,
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`, // apply namespace since it is specific and no fallback
           namespaceFallback: false
-        }, ...styles], false) // apply namespace since it is specific and no fallback
+        }, ...styles], false)
         break
       case 'tile-pink-':
         this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`,
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`, // apply namespace since it is specific and no fallback
           namespaceFallback: false
         }, {
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-pink-.css`,
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-pink-.css`, // apply namespace since it is specific and no fallback
           namespaceFallback: false
-        }, ...styles], false) // apply namespace since it is specific and no fallback
+        }, ...styles], false)
+        break
+      default:
+        this.fetchCSS(styles, false)
         break
     }
   }
