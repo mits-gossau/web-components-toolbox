@@ -395,7 +395,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     })
   }
 
-  // display trumps hidden property, which we resolve here
+  // display trumps hidden property, which we resolve here as well as we allow an animation on show
   set hidden (value) {
     if (!this._cssHidden) {
       /** @type {HTMLStyleElement} */
