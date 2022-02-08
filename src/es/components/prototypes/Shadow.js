@@ -298,13 +298,13 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (!Array.isArray(fetchCSSParams)) fetchCSSParams = [fetchCSSParams]
     return Promise.all(fetchCSSParams.map(
       fetchCSSParam => fetch(fetchCSSParam.path).then(response => {
-        if (response.status >= 200 && response.status <= 299) return Promise.all([response.text(), Promise.resolve(fetchCSSParam)])
+        if (response.status >= 200 && response.status <= 299) return Promise.all([Promise.resolve(fetchCSSParam), response.text()])
         throw new Error(response.statusText)
-      }).then(([style, fetchCSSParam]) => ({ style, ...fetchCSSParam })).catch(error => {
+      }).then(([fetchCSSParam, style]) => ({ ...fetchCSSParam, style })).catch(error => {
         if (hide) this.hidden = false
         error = `${fetchCSSParam.path} ${error}!!!`
         // @ts-ignore
-        return { error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`), ...fetchCSSParam }
+        return { ...fetchCSSParam, error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`) }
       })
     )).then(fetchCSSParams => {
       if (hide) this.hidden = false
@@ -316,11 +316,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           styleNode = document.createElement('style')
           styleNode.setAttribute('_css', path)
           styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-          fetchCSSParams[i].styleNode = styleNode
           if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
         }
         this.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
-        return { ...fetchCSSParams[i], style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode) }
+        return { ...fetchCSSParams[i], styleNode, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode) }
       })
     }).catch(error => error)
   }
