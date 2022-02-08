@@ -98,7 +98,7 @@ export default class Teaser extends Shadow() {
       case 'tile-':
         this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
-          namespaceFallback: false
+          namespace: false
         }, ...styles], false)
         break
       default:

@@ -1,6 +1,6 @@
 :host {
-  --background-color: var(--background-color-custom, #FFFFFF);
-  --figcaption-background-color: var(--figcaption-background-color-custom, var(--background-color));
-  --figcaption-padding: 3rem;
-  --h3-margin: 0;
+  --tile-background-color: var(--tile-background-color-custom, var(--m-white));
+  --tile-figcaption-background-color: var(--tile-figcaption-background-color-custom, var(--tile-background-color));
+  --tile-figcaption-padding: 3rem;
+  --tile-h3-margin: 0;
 }
