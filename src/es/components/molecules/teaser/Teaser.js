@@ -61,11 +61,15 @@ export default class Teaser extends Shadow() {
         flex-direction: var(--flex-direction, column);
         align-items: var(--align-items, flex-start);
         justify-content: var(--justify-content, space-between);
-        margin: 0;
+        margin: var(--margin, 0);
+        padding: var(--padding, 0);
+        height: var(--height, 100%);
       }
       :host figure figcaption {
-        background-color: var(--background-color, #c2262f);
-        padding: var(--padding, 1rem);
+        background-color: var(--figcaption-background-color, #c2262f);
+        margin: var(--figcaption-margin, 0);
+        padding: var(--figcaption-padding, 1rem);
+        flex-grow: var(--figcaption-flex-grow, 1);
       }
       @media only screen and (max-width: _max-width_) {
         
