@@ -232,7 +232,7 @@
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto 1.143em));
   }
   :host h6 {
-    font-size: var(--h6-font-size-mobile, var(--h6-font-size, 875rem));
+    font-size: var(--h6-font-size-mobile, var(--h6-font-size, 0.875rem));
     line-height: var(--h6-line-height-mobile, var(--h6-line-height, normal));
     word-break: var(--h6-word-break-mobile, var(--h6-word-break, normal));
     text-transform: var(--h6-text-transform-mobile, var(--h6-text-transform, normal));
@@ -240,10 +240,10 @@
   }
   :host p {
     text-transform: var(--p-text-transform-mobile, var(--p-text-transform, none));
-    margin: var(--p-margin-mobile, var(--p-margin, var(--content-spacing-mobile, var(--content-spacing) auto)));
+    margin: var(--p-margin-mobile, var(--p-margin, var(--content-spacing-mobile, var(--content-spacing)) auto));
   }
   :host a {
-    margin: var(--a-margin-mobile, var(--a-margin, var(--content-spacing-mobile, var(--content-spacing) auto)));
+    margin: var(--a-margin-mobile, var(--a-margin, var(--content-spacing-mobile, var(--content-spacing)) auto));
   }
   .spacer {
     height: var(--spacer-height-mobile, 1.53rem);

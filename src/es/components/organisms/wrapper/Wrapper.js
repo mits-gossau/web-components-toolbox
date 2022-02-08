@@ -58,6 +58,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         align-items: var(--align-items, normal);
         justify-content: var(--justify-content, center);
         width: 100%;
+        gap: var(--gap, normal);
       }
       :host > section > * {
         box-sizing: border-box;
@@ -125,6 +126,12 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
       if (margin === false) {
         [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}margin`))
         if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin'))
+      }
+      // gap (ether use gap or margin, both does not work)
+      if (margin === false && i < childNodes.length - 1) {
+        [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}gap`))
+        if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--gap'))
+        if (margin) margin = margin / 2 // gap has no shorthand and does not need to be duplicated like margin for lef and right 
       }
       return [acc[0] + width, width ? acc[1] + 1 : acc[1], unit ? acc[2] + margin : acc[2], unit || acc[3]]
     }, [0, 0, 0, ''])

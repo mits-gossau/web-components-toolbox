@@ -64,12 +64,19 @@ export default class Teaser extends Shadow() {
         margin: var(--margin, 0);
         padding: var(--padding, 0);
         height: var(--height, 100%);
+        width: var(--width, 100%);
+      }
+      :host figure a-picture {
+        height: var(--a-picture-height, 100%);
+        width: var(--a-picture-width, 100%);
       }
       :host figure figcaption {
         background-color: var(--figcaption-background-color, #c2262f);
         margin: var(--figcaption-margin, 0);
         padding: var(--figcaption-padding, 1rem);
         flex-grow: var(--figcaption-flex-grow, 1);
+        height: var(--figcaption-height, 100%);
+        width: var(--figcaption-width, 100%);
       }
       @media only screen and (max-width: _max-width_) {
         
