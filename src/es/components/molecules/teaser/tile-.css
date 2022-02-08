@@ -1,5 +1,0 @@
-:host {
-  --figcaption-background-color: var(--background-color-custom, lightblue);
-  --figcaption-padding: 3rem;
-  --h3-margin: 0;
-}

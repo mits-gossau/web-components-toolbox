@@ -58,6 +58,7 @@ export default class Teaser extends Shadow() {
       }
       :host figure {
         display: var(--display, flex);
+        background-color: var(--background-color, #c2262f);
         flex-direction: var(--flex-direction, column);
         align-items: var(--align-items, flex-start);
         justify-content: var(--justify-content, space-between);
@@ -96,16 +97,7 @@ export default class Teaser extends Shadow() {
     switch (this.getAttribute('namespace')) {
       case 'tile-':
         this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`, // apply namespace since it is specific and no fallback
-          namespaceFallback: false
-        }, ...styles], false)
-        break
-      case 'tile-pink-':
-        this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-.css`, // apply namespace since it is specific and no fallback
-          namespaceFallback: false
-        }, {
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-pink-.css`, // apply namespace since it is specific and no fallback
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
           namespaceFallback: false
         }, ...styles], false)
         break
