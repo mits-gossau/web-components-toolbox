@@ -1,5 +1,4 @@
 // @ts-check
-import Body from './Body.js'
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global Link */
@@ -265,7 +264,7 @@ export default class Footer extends Shadow() {
       ),
       wrapperPromise.then(
         /** @returns {[string, any]} */
-        module => [this.getAttribute('o-footer-wrapper') || 'o-footer-wrapper', module.Wrapper(Body)]
+        module => [this.getAttribute('o-footer-wrapper') || 'o-footer-wrapper', module.Wrapper()]
       )
     ]).then(elements => {
       elements.forEach(element => {

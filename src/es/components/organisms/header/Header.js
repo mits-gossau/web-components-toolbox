@@ -365,7 +365,7 @@ export default class Header extends Shadow() {
     try {
       menuIconPromise = Promise.resolve({ default: MenuIcon })
     } catch (error) {
-      menuIconPromise = import('../atoms/MenuIcon.js')
+      menuIconPromise = import('../../atoms/menuIcon/MenuIcon.js')
     }
     return (this.childComponentsPromise = Promise.all([
       menuIconPromise.then(

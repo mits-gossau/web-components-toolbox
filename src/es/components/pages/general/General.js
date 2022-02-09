@@ -56,14 +56,13 @@ export default class General extends Shadow() {
                              "body"
                              "footer";
         grid-template-columns: 100%;
-        grid-template-rows: var(--header-height , 85px) 1fr minmax(var(--footer-min-height, 250px), auto);
+        grid-template-rows: minmax(var(--header-height , 87px), auto) 1fr minmax(var(--footer-min-height, 48px), auto);
         min-height: 100vh;
       }
       /* global css set by page */
       :root {
         background-color: var(--root-background-color, transparent);
         font-size: var(--font-size, 10px);
-        font-weight: var(--font-weight, normal);
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
         word-break: var(--word-break, normal);
@@ -100,14 +99,14 @@ export default class General extends Shadow() {
       }
       @media only screen and (max-width: _max-width_) {
         :host {
-          grid-template-rows: var(--header-height-mobile, 50px) 1fr minmax(var(--footer-min-height-mobile, 150px), auto);
+          grid-template-rows: minmax(var(--header-height-mobile, var(--header-height, 87px)), auto) 1fr minmax(var(--footer-min-height-mobile, var(--footer-min-height, 48px)), auto);
         }
         /* global css set by page */
         :root {
-          font-size: var(--font-size-mobile, 10px);
+          font-size: var(--font-size-mobile, var(--font-size, 10px));
           font-weight: var(--font-weight-mobile, var(--font-weight, normal));
           line-height: var(--line-height-mobile, var(--line-height, normal));
-          word-break: var(--word-break-mobile, normal);
+          word-break: var(--word-break-mobile, var(--word-break, normal));
         }
       }
     `
