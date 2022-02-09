@@ -60,7 +60,7 @@ export default class IntersectionScrollEffect extends Intersection() {
         overflow: var(--overflow, hidden);
       }
       ${this.getAttribute('transition') && this.getAttribute('css-property') && !this.getAttribute('css-property').includes('--')
-        ? /* CSS */`:host > *:not(style) {
+        ? /* CSS */`:host > *:not(style):not(script) {
           transition: ${this.getAttribute('css-property')} ${this.getAttribute('transition')};
         }`
         : ''
@@ -97,7 +97,7 @@ export default class IntersectionScrollEffect extends Intersection() {
         if (!isNaN(outputValue)) {
           this.css = '' // resets css
           this.css = /* css */ `
-              :host > *:not(style) {
+              :host > *:not(style):not(script) {
                 ${this.getAttribute('css-property')}: ${this.getAttribute('effect')}(calc(${outputValue} * ${this.checkMedia('mobile') ? this.getAttribute('max-value-mobile') || this.getAttribute('max-value') : this.getAttribute('max-value')}));
               }
             `

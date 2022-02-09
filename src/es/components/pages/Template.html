@@ -7,10 +7,11 @@
   <link href=../../../css/initial.css rel=stylesheet type="text/css">
   <link href=../../../css/reset.css rel=stylesheet type="text/css">
   <link href=../../../css/colors.css rel=stylesheet type="text/css">
-  <link rel=preload as="style" href=../../../css/fonts.css rel=stylesheet type="text/css">
+  <link href=../../../css/fonts.css rel=stylesheet type="text/css">
   <link href=../../../css/variables.css rel=stylesheet type="text/css">
   <script async rel=preload as="script" type="text/javascript" src="../../helpers/Environment.js"></script>
-  <script async rel=preload as="script" type="text/javascript" src="../../../../wc-config.js"></script>
+  <!-- wc-config.js gets loaded once the template fetched its body content -->
+  <!--<script async rel=preload as="script" type="text/javascript" src="../../../../wc-config.js"></script>-->
   <title>Web Components Toolbox 😎</title>
 </head>
 <body>
@@ -376,92 +377,7 @@
       </m-navigation>
     </o-header>
     <o-body>
-      <h1>h1</h1>
-      <h2>h2</h2>
-      <h3>h3</h3>
-      <h4>h4</h4>
-      <h5>h5</h5>
-      <h6>h6</h6>
-      <p>Hello</p>
-      <o-wrapper namespace=wrapper->
-        <m-teaser>
-          <figure>
-            <a-picture picture-load defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "small" 
-            },{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "medium"
-            },{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "large"
-            },{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "extra-large"
-            }]'></a-picture>
-            <figcaption>
-              <h3>Teaser Title</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a>Link</a></p>
-            </figcaption>
-          </figure>
-        </m-teaser>
-        <m-teaser namespace=tile->
-          <figure>
-            <a-picture picture-load defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "small" 
-            },{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "medium"
-            },{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "large"
-            },{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "extra-large"
-            }]'></a-picture>
-            <figcaption>
-              <h3>Teaser Title</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a>Link</a></p>
-            </figcaption>
-          </figure>
-        </m-teaser>
-        <m-teaser namespace=tile-pink->
-          <figure>
-            <a-picture picture-load defaultSource="https://picsum.photos/900/770" alt="randomized image" sources='[{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "small" 
-            },{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "medium"
-            },{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "large"
-            },{
-              "src": "https://picsum.photos/900/770",
-              "type": "image/jpg",
-              "size": "extra-large"
-            }]'></a-picture>
-            <figcaption>
-              <h3>Teaser Title</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. <a>Link</a></p>
-            </figcaption>
-          </figure>
-        </m-teaser>
-      </o-wrapper>
-      <a-arrow></a-arrow>
-      <a-button>Hello Button</a-button>
+      <!-- template content passed by content query gets loaded into here. eg. ./src/es/components/pages/Template.html?content=../molecules/teaser/tile-/tile-.html -->
     </o-body>
     <o-footer namespace="footer-" namespace-fallback>
       <ul>
@@ -560,4 +476,32 @@
     </o-footer>
   </p-general>
 </body>
+<script>
+  const loadWcConfig = () => {
+    const script = document.createElement('script')
+    script.setAttribute('src', '../../../../wc-config.js?triggerImmediately=true')
+    document.head.appendChild(script)
+  }
+  // load content passed by query
+  let content
+  if ((content = new URL(location.href).searchParams.get('content'))) {
+    fetch(content).then(res => res.text()).then(innerHTML => {
+      // fix relative links
+      innerHTML = innerHTML.replace(/\.\//g, content.replace(/(.*\/)(.*)$/, '$1'))
+      document.querySelector('o-body').innerHTML = innerHTML
+      // fetched html scripts don't execute automatically, create new script tags and append them to head
+      Array.from(document.querySelectorAll('.script')).forEach(script => {
+        const newScript = document.createElement('script')
+        newScript.setAttribute('src', script.getAttribute('src'))
+        document.head.appendChild(newScript)
+        script.remove()
+      })
+      // load wc-config.js once all content is loaded
+      loadWcConfig()
+    })
+  } else {
+    // without loading content into the body but activate web components
+    loadWcConfig()
+  }
+</script>
 </html>

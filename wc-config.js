@@ -19,6 +19,7 @@
 //  7) {string, false}[wc-config-load='wc-config-load'] the name under which the application will Promise.all.finally execute the console.info and emit the CustomEvent(Name) at document.body, set to false if Event and Log shall be suppressed
 //  8) {boolean}[debug=true] assumes we are on debug and does post the result on console.info. Set to 'false' to suppress the console.info
 //  9) {boolean}[resolveImmediately=false] if true, customElements.define all elements immediately after import promise resolved. This can lead to the blitz/flashing when web components already connect while others are not. shadow doms then possibly prevent css rules like ":not(:defined) {display: none;}" to be effective
+//  10) {boolean}[triggerImmediately=false] if true, does not wait for window load event but trigger immediately
 (function (self, document, baseUrl, directories) {
   /**
    * Directory sets selector and url by which a reference between tagName/selector and url/file can be done (customElements.define(name aka. tagName, constructor))
@@ -114,7 +115,7 @@
     }
     return Promise.resolve(`${tagName} is already defined @load`)
   }
-  self.addEventListener('load', event => {
+  const loadListener = event => {
     /** @type {ImportEl[]} */
     const imports = []
     // finding all not defined web component nodes in the dom and forwarding their tagNames to the load function
@@ -155,7 +156,12 @@
         ))
       }
     })
-  }, { once: true })
+  }
+  if (src.searchParams.get('triggerImmediately') === 'true') {
+    loadListener()
+  } else {
+    self.addEventListener('load', loadListener, { once: true })
+  }
 })(window || self, document,
   // ↓↓↓ adjustable ↓↓↓
   './src/es/components/', // baseUrl

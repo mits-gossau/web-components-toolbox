@@ -48,7 +48,7 @@ export default class Logo extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    this.textSelector = ':not(img):not(a):not(style)'
+    this.textSelector = ':not(img):not(a):not(style):not(script)'
     this.setAttribute('lang', document.documentElement.getAttribute('lang') || 'de')
 
     let timeout = null

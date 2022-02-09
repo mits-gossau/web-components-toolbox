@@ -80,7 +80,7 @@ export default class Body extends Shadow() {
         margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--content-width, 80%);
       }
-      :host > main > *:not(style) {
+      :host > main > *:not(style):not(script) {
         display: var(--any-display, block);
       }
       :host > main > span, :host > main > div, :host > main > p, :host > main > a, :host > main > article, :host > main > ul, :host > main > ol, :host > main > section, :host > main > h1, :host > main > h2, :host > main > h3, :host > main > h4, :host > main > h5, :host > main > h6 {

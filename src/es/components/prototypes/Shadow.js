@@ -283,7 +283,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @return {string}
    */
   // @ts-ignore
-  cssMaxWidth (style, maxWidth = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px') {
+  cssMaxWidth (style, maxWidth = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '767px') {
     return style.replace(/_max-width_/g, maxWidth)
   }
 
