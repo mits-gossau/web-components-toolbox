@@ -131,7 +131,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
       if (margin === false && i < childNodes.length - 1) {
         [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}gap`))
         if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--gap'))
-        if (margin) margin = margin / 2 // gap has no shorthand and does not need to be duplicated like margin for lef and right 
+        if (margin) margin = margin / 2 // gap has no shorthand and does not need to be duplicated like margin for lef and right
       }
       return [acc[0] + width, width ? acc[1] + 1 : acc[1], unit ? acc[2] + margin : acc[2], unit || acc[3]]
     }, [0, 0, 0, ''])
