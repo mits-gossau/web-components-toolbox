@@ -1,3 +1,4 @@
+// the loader shall make it easy to get all component preview files for previews from within src/...
 const script = document.createElement('script')
 script.setAttribute('src', location.href.replace(/\/(?:.(?!src\/))+$/g, '/wc-config.js?triggerImmediately=true'))
 document.head.appendChild(script)

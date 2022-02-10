@@ -1,6 +1,7 @@
 /* global fetch */
 /* global location */
 
+// the documenter shall only be used at component previews within src/...
 const componentName = new URL(document.currentScript.src).searchParams.get('component')
 if (componentName) {
   document.body.addEventListener('wc-config-load', event => event.detail.imports.forEach(importPromise => importPromise.then(importEl => {

@@ -478,7 +478,7 @@
 <script>
   const loadWcConfig = () => {
     const script = document.createElement('script')
-    script.setAttribute('src', location.origin + '/wc-config.js?triggerImmediately=true')
+    script.setAttribute('src', location.href.replace(/\/(?:.(?!docs\/))+$/g,  '/wc-config.js?triggerImmediately=true'))
     document.head.appendChild(script)
   }
   // load path passed by query
