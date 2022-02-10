@@ -36,7 +36,7 @@
     }} Directory
    */
   /**
-   * @typedef {Promise<[string, CustomElementConstructor] | string>} ImportEl
+   * @typedef {Promise<[string, CustomElementConstructor, {extends: HTMLElement} | undefined, string] | string>} ImportEl
    */
   /** @type {URL} */
   // @ts-ignore
@@ -71,6 +71,7 @@
           // @ts-ignore
           if (typeof element[1] === 'object') element[1] = element[1][Object.keys(element[1])[0]]() // helps to load functions which return the component class eg: src/es/components/src/es/components/organisms/Wrapper.js,
           if (customElements.get(element[0])) return imports.splice(i, 1, Promise.resolve(`${element[0]} is already defined @resolve`))
+          // @ts-ignore
           customElements.define(...element)
         }
       })
@@ -106,8 +107,9 @@
          */
         const fileName = /.[m]{0,1}js/.test(url) ? '' : `${(tagName.replace(directory.selector, '') || tagName).charAt(0).toUpperCase()}${(tagName.replace(directory.selector, '') || tagName).slice(1).replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())}.${fileEnding}`
         if (directory.separateFolder) url += `${`${fileName.slice(0, 1).toLowerCase()}${fileName.slice(1)}`.replace(`.${fileEnding}`, '')}${directory.separateFolderPlural ? 's' : ''}/`
+        const importPath = `${/[./]{1}/.test(url.charAt(0)) ? '' : baseUrl}${url}${fileName}${query}`
         /** @type {ImportEl} */
-        const importEl = import(`${/[./]{1}/.test(url.charAt(0)) ? '' : baseUrl}${url}${fileName}${query}`).then(module => /** @returns {[string, CustomElementConstructor]} */ [tagName, module.default || module])
+        const importEl = import(importPath).then(module => /** @returns {[string, CustomElementConstructor]} */ [tagName, module.default || module, undefined, importPath])
         if (src.searchParams.get('resolveImmediately') === 'true') resolve([importEl])
         return importEl
       }
