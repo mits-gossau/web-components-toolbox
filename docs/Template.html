@@ -480,7 +480,7 @@
   // TODO: possibly move to documentation directory
   const loadWcConfig = () => {
     const script = document.createElement('script')
-    script.setAttribute('src', '../wc-config.js?triggerImmediately=true')
+    script.setAttribute('src', location.origin + '/wc-config.js?triggerImmediately=true')
     document.head.appendChild(script)
   }
   // load path passed by query
