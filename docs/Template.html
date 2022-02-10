@@ -488,20 +488,14 @@
   if ((path = new URL(location.href).searchParams.get('content'))) {
     fetch(path).then(res => res.text()).then(innerHTML => {
       // fix relative links
-      console.log(path, path.replace(/(.*\/)(.*)$/, '$1'));
-      // ../../../../../../docs/es/documenter.js
-      innerHTML = innerHTML.replace(/\.\/([^\/])/g, `${path.replace(/(.*\/)(.*)$/, '$1')} $1`)
-      innerHTML = innerHTML.replace('../../../../../../', './')
-
+      innerHTML = innerHTML.replace(/([^\.])\.\/([^\.])/g, `$1${path.replace(/(.*\/)(.*)$/, '$1')}$2`)
       document.querySelector('o-body').innerHTML = innerHTML
       // fetched html scripts don't execute automatically, create new script tags and append them to head
-      Array.from(document.querySelectorAll('.script')).forEach(script => {
-        if(!script.getAttribute('src').includes('loader')){
-          const newScript = document.createElement('script')
-          newScript.setAttribute('src', script.getAttribute('src'))
-          document.head.appendChild(newScript)
-          script.remove()
-        }
+      Array.from(document.querySelectorAll('.template-script')).forEach(script => {
+        const newScript = document.createElement('script')
+        newScript.setAttribute('src', script.getAttribute('src'))
+        document.head.appendChild(newScript)
+        script.remove()
       })
       // load wc-config.js once all path is loaded
       loadWcConfig()
