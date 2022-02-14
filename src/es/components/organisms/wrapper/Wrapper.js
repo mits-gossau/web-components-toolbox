@@ -19,8 +19,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends ChosenHTMLElement {
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldComponentRenderCSS()) this.renderCSS().then(() => {
+      if (this.shouldComponentRenderHTML()) this.renderHTML()
+    })
   }
 
   /**
@@ -44,7 +45,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
   /**
    * renders the o-teaser-wrapper css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     // general flex styles
@@ -89,6 +90,29 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         }
       }
     `
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
+    switch (this.getAttribute('namespace')) {
+      case 'wrapper-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./wrapper-/wrapper-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles]).then(() => this.calcColumnWidth())
+      default:
+        return this.fetchCSS(styles).then(() => this.calcColumnWidth())
+    }
+  }
+
+  calcColumnWidth () {
     // set width attributes as css vars
     const childNodes = Array.from(this.root.children).filter(node => node.nodeName !== 'STYLE')
     for (let i = 0; i < childNodes.length; i++) {

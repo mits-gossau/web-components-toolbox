@@ -13,13 +13,25 @@
     <li>note: on windows systems you may need to run: "git config --system core.longpaths true"</li>
   </ol>
   <br>
+  <script>
+    var headerFooterQuery = 'logo=./src/es/components/atoms/logo/Logo.html&nav=./src/es/components/molecules/navigation/Navigation.html&footer=./src/es/components/organisms/footer/Footer.html'
+  </script>
+  <h3>Wrapper</h3>
+  <div id=wrapper></div>
+  <script>
+    document.querySelector('#wrapper').innerHTML = /* HTML */`
+      <ul>
+        <li><a href="./docs/Template.html?${headerFooterQuery}&content=./src/es/components/molecules/teaser/tile-/tile-.html">"wrapper-" Page</a> / <a href=./src/es/components/molecules/teaser/tile-/tile-.html>"wrapper-" Plain</a></li>
+      </ul>
+    `
+  </script>
+  <br>
   <h3>Teaser</h3>
   <div id=teaser></div>
   <script>
-    const teaserQuery = 'logo=./src/es/components/atoms/logo/Logo.html&nav=./src/es/components/molecules/navigation/Navigation.html&footer=./src/es/components/organisms/footer/Footer.html'
     document.querySelector('#teaser').innerHTML = /* HTML */`
       <ul>
-        <li><a href="./docs/Template.html?${teaserQuery}&content=./src/es/components/molecules/teaser/tile-/tile-.html">"tile-" Page</a> / <a href=./src/es/components/molecules/teaser/tile-/tile-.html>"tile-" Document</a></li>
+        <li><a href="./docs/Template.html?${headerFooterQuery}&content=./src/es/components/molecules/teaser/tile-/tile-.html">"tile-" Page</a> / <a href=./src/es/components/molecules/teaser/tile-/tile-.html>"tile-" Plain</a></li>
       </ul>
     `
   </script>
