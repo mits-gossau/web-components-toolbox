@@ -19,9 +19,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends ChosenHTMLElement {
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS().then(() => {
-      if (this.shouldComponentRenderHTML()) this.renderHTML()
-    })
+    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
   /**
@@ -112,10 +111,16 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
     }
   }
 
-  calcColumnWidth () {
+  calcColumnWidth (children = this.section.children) {
     // set width attributes as css vars
-    const childNodes = Array.from(this.root.children).filter(node => node.nodeName !== 'STYLE')
-    for (let i = 0; i < childNodes.length; i++) {
+    let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE')
+    const childNodesLength = Number(this.getAttribute('simulate-children')) || childNodes.length
+    if (childNodes.length < childNodesLength) {
+      childNodes = childNodes.concat(Array(childNodesLength - childNodes.length).fill(childNodes[0]))
+    } else if (childNodes.length > childNodesLength) {
+      childNodes = childNodes.splice(0, childNodesLength)
+    }
+    for (let i = 0; i < childNodesLength; i++) {
       if (this.hasAttribute(`any-${i + 1}-width`) || (childNodes[i] && childNodes[i].hasAttribute('width'))) {
         this.css = /* css */ `
           :host {
@@ -141,7 +146,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin-first-child'))
       }
       // margin-last-child
-      if (i === childNodes.length - 1) {
+      if (i === childNodesLength - 1) {
         [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}margin-last-child`))
         // margin-last-child without namespace
         if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin-last-child'))
@@ -152,20 +157,20 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin'))
       }
       // gap (ether use gap or margin, both does not work)
-      if (margin === false && i < childNodes.length - 1) {
+      if (margin === false && i < childNodesLength - 1) {
         [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}gap`))
         if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--gap'))
         if (margin) margin = margin / 2 // gap has no shorthand and does not need to be duplicated like margin for lef and right
       }
       return [acc[0] + width, width ? acc[1] + 1 : acc[1], unit ? acc[2] + margin : acc[2], unit || acc[3]]
     }, [0, 0, 0, ''])
-    let freeWidth = ((100 - bookedWidth) / (childNodes.length - bookedCount))
+    let freeWidth = ((100 - bookedWidth) / (childNodesLength - bookedCount))
     // @ts-ignore
     if (freeWidth === Infinity) freeWidth = 0
-    for (let i = 1; i < childNodes.length + 1; i++) {
+    for (let i = 1; i < childNodesLength + 1; i++) {
       this.css = /* css */`
         :host > section > *:nth-child(${i}) {
-          width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodes.length}${unit || 'px'});
+          width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodesLength}${unit || 'px'});
         }
       `
     }

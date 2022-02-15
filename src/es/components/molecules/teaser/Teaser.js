@@ -25,11 +25,13 @@ export default class Teaser extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
     this.addEventListener('click', this.clickListener)
-    if (this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+    if (showPromises.length) {
       this.hidden = true
-      this.addEventListener('picture-load', event => (this.hidden = false), { once: true })
+      Promise.all(showPromises).then(() => (this.hidden = false))
     }
   }
 
@@ -49,7 +51,7 @@ export default class Teaser extends Shadow() {
   /**
    * renders the m-Teaser css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -66,21 +68,41 @@ export default class Teaser extends Shadow() {
         padding: var(--padding, 0);
         height: var(--height, 100%);
         width: var(--width, 100%);
+        overflow: var(--overflow, visible);
+        position: var(--position, static);
       }
       :host figure a-picture {
         height: var(--a-picture-height, 100%);
         width: var(--a-picture-width, 100%);
+        transition: var(--a-picture-transition, none);
+        transform: var(--a-picture-transform, none);
+      }
+      :host(:hover) figure a-picture {
+        transform: var(--a-picture-transform-hover, none);
       }
       :host figure figcaption {
         background-color: var(--figcaption-background-color, #c2262f);
         margin: var(--figcaption-margin, 0);
         padding: var(--figcaption-padding, 1rem);
+        font-size: var(--figcaption-font-size, 1rem);
         flex-grow: var(--figcaption-flex-grow, 1);
         height: var(--figcaption-height, 100%);
         width: var(--figcaption-width, 100%);
+        transition: var(--figcaption-transition, none);
+        transform: var(--figcaption-transform, none);
       }
-      @media only screen and (max-width: _max-width_) {
-        
+      :host(:hover) figure figcaption {
+        transform: var(--figcaption-transform-hover, none);
+      }
+      :host figure figcaption a-link {
+        position: var(--a-link-position, static);
+        top: var(--a-link-top, auto);
+        bottom: var(--a-link-bottom, auto);
+        transition: var(--a-link-transition, none);
+        transform: var(--a-link-transform, none);
+      }
+      :host(:hover) figure figcaption a-link {
+        transform: var(--a-link-transform-hover, none);
       }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
@@ -96,14 +118,12 @@ export default class Teaser extends Shadow() {
     ]
     switch (this.getAttribute('namespace')) {
       case 'tile-':
-        this.fetchCSS([{
+        return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
-        break
       default:
-        this.fetchCSS(styles, false)
-        break
+        return this.fetchCSS(styles, false)
     }
   }
 

@@ -15,7 +15,7 @@
   --color-secondary: var(--m-orange-600);
   --color: var(--m-black);
   --content-spacing-mobile: 0.75rem;
-  --content-spacing: 1rem;
+  --content-spacing: 1.5rem;
   --font-family-secondary: micro, Helvetica, Arial, sans-serif;
   --font-family: text, Helvetica, Arial, sans-serif;
   --font-size-mobile: min(14px, 5vw);
