@@ -11,7 +11,7 @@ TODO:
 - [x] body.js css to separate file which can be fetched and setCss through shadow with namespace
 - [x] body.js css to import reset.css
 - [x] teaser templates by namespace
-- [ ] tile https://www.betriebsrestaurants-migros.ch/de/referenzen.html
+- [x] tile https://www.betriebsrestaurants-migros.ch/de/referenzen.html
 - [ ] Template.html api call to fetch page content for previews
 - [ ] https://playwright.dev/ visual regression tests
 - [ ] documenter.js to document the web components
