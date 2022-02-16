@@ -1,34 +1,39 @@
 <o-wrapper namespace=wrapper->
   <m-teaser namespace=overlay- href="https://www.migrosbank.ch">
     <figure>
-      <a-picture picture-load defaultSource="./img/angebote-und-services_buehne2_1920x1080px.jpg" alt="randomized image"></a-picture>
+      <a-picture picture-load defaultSource="./img/unsere_werte_2.jpg" alt="randomized image"></a-picture>
       <figcaption>
         <h2 class=bg-color>Unsere Werte</h2>
-        <h2 class=bg-color><a-arrow direction=right></a-arrow></h2>
+        <h2 class=bg-color><a-arrow move direction=right></a-arrow></h2>
       </figcaption>
     </figure>
   </m-teaser>
   <m-teaser namespace=overlay- href="https://www.stadlerrail.com/de/ueber-uns/standorte/stadler-bussnang-ag/">
     <figure>
-      <a-picture picture-load defaultSource="./img/unsere_werte_2.jpg" alt="randomized image"></a-picture>
+      <a-picture picture-load defaultSource="./img/angebote-und-services_buehne2_1920x1080px.jpg" alt="randomized image"></a-picture>
       <figcaption>
         <h2 class=bg-color>Unsere Angebote & Services</h2>
-        <h2 class=bg-color><a-arrow direction=right></a-arrow></h2>
+        <h2 class=bg-color><a-arrow move direction=right></a-arrow></h2>
       </figcaption>
     </figure>
   </m-teaser>
 </o-wrapper>
 <o-wrapper namespace=wrapper- simulate-children=2>
+  <style>
+    :host {
+      --overlay-bg-color-hover-custom: #003a56;
+      --overlay-bg-color-custom: #26b4e9;
+    }
+  </style>
   <m-teaser namespace=overlay- href="http://www.jowa.ch">
     <figure>
       <a-picture picture-load defaultSource="./img/MV_Brunchschiff_Text_Banner_700x540px_sRGB_high.jpg" alt="randomized image"></a-picture>
       <figcaption>
-        <h2 class=bg-color><a-arrow direction=right></a-arrow></h2>
+        <h2 class=bg-color><a-arrow move direction=right></a-arrow></h2>
       </figcaption>
     </figure>
   </m-teaser>
 </o-wrapper>
-<a href="hello.pdf">Hello</a>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./overlay-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>

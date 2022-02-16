@@ -1,6 +1,7 @@
 :host {
   --color-hover: var(--color);
   --color: var(--overlay-h2-color);
+  --font-size: 1.3em;
   --overlay-a-picture-height: var(--overlay-figcaption-height);
   --overlay-a-picture-transform-hover: scale(1.05,1.05);
   --overlay-a-picture-transition: transform .5s ease-out;
@@ -12,10 +13,10 @@
   --overlay-figcaption-background-color: var(--overlay-background-color);
   --overlay-figcaption-font-size: 2rem;
   --overlay-figcaption-height: auto;
-  --overlay-figcaption-padding: 0 0 0.625rem;
+  --overlay-figcaption-padding: 0 0 1rem;
   --overlay-h2-color: var(--overlay-h2-color-custom, var(--background-color, var(--m-white)));
   --overlay-h2-line-height: 1.3em;
-  --overlay-h2-margin: 0.1em 0;
+  --overlay-h2-margin: 0.09em 0;
   --overlay-h2-padding: 0 0.5em;
   --overlay-h2-width: fit-content;
   --overlay-overflow: hidden;

@@ -22,21 +22,36 @@ export default class Teaser extends Shadow() {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
+
+    this.mouseoverListener = event => {
+      if (this.aArrow) this.aArrow.setAttribute('hover', 'true')
+    }
+    this.mouseoutListener = event => {
+      if (this.aArrow) this.aArrow.setAttribute('hover', '')
+    }
   }
 
   connectedCallback () {
     this.addEventListener('click', this.clickListener)
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+    if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => (this.hidden = false))
+    }
+    if (this.getAttribute('namespace') === 'overlay-') {
+      this.addEventListener('mouseover', this.mouseoverListener)
+      this.addEventListener('mouseout', this.mouseoutListener)
     }
   }
 
   disconnectedCallback () {
     this.removeEventListener('click', this.clickListener)
+    if (this.getAttribute('namespace') === 'overlay-') {
+      this.removeEventListener('mouseover', this.mouseoverListener)
+      this.removeEventListener('mouseout', this.mouseoutListener)
+    }
   }
 
   /**
@@ -151,5 +166,9 @@ export default class Teaser extends Shadow() {
 
   get aPicture () {
     return this.root.querySelector('a-picture')
+  }
+
+  get aArrow () {
+    return this.root.querySelector('a-arrow')
   }
 }
