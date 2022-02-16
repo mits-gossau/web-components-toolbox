@@ -1,0 +1,19 @@
+:host {
+  --overlay-a-link-bottom: -1.625em;
+  --overlay-a-link-position: absolute;
+  --overlay-a-link-transform-hover: translateY(0);
+  --overlay-a-link-transform: translateY(2.5em);
+  --overlay-a-link-transition: transform .35s ease .1s;
+  --overlay-background-color: var(--overlay-background-color-custom, var(--m-white));
+  --overlay-figcaption-background-color: var(--overlay-figcaption-background-color-custom, var(--overlay-background-color));
+  --overlay-figcaption-font-size: 0.875rem;
+  --overlay-figcaption-padding: 0.625rem 0.625rem 0;
+  --overlay-figcaption-transform-hover: translateY(-2.5em);
+  --overlay-figcaption-transition: .45s cubic-bezier(.17,.67,.28,1) 50ms;
+  --overlay-h5-color: var(--color-secondary);
+  --overlay-h5-margin: 0 0 0.5rem;
+  --overlay-overflow: hidden;
+  --overlay-p-line-height: 1.14em;
+  --overlay-p-margin: 0 0 0.625em;
+  --overlay-position: relative;
+}

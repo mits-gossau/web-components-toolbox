@@ -84,6 +84,9 @@ export default class Link extends Shadow() {
           }
         `
         : ''}
+      :host {
+        cursor: pointer;
+      }
       :host > a, :host > ${this.hitAreaTagName} {
         box-sizing: border-box;
         color: var(--color, red);
@@ -121,6 +124,10 @@ export default class Link extends Shadow() {
         display: var(--span-display, inline);
       }
       ${this.getAttribute('namespace') === 'underline-' ? /* CSS */`
+        :host {
+          position: relative;
+          width: var(--width, fit-content) !important;
+        }
         :host > a::after, :host > ${this.hitAreaTagName}::after {
           position: absolute;
           top: 100%;
