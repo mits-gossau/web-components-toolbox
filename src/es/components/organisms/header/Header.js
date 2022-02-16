@@ -42,6 +42,7 @@ export default class Header extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.hidden = true
     this.scrollListener = event => {
       const lastScroll = self.scrollY
       setTimeout(() => {
@@ -115,7 +116,7 @@ export default class Header extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.root.querySelector('header')
+    return !this.header || this.hidden
   }
 
   /**
@@ -348,6 +349,7 @@ export default class Header extends Shadow() {
           })
         })
         this.header.appendChild(MenuIcon)
+        this.hidden = false
       })
     }
     if (this.hasAttribute('sticky')) this.classList.add('top')
