@@ -1,5 +1,6 @@
 :host h1 {
   color: var(--h1-color, var(--color, black));
+  display: var(--h1-display, block);
   font-size: var(--h1-font-size, 1.75rem);
   font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h1-font-weight, 800);
@@ -9,9 +10,11 @@
   text-transform: var(--h1-text-transform, none);
   margin: var(--h1-margin, 0 auto 1.143em);
   padding: var(--h1-padding, unset);
+  width: var(--h1-width, auto);
 }
 :host h2 {
   color: var(--h2-color, var(--color, black));
+  display: var(--h2-display, block);
   font-size: var(--h2-font-size, 1.5rem);
   font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h2-font-weight, 700);
@@ -21,9 +24,11 @@
   text-transform: var(--h2-text-transform, none);
   margin: var(--h2-margin, 0 auto 1.143em);
   padding: var(--h2-padding, unset);
+  width: var(--h2-width, auto);
 }
 :host h3 {
   color: var(--h3-color, var(--color, black));
+  display: var(--h3-display, block);
   font-size: var(--h3-font-size, 1.25rem);
   font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h3-font-weight, 700);
@@ -33,9 +38,11 @@
   text-transform: var(--h3-text-transform, none);
   margin: var(--h3-margin, 0 auto 1.143em);
   padding: var(--h3-padding, unset);
+  width: var(--h3-width, auto);
 }
 :host h4 {
   color: var(--h4-color, var(--color, black));
+  display: var(--h4-display, block);
   font-size: var(--h4-font-size, 1.125rem);
   font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h4-font-weight, 700);
@@ -45,9 +52,11 @@
   text-transform: var(--h4-text-transform, none);
   margin: var(--h4-margin, 0 auto 1.143em);
   padding: var(--h4-padding, unset);
+  width: var(--h4-width, auto);
 }
 :host h5 {
   color: var(--h5-color, var(--color, black));
+  display: var(--h5-display, block);
   font-size: var(--h5-font-size, 1rem);
   font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h5-font-weight, var(--font-weight, normal));
@@ -57,9 +66,11 @@
   text-transform: var(--h5-text-transform, none);
   margin: var(--h5-margin, 0 auto 1.143em);
   padding: var(--h5-padding, unset);
+  width: var(--h5-width, auto);
 }
 :host h6 {
   color: var(--h6-color, var(--color, black));
+  display: var(--h6-display, block);
   font-size: var(--h6-font-size, 0.875rem);
   font-family: var(--h6-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h6-font-weight, var(--font-weight, normal));
@@ -69,6 +80,7 @@
   text-transform: var(--h6-text-transform, none);
   margin: var(--h6-margin, 0 auto 1.143em);
   padding: var(--h6-padding, unset);
+  width: var(--h6-width, auto);
 }
 :host p {
   font-family: var(--p-font-family, var(--font-family));
@@ -168,13 +180,13 @@
 }
 :host a[href^="/"]:not(.no-icon):before, :host a[href^="http"]:not(.no-icon):before, :host a[href$=".pdf"]:not(.no-icon):before, :host a[href$=".xls"]:not(.no-icon):before {
   background-color: var(--a-color);
-  border-radius: 0.25rem;
+  border-radius: 0.25em;
   display: inline-block;
-  padding: 0.25rem;
-  margin: 0.25rem 0.5rem 0.25rem 0;
-  height: 1.25rem;
-  vertical-align: middle;
-  width: 1.25rem;
+  padding: 0.25em;
+  margin: 0.25em 0.5em 0.25em 0;
+  height: 2em;
+  vertical-align: sub;
+  width: 2em;
 }
 :host a[href^="/"]:not(.no-icon):hover:before, :host a[href^="http"]:not(.no-icon):hover:before, :host a[href$=".pdf"]:not(.no-icon):hover:before, :host a[href$=".xls"]:not(.no-icon):hover:before {
   background-color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
@@ -198,6 +210,12 @@
 :host wc-a-button ~ wc-a-button {
   padding-top: var(--content-spacing);
 }
+:host *.bg-color {
+  background-color: var(--bg-color, var(--background-color, red));
+}
+:host(:hover) *.bg-color, :host *.bg-color:hover {
+  background-color: var(--bg-color-hover, var(--bg-color, var(--background-color, green)));
+}
 @media only screen and (max-width: _max-width_) {
   :host h1 {
     font-size: var(--h1-font-size-mobile, var(--h1-font-size, 1.75rem));
@@ -205,6 +223,7 @@
     word-break: var(--h1-word-break-mobile, var(--h1-word-break, normal));
     text-transform: var(--h1-text-transform-mobile, var(--h1-text-transform, none));
     margin: var(--h1-margin-mobile, var(--h1-margin, 0 auto 1.143em));
+    width: var(--h1-width-mobile, var(--h1-width, auto));
   }
   :host h2 {
     font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5rem));
@@ -212,6 +231,7 @@
     word-break: var(--h2-word-break-mobile, var(--h2-word-break, normal));
     text-transform: var(--h2-text-transform-mobile, var(--h2-text-transform, none));
     margin: var(--h2-margin-mobile, var(--h2-margin, 0 auto 1.143em));
+    width: var(--h2-width-mobile, var(--h2-width, auto));
   }
   :host h3 {
     font-size: var(--h3-font-size-mobile, var(--h3-font-size, 1.25rem));
@@ -219,6 +239,7 @@
     word-break: var(--h3-word-break-mobile, var(--h3-word-break, normal));
     text-transform: var(--h3-text-transform-mobile, var(--h3-text-transform, none));
     margin: var(--h3-margin-mobile, var(--h3-margin, 0 auto 1.143em));
+    width: var(--h3-width-mobile, var(--h3-width, auto));
   }
   :host h4 {
     font-size: var(--h4-font-size-mobile, var(--h4-font-size, 1.125rem));
@@ -226,6 +247,7 @@
     word-break: var(--h4-word-break-mobile, var(--h4-word-break, normal));
     text-transform: var(--h4-text-transform-mobile, var(--h4-text-transform, none));
     margin: var(--h4-margin-mobile, var(--h4-margin, 0 auto 1.143em));
+    width: var(--h4-width-mobile, var(--h4-width, auto));
   }
   :host h5 {
     font-size: var(--h5-font-size-mobile, var(--h5-font-size, 1rem));
@@ -233,6 +255,7 @@
     word-break: var(--h5-word-break-mobile, var(--h5-word-break, normal));
     text-transform: var(--h5-text-transform-mobile, var(--h5-text-transform, none));
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto 1.143em));
+    width: var(--h5-width-mobile, var(--h5-width, auto));
   }
   :host h6 {
     font-size: var(--h6-font-size-mobile, var(--h6-font-size, 0.875rem));
@@ -240,6 +263,7 @@
     word-break: var(--h6-word-break-mobile, var(--h6-word-break, normal));
     text-transform: var(--h6-text-transform-mobile, var(--h6-text-transform, none));
     margin: var(--h6-margin-mobile, var(--h6-margin, 0 auto 1.143em));
+    width: var(--h6-width-mobile, var(--h6-width, auto));
   }
   :host p {
     font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));

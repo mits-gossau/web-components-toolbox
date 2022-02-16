@@ -1,2 +1,3 @@
 // For Demo Purposes Only
-document.body.setAttribute('style', '--background-color: #eee; background-color: var(--background-color);')
+document.body.setAttribute('style', 'background-color: #eee;')
+document.querySelector('o-body').setAttribute('style', 'background-color: #eee;')

@@ -123,29 +123,32 @@ export default class Link extends Shadow() {
       :host > span {
         display: var(--span-display, inline);
       }
-      ${this.getAttribute('namespace') === 'underline-' ? /* CSS */`
-        :host {
-          position: relative;
-          width: var(--width, fit-content) !important;
-        }
-        :host > a::after, :host > ${this.hitAreaTagName}::after {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          display: inline-block;
-          width: 100%;
-          height: var(--after-height, 0.25em);
-          background-color: var(--after-background-color, var(--color-hover, green));
-          content: '';
-          opacity: 0;
-          transform: translateY(1em);
-          transition: opacity .3s ease 0s,transform .3s ease 0s;
-        }
-        :host > a:hover::after, :host > ${this.hitAreaTagName}:hover::after {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      ` : ''}
+      ${this.getAttribute('namespace') === 'underline-'
+        ? /* CSS */`
+          :host {
+            display: block;
+            position: relative !important;
+            width: var(--width, fit-content) !important;
+          }
+          :host > a::after, :host > ${this.hitAreaTagName}::after {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            display: inline-block;
+            width: 100%;
+            height: var(--after-height, 0.25em);
+            background-color: var(--after-background-color, var(--color-hover, green));
+            content: '';
+            opacity: 0;
+            transform: translateY(1em);
+            transition: opacity .3s ease 0s,transform .3s ease 0s;
+          }
+          :host > a:hover::after, :host > ${this.hitAreaTagName}:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        `
+        : ''}
       @media only screen and (max-width: _max-width_) {
         :host > a, :host > ${this.hitAreaTagName} {
           color:var(--color-mobile, var(--color, inherit));

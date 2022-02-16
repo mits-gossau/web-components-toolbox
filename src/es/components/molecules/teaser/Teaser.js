@@ -71,6 +71,22 @@ export default class Teaser extends Shadow() {
         overflow: var(--overflow, visible);
         position: var(--position, static);
       }
+      ${this.getAttribute('namespace') === 'overlay-'
+        ? /* css */`
+          :host figure {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+          }
+          :host figure a-picture, :host figure figcaption {
+            grid-column: 1;
+            grid-row: 1;
+          }
+          :host figure figcaption {
+            z-index: 1;
+          }
+        `
+        : ''}
       :host figure a-picture {
         height: var(--a-picture-height, 100%);
         width: var(--a-picture-width, 100%);
@@ -81,6 +97,7 @@ export default class Teaser extends Shadow() {
         transform: var(--a-picture-transform-hover, none);
       }
       :host figure figcaption {
+        align-self: var(--figcaption-align-self, auto);
         background-color: var(--figcaption-background-color, #c2262f);
         margin: var(--figcaption-margin, 0);
         padding: var(--figcaption-padding, 1rem);
