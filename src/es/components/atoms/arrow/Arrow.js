@@ -34,7 +34,7 @@ export default class Arrow extends Shadow() {
       this.style.textContent = ''
       this.style.textContent = /* CSS */`
         :host > svg{
-          animation: move ${duration}ms ease-out ${newValue ? '' :'reverse'};
+          animation: move ${duration}ms ease-out ${newValue ? '' : 'reverse'};
         }
       `
       clearTimeout(this.timeout)
