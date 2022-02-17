@@ -35,11 +35,11 @@
   --header-default-justify-content-mobile: space-between;
   --header-default-justify-content: flex-start;
   --header-default-left-open-mobile: 0;
-  --header-default-logistik-m-navigation-background-color-mobile: var(--background-color);
-  --header-default-logistik-m-navigation-height-mobile: calc(100vh - var(--header-default-logistik-m-navigation-top-mobile));
-  --header-default-logistik-m-navigation-height-open-mobile: var(--header-default-logistik-m-navigation-height-mobile);
-  --header-default-logistik-m-navigation-top-mobile: var(--header-default-height-mobile);
-  --header-default-logistik-m-navigation-transition: none;
+  --header-default-m-navigation-background-color-mobile: var(--background-color);
+  --header-default-m-navigation-height-mobile: calc(100vh - var(--header-default-m-navigation-top-mobile));
+  --header-default-m-navigation-height-open-mobile: var(--header-default-m-navigation-height-mobile);
+  --header-default-m-navigation-top-mobile: var(--header-default-height-mobile);
+  --header-default-m-navigation-transition: none;
   --header-default-logo-align-items: baseline;
   --header-default-logo-flex-grow: 0;
   --header-default-logo-justify-content: flex-start;

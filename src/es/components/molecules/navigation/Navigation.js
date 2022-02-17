@@ -373,7 +373,7 @@ export default class Navigation extends Shadow() {
           display: flex;
           flex-direction: column;
           justify-content: flex-start; /* must be up, otherwise the iphone hides it behind the footer bar */
-          min-height: calc(100vh - var(--header-logistik-m-navigation-top-mobile));
+          min-height: calc(100vh - var(--header-m-navigation-top-mobile));
         }
         :host > nav > .language-switcher {
           display: flex;
