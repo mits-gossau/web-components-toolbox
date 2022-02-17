@@ -23,6 +23,6 @@
   --font-weight: 400;
   --line-height: 1.5em;
   --root-background-color: var(--background-color);
-  --overlay-bg-color-custom: #a40511;
-  --overlay-bg-color-hover-custom: #6c000a;
+  --teaser-overlay-bg-color-custom: #a40511;
+  --teaser-overlay-bg-color-hover-custom: #6c000a;
 }

@@ -40,7 +40,7 @@ export default class Teaser extends Shadow() {
       this.hidden = true
       Promise.all(showPromises).then(() => (this.hidden = false))
     }
-    if (this.getAttribute('namespace') === 'overlay-') {
+    if (this.getAttribute('namespace') === 'teaser-overlay-') {
       this.addEventListener('mouseover', this.mouseoverListener)
       this.addEventListener('mouseout', this.mouseoutListener)
     }
@@ -48,7 +48,7 @@ export default class Teaser extends Shadow() {
 
   disconnectedCallback () {
     this.removeEventListener('click', this.clickListener)
-    if (this.getAttribute('namespace') === 'overlay-') {
+    if (this.getAttribute('namespace') === 'teaser-overlay-') {
       this.removeEventListener('mouseover', this.mouseoverListener)
       this.removeEventListener('mouseout', this.mouseoutListener)
     }
@@ -86,7 +86,7 @@ export default class Teaser extends Shadow() {
         overflow: var(--overflow, visible);
         position: var(--position, static);
       }
-      ${this.getAttribute('namespace') === 'overlay-'
+      ${this.getAttribute('namespace') === 'teaser-overlay-'
         ? /* css */`
           :host figure {
             display: grid;
@@ -149,12 +149,12 @@ export default class Teaser extends Shadow() {
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'tile-':
+      case 'teaser-tile-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
-      case 'overlay-':
+      case 'teaser-overlay-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overlay-/overlay-.css`, // apply namespace since it is specific and no fallback
           namespace: false

@@ -1,19 +1,19 @@
 :host {
-  --tile-a-link-bottom: -1.625em;
-  --tile-a-link-position: absolute;
-  --tile-a-link-transform-hover: translateY(0);
-  --tile-a-link-transform: translateY(2.5em);
-  --tile-a-link-transition: transform .35s ease .1s;
-  --tile-background-color: var(--tile-background-color-custom, var(--background-color, var(--m-white)));
-  --tile-figcaption-background-color: var(--tile-figcaption-background-color-custom, var(--tile-background-color));
-  --tile-figcaption-font-size: 0.875rem;
-  --tile-figcaption-padding: 0.625rem 0.625rem 0;
-  --tile-figcaption-transform-hover: translateY(-2.5em);
-  --tile-figcaption-transition: transform .45s cubic-bezier(.17,.67,.28,1) 50ms;
-  --tile-h5-color: var(--color-secondary);
-  --tile-h5-margin: 0 0 0.5rem;
-  --tile-overflow: hidden;
-  --tile-p-line-height: 1.14em;
-  --tile-p-margin: 0 0 0.625em;
-  --tile-position: relative;
+  --teaser-tile-a-link-bottom: -1.625em;
+  --teaser-tile-a-link-position: absolute;
+  --teaser-tile-a-link-transform-hover: translateY(0);
+  --teaser-tile-a-link-transform: translateY(2.5em);
+  --teaser-tile-a-link-transition: transform .35s ease .1s;
+  --teaser-tile-background-color: var(--teaser-tile-background-color-custom, var(--background-color, var(--m-white)));
+  --teaser-tile-figcaption-background-color: var(--teaser-tile-figcaption-background-color-custom, var(--teaser-tile-background-color));
+  --teaser-tile-figcaption-font-size: 0.875rem;
+  --teaser-tile-figcaption-padding: 0.625rem 0.625rem 0;
+  --teaser-tile-figcaption-transform-hover: translateY(-2.5em);
+  --teaser-tile-figcaption-transition: transform .45s cubic-bezier(.17,.67,.28,1) 50ms;
+  --teaser-tile-h5-color: var(--color-secondary);
+  --teaser-tile-h5-margin: 0 0 0.5rem;
+  --teaser-tile-overflow: hidden;
+  --teaser-tile-p-line-height: 1.14em;
+  --teaser-tile-p-margin: 0 0 0.625em;
+  --teaser-tile-position: relative;
 }
