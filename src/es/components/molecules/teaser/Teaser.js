@@ -109,7 +109,7 @@ export default class Teaser extends Shadow() {
         transform: var(--a-picture-transform, none);
       }
       :host(:hover) figure a-picture {
-        transform: var(--a-picture-transform-hover, none);
+        transform: var(--a-picture-transform-hover, var(--a-picture-transform, none));
       }
       :host figure figcaption {
         align-self: var(--figcaption-align-self, auto);
