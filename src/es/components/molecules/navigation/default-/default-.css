@@ -1,0 +1,21 @@
+:host {
+  --navigation-default-a-arrow-color: var(--color);
+  --navigation-default-a-link-color-no-scroll: var(--navigation-default-a-link-color);
+  --navigation-default-a-link-color: var(--color);
+  --navigation-default-a-link-content-spacing-no-scroll: var(--navigation-default-a-link-content-spacing);
+  --navigation-default-a-link-content-spacing: 0;
+  --navigation-default-a-link-font-size-no-scroll: var(--navigation-default-a-link-font-size);
+  --navigation-default-a-link-font-size: var(--header-default-a-font-size, var(--font-size));
+  --navigation-default-a-link-font-weight-no-scroll: var(--navigation-default-a-link-font-weight);
+  --navigation-default-a-link-font-weight: bold;
+  --navigation-default-color-active: var(--color-hover);
+  --navigation-default-color-hover: var(--color-secondary);
+  --navigation-default-color-open: var(--color-secondary);
+  --navigation-default-flex-wrap: wrap;
+  --navigation-default-li-padding: 0 0 1.5rem;
+  --navigation-default-margin: 0 max(0.6vw, 0.75rem);
+  --navigation-default-padding: 0;
+  --navigation-default-search-li-padding: 0;
+  --navigation-default-white-space: normal;
+  --navigation-default-word-break: break-word;
+}

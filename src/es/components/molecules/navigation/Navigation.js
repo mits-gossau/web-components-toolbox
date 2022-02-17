@@ -127,7 +127,7 @@ export default class Navigation extends Shadow() {
   /**
    * renders the m-navigation css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     const firstLevelCount = this.root.querySelectorAll('nav > ul > li').length
@@ -477,6 +477,13 @@ export default class Navigation extends Shadow() {
         100% {left: 0}
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'navigation-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
+    }
   }
 
   /**

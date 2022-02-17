@@ -64,7 +64,7 @@ export default class Footer extends Shadow() {
   /**
    * renders the o-footer css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -209,6 +209,13 @@ export default class Footer extends Shadow() {
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'footer-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
+    }
   }
 
   /**

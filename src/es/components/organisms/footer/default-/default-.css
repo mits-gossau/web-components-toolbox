@@ -1,0 +1,22 @@
+:host {
+  --footer-default-a-color-hover: var(--header-default-a-color-hover);
+  --footer-default-a-color: var(--header-default-a-color);
+  --footer-default-a-font-size: var(--header-default-a-font-size);
+  --footer-default-a-line-height: var(--header-default-a-line-height);
+  --footer-default-a-margin-mobile: var(--header-default-a-margin-mobile);
+  --footer-default-a-margin: var(--header-default-a-margin);
+  --footer-default-a-padding-mobile: var(--header-default-a-padding-mobile);
+  --footer-default-a-padding: var(--header-default-a-padding);
+  --footer-default-a-text-decoration-hover: var(--header-default-a-text-decoration-hover);
+  --footer-default-a-text-decoration: var(--header-default-a-text-decoration);
+  --footer-default-a-text-transform: var(--header-default-a-text-transform);
+  --footer-default-a-white-space: var(--header-default-a-white-space);
+  --footer-default-border-top: var(--header-default-border-bottom);
+  --footer-default-color-hover: var(--color-secondary);
+  --footer-default-margin: 0;
+  --footer-default-min-height: auto;
+  --footer-default-padding: 1.5rem 0 0;
+  --footer-default-white-space: var(--navigation-white-space);
+  --footer-default-word-break: var(--navigation-word-break);
+  --footer-default-z-index: 0;
+}

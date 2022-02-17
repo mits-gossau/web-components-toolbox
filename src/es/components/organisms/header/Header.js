@@ -122,7 +122,7 @@ export default class Header extends Shadow() {
   /**
    * renders the o-header css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -324,6 +324,13 @@ export default class Header extends Shadow() {
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'header-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
+    }
   }
 
   /**
