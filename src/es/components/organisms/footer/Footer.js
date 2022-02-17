@@ -64,7 +64,7 @@ export default class Footer extends Shadow() {
   /**
    * renders the o-footer css
    *
-   * @return {Promise<void>}
+   * @return {Promise<void>|void}
    */
   renderCSS () {
     this.css = /* css */`

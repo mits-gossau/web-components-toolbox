@@ -127,7 +127,7 @@ export default class Navigation extends Shadow() {
   /**
    * renders the m-navigation css
    *
-   * @return {Promise<void>}
+   * @return {Promise<void>|void}
    */
   renderCSS () {
     const firstLevelCount = this.root.querySelectorAll('nav > ul > li').length
@@ -568,6 +568,14 @@ export default class Navigation extends Shadow() {
       this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.addEventListener('click', this.liClickListener))
       this.html = this.style
       this.hidden = false
+      this.dispatchEvent(new CustomEvent(this.getAttribute('navigation-load') || 'navigation-load', {
+        detail: {
+          child: this,
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
     })
   }
 

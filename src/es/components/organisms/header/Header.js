@@ -46,6 +46,7 @@ export default class Header extends Shadow() {
     this.scrollListener = event => {
       const lastScroll = self.scrollY
       setTimeout(() => {
+        this.setStickyOffsetHeight()
         // is top
         if (self.scrollY <= this.offsetHeight + 5) {
           this.classList.add('top')
@@ -86,7 +87,10 @@ export default class Header extends Shadow() {
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
+    if (this.hasAttribute('sticky')) {
+      self.addEventListener('scroll', this.scrollListener, { once: true })
+      this.addEventListener('navigation-load', event => this.setStickyOffsetHeight(), { once: true })
+    }
     this.addEventListener('click', this.clickAnimationListener)
     this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
     self.addEventListener('resize', this.mutationCallback)
@@ -205,13 +209,8 @@ export default class Header extends Shadow() {
         display: none;
         --a-menu-icon-background-color: var(--color, #777);
       }
-      /* sticky header classes */
-      :host([sticky]) {
-        position: sticky;
-      }
       :host([sticky].top) {
         position: var(--position, sticky);
-        top: -${this.offsetHeight}px;
       }
       :host([sticky].top), :host([sticky].top) > header {
         background-color: transparent;
@@ -222,7 +221,6 @@ export default class Header extends Shadow() {
         transition: var(--sticky-transition-show, top .5s ease);
       }
       :host([sticky]:not(.top)) {
-        top: -${this.offsetHeight}px;
         transition: var(--sticky-transition-hide, top .4s ease);
       }
       @keyframes backgroundAnimation {
@@ -330,6 +328,8 @@ export default class Header extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }], false)
+      default:
+        return Promise.resolve()
     }
   }
 
@@ -356,6 +356,7 @@ export default class Header extends Shadow() {
           })
         })
         this.header.appendChild(MenuIcon)
+        this.html = this.style
         this.hidden = false
       })
     }
@@ -393,5 +394,25 @@ export default class Header extends Shadow() {
 
   get mNavigation () {
     return this.root.querySelector(this.getAttribute('m-navigation') || 'm-navigation')
+  }
+
+  setStickyOffsetHeight () {
+    if (this.lastOffsetHeight !== this.offsetHeight) {
+      this.lastOffsetHeight = this.offsetHeight
+      this.style.textContent = /* CSS */`
+        :host([sticky].top), :host([sticky]:not(.top)) {
+          top: -${this.offsetHeight}px;
+          transition: var(--sticky-transition-hide, top .4s ease);
+        }
+      `
+    }
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 }
