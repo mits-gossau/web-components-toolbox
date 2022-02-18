@@ -80,55 +80,42 @@ export default class Button extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        --default-border-color-disabled: var(--m-orange-300, #FFDAC2);
-        --default-border-radius: 8px;
-        --default-button-color-active: var(--m-orange-900, #803300);
-        --default-button-color-hover: var(--m-orange-800, #B24800);
-        --default-button-color: var(--m-orange-600, #FF6600);
-        --default-button-width: auto;
-        --default-font-color-active: white;
-        --default-font-color-hover: white;
-        --default-font-color: white;
-        --default-font-family: text, Helvetica, Arial, sans-serif;;
-        --default-font-size: 16px;
-        --default-icon-size: 24px;
-        --default-line-height: 1.5em;
-        --default-padding: 10px 24px;
         display: block;
       }
       button {
         align-items: center;
-        background-color: var(--button-color, var(--default-button-color));
-        border: none;
-        border-radius: var(--border-radius, var(--default-border-radius));
-        color: var(--font-color, var(--default-font-color));
+        background-color: var(--background-color, #000000);
+        border-radius: var(--border-radius, 8px);
+        border: var(--border-width, 0) solid var(--border-color, transparent);
+        color: var(--color, #FFFFFF);
         cursor: pointer;
         display: flex;
         justify-content: center;
-        letter-spacing: .5px;
-        line-height: var(--line-height, var(--default-line-height));
-        outline: none;
-        overflow: hidden;
+        letter-spacing: var(--letter-spacing, normal);
+        line-height: var(--line-height, 1.5em);
         margin: var(--margin, 0);
-        padding: var(--padding, var(--default-padding));
+        outline: var(--outline, none);
+        overflow: hidden;
+        padding: var(--padding, 12px 24px);
         position: relative;
         touch-action: manipulation;
-        transition: background-color 0.3s ease-out, border-bottom-color 0.3s ease-out, color 0.3s ease-out;
-        width: var(--button-width, var(--default-button-width));
+        transition: background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out;
+        width: var(--width, auto);
       }
       button:hover {
-        background-color: var(--button-color-hover, var(--default-button-color-hover));
-        color: var(--font-color-hover, var(--default-font-color-hover));
+        background-color: var(--background-color-hover, #B24800);
+        border: var(--border-width-hover, var(--border-width, 0)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
+        color: var(--color-hover, #FFFFFF);
       }
       button:active {
-        background-color: var(--button-color-active, var(--default-button-color-active));
-        color: var(--font-color-active, var(--default-font-color-active));
+        background-color: var(--background-color-active, #803300);
+        color: var(--color-active, #FFFFFF);
       }
       button.active .ripple {
         animation-duration: 0.4s;
         animation-name: ripple;
         animation-timing-function: ease-out;
-        background-color: #808080;
+        background-color: var(--background-color-ripple, #808080);
         border-radius: 50%;
         left: 50%;
         position: absolute;
@@ -136,12 +123,15 @@ export default class Button extends Shadow() {
         transform: translate(-50%, -50%);
       }
       :host([disabled]) button {
+        border: var(--disabled-border-width, var(--border-width, 0)) solid var(--disabled-border-color, var(--border-color, #FFFFFF));
+        background-color: var(--disabled-background-color, #FFDAC2);
+        color: var(--color, #FFFFFF);
         cursor: not-allowed;
         opacity: 0.5;
         transition: opacity 0.3s ease-out;
       }
       :host([disabled]) button:hover {
-        opacity: 0.3;
+        opacity: 0.5;
       }
       :host([disabled]) button .ripple {
         display: none;
@@ -151,84 +141,59 @@ export default class Button extends Shadow() {
         border-radius: 50%;
       }
       :host([small]) button {
-        padding: 6px 10px 4px;
+        padding: var(--small-padding, 6px 10px 4px);
       }
       :host([large]) button {
-        padding: 16px 20px 14px;
-      }
-      :host([outline]) button {
-        background-color: transparent;
-        border: 2px solid var(--button-color, var(--default-button-color));
-        color: var(--button-color, var(--default-button-color));
-        transition: border-color 0.3s ease-out, color 0.3s ease-out;
-      }
-      :host([outline]) button:hover {
-        border-color: var(--button-color-hover, var(--default-button-color-hover));
-        color: var(--button-color-hover, var(--default-button-color-hover));
-      }
-      :host([outline]) button:active {
-        border-color: var(--button-color-active, var(--default-button-color-active));
-        color: var(--button-color-active, var(--default-button-color-active));
+        padding: var(--large-padding, 16px 20px 14px);
       }
       :host([raised]) button {
-        background-color: var(--button-color, var(--default-button-color));
+        background-color: var(--raised-background-color, #FF6600);
         border: none;
         box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
       }
       :host([raised]) button:hover {
-        background-color: var(--button-color-hover, var(--default-button-color-hover));
+        background-color: var(--raised-background-color-hover, #B24800);
       }
       :host([raised]) button:active {
-        background-color: var(--button-color-active, var(--default-button-color-active));
+        background-color: var(--raised-background-color-active, #803300);
       }
       :host([raised]) button[disabled]:hover {
-        background-color: var(--button-color, var(--default-button-color));
+        background-color: var(--raised-background-color-disabled, #FF6600);
       }
       #label {
         display: inline-block;
-        font-family: var(--font-family, var(--default-font-family));
-        font-size: var(--font-size, var(--default-font-size));
-        font-weight: 700;
+        font-family: var(--label-font-family, text, Helvetica, Arial, sans-serif);
+        font-size: var(--label-font-size, 1em);
+        font-weight: var(--label-font-weight, 700);
         position: relative;
       }
       #label.hide {
         display: none;
       }
       ::slotted([slot="left-icon"]) {
-        font-size: var(--icon-size, var(--default-icon-size)) !important;
+        font-size: var(--icon-size, 24px) !important;
       }
       :host([label]) ::slotted([slot="left-icon"]) {
-        margin-right: 8px;
+        margin-right: var(--label-left-icon-margin-left, 8px);
       }
       ::slotted([slot="right-icon"]) {
-        font-size: var(--icon-size, var(--default-icon-size)) !important;
+        font-size: var(--icon-size, 24px) !important;
       }
       :host([label]) ::slotted([slot="right-icon"]) {
-        margin-left: 8px;
-      }
-      ::slotted([slot="file-input"]) {
-        bottom: 0;
-        cursor: pointer;
-        left: 0;
-        opacity: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 100%;
-        z-index: 9;
+        margin-left: var(--label-right-icon-margin-left, 8px);
       }
       @media only screen and (max-width: _max-width_) {
         button {
           margin: var(--margin-mobile, var(--margin, 0));
         }
         #label {
-          font-size: var(--font-size-mobile, var(--font-size, var(--default-font-size)));
+          font-size: var(--font-size-mobile, var(--font-size, 14px));
         }
         ::slotted([slot="left-icon"]) {
-          font-size: var(--icon-size-mobile, var(--icon-size, var(--default-icon-size))) !important;
+          font-size: var(--icon-size-mobile, var(--icon-size, 24px)) !important;
         }
         ::slotted([slot="right-icon"]) {
-          font-size: var(--icon-size-mobile, var(--icon-size, var(--default-icon-size))) !important;
+          font-size: var(--icon-size-mobile, var(--icon-size, 24px)) !important;
         }
       }
       @keyframes ripple {
@@ -244,13 +209,27 @@ export default class Button extends Shadow() {
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'button-primary-':
+        this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./primary-/primary-.css`, 
+          namespace: false
+        }])
+        case 'button-secondary-':
+        this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./secondary-/secondary-.css`, 
+          namespace: false
+        }])
+        break
+    }
   }
 
   renderHTML () {
     this.html = /* html */`
       <button type="button">
         <div class="ripple"></div>
-        <slot name="file-input"></slot>
         <slot name="left-icon"></slot>
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
         <slot name="right-icon"></slot>
