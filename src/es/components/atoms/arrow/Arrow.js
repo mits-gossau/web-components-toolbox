@@ -116,6 +116,7 @@ export default class Arrow extends Shadow() {
    */
   renderHTML () {
     // TODO: SVG's should be taken from icons folder but fetch can't use cache and is too slow on loads of requests at once. object, img, etc. does not work for css styling. so most likely it needs a node script copying this stuff on update in the icon folder.
+    // TODO: or solve the problem with an icon controller with caching. Send event with Promise.resolve to controller, which then resolves it with the svg
     // src/es/components/web-components-toolbox/src/icons/chevron_right.svg
     this.html = /* html */`
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
