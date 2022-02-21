@@ -190,6 +190,13 @@ export default class Logo extends Shadow() {
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'logo-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
+    }
   }
 
   /**

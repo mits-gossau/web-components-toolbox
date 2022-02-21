@@ -237,7 +237,8 @@ export default class Header extends Shadow() {
       }
       @media only screen and (max-width: _max-width_) {
         :host > * {
-          --header-logo-justify-content: flex-end;
+          --logo-default-justify-content: flex-end;
+          font-size: var(--font-size-mobile, var(--font-size, 1rem));
           margin: var(--content-spacing-mobile, 0) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, 90%);
         }
