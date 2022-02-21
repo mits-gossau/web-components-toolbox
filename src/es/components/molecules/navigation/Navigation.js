@@ -570,7 +570,7 @@ export default class Navigation extends Shadow() {
       this.hidden = false
       this.dispatchEvent(new CustomEvent(this.getAttribute('navigation-load') || 'navigation-load', {
         detail: {
-          child: this,
+          child: this
         },
         bubbles: true,
         cancelable: true,

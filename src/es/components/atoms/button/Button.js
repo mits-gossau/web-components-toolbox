@@ -4,10 +4,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global self */
 
 /**
- * Creates an MSWC Button by the blueprints of:
- * TODO: update the buttons.html with last changes (include colors.css, variables.css, fonts, remove unneeded sizes... find figma stuff)
- * https://components.migros.ch/components/atoms/buttons.html
- * https://github.com/DannyMoerkerke/material-webcomponents/blob/master/src/material-button.js
+ * Creates an Button
  *
  * @export
  * @attribute {namespace} namespace
@@ -33,7 +30,7 @@ export default class Button extends Shadow() {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
-    this.animationendListener = event => this.button.classList.remove('active')
+    this.animationendListener = () => this.button.classList.remove('active')
     if (!this.children.length) this.labelText = this.textContent // allow its initial textContent to become the label if there are no nodes but only text
   }
 
@@ -163,7 +160,7 @@ export default class Button extends Shadow() {
       #label {
         display: inline-block;
         font-family: var(--label-font-family, text, Helvetica, Arial, sans-serif);
-        font-size: var(--label-font-size, 1em);
+        font-size: var(--label-font-size, 1.2em);
         font-weight: var(--label-font-weight, 400);
         position: relative;
       }
