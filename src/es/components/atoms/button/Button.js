@@ -223,9 +223,15 @@ export default class Button extends Shadow() {
           namespace: false
         }])
       case 'button-tertiary-':
-        this.fetchCSS([{
+        return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tertiary-/tertiary-.css`,
+          namespace: false
+        }])
+      case 'button-quaternary-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./quaternary-/quaternary-.css`,
           namespace: false
         }])
     }

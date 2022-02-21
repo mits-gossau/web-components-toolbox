@@ -1,10 +1,11 @@
 :host {
   --button-quaternary-background-color: transparent;
-  --button-quaternary-color:var(--m-orange-600);
-  --button-quaternary-border-color:var(--m-orange-600);
-  --button-quaternary-background-color-hover:transparent;
-  --button-quaternary-color-hover:var(--m-orange-800);
-  --button-quaternary-border-color-hover:var(--m-orange-800);
+  --button-quaternary-color:var(--m-gray-600);
+  --button-quaternary-border-color:transparent;
+  --button-quaternary-background-color-hover:var(--m-gray-100);
+  --button-quaternary-color-hover:var(--m-gray-600);
+  --button-quaternary-border-color-hover:transparent;
   --button-quaternary-border-width:2px;
   --button-quaternary-disabled-background-color:transparent;
+  --button-quaternary-padding:12px;
 }
