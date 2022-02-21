@@ -164,7 +164,7 @@ export default class Button extends Shadow() {
         display: inline-block;
         font-family: var(--label-font-family, text, Helvetica, Arial, sans-serif);
         font-size: var(--label-font-size, 1em);
-        font-weight: var(--label-font-weight, 700);
+        font-weight: var(--label-font-weight, 400);
         position: relative;
       }
       #label.hide {
@@ -211,18 +211,23 @@ export default class Button extends Shadow() {
     `
     switch (this.getAttribute('namespace')) {
       case 'button-primary-':
-        this.fetchCSS([{
+        return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./primary-/primary-.css`, 
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./primary-/primary-.css`,
           namespace: false
         }])
-        case 'button-secondary-':
-        this.fetchCSS([{
+      case 'button-secondary-':
+        return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./secondary-/secondary-.css`, 
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./secondary-/secondary-.css`,
           namespace: false
         }])
-        break
+      case 'button-tertiary-':
+        this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tertiary-/tertiary-.css`,
+          namespace: false
+        }])
     }
   }
 

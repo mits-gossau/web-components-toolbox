@@ -1,10 +1,11 @@
 :host {
-  --button-secondary-background-color: transparent;
-  --button-secondary-color:var(--m-orange-600);
-  --button-secondary-border-color:var(--m-orange-600);
-  --button-secondary-background-color-hover:transparent;
-  --button-secondary-color-hover:var(--m-orange-800);
-  --button-secondary-border-color-hover:var(--m-orange-800);
-  --button-secondary-border-width:2px;
-  --button-secondary-disabled-background-color:transparent;
+  --button-tertiary-background-color: transparent;
+  --button-tertiary-color:var(--m-orange-600);
+  --button-tertiary-border-color:transparent;
+  --button-tertiary-background-color-hover:var(--m-orange-100);
+  --button-tertiary-color-hover:var(--m-orange-600);
+  --button-tertiary-border-color-hover:transparent;
+  --button-tertiary-border-width:2px;
+  --button-tertiary-disabled-background-color:transparent;
+  --button-tertiary-padding:12px;
 }
