@@ -1,0 +1,12 @@
+:host {
+  --button-quaternary-background-color-disabled: transparent;
+  --button-quaternary-background-color-hover: var(--button-quaternary-background-color-hover-custom, var(--m-gray-100));
+  --button-quaternary-background-color: transparent;
+  --button-quaternary-border-color-hover: transparent;
+  --button-quaternary-border-color: transparent;
+  --button-quaternary-border-width: 2px;
+  --button-quaternary-color-hover: var(--button-quaternary-color-hover-custom, var(--m-gray-600));
+  --button-quaternary-color: var(--button-quaternary-color-custom, var(--m-gray-600));
+  --button-quaternary-font-family: text, Helvetica, Arial, sans-serif;
+  --button-quaternary-padding: 0.75em;
+}
