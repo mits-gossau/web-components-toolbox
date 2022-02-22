@@ -7,6 +7,7 @@
   --button-secondary-border-color: var(--button-secondary-border-color-custom, var(--m-orange-600));
   --button-secondary-border-width: 2px;
   --button-secondary-color-disabled: var(--button-secondary-color-disabled-custom, var(--m-orange-300));
-  --button-secondary-color-hover:var(--button-secondary-color-hover-custom, var(--m-orange-800));
+  --button-secondary-color-hover: var(--button-secondary-color-hover-custom, var(--m-orange-800));
   --button-secondary-color: var(--button-secondary-color-custom, var(--m-orange-600));
+  --button-secondary-font-family: text, Helvetica, Arial, sans-serif;
 }
