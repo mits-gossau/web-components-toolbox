@@ -12,7 +12,7 @@ TODO:
 - [x] body.js css to import reset.css
 - [x] teaser templates by namespace
 - [x] tile https://www.betriebsrestaurants-migros.ch/de/referenzen.html
-- [ ] button 1-4 version https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=2866%3A55901
+- [x] button 1-4 version https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=2866%3A55901
 - [ ] Template.html api call to fetch page content for previews
 - [ ] https://playwright.dev/ visual regression tests
 - [ ] documenter.js to document the web components
