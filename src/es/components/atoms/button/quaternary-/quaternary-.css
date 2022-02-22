@@ -6,6 +6,6 @@
   --button-quaternary-color-hover:var(--m-gray-600);
   --button-quaternary-border-color-hover:transparent;
   --button-quaternary-border-width:2px;
-  --button-quaternary-disabled-background-color:transparent;
-  --button-quaternary-padding:12px;
+  --button-quaternary-background-color-disabled:transparent;
+  --button-quaternary-padding:0.75em;
 }

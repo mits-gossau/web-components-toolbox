@@ -1,5 +1,23 @@
-<a-button namespace="button-primary-" label="Label"></a-button>
+<a-button namespace="button-primary-">Label</a-button>
 <a-button namespace="button-primary-" label="Label" disabled></a-button>
+<a-button namespace="button-primary-">
+  icon-left
+  <svg class="icon-left" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 18V18C1.89543 18 1 17.1046 1 16V11H21C22.1046 11 23 11.8954 23 13V16C23 17.1046 22.1046 18 21 18H20M8 18H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M1 11L4.40541 4H14.1351L20 11" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M5.5 21C6.88071 21 8 19.8807 8 18.5C8 17.1193 6.88071 16 5.5 16C4.11929 16 3 17.1193 3 18.5C3 19.8807 4.11929 21 5.5 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17.5 21C18.8807 21 20 19.8807 20 18.5C20 17.1193 18.8807 16 17.5 16C16.1193 16 15 17.1193 15 18.5C15 19.8807 16.1193 21 17.5 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M11 11L11 4" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    
+</a-button>
+<a-button namespace="button-primary-" label="icon-right">
+  <img class="icon-right" src="../../../../../../src/icons/car.svg">
+</a-button>
+<a-button namespace="button-primary-" label="icon-left-right">
+  <img class="icon-left" src="../../../../../../src/icons/car.svg">
+  <img class="icon-right" src="../../../../../../src/icons/car.svg">
+</a-button>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./primary-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>

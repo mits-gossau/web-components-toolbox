@@ -6,6 +6,6 @@
   --button-tertiary-color-hover:var(--m-orange-600);
   --button-tertiary-border-color-hover:transparent;
   --button-tertiary-border-width:2px;
-  --button-tertiary-disabled-background-color:transparent;
-  --button-tertiary-padding:12px;
+  --button-tertiary-background-color-disabled:transparent;
+  --button-tertiary-padding:0.75em;
 }
