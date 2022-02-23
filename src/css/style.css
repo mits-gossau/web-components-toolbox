@@ -207,7 +207,7 @@
   padding: 0;
   width: 100%;
 }
-:host wc-a-button ~ wc-a-button {
+:host a-button ~ a-button {
   padding-top: var(--content-spacing);
 }
 :host *.bg-color {
@@ -278,7 +278,7 @@
   .spacer {
     height: var(--spacer-height-mobile, 1.53rem);
   }
-  :host wc-a-button ~ wc-a-button {
+  :host a-button ~ a-button {
     padding-top: var(--content-spacing-mobile, var(--content-spacing));
   }
 }

@@ -12,7 +12,8 @@ TODO:
 - [x] body.js css to import reset.css
 - [x] teaser templates by namespace
 - [x] tile https://www.betriebsrestaurants-migros.ch/de/referenzen.html
-- [x] button 1-4 version https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=2866%3A55901
+- [ ] button 1-4 version (3 + 4 -color-disabled) https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=2866%3A55901
+- [ ] Template.html fix image path issue http://localhost:4200/src/es/components/web-components-toolbox/docs/Template.html?logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/atoms/button/primary-/primary-.html
 - [ ] Template.html api call to fetch page content for previews
 - [ ] https://playwright.dev/ visual regression tests
 - [ ] documenter.js to document the web components
