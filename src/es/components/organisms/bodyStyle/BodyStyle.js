@@ -39,7 +39,10 @@ export default class BodyStyle extends Body {
     this._css.textContent = bodyCss
     this.css = /* css */`
       :host {
-        ${Array.from(this.attributes).reduce((acc, attribute) => `${acc}${attribute.name}: ${attribute.value};--${attribute.name}: ${attribute.value};`, '')}
+        ${Array.from(this.attributes).reduce((acc, attribute) => {
+          if(attribute?.value === "") return acc
+          return `${acc}${attribute.name}: ${attribute.value};--${attribute.name}: ${attribute.value};`
+        }, '')}
       }
     `
   }
