@@ -1,4 +1,0 @@
-:host {
-  --wrapper-gap: var(--wrapper-gap-custom, var(--content-spacing));
-  --wrapper-justify-content: var(--wrapper-justify-content-custom, left);
-}

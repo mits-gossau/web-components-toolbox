@@ -119,8 +119,8 @@ export default class Picture extends Shadow() {
         height: var(--height, unset);
         overflow: var(--overflow, initial);
         transition: var(--transition, none);
-        margin: var(--margin, 0);
         transform: var(--transform, none);
+        margin: var(--margin, 0);
         text-align: var(--text-align, center);
       }
       :host picture:hover {
@@ -130,31 +130,46 @@ export default class Picture extends Shadow() {
       :host picture img {
         aspect-ratio: var(--aspect-ratio, attr(width, auto) / attr(height, auto));
         display: var(--img-display, inline);
-        border-radius:var(--border-radius, 0);
-        width: var(--img-width, 100%);
-        min-width: var(--img-min-width);
+        border-radius: var(--border-radius, 0);
+        width: var(--img-width, auto);
+        min-width: var(--img-min-width, unset);
         max-width: var(--img-max-width, 100%);
         height: var(--img-height, auto);
-        min-height: var(--img-min-height, 100%);
-        max-height: var(--img-max-height);
+        min-height: var(--img-min-height, unset);
+        max-height: var(--img-max-height, unset);
         object-fit: var(--img-object-fit, cover);
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
       }
       @media only screen and (max-width: _max-width_) {
         :host picture {
-          border-radius:var(--border-radius-mobile, 0);
-          transition: var(--transition-mobile, none);
-          transform: var(--transform-mobile, none);
-          filter: var(--filter-mobile, none);
-          width: var(--width-mobile, var(--width, 100%));
-          height: var(--height-mobile, var(--height, unset));
+          transition: var(--transition-mobile, var(--transition, none));
+          transform: var(--transform-mobile, var(--transform, none));
+          filter: var(--filter-mobile, var(--filter, none));
+          width: var(--width-mobile, var(--width, auto));
+          height: var(--height-mobile, var(--height, auto));
           text-align: var(--text-align-mobile, var(--text-align, center));
         }
+        :host picture:hover {
+          filter: var(--filter-mobile-hover, var(--filter-hover, var(--filter, none)));
+          transform: var(--transform-mobile-hover, var(--transform-hover, var(--transform, none)));
+        }
         :host picture img {
-          border-radius:var(--border-radius-mobile, 0);
+          border-radius: var(--border-radius-mobile, 0);
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'picture-scale-up-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./scale-up-/scale-up-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+      case 'picture-teaser-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+    }
   }
 
   /**

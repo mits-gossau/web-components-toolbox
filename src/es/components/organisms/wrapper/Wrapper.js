@@ -18,9 +18,27 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @return {CustomElementConstructor | *}
  */
 export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends ChosenHTMLElement {
+  constructor (...args) {
+    super(...args)
+
+    this.clickListener = event => {
+      if (this.hasAttribute('href')) self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
+    }
+    // link behavior made accessible
+    if (this.hasAttribute('href')) {
+      this.setAttribute('data-href', this.getAttribute('href'))
+      this.setAttribute('role', 'link')
+    }
+  }
+
   connectedCallback () {
+    this.addEventListener('click', this.clickListener)
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+  }
+
+  disconnectedCallback () {
+    this.removeEventListener('click', this.clickListener)
   }
 
   /**
@@ -52,10 +70,13 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
       :host {
         display: block;
       }
+      :host([href]) {
+        cursor: pointer;
+      }
       :host > section {
         display: flex;
         flex-wrap: wrap;
-        align-items: var(--align-items, normal);
+        align-items: var(--align-items, center);
         justify-content: var(--justify-content, center);
         width: 100%;
         gap: var(--gap, normal);
@@ -101,17 +122,23 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'wrapper-':
+      case 'wrapper-teaser-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./wrapper-/wrapper-.css`, // apply namespace since it is specific and no fallback
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles]).then(() => this.calcColumnWidth())
+        }]).then(() => this.calcColumnWidth())
+      case 'wrapper-no-calc-column-width-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./no-calc-column-width-/no-calc-column-width-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }]).then(() => this.calcColumnWidth())
       default:
         return this.fetchCSS(styles).then(() => this.calcColumnWidth())
     }
   }
 
   calcColumnWidth (children = this.section.children) {
+    if (this.hasAttribute('no-calc-column-width')) return
     // set width attributes as css vars
     let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE')
     const childNodesLength = Number(this.getAttribute('simulate-children')) || childNodes.length
