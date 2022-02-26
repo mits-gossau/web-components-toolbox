@@ -5,11 +5,6 @@
  * - if a component holds other components you should share the attribute namespace with its children
  */
 :root {
-  --a-color: var(--color-secondary);
-  --a-margin: 0;
-  --a-text-align: center;
-  --a-text-decoration-hover: var(--a-text-decoration);
-  --a-text-decoration: underline;
   --background-color: var(--m-white);
   --color-disabled: var(--m-orange-300);
   --color-hover: var(--m-orange-800);
@@ -23,7 +18,4 @@
   --font-size: max(16px, 0.8vw);
   --font-weight: 400;
   --line-height: 1.5em;
-  --root-background-color: var(--background-color);
-  --teaser-overlay-bg-color-custom: #a40511;
-  --teaser-overlay-bg-color-hover-custom: #6c000a;
 }

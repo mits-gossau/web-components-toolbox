@@ -61,7 +61,7 @@ export default class General extends Shadow() {
       }
       /* global css set by page */
       :root {
-        background-color: var(--root-background-color, transparent);
+        background-color: var(--root-background-color, var(--background-color, transparent));
         font-size: var(--font-size, 10px);
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);

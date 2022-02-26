@@ -92,21 +92,21 @@
   font-weight: var(--a-font-weight, var(--font-weight, normal));
   text-align: var(--a-text-align, unset);
   font-size: var(--a-font-size, 1em);
-  text-decoration: var(--a-text-decoration, var(--text-decoration, none));
+  text-decoration: var(--a-text-decoration, var(--text-decoration, underline));
   text-underline-offset: var(--a-text-underline-offset, unset);
   display: var(--a-display, block);
   margin: var(--a-margin, var(--content-spacing) auto);
 }
 :host a:hover, :host a:active, :host a:focus {
-  color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
-  text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
+  color: var(--a-color-hover, var(--color-hover, var(--color, green)));
+  text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, underline))));
 }
 :host * a {
   display: var(--any-a-display, var(--a-display, inline));
 }
 :host a > h1, :host a > h2, :host a > h3, :host a > h4, :host a > h5, :host a > h6 {
   color: var(--a-color, var(--color-secondary, var(--color, pink)));
-  text-decoration: var(--a-text-decoration, var(--text-decoration, none));
+  text-decoration: var(--a-text-decoration, var(--text-decoration, underline));
   text-underline-offset: var(--a-text-underline-offset, unset);
 }
 :host a:hover > h1, :host a:active > h1, :host a:focus > h1,
@@ -115,8 +115,8 @@
 :host a:hover > h4, :host a:active > h4, :host a:focus > h4,
 :host a:hover > h5, :host a:active > h5, :host a:focus > h5,
 :host a:hover > h6, :host a:active > h6, :host a:focus > h6 {
-  color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
-  text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
+  color: var(--a-color-hover, var(--color-hover, var(--color, green)));
+  text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, underline))));
 }
 :host ul {
   text-align: var(--ul-text-align, var(--ol-text-align, start));
@@ -195,7 +195,7 @@
   width: 2em;
 }
 :host a[href^="/"]:not(.no-icon):hover:before, :host a[href^="http"]:not(.no-icon):hover:before, :host a[href$=".pdf"]:not(.no-icon):hover:before, :host a[href$=".xls"]:not(.no-icon):hover:before {
-  background-color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
+  background-color: var(--a-color-hover, var(--color-hover, var(--color, green)));
 }
 :host .quote {
   text-align: var(--q-text-align, center);
@@ -219,10 +219,10 @@
   height: 1px;
 }
 :host *.bg-color {
-  background-color: var(--bg-color, var(--background-color, red));
+  background-color: var(--bg-color, var(--color-secondary, var(--background-color, red)));
 }
 :host(:hover) *.bg-color, :host *.bg-color:hover {
-  background-color: var(--bg-color-hover, var(--bg-color, var(--background-color, green)));
+  background-color: var(--bg-color-hover, var(--color-hover, var(--bg-color, var(--background-color, green))));
 }
 @media only screen and (max-width: _max-width_) {
   :host h1 {
