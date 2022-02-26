@@ -13,11 +13,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Button extends Shadow() {
   static get observedAttributes () {
-    return ['label']
+    return ['label', 'disabled']
   }
 
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { mode: 'open' }), ...args)
+    super(...args)
 
     this.clickListener = event => {
       this.button.classList.add('active')
@@ -38,6 +38,7 @@ export default class Button extends Shadow() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     this.button.addEventListener('click', this.clickListener)
+    this.attributeChangedCallback('disabled')
   }
 
   disconnectedCallback () {
@@ -51,7 +52,7 @@ export default class Button extends Shadow() {
         this.label.textContent = this.labelText || ''
         this.label.classList[this.labelText ? 'remove' : 'add']('hide')
       }
-    }
+    } else if (this.button && name === 'disabled') this.hasAttribute('disabled') ? this.button.setAttribute('disabled', '') : this.button.removeAttribute('disabled')
   }
 
   /**
@@ -75,13 +76,14 @@ export default class Button extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        display: block;
+        cursor: unset !important;
+        display: inline-block;
       }
       button {
         align-items: center;
         background-color: var(--background-color, #000000);
         border-radius: var(--border-radius, 0.5em);
-        border: var(--border-width, 0) solid var(--border-color, transparent);
+        border: var(--border-width, 0px) solid var(--border-color, transparent);
         color: var(--color, #FFFFFF);
         cursor: pointer;
         display: flex;
@@ -94,8 +96,7 @@ export default class Button extends Shadow() {
         margin: var(--margin, 0);
         outline: var(--outline, none);
         overflow: hidden;
-        padding: var(--padding, 0.75em 1.5em);
-        position: relative;
+        padding: var(--padding, calc(0.75em - var(--border-width, 0px)) calc(1.5em - var(--border-width, 0px)));
         touch-action: manipulation;
         transition: background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out;
         width: var(--width, auto);
@@ -103,23 +104,23 @@ export default class Button extends Shadow() {
       }
       button:hover {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
-        border: var(--border-width-hover, var(--border-width, 0)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
+        border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
         opacity: var(--opacity-hover, var(--opacity, 1));
       }
       button:active {
-        background-color: var(--background-color-active, var(--background-color, #803300));
-        color: var(--color-active, var(--color, #FFFFFF));
+        background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
+        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
-      :host([disabled]) button {
-        border: var(--border-width-disabled, var(--border-width, 0)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));
+      :host button[disabled] {
+        border: var(--border-width-disabled, var(--border-width, 0px)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));
         background-color: var(--background-color-disabled, var(--background-color, #FFDAC2));
         color: var(--color-disabled, var(--color, #FFFFFF));
         cursor: not-allowed;
         opacity: var(--opacity-disabled, var(--opacity, 1));
         transition: opacity 0.3s ease-out;
       }
-      :host([disabled]) button:hover {
+      :host button[disabled]:hover {
         opacity: var(--opacity-disabled-hover, var(--opacity-disabled, var(--opacity, 1)));
       }
       #label {
@@ -195,15 +196,6 @@ export default class Button extends Shadow() {
     if ((iconLeft = this.root.querySelector('.icon-left'))) this.button.prepend(iconLeft)
     let iconRight
     if ((iconRight = this.root.querySelector('.icon-right'))) this.button.append(iconRight)
-  }
-
-  get disabled () {
-    return this.hasAttribute('disabled')
-  }
-
-  set disabled (isDisabled) {
-    this.button.disabled = isDisabled
-    isDisabled ? this.setAttribute('disabled', '') : this.removeAttribute('disabled')
   }
 
   get button () {

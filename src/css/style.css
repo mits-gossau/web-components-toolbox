@@ -11,7 +11,6 @@
   text-transform: var(--h1-text-transform, none);
   margin: var(--h1-margin, 0 auto 1.143em);
   padding: var(--h1-padding, unset);
-  width: var(--h1-width, auto);
 }
 :host h2 {
   color: var(--h2-color, var(--color, black));
@@ -25,7 +24,6 @@
   text-transform: var(--h2-text-transform, none);
   margin: var(--h2-margin, 0 auto 1.143em);
   padding: var(--h2-padding, unset);
-  width: var(--h2-width, auto);
 }
 :host h3 {
   color: var(--h3-color, var(--color, black));
@@ -39,7 +37,6 @@
   text-transform: var(--h3-text-transform, none);
   margin: var(--h3-margin, 0 auto 1.143em);
   padding: var(--h3-padding, unset);
-  width: var(--h3-width, auto);
 }
 :host h4 {
   color: var(--h4-color, var(--color, black));
@@ -53,7 +50,6 @@
   text-transform: var(--h4-text-transform, none);
   margin: var(--h4-margin, 0 auto 1.143em);
   padding: var(--h4-padding, unset);
-  width: var(--h4-width, auto);
 }
 :host h5 {
   color: var(--h5-color, var(--color, black));
@@ -67,7 +63,6 @@
   text-transform: var(--h5-text-transform, none);
   margin: var(--h5-margin, 0 auto 1.143em);
   padding: var(--h5-padding, unset);
-  width: var(--h5-width, auto);
 }
 :host h6 {
   color: var(--h6-color, var(--color, black));
@@ -81,7 +76,6 @@
   text-transform: var(--h6-text-transform, none);
   margin: var(--h6-margin, 0 auto 1.143em);
   padding: var(--h6-padding, unset);
-  width: var(--h6-width, auto);
 }
 :host p {
   font-family: var(--p-font-family, var(--font-family));
@@ -162,8 +156,9 @@
 }
 :host hr {
   border: var(--hr-border, 0);
-  border-bottom: var(--hr-border-bottom, 1px dashed var(--color));
+  border-bottom: var(--hr-border-bottom, 1px dotted var(--color));
   background: var(--hr-background, 0);
+  opacity: var(--hr-opacity, 0.5);
 }
 :host img {
   max-width: 100%;
@@ -172,7 +167,6 @@
   border-collapse: var(--table-border-collapse, collapse);
   border-spacing: var(--table-border-spacing, 0);
   max-width: var(--table-max-width, 100%);
-  width: var(--table-width, 100%);
 }
 :host table:not([border=0]) td {
   border: var(--table-td-border, 1px solid var(--color));
@@ -212,12 +206,17 @@
 :host .quote > small {
   font-size: var(--q-font-size, 0.8em);
 }
-.spacer {
+.spacer, .half-spacer, .quarter-spacer {
   display: block;
   height: var(--spacer-height, 4.41rem);
   margin: 0 auto;
   padding: 0;
-  width: 100%;
+}
+.half-spacer {
+  height: calc(var(--spacer-height, 4.41rem) / 2);
+}
+.quarter-spacer {
+  height: 1px;
 }
 :host *.bg-color {
   background-color: var(--bg-color, var(--background-color, red));
@@ -232,7 +231,6 @@
     word-break: var(--h1-word-break-mobile, var(--h1-word-break, normal));
     text-transform: var(--h1-text-transform-mobile, var(--h1-text-transform, none));
     margin: var(--h1-margin-mobile, var(--h1-margin, 0 auto 1.143em));
-    width: var(--h1-width-mobile, var(--h1-width, auto));
   }
   :host h2 {
     font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5rem));
@@ -240,7 +238,6 @@
     word-break: var(--h2-word-break-mobile, var(--h2-word-break, normal));
     text-transform: var(--h2-text-transform-mobile, var(--h2-text-transform, none));
     margin: var(--h2-margin-mobile, var(--h2-margin, 0 auto 1.143em));
-    width: var(--h2-width-mobile, var(--h2-width, auto));
   }
   :host h3 {
     font-size: var(--h3-font-size-mobile, var(--h3-font-size, 1.25rem));
@@ -248,7 +245,6 @@
     word-break: var(--h3-word-break-mobile, var(--h3-word-break, normal));
     text-transform: var(--h3-text-transform-mobile, var(--h3-text-transform, none));
     margin: var(--h3-margin-mobile, var(--h3-margin, 0 auto 1.143em));
-    width: var(--h3-width-mobile, var(--h3-width, auto));
   }
   :host h4 {
     font-size: var(--h4-font-size-mobile, var(--h4-font-size, 1.125rem));
@@ -256,7 +252,6 @@
     word-break: var(--h4-word-break-mobile, var(--h4-word-break, normal));
     text-transform: var(--h4-text-transform-mobile, var(--h4-text-transform, none));
     margin: var(--h4-margin-mobile, var(--h4-margin, 0 auto 1.143em));
-    width: var(--h4-width-mobile, var(--h4-width, auto));
   }
   :host h5 {
     font-size: var(--h5-font-size-mobile, var(--h5-font-size, 1rem));
@@ -264,7 +259,6 @@
     word-break: var(--h5-word-break-mobile, var(--h5-word-break, normal));
     text-transform: var(--h5-text-transform-mobile, var(--h5-text-transform, none));
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto 1.143em));
-    width: var(--h5-width-mobile, var(--h5-width, auto));
   }
   :host h6 {
     font-size: var(--h6-font-size-mobile, var(--h6-font-size, 0.875rem));
@@ -272,7 +266,6 @@
     word-break: var(--h6-word-break-mobile, var(--h6-word-break, normal));
     text-transform: var(--h6-text-transform-mobile, var(--h6-text-transform, none));
     margin: var(--h6-margin-mobile, var(--h6-margin, 0 auto 1.143em));
-    width: var(--h6-width-mobile, var(--h6-width, auto));
   }
   :host p {
     font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));

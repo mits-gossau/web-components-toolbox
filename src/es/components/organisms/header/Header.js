@@ -153,7 +153,7 @@ export default class Header extends Shadow() {
         align-self: baseline;
       }
       :host > span, :host > div, :host > p, :host > ul, :host > ol {
-        width: var(--content-width-not-web-component, 80%);
+        width: var(--content-width, 80%);
       }
       :host > header {
         align-items: var(--align-items, center);
@@ -264,7 +264,7 @@ export default class Header extends Shadow() {
           padding: var(--a-menu-icon-padding);
         }
         :host > span, :host > div, :host > p, :host > ul, :host > ol {
-          width: var(--content-width-not-web-component-mobile, 90%);
+          width: var(--content-width, 90%);
         }
         :host > header {
           height: var(--height-mobile, 50px);

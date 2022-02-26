@@ -11,6 +11,7 @@
   --a-text-decoration-hover: var(--a-text-decoration);
   --a-text-decoration: underline;
   --background-color: var(--m-white);
+  --color-disabled: var(--m-orange-300);
   --color-hover: var(--m-orange-800);
   --color-secondary: var(--m-orange-600);
   --color: var(--m-black);
