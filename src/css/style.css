@@ -195,17 +195,20 @@
 :host .quote > small {
   font-size: var(--q-font-size, 0.8em);
 }
-.spacer, .half-spacer, .quarter-spacer {
+.spacer, .spacer-two, .spacer-three, .spacer-four {
   display: block;
-  height: var(--spacer-height, 4.41rem);
+  height: 1px;
   margin: 0 auto;
   padding: 0;
 }
-.half-spacer {
-  height: calc(var(--spacer-height, 4.41rem) / 2);
+.spacer-two {
+  height: calc(var(--spacer-height, calc(var(--content-spacing) * 2)) / 2);
 }
-.quarter-spacer {
-  height: 1px;
+.spacer-three {
+  height: var(--spacer-height, calc(var(--content-spacing) * 2));
+}
+.spacer-four {
+  height: var(--spacer-height, calc(var(--content-spacing) * 3));
 }
 :host *.bg-color {
   background-color: var(--bg-color, var(--color-secondary, var(--background-color, red)));
@@ -259,7 +262,13 @@
     font-size: var(--a-font-size-mobile, var(--a-font-size, 1em));
     margin: var(--a-margin-mobile, var(--a-margin, var(--content-spacing-mobile, var(--content-spacing)) auto));
   }
-  .spacer {
-    height: var(--spacer-height-mobile, 1.53rem);
+  .spacer-two {
+    height: calc(var(--spacer-height-mobile, var(--spacer-height, calc(var(--content-spacing-mobile, var(--content-spacing)) * 2))) / 2);
+  }
+  .spacer-three {
+    height: var(--spacer-height-mobile, var(--spacer-height, calc(var(--content-spacing-mobile, var(--content-spacing)) * 2)));
+  }
+  .spacer-four {
+    height: var(--spacer-height-mobile, var(--spacer-height, calc(var(--content-spacing-mobile, var(--content-spacing)) * 3)));
   }
 }

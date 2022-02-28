@@ -4,6 +4,6 @@
 }
 @media only screen and (max-width: _max-width_) {
   :host {
-    --wrapper-no-calc-column-width-gap: var(--wrapper-no-calc-column-width-gap-custom, var(--content-spacing-mobile, var(--content-spacing)));
+    --wrapper-no-calc-column-width-gap: var(--wrapper-no-calc-column-width-gap-mobile-custom, var(--wrapper-no-calc-column-width-gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
   }
 }

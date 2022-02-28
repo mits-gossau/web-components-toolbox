@@ -5,6 +5,6 @@
 }
 @media only screen and (max-width: _max-width_) {
   :host {
-    --wrapper-teaser-gap: var(--wrapper-teaser-gap-custom, var(--content-spacing-mobile, var(--content-spacing)));
+    --wrapper-teaser-gap: var(--wrapper-teaser-gap-mobile-custom, var(--wrapper-teaser-gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
   }
 }

@@ -131,8 +131,18 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./no-calc-column-width-/no-calc-column-width-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }]).then(() => this.calcColumnWidth())
+        }, ...styles]).then(() => this.calcColumnWidth())
       default:
+        if (!this.hasAttribute('namespace')) this.css = /* css */`
+          :host {
+            --gap: var(--gap-custom, var(--content-spacing));
+          }
+          @media only screen and (max-width: _max-width_) {
+            :host {
+              --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
+            }
+          }
+        `
         return this.fetchCSS(styles).then(() => this.calcColumnWidth())
     }
   }
