@@ -100,7 +100,13 @@ export default class Body extends Shadow() {
         }
         :host > main > * {
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-          width: var(--content-width-mobile, var(--content-width, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)));
+          width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
+        }
+        :host(.content-max-width) > main > *:not(.ignore-max-width), :host> main > *.content-max-width {
+          max-width: var(--content-max-width-mobile, none);
+        }
+        :host(.content-max-width-two) > main > *:not(.ignore-max-width), :host > main > *.content-max-width-two {
+          max-width: var(--content-max-width-two-mobile, none);
         }
       }
     `
