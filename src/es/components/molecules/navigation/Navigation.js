@@ -657,9 +657,7 @@ export default class Navigation extends Shadow() {
    * @memberof IntersectionScrollEffect
    */
   checkMedia (media = this.getAttribute('media')) {
-    // @ts-ignore ignoring self.Environment error
-    const breakpoint = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'
-    const isMobile = self.matchMedia(`(max-width: ${breakpoint})`).matches
+    const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
     return (isMobile ? 'mobile' : 'desktop') === media
   }
 

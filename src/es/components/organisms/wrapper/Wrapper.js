@@ -29,16 +29,26 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
+    this.resizeListener = event => {
+      const media = this.getMedia()
+      if (this.lastMedia !== media) {
+        this.calcColumnWidth()
+        this.lastMedia = media
+      }
+    }
   }
 
   connectedCallback () {
     this.addEventListener('click', this.clickListener)
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    self.addEventListener('resize', this.resizeListener)
+    this.lastMedia = this.getMedia()
   }
 
   disconnectedCallback () {
     this.removeEventListener('click', this.clickListener)
+    self.removeEventListener('resize', this.resizeListener)
   }
 
   /**
@@ -83,30 +93,30 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
       }
       :host > section > * {
         box-sizing: border-box;
-        margin: var(--margin, 0);
-        padding: var(--padding, 0);
+        margin: var(--margin, 0) !important;
+        padding: var(--padding, 0) !important;
       }
       :host > section > *:first-child {
-        margin: var(--margin-first-child, var(--margin, 0));
-        padding: var(--padding-first-child, var(--padding, 0));
+        margin: var(--margin-first-child, var(--margin, 0)) !important;
+        padding: var(--padding-first-child, var(--padding, 0)) !important;
       }
       :host > section > *:last-child {
-        margin: var(--margin-last-child, var(--margin, 0));
-        padding: var(--padding-last-child, var(--padding, 0));
+        margin: var(--margin-last-child, var(--margin, 0)) !important;
+        padding: var(--padding-last-child, var(--padding, 0)) !important;
       }
       @media only screen and (max-width: _max-width_) {
         :host > section > * {
-          margin: var(--margin-mobile, var(--margin, 0));
-          padding: var(--padding-mobile, var(--padding, 0));
+          margin: var(--margin-mobile, var(--margin, 0)) !important;
+          padding: var(--padding-mobile, var(--padding, 0)) !important;
           ${this.hasAttribute('flex-nowrap-mobile') ? '' : 'width: 100% !important;'}
         }
         :host > section > *:first-child {
-          margin: var(--margin-first-child-mobile, var(--margin-first-child, var(--margin-mobile, var(--margin, 0))));
-          padding: var(--padding-first-child-mobile, var(--padding-first-child, var(--padding-mobile, var(--padding, 0))));
+          margin: var(--margin-first-child-mobile, var(--margin-first-child, var(--margin-mobile, var(--margin, 0)))) !important;
+          padding: var(--padding-first-child-mobile, var(--padding-first-child, var(--padding-mobile, var(--padding, 0)))) !important;
         }
         :host > section > *:last-child {
-          margin: var(--margin-last-child-mobile, var(--margin-last-child, var(--margin-mobile, var(--margin, 0))));
-          padding: var(--padding-last-child-mobile, var(--padding-last-child, var(--padding-mobile, var(--padding, 0))));
+          margin: var(--margin-last-child-mobile, var(--margin-last-child, var(--margin-mobile, var(--margin, 0)))) !important;
+          padding: var(--padding-last-child-mobile, var(--padding-last-child, var(--padding-mobile, var(--padding, 0)))) !important;
         }
       }
     `
@@ -133,16 +143,18 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
           namespace: false
         }, ...styles]).then(() => this.calcColumnWidth())
       default:
-        if (!this.hasAttribute('namespace')) this.css = /* css */`
-          :host {
-            --gap: var(--gap-custom, var(--content-spacing));
-          }
-          @media only screen and (max-width: _max-width_) {
+        if (!this.hasAttribute('namespace')) {
+          this.css = /* css */`
             :host {
-              --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
+              --gap: var(--gap-custom, var(--content-spacing));
             }
-          }
-        `
+            @media only screen and (max-width: _max-width_) {
+              :host {
+                --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
+              }
+            }
+          `
+        }
         return this.fetchCSS(styles).then(() => this.calcColumnWidth())
     }
   }
@@ -159,7 +171,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
     }
     for (let i = 0; i < childNodesLength; i++) {
       if (this.hasAttribute(`any-${i + 1}-width`) || (childNodes[i] && childNodes[i].hasAttribute('width'))) {
-        this.css = /* css */ `
+        this.css = /* css */`
           :host {
             --any-${i + 1}-width: ${this.getAttribute(`any-${i + 1}-width`) || childNodes[i].getAttribute('width')};
           }
@@ -204,8 +216,9 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
     let freeWidth = ((100 - bookedWidth) / (childNodesLength - bookedCount))
     // @ts-ignore
     if (freeWidth === Infinity) freeWidth = 0
+    this.style.textContent = ''
     for (let i = 1; i < childNodesLength + 1; i++) {
-      this.css = /* css */`
+      this.style.textContent += /* css */`
         :host > section > *:nth-child(${i}) {
           width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodesLength}${unit || 'px'});
         }
@@ -222,7 +235,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
     Array.from(this.root.children).forEach(node => {
       if (node.tagName !== 'STYLE') this.section.appendChild(node)
     })
-    this.html = this.section
+    this.html = [this.section, this.style]
   }
 
   /**
@@ -252,7 +265,19 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
     return [value, unit]
   }
 
+  getMedia () {
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
+  }
+
   get section () {
     return this._section || (this._section = document.createElement('section'))
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 }

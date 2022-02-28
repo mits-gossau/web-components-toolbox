@@ -311,9 +311,7 @@ export default class MacroCarousel extends Shadow() {
   }
 
   getMedia () {
-    // @ts-ignore ignoring self.Environment error
-    const breakpoint = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'
-    return self.matchMedia(`(min-width: calc(${breakpoint} + 1px))`).matches ? '' : '-mobile'
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? '' : '-mobile'
   }
 
   get scripts () {
