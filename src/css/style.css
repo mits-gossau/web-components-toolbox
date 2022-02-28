@@ -96,6 +96,7 @@
   text-underline-offset: var(--a-text-underline-offset, unset);
   display: var(--a-display, block);
   margin: var(--a-margin, var(--content-spacing) auto);
+  transition: var(--a-transition, color 0.3s ease-out);
 }
 :host a:hover, :host a:active, :host a:focus {
   color: var(--a-color-hover, var(--color-hover, var(--color, green)));

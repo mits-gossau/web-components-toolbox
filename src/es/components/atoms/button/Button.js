@@ -98,7 +98,7 @@ export default class Button extends Shadow() {
         overflow: hidden;
         padding: var(--padding, calc(0.75em - var(--border-width, 0px)) calc(1.5em - var(--border-width, 0px)));
         touch-action: manipulation;
-        transition: background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out;
+        transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
         opacity: var(--opacity, 1);
       }
