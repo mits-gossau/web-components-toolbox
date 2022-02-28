@@ -243,6 +243,12 @@
   color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
   background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
 }
+img[style="float: left;"] {
+  margin: var(--img-float-left-margin, 0 var(--content-spacing) 0 0);
+}
+img[style="float: right;"] {
+  margin: var(--img-float-right-margin, 0 0 0 var(--content-spacing));
+}
 @media only screen and (max-width: _max-width_) {
   :host h1, :host h6 {
     font-size: var(--h1-font-size-mobile, var(--h1-font-size, 1.75rem));
@@ -322,5 +328,11 @@
   }
   .spacer-four {
     height: var(--spacer-height-mobile, var(--spacer-height, calc(var(--content-spacing-mobile, var(--content-spacing)) * 3)));
+  }
+  img[style="float: left;"] {
+    margin: var(--img-float-left-margin-mobile, var(--img-float-left-margin, 0 var(--content-spacing-mobile, var(--content-spacing)) 0 0));
+  }
+  img[style="float: right;"] {
+    margin: var(--img-float-right-margin-mobile, var(--img-float-right-margin, 0 0 0 var(--content-spacing-mobile, var(--content-spacing))));
   }
 }

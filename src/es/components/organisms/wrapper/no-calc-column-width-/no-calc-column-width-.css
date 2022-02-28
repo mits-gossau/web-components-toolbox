@@ -1,4 +1,5 @@
 :host {
+  --wrapper-no-calc-column-width-align-items: var(--wrapper-no-calc-column-width-align-items-custom, center);
   --wrapper-no-calc-column-width-gap: var(--wrapper-no-calc-column-width-gap-custom, var(--content-spacing));
   --wrapper-no-calc-column-width-justify-content: var(--wrapper-no-calc-column-width-justify-content-custom, space-evenly);
 }
