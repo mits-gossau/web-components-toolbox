@@ -1,5 +1,5 @@
 /* https://www.figma.com/file/qrlDSGcoLRt6NDU3p7O0T3/Typography?node-id=3194%3A213 */
-:host h1 {
+:host h1, :host h6 {
   color: var(--h1-color, var(--color, black));
   display: var(--h1-display, block);
   font-size: var(--h1-font-size, 1.75rem);
@@ -56,26 +56,13 @@
   display: var(--h5-display, block);
   font-size: var(--h5-font-size, 1rem);
   font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family)));
-  font-weight: var(--h5-font-weight, var(--font-weight, normal));
+  font-weight: var(--h5-font-weight, 700);
   line-height: var(--h5-line-height, 1.334em);
   text-align: var(--h5-text-align, start);
   word-break: var(--h5-word-break, normal);
   text-transform: var(--h5-text-transform, none);
   margin: var(--h5-margin, 0 auto 1.143em);
   padding: var(--h5-padding, unset);
-}
-:host h6 {
-  color: var(--h6-color, var(--color, black));
-  display: var(--h6-display, block);
-  font-size: var(--h6-font-size, 0.875rem);
-  font-family: var(--h6-font-family, var(--font-family-bold, var(--font-family)));
-  font-weight: var(--h6-font-weight, var(--font-weight, normal));
-  line-height: var(--h6-line-height, normal);
-  text-align: var(--h6-text-align, start);
-  word-break: var(--h6-word-break, normal);
-  text-transform: var(--h6-text-transform, none);
-  margin: var(--h6-margin, 0 auto 1.143em);
-  padding: var(--h6-padding, unset);
 }
 :host p {
   font-family: var(--p-font-family, var(--font-family));
@@ -186,7 +173,7 @@
   content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="white"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" /></svg>');
 }
 :host a[href^="/"]:not(.no-icon):before, :host a[href^="http"]:not(.no-icon):before, :host a[href$=".pdf"]:not(.no-icon):before, :host a[href$=".xls"]:not(.no-icon):before {
-  background-color: var(--color-secondary, var(--a-color));
+  background-color: var(--a-color, var(--color-secondary));
   border-radius: 0.25em;
   display: inline-block;
   padding: 0.25em;
@@ -227,7 +214,7 @@
   background-color: var(--bg-color-hover, var(--color-hover, var(--bg-color, var(--background-color, green))));
 }
 @media only screen and (max-width: _max-width_) {
-  :host h1 {
+  :host h1, :host h6 {
     font-size: var(--h1-font-size-mobile, var(--h1-font-size, 1.75rem));
     line-height: var(--h1-line-height-mobile, var(--h1-line-height, 1.286em));
     word-break: var(--h1-word-break-mobile, var(--h1-word-break, normal));
@@ -261,13 +248,6 @@
     word-break: var(--h5-word-break-mobile, var(--h5-word-break, normal));
     text-transform: var(--h5-text-transform-mobile, var(--h5-text-transform, none));
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto 1.143em));
-  }
-  :host h6 {
-    font-size: var(--h6-font-size-mobile, var(--h6-font-size, 0.875rem));
-    line-height: var(--h6-line-height-mobile, var(--h6-line-height, normal));
-    word-break: var(--h6-word-break-mobile, var(--h6-word-break, normal));
-    text-transform: var(--h6-text-transform-mobile, var(--h6-text-transform, none));
-    margin: var(--h6-margin-mobile, var(--h6-margin, 0 auto 1.143em));
   }
   :host p {
     font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));
