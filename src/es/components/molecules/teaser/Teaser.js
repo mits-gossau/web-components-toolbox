@@ -129,6 +129,10 @@ export default class Teaser extends Shadow() {
       :host figure figcaption h2 {
         width: var(--h2-width, auto);
       }
+      :host(:hover) figure figcaption h2 {
+        color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
+        background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
+      }
       :host figure figcaption a-link {
         position: var(--a-link-position, static);
         top: var(--a-link-top, auto);
