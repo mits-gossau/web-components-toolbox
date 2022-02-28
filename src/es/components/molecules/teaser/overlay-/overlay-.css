@@ -6,7 +6,7 @@
   --teaser-overlay-a-picture-transition: transform .5s ease-out;
   --teaser-overlay-align-items: center;
   --teaser-overlay-background-color: transparent;
-  --teaser-overlay-bg-background-color-hover: var(--teaser-overlay-bg-background-color-hover-custom, var(--color-secondary, var(--m-red-900)));
+  --teaser-overlay-bg-background-color-hover: var(--teaser-overlay-bg-background-color-hover-custom, var(--color-hover, var(--m-red-900)));
   --teaser-overlay-bg-background-color: var(--teaser-overlay-bg-background-color-custom, var(--color-secondary, var(--m-red-800)));
   --teaser-overlay-bg-color-hover: var(--teaser-overlay-bg-color-hover-custom, var(--background-color, var(--m-red-900)));
   --teaser-overlay-bg-color: var(--teaser-overlay-bg-color-custom, var(--background-color, var(--m-red-800)));
@@ -15,6 +15,5 @@
   --teaser-overlay-figcaption-height: auto;
   --teaser-overlay-figcaption-padding: 0 0 1rem;
   --teaser-overlay-h2-margin: 0.09em 0;
-  --teaser-overlay-h2-width: fit-content;
   --teaser-overlay-overflow: hidden;
 }
