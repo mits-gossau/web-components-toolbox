@@ -23,9 +23,31 @@ export default class Arrow extends Shadow() {
     return ['hover']
   }
 
+  constructor (...args) {
+    super(...args)
+
+    this.mouseoverListener = event => {
+      if (!this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', 'true')
+    }
+    this.mouseoutListener = event => {
+      if (!this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', '')
+    }
+  }
+
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.hasAttribute('move') && this.svg) {
+      this[this.hasAttribute('hover-on-parentElement') ? 'parentNode' : 'svg'].addEventListener('mouseover', this.mouseoverListener)
+      this[this.hasAttribute('hover-on-parentElement') ? 'parentNode' : 'svg'].addEventListener('mouseout', this.mouseoutListener)
+    }
+  }
+
+  disconnectedCallback () {
+    if (this.hasAttribute('move') && this.svg) {
+      this[this.hasAttribute('hover-on-parentElement') ? 'parentNode' : 'svg'].removeEventListener('mouseover', this.mouseoverListener)
+      this[this.hasAttribute('hover-on-parentElement') ? 'parentNode' : 'svg'].removeEventListener('mouseout', this.mouseoutListener)
+    }
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -66,19 +88,20 @@ export default class Arrow extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host([hover]) {
-        display: block;
+      :host {
+        display: inline-block;
         overflow: hidden;
+        height: var(--svg-size, 1.5em);
+        width: var(--svg-size, 1.5em);
+        vertical-align: text-top;
       }
       :host > svg {
         align-items: center;
         color: var(--color, #777);
         cursor: pointer;
-        display: flex;
-        font-size: var(--font-size);
-        height: 1em;
+        height: var(--svg-size, 1.5em);
         justify-content: center;
-        width: 1em;
+        width: var(--svg-size, 1.5em);
       }
       :host > svg path {
         stroke: var(--color, #777);
@@ -124,6 +147,10 @@ export default class Arrow extends Shadow() {
       </svg>
     `
     this.html = this.style
+  }
+
+  get svg () {
+    return this.root.querySelector('svg')
   }
 
   get style () {

@@ -22,7 +22,6 @@ export default class Teaser extends Shadow() {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
-
     this.mouseoverListener = event => {
       if (this.aArrow) this.aArrow.setAttribute('hover', 'true')
     }
@@ -69,6 +68,7 @@ export default class Teaser extends Shadow() {
    * @return {Promise<void>}
    */
   renderCSS () {
+    if (this.getAttribute('namespace') === 'teaser-overlay-' && this.aArrow) this.aArrow.setAttribute('hover-set-by-outside', '')
     this.css = /* css */`
       :host([href]) {
         cursor: pointer;
@@ -100,6 +100,11 @@ export default class Teaser extends Shadow() {
           :host figure figcaption {
             z-index: 1;
           }
+          :host(:hover) figure figcaption * {
+            color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
+            background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
+            box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green)))), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
+          }
         `
         : ''}
       :host figure a-picture {
@@ -125,13 +130,6 @@ export default class Teaser extends Shadow() {
       }
       :host(:hover) figure figcaption {
         transform: var(--figcaption-transform-hover, none);
-      }
-      :host figure figcaption h2 {
-        width: var(--h2-width, auto);
-      }
-      :host(:hover) figure figcaption h2 {
-        color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
-        background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
       }
       :host figure figcaption a-link {
         position: var(--a-link-position, static);
