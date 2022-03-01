@@ -271,7 +271,7 @@ export default class Picture extends Shadow() {
 
   get parentNodeShadowRootHost () {
     if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
-    const searchShadowRoot = node => node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
+    const searchShadowRoot = node => node.root || node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
     return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
   }
 
