@@ -15,7 +15,7 @@ TODO:
 - [x] button 1-4 version (3 + 4 -color-disabled) https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=2866%3A55901
 - [x] Wrapper.js onresize newly calculate calcColumnWidth
 - [x] :host *.bg-color, :host *.bg-color-hover try to make this display inline and with box-shadow analog https://www.betriebsrestaurants-migros.ch/de.html
-- [ ] review each component, css Dino + Weedy
+- [x] review each component, css Dino + Weedy
 - [ ] style.css demo page
 - [ ] Template.html fix image path issue http://localhost:4200/src/es/components/web-components-toolbox/docs/Template.html?logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/atoms/button/primary-/primary-.html
 - [ ] Template.html api call to fetch page content for previews

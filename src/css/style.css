@@ -64,7 +64,7 @@
   margin: var(--h5-margin, 0 auto 1.143em);
   padding: var(--h5-padding, unset);
 }
-:host .font-size-huge {
+:host .font-size-big {
   font-size: calc(var(--h1-font-size, 1.75rem) * 1.5);
 }
 :host p {
@@ -284,7 +284,7 @@ img[style="float: right;"] {
     text-transform: var(--h5-text-transform-mobile, var(--h5-text-transform, none));
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto 1.143em));
   }
-  :host .font-size-huge {
+  :host .font-size-big {
     font-size: calc(var(--h1-font-size-mobile, var(--h1-font-size, 1.75rem)) * 1.5);
   }
   :host p {
