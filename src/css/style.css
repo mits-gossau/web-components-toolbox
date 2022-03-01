@@ -109,12 +109,7 @@
   color: var(--a-color-hover, var(--color-hover, var(--color, green)));
   text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, underline))));
 }
-:host a:hover > h1.a-arrow, :host a:active > h1.a-arrow, :host a:focus > h1.a-arrow,
-:host a:hover > h2.a-arrow, :host a:active > h2.a-arrow, :host a:focus > h2.a-arrow,
-:host a:hover > h3.a-arrow, :host a:active > h3.a-arrow, :host a:focus > h3.a-arrow,
-:host a:hover > h4.a-arrow, :host a:active > h4.a-arrow, :host a:focus > h4.a-arrow,
-:host a:hover > h5.a-arrow, :host a:active > h5.a-arrow, :host a:focus > h5.a-arrow,
-:host a:hover > h6.a-arrow, :host a:active > h6.a-arrow, :host a:focus > h6.a-arrow {
+:host a:hover *.a-arrow {
   --color: var(--a-color-hover, var(--color-hover, green));
 }
 :host ul {
