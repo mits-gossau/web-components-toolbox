@@ -428,7 +428,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
 
   /**
    * the most common way to figure out the sites break point
-   * 
+   *
    * @readonly
    * @return {string}
    */

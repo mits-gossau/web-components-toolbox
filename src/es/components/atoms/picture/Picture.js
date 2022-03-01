@@ -57,16 +57,31 @@ export default class Picture extends Shadow() {
         composed: true
       }))
     }
+    this.mouseoverListener = event => {
+      this.picture.classList.add('hover')
+    }
+    this.mouseoutListener = event => {
+      this.picture.classList.remove('hover')
+    }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.hasAttribute('open-modal')) this.addEventListener('click', this.clickListener)
+    if (this.mouseEventElement) {
+      this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
+      this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
+    }
   }
 
   disconnectedCallback () {
     if (this.hasAttribute('open-modal')) this.removeEventListener('click', this.clickListener)
+    if (this.mouseEventElement) {
+      this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
+      this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
+      this.parentNodeShadowRootHost = null
+    }
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -123,7 +138,7 @@ export default class Picture extends Shadow() {
         margin: var(--margin, 0);
         text-align: var(--text-align, center);
       }
-      :host picture:hover {
+      :host picture:hover, :host picture.hover {
         filter: var(--filter-hover, var(--filter, none));
         transform: var(--transform-hover, var(--transform, none));
       }
@@ -149,7 +164,7 @@ export default class Picture extends Shadow() {
           height: var(--height-mobile, var(--height, auto));
           text-align: var(--text-align-mobile, var(--text-align, center));
         }
-        :host picture:hover {
+        :host picture:hover, :host picture.hover {
           filter: var(--filter-mobile-hover, var(--filter-hover, var(--filter, none)));
           transform: var(--transform-mobile-hover, var(--transform-hover, var(--transform, none)));
         }
@@ -252,5 +267,19 @@ export default class Picture extends Shadow() {
 
   get img () {
     return this.root.querySelector('img')
+  }
+
+  get parentNodeShadowRootHost () {
+    if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
+    const searchShadowRoot = node => node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
+    return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
+  }
+
+  set parentNodeShadowRootHost (node) {
+    this._parentNodeShadowRootHost = node
+  }
+
+  get mouseEventElement () {
+    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
   }
 }
