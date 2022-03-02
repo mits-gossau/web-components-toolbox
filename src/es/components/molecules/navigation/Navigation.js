@@ -319,6 +319,8 @@ export default class Navigation extends Shadow() {
         --a-link-content-spacing: 0;
         --a-link-font-size: 1rem;
         --a-link-font-weight: normal;
+        --justify-content: left;
+        --show: none;
         background-color: var(--background-color, white);
         cursor: auto;
         display: none !important;
@@ -328,7 +330,7 @@ export default class Navigation extends Shadow() {
         overflow: auto;
         box-sizing: border-box;
         max-height: 80vh;
-        padding: 2.5rem calc((100% - var(--content-width)) / 2);
+        padding: 2.5rem calc((100% - var(--content-width, 80%)) / 2);
         transition: all 0.2s ease;
         z-index: var(--li-ul-z-index, auto);
       }

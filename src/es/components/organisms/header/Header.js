@@ -223,6 +223,12 @@ export default class Header extends Shadow() {
       :host([sticky]:not(.top)) {
         transition: var(--sticky-transition-hide, top .4s ease);
       }
+      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
+        order: 2;
+      }
+      :host > header > a-logo{
+        order: 1;
+      }
       @keyframes backgroundAnimation {
         0%{background-position-y:100%}
         100%{background-position-y:0%}
@@ -318,7 +324,11 @@ export default class Header extends Shadow() {
           --a-menu-icon-margin: var(--a-menu-icon-margin-open-mobile);
           display: var(--a-menu-icon-display-open-mobile, var(--a-menu-icon-display-mobile, block));
         }
+        :host > header > a-menu-icon {
+          order: 3;
+        }
         :host > header > a-logo{
+          order: 1;
           flex-grow: 1;
         }
       }
