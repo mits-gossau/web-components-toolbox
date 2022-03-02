@@ -249,15 +249,16 @@ export default class Input extends Shadow() {
         }
         :host([search]) button {
           right: var(--content-spacing-mobile);
+          line-height: 1.5;
         }
         .mui-form-group {
           max-width: var(--max-width-mobile, var(--max-width, none));
         }
-        :host([search]) button {
-          line-height: 1.5;
-        }
         :host([search]) input::-webkit-search-cancel-button {
           margin-right: 2.5em;
+        }
+        label, input, :host([search]) button {
+          font-size: var(--font-size-mobile, var(--font-size));
         }
       }
     `
