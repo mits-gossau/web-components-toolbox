@@ -218,11 +218,11 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
     if (freeWidth === Infinity) freeWidth = 0
     this.style.textContent = ''
     for (let i = 1; i < childNodesLength + 1; i++) {
-      this.style.textContent += /* css */`
+      this.setCss(/* CSS */`
         :host > section > *:nth-child(${i}) {
           width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodesLength}${unit || 'px'});
         }
-      `
+      `, undefined, undefined, undefined, this.style)
     }
   }
 

@@ -63,11 +63,11 @@ export default class Navigation extends Shadow() {
       let section
       if ((section = this.root.querySelector('li.open section'))) {
         if (this.checkMedia('desktop')) {
-          this.style.textContent = /* css */`
-          :host > nav > ul > li.open > div.background {
-            top: ${section.getBoundingClientRect().bottom}px;
-          }
-        `
+          this.setCss(/* CSS */`
+            :host > nav > ul > li.open > div.background {
+              top: ${section.getBoundingClientRect().bottom}px;
+            }
+          `, undefined, undefined, undefined, this.style)
         }
       }
       this.liClickListener(event)

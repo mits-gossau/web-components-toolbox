@@ -159,7 +159,7 @@ export default class Footer extends Shadow() {
         }
       }
     `
-    this.wrapperStyle.textContent = /* css */`
+    this.setCss(/* CSS */`
       :host {
         padding: 0 !important;
       }
@@ -208,7 +208,7 @@ export default class Footer extends Shadow() {
           padding: 0.5rem 0;
         }
       }
-    `
+    `, undefined, undefined, undefined, this.wrapperStyle)
     switch (this.getAttribute('namespace')) {
       case 'footer-default-':
         return this.fetchCSS([{

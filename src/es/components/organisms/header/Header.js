@@ -400,12 +400,12 @@ export default class Header extends Shadow() {
   setStickyOffsetHeight () {
     if (this.lastOffsetHeight !== this.offsetHeight) {
       this.lastOffsetHeight = this.offsetHeight
-      this.style.textContent = /* CSS */`
+      this.setCss(/* CSS */`
         :host([sticky].top), :host([sticky]:not(.top)) {
           top: -${this.offsetHeight}px;
           transition: var(--sticky-transition-hide, top .4s ease);
         }
-      `
+      `, undefined, undefined, undefined, this.style)
     }
   }
 
