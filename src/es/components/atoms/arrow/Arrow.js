@@ -27,28 +27,26 @@ export default class Arrow extends Shadow() {
     super(...args)
 
     this.mouseoverListener = event => {
-      if (!this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', 'true')
+      if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', 'true')
+      this.classList.add('hover')
     }
     this.mouseoutListener = event => {
-      if (!this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', '')
+      if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', '')
+      this.classList.remove('hover')
     }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    if (this.hasAttribute('move')) {
-      this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
-      this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
-    }
+    this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
+    this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
   }
 
   disconnectedCallback () {
-    if (this.hasAttribute('move')) {
-      this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
-      this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
-      this.parentNodeShadowRootHost = null
-    }
+    this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
+    this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
+    this.parentNodeShadowRootHost = null
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -105,10 +103,11 @@ export default class Arrow extends Shadow() {
         width: var(--svg-size, 1.5em);
       }
       :host > svg path {
-        stroke: var(--color, #777);
+        stroke: var(--path-color, var(--color, #777));
+        transition: var(--path-transition, all 0.3s ease-out);
       }
-      :host(:hover) > svg{
-        color: var(--color-hover, var(--color, white));
+      :host(:hover) > svg path, :host(.hover) > svg path{
+        stroke: var(--path-color-hover, var(--color, #777));
       }
       :host([direction=up]) > svg {
         transform: rotate(270deg);
@@ -144,7 +143,7 @@ export default class Arrow extends Shadow() {
     // src/es/components/web-components-toolbox/src/icons/chevron_right.svg
     this.html = /* html */`
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 18L15 12L9 6" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     `
     this.html = this.style

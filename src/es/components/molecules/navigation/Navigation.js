@@ -72,6 +72,10 @@ export default class Navigation extends Shadow() {
       }
       this.liClickListener(event)
     }
+    this.resizeListener = event => {
+      if (this.hasAttribute('no-scroll')) this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+      this.clickListener(event)
+    }
     // on resize or click keep ul open in sync
     // remove open class
     this.liClickListener = event => {
@@ -94,13 +98,13 @@ export default class Navigation extends Shadow() {
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    self.addEventListener('resize', this.clickListener)
+    self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
     this.setFocusLostClickBehavior()
   }
 
   disconnectedCallback () {
-    self.removeEventListener('resize', this.clickListener)
+    self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
     this.root.querySelectorAll('a-link').forEach(link => link.removeEventListener('click', this.clickListener))
     this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.removeEventListener('click', this.liClickListener))
@@ -262,6 +266,17 @@ export default class Navigation extends Shadow() {
           display: var(--arrow-display, 'block');
           min-height: var(--min-height-mobile, 50px);
           min-width: var(--min-width-mobile, 50px);
+          text-align: right;
+          padding-right: var(--content-spacing-mobile);
+        }
+        :host > nav > ul ul > li > a-arrow {
+          display: none;
+        }
+        :host > nav > ul > li a-link:hover ~ a-arrow, :host > nav > ul > li.open a-link:hover ~ a-arrow {
+          --color: var(--color-hover);
+        }
+        :host > nav > ul > li.open a-arrow {
+          --color: var(--color-secondary);
         }
         :host > nav > ul li:hover ul,
         :host > nav > ul li:not(.open) a-link.open ~ ul,
@@ -354,6 +369,11 @@ export default class Navigation extends Shadow() {
         padding: var(--search-li-padding, var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4)));
         margin-top: -1.5rem;
       }
+      :host > nav > ul > li > a-input{
+        --margin-bottom: 0;
+        --search-input-border-color: transparent;
+        --search-input-padding-mobile: var(--a-link-content-spacing);
+      }
       @media only screen and (max-width: _max-width_) {
         :host {
           --a-link-content-spacing-no-scroll: 1.1429rem 1.2143rem;
@@ -375,14 +395,14 @@ export default class Navigation extends Shadow() {
           display: flex;
           flex-direction: column;
           justify-content: flex-start; /* must be up, otherwise the iphone hides it behind the footer bar */
-          min-height: calc(100vh - var(--header-m-navigation-top-mobile));
+          min-height: calc(100vh - var(--header-default-m-navigation-top-mobile));
         }
         :host > nav > .language-switcher {
           display: flex;
           flex-direction: row;
           justify-content: center;
         }
-        :host > nav > .language-switcher > li {
+        :host > nav > .language-switcher > li, :host > nav > .language-switcher > li:hover:not(.search) {
           border: 0;
           width: auto;
         }
@@ -398,20 +418,20 @@ export default class Navigation extends Shadow() {
         :host > nav > ul > li{
           align-items: center;
           box-sizing: border-box;
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
           display: flex;
           justify-content: space-between;
           width: 100%;
         }
         :host > nav > ul > li:hover:not(.search) {
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
         }
         :host > nav > ul li.open {
           --a-link-content-spacing-no-scroll: var(--a-link-font-size-no-scroll-mobile) 1.2143rem var(--a-link-font-size-no-scroll-mobile) 0;
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: var(--a-link-font-size-no-scroll-mobile);
           --a-link-font-size-no-scroll-mobile: 1.7143rem;
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
           flex-direction: row-reverse;
         }
         :host > nav > ul > li > div.background {
@@ -428,7 +448,7 @@ export default class Navigation extends Shadow() {
           z-index: 100;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem calc(2rem + 50px);
+          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem calc(2rem + min(30vw, 50px));
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: 1.1429rem;
           --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
@@ -436,16 +456,19 @@ export default class Navigation extends Shadow() {
           left: 0;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul {
-          --padding-mobile: 0.8571rem 0;
+          --padding-mobile: 0 0 0.8571rem;
           --padding-first-child-mobile: var(--padding-mobile);
           --padding-last-child-mobile: var(--padding-mobile);
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
+        }
+        :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul:first-child {
+          --padding-mobile: 0.8571rem 0;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul:last-child {
           margin-bottom: 100px !important; /* must be up, otherwise the iphone hides it behind the footer bar */
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li:first-child, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
-          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem 50px;
+          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem min(30vw, 50px);
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: 1.2857rem;
           --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
@@ -457,7 +480,7 @@ export default class Navigation extends Shadow() {
           padding-bottom: 0;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
           padding: var(--padding-mobile);
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold:first-child {
