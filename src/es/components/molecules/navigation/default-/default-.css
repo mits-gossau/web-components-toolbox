@@ -18,6 +18,7 @@
   --navigation-default-margin: 0;
   --navigation-default-padding: 0;
   --navigation-default-search-li-padding: 0;
+  --navigation-default-transition: all 0.2s ease-out, color 0.3s ease-out;
   --navigation-default-white-space: normal;
   --navigation-default-word-break: break-word;
 }

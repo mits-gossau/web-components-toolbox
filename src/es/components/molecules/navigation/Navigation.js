@@ -367,7 +367,6 @@ export default class Navigation extends Shadow() {
         justify-content: flex-end;
         margin-right: 0;
         padding: var(--search-li-padding, var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4)));
-        margin-top: -1.5rem;
       }
       :host > nav > ul > li > a-input{
         --margin-bottom: 0;

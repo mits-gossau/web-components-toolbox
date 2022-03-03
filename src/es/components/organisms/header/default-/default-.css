@@ -50,7 +50,7 @@
   --header-default-m-navigation-transition: none;
   --header-default-order: 0;
   --header-default-padding-mobile: 0 0 0;
-  --header-default-padding: 1.5rem 0 0;
+  --header-default-padding: var(--content-spacing) 0 0;
   --header-default-position-open-mobile: fixed;
   --header-default-position: static;
   --header-default-sticky-border-bottom: var(--header-default-border-bottom);
