@@ -10,20 +10,44 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class EmotionPictures extends Shadow() {
-  constructor (...args) {
+  constructor (options = {}, ...args) {
     super(...args)
+
     this.childEle = this.root.childNodes;
+
     Array.from(this.childEle).forEach(node => {
       if(node.tagName === 'A-PICTURE'){
         node.setAttribute('loading', this.getAttribute('loading') || 'eager')
       }
     })
+
+    this.observer = this.titleObserver()
+    this.titleElement = this.root.querySelector('H2')
+
+  }
+
+  titleObserver = () => {
+    return new IntersectionObserver(entries => {
+      if(entries[0]['isIntersecting'] === true) {
+        if(entries[0]['intersectionRatio'] === 1) {
+          this.titleElement.style.opacity =  1;
+        }else if(entries[0]['intersectionRatio'] > 0.5){
+          this.titleElement.style.opacity =  entries[0]['intersectionRatio'];
+        }  else {
+          this.titleElement.style.opacity =  entries[0]['intersectionRatio'];
+        }
+      }else{
+        this.titleElement.style.opacity =  1;
+      }
+    }, { threshold: [0, 0.5, 1] });
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shown) this.shuffle()
+    if(this.titleElement) this.observer.observe(this.titleElement)
   }
+
 
   disconnectedCallback () {
     this.shuffle(false)
