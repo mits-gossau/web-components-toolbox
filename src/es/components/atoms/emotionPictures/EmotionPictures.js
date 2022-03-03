@@ -50,7 +50,8 @@ export default class EmotionPictures extends Shadow() {
         margin: var(--margin, 0) !important;
         width: var(--width, 100%) !important;
         line-height:var(--line-height, 0);
-        /*background:red;*/
+        align-items: start;
+        justify-items: start;
       }
       :host > * {
         grid-column: 1;
@@ -61,12 +62,22 @@ export default class EmotionPictures extends Shadow() {
       :host > *.shown {
         opacity: 1;
       }
+      :host > h2 {
+        z-index:2;
+        top: 4vw;
+        left: 10vw !important;
+      }
       @media only screen and (max-width: _max-width_) {
-        :host {
-          margin: var(--margin-mobile, var(--margin, calc(-1.5rem + 1px) auto 1.5rem)) !important;
-        }
+        :host {}
       }
     `
+
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
 
     switch (this.getAttribute('namespace')) {
       case 'emotion-pictures-has-title-':
@@ -75,15 +86,16 @@ export default class EmotionPictures extends Shadow() {
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./has-title-/has-title-.css`,
           namespace: false
-        }])
+        },...styles])
       default:
         if (!this.hasAttribute('namespace')) {
           this.css = /* css */`
           :host {
-            --img-width: 14%;
+            --img-width: 100%;
            }
           `
         }
+        return this.fetchCSS(styles)
     }
   }
 
