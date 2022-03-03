@@ -63,6 +63,7 @@ export default class Navigation extends Shadow() {
       let section
       if ((section = this.root.querySelector('li.open section'))) {
         if (this.checkMedia('desktop')) {
+          this.style.textContent = ''
           this.setCss(/* CSS */`
             :host > nav > ul > li.open > div.background {
               top: ${section.getBoundingClientRect().bottom}px;
@@ -72,9 +73,12 @@ export default class Navigation extends Shadow() {
       }
       this.liClickListener(event)
     }
+    let timeout = null
     this.resizeListener = event => {
       if (this.hasAttribute('no-scroll')) this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
       this.clickListener(event)
+      clearTimeout(timeout)
+      timeout = setTimeout(() => this.checkIfWrapped(true), 200)
     }
     // on resize or click keep ul open in sync
     // remove open class
@@ -254,6 +258,7 @@ export default class Navigation extends Shadow() {
         }
         :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
           --color: var(--a-arrow-color-hover, var(--color-hover));
+          --color-mobile: var(--color-open-mobile, var(--color-hover-mobile));
         }
         :host > nav > ul li > a-link{
           flex-grow: 1;
@@ -268,6 +273,9 @@ export default class Navigation extends Shadow() {
           min-width: var(--min-width-mobile, 50px);
           text-align: right;
           padding-right: var(--content-spacing-mobile);
+        }
+        :host > nav > ul > li a-link.active ~ a-arrow {
+          --color: var(--a-arrow-color-active);
         }
         :host > nav > ul ul > li > a-arrow {
           display: none;
@@ -335,19 +343,21 @@ export default class Navigation extends Shadow() {
         --a-link-font-size: 1rem;
         --a-link-font-weight: normal;
         --justify-content: left;
-        --show: none;
         background-color: var(--background-color, white);
         cursor: auto;
         display: none !important;
         position: absolute;
         left: 0;
-        margin-top: 1.7rem;
+        margin-top: 0.2em;
         overflow: auto;
         box-sizing: border-box;
         max-height: 80vh;
         padding: 2.5rem calc((100% - var(--content-width, 80%)) / 2);
         transition: all 0.2s ease;
         z-index: var(--li-ul-z-index, auto);
+      }
+      :host(.wrapped) > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+        margin-top: 4.1em;
       }
       :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
         display: flex !important;
@@ -367,6 +377,9 @@ export default class Navigation extends Shadow() {
         justify-content: flex-end;
         margin-right: 0;
         padding: var(--search-li-padding, var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4)));
+      }
+      :host(.wrapped) > nav > ul > li.search {
+        justify-content: flex-start;
       }
       :host > nav > ul > li > a-input{
         --margin-bottom: 0;
@@ -493,7 +506,11 @@ export default class Navigation extends Shadow() {
           width: 100%;
         }
         :host > nav > ul > li.search {
+          --search-input-width: 100%;
           margin-top: 0;
+        }
+        :host > nav > ul > li.search {
+          padding: var(--search-li-padding-mobile, var(--search-li-padding, 0 calc(var(--content-spacing, 40px) / 4)));
         }
       }
       @keyframes open {
@@ -600,6 +617,14 @@ export default class Navigation extends Shadow() {
         cancelable: true,
         composed: true
       }))
+      this.checkIfWrapped(true)
+      setTimeout(() => self.requestAnimationFrame(timeStamp => {
+        this.css = /* CSS */`
+          :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+            --show: none;
+          }
+        `
+      }), 1000)
     })
   }
 
@@ -691,5 +716,23 @@ export default class Navigation extends Shadow() {
       style.setAttribute('protected', 'true')
       return style
     })())
+  }
+
+  get liSearch () {
+    return this.root.querySelector('li.search') || this.root.querySelector('li')
+  }
+
+  // adjust logo top position
+  checkIfWrapped (resetCouter) {
+    if (this.getMedia() !== 'desktop') return
+    this._checkIfWrappedCounter = resetCouter ? 1 : !this._checkIfWrappedCounter ? 1 : this._checkIfWrappedCounter + 1
+    self.requestAnimationFrame(timeStamp => {
+      if (this._checkIfWrappedCounter < 10 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 500)
+      this.classList[this.offsetHeight > this.liSearch.offsetHeight ? 'add' : 'remove']('wrapped')
+    })
+  }
+
+  getMedia () {
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 }

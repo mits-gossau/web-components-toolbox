@@ -58,7 +58,7 @@ export default class EmotionPictures extends Shadow() {
       }
       @media only screen and (max-width: _max-width_) {
         :host {
-          margin: var(--margin-mobile, var(--margin, calc(var(--content-spacing-mobile) + 1px) auto var(--content-spacing-mobile))) !important;
+          margin: var(--margin-mobile, var(--margin, 0 auto var(--content-spacing-mobile))) !important;
         }
       }
     `

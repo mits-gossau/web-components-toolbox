@@ -134,13 +134,13 @@ export default class Input extends Shadow() {
         line-height: 1.5;
         color: var(--input-color, var(--color));
         appearance: none;
-        background: var(--input-bg-color, var(--m-gray-100));
+        background: var(--input-bg-color, var(--m-gray-200));
         border: var(--border, 1px solid transparent);
         transition: background ease-out .3s, border-color ease-out .3s;
       }
 
       input::placeholder {
-        color: var(--placeholder-color, var(--m-gray-300));
+        color: var(--placeholder-color, var(--m-gray-500));
         opacity: 1;
       }
 
@@ -173,6 +173,8 @@ export default class Input extends Shadow() {
         padding: var(--search-input-padding, 0.75em var(--content-spacing));
         padding-right: max(2.5em, 35px);
         border-radius: var(--border-radius, 0.5em);
+        width: var(--search-input-width, 20em);
+        min-width: 10em;
       }
 
       :host([search]) input::-webkit-search-cancel-button {

@@ -2,9 +2,4 @@
   --logo-default-align-items: baseline;
   --logo-default-flex-grow: 0;
   --logo-default-justify-content: flex-end;
-  --logo-default-max-height-mobile: 6.4em;
-  --logo-default-max-height: 5.6em;
-  --logo-default-max-width: 50vw;
-  --logo-default-height: auto;
-  --logo-default-height-mobile: var(--logo-default-height);
 }
