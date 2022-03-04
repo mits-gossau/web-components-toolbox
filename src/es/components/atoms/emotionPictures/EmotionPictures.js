@@ -10,25 +10,32 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * @type {CustomElementConstructor}
  */
 export default class EmotionPictures extends Intersection() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 } }), ...args)
-   
+
     Array.from(this.root.childNodes).forEach(node => {
       if (node.tagName === 'A-PICTURE') node.setAttribute('loading', this.getAttribute('loading') || 'eager')
     })
   }
 
-  intersectionCallback (entries, observer) {
-    if (entries?.[0] && entries[0].isIntersecting) this.classList.toggle('visible')
+  intersectionCallback(entries, observer) {
+    if (entries && entries[0]) {
+      if (entries[0].isIntersecting) {
+        this.classList.add('visible')
+      } else {
+        this.classList.remove('visible')
+      }
+    }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    //console.log(Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length);
     if (this.shown && Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length > 1) this.shuffle()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     this.shuffle(false)
   }
@@ -38,7 +45,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -47,7 +54,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         display: grid !important;
@@ -60,14 +67,16 @@ export default class EmotionPictures extends Intersection() {
       :host > * {
         grid-column: 1;
         grid-row: 1;
-        /*opacity: 0;*/
         opacity: 0;
         transition: var(--transition, opacity 3s ease);
       }
       :host > *.shown {
-        /*opacity: 1;*/
         opacity: 1;
       }
+      // :host > div * a-picture {
+      //   max-height:10px;
+      //   --img-max-height:var(--img-max-height, 400px);
+      // }
       :host > div {
         position:relative;
       }
@@ -81,7 +90,6 @@ export default class EmotionPictures extends Intersection() {
       }
       :host(.visible) > div > h2 {
         opacity: 1;
-
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
@@ -92,6 +100,14 @@ export default class EmotionPictures extends Intersection() {
       }
     `
 
+    this.setCss(/* css */`
+    :host > * {
+      --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
+      --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 100vh);
+    }
+  `, undefined, '', false)
+
+
     const styles = [
       {
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
@@ -101,25 +117,21 @@ export default class EmotionPictures extends Intersection() {
 
     switch (this.getAttribute('namespace')) {
       case 'emotion-pictures-has-title-':
-        this.setCss(/* css */':host > * {--img-width: var(--emotion-pictures-has-title-img-width, 100%);}', undefined, '', false)
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./has-title-/has-title-.css`,
           namespace: false
         }, ...styles])
-      default:
-        if (!this.hasAttribute('namespace')) {
-          this.css = /* css */`
-          :host {
-            --img-width: 100%;
-           }
-          `
-        }
-        return this.fetchCSS(styles)
+        case 'emotion-pictures-default-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          namespace: false
+        }, ...styles])
     }
   }
 
-  shuffle (start = true) {
+  shuffle(start = true) {
     clearInterval(this.interval || null)
     if (start) {
       this.interval = setInterval(() => {
@@ -136,7 +148,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  get shown () {
+  get shown() {
     return this.root.querySelector('.shown') || (() => {
       if (this.root.childNodes[0]) this.root.childNodes[0].classList.add('shown')
       return this.root.childNodes[0]

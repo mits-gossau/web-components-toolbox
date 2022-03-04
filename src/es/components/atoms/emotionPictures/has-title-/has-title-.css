@@ -3,4 +3,5 @@
    --emotion-pictures-has-title-bg-background-color:var(--emotion-pictures-has-title-bg-background-color-custom, var(--m-white));
    --emotion-pictures-has-title-bg-color:var(--emotion-pictures-has-title-bg-color-custom, var(--m-black));
    --emotion-pictures-has-title-bg-transition: opacity 0.5s ease-out;
+   --emotion-pictures-has-title-img-max-height:80vh;
 }
