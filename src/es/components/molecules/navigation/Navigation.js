@@ -677,7 +677,7 @@ export default class Navigation extends Shadow() {
   }
 
   get focusLostClose () {
-    return this.checkMedia('desktop') && this.hasAttribute('focus-lost-close') && this.getAttribute('focus-lost-close') !== 'false'
+    return this.hasAttribute('focus-lost-close') && this.getAttribute('focus-lost-close') !== 'false'
   }
 
   getBackground () {
