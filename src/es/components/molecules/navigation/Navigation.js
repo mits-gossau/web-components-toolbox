@@ -728,7 +728,7 @@ export default class Navigation extends Shadow() {
     this._checkIfWrappedCounter = resetCouter ? 1 : !this._checkIfWrappedCounter ? 1 : this._checkIfWrappedCounter + 1
     self.requestAnimationFrame(timeStamp => {
       if (this._checkIfWrappedCounter < 10 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 500)
-      this.classList[this.offsetHeight > this.liSearch.offsetHeight ? 'add' : 'remove']('wrapped')
+      this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
     })
   }
 

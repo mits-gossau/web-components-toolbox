@@ -397,6 +397,7 @@ export default class Header extends Shadow() {
         this.html = this.style
         this.hidden = false
         this.adjustLogoPos(true)
+        setTimeout(() => self.requestAnimationFrame(timeStamp => this.adjustLogoPos(true)), 1000)
       })
     }
     if (this.hasAttribute('sticky')) this.classList.add('top')
