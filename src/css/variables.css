@@ -23,5 +23,7 @@
   :root {
     --background-color: var(--m-black);
     --color: var(--m-white);
+    --navigation-default-color-custom: var(--color);
+    --header-default-a-menu-icon-background-color-custom: var(--color);
   }
 }
