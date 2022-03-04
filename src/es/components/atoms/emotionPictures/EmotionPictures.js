@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Intersection } from '../../prototypes/Intersection.js'
 
 /**
  * EmotionPictures
@@ -9,9 +9,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class EmotionPictures
  * @type {CustomElementConstructor}
  */
-export default class EmotionPictures extends Shadow() {
+export default class EmotionPictures extends Intersection() {
   constructor (options = {}, ...args) {
-    super(...args)
+    super(Object.assign(options, { intersectionObserverInit: { rootMargin: '200px 0px 200px 0px', threshold: 0.5 } }), ...args)
 
     this.childEle = this.root.childNodes;
 
@@ -20,37 +20,27 @@ export default class EmotionPictures extends Shadow() {
         node.setAttribute('loading', this.getAttribute('loading') || 'eager')
       }
     })
-
-    this.observer = this.titleObserver()
-    this.titleElement = this.root.querySelector('H2')
-
   }
 
-  titleObserver = () => {
-    return new IntersectionObserver(entries => {
-      if(!entries[0]['isIntersecting']){
-        return;
+  intersectionCallback (entries, observer) {
+    if (entries && entries[0]) {
+      if (entries[0].isIntersecting) {
+        this.classList.add('visible')
+      } else {
+        this.classList.remove('visible')
       }
-      if(entries[0]['isIntersecting']) {
-        if(entries[0]['intersectionRatio'] === 1) {
-          this.titleElement.style.opacity =  1;
-        } else {
-          this.titleElement.style.opacity =  entries[0]['intersectionRatio'];
-        }
-      }else{
-        this.titleElement.style.opacity =  1;
-      }
-    }, { threshold: [0, 0.5, 1] });
+    }
   }
 
   connectedCallback () {
+    super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shown) this.shuffle()
-    if (this.titleElement) this.observer.observe(this.titleElement)
   }
 
 
   disconnectedCallback () {
+    super.disconnectedCallback()
     this.shuffle(false)
   }
 
@@ -81,19 +71,30 @@ export default class EmotionPictures extends Shadow() {
       :host > * {
         grid-column: 1;
         grid-row: 1;
-        opacity: 0;
+        /*opacity: 0;*/
+        opacity: 1;
         transition: var(--transition, opacity 3s ease);
       }
       :host > *.shown {
-        opacity: 1;
+        /*opacity: 1;*/
       }
-      :host > h2 {
+      :host > div > h2 {
         z-index:2;
         top: 4vw;
         left: 10vw !important;
+        opacity: 0;
+        animation: opacity 500ms ease-out;
+      }
+      :host(.visible) > div > h2 {
+        opacity: 1;
+
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
+      }
+      @keyframes opacity {
+        0% {opacity: 0;}
+        100% {opacity: 1;}
       }
     `
 
