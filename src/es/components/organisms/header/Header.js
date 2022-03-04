@@ -58,7 +58,7 @@ export default class Header extends Shadow() {
             this.classList.add('show')
           // scrolling down and hide header
           } else if (Math.abs(self.scrollY - lastScroll) > 30) {
-            if (this.mNavigation) Array.from(this.mNavigation.root.querySelectorAll('.open')).forEach(node => node.classList.remove('open'))
+            //if (this.mNavigation) Array.from(this.mNavigation.root.querySelectorAll('.open')).forEach(node => node.classList.remove('open'))
             this.classList.remove('show')
           }
         }
@@ -233,10 +233,6 @@ export default class Header extends Shadow() {
       :host([sticky].show:not(.top)) > header {
         border-bottom: var(--sticky-border-bottom, 1px solid var(--color));
       }
-      :host([sticky].show:not(.top)) > header, :host([sticky]:not(.top)) > header {
-        margin-top: 0;
-        margin-bottom: 0;
-      }
       :host([sticky]:not(.top)) {
         transition: var(--sticky-transition-hide, top .4s ease);
       }
@@ -271,6 +267,10 @@ export default class Header extends Shadow() {
         }
         :host([sticky]) {
           position: sticky;
+        }
+        :host([sticky].show:not(.top)) > header, :host([sticky]:not(.top)) > header {
+          margin-top: 0;
+          margin-bottom: 0;
         }
         :host > header {
           flex-wrap: nowrap;
