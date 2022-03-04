@@ -577,8 +577,8 @@ export default class Navigation extends Shadow() {
             }
           }
         })
-        self.addEventListener('click', event => {
-          if (this.focusLostClose) {
+        if (this.focusLostClose) {
+          self.addEventListener('click', event => {
             if (this.hasAttribute('focus-lost-close-mobile')) {
               Array.from(this.root.querySelectorAll('li.open')).forEach(li => li.classList.remove('open'))
               if (this.hasAttribute('no-scroll')) document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
@@ -588,8 +588,8 @@ export default class Navigation extends Shadow() {
               let arrow
               if (aLink.parentNode && event.target && !aLink.parentNode.classList.contains('open') && (arrow = aLink.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
             })
-          }
-        })
+          })
+        }
         li.prepend(arrow)
         a.replaceWith(aLink)
         li.prepend(aLink)
