@@ -11,7 +11,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  */
 export default class EmotionPictures extends Intersection() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { intersectionObserverInit: { rootMargin: '200px 0px 200px 0px', threshold: 0.5 } }), ...args)
+    super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px 0px 0px 0px', threshold: 0.75 } }), ...args)
    
     Array.from(this.root.childNodes).forEach(node => {
       if (node.tagName === 'A-PICTURE') node.setAttribute('loading', this.getAttribute('loading') || 'eager')
@@ -130,7 +130,6 @@ export default class EmotionPictures extends Intersection() {
     if (start) {
       this.interval = setInterval(() => {
         let shown
-        
         if ((shown = this.shown)) {
           Array.from(this.root.childNodes).forEach(node => node.classList.remove('shown'))
           if (shown.nextElementSibling && shown.nextElementSibling.tagName !== 'STYLE') {
