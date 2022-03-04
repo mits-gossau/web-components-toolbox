@@ -19,11 +19,17 @@ export default class EmotionPictures extends Intersection() {
   }
 
   intersectionCallback(entries, observer) {
-    if (entries && entries[0]) {
-      if (entries[0].isIntersecting) {
+    for (let entry of entries) {
+      if(!entry.isIntersecting && entry.intersectionRatio === 0){
         this.classList.add('visible')
-      } else {
+        break
+      }
+      if (entry.isIntersecting && entry.intersectionRatio > 0) {
+        this.classList.add('visible')
+        break;
+      }else{
         this.classList.remove('visible')
+        break
       }
     }
   }
