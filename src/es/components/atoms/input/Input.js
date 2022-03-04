@@ -104,63 +104,43 @@ export default class Input extends Shadow() {
       }
 
       :host {
-        --default-border-color: #FF6600;
-        --default-border-color-disabled: #E9855F;
-
-        --default-input-bg-color: #F1EFEE;
-        --default-input-bg-color-focus: #FFF;
-        --default-input-bg-color-error: #FFE5E5;
-        --default-input-color: #333;
-        --default-input-font-size: 18px;
-
-        --default-font-family: text, Helvetica, Arial, sans-serif;
-        --default-font-color: #767676;
-        --default-font-size: 14px;
-
-        --default-color-error: #F00;
-
-        --default-icon-color: #F60;
-
-        --default-search-input-border-color: #E7E5E3;
-
         display: block;
       }
 
       .mui-form-group {
-        font-family: var(--font-family, var(--default-font-family));
-        margin-bottom: var(--margin-bottom, 30px);
+        font-family: var(--font-family);
+        margin-bottom: var(--margin-bottom, var(--content-spacing));
         max-width: var(--max-width, none);
       }
 
       label {
-        font-size: var(--font-size, var(--default-font-size));
+        font-size: var(--font-size);
         font-weight: 700;
-        letter-spacing: .5px;
+        letter-spacing: 0.03em;
         text-transform: uppercase;
         line-height: 1;
-        color: var(--font-color, var(--default-font-color));
+        color: var(--color);
         display: block;
-        margin-bottom: 10px;
+        margin-bottom: 0.625em;
       }
 
       input {
-        caret-color: var(--caret-color, var(--input-color, var(--default-input-color)));
+        caret-color: var(--caret-color, var(--input-color, var(--color-secondary, var(--color))));
         display: block;
-        padding: 10px 15px;
+        padding: 0.625em 1em;
         width: 100%;
         font-family: inherit;
-        font-size: var(--input-font-size, var(--default-input-font-size));
+        font-size: var(--input-font-size, var(--font-size));
         line-height: 1.5;
-        color: var(--input-color, var(--default-input-color));
+        color: var(--input-color, var(--color));
         appearance: none;
-        background: var(--input-bg-color, var(--default-input-bg-color));
-        border: var(--border, 2px solid transparent);
-        border-bottom-color: var(--border-color, var(--default-border-color));
-        transition: background ease-in-out .15s, border-color ease-in-out .15s;
+        background: var(--input-bg-color, var(--m-gray-100));
+        border: var(--border, 1px solid transparent);
+        transition: background ease-out .3s, border-color ease-out .3s;
       }
 
       input::placeholder {
-        color: var(--font-color, var(--default-font-color));
+        color: var(--placeholder-color, var(--m-gray-300));
         opacity: 1;
       }
 
@@ -171,8 +151,8 @@ export default class Input extends Shadow() {
 
       input:focus:not(:read-only):not(:invalid) {
         background: #fff;
-        border: var(--border-focus, var(--border, 2px solid transparent));
-        border-color: var(--border-color-focus, var(--border-color, var(--default-border-color)));
+        border: var(--border-focus, var(--border, 1px solid transparent));
+        border-color: var(--border-color-focus, var(--border-color, var(--m-gray-500)));
       }
 
       input:visited {
@@ -189,30 +169,38 @@ export default class Input extends Shadow() {
       }
 
       :host([search]) input {
-        border-color: var(--search-input-border-color, var(--default-search-input-border-color));
-        padding: 10px 15px;
+        border-color: var(--search-input-border-color, var(--m-gray-300));
+        padding: var(--search-input-padding, 0.75em var(--content-spacing));
         padding-right: max(2.5em, 35px);
-        border-radius: var(--border-radius, 4px);
+        border-radius: var(--border-radius, 0.5em);
+      }
+
+      :host([search]) input::-webkit-search-cancel-button {
+        margin-right: 0.5em;
       }
 
       :host([search]) button {
-        height: max(2.5em, 35px);
         position: absolute;
-        bottom: 0.2em;
-        right: 0;
-        padding: 5px 7.5px;
+        bottom: 0.5em;
+        right: 0.47em;
+        padding: 0;
         border: 0;
         background: transparent;
         outline: none;
         appearance: none;
         box-shadow: none;
         font-family: inherit;
-        font-size: var(--input-font-size, var(--default-input-font-size));
-        line-height: 1.5;
-        color: var(--icon-color, var(--default-icon-color));
+        font-size: var(--input-font-size, var(--font-size));
+        line-height: 0.5em;
+        color: var(--icon-color, var(--color-secondary, var(--color)));
         font-style: normal;
         cursor: pointer;
-        width: 3em;
+        transition: color ease-out .3s;
+      }
+
+      :host([search]) button svg {
+        height: var(--svg-size, 2em);
+        width: var(--svg-size, 2em);
       }
 
       :host([disabled]) button,
@@ -224,34 +212,53 @@ export default class Input extends Shadow() {
       :host([error]) input::placeholder,
       :host([search]) button.error,
       label.error {
-        color: var(--color-error, var(--default-color-error));
+        color: var(--color-error, var(--m-red-700));
       }
 
       :host([error]) input,
       :host([error]) input:focus,
       input:invalid {
-        border-color: var(--color-error, var(--default-color-error));
-        color: var(--color-error, var(--default-color-error));
-        background: var(--input-color-bg-error, var(--default-input-bg-color-error));
+        border-color: var(--color-error, var(--m-red-700));
+        color: var(--color-error, var(--m-red-700));
+        background: var(--input-color-bg-error, var(--m-yellow-300));
       }
 
       @media (hover: hover) {
         input:hover:not(:disabled):not(:read-only):not(:invalid) {
-          border-color: var(--border-color-hover, var(--border-color, var(--default-border-color)));
+          border-color: var(--border-color-hover, var(--border-color, var(--m-gray-500)));
+          caret-color: var(--caret-color-hover, var(--input-color-hover, var(--color-hover, var(--color))));
         }
 
         :host([search]) input:hover {
-          border-color: var(--search-input-border-color-hover, var(--search-input-border-color, var(--default-search-input-border-color)));
+          border-color: var(--search-input-border-color-hover, var(--search-input-border-color, var(--m-gray-300)));
+        }
+
+        :host([search]:hover) button {
+          color: var(--icon-color-hover, var(--color-hover, var(--color)));
         }
 
         :host([error]) input:hover:not(:disabled):not(:read-only) {
-          border-color: var(--color-error-hover, var(--color-error, var(--default-color-error)));
+          border-color: var(--color-error-hover, var(--color-error, var(--m-red-700)));
         }
       }
 
       @media only screen and (max-width: _max-width_) {
+        :host([search]) input {
+          padding: var(--search-input-padding-mobile, var(--search-input-padding, 0.75em var(--content-spacing-mobile)));
+          border-radius: var(--border-radius, 0);
+        }
+        :host([search]) button {
+          right: var(--content-spacing-mobile);
+          line-height: 1.5;
+        }
         .mui-form-group {
           max-width: var(--max-width-mobile, var(--max-width, none));
+        }
+        :host([search]) input::-webkit-search-cancel-button {
+          margin-right: 2.5em;
+        }
+        label, input, :host([search]) button {
+          font-size: var(--font-size-mobile, var(--font-size));
         }
       }
     `

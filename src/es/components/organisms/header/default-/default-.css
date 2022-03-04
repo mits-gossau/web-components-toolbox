@@ -56,4 +56,5 @@
   --header-default-sticky-border-bottom: var(--header-default-border-bottom);
   --header-default-top-open-mobile: 0;
   --header-default-width-open-mobile: 100%;
+  --search-input-padding: 0.625em;
 }
