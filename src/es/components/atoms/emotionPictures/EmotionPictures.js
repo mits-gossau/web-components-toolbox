@@ -28,12 +28,13 @@ export default class EmotionPictures extends Shadow() {
 
   titleObserver = () => {
     return new IntersectionObserver(entries => {
-      if(entries[0]['isIntersecting'] === true) {
+      if(!entries[0]['isIntersecting']){
+        return;
+      }
+      if(entries[0]['isIntersecting']) {
         if(entries[0]['intersectionRatio'] === 1) {
           this.titleElement.style.opacity =  1;
-        }else if(entries[0]['intersectionRatio'] > 0.5){
-          this.titleElement.style.opacity =  entries[0]['intersectionRatio'];
-        }  else {
+        } else {
           this.titleElement.style.opacity =  entries[0]['intersectionRatio'];
         }
       }else{
@@ -45,7 +46,7 @@ export default class EmotionPictures extends Shadow() {
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shown) this.shuffle()
-    if(this.titleElement) this.observer.observe(this.titleElement)
+    if (this.titleElement) this.observer.observe(this.titleElement)
   }
 
 
