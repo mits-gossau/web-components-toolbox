@@ -267,6 +267,7 @@ export default class Header extends Shadow() {
         }
         :host([sticky]) {
           position: sticky;
+          top: -7em;
         }
         :host([sticky].show:not(.top)) > header, :host([sticky]:not(.top)) > header {
           margin-top: 0;
