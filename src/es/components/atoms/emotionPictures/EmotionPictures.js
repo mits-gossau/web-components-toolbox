@@ -72,13 +72,18 @@ export default class EmotionPictures extends Intersection() {
         grid-column: 1;
         grid-row: 1;
         /*opacity: 0;*/
-        opacity: 1;
+        opacity: 0;
         transition: var(--transition, opacity 3s ease);
       }
       :host > *.shown {
         /*opacity: 1;*/
+        opacity: 1;
+      }
+      :host > div {
+        position:relative;
       }
       :host > div > h2 {
+        position: absolute !important;
         z-index:2;
         top: 4vw;
         left: 10vw !important;
@@ -131,6 +136,24 @@ export default class EmotionPictures extends Intersection() {
       this.interval = setInterval(() => {
         let shown
         if ((shown = this.shown)) {
+          Array.from(this.root.childNodes).forEach(node => node.classList.remove('shown'))
+          if (shown.nextElementSibling && shown.nextElementSibling.tagName !== 'STYLE') {
+            shown.nextElementSibling.classList.add('shown')
+          } else if (this.root.childNodes[0]) {
+            this.root.childNodes[0].classList.add('shown')
+          }
+        }
+      }, Number(this.getAttribute('interval')) || 8000)
+    }
+  }
+
+
+  shuffle_old (start = true) {
+    clearInterval(this.interval || null)
+    if (start) {
+      this.interval = setInterval(() => {
+        let shown
+        if ((shown = this.shown)) {
           Array.from(this.childEle).forEach(node => {
             if(node.tagName === "A-PICTURE"){
               node.classList.remove('shown')
@@ -151,6 +174,13 @@ export default class EmotionPictures extends Intersection() {
   }
 
   get shown () {
+    return this.root.querySelector('.shown') || (() => {
+      if (this.root.childNodes[0]) this.root.childNodes[0].classList.add('shown')
+      return this.root.childNodes[0]
+    })()
+  }
+
+  get shown_old () {
     return this.root.querySelector('a-picture.shown') || (() => {
       if (this.childEle[0].tagName !== 'A-PICTURE') {
         this.childEle[0].classList.add('shown')
@@ -160,6 +190,8 @@ export default class EmotionPictures extends Intersection() {
         this.childEle[0].classList.add('shown')
         return this.childEle[0]
       }
+
     })()
+
   }
 }
