@@ -58,7 +58,7 @@ export default class Header extends Shadow() {
             this.classList.add('show')
           // scrolling down and hide header
           } else if (Math.abs(self.scrollY - lastScroll) > 30) {
-            if (this.mNavigation) Array.from(this.mNavigation.root.querySelectorAll('.open')).forEach(node => node.classList.remove('open'))
+            // if (this.mNavigation) Array.from(this.mNavigation.root.querySelectorAll('.open')).forEach(node => node.classList.remove('open'))
             this.classList.remove('show')
           }
         }
@@ -72,6 +72,11 @@ export default class Header extends Shadow() {
       } else if (event && event.animationName === 'close') {
         this.mNavigation.classList.remove('open')
       }
+    }
+    let timeout = null
+    this.resizeListener = event => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => this.adjustLogoPos(true), 200)
     }
     this.mutationCallbackTimeout = null
     this.mutationCallback = mutationsList => {
@@ -92,6 +97,7 @@ export default class Header extends Shadow() {
       this.addEventListener('navigation-load', event => this.setStickyOffsetHeight(), { once: true })
     }
     this.addEventListener('click', this.clickAnimationListener)
+    self.addEventListener('resize', this.resizeListener)
     this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
     self.addEventListener('resize', this.mutationCallback)
     this.observer.observe(this.header, { attributes: true })
@@ -100,6 +106,7 @@ export default class Header extends Shadow() {
   disconnectedCallback () {
     if (this.hasAttribute('sticky')) self.removeEventListener('scroll', this.scrollListener)
     this.removeEventListener('click', this.clickAnimationListener)
+    self.removeEventListener('resize', this.resizeListener)
     this.mNavigation.removeEventListener('animationend', this.clickAnimationListener)
     self.removeEventListener('resize', this.mutationCallback)
     this.observer.disconnect()
@@ -136,7 +143,6 @@ export default class Header extends Shadow() {
         top: 0;
         z-index: var(--z-index, 100);
         text-align: var(--text-align, initial);
-        background-color: var(--background-color, transparent);
       }
       :host > * {
         font-size: var(--font-size, 1rem);
@@ -148,6 +154,15 @@ export default class Header extends Shadow() {
       }
       :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
         flex-grow: 1;
+        max-width: calc(var(--content-width, 80%) - var(--logo-width));
+      }
+      :host > header::before {
+        display: block;
+        width: var(--logo-width);
+        height: auto;
+        clear: both;
+        content: '';
+        order: 1;
       }
       :host > header > *:first-child {
         align-self: baseline;
@@ -165,9 +180,12 @@ export default class Header extends Shadow() {
         flex-wrap: var(--flex-wrap, nowrap);
         height: var(--height , 85px);
         justify-content: var(--justify-content , space-between);
-        padding: var(--padding, 0 calc(var(--content-spacing, 40px) / 2));
+        padding: var(--padding, 0);
+        margin: var(--margin, 0);
+        width: var(--width, 100%);
         position: var(--header-position, static);
         transition: var(--transition, all 0.2s ease);
+        position: relative;
       }
       :host > header.open {
         background-color: var(--background-color-open, var(--background-color, black));
@@ -177,9 +195,6 @@ export default class Header extends Shadow() {
         animation: backgroundAnimation var(--background-animation, 0.5s ease);
         background-size: 100% 200%;
         background-position-y: 0%;
-      }
-      :host > header.animate > a-menu-icon {
-        --a-menu-icon-background-color: var(--background-color, #777);
       }
       :host > header > a {
         align-self: var(--a-align-self, var(--align-self, auto));
@@ -207,18 +222,16 @@ export default class Header extends Shadow() {
       :host > header > a-menu-icon {
         align-self: var(--a-menu-icon-align-self, var(--align-self, auto));
         display: none;
-        --a-menu-icon-background-color: var(--color, #777);
       }
       :host([sticky].top) {
         position: var(--position, sticky);
       }
-      :host([sticky].top), :host([sticky].top) > header {
-        background-color: transparent;
-      }
       :host([sticky].show:not(.top)) {
-        border-bottom: var(--sticky-border-bottom, 1px solid var(--color));
         top: 0;
         transition: var(--sticky-transition-show, top .5s ease);
+      }
+      :host([sticky].show:not(.top)) > header {
+        border-bottom: var(--sticky-border-bottom, 1px solid var(--color));
       }
       :host([sticky]:not(.top)) {
         transition: var(--sticky-transition-hide, top .4s ease);
@@ -227,7 +240,11 @@ export default class Header extends Shadow() {
         order: 2;
       }
       :host > header > a-logo{
-        order: 1;
+        position: absolute;
+        left: calc((100% - var(--content-width, 80%)) / 2);
+        z-index: 100;
+        top: 0;
+        transition: top 0.2s ease-out;
       }
       @keyframes backgroundAnimation {
         0%{background-position-y:100%}
@@ -251,8 +268,13 @@ export default class Header extends Shadow() {
         :host([sticky]) {
           position: sticky;
         }
+        :host([sticky].show:not(.top)) > header, :host([sticky]:not(.top)) > header {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
         :host > header {
           flex-wrap: nowrap;
+          margin: var(--margin-mobile, var(--margin, 0));
         }
         :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
           animation: close .4s ease-in;
@@ -267,19 +289,18 @@ export default class Header extends Shadow() {
         }
         :host > header > *:first-child {
           align-self: center;
-          padding: var(--a-menu-icon-padding);
         }
         :host > span, :host > div, :host > p, :host > ul, :host > ol {
           width: var(--content-width, 90%);
         }
         :host > header {
+          box-sizing: var(--box-sizing-open-mobile, var(--box-sizing-open, var(--box-sizing, content-box)));;
           height: var(--height-mobile, 50px);
           flex-direction: var(--flex-direction-mobile, row-reverse);
           justify-content: var(--justify-content-mobile, space-between);
           padding: var(--padding-mobile, var(--padding, 0 calc(var(--content-spacing, 40px) / 2)));
         }
         :host > header.open {
-          box-sizing: var(--box-sizing-open-mobile, var(--box-sizing-open, var(--box-sizing, content-box)));;
           position: var(--position-open-mobile, var(--position-open, var(--position, static)));
           top: var(--top-open-mobile, var(--top-open, var(--top, auto)));
           left: var(--left-open-mobile, var(--left-open, var(--position, auto)));
@@ -298,6 +319,7 @@ export default class Header extends Shadow() {
           top: var(--${this.getAttribute('m-navigation') || 'm-navigation'}-top-mobile, var(--height-mobile, 50px));
           padding: var(--${this.getAttribute('m-navigation') || 'm-navigation'}-padding-mobile, 0);
           width: 100%;
+          min-width: 100%;
         }
         :host > header > a {
           align-self: var(--a-align-self-mobile, var(--a-align-self, var(--align-self, auto)));
@@ -328,8 +350,13 @@ export default class Header extends Shadow() {
           order: 3;
         }
         :host > header > a-logo{
-          order: 1;
           flex-grow: 1;
+          left: auto;
+          right: var(--content-spacing-mobile, var(--content-spacing));
+          top: -1em !important;
+        }
+        :host > header::before {
+          order: 1;
         }
       }
     `
@@ -369,6 +396,8 @@ export default class Header extends Shadow() {
         this.header.appendChild(MenuIcon)
         this.html = this.style
         this.hidden = false
+        this.adjustLogoPos(true)
+        setTimeout(() => self.requestAnimationFrame(timeStamp => this.adjustLogoPos(true)), 1000)
       })
     }
     if (this.hasAttribute('sticky')) this.classList.add('top')
@@ -407,16 +436,41 @@ export default class Header extends Shadow() {
     return this.root.querySelector(this.getAttribute('m-navigation') || 'm-navigation')
   }
 
+  get aLogo () {
+    return this.root.querySelector(this.getAttribute('a-logo') || 'a-logo')
+  }
+
   setStickyOffsetHeight () {
     if (this.lastOffsetHeight !== this.offsetHeight) {
       this.lastOffsetHeight = this.offsetHeight
+      this.style.textContent = ''
       this.setCss(/* CSS */`
         :host([sticky].top), :host([sticky]:not(.top)) {
-          top: -${this.offsetHeight}px;
+          top: -${this.offsetHeight + 5}px;
           transition: var(--sticky-transition-hide, top .4s ease);
         }
       `, undefined, undefined, undefined, this.style)
     }
+  }
+
+  // adjust logo top position
+  adjustLogoPos (resetCouter) {
+    if (this.getMedia() !== 'desktop') return
+    this._adjustLogoPosCounter = resetCouter ? 1 : !this._adjustLogoPosCounter ? 1 : this._adjustLogoPosCounter + 1
+    self.requestAnimationFrame(timeStamp => {
+      const navHeight = this.mNavigation.offsetHeight
+      const logoHeight = this.aLogo.offsetHeight
+      if (this._adjustLogoPosCounter < 10 && (!navHeight || !logoHeight)) return setTimeout(() => this.adjustLogoPos(false), 500)
+      this.css = /* CSS */`
+        :host > header > a-logo {
+          top: calc(${navHeight}px / 2 - ${logoHeight}px / 2);
+        }
+      `
+    })
+  }
+
+  getMedia () {
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 
   get style () {

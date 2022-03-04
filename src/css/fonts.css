@@ -6,6 +6,8 @@ Ihr habt die Möglichkeit, eine Zeile CSS code in eure Website einzubauen:
 https://cdn.fonts.net/t/1.css?apiType=css&projectid=b424dfd0-9958-11ec-b670-06c4e8753e28
 Damit wird sichergestellt, dass wir die Lizenz-Bedingungen erfüllen und page views an Monotype melden.
 Wenn ihr diesen Code nicht einbauen wollt, dann müsstet ihr quartalsmässig eure page views an Monotype reporten.
+
+https://wiki.migros.net/pages/viewpage.action?spaceKey=DIGOPS&title=Webfonts+auf+cdn.migros.net
 */
 /* font-faces analog: https://static.shop.migros.ch/fonts/mofonts.css */
 @charset "utf-8";
