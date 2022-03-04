@@ -13,10 +13,10 @@ export default class EmotionPictures extends Intersection() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { intersectionObserverInit: { rootMargin: '200px 0px 200px 0px', threshold: 0.5 } }), ...args)
 
-    this.childEle = this.root.childNodes;
+    this.childEle = this.root.childNodes
 
     Array.from(this.childEle).forEach(node => {
-      if(node.tagName === 'A-PICTURE'){
+      if (node.tagName === 'A-PICTURE') {
         node.setAttribute('loading', this.getAttribute('loading') || 'eager')
       }
     })
@@ -37,7 +37,6 @@ export default class EmotionPictures extends Intersection() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shown) this.shuffle()
   }
-
 
   disconnectedCallback () {
     super.disconnectedCallback()
@@ -112,12 +111,12 @@ export default class EmotionPictures extends Intersection() {
 
     switch (this.getAttribute('namespace')) {
       case 'emotion-pictures-has-title-':
-        this.setCss(/* css */`:host > * {--img-width: var(--emotion-pictures-has-title-img-width, 100%);}`, undefined, '', false)
+        this.setCss(/* css */':host > * {--img-width: var(--emotion-pictures-has-title-img-width, 100%);}', undefined, '', false)
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./has-title-/has-title-.css`,
           namespace: false
-        },...styles])
+        }, ...styles])
       default:
         if (!this.hasAttribute('namespace')) {
           this.css = /* css */`
@@ -147,51 +146,10 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-
-  shuffle_old (start = true) {
-    clearInterval(this.interval || null)
-    if (start) {
-      this.interval = setInterval(() => {
-        let shown
-        if ((shown = this.shown)) {
-          Array.from(this.childEle).forEach(node => {
-            if(node.tagName === "A-PICTURE"){
-              node.classList.remove('shown')
-            }
-          })
-          if (shown.nextElementSibling && shown.nextElementSibling.tagName !== 'STYLE') {
-            shown.nextElementSibling.classList.add('shown')
-          } else if (this.childEle[0]) {
-            if(this.childEle[0].tagName !== "A-PICTURE"){
-              this.childEle[1].classList.add('shown')
-            }else{
-              this.childEle[0].classList.add('shown')
-            }
-          }
-        }
-      }, Number(this.getAttribute('interval')) || 8000)
-    }
-  }
-
   get shown () {
     return this.root.querySelector('.shown') || (() => {
       if (this.root.childNodes[0]) this.root.childNodes[0].classList.add('shown')
       return this.root.childNodes[0]
     })()
-  }
-
-  get shown_old () {
-    return this.root.querySelector('a-picture.shown') || (() => {
-      if (this.childEle[0].tagName !== 'A-PICTURE') {
-        this.childEle[0].classList.add('shown')
-        this.childEle[1].classList.add('shown')
-        return this.childEle[1]
-      }else{
-        this.childEle[0].classList.add('shown')
-        return this.childEle[0]
-      }
-
-    })()
-
   }
 }
