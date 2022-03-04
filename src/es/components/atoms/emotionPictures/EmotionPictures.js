@@ -11,7 +11,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  */
 export default class EmotionPictures extends Intersection() {
   constructor(options = {}, ...args) {
-    super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 } }), ...args)
+    super(Object.assign(options, { intersectionObserverInit: { rootMargin: '100px 0px -100px 0px', threshold: 1 } }), ...args)
 
     Array.from(this.root.childNodes).forEach(node => {
       if (node.tagName === 'A-PICTURE') node.setAttribute('loading', this.getAttribute('loading') || 'eager')
@@ -31,7 +31,6 @@ export default class EmotionPictures extends Intersection() {
   connectedCallback() {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    //console.log(Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length);
     if (this.shown && Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length > 1) this.shuffle()
   }
 
@@ -60,7 +59,7 @@ export default class EmotionPictures extends Intersection() {
         display: grid !important;
         margin: var(--margin, 0) !important;
         width: var(--width, 100%) !important;
-        line-height:var(--line-height, 0);
+        line-height: var(--line-height, 0);
         align-items: start;
         justify-items: start;
       }
@@ -73,12 +72,9 @@ export default class EmotionPictures extends Intersection() {
       :host > *.shown {
         opacity: 1;
       }
-      // :host > div * a-picture {
-      //   max-height:10px;
-      //   --img-max-height:var(--img-max-height, 400px);
-      // }
       :host > div {
-        position:relative;
+        position: relative;
+        width: var(--width, 100%);
       }
       :host > div > h2 {
         position: absolute !important;
@@ -116,10 +112,10 @@ export default class EmotionPictures extends Intersection() {
     ]
 
     switch (this.getAttribute('namespace')) {
-      case 'emotion-pictures-has-title-':
+      case 'emotion-pictures-with-title-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./has-title-/has-title-.css`,
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`,
           namespace: false
         }, ...styles])
         case 'emotion-pictures-default-':
