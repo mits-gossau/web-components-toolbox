@@ -227,12 +227,15 @@ export default class Header extends Shadow() {
         position: var(--position, sticky);
       }
       :host([sticky].show:not(.top)) {
-        border-bottom: var(--sticky-border-bottom, 1px solid var(--color));
         top: 0;
         transition: var(--sticky-transition-show, top .5s ease);
       }
+      :host([sticky].show:not(.top)) > header {
+        border-bottom: var(--sticky-border-bottom, 1px solid var(--color));
+      }
       :host([sticky].show:not(.top)) > header, :host([sticky]:not(.top)) > header {
         margin-top: 0;
+        margin-bottom: 0;
       }
       :host([sticky]:not(.top)) {
         transition: var(--sticky-transition-hide, top .4s ease);
@@ -271,6 +274,7 @@ export default class Header extends Shadow() {
         }
         :host > header {
           flex-wrap: nowrap;
+          margin: var(--margin-mobile, var(--margin, 0));
         }
         :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
           animation: close .4s ease-in;
@@ -290,13 +294,13 @@ export default class Header extends Shadow() {
           width: var(--content-width, 90%);
         }
         :host > header {
+          box-sizing: var(--box-sizing-open-mobile, var(--box-sizing-open, var(--box-sizing, content-box)));;
           height: var(--height-mobile, 50px);
           flex-direction: var(--flex-direction-mobile, row-reverse);
           justify-content: var(--justify-content-mobile, space-between);
           padding: var(--padding-mobile, var(--padding, 0 calc(var(--content-spacing, 40px) / 2)));
         }
         :host > header.open {
-          box-sizing: var(--box-sizing-open-mobile, var(--box-sizing-open, var(--box-sizing, content-box)));;
           position: var(--position-open-mobile, var(--position-open, var(--position, static)));
           top: var(--top-open-mobile, var(--top-open, var(--top, auto)));
           left: var(--left-open-mobile, var(--left-open, var(--position, auto)));

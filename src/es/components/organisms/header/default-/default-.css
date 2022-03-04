@@ -41,7 +41,8 @@
   --header-default-m-navigation-height-open-mobile: var(--header-default-m-navigation-height-mobile);
   --header-default-m-navigation-top-mobile: var(--header-default-height-mobile);
   --header-default-m-navigation-transition: none;
-  --header-default-margin: var(--content-spacing) auto 0;
+  --header-default-margin-mobile: var(--content-spacing-mobile) auto;
+  --header-default-margin: var(--content-spacing) auto;
   --header-default-order: 0;
   --header-default-position-open-mobile: fixed;
   --header-default-position: static;

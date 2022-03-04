@@ -407,7 +407,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     this.setCss(value
       ? /* css */`
         :host {
-          display: none !important;
+          visibility: hidden !important;
         }
       `
       : /* css */`
