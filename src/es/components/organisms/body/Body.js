@@ -71,6 +71,8 @@ export default class Body extends Shadow() {
     this.css = /* css */`
       :host {
         background-color: var(--background-color, transparent);
+        background-repeat: var(--background-repeat, initial);
+        background-position: var(--background-position, 0);
         grid-area: body;
       }
       :host > main {
