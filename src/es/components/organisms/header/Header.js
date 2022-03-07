@@ -242,7 +242,7 @@ export default class Header extends Shadow() {
       :host > header > a-logo{
         position: absolute;
         left: calc((100% - var(--content-width, 80%)) / 2);
-        z-index: 100;
+        z-index: 101;
         top: var(--a-logo-top, 0);
         transition: top 0.2s ease-out;
       }
@@ -270,8 +270,7 @@ export default class Header extends Shadow() {
           top: -7em;
         }
         :host([sticky].show:not(.top)) > header, :host([sticky]:not(.top)) > header {
-          margin-top: 0;
-          margin-bottom: 0;
+          transform: translateY(calc(-1 * var(--content-spacing-mobile)));
         }
         :host > header {
           flex-wrap: nowrap;
@@ -449,6 +448,11 @@ export default class Header extends Shadow() {
         :host([sticky].top), :host([sticky]:not(.top)) {
           top: -${this.offsetHeight + 5}px;
           transition: var(--sticky-transition-hide, top .4s ease);
+        }
+        @media only screen and (max-width: _max-width_) {
+          :host {
+            min-height: ${this.offsetHeight}px;
+          }
         }
       `, undefined, undefined, undefined, this.style)
     }

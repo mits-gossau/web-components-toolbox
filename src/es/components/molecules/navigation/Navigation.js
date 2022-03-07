@@ -56,6 +56,7 @@ export default class Navigation extends Shadow() {
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
     this.clickListener = event => {
+      this.checkIfWrapped(true)
       this.setFocusLostClickBehavior()
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
       // console.log('changed', this.isDesktop === (this.isDesktop = this.checkMedia('desktop')));
@@ -348,16 +349,14 @@ export default class Navigation extends Shadow() {
         display: none !important;
         position: absolute;
         left: 0;
-        margin-top: 0.2em;
+        top: 0;
+        margin-top: 3.95em;
         overflow: auto;
         box-sizing: border-box;
         max-height: 80vh;
         padding: 2.5rem calc((100% - var(--content-width, 80%)) / 2);
         transition: all 0.2s ease;
         z-index: var(--li-ul-z-index, auto);
-      }
-      :host(.wrapped) > nav > ul li:not(.wrapped) > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-        margin-top: 4.1em;
       }
       :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
         display: flex !important;
@@ -454,6 +453,7 @@ export default class Navigation extends Shadow() {
           align-items: center;
         }
         :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+          top: auto;
           margin-top: calc(3rem + 1px);
           max-height: unset;
           padding: 0 0 2.5rem 0;
@@ -620,7 +620,7 @@ export default class Navigation extends Shadow() {
       this.checkIfWrapped(true)
       setTimeout(() => self.requestAnimationFrame(timeStamp => {
         this.css = /* CSS */`
-          :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+          :host {
             --show: none;
           }
         `
@@ -729,7 +729,14 @@ export default class Navigation extends Shadow() {
     self.requestAnimationFrame(timeStamp => {
       if (this._checkIfWrappedCounter < 10 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 500)
       this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
-      Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher) > li')).forEach(li => li.classList[li.offsetTop ? 'add' : 'remove']('wrapped'))
+      // TODO: should be this.mobileBreakpoint + 1px
+      this.css = /*css*/`
+        @media only screen and (min-width: ${this.mobileBreakpoint}) {
+          :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+            margin-top: ${this.root.querySelector('nav > ul').offsetHeight + 1}px;
+          }
+        }
+      `
     })
   }
 
