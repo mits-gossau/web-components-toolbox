@@ -243,7 +243,7 @@ export default class Header extends Shadow() {
         position: absolute;
         left: calc((100% - var(--content-width, 80%)) / 2);
         z-index: 100;
-        top: 0;
+        top: var(--a-logo-top, 0);
         transition: top 0.2s ease-out;
       }
       @keyframes backgroundAnimation {
