@@ -26,7 +26,7 @@
   --header-default-a-text-transform: none;
   --header-default-a-white-space: nowrap;
   --header-default-align-items: end;
-  --header-default-background-color: var(--color-secondary);
+  --header-default-background-color: var(--header-default-background-color-custom, var(--color-secondary));
   --header-default-border-bottom: 1px solid var(--m-gray-300);
   --header-default-box-sizing-open-mobile: border-box;
   --header-default-content-width-mobile: 100%;

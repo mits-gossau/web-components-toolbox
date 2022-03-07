@@ -356,7 +356,7 @@ export default class Navigation extends Shadow() {
         transition: all 0.2s ease;
         z-index: var(--li-ul-z-index, auto);
       }
-      :host(.wrapped) > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+      :host(.wrapped) > nav > ul li:not(.wrapped) > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
         margin-top: 4.1em;
       }
       :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
@@ -599,7 +599,7 @@ export default class Navigation extends Shadow() {
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node, i) => {
-          if (sectionChildren.length < 4) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
+          if (sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
         section.parentNode.prepend(this.getBackground())
@@ -729,6 +729,7 @@ export default class Navigation extends Shadow() {
     self.requestAnimationFrame(timeStamp => {
       if (this._checkIfWrappedCounter < 10 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 500)
       this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
+      Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher) > li')).forEach(li => li.classList[li.offsetTop ? 'add' : 'remove']('wrapped'))
     })
   }
 
