@@ -144,7 +144,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }]).then(() => this.calcColumnWidth())
+        }, ...styles]).then(() => this.calcColumnWidth())
       case 'wrapper-no-calc-column-width-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./no-calc-column-width-/no-calc-column-width-.css`, // apply namespace since it is specific and no fallback
