@@ -94,7 +94,9 @@ export default class EmotionPictures extends Intersection() {
         opacity: 1;
       }
       @media only screen and (max-width: _max-width_) {
-        :host {}
+        :host {
+          margin: var(--margin-mobile, var(--margin, 0)) !important;
+        }
       }
       @keyframes opacity {
         0% {opacity: 0;}
@@ -129,7 +131,7 @@ export default class EmotionPictures extends Intersection() {
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
-        }, ...styles])
+        }])
     }
   }
 
