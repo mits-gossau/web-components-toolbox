@@ -619,6 +619,7 @@ export default class Navigation extends Shadow() {
       }))
       this.checkIfWrapped(true)
       setTimeout(() => self.requestAnimationFrame(timeStamp => {
+        this.checkIfWrapped(true)
         this.css = /* CSS */`
           :host {
             --show: none;

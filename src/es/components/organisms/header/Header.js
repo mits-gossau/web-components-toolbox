@@ -96,7 +96,10 @@ export default class Header extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
-    this.addEventListener('navigation-load', event => this.setStickyOffsetHeight(), { once: true })
+    this.addEventListener('navigation-load', event => {
+      this.adjustLogoPos(true)
+      this.setStickyOffsetHeight()
+    }, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
     self.addEventListener('resize', this.resizeListener)
     this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
