@@ -104,6 +104,10 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         margin: var(--margin-last-child, var(--margin, 0)) !important;
         padding: var(--padding-last-child, var(--padding, 0)) !important;
       }
+      :host > section > * > *:last-child {
+        margin: var(--any-margin-last-child, var(--any-margin, 0)) !important;
+        padding: var(--any-padding-last-child, var(--any-padding, 0)) !important;
+      }
       @media only screen and (max-width: _max-width_) {
         :host > section > * {
           margin: var(--margin-mobile, var(--margin, 0)) !important;
@@ -117,6 +121,10 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         :host > section > *:last-child {
           margin: var(--margin-last-child-mobile, var(--margin-last-child, var(--margin-mobile, var(--margin, 0)))) !important;
           padding: var(--padding-last-child-mobile, var(--padding-last-child, var(--padding-mobile, var(--padding, 0)))) !important;
+        }
+        :host > section > * > *:last-child {
+          margin: var(--any-margin-last-child-mobile, var(--any-margin-last-child, var(--any-margin-mobile, var(--any-margin, 0)))) !important;
+          padding: var(--any-padding-last-child-mobile, var(--any-padding-last-child, var(--any-padding-mobile, var(--any-padding, 0)))) !important;
         }
       }
     `

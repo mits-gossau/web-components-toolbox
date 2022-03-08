@@ -76,7 +76,10 @@ export default class Header extends Shadow() {
     let timeout = null
     this.resizeListener = event => {
       clearTimeout(timeout)
-      timeout = setTimeout(() => this.adjustLogoPos(true), 200)
+      timeout = setTimeout(() => {
+        this.adjustLogoPos(true)
+        this.setStickyOffsetHeight()
+      }, 200)
     }
     this.mutationCallbackTimeout = null
     this.mutationCallback = mutationsList => {
@@ -439,9 +442,8 @@ export default class Header extends Shadow() {
   }
 
   setStickyOffsetHeight () {
-    if (this.lastOffsetHeight !== this.offsetHeight) {
-      this.lastOffsetHeight = this.offsetHeight
-      this.style.textContent = ''
+    this.style.textContent = ''
+    self.requestAnimationFrame(timeStamp => {
       this.setCss(/* CSS */`
         :host([sticky].top), :host([sticky]:not(.top)) {
           top: -${this.offsetHeight + 5}px;
@@ -453,7 +455,7 @@ export default class Header extends Shadow() {
           }
         }
       `, undefined, undefined, undefined, this.style)
-    }
+    })
   }
 
   // adjust logo top position
