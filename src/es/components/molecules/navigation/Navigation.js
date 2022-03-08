@@ -56,6 +56,7 @@ export default class Navigation extends Shadow() {
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
     this.clickListener = event => {
+      this.checkIfWrapped(true)
       this.setFocusLostClickBehavior()
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
       // console.log('changed', this.isDesktop === (this.isDesktop = this.checkMedia('desktop')));
@@ -348,16 +349,14 @@ export default class Navigation extends Shadow() {
         display: none !important;
         position: absolute;
         left: 0;
-        margin-top: 0.2em;
+        top: 0;
+        margin-top: 3.95em;
         overflow: auto;
         box-sizing: border-box;
         max-height: 80vh;
         padding: 2.5rem calc((100% - var(--content-width, 80%)) / 2);
         transition: all 0.2s ease;
         z-index: var(--li-ul-z-index, auto);
-      }
-      :host(.wrapped) > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-        margin-top: 4.1em;
       }
       :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
         display: flex !important;
@@ -454,6 +453,7 @@ export default class Navigation extends Shadow() {
           align-items: center;
         }
         :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+          top: auto;
           margin-top: calc(3rem + 1px);
           max-height: unset;
           padding: 0 0 2.5rem 0;
@@ -577,8 +577,8 @@ export default class Navigation extends Shadow() {
             }
           }
         })
-        if (this.focusLostClose) {
-          self.addEventListener('click', event => {
+        self.addEventListener('click', event => {
+          if (this.focusLostClose) {
             if (this.hasAttribute('focus-lost-close-mobile')) {
               Array.from(this.root.querySelectorAll('li.open')).forEach(li => li.classList.remove('open'))
               if (this.hasAttribute('no-scroll')) document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
@@ -588,8 +588,8 @@ export default class Navigation extends Shadow() {
               let arrow
               if (aLink.parentNode && event.target && !aLink.parentNode.classList.contains('open') && (arrow = aLink.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
             })
-          })
-        }
+          }
+        })
         li.prepend(arrow)
         a.replaceWith(aLink)
         li.prepend(aLink)
@@ -599,7 +599,7 @@ export default class Navigation extends Shadow() {
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node, i) => {
-          if (sectionChildren.length < 4) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
+          if (sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
         section.parentNode.prepend(this.getBackground())
@@ -620,7 +620,7 @@ export default class Navigation extends Shadow() {
       this.checkIfWrapped(true)
       setTimeout(() => self.requestAnimationFrame(timeStamp => {
         this.css = /* CSS */`
-          :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+          :host {
             --show: none;
           }
         `
@@ -729,6 +729,14 @@ export default class Navigation extends Shadow() {
     self.requestAnimationFrame(timeStamp => {
       if (this._checkIfWrappedCounter < 10 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 500)
       this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
+      // TODO: should be this.mobileBreakpoint + 1px
+      this.css = /*css*/`
+        @media only screen and (min-width: ${this.mobileBreakpoint}) {
+          :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+            margin-top: ${this.root.querySelector('nav > ul').offsetHeight + 1}px;
+          }
+        }
+      `
     })
   }
 

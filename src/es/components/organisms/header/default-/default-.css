@@ -3,6 +3,7 @@
   --header-default-a-color: var(--color);
   --header-default-a-font-size: var(--h4-font-size);
   --header-default-a-line-height: 2rem;
+  --header-default-a-logo-top: var(--header-default-a-logo-top-custom, calc(62px / 2 - 90px / 2)); /* gets calculated by adjustLogoPos but preset here for desktop with these values: "calc(${navHeight}px / 2 - ${logoHeight}px / 2)" to avoid visible adjustment at load */
   --header-default-a-margin-mobile: 0 5% 0 0;
   --header-default-a-margin: 0 max(4.5625rem, 3vw) 0 0;
   --header-default-a-menu-icon-align-self-mobile: baseline;
@@ -25,7 +26,7 @@
   --header-default-a-text-transform: none;
   --header-default-a-white-space: nowrap;
   --header-default-align-items: end;
-  --header-default-background-color: var(--color-secondary);
+  --header-default-background-color: var(--header-default-background-color-custom, var(--color-secondary));
   --header-default-border-bottom: 1px solid var(--m-gray-300);
   --header-default-box-sizing-open-mobile: border-box;
   --header-default-content-width-mobile: 100%;
@@ -35,7 +36,7 @@
   --header-default-justify-content-mobile: space-between;
   --header-default-justify-content: center;
   --header-default-left-open-mobile: 0;
-  --header-default-logo-width: 90px;
+  --header-default-logo-width: var(--header-default-logo-width-custom, 90px);
   --header-default-m-navigation-background-color-mobile: var(--background-color);
   --header-default-m-navigation-height-mobile: calc(100vh - var(--header-default-m-navigation-top-mobile));
   --header-default-m-navigation-height-open-mobile: var(--header-default-m-navigation-height-mobile);
