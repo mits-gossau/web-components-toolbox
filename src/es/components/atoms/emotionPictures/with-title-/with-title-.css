@@ -1,0 +1,7 @@
+:host {
+   --emotion-pictures-with-title-img-width:100%;
+   --emotion-pictures-with-title-bg-background-color:var(--emotion-pictures-with-title-bg-background-color-custom, var(--m-white));
+   --emotion-pictures-with-title-bg-color:var(--emotion-pictures-with-title-bg-color-custom, var(--m-black));
+   --emotion-pictures-with-title-bg-transition: opacity 0.5s ease-out;
+   --emotion-pictures-with-title-img-max-height:75vh;
+}

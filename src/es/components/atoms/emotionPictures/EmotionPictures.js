@@ -1,27 +1,47 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Intersection } from '../../prototypes/Intersection.js'
 
 /**
  * EmotionPictures
- * A picture shuffle example at: src/es/components/pages/Kontakt.html
+ * A picture shuffle Component
  *
  * @export
  * @class EmotionPictures
  * @type {CustomElementConstructor}
  */
-export default class EmotionPictures extends Shadow() {
-  constructor (...args) {
-    super(...args)
+export default class EmotionPictures extends Intersection() {
+  constructor(options = {}, ...args) {
+    super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 } }), ...args)
 
-    Array.from(this.root.children).forEach(node => node.setAttribute('loading', this.getAttribute('loading') || 'eager'))
+    Array.from(this.root.childNodes).forEach(node => {
+      if (node.tagName === 'A-PICTURE') node.setAttribute('loading', this.getAttribute('loading') || 'eager')
+    })
   }
 
-  connectedCallback () {
+  intersectionCallback(entries, observer) {
+    for (let entry of entries) {
+      if(!entry.isIntersecting && entry.intersectionRatio === 0){
+        this.classList.add('visible')
+        break
+      }
+      if (entry.isIntersecting && entry.intersectionRatio > 0) {
+        this.classList.add('visible')
+        break;
+      }else{
+        this.classList.remove('visible')
+        break
+      }
+    }
+  }
+
+  connectedCallback() {
+    super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shown) this.shuffle()
+    if (this.shown && Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length > 1) this.shuffle()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
+    super.disconnectedCallback()
     this.shuffle(false)
   }
 
@@ -30,7 +50,7 @@ export default class EmotionPictures extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -39,13 +59,15 @@ export default class EmotionPictures extends Shadow() {
    *
    * @return {void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         display: grid !important;
-        margin: var(--margin, -1.5rem auto 1.5rem) !important;
+        margin: var(--margin, 0) !important;
         width: var(--width, 100%) !important;
-        max-width: var(--max-width, none) !important;
+        line-height: var(--line-height, 0);
+        align-items: start;
+        justify-items: start;
       }
       :host > * {
         grid-column: 1;
@@ -56,21 +78,62 @@ export default class EmotionPictures extends Shadow() {
       :host > *.shown {
         opacity: 1;
       }
+      :host > div {
+        position: relative;
+        width: var(--width, 100%);
+      }
+      :host > div > h2 {
+        position: absolute !important;
+        z-index:2;
+        top: 4vw;
+        left: 10vw !important;
+        opacity: 0;
+        animation: opacity 500ms ease-out;
+      }
+      :host(.visible) > div > h2 {
+        opacity: 1;
+      }
       @media only screen and (max-width: _max-width_) {
-        :host {
-          margin: var(--margin-mobile, var(--margin, calc(-1.5rem + 1px) auto 1.5rem)) !important;
-        }
+        :host {}
+      }
+      @keyframes opacity {
+        0% {opacity: 0;}
+        100% {opacity: 1;}
       }
     `
-    this.setCss(/* css */`:host > * {
-      --${this.getAttribute('namespace') || ''}img-max-height: var(--${this.getAttribute('namespace') || ''}max-height, 35vh);
-      --picture-img-max-height: var(--${this.getAttribute('namespace') || ''}img-max-height);
-      --${this.getAttribute('namespace') || ''}img-width: var(--${this.getAttribute('namespace') || ''}width, 100%);
-      --picture-img-width: var(--${this.getAttribute('namespace') || ''}img-width);
-    }`, undefined, '', false)
+
+    this.setCss(/* css */`
+    :host > * {
+      --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
+      --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 100vh);
+    }
+  `, undefined, '', false)
+
+
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
+
+    switch (this.getAttribute('namespace')) {
+      case 'emotion-pictures-with-title-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`,
+          namespace: false
+        }, ...styles])
+        case 'emotion-pictures-default-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          namespace: false
+        }, ...styles])
+    }
   }
 
-  shuffle (start = true) {
+  shuffle(start = true) {
     clearInterval(this.interval || null)
     if (start) {
       this.interval = setInterval(() => {
@@ -87,7 +150,7 @@ export default class EmotionPictures extends Shadow() {
     }
   }
 
-  get shown () {
+  get shown() {
     return this.root.querySelector('.shown') || (() => {
       if (this.root.childNodes[0]) this.root.childNodes[0].classList.add('shown')
       return this.root.childNodes[0]
