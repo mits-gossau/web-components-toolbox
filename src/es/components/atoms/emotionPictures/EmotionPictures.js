@@ -114,6 +114,7 @@ export default class EmotionPictures extends Intersection() {
 
     const styles = [
       {
+        // @ts-ignore
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
