@@ -166,19 +166,19 @@
   border: var(--table-td-border, 1px solid var(--color));
 }
 /* https://heroicons.com/ */
-:host a[href^="/"]:not(.no-icon):before {
+:host a[href^="/"].icon:before {
   content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="white"><path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd" /></svg>');
 }
-:host a[href^="http"]:not(.no-icon):before {
+:host a[href^="http"].icon:before {
   content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="white"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" /><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" /></svg>');
 }
-:host a[href$=".pdf"]:not(.no-icon):before {
+:host a[href$=".pdf"].icon:before {
   content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="white"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" /></svg>');
 }
-:host a[href$=".xls"]:not(.no-icon):before {
+:host a[href$=".xls"].icon:before {
   content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="white"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" /></svg>');
 }
-:host a[href^="/"]:not(.no-icon):before, :host a[href^="http"]:not(.no-icon):before, :host a[href$=".pdf"]:not(.no-icon):before, :host a[href$=".xls"]:not(.no-icon):before {
+:host a[href^="/"].icon:before, :host a[href^="http"].icon:before, :host a[href$=".pdf"].icon:before, :host a[href$=".xls"].icon:before {
   background-color: var(--a-color, var(--color-secondary));
   border-radius: 0.25em;
   display: inline-block;
@@ -189,7 +189,7 @@
   width: 2em;
   transition: var(--a-transition, background-color 0.3s ease-out);
 }
-:host a[href^="/"]:not(.no-icon):hover:before, :host a[href^="http"]:not(.no-icon):hover:before, :host a[href$=".pdf"]:not(.no-icon):hover:before, :host a[href$=".xls"]:not(.no-icon):hover:before {
+:host a[href^="/"].icon:hover:before, :host a[href^="http"].icon:hover:before, :host a[href$=".pdf"].icon:hover:before, :host a[href$=".xls"].icon:hover:before {
   background-color: var(--a-color-hover, var(--color-hover, var(--color, green)));
 }
 :host .quote {
