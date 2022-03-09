@@ -86,7 +86,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
       :host > section {
         display: flex;
         flex-wrap: wrap;
-        align-items: var(--align-items, normal);
+        align-items: var(--align-items, center);
         justify-content: var(--justify-content, center);
         width: 100%;
         gap: var(--gap, normal);
