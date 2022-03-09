@@ -241,7 +241,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
    */
   renderHTML () {
     Array.from(this.root.children).forEach(node => {
-      if (node.tagName !== 'STYLE') this.section.appendChild(node)
+      if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
     this.html = [this.section, this.style]
   }
