@@ -113,6 +113,7 @@ export default class EmotionPictures extends Intersection() {
           font-size: var(--h1-font-size-mobile);
         }
         :host > div > *:not(a-picture) {
+          top: 2vw;
           left: 0;
           margin:var(--div-margin-mobile);
         }
