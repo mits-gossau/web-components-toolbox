@@ -16,6 +16,7 @@ TODO:
 - [x] Wrapper.js onresize newly calculate calcColumnWidth
 - [x] :host *.bg-color, :host *.bg-color-hover try to make this display inline and with box-shadow analog https://www.betriebsrestaurants-migros.ch/de.html
 - [x] review each component, css Dino + Weedy
+- [ ] integration laurin's picture aspect-ratio and low qual 5k image in advance loading, picture source generation at umbraco
 - [ ] style.css demo page
 - [ ] Template.html fix image path issue http://localhost:4200/src/es/components/web-components-toolbox/docs/Template.html?logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/atoms/button/primary-/primary-.html
 - [ ] Template.html api call to fetch page content for previews
