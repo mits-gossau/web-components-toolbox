@@ -74,7 +74,7 @@
   line-height: var(--p-line-height, var(--line-height, normal));
   text-align: var(--p-text-align, start);
   text-transform: var(--p-text-transform, none);
-  margin: var(--p-margin, 0 auto var(--content-spacing));
+  margin: var(--p-margin, 0 auto 1.143em);
 }
 :host a {
   cursor: pointer;
@@ -85,7 +85,7 @@
   text-decoration: var(--a-text-decoration, var(--text-decoration, underline));
   text-underline-offset: var(--a-text-underline-offset, unset);
   display: var(--a-display, block);
-  margin: var(--a-margin, 0 auto var(--content-spacing));
+  margin: var(--a-margin, 0 auto 1.143em);
   transition: var(--a-transition, color 0.3s ease-out);
 }
 :host *:not(main) a {
@@ -291,11 +291,11 @@ img[style="float: right;"] {
     font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));
     line-height: var(--p-line-height-mobile, var(--p-line-height, var(--line-height, normal)));
     text-transform: var(--p-text-transform-mobile, var(--p-text-transform, none));
-    margin: var(--p-margin-mobile, var(--p-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+    margin: var(--p-margin-mobile, var(--p-margin, 0 auto 1.143em));
   }
   :host a {
     font-size: var(--a-font-size-mobile, var(--a-font-size, 1em));
-    margin: var(--a-margin-mobile, var(--a-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+    margin: var(--a-margin-mobile, var(--a-margin, 0 auto 1.143em));
   }
   :host *:not(main) a {
     display: var(--any-a-display-mobile, var(--any-a-display, var(--a-display-mobile, var(--a-display, inline))));

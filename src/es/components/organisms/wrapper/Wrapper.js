@@ -156,6 +156,9 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
             :host {
               --gap: var(--gap-custom, var(--content-spacing));
             }
+            :host > section > *:not(a-picture) ~ * {
+              align-self: var(--not-a-picture-align-self, normal);
+            }
             @media only screen and (max-width: _max-width_) {
               :host {
                 --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
