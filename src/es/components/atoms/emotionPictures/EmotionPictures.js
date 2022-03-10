@@ -82,7 +82,7 @@ export default class EmotionPictures extends Intersection() {
         position: relative;
         width: var(--width, 100%);
       }
-      :host > div > h2 {
+      :host > div > *:not(a-picture) {
         position: absolute !important;
         z-index:2;
         top: 4vw;
@@ -90,12 +90,15 @@ export default class EmotionPictures extends Intersection() {
         opacity: 0;
         animation: opacity 500ms ease-out;
       }
-      :host(.visible) > div > h2 {
+      :host(.visible) > div > *:not(a-picture) {
         opacity: 1;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
           margin: var(--margin-mobile, var(--margin, 0)) !important;
+        }
+        :host > div h2.font-size-big {
+          font-size: var(--h2-font-size-mobile);
         }
       }
       @keyframes opacity {
