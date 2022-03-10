@@ -157,14 +157,14 @@ export default class Header extends Shadow() {
       :host > * {
         font-size: var(--font-size, 1rem);
         margin: var(--content-spacing, 40px) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-        width: var(--content-width, 80%);
+        width: var(--content-width, 55%);
       }
       :host([sticky]) {
         position: static;
       }
       :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
         flex-grow: 1;
-        max-width: calc(var(--content-width, 80%) - var(--logo-width));
+        max-width: calc(var(--content-width, 55%) - var(--logo-width));
       }
       :host > header::before {
         display: block;
@@ -178,7 +178,7 @@ export default class Header extends Shadow() {
         align-self: baseline;
       }
       :host > span, :host > div, :host > p, :host > ul, :host > ol {
-        width: var(--content-width, 80%);
+        width: var(--content-width, 55%);
       }
       :host > header {
         align-items: var(--align-items, center);
@@ -251,7 +251,7 @@ export default class Header extends Shadow() {
       }
       :host > header > a-logo{
         position: absolute;
-        left: calc((100% - var(--content-width, 80%)) / 2);
+        left: calc((100% - var(--content-width, 55%)) / 2);
         z-index: 101;
         top: var(--a-logo-top, 0);
         transition: top 0.2s ease-out;

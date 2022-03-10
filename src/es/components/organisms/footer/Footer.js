@@ -81,7 +81,7 @@ export default class Footer extends Shadow() {
         : ''}
       :host > footer > * {
         margin: var(--content-spacing, 40px) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-        width: var(--content-width, 80%);
+        width: var(--content-width, 55%);
       }
       :host > footer > div.logo {
         margin: 0 auto;

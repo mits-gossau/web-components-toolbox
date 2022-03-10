@@ -15,7 +15,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {
  *  NOTE: grid-area: body;
  *  --content-spacing [40px]
- *  --content-width [80%]
+ *  --content-width [55%]
  *  --h1-color [--color, black]
  *  --font-family-secondary
  * }
@@ -83,7 +83,7 @@ export default class Body extends Shadow() {
       }
       :host > main > * {
         margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-        width: var(--content-width, 80%);
+        width: var(--content-width, 55%);
       }
       :host > main > o-body-style {
         display: inline-block !important;
