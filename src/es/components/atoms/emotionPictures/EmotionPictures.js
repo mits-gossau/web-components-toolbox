@@ -33,10 +33,18 @@ export default class EmotionPictures extends Intersection() {
       }
     }
   }
-
+      
   connectedCallback() {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    const showPromises = []
+    if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
+      showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+    }
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => (this.hidden = false))
+    }
     if (this.shown && Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length > 1) this.shuffle()
   }
 
@@ -83,10 +91,11 @@ export default class EmotionPictures extends Intersection() {
         width: var(--width, 100%);
       }
       :host > div > *:not(a-picture) {
-        position: absolute !important;
+        position: absolute;
         z-index:2;
         top: 4vw;
-        left: 10vw !important;
+        left: 10vw;
+        right:10vw;
         opacity: 0;
         animation: opacity 500ms ease-out;
       }
@@ -99,6 +108,13 @@ export default class EmotionPictures extends Intersection() {
         }
         :host > div h2.font-size-big {
           font-size: var(--h2-font-size-mobile);
+        }
+        :host > div h1.font-size-big {
+          font-size: var(--h1-font-size-mobile);
+        }
+        :host > div > *:not(a-picture) {
+          left: 0;
+          margin:var(--div-margin-mobile);
         }
       }
       @keyframes opacity {
@@ -129,13 +145,13 @@ export default class EmotionPictures extends Intersection() {
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`,
           namespace: false
-        }, ...styles])
+        }, ...styles], false)
         case 'emotion-pictures-default-':
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
-        }])
+        }],false)
     }
   }
 
@@ -161,5 +177,9 @@ export default class EmotionPictures extends Intersection() {
       if (this.root.childNodes[0]) this.root.childNodes[0].classList.add('shown')
       return this.root.childNodes[0]
     })()
+  }
+
+  get aPicture () {
+    return this.root.querySelector('a-picture')
   }
 }
