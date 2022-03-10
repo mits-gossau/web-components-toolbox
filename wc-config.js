@@ -148,6 +148,7 @@
       // finally is not properly supported but we resolve on success as well as on error. Important is to wait for all, to avoid UI blitz/flashes
       if (src.searchParams.get('wc-config-load') !== 'false') {
         if (src.searchParams.get('debug') !== 'false') console.info(wcConfigLoad, imports)
+        document.body.setAttribute(wcConfigLoad, 'true')
         document.body.dispatchEvent(new CustomEvent(wcConfigLoad,
           {
             detail: { imports },
