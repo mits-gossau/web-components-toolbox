@@ -101,6 +101,7 @@ export default class Navigation extends Shadow() {
       Promise.all(showPromises).then(() => {
         this.hidden = false
         this.checkIfWrapped(true)
+        setTimeout(() => this.checkIfWrapped(true), 1000);
         this.setFocusLostClickBehavior()
         this.css = /* CSS */`
           :host {

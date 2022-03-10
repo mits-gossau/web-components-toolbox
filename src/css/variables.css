@@ -25,5 +25,7 @@
     --color: var(--m-white);
     --navigation-default-color-custom: var(--color);
     --header-default-a-menu-icon-background-color-custom: var(--color);
+    --footer-default-color-custom: var(--color);
+    --footer-default-hr-border-bottom-custom: 1px dotted var(--color);
   }
 }

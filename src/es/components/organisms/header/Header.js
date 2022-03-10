@@ -101,8 +101,9 @@ export default class Header extends Shadow() {
       this.hidden = true
       Promise.all(showPromises).then(() => {
         this.hidden = false
-        this.adjustLogoPos(true)
         this.setStickyOffsetHeight()
+        this.adjustLogoPos(true)
+        setTimeout(() => this.adjustLogoPos(true), 1000);
       })
     }
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })

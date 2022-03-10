@@ -12,11 +12,16 @@
   --footer-default-a-text-transform: var(--header-default-a-text-transform);
   --footer-default-a-white-space: var(--header-default-a-white-space);
   --footer-default-border-top: var(--header-default-border-bottom);
-  --footer-default-color-hover: var(--color-secondary);
   --footer-default-margin: 0;
   --footer-default-min-height: auto;
-  --footer-default-padding: 1.5rem 0 0;
+  --footer-default-margin-mobile: var(--content-spacing-mobile) 0 0;
+  --footer-default-margin: var(--content-spacing) 0 0;
+  --footer-default-padding-mobile: var(--content-spacing-mobile) 0 0;
+  --footer-default-padding: var(--content-spacing) 0 0;
   --footer-default-white-space: var(--navigation-white-space);
   --footer-default-word-break: var(--navigation-word-break);
   --footer-default-z-index: 0;
+  --footer-default-hr-border-bottom: var(--footer-default-hr-border-bottom-custom, 1px dotted var(--background-color));
+  --footer-default-color: var(--footer-default-color-custom, var(--background-color));
+  --picture-footer-logo-img-width: min(40px, 10vw);
 }

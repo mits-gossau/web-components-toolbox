@@ -14,8 +14,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class Footer
  * @type {CustomElementConstructor}
  * @attribute {
- *  {string} [logo-load="logo-load"]
- *  {boolean} [homepage] for classics homepage styles (only one logo at right side)
  * }
  * @css {
  *  NOTE: grid-area: footer;
@@ -69,49 +67,30 @@ export default class Footer extends Shadow() {
     this.css = /* css */`
       :host {
         grid-area: footer;
-        ${this.logo ? /* css */'border-top: var(--border-top, 0);' : ''}
-        margin: var(--margin, 0);
+        color: var(--color);
+        --a-color: var(--color);
       }
-      ${this.logo
-        ? /* css */`
-            :host > footer {
-              padding: var(--padding, 0);
-            }
-          `
-        : ''}
+      :host > footer {
+        margin: var(--margin, 0);
+        padding: var(--padding, 0);
+        background-color: var(--color-secondary, var(--background-color));
+      }
       :host > footer > * {
         margin: var(--content-spacing, 40px) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--content-width, 55%);
       }
-      :host > footer > div.logo {
-        margin: 0 auto;
-      }
-      :host > footer > div.logo > a {
-        align-self: var(--a-align-self, var(--align-self, auto));
-        color: var(--a-color, var(--color));
+      :host > footer > .logo {
         display: block;
-        font-family: var(--a-font-family, var(--font-family));
-        font-weight: var(--a-font-weight, var(--font-weight, normal));
-        font-size: var(--a-font-size, var(--font-size));
-        padding: var(--a-padding, 0);
-        margin: var(--a-margin, 0);
-        line-height: var(--a-line-height, 0);
-        order: var(--order, 1);
-        text-decoration: var(--a-text-decoration, var(--text-decoration, none));
-        text-underline-offset: var(--a-text-underline-offset, unset);
-        text-transform: var(--a-text-transform, uppercase);
-        transition: var(--a-transition, all 0.2s ease);
-        white-space: var(--a-white-space, normal);
+        --picture-store-logo-text-align: var(--picture-store-logo-text-align-custom, left);
       }
-      :host > footer > div.logo > a:hover {
-        color: var(--a-color-hover, var(--a-color-hover, var(--a-color, var(--color))));
-        text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
+      :host > footer > o-footer-wrapper {
+        --align-items: var(--align-items-custom, normal);
       }
       :host > footer > ul.language-switcher {
         --color: var(--background-color);
         --color-hover: var(--m-orange-300);
         --padding: 1.1429rem 1.2143rem;
-        background-color: var(--color-secondary);
+        background-color: var(--language-switcher-color-secondary, var(--background-color));
         color: var(--color);
         display: flex;
         flex-direction: row;
@@ -145,28 +124,37 @@ export default class Footer extends Shadow() {
           --font-size: var(--font-size-mobile);
         }
         :host > footer {
-          padding: var(--padding, var(--padding, 0));
+          margin: var(--margin-mobile, var(--margin, 0));
+          padding: var(--padding-mobile, var(--padding, 0));
         }
         :host > footer > * {
           margin: var(--content-spacing-mobile, 0) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width, 90%);
-        }
-        :host > footer > div.logo > a {
-          padding-bottom: 0;
         }
         :host > footer > ul.language-switcher > li.copy {
           position: static;
         }
       }
     `
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
     switch (this.getAttribute('namespace')) {
       case 'footer-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }], false)
+        }, ...styles], false)
       default:
-        return Promise.resolve()
+        return this.fetchCSS(styles)
     }
   }
 
@@ -187,10 +175,12 @@ export default class Footer extends Shadow() {
       })
       const wrapper = new children[1][1]()
       Array.from(this.root.children).forEach(node => {
-        if (!node.getAttribute('slot') && node.tagName !== 'STYLE' && node.tagName !== 'FOOTER' && !node.classList.contains('language-switcher') && node !== this.logo) wrapper.root.appendChild(node)
+        if (!node.getAttribute('slot') && node.tagName !== 'STYLE' && node.tagName !== 'HR' && node.tagName !== 'FOOTER' && !node.classList.contains('spacer') && !node.classList.contains('language-switcher') && node !== this.logo) wrapper.root.appendChild(node)
       })
       if (this.logo) this.footer.appendChild(this.logo)
+      if (this.root.querySelector('hr')) this.footer.appendChild(this.root.querySelector('hr'))
       this.footer.appendChild(wrapper)
+      if (this.root.querySelector('.spacer')) this.footer.appendChild(this.root.querySelector('.spacer'))
       this.languageSwitchers.forEach(languageSwitcher => this.footer.appendChild(languageSwitcher))
       this.html = this.footer
     })
