@@ -31,7 +31,6 @@ export default class Teaser extends Shadow() {
   }
 
   connectedCallback () {
-    this.addEventListener('click', this.clickListener)
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
@@ -39,6 +38,7 @@ export default class Teaser extends Shadow() {
       this.hidden = true
       Promise.all(showPromises).then(() => (this.hidden = false))
     }
+    this.addEventListener('click', this.clickListener)
     if (this.getAttribute('namespace') === 'teaser-overlay-') {
       this.addEventListener('mouseover', this.mouseoverListener)
       this.addEventListener('mouseout', this.mouseoutListener)

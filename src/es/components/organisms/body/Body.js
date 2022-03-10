@@ -59,7 +59,7 @@ export default class Body extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.root.querySelector('main')
+    return !this.main
   }
 
   /**
@@ -129,10 +129,11 @@ export default class Body extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    const main = this.root.appendChild(document.createElement('main'))
+    this.main = this.root.querySelector('main') || document.createElement('main')
     Array.from(this.root.children).forEach(node => {
-      if (node === main || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
-      main.appendChild(node)
+      if (node === this.main || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
+      this.main.appendChild(node)
     })
+    this.html = this.main
   }
 }

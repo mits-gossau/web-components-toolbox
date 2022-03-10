@@ -66,7 +66,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.querySelector('section')
+    return !this.section
   }
 
   /**
@@ -240,6 +240,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
    * @return {void}
    */
   renderHTML () {
+    this.section = this.root.querySelector('section') || document.createElement('section')
     Array.from(this.root.children).forEach(node => {
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
@@ -275,10 +276,6 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
 
   getMedia () {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
-  }
-
-  get section () {
-    return this._section || (this._section = document.createElement('section'))
   }
 
   get style () {

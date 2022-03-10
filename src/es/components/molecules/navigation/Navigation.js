@@ -45,14 +45,6 @@ export default class Navigation extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    this.nav = document.createElement('nav')
-    this.hidden = true
-    Array.from(this.root.children).forEach(node => {
-      if (node.getAttribute('slot') || node.nodeName === 'STYLE') return false
-      this.nav.appendChild(node)
-    })
-    this.root.appendChild(this.nav)
-
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
     this.clickListener = event => {
@@ -101,11 +93,32 @@ export default class Navigation extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+        this.checkIfWrapped(true)
+        this.setFocusLostClickBehavior()
+        this.css = /* CSS */`
+          :host {
+            --show: none;
+          }
+        `
+        this.dispatchEvent(new CustomEvent(this.getAttribute('navigation-load') || 'navigation-load', {
+          detail: {
+            child: this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+    }
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
-    this.setFocusLostClickBehavior()
   }
 
   disconnectedCallback () {
@@ -130,7 +143,7 @@ export default class Navigation extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return this.hidden
+    return !this.nav
   }
 
   /**
@@ -524,6 +537,8 @@ export default class Navigation extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }], false)
+      default:
+        return Promise.resolve()
     }
   }
 
@@ -531,10 +546,16 @@ export default class Navigation extends Shadow() {
    * renders the a-link html
    *
    * @param {string[]} [arrowDirections=['up', 'down']]
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML (arrowDirections = ['left', 'right']) {
-    this.loadChildComponents().then(children => {
+    this.nav = this.root.querySelector('nav') || document.createElement('nav')
+    Array.from(this.root.children).forEach(node => {
+      if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'nav' ) return false
+      this.nav.appendChild(node)
+    })
+    this.html = this.nav
+    return this.loadChildComponents().then(children => {
       Array.from(this.root.querySelectorAll('a')).forEach(a => {
         const li = a.parentElement
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
@@ -608,24 +629,6 @@ export default class Navigation extends Shadow() {
       this.root.querySelectorAll('a-link').forEach(link => link.addEventListener('click', this.clickListener))
       this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.addEventListener('click', this.liClickListener))
       this.html = this.style
-      this.hidden = false
-      this.dispatchEvent(new CustomEvent(this.getAttribute('navigation-load') || 'navigation-load', {
-        detail: {
-          child: this
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      }))
-      this.checkIfWrapped(true)
-      setTimeout(() => self.requestAnimationFrame(timeStamp => {
-        this.checkIfWrapped(true)
-        this.css = /* CSS */`
-          :host {
-            --show: none;
-          }
-        `
-      }), 1000)
     })
   }
 

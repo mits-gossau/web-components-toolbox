@@ -193,8 +193,7 @@ export default class Picture extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.html = this.picture = document.createElement('picture')
-
+    this.html = this.picture = this.root.querySelector('picture') || document.createElement('picture')
     // in case someone adds sources/img directly instead of using the attributes
     Array.from(this.root.children).forEach(node => {
       if (node.nodeName === 'SOURCE' || node.nodeName === 'IMG') this.picture.appendChild(node)

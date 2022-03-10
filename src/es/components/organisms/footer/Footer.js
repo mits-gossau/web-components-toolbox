@@ -32,15 +32,14 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Footer extends Shadow() {
-  constructor (...args) {
-    super(...args)
-
-    this.hidden = true
-  }
-
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => (this.hidden = false))
+    }
   }
 
   /**
@@ -58,17 +57,18 @@ export default class Footer extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.wrapper
+    return !this.footer
   }
 
   /**
    * renders the o-footer css
    *
-   * @return {Promise<void>|void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
       :host {
+        grid-area: footer;
         ${this.logo ? /* css */'border-top: var(--border-top, 0);' : ''}
         margin: var(--margin, 0);
       }
@@ -159,72 +159,25 @@ export default class Footer extends Shadow() {
         }
       }
     `
-    this.setCss(/* CSS */`
-      :host {
-        padding: 0 !important;
-      }
-      :host > section h1 {
-        --h1-margin: 0 auto 0.875rem;
-      }
-      :host > section h2 {
-        --h2-margin: 0 auto 0.875rem;
-      }
-      :host > section h3 {
-        --h3-margin: 0 auto 0.875rem;
-      }
-      :host > section h4 {
-        --h4-margin: 0 auto 0.875rem;
-      }
-      :host > section > ul {
-        --footer-padding: 0;
-      }
-      :host > section > ul > li {
-        list-style: var(--list-style, none);
-        padding-bottom: 0.5rem;
-      }
-      :host > section > ul > li:first-child, :host > section > ul > li.bold {
-        --${this.namespace || ''}font-weight: bold;
-        --${this.namespace || ''}font-size: 1.25rem;
-        padding-bottom: 0.875rem;
-      }
-      @media only screen and (max-width: _max-width_) {
-        :host {
-          padding: 0 !important;
-        }
-        :host > section h1 {
-          --h1-margin: 0.5rem auto 0.5rem;
-        }
-        :host > section h2 {
-          --h2-margin: 0.5rem auto 0.5rem;
-        }
-        :host > section h3 {
-          --h3-margin: 0.5rem auto 0.5rem;
-        }
-        :host > section h4 {
-          --h4-margin: 0.5rem auto 0.5rem;
-        }
-        :host > section > ul > li:first-child, :host > section > ul > li.bold {
-          --${this.namespace || ''}font-size-mobile: 1.2857rem;
-          padding: 0.5rem 0;
-        }
-      }
-    `, undefined, undefined, undefined, this.wrapperStyle)
     switch (this.getAttribute('namespace')) {
       case 'footer-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }], false)
+      default:
+        return Promise.resolve()
     }
   }
 
   /**
    * renders the a-link html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
-    this.loadChildComponents().then(children => {
+    this.footer = this.root.querySelector('footer') || document.createElement('footer')
+    return this.loadChildComponents().then(children => {
       Array.from(this.root.querySelectorAll('li a')).forEach(a => {
         const li = a.parentElement
         const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
@@ -233,15 +186,13 @@ export default class Footer extends Shadow() {
         li.prepend(aLink)
       })
       const wrapper = new children[1][1]()
-      wrapper.root.appendChild(this.wrapperStyle)
       Array.from(this.root.children).forEach(node => {
-        if (!node.getAttribute('slot') && node.tagName !== 'STYLE' && !node.classList.contains('language-switcher') && node !== this.logo) wrapper.root.appendChild(node)
+        if (!node.getAttribute('slot') && node.tagName !== 'STYLE' && node.tagName !== 'FOOTER' && !node.classList.contains('language-switcher') && node !== this.logo) wrapper.root.appendChild(node)
       })
       if (this.logo) this.footer.appendChild(this.logo)
       this.footer.appendChild(wrapper)
       this.languageSwitchers.forEach(languageSwitcher => this.footer.appendChild(languageSwitcher))
       this.html = this.footer
-      this.hidden = false
     })
   }
 
@@ -283,20 +234,8 @@ export default class Footer extends Shadow() {
     }))
   }
 
-  get footer () {
-    return this._footer || (this._footer = document.createElement('footer'))
-  }
-
   get wrapper () {
     return this.root.querySelector('o-footer-wrapper')
-  }
-
-  get wrapperStyle () {
-    return this._style || (this._style = (() => {
-      const style = document.createElement('style')
-      style.setAttribute('protected', 'true')
-      return style
-    })())
   }
 
   get languageSwitchers () {

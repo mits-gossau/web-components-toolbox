@@ -42,7 +42,6 @@ export default class Header extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    this.hidden = true
     this.scrollListener = event => {
       const lastScroll = self.scrollY
       setTimeout(() => {
@@ -93,13 +92,20 @@ export default class Header extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    showPromises.push(new Promise(resolve => this.addEventListener('navigation-load', event => resolve(), { once: true })))
+    if (this.aLogo && this.aLogo.hasAttribute('logo-load') && !this.aLogo.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('logo-load', event => resolve(), { once: true })))
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+        this.adjustLogoPos(true)
+        this.setStickyOffsetHeight()
+      })
+    }
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
-    this.addEventListener('navigation-load', event => {
-      this.adjustLogoPos(true)
-      this.setStickyOffsetHeight()
-    }, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
     self.addEventListener('resize', this.resizeListener)
     this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
@@ -131,7 +137,7 @@ export default class Header extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.header || this.hidden
+    return !this.header
   }
 
   /**
@@ -378,34 +384,33 @@ export default class Header extends Shadow() {
   /**
    * renders the a-link html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
-    this.header = this.root.appendChild(document.createElement('header'))
+    this.header = this.root.querySelector('header') || document.createElement('header')
     Array.from(this.root.children).forEach(node => {
       if (node === this.header || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
       this.header.appendChild(node)
     })
-    if (this.getAttribute('menu-icon')) {
-      this.loadChildComponents().then(children => {
-        const MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback') })
-        MenuIcon.addEventListener('click', event => {
-          this.header.classList.toggle('open')
-          const prop = this.header.classList.contains('open') ? 'add' : 'remove'
-          document.documentElement.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
-          Array.from(this.header.children).forEach(node => {
-            node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
-          })
-        })
-        this.header.appendChild(MenuIcon)
-        this.html = this.style
-        this.hidden = false
-        this.adjustLogoPos(true)
-        setTimeout(() => self.requestAnimationFrame(timeStamp => this.adjustLogoPos(true)), 1000)
-      })
-    }
+    this.html = this.header
     if (this.hasAttribute('sticky')) this.classList.add('top')
     self.addEventListener('resize', event => document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll'))
+    return this.getAttribute('menu-icon')
+      ? this.loadChildComponents().then(children => {
+          const MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+          MenuIcon.addEventListener('click', event => {
+            this.header.classList.toggle('open')
+            const prop = this.header.classList.contains('open') ? 'add' : 'remove'
+            document.documentElement.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
+            Array.from(this.header.children).forEach(node => {
+              node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
+            })
+          })
+          this.header.appendChild(MenuIcon)
+          this.html = this.style
+          this.adjustLogoPos(true)
+        })
+      : Promise.resolve()
   }
 
   /**

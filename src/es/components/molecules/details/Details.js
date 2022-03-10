@@ -124,6 +124,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
+    // TODO: remove flag and do as usual with !this.summary or else
     return !this.hasRendered
   }
 

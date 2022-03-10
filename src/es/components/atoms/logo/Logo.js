@@ -205,20 +205,40 @@ export default class Logo extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    const img = `<img src=${this.getAttribute('src')} alt=${this.getAttribute('alt')} loading=${this.getAttribute('loading') || 'eager'}>`
+    this.img = this.root.querySelector('img') || document.createElement('img')
+    this.img.setAttribute('src', this.getAttribute('src'))
+    this.img.setAttribute('alt', this.getAttribute('alt'))
+    this.img.setAttribute('loading', this.getAttribute('loading') || 'eager')
     let a = null
     if (this.hasAttribute('href')) {
       a = document.createElement('a')
       a.setAttribute('href', this.getAttribute('href'))
       if (this.hasAttribute('rel')) a.setAttribute('rel', this.getAttribute('rel'))
       if (this.hasAttribute('target')) a.setAttribute('target', this.getAttribute('target'))
-      a.innerHTML = img
+      a.appendChild(this.img)
     }
-    this.html = a || img
+    this.html = a || this.img
     // calculated css style
     this.img.addEventListener('load', event => {
       this.resizeListener(event)
+      this.setAttribute('loaded', 'true')
       this.dispatchEvent(new CustomEvent(this.getAttribute('logo-load') || 'logo-load', {
+        detail: {
+          origEvent: event,
+          child: this,
+          img: this.img,
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    })
+    this.img.addEventListener('error', event => {
+      this.setAttribute('loaded', 'false')
+      this.dispatchEvent(new CustomEvent(this.getAttribute('logo-load') || 'logo-load', {
+        detail: {
+          error: event
+        },
         bubbles: true,
         cancelable: true,
         composed: true
@@ -228,10 +248,6 @@ export default class Logo extends Shadow() {
 
   get a () {
     return this.root.querySelector('a')
-  }
-
-  get img () {
-    return this.root.querySelector('img')
   }
 
   get text () {
