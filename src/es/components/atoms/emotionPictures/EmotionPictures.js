@@ -43,9 +43,16 @@ export default class EmotionPictures extends Intersection() {
     }
     if (showPromises.length) {
       this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+        if (this.shown && Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length > 1) this.shuffle()
+        this.css = /* CSS */`
+          :host {
+            --show: none;
+          }
+        `
+      })
     }
-    if (this.shown && Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length > 1) this.shuffle()
   }
 
   disconnectedCallback() {
@@ -80,7 +87,7 @@ export default class EmotionPictures extends Intersection() {
         grid-column: 1;
         grid-row: 1;
         opacity: 0;
-        transition: var(--transition, opacity 3s ease);
+        transition: var(--transition, opacity 2s ease-out);
       }
       :host > *.shown {
         opacity: 1;
@@ -96,7 +103,7 @@ export default class EmotionPictures extends Intersection() {
         left: 10vw;
         right:10vw;
         opacity: 0;
-        animation: opacity 500ms ease-out;
+        transition: var(--text-transition, opacity 0.5s ease-out);
       }
       :host(.visible) > div > *:not(a-picture) {
         opacity: 1;
@@ -113,10 +120,6 @@ export default class EmotionPictures extends Intersection() {
           left: 0;
           margin:var(--div-margin-mobile);
         }
-      }
-      @keyframes opacity {
-        0% {opacity: 0;}
-        100% {opacity: 1;}
       }
     `
 
