@@ -7,6 +7,4 @@
    --emotion-pictures-with-title-h2-font-size-mobile: var(--emotion-pictures-with-title-h2-font-size-mobile-custom, min(calc(1.5rem * 1.5), 7vw));
    --emotion-pictures-with-title-img-max-height:75vh;
    --emotion-pictures-with-title-img-width:100%;
-   --emotion-pictures-with-title-margin-mobile: calc(-1 * var(--content-spacing-mobile)) 0 0;
-   --emotion-pictures-with-title-margin: calc(-1 * var(--content-spacing)) 0 0;  
 }

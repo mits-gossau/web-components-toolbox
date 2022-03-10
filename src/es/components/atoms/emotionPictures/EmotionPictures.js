@@ -71,7 +71,6 @@ export default class EmotionPictures extends Intersection() {
     this.css = /* css */`
       :host {
         display: grid !important;
-        margin: var(--margin, 0) !important;
         width: var(--width, 100%) !important;
         line-height: var(--line-height, 0);
         align-items: start;
@@ -103,9 +102,6 @@ export default class EmotionPictures extends Intersection() {
         opacity: 1;
       }
       @media only screen and (max-width: _max-width_) {
-        :host {
-          margin: var(--margin-mobile, var(--margin, 0)) !important;
-        }
         :host > div h2.font-size-big {
           font-size: var(--h2-font-size-mobile);
         }
