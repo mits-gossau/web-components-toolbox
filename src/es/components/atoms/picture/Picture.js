@@ -184,6 +184,11 @@ export default class Picture extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
+      case 'picture-store-logo-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./store-logo-/store-logo-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
     }
   }
 

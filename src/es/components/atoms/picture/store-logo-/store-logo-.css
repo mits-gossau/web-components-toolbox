@@ -1,0 +1,3 @@
+:host {
+    --picture-store-logo-img-width: min(145px, 50vw);
+}
