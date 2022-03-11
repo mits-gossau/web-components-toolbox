@@ -130,9 +130,7 @@ export default class IntersectionScrollEffect extends Intersection() {
   checkMedia (media = this.getAttribute('media')) {
     if (!media) return true
     if (this.cachedMedia) return this.cachedMedia === media
-    // @ts-ignore ignoring self.Environment error
-    const breakpoint = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'
-    const isDesktop = self.matchMedia(`(min-width: ${breakpoint})`).matches
+    const isDesktop = self.matchMedia(`(min-width: ${this.mobileBreakpoint})`).matches
     this.cachedMedia = isDesktop ? 'desktop' : 'mobile'
     return this.cachedMedia === media
   }

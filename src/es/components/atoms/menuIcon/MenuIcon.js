@@ -73,6 +73,7 @@ export default class MenuIcon extends Shadow() {
         padding: var(--padding, 0 calc(var(--width, 35px) / 4)) !important;
         margin: var(--margin, 0);
         transition: var(--transition, 0.2s);
+        font-size: 14px;
       }
       :host(.${this.openClass}) {
         padding: var(--padding-open, 0 calc(var(--width, 35px) / 4)) !important;

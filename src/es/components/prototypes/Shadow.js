@@ -279,11 +279,11 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    *
    * @static
    * @param {string} style
-   * @param {string} [maxWidth = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px']
+   * @param {string} [maxWidth = this.mobileBreakpoint]
    * @return {string}
    */
   // @ts-ignore
-  cssMaxWidth (style, maxWidth = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '767px') {
+  cssMaxWidth (style, maxWidth = this.mobileBreakpoint) {
     return style.replace(/_max-width_/g, maxWidth)
   }
 
@@ -407,7 +407,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     this.setCss(value
       ? /* css */`
         :host {
-          display: none !important;
+          visibility: hidden !important;
         }
       `
       : /* css */`
@@ -424,5 +424,16 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
 
   get hidden () {
     return super.hidden
+  }
+
+  /**
+   * the most common way to figure out the sites break point
+   *
+   * @readonly
+   * @return {string}
+   */
+  get mobileBreakpoint () {
+    // @ts-ignore ignoring self.Environment error
+    return this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '767px'
   }
 }

@@ -1,6 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
-import Button from '../web-components/src/es/components/atoms/buttons/Button.js'
+import Button from '../../atoms/button/Button.js'
 
 /* global customElements */
 
@@ -100,7 +100,7 @@ export default class Form extends Shadow() {
       .field-validation-error {
         color: var(--color-secondary);
         padding: 0 10px;
-        font-size: 0.875rem;
+        font-size: 0.875em;
       }
       fieldset {
         border: 0;

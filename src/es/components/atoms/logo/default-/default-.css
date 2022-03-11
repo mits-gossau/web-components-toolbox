@@ -1,0 +1,5 @@
+:host {
+  --logo-default-align-items: baseline;
+  --logo-default-flex-grow: 0;
+  --logo-default-justify-content: flex-end;
+}

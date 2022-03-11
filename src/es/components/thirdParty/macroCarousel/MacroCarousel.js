@@ -191,7 +191,7 @@ export default class MacroCarousel extends Shadow() {
       :host > macro-carousel h3 {
         font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family)));
         font-weight: var(--h3-font-weight, var(--font-weight, normal));
-        font-size: var(--h3-font-size, min(3rem, 10vw));
+        font-size: var(--h3-font-size, min(3em, 10vw));
         text-transform: var(--h3-text-transform, none);
         margin: var(--h3-margin, 0);
       }
@@ -311,9 +311,7 @@ export default class MacroCarousel extends Shadow() {
   }
 
   getMedia () {
-    // @ts-ignore ignoring self.Environment error
-    const breakpoint = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'
-    return self.matchMedia(`(min-width: calc(${breakpoint} + 1px))`).matches ? '' : '-mobile'
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? '' : '-mobile'
   }
 
   get scripts () {

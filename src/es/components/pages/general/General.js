@@ -56,12 +56,12 @@ export default class General extends Shadow() {
                              "body"
                              "footer";
         grid-template-columns: 100%;
-        grid-template-rows: minmax(var(--header-height , 87px), auto) 1fr minmax(var(--footer-min-height, 48px), auto);
+        grid-template-rows: minmax(var(--header-height , 50px), auto) 1fr minmax(var(--footer-min-height, 50px), auto);
         min-height: 100vh;
       }
       /* global css set by page */
       :root {
-        background-color: var(--root-background-color, transparent);
+        background-color: var(--root-background-color, var(--background-color, transparent));
         font-size: var(--font-size, 10px);
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
@@ -99,7 +99,7 @@ export default class General extends Shadow() {
       }
       @media only screen and (max-width: _max-width_) {
         :host {
-          grid-template-rows: minmax(var(--header-height-mobile, var(--header-height, 87px)), auto) 1fr minmax(var(--footer-min-height-mobile, var(--footer-min-height, 48px)), auto);
+          grid-template-rows: minmax(var(--header-height-mobile, var(--header-height, 50px)), auto) 1fr minmax(var(--footer-min-height-mobile, var(--footer-min-height, 50px)), auto);
         }
         /* global css set by page */
         :root {

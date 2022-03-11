@@ -1,0 +1,18 @@
+:host {
+  --color: var(--background-color);
+  --teaser-overlay-a-picture-height: var(--teaser-overlay-figcaption-height);
+  --teaser-overlay-a-picture-transform-hover: scale(1.05,1.05);
+  --teaser-overlay-a-picture-transition: transform .5s ease-out;
+  --teaser-overlay-align-items: center;
+  --teaser-overlay-background-color: transparent;
+  --teaser-overlay-bg-background-color-hover: var(--teaser-overlay-bg-background-color-hover-custom, var(--color-hover, var(--m-red-900)));
+  --teaser-overlay-bg-background-color: var(--teaser-overlay-bg-background-color-custom, var(--color-secondary, var(--m-red-800)));
+  --teaser-overlay-bg-color-hover: var(--teaser-overlay-bg-color-hover-custom, var(--background-color, var(--m-red-900)));
+  --teaser-overlay-bg-color: var(--teaser-overlay-bg-color-custom, var(--background-color, var(--m-red-800)));
+  --teaser-overlay-figcaption-align-self: end;
+  --teaser-overlay-figcaption-background-color: var(--teaser-overlay-background-color);
+  --teaser-overlay-figcaption-height: auto;
+  --teaser-overlay-figcaption-padding: 0 0 1em;
+  --teaser-overlay-h2-margin: 0.09em 0;
+  --teaser-overlay-overflow: hidden;
+}

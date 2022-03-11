@@ -1,0 +1,8 @@
+:host {
+  --picture-footer-logo-img-width: min(40px, 10vw);
+  --picture-store-logo-text-align: left;
+  --footer-default-content-spacing: var(--content-spacing);
+  --footer-default-content-spacing-mobile: var(--content-spacing-mobile);
+  --footer-default-invert-color: var(--background-color);
+  --footer-default-invert-background-color: var(--color-secondary);
+}

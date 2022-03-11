@@ -31,7 +31,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  --max-width [80vw]
  *  --text-box-sizing [content-box]
  *  --text-color [pink]
- *  --text-font-size [1rem]
+ *  --text-font-size [1em]
  *  --text-line-height [normal]
  *  --text-padding [0]
  *  --text-margin [0]
@@ -139,7 +139,7 @@ export default class Logo extends Shadow() {
         font-family: var(--text-font-family);
         box-sizing: var(--text-box-sizing, border-box);
         color: var(--text-color, var(--color, pink));
-        font-size: var(--text-font-size, 1rem);
+        font-size: var(--text-font-size, 1em);
         line-height: var(--text-line-height, normal);
         padding: var(--text-padding, 0);
         margin: var(--text-margin, 0);
@@ -178,7 +178,7 @@ export default class Logo extends Shadow() {
         }
         :host > ${this.textSelector}{
           box-sizing: var(--text-box-sizing-mobile, border-box);
-          font-size: var(--text-font-size-mobile, 1rem);
+          font-size: var(--text-font-size-mobile, 1em);
           padding: var(--text-padding-mobile, 0);
           line-height: var(--text-line-height-mobile, normal);
         }
@@ -190,6 +190,13 @@ export default class Logo extends Shadow() {
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'logo-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+    }
   }
 
   /**
@@ -198,20 +205,40 @@ export default class Logo extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    const img = `<img src=${this.getAttribute('src')} alt=${this.getAttribute('alt')} loading=${this.getAttribute('loading') || 'eager'}>`
+    this.img = this.root.querySelector('img') || document.createElement('img')
+    this.img.setAttribute('src', this.getAttribute('src'))
+    this.img.setAttribute('alt', this.getAttribute('alt'))
+    this.img.setAttribute('loading', this.getAttribute('loading') || 'eager')
     let a = null
     if (this.hasAttribute('href')) {
       a = document.createElement('a')
       a.setAttribute('href', this.getAttribute('href'))
       if (this.hasAttribute('rel')) a.setAttribute('rel', this.getAttribute('rel'))
       if (this.hasAttribute('target')) a.setAttribute('target', this.getAttribute('target'))
-      a.innerHTML = img
+      a.appendChild(this.img)
     }
-    this.html = a || img
+    this.html = a || this.img
     // calculated css style
     this.img.addEventListener('load', event => {
       this.resizeListener(event)
+      this.setAttribute('loaded', 'true')
       this.dispatchEvent(new CustomEvent(this.getAttribute('logo-load') || 'logo-load', {
+        detail: {
+          origEvent: event,
+          child: this,
+          img: this.img,
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    })
+    this.img.addEventListener('error', event => {
+      this.setAttribute('loaded', 'false')
+      this.dispatchEvent(new CustomEvent(this.getAttribute('logo-load') || 'logo-load', {
+        detail: {
+          error: event
+        },
         bubbles: true,
         cancelable: true,
         composed: true
@@ -221,10 +248,6 @@ export default class Logo extends Shadow() {
 
   get a () {
     return this.root.querySelector('a')
-  }
-
-  get img () {
-    return this.root.querySelector('img')
   }
 
   get text () {

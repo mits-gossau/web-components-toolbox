@@ -174,16 +174,11 @@ export default class CookieBanner extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.html = /* html */`
-      <section></section>
-    `
+    this.section = this.root.querySelector('section') || document.createElement('section')
     Array.from(this.root.children).forEach(node => {
-      if (node !== this.section && !node.getAttribute('slot') && node.tagName !== 'STYLE') this.section.appendChild(node)
+      if (node !== this.section && !node.getAttribute('slot') && node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
-  }
-
-  get section () {
-    return this.root.querySelector('section')
+    this.html = this.section
   }
 
   get shown () {

@@ -57,16 +57,31 @@ export default class Picture extends Shadow() {
         composed: true
       }))
     }
+    this.mouseoverListener = event => {
+      this.picture.classList.add('hover')
+    }
+    this.mouseoutListener = event => {
+      this.picture.classList.remove('hover')
+    }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.hasAttribute('open-modal')) this.addEventListener('click', this.clickListener)
+    if (this.mouseEventElement) {
+      this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
+      this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
+    }
   }
 
   disconnectedCallback () {
     if (this.hasAttribute('open-modal')) this.removeEventListener('click', this.clickListener)
+    if (this.mouseEventElement) {
+      this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
+      this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
+      this.parentNodeShadowRootHost = null
+    }
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -108,9 +123,6 @@ export default class Picture extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host {
-        text-align: var(--text-align, center);
-      }
       :host([open-modal]) {
         cursor: pointer;
       }
@@ -122,40 +134,62 @@ export default class Picture extends Shadow() {
         height: var(--height, unset);
         overflow: var(--overflow, initial);
         transition: var(--transition, none);
-        margin: var(--margin, 0);
         transform: var(--transform, none);
+        margin: var(--margin, 0);
         text-align: var(--text-align, center);
       }
-      :host picture:hover {
+      :host picture:hover, :host picture.hover {
         filter: var(--filter-hover, var(--filter, none));
+        transform: var(--transform-hover, var(--transform, none));
       }
       :host picture img {
         aspect-ratio: var(--aspect-ratio, attr(width, auto) / attr(height, auto));
         display: var(--img-display, inline);
-        border-radius:var(--border-radius, 0);
-        width: var(--img-width, 100%);
-        min-width: var(--img-min-width);
+        border-radius: var(--border-radius, 0);
+        width: var(--img-width, auto);
+        min-width: var(--img-min-width, unset);
         max-width: var(--img-max-width, 100%);
         height: var(--img-height, auto);
-        min-height: var(--img-min-height, 100%);
-        max-height: var(--img-max-height);
+        min-height: var(--img-min-height, unset);
+        max-height: var(--img-max-height, unset);
         object-fit: var(--img-object-fit, cover);
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
       }
       @media only screen and (max-width: _max-width_) {
         :host picture {
-          border-radius:var(--border-radius-mobile, 0);
-          transition: var(--transition-mobile, none);
-          transform: var(--transform-mobile, none);
-          filter: var(--filter-mobile, none);
-          width: var(--width-mobile, var(--width, 100%));
-          height: var(--height-mobile, var(--height, unset));
+          transition: var(--transition-mobile, var(--transition, none));
+          transform: var(--transform-mobile, var(--transform, none));
+          filter: var(--filter-mobile, var(--filter, none));
+          width: var(--width-mobile, var(--width, auto));
+          height: var(--height-mobile, var(--height, auto));
+          text-align: var(--text-align-mobile, var(--text-align, center));
+        }
+        :host picture:hover, :host picture.hover {
+          filter: var(--filter-mobile-hover, var(--filter-hover, var(--filter, none)));
+          transform: var(--transform-mobile-hover, var(--transform-hover, var(--transform, none)));
         }
         :host picture img {
-          border-radius:var(--border-radius-mobile, 0);
+          border-radius: var(--border-radius-mobile, 0);
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'picture-scale-up-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./scale-up-/scale-up-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+      case 'picture-teaser-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+      case 'picture-store-logo-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./store-logo-/store-logo-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+    }
   }
 
   /**
@@ -164,8 +198,7 @@ export default class Picture extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.html = this.picture = document.createElement('picture')
-
+    this.html = this.picture = this.root.querySelector('picture') || document.createElement('picture')
     // in case someone adds sources/img directly instead of using the attributes
     Array.from(this.root.children).forEach(node => {
       if (node.nodeName === 'SOURCE' || node.nodeName === 'IMG') this.picture.appendChild(node)
@@ -219,6 +252,17 @@ export default class Picture extends Shadow() {
           composed: true
         }))
       })
+      this.img.addEventListener('error', event => {
+        this.setAttribute('loaded', 'false')
+        this.dispatchEvent(new CustomEvent(this.getAttribute('picture-load') || 'picture-load', {
+          detail: {
+            error: event
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
       this.img.setAttribute('loading', 'eager') // must load eager, not that the loading event doesn't trigger emit picture-load
     } else {
       this.img.setAttribute('loading', this.getAttribute('loading') || 'lazy')
@@ -227,5 +271,19 @@ export default class Picture extends Shadow() {
 
   get img () {
     return this.root.querySelector('img')
+  }
+
+  get parentNodeShadowRootHost () {
+    if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
+    const searchShadowRoot = node => node.root || node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
+    return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
+  }
+
+  set parentNodeShadowRootHost (node) {
+    this._parentNodeShadowRootHost = node
+  }
+
+  get mouseEventElement () {
+    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
   }
 }

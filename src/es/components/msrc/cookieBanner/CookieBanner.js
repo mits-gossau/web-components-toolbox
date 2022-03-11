@@ -23,7 +23,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  * @css {
  * --color, black
- * --font-size, 0.73rem
+ * --font-size, 0.73em
  * --line-height, normal
  * --font-weight, normal
  * --background-color, white
@@ -79,7 +79,7 @@ export default class CookieBanner extends Shadow() {
     this.css = /* css */`
       #msrc-widget div, #msrc-widget a, #msrc-widget button {
         color: var(--color, black) !important;
-        font-size: var(--font-size, 0.73rem) !important;
+        font-size: var(--font-size, 0.73em) !important;
         font-family: var(--font-family) !important;
         line-height: var(--line-height, normal) !important;
         font-weight: var(--font-weight, normal) !important;
@@ -96,7 +96,7 @@ export default class CookieBanner extends Shadow() {
         font-family: var(--font-family-bold) !important;
         text-transform: var(--text-transform, uppercase) !important;
         border-radius: var(--button-border-radius, 4px) !important;
-        padding: var(--button-padding, 0.5rem 1.2rem) !important;
+        padding: var(--button-padding, 0.5em 1.2em) !important;
       }
       #msrc-widget button:hover {
         background-color: var(--button-background-color-hover, var(--button-background-color, var(--color-secondary, var(--color, orange)))) !important;
@@ -114,7 +114,7 @@ export default class CookieBanner extends Shadow() {
       }
       @media only screen and (max-width: _max-width_) {
         #msrc-widget div, #msrc-widget a, #msrc-widget button {
-          font-size: var(--font-size-mobile, var(--font-size, 0.73rem)) !important;
+          font-size: var(--font-size-mobile, var(--font-size, 0.73em)) !important;
           line-height: var(--line-height-mobile, var(--line-height, normal)) !important;
           font-weight: var(--font-weight-mobile, var(--font-weight, normal)) !important;
           white-space: var(--white-space, normal) !important;

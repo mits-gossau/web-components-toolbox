@@ -1,3 +1,23 @@
+/*
+Ich habe die Font-Files hochgeladen:
+Avenir	35 Light	https://cdn.migros.ch/ch.migros/static/fonts/Avenir/Avenir35Light.woff
+ 	 	https://cdn.migros.ch/ch.migros/static/fonts/Avenir/Avenir35Light.woff2
+Ihr habt die Möglichkeit, eine Zeile CSS code in eure Website einzubauen:
+https://cdn.fonts.net/t/1.css?apiType=css&projectid=b424dfd0-9958-11ec-b670-06c4e8753e28
+Damit wird sichergestellt, dass wir die Lizenz-Bedingungen erfüllen und page views an Monotype melden.
+Wenn ihr diesen Code nicht einbauen wollt, dann müsstet ihr quartalsmässig eure page views an Monotype reporten.
+
+https://wiki.migros.net/pages/viewpage.action?spaceKey=DIGOPS&title=Webfonts+auf+cdn.migros.net
+
+Ich habe ein neues Webfont-Projekt erstellt. Hier der entsprechende CSS-Code, den ihr einbinden solltet:
+
+
+@import url("https://cdn.fonts.net/t/1.css?apiType=css&projectid=15e0d230-9ed9-11ec-b670-06c4e8753e28"); 
+ 
+Und hier eine Liste von Schriftschnitten, die auf dem CDN bereitliegen:
+
+https://cdn.migros.ch/?prefix=ch.migros/static/fonts/helvetica-now/
+*/
 /* font-faces analog: https://static.shop.migros.ch/fonts/mofonts.css */
 @charset "utf-8";
 @import url("https://fast.fonts.net/t/1.css?apiType=css&projectid=074eae2d-ad11-4cc1-b08f-d23f76b718d2");

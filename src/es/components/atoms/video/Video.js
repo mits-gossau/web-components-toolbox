@@ -113,7 +113,7 @@ export default class Video extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.video = document.createElement('div')
+    this.video = this.root.querySelector('video') || document.createElement('div')
     this.video.innerHTML = Array.from(this.attributes).reduce((acc, attribute) => {
       if (attribute.name && attribute.name !== 'sources') return `${acc} ${attribute.name}="${attribute.value || 'true'}"`
       return acc

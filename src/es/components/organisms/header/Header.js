@@ -45,6 +45,7 @@ export default class Header extends Shadow() {
     this.scrollListener = event => {
       const lastScroll = self.scrollY
       setTimeout(() => {
+        this.setStickyOffsetHeight()
         // is top
         if (self.scrollY <= this.offsetHeight + 5) {
           this.classList.add('top')
@@ -56,7 +57,7 @@ export default class Header extends Shadow() {
             this.classList.add('show')
           // scrolling down and hide header
           } else if (Math.abs(self.scrollY - lastScroll) > 30) {
-            if (this.mNavigation) Array.from(this.mNavigation.root.querySelectorAll('.open')).forEach(node => node.classList.remove('open'))
+            // if (this.mNavigation) Array.from(this.mNavigation.root.querySelectorAll('.open')).forEach(node => node.classList.remove('open'))
             this.classList.remove('show')
           }
         }
@@ -71,6 +72,14 @@ export default class Header extends Shadow() {
         this.mNavigation.classList.remove('open')
       }
     }
+    let timeout = null
+    this.resizeListener = event => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        this.adjustLogoPos(true)
+        this.setStickyOffsetHeight()
+      }, 200)
+    }
     this.mutationCallbackTimeout = null
     this.mutationCallback = mutationsList => {
       clearTimeout(this.mutationCallbackTimeout)
@@ -83,10 +92,23 @@ export default class Header extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    showPromises.push(new Promise(resolve => this.addEventListener('navigation-load', event => resolve(), { once: true })))
+    if (this.aLogo && this.aLogo.hasAttribute('logo-load') && !this.aLogo.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('logo-load', event => resolve(), { once: true })))
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+        this.setStickyOffsetHeight()
+        this.adjustLogoPos(true)
+        setTimeout(() => this.adjustLogoPos(true), 1000);
+      })
+    }
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
+    self.addEventListener('resize', this.resizeListener)
     this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
     self.addEventListener('resize', this.mutationCallback)
     this.observer.observe(this.header, { attributes: true })
@@ -95,6 +117,7 @@ export default class Header extends Shadow() {
   disconnectedCallback () {
     if (this.hasAttribute('sticky')) self.removeEventListener('scroll', this.scrollListener)
     this.removeEventListener('click', this.clickAnimationListener)
+    self.removeEventListener('resize', this.resizeListener)
     this.mNavigation.removeEventListener('animationend', this.clickAnimationListener)
     self.removeEventListener('resize', this.mutationCallback)
     this.observer.disconnect()
@@ -115,13 +138,13 @@ export default class Header extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.root.querySelector('header')
+    return !this.header
   }
 
   /**
    * renders the o-header css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -131,24 +154,32 @@ export default class Header extends Shadow() {
         top: 0;
         z-index: var(--z-index, 100);
         text-align: var(--text-align, initial);
-        background-color: var(--background-color, transparent);
       }
       :host > * {
         font-size: var(--font-size, 1rem);
         margin: var(--content-spacing, 40px) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-        width: var(--content-width, 80%);
+        width: var(--content-width, 55%);
       }
       :host([sticky]) {
         position: static;
       }
       :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
         flex-grow: 1;
+        max-width: calc(var(--content-width, 55%) - var(--logo-width));
+      }
+      :host > header::before {
+        display: block;
+        width: var(--logo-width);
+        height: auto;
+        clear: both;
+        content: '';
+        order: 1;
       }
       :host > header > *:first-child {
         align-self: baseline;
       }
       :host > span, :host > div, :host > p, :host > ul, :host > ol {
-        width: var(--content-width-not-web-component, 80%);
+        width: var(--content-width, 55%);
       }
       :host > header {
         align-items: var(--align-items, center);
@@ -160,9 +191,12 @@ export default class Header extends Shadow() {
         flex-wrap: var(--flex-wrap, nowrap);
         height: var(--height , 85px);
         justify-content: var(--justify-content , space-between);
-        padding: var(--padding, 0 calc(var(--content-spacing, 40px) / 2));
+        padding: var(--padding, 0);
+        margin: var(--margin, 0);
+        width: var(--width, 100%);
         position: var(--header-position, static);
         transition: var(--transition, all 0.2s ease);
+        position: relative;
       }
       :host > header.open {
         background-color: var(--background-color-open, var(--background-color, black));
@@ -172,9 +206,6 @@ export default class Header extends Shadow() {
         animation: backgroundAnimation var(--background-animation, 0.5s ease);
         background-size: 100% 200%;
         background-position-y: 0%;
-      }
-      :host > header.animate > a-menu-icon {
-        --a-menu-icon-background-color: var(--background-color, #777);
       }
       :host > header > a {
         align-self: var(--a-align-self, var(--align-self, auto));
@@ -202,27 +233,29 @@ export default class Header extends Shadow() {
       :host > header > a-menu-icon {
         align-self: var(--a-menu-icon-align-self, var(--align-self, auto));
         display: none;
-        --a-menu-icon-background-color: var(--color, #777);
-      }
-      /* sticky header classes */
-      :host([sticky]) {
-        position: sticky;
       }
       :host([sticky].top) {
         position: var(--position, sticky);
-        top: -${this.offsetHeight}px;
-      }
-      :host([sticky].top), :host([sticky].top) > header {
-        background-color: transparent;
       }
       :host([sticky].show:not(.top)) {
-        border-bottom: var(--sticky-border-bottom, 1px solid var(--color));
         top: 0;
         transition: var(--sticky-transition-show, top .5s ease);
       }
+      :host([sticky].show:not(.top)) > header {
+        border-bottom: var(--sticky-border-bottom, 1px solid var(--color));
+      }
       :host([sticky]:not(.top)) {
-        top: -${this.offsetHeight}px;
         transition: var(--sticky-transition-hide, top .4s ease);
+      }
+      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
+        order: 2;
+      }
+      :host > header > a-logo{
+        position: absolute;
+        left: calc((100% - var(--content-width, 55%)) / 2);
+        z-index: 101;
+        top: var(--a-logo-top, 0);
+        transition: top 0.2s ease-out;
       }
       @keyframes backgroundAnimation {
         0%{background-position-y:100%}
@@ -238,15 +271,21 @@ export default class Header extends Shadow() {
       }
       @media only screen and (max-width: _max-width_) {
         :host > * {
-          --header-logo-justify-content: flex-end;
+          --logo-default-justify-content: flex-end;
+          font-size: var(--font-size-mobile, var(--font-size, 1rem));
           margin: var(--content-spacing-mobile, 0) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, 90%);
         }
         :host([sticky]) {
           position: sticky;
+          top: -7em;
+        }
+        :host([sticky].show:not(.top)) > header, :host([sticky]:not(.top)) > header {
+          transform: translateY(calc(-1 * var(--content-spacing-mobile)));
         }
         :host > header {
           flex-wrap: nowrap;
+          margin: var(--margin-mobile, var(--margin, 0));
         }
         :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
           animation: close .4s ease-in;
@@ -261,19 +300,18 @@ export default class Header extends Shadow() {
         }
         :host > header > *:first-child {
           align-self: center;
-          padding: var(--a-menu-icon-padding);
         }
         :host > span, :host > div, :host > p, :host > ul, :host > ol {
-          width: var(--content-width-not-web-component-mobile, 90%);
+          width: var(--content-width, 90%);
         }
         :host > header {
+          box-sizing: var(--box-sizing-open-mobile, var(--box-sizing-open, var(--box-sizing, content-box)));;
           height: var(--height-mobile, 50px);
           flex-direction: var(--flex-direction-mobile, row-reverse);
           justify-content: var(--justify-content-mobile, space-between);
           padding: var(--padding-mobile, var(--padding, 0 calc(var(--content-spacing, 40px) / 2)));
         }
         :host > header.open {
-          box-sizing: var(--box-sizing-open-mobile, var(--box-sizing-open, var(--box-sizing, content-box)));;
           position: var(--position-open-mobile, var(--position-open, var(--position, static)));
           top: var(--top-open-mobile, var(--top-open, var(--top, auto)));
           left: var(--left-open-mobile, var(--left-open, var(--position, auto)));
@@ -292,6 +330,7 @@ export default class Header extends Shadow() {
           top: var(--${this.getAttribute('m-navigation') || 'm-navigation'}-top-mobile, var(--height-mobile, 50px));
           padding: var(--${this.getAttribute('m-navigation') || 'm-navigation'}-padding-mobile, 0);
           width: 100%;
+          min-width: 100%;
         }
         :host > header > a {
           align-self: var(--a-align-self-mobile, var(--a-align-self, var(--align-self, auto)));
@@ -318,40 +357,61 @@ export default class Header extends Shadow() {
           --a-menu-icon-margin: var(--a-menu-icon-margin-open-mobile);
           display: var(--a-menu-icon-display-open-mobile, var(--a-menu-icon-display-mobile, block));
         }
+        :host > header > a-menu-icon {
+          order: 3;
+        }
         :host > header > a-logo{
           flex-grow: 1;
+          left: auto;
+          right: var(--content-spacing-mobile, var(--content-spacing));
+          top: -1em !important;
+        }
+        :host > header::before {
+          order: 1;
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'header-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
+      default:
+        return Promise.resolve()
+    }
   }
 
   /**
    * renders the a-link html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
-    this.header = this.root.appendChild(document.createElement('header'))
+    this.header = this.root.querySelector('header') || document.createElement('header')
     Array.from(this.root.children).forEach(node => {
       if (node === this.header || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
       this.header.appendChild(node)
     })
-    if (this.getAttribute('menu-icon')) {
-      this.loadChildComponents().then(children => {
-        const MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback') })
-        MenuIcon.addEventListener('click', event => {
-          this.header.classList.toggle('open')
-          const prop = this.header.classList.contains('open') ? 'add' : 'remove'
-          document.documentElement.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
-          Array.from(this.header.children).forEach(node => {
-            node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
-          })
-        })
-        this.header.appendChild(MenuIcon)
-      })
-    }
+    this.html = this.header
     if (this.hasAttribute('sticky')) this.classList.add('top')
     self.addEventListener('resize', event => document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll'))
+    return this.getAttribute('menu-icon')
+      ? this.loadChildComponents().then(children => {
+          const MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+          MenuIcon.addEventListener('click', event => {
+            this.header.classList.toggle('open')
+            const prop = this.header.classList.contains('open') ? 'add' : 'remove'
+            document.documentElement.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
+            Array.from(this.header.children).forEach(node => {
+              node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
+            })
+          })
+          this.header.appendChild(MenuIcon)
+          this.html = this.style
+          this.adjustLogoPos(true)
+        })
+      : Promise.resolve()
   }
 
   /**
@@ -384,5 +444,54 @@ export default class Header extends Shadow() {
 
   get mNavigation () {
     return this.root.querySelector(this.getAttribute('m-navigation') || 'm-navigation')
+  }
+
+  get aLogo () {
+    return this.root.querySelector(this.getAttribute('a-logo') || 'a-logo')
+  }
+
+  setStickyOffsetHeight () {
+    this.style.textContent = ''
+    self.requestAnimationFrame(timeStamp => {
+      this.setCss(/* CSS */`
+        :host([sticky].top), :host([sticky]:not(.top)) {
+          top: -${this.offsetHeight + 5}px;
+          transition: var(--sticky-transition-hide, top .4s ease);
+        }
+        @media only screen and (max-width: _max-width_) {
+          :host {
+            min-height: ${this.offsetHeight}px;
+          }
+        }
+      `, undefined, undefined, undefined, this.style)
+    })
+  }
+
+  // adjust logo top position
+  adjustLogoPos (resetCouter) {
+    if (this.getMedia() !== 'desktop') return
+    this._adjustLogoPosCounter = resetCouter ? 1 : !this._adjustLogoPosCounter ? 1 : this._adjustLogoPosCounter + 1
+    self.requestAnimationFrame(timeStamp => {
+      const navHeight = this.mNavigation.offsetHeight
+      const logoHeight = this.aLogo.offsetHeight
+      if (this._adjustLogoPosCounter < 10 && (!navHeight || !logoHeight)) return setTimeout(() => this.adjustLogoPos(false), 500)
+      this.css = /* CSS */`
+        :host > header > a-logo {
+          top: calc(${navHeight}px / 2 - ${logoHeight}px / 2);
+        }
+      `
+    })
+  }
+
+  getMedia () {
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 }

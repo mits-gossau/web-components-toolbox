@@ -22,19 +22,35 @@ export default class Teaser extends Shadow() {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
+    this.mouseoverListener = event => {
+      if (this.aArrow) this.aArrow.setAttribute('hover', 'true')
+    }
+    this.mouseoutListener = event => {
+      if (this.aArrow) this.aArrow.setAttribute('hover', '')
+    }
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    this.addEventListener('click', this.clickListener)
-    if (this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+    if (showPromises.length) {
       this.hidden = true
-      this.addEventListener('picture-load', event => (this.hidden = false), { once: true })
+      Promise.all(showPromises).then(() => (this.hidden = false))
+    }
+    this.addEventListener('click', this.clickListener)
+    if (this.getAttribute('namespace') === 'teaser-overlay-') {
+      this.addEventListener('mouseover', this.mouseoverListener)
+      this.addEventListener('mouseout', this.mouseoutListener)
     }
   }
 
   disconnectedCallback () {
     this.removeEventListener('click', this.clickListener)
+    if (this.getAttribute('namespace') === 'teaser-overlay-') {
+      this.removeEventListener('mouseover', this.mouseoverListener)
+      this.removeEventListener('mouseout', this.mouseoutListener)
+    }
   }
 
   /**
@@ -49,9 +65,10 @@ export default class Teaser extends Shadow() {
   /**
    * renders the m-Teaser css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
+    if (this.getAttribute('namespace') === 'teaser-overlay-' && this.aArrow) this.aArrow.setAttribute('hover-set-by-outside', '')
     this.css = /* css */`
       :host([href]) {
         cursor: pointer;
@@ -66,21 +83,63 @@ export default class Teaser extends Shadow() {
         padding: var(--padding, 0);
         height: var(--height, 100%);
         width: var(--width, 100%);
+        overflow: var(--overflow, visible);
+        position: var(--position, static);
       }
+      ${this.getAttribute('namespace') === 'teaser-overlay-'
+        ? /* css */`
+          :host figure {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+          }
+          :host figure a-picture, :host figure figcaption {
+            grid-column: 1;
+            grid-row: 1;
+          }
+          :host figure figcaption {
+            z-index: 1;
+          }
+          :host(:hover) figure figcaption * {
+            color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
+            background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
+            box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green)))), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
+          }
+        `
+        : ''}
       :host figure a-picture {
         height: var(--a-picture-height, 100%);
         width: var(--a-picture-width, 100%);
+        transition: var(--a-picture-transition, none);
+        transform: var(--a-picture-transform, none);
+      }
+      :host(:hover) figure a-picture {
+        transform: var(--a-picture-transform-hover, var(--a-picture-transform, none));
       }
       :host figure figcaption {
+        align-self: var(--figcaption-align-self, auto);
         background-color: var(--figcaption-background-color, #c2262f);
         margin: var(--figcaption-margin, 0);
-        padding: var(--figcaption-padding, 1rem);
+        padding: var(--figcaption-padding, 1em);
+        font-size: var(--figcaption-font-size, 1em);
         flex-grow: var(--figcaption-flex-grow, 1);
         height: var(--figcaption-height, 100%);
         width: var(--figcaption-width, 100%);
+        transition: var(--figcaption-transition, none);
+        transform: var(--figcaption-transform, none);
       }
-      @media only screen and (max-width: _max-width_) {
-        
+      :host(:hover) figure figcaption {
+        transform: var(--figcaption-transform-hover, none);
+      }
+      :host figure figcaption a-link {
+        position: var(--a-link-position, static);
+        top: var(--a-link-top, auto);
+        bottom: var(--a-link-bottom, auto);
+        transition: var(--a-link-transition, none);
+        transform: var(--a-link-transform, none);
+      }
+      :host(:hover) figure figcaption a-link {
+        transform: var(--a-link-transform-hover, none);
       }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
@@ -95,19 +154,26 @@ export default class Teaser extends Shadow() {
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'tile-':
-        this.fetchCSS([{
+      case 'teaser-tile-':
+        return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
-        break
+      case 'teaser-overlay-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overlay-/overlay-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
       default:
-        this.fetchCSS(styles, false)
-        break
+        return this.fetchCSS(styles, false)
     }
   }
 
   get aPicture () {
     return this.root.querySelector('a-picture')
+  }
+
+  get aArrow () {
+    return this.root.querySelector('a-arrow')
   }
 }

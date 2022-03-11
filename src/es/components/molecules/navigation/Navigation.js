@@ -45,17 +45,10 @@ export default class Navigation extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    this.nav = document.createElement('nav')
-    this.hidden = true
-    Array.from(this.root.children).forEach(node => {
-      if (node.getAttribute('slot') || node.nodeName === 'STYLE') return false
-      this.nav.appendChild(node)
-    })
-    this.root.appendChild(this.nav)
-
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
     this.clickListener = event => {
+      this.checkIfWrapped(true)
       this.setFocusLostClickBehavior()
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
       // console.log('changed', this.isDesktop === (this.isDesktop = this.checkMedia('desktop')));
@@ -63,14 +56,22 @@ export default class Navigation extends Shadow() {
       let section
       if ((section = this.root.querySelector('li.open section'))) {
         if (this.checkMedia('desktop')) {
-          this.style.textContent = /* css */`
-          :host > nav > ul > li.open > div.background {
-            top: ${section.getBoundingClientRect().bottom}px;
-          }
-        `
+          this.style.textContent = ''
+          this.setCss(/* CSS */`
+            :host > nav > ul > li.open > div.background {
+              top: ${section.getBoundingClientRect().bottom}px;
+            }
+          `, undefined, undefined, undefined, this.style)
         }
       }
       this.liClickListener(event)
+    }
+    let timeout = null
+    this.resizeListener = event => {
+      if (this.hasAttribute('no-scroll')) this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+      this.clickListener(event)
+      clearTimeout(timeout)
+      timeout = setTimeout(() => this.checkIfWrapped(true), 200)
     }
     // on resize or click keep ul open in sync
     // remove open class
@@ -92,15 +93,37 @@ export default class Navigation extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
-    self.addEventListener('resize', this.clickListener)
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+        this.checkIfWrapped(true)
+        setTimeout(() => this.checkIfWrapped(true), 1000);
+        this.setFocusLostClickBehavior()
+        this.css = /* CSS */`
+          :host {
+            --show: none;
+          }
+        `
+        this.dispatchEvent(new CustomEvent(this.getAttribute('navigation-load') || 'navigation-load', {
+          detail: {
+            child: this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+    }
+    self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
-    this.setFocusLostClickBehavior()
   }
 
   disconnectedCallback () {
-    self.removeEventListener('resize', this.clickListener)
+    self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
     this.root.querySelectorAll('a-link').forEach(link => link.removeEventListener('click', this.clickListener))
     this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.removeEventListener('click', this.liClickListener))
@@ -121,13 +144,13 @@ export default class Navigation extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return this.hidden
+    return !this.nav
   }
 
   /**
    * renders the m-navigation css
    *
-   * @return {void}
+   * @return {Promise<void>|void}
    */
   renderCSS () {
     const firstLevelCount = this.root.querySelectorAll('nav > ul > li').length
@@ -250,6 +273,7 @@ export default class Navigation extends Shadow() {
         }
         :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
           --color: var(--a-arrow-color-hover, var(--color-hover));
+          --color-mobile: var(--color-open-mobile, var(--color-hover-mobile));
         }
         :host > nav > ul li > a-link{
           flex-grow: 1;
@@ -262,6 +286,20 @@ export default class Navigation extends Shadow() {
           display: var(--arrow-display, 'block');
           min-height: var(--min-height-mobile, 50px);
           min-width: var(--min-width-mobile, 50px);
+          text-align: right;
+          padding-right: var(--content-spacing-mobile);
+        }
+        :host > nav > ul > li a-link.active ~ a-arrow {
+          --color: var(--a-arrow-color-active);
+        }
+        :host > nav > ul ul > li > a-arrow {
+          display: none;
+        }
+        :host > nav > ul > li a-link:hover ~ a-arrow, :host > nav > ul > li.open a-link:hover ~ a-arrow {
+          --color: var(--color-hover);
+        }
+        :host > nav > ul > li.open a-arrow {
+          --color: var(--color-secondary);
         }
         :host > nav > ul li:hover ul,
         :host > nav > ul li:not(.open) a-link.open ~ ul,
@@ -319,16 +357,19 @@ export default class Navigation extends Shadow() {
         --a-link-content-spacing: 0;
         --a-link-font-size: 1rem;
         --a-link-font-weight: normal;
+        --justify-content: left;
+        --align-items: normal;
         background-color: var(--background-color, white);
         cursor: auto;
         display: none !important;
         position: absolute;
         left: 0;
-        margin-top: 1.7rem;
+        top: 0;
+        margin-top: 3.95em;
         overflow: auto;
         box-sizing: border-box;
         max-height: 80vh;
-        padding: 2.5rem calc((100% - var(--content-width)) / 2);
+        padding: 2.5rem calc((100% - var(--content-width, 55%)) / 2);
         transition: all 0.2s ease;
         z-index: var(--li-ul-z-index, auto);
       }
@@ -350,7 +391,14 @@ export default class Navigation extends Shadow() {
         justify-content: flex-end;
         margin-right: 0;
         padding: var(--search-li-padding, var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4)));
-        margin-top: -1.5rem;
+      }
+      :host(.wrapped) > nav > ul > li.search {
+        justify-content: flex-start;
+      }
+      :host > nav > ul > li > a-input{
+        --margin-bottom: 0;
+        --search-input-border-color: transparent;
+        --search-input-padding-mobile: var(--a-link-content-spacing);
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -373,14 +421,14 @@ export default class Navigation extends Shadow() {
           display: flex;
           flex-direction: column;
           justify-content: flex-start; /* must be up, otherwise the iphone hides it behind the footer bar */
-          min-height: calc(100vh - var(--header-logistik-m-navigation-top-mobile));
+          min-height: calc(100vh - var(--header-default-m-navigation-top-mobile));
         }
         :host > nav > .language-switcher {
           display: flex;
           flex-direction: row;
           justify-content: center;
         }
-        :host > nav > .language-switcher > li {
+        :host > nav > .language-switcher > li, :host > nav > .language-switcher > li:hover:not(.search) {
           border: 0;
           width: auto;
         }
@@ -396,20 +444,20 @@ export default class Navigation extends Shadow() {
         :host > nav > ul > li{
           align-items: center;
           box-sizing: border-box;
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
           display: flex;
           justify-content: space-between;
           width: 100%;
         }
         :host > nav > ul > li:hover:not(.search) {
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
         }
         :host > nav > ul li.open {
           --a-link-content-spacing-no-scroll: var(--a-link-font-size-no-scroll-mobile) 1.2143rem var(--a-link-font-size-no-scroll-mobile) 0;
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: var(--a-link-font-size-no-scroll-mobile);
           --a-link-font-size-no-scroll-mobile: 1.7143rem;
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
           flex-direction: row-reverse;
         }
         :host > nav > ul > li > div.background {
@@ -420,13 +468,14 @@ export default class Navigation extends Shadow() {
           align-items: center;
         }
         :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+          top: auto;
           margin-top: calc(3rem + 1px);
           max-height: unset;
           padding: 0 0 2.5rem 0;
           z-index: 100;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem calc(2rem + 50px);
+          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem calc(2rem + min(30vw, 50px));
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: 1.1429rem;
           --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
@@ -434,16 +483,19 @@ export default class Navigation extends Shadow() {
           left: 0;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul {
-          --padding-mobile: 0.8571rem 0;
+          --padding-mobile: 0 0 0.8571rem;
           --padding-first-child-mobile: var(--padding-mobile);
           --padding-last-child-mobile: var(--padding-mobile);
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
+        }
+        :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul:first-child {
+          --padding-mobile: 0.8571rem 0;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul:last-child {
           margin-bottom: 100px !important; /* must be up, otherwise the iphone hides it behind the footer bar */
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li:first-child, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
-          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem 50px;
+          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem min(30vw, 50px);
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: 1.2857rem;
           --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
@@ -455,7 +507,7 @@ export default class Navigation extends Shadow() {
           padding-bottom: 0;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
-          border-bottom: var(--header-border-bottom);
+          border-bottom: var(--header-default-border-bottom);
           padding: var(--padding-mobile);
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold:first-child {
@@ -469,7 +521,11 @@ export default class Navigation extends Shadow() {
           width: 100%;
         }
         :host > nav > ul > li.search {
+          --search-input-width: 100%;
           margin-top: 0;
+        }
+        :host > nav > ul > li.search {
+          padding: var(--search-li-padding-mobile, var(--search-li-padding, 0 calc(var(--content-spacing, 40px) / 4)));
         }
       }
       @keyframes open {
@@ -477,16 +533,31 @@ export default class Navigation extends Shadow() {
         100% {left: 0}
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'navigation-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
+      default:
+        return Promise.resolve()
+    }
   }
 
   /**
    * renders the a-link html
    *
    * @param {string[]} [arrowDirections=['up', 'down']]
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML (arrowDirections = ['left', 'right']) {
-    this.loadChildComponents().then(children => {
+    this.nav = this.root.querySelector('nav') || document.createElement('nav')
+    Array.from(this.root.children).forEach(node => {
+      if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'NAV' ) return false
+      this.nav.appendChild(node)
+    })
+    this.html = this.nav
+    return this.loadChildComponents().then(children => {
       Array.from(this.root.querySelectorAll('a')).forEach(a => {
         const li = a.parentElement
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
@@ -529,8 +600,8 @@ export default class Navigation extends Shadow() {
             }
           }
         })
-        if (this.focusLostClose) {
-          self.addEventListener('click', event => {
+        self.addEventListener('click', event => {
+          if (this.focusLostClose) {
             if (this.hasAttribute('focus-lost-close-mobile')) {
               Array.from(this.root.querySelectorAll('li.open')).forEach(li => li.classList.remove('open'))
               if (this.hasAttribute('no-scroll')) document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
@@ -540,8 +611,8 @@ export default class Navigation extends Shadow() {
               let arrow
               if (aLink.parentNode && event.target && !aLink.parentNode.classList.contains('open') && (arrow = aLink.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
             })
-          })
-        }
+          }
+        })
         li.prepend(arrow)
         a.replaceWith(aLink)
         li.prepend(aLink)
@@ -551,7 +622,7 @@ export default class Navigation extends Shadow() {
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node, i) => {
-          if (sectionChildren.length < 4) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
+          if (sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
         section.parentNode.prepend(this.getBackground())
@@ -560,7 +631,6 @@ export default class Navigation extends Shadow() {
       this.root.querySelectorAll('a-link').forEach(link => link.addEventListener('click', this.clickListener))
       this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.addEventListener('click', this.liClickListener))
       this.html = this.style
-      this.hidden = false
     })
   }
 
@@ -642,9 +712,7 @@ export default class Navigation extends Shadow() {
    * @memberof IntersectionScrollEffect
    */
   checkMedia (media = this.getAttribute('media')) {
-    // @ts-ignore ignoring self.Environment error
-    const breakpoint = this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '1000px'
-    const isMobile = self.matchMedia(`(max-width: ${breakpoint})`).matches
+    const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
     return (isMobile ? 'mobile' : 'desktop') === media
   }
 
@@ -654,5 +722,31 @@ export default class Navigation extends Shadow() {
       style.setAttribute('protected', 'true')
       return style
     })())
+  }
+
+  get liSearch () {
+    return this.root.querySelector('li.search') || this.root.querySelector('li')
+  }
+
+  // adjust logo top position
+  checkIfWrapped (resetCouter) {
+    if (this.getMedia() !== 'desktop') return
+    this._checkIfWrappedCounter = resetCouter ? 1 : !this._checkIfWrappedCounter ? 1 : this._checkIfWrappedCounter + 1
+    self.requestAnimationFrame(timeStamp => {
+      if (this._checkIfWrappedCounter < 10 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 500)
+      this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
+      // TODO: should be this.mobileBreakpoint + 1px
+      this.css = /*css*/`
+        @media only screen and (min-width: ${this.mobileBreakpoint}) {
+          :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+            margin-top: ${this.root.querySelector('nav > ul').offsetHeight + 1}px;
+          }
+        }
+      `
+    })
+  }
+
+  getMedia () {
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 }

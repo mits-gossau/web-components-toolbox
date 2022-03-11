@@ -18,7 +18,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {
  *  --text-transform [none]
  *  --color [red]
- *  --font-size [1rem]
+ *  --font-size [1em]
  *  --font-weight [normal]
  *  --padding [14px 10px]
  *  --text-align [left]
@@ -84,11 +84,14 @@ export default class Link extends Shadow() {
           }
         `
         : ''}
+      :host {
+        cursor: pointer;
+      }
       :host > a, :host > ${this.hitAreaTagName} {
         box-sizing: border-box;
         color: var(--color, red);
         display: var(--display, block);
-        font-size: var(--font-size, 1rem);
+        font-size: var(--font-size, 1em);
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
         font-weight: var(--font-weight, normal);
@@ -98,7 +101,7 @@ export default class Link extends Shadow() {
         text-decoration: var(--text-decoration, none);
         text-underline-offset: var(--text-underline-offset, var(--a-text-underline-offset, unset));
         text-transform: var(--text-transform, none);
-        transition: var(--transition, all 0.2s ease);
+        transition: var(--transition, all 0.3s ease-out);
         width: var(--width, 100%);
         font-family: var(--font-family);
         white-space: var(--white-space, normal);
@@ -120,6 +123,32 @@ export default class Link extends Shadow() {
       :host > span {
         display: var(--span-display, inline);
       }
+      ${this.getAttribute('namespace') === 'underline-'
+        ? /* CSS */`
+          :host {
+            display: block;
+            position: relative !important;
+            width: var(--width, fit-content) !important;
+          }
+          :host > a::after, :host > ${this.hitAreaTagName}::after {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            display: inline-block;
+            width: 100%;
+            height: var(--after-height, 0.25em);
+            background-color: var(--after-background-color, var(--color-hover, green));
+            content: '';
+            opacity: 0;
+            transform: translateY(1em);
+            transition: opacity .3s ease 0s,transform .3s ease 0s;
+          }
+          :host > a:hover::after, :host > ${this.hitAreaTagName}:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        `
+        : ''}
       @media only screen and (max-width: _max-width_) {
         :host > a, :host > ${this.hitAreaTagName} {
           color:var(--color-mobile, var(--color, inherit));
@@ -131,6 +160,14 @@ export default class Link extends Shadow() {
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'underline-':
+        this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./underline-/underline-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+        break
+    }
   }
 
   /**

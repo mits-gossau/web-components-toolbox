@@ -1,27 +1,31 @@
 /**
  * Variables naming rule: --{selector aka component aka namespace}-{css property}-{pseudo class or media query name} eg. --p-background-color-hover 
- * NOTE: Within the component don't use any name spacing eg. component header don't use --header-color just use --color the namespace can be added by the Shadow as an html attribute
+ * NOTE: Within the component don't use any name spacing eg. component header don't use --header-default-color just use --color the namespace can be added by the Shadow as an html attribute
  * - if a component holds other components or nodes you can declare or remap classes eg. :host > h1 {--color: var(--h1-color, white);}
  * - if a component holds other components you should share the attribute namespace with its children
  */
- :root {
-  --a-color: var(--color-secondary);
-  --a-margin: 0;
-  --a-text-align: center;
-  --a-text-decoration-hover: var(--a-text-decoration);
-  --a-text-decoration: underline;
+:root {
   --background-color: var(--m-white);
+  --color-disabled: var(--m-orange-300);
   --color-hover: var(--m-orange-800);
   --color-secondary: var(--m-orange-600);
   --color: var(--m-black);
   --content-spacing-mobile: 0.75rem;
-  --content-spacing: 1rem;
+  --content-spacing: 1.5rem;
   --font-family-secondary: micro, Helvetica, Arial, sans-serif;
   --font-family: text, Helvetica, Arial, sans-serif;
   --font-size-mobile: min(14px, 5vw);
   --font-size: max(16px, 0.8vw);
   --font-weight: 400;
-  --line-height: 1.5rem;
-  --root-background-color: var(--background-color);
-  --wrapper-gap: 1.5rem;
+  --line-height: 1.5em;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: var(--m-black);
+    --color: var(--m-white);
+    --navigation-default-color-custom: var(--color);
+    --header-default-a-menu-icon-background-color-custom: var(--color);
+    --footer-default-color-custom: var(--color);
+    --footer-default-hr-border-bottom-custom: 1px dotted var(--color);
+  }
 }

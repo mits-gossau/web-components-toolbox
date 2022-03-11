@@ -1,0 +1,13 @@
+:host {
+  --button-secondary-background-color-disabled: transparent;
+  --button-secondary-background-color-hover: transparent;
+  --button-secondary-background-color: transparent;
+  --button-secondary-border-color-disabled: var(--button-secondary-border-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
+  --button-secondary-border-color-hover: var(--button-secondary-border-color-hover-custom, var(--color-hover, var(--m-orange-800)));
+  --button-secondary-border-color: var(--button-secondary-border-color-custom, var(--color-secondary, var(--m-orange-600)));
+  --button-secondary-border-width: 2px;
+  --button-secondary-color-disabled: var(--button-secondary-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
+  --button-secondary-color-hover: var(--button-secondary-color-hover-custom, var(--color-hover, var(--m-orange-800)));
+  --button-secondary-color: var(--button-secondary-color-custom, var(--color-secondary, var(--m-orange-600)));
+  --button-secondary-font-family: text, Helvetica, Arial, sans-serif;
+}

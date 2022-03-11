@@ -234,11 +234,12 @@ export default class Modal extends Shadow() {
   setContainerMaxWidth () {
     const margins = this.cleanPropertyMarginValue(self.getComputedStyle(this.container).getPropertyValue(`--${this.namespace || ''}margin`))
     const height = `calc(100vh - ${margins[0]} - ${margins[2]})`
-    this.style.textContent = /* css */`
+    this.style.textContent = ''
+    this.setCss(/* CSS */`
       :host([open]) > section > div {
         ${this.containerNamespaces.reduce((acc, namespace) => acc + this.getMaxWidthString(namespace, height), `max-height: ${height};${this.getMaxWidthString('', height)}`)}
       }
-    }`
+    }`, undefined, undefined, undefined, this.style)
   }
 
   getMaxWidthString (namespace = '', height = '100vh') {
