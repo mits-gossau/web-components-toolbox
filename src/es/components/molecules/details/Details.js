@@ -222,7 +222,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       }
       :host details .icon > img, :host details .icon > div > svg {
         transition: var(--icon-transition, transform 0.15s ease);
-        margin: var(--icon-margin, 0 1rem) !important;
+        margin: var(--icon-margin, 0 1em) !important;
       }
       :host details[open] .icon > img, :host details[open] .icon > div > svg  {
         transform: var(--icon-transform-open, rotate(180deg));
@@ -240,7 +240,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           width: 90% !important;
         }
         :host details .icon > img, :host details .icon > div > svg {
-          width: var(--icon-width-mobile, min(1.7rem, 10vw))
+          width: var(--icon-width-mobile, min(1.7em, 10vw))
         }
         :host details summary ~ * {
           padding: var(--child-padding-mobile, var(--child-padding, 0));

@@ -3,8 +3,8 @@
    --emotion-pictures-with-title-bg-color:var(--emotion-pictures-with-title-bg-color-custom, var(--m-black));
    --emotion-pictures-with-title-bg-transition: opacity 0.5s ease-out;
    --emotion-pictures-with-title-div-margin-mobile:var(--content-spacing-mobile);
-   --emotion-pictures-with-title-h1-font-size-mobile: var(--emotion-pictures-with-title-h1-font-size-mobile-custom, min(calc(1.75rem * 1.75), 7vw));
-   --emotion-pictures-with-title-h2-font-size-mobile: var(--emotion-pictures-with-title-h2-font-size-mobile-custom, min(calc(1.5rem * 1.5), 7vw));
+   --emotion-pictures-with-title-h1-font-size-mobile: var(--emotion-pictures-with-title-h1-font-size-mobile-custom, min(calc(1.75em * 1.75), 7vw));
+   --emotion-pictures-with-title-h2-font-size-mobile: var(--emotion-pictures-with-title-h2-font-size-mobile-custom, min(calc(1.5em * 1.5), 7vw));
    --emotion-pictures-with-title-img-max-height:75vh;
    --emotion-pictures-with-title-img-width:100%;
 }

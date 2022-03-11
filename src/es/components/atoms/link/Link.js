@@ -18,7 +18,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {
  *  --text-transform [none]
  *  --color [red]
- *  --font-size [1rem]
+ *  --font-size [1em]
  *  --font-weight [normal]
  *  --padding [14px 10px]
  *  --text-align [left]
@@ -91,7 +91,7 @@ export default class Link extends Shadow() {
         box-sizing: border-box;
         color: var(--color, red);
         display: var(--display, block);
-        font-size: var(--font-size, 1rem);
+        font-size: var(--font-size, 1em);
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
         font-weight: var(--font-weight, normal);

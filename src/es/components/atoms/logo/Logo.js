@@ -31,7 +31,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  --max-width [80vw]
  *  --text-box-sizing [content-box]
  *  --text-color [pink]
- *  --text-font-size [1rem]
+ *  --text-font-size [1em]
  *  --text-line-height [normal]
  *  --text-padding [0]
  *  --text-margin [0]
@@ -139,7 +139,7 @@ export default class Logo extends Shadow() {
         font-family: var(--text-font-family);
         box-sizing: var(--text-box-sizing, border-box);
         color: var(--text-color, var(--color, pink));
-        font-size: var(--text-font-size, 1rem);
+        font-size: var(--text-font-size, 1em);
         line-height: var(--text-line-height, normal);
         padding: var(--text-padding, 0);
         margin: var(--text-margin, 0);
@@ -178,7 +178,7 @@ export default class Logo extends Shadow() {
         }
         :host > ${this.textSelector}{
           box-sizing: var(--text-box-sizing-mobile, border-box);
-          font-size: var(--text-font-size-mobile, 1rem);
+          font-size: var(--text-font-size-mobile, 1em);
           padding: var(--text-padding-mobile, 0);
           line-height: var(--text-line-height-mobile, normal);
         }

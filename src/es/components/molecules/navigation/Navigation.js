@@ -552,7 +552,7 @@ export default class Navigation extends Shadow() {
   renderHTML (arrowDirections = ['left', 'right']) {
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
     Array.from(this.root.children).forEach(node => {
-      if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'nav' ) return false
+      if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'NAV' ) return false
       this.nav.appendChild(node)
     })
     this.html = this.nav

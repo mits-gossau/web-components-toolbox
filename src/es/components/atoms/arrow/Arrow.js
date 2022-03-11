@@ -14,7 +14,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  * @css {
  *  --color [#777]
- *  --font-size [1.2rem]
+ *  --font-size [1.2em]
  *  --color-hover [white]
  * }
  */

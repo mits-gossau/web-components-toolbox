@@ -12,7 +12,7 @@
   --teaser-overlay-figcaption-align-self: end;
   --teaser-overlay-figcaption-background-color: var(--teaser-overlay-background-color);
   --teaser-overlay-figcaption-height: auto;
-  --teaser-overlay-figcaption-padding: 0 0 1rem;
+  --teaser-overlay-figcaption-padding: 0 0 1em;
   --teaser-overlay-h2-margin: 0.09em 0;
   --teaser-overlay-overflow: hidden;
 }

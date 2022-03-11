@@ -3,7 +3,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global Link */
 /* global customElements */
-/* global Wrapper */
 
 /**
  * Footer is sticky and hosts uls
@@ -21,11 +20,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  --z-index [100]
  *  --content-spacing [40px]
  *  --a-link-content-spacing [0]
- *  --a-link-font-size [1rem]
- *  --a-link-font-size-2 [1rem]
+ *  --a-link-font-size [1em]
+ *  --a-link-font-size-2 [1em]
  *  --list-style [none]
  *  --align-items [start]
- *  --font-size [1rem]
+ *  --font-size [1em]
  *  --p-margin [0]
  * }
  */
@@ -67,29 +66,18 @@ export default class Footer extends Shadow() {
     this.css = /* css */`
       :host {
         grid-area: footer;
-        color: var(--color);
-        --a-color: var(--color);
-      }
-      :host > footer {
-        margin: var(--margin, 0);
-        padding: var(--padding, 0);
-        background-color: var(--color-secondary, var(--background-color));
       }
       :host > footer > * {
-        margin: var(--content-spacing, 40px) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+        margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--content-width, 55%);
       }
-      :host > footer > .logo {
+      :host > footer > a.logo {
         display: block;
-        --picture-store-logo-text-align: var(--picture-store-logo-text-align-custom, left);
-      }
-      :host > footer > o-footer-wrapper {
-        --align-items: var(--align-items-custom, normal);
       }
       :host > footer > ul.language-switcher {
         --color: var(--background-color);
         --color-hover: var(--m-orange-300);
-        --padding: 1.1429rem 1.2143rem;
+        --padding: 1.1429em 1.2143em;
         background-color: var(--language-switcher-color-secondary, var(--background-color));
         color: var(--color);
         display: flex;
@@ -120,19 +108,9 @@ export default class Footer extends Shadow() {
         width: auto;
       }
       @media only screen and (max-width: _max-width_) {
-        :host {
-          --font-size: var(--font-size-mobile);
-        }
-        :host > footer {
-          margin: var(--margin-mobile, var(--margin, 0));
-          padding: var(--padding-mobile, var(--padding, 0));
-        }
         :host > footer > * {
-          margin: var(--content-spacing-mobile, 0) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-          width: var(--content-width, 90%);
-        }
-        :host > footer > ul.language-switcher > li.copy {
-          position: static;
+          margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
         }
       }
     `
@@ -165,74 +143,11 @@ export default class Footer extends Shadow() {
    */
   renderHTML () {
     this.footer = this.root.querySelector('footer') || document.createElement('footer')
-    return this.loadChildComponents().then(children => {
-      Array.from(this.root.querySelectorAll('li a')).forEach(a => {
-        const li = a.parentElement
-        const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
-        if (a.classList.contains('active')) aLink.classList.add('active')
-        a.replaceWith(aLink)
-        li.prepend(aLink)
-      })
-      const wrapper = new children[1][1]()
-      Array.from(this.root.children).forEach(node => {
-        if (!node.getAttribute('slot') && node.tagName !== 'STYLE' && node.tagName !== 'HR' && node.tagName !== 'FOOTER' && !node.classList.contains('spacer') && !node.classList.contains('language-switcher') && node !== this.logo) wrapper.root.appendChild(node)
-      })
-      if (this.logo) this.footer.appendChild(this.logo)
-      if (this.root.querySelector('hr')) this.footer.appendChild(this.root.querySelector('hr'))
-      this.footer.appendChild(wrapper)
-      if (this.root.querySelector('.spacer')) this.footer.appendChild(this.root.querySelector('.spacer'))
-      this.languageSwitchers.forEach(languageSwitcher => this.footer.appendChild(languageSwitcher))
-      this.html = this.footer
+    Array.from(this.root.children).forEach(node => {
+      if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'FOOTER' ) return false
+      this.footer.appendChild(node)
     })
-  }
-
-  /**
-   * fetch children when first needed
-   *
-   * @returns {Promise<[string, CustomElementConstructor][]>}
-   */
-  loadChildComponents () {
-    if (this.childComponentsPromise) return this.childComponentsPromise
-    let linkPromise
-    try {
-      linkPromise = Promise.resolve({ default: Link })
-    } catch (error) {
-      linkPromise = import('../../atoms/link/Link.js')
-    }
-    let wrapperPromise
-    try {
-      wrapperPromise = Promise.resolve({ Wrapper: Wrapper })
-    } catch (error) {
-      wrapperPromise = import('../../organisms/wrapper/Wrapper.js')
-    }
-    return (this.childComponentsPromise = Promise.all([
-      linkPromise.then(
-        /** @returns {[string, CustomElementConstructor]} */
-        module => ['a-link', module.default]
-      ),
-      wrapperPromise.then(
-        /** @returns {[string, any]} */
-        module => [this.getAttribute('o-footer-wrapper') || 'o-footer-wrapper', module.Wrapper()]
-      )
-    ]).then(elements => {
-      elements.forEach(element => {
-        // don't define already existing customElements
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
-  }
-
-  get wrapper () {
-    return this.root.querySelector('o-footer-wrapper')
-  }
-
-  get languageSwitchers () {
-    return this.root.querySelectorAll('.language-switcher')
-  }
-
-  get logo () {
-    return this.root.querySelector('.logo')
+    this.html = this.footer
+    return Promise.resolve()
   }
 }

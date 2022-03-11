@@ -120,8 +120,8 @@ export default class Teaser extends Shadow() {
         align-self: var(--figcaption-align-self, auto);
         background-color: var(--figcaption-background-color, #c2262f);
         margin: var(--figcaption-margin, 0);
-        padding: var(--figcaption-padding, 1rem);
-        font-size: var(--figcaption-font-size, 1rem);
+        padding: var(--figcaption-padding, 1em);
+        font-size: var(--figcaption-font-size, 1em);
         flex-grow: var(--figcaption-flex-grow, 1);
         height: var(--figcaption-height, 100%);
         width: var(--figcaption-width, 100%);

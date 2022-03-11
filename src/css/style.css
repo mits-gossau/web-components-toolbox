@@ -2,7 +2,7 @@
 :host h1, :host h6 {
   color: var(--h1-color, var(--color, black));
   display: var(--h1-display, block);
-  font-size: var(--h1-font-size, 1.75rem);
+  font-size: var(--h1-font-size, 1.75em);
   font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h1-font-weight, 800);
   line-height: var(--h1-line-height, 1.286em);
@@ -15,7 +15,7 @@
 :host h2 {
   color: var(--h2-color, var(--color, black));
   display: var(--h2-display, block);
-  font-size: var(--h2-font-size, 1.5rem);
+  font-size: var(--h2-font-size, 1.5em);
   font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h2-font-weight, 700);
   line-height: var(--h2-line-height, 1.334em);
@@ -28,7 +28,7 @@
 :host h3 {
   color: var(--h3-color, var(--color, black));
   display: var(--h3-display, block);
-  font-size: var(--h3-font-size, 1.25rem);
+  font-size: var(--h3-font-size, 1.25em);
   font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h3-font-weight, 700);
   line-height: var(--h3-line-height, 1.4em);
@@ -41,7 +41,7 @@
 :host h4 {
   color: var(--h4-color, var(--color, black));
   display: var(--h4-display, block);
-  font-size: var(--h4-font-size, 1.125rem);
+  font-size: var(--h4-font-size, 1.125em);
   font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h4-font-weight, 700);
   line-height: var(--h4-line-height, 1.334em);
@@ -54,7 +54,7 @@
 :host h5 {
   color: var(--h5-color, var(--color, black));
   display: var(--h5-display, block);
-  font-size: var(--h5-font-size, 1rem);
+  font-size: var(--h5-font-size, 1em);
   font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family)));
   font-weight: var(--h5-font-weight, 700);
   line-height: var(--h5-line-height, 1.334em);
@@ -65,7 +65,10 @@
   padding: var(--h5-padding, unset);
 }
 :host .font-size-big {
-  font-size: calc(var(--h1-font-size, 1.75rem) * 1.5);
+  font-size: calc(var(--h1-font-size, 1.75em) * 1.5);
+}
+:host .font-size-tiny {
+  font-size: calc(var(--p-font-size, 1em) * 0.75);
 }
 :host p {
   font-family: var(--p-font-family, var(--font-family));
@@ -153,6 +156,7 @@
   border-bottom: var(--hr-border-bottom, 1px dotted var(--color));
   background: var(--hr-background, 0);
   opacity: var(--hr-opacity, 0.5);
+  margin: var(--hr-margin, var(--content-spacing) auto);
 }
 :host img {
   max-width: 100%;
@@ -250,48 +254,54 @@ img[style="float: right;"] {
 }
 @media only screen and (max-width: _max-width_) {
   :host h1, :host h6 {
-    font-size: var(--h1-font-size-mobile, var(--h1-font-size, 1.75rem));
+    font-size: var(--h1-font-size-mobile, var(--h1-font-size, 1.75em));
     line-height: var(--h1-line-height-mobile, var(--h1-line-height, 1.286em));
     word-break: var(--h1-word-break-mobile, var(--h1-word-break, normal));
     text-transform: var(--h1-text-transform-mobile, var(--h1-text-transform, none));
     margin: var(--h1-margin-mobile, var(--h1-margin, 0 auto 1.143em));
   }
   :host h2 {
-    font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5rem));
+    font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5em));
     line-height: var(--h2-line-height-mobile, var(--h2-line-height, 1.334em));
     word-break: var(--h2-word-break-mobile, var(--h2-word-break, normal));
     text-transform: var(--h2-text-transform-mobile, var(--h2-text-transform, none));
     margin: var(--h2-margin-mobile, var(--h2-margin, 0 auto 1.143em));
   }
   :host h3 {
-    font-size: var(--h3-font-size-mobile, var(--h3-font-size, 1.25rem));
+    font-size: var(--h3-font-size-mobile, var(--h3-font-size, 1.25em));
     line-height: var(--h3-line-height-mobile, var(--h3-line-height, 1.4em));
     word-break: var(--h3-word-break-mobile, var(--h3-word-break, normal));
     text-transform: var(--h3-text-transform-mobile, var(--h3-text-transform, none));
     margin: var(--h3-margin-mobile, var(--h3-margin, 0 auto 1.143em));
   }
   :host h4 {
-    font-size: var(--h4-font-size-mobile, var(--h4-font-size, 1.125rem));
+    font-size: var(--h4-font-size-mobile, var(--h4-font-size, 1.125em));
     line-height: var(--h4-line-height-mobile, var(--h4-line-height, 1.334em));
     word-break: var(--h4-word-break-mobile, var(--h4-word-break, normal));
     text-transform: var(--h4-text-transform-mobile, var(--h4-text-transform, none));
     margin: var(--h4-margin-mobile, var(--h4-margin, 0 auto 1.143em));
   }
   :host h5 {
-    font-size: var(--h5-font-size-mobile, var(--h5-font-size, 1rem));
+    font-size: var(--h5-font-size-mobile, var(--h5-font-size, 1em));
     line-height: var(--h5-line-height-mobile, var(--h5-line-height, 1.334em));
     word-break: var(--h5-word-break-mobile, var(--h5-word-break, normal));
     text-transform: var(--h5-text-transform-mobile, var(--h5-text-transform, none));
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto 1.143em));
   }
   :host .font-size-big {
-    font-size: calc(var(--h1-font-size-mobile, var(--h1-font-size, 1.75rem)) * 1.5);
+    font-size: calc(var(--h1-font-size-mobile, var(--h1-font-size, 1.75em)) * 1.5);
+  }
+  :host .font-size-tiny {
+    font-size: calc(var(--p-font-size-mobile, var(--p-font-size, 1em)) * 0.75);
   }
   :host p {
     font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));
     line-height: var(--p-line-height-mobile, var(--p-line-height, var(--line-height, normal)));
     text-transform: var(--p-text-transform-mobile, var(--p-text-transform, none));
     margin: var(--p-margin-mobile, var(--p-margin, 0 auto 1.143em));
+  }
+  :host hr {
+    margin: var(--hr-margin-mobile, var(--hr-margin, var(--content-spacing-mobile) auto));
   }
   :host a {
     font-size: var(--a-font-size-mobile, var(--a-font-size, 1em));

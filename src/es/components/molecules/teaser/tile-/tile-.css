@@ -6,13 +6,13 @@
   --teaser-tile-a-link-transition: transform .35s ease .1s;
   --teaser-tile-background-color: var(--teaser-tile-background-color-custom, var(--background-color, var(--m-white)));
   --teaser-tile-figcaption-background-color: var(--teaser-tile-figcaption-background-color-custom, var(--teaser-tile-background-color));
-  --teaser-tile-p-font-size: 0.875rem;
+  --teaser-tile-p-font-size: 0.875em;
   --underline-font-size: var(--teaser-tile-p-font-size);
-  --teaser-tile-figcaption-padding: 0.625rem 0.625rem 0;
+  --teaser-tile-figcaption-padding: 0.625em 0.625em 0;
   --teaser-tile-figcaption-transform-hover: translateY(-2.5em);
   --teaser-tile-figcaption-transition: transform .45s cubic-bezier(.17,.67,.28,1) 50ms;
   --teaser-tile-h5-color: var(--color-secondary);
-  --teaser-tile-h5-margin: 0 0 0.5rem;
+  --teaser-tile-h5-margin: 0 0 0.5em;
   --teaser-tile-overflow: hidden;
   --teaser-tile-p-line-height: 1.14em;
   --teaser-tile-p-margin: 0 0 0.625em;
