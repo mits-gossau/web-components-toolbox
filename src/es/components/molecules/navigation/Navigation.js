@@ -358,6 +358,7 @@ export default class Navigation extends Shadow() {
         --a-link-font-size: 1rem;
         --a-link-font-weight: normal;
         --justify-content: left;
+        --align-items: normal;
         background-color: var(--background-color, white);
         cursor: auto;
         display: none !important;

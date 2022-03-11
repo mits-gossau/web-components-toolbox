@@ -66,13 +66,27 @@ export default class Footer extends Shadow() {
     this.css = /* css */`
       :host {
         grid-area: footer;
+        margin-top: var(--content-spacing);
       }
-      :host > footer > * {
+      :host > footer > *, :host > footer > .invert > * {
         margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--content-width, 55%);
       }
-      :host > footer > a.logo {
+      :host > footer a.logo {
         display: block;
+      }
+      :host > footer > .invert {
+        display: flow-root;
+        margin: 0;
+        width: 100%;
+        color: var(--invert-color);
+        --color: var(--invert-color);
+        background-color: var(--invert-background-color);
+      }
+      :host > footer o-wrapper {
+        --align-items: normal;
+        --gap: var(--gap-custom, var(--content-spacing));
+        --justify-content: var(--justify-content-custom, left);
       }
       :host > footer > ul.language-switcher {
         --color: var(--background-color);
@@ -108,12 +122,19 @@ export default class Footer extends Shadow() {
         width: auto;
       }
       @media only screen and (max-width: _max-width_) {
-        :host > footer > * {
+        :host {
+          margin-top: var(--content-spacing-mobile);
+        }
+        :host > footer > *, :host > footer > .invert > * {
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
         }
+        :host > footer o-wrapper {
+          --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
+        }
       }
     `
+    console.log('css done');
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -146,6 +167,7 @@ export default class Footer extends Shadow() {
     Array.from(this.root.children).forEach(node => {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'FOOTER' ) return false
       this.footer.appendChild(node)
+      console.log('append');
     })
     this.html = this.footer
     return Promise.resolve()
