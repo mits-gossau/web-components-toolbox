@@ -37,21 +37,24 @@ export default class EmotionPictures extends Intersection() {
   connectedCallback () {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    const init = () => {
+      this.hidden = false
+      if (this.shown && Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length > 1) this.shuffle()
+      this.css = /* CSS */`
+        :host {
+          --show: none;
+        }
+      `
+    }
     const showPromises = []
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
       showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     }
     if (showPromises.length) {
       this.hidden = true
-      Promise.all(showPromises).then(() => {
-        this.hidden = false
-        if (this.shown && Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length > 1) this.shuffle()
-        this.css = /* CSS */`
-          :host {
-            --show: none;
-          }
-        `
-      })
+      Promise.all(showPromises).then(init)
+    } else {
+      init()
     }
   }
 
