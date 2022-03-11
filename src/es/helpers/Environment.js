@@ -2,5 +2,20 @@
 
 // @ts-ignore
 self.Environment = {
-  mobileBreakpoint: '767px'
+  /**
+   *
+   *
+   * @param {{constructor: string, tagName: string}} organism
+   * @return {string}
+   */
+  mobileBreakpoint: ({ constructor, tagName }) => {
+    switch (true) {
+      case constructor.includes('Header'):
+      case constructor.includes('Navigation'):
+      case constructor.includes('Footer'):
+        return '1500px'
+      default:
+        return '767px'
+    }
+  }
 }
