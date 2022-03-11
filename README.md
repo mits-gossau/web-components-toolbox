@@ -23,3 +23,4 @@ TODO:
 - [ ] https://playwright.dev/ visual regression tests
 - [ ] documenter.js to document the web components
 - [ ] live-server reload on css file changes
+- [ ] redo header and navigation /\drem/, then eliminate all rem values
