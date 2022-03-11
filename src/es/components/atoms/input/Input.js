@@ -23,12 +23,11 @@ export default class Input extends Shadow() {
 
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']
     if (!this.children.length) this.labelText = this.textContent
-    this.searchTermWrapper = ['"', '%22']
 
     this.clickListener = event => {
       if (!this.inputField.value) return
       if (this.getAttribute('search')) {
-        location.href = `${this.getAttribute('search')}${this.searchTermWrapper[0]}${this.inputField.value}${this.searchTermWrapper[0]}`
+        location.href = `${this.getAttribute('search')}${encodeURIComponent(this.inputField.value)}`
       } else {
         this.dispatchEvent(new CustomEvent(this.getAttribute('submit-search') || 'submit-search', {
           bubbles: true,
@@ -62,7 +61,7 @@ export default class Input extends Shadow() {
     if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
       this.searchButton.addEventListener('click', this.clickListener)
       document.addEventListener('keydown', this.keydownListener)
-      if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURI(location.href.split(this.getAttribute('search'))[1]).replace(new RegExp(`[${this.searchTermWrapper[0]}${this.searchTermWrapper[1]}]*`, 'g'), '')
+      if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
     }
   }
 
