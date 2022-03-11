@@ -6,6 +6,7 @@
  */
 :root {
   --background-color: var(--m-white);
+  --color-active: var(--m-gray-500);
   --color-disabled: var(--m-orange-300);
   --color-hover: var(--m-orange-800);
   --color-secondary: var(--m-orange-600);
@@ -23,9 +24,9 @@
   :root {
     --background-color: var(--m-black);
     --color: var(--m-white);
-    --navigation-default-color-custom: var(--color);
+    --footer-default-invert-a-color-hover-custom: var(--color-hover);
+    --footer-default-invert-color-custom: var(--color);
     --header-default-a-menu-icon-background-color-custom: var(--color);
-    --footer-default-color-custom: var(--color);
-    --footer-default-hr-border-bottom-custom: 1px dotted var(--color);
+    --navigation-default-color-custom: var(--color);
   }
 }

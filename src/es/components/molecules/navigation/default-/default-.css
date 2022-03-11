@@ -10,8 +10,8 @@
   --navigation-default-a-link-font-weight-no-scroll: var(--navigation-default-a-link-font-weight);
   --navigation-default-a-link-font-weight: bold;
   --navigation-default-background-color: var(--header-default-background-color);
-  --navigation-default-color-active: var(--color-hover);
-  --navigation-default-color-hover: var(--m-gray-500);
+  --navigation-default-color-active: var(--color-active);
+  --navigation-default-color-hover: var(--color-hover);
   --navigation-default-color-mobile: var(--navigation-default-color);
   --navigation-default-color-open-hover: var(--navigation-default-color-hover);
   --navigation-default-color-open-mobile: var(--navigation-default-color-open);
