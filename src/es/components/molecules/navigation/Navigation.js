@@ -101,7 +101,7 @@ export default class Navigation extends Shadow() {
       Promise.all(showPromises).then(() => {
         this.hidden = false
         this.checkIfWrapped(true)
-        setTimeout(() => this.checkIfWrapped(true), 1000);
+        setTimeout(() => this.checkIfWrapped(true), 1000)
         this.setFocusLostClickBehavior()
         this.css = /* CSS */`
           :host {
@@ -553,7 +553,7 @@ export default class Navigation extends Shadow() {
   renderHTML (arrowDirections = ['left', 'right']) {
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
     Array.from(this.root.children).forEach(node => {
-      if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'NAV' ) return false
+      if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'NAV') return false
       this.nav.appendChild(node)
     })
     this.html = this.nav
@@ -736,7 +736,7 @@ export default class Navigation extends Shadow() {
       if (this._checkIfWrappedCounter < 10 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 500)
       this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
       // TODO: should be this.mobileBreakpoint + 1px
-      this.css = /*css*/`
+      this.css = /* css */`
         @media only screen and (min-width: ${this.mobileBreakpoint}) {
           :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
             margin-top: ${this.root.querySelector('nav > ul').offsetHeight + 1}px;

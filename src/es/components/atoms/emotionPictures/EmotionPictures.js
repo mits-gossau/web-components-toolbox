@@ -10,7 +10,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * @type {CustomElementConstructor}
  */
 export default class EmotionPictures extends Intersection() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 } }), ...args)
 
     Array.from(this.root.childNodes).forEach(node => {
@@ -18,23 +18,23 @@ export default class EmotionPictures extends Intersection() {
     })
   }
 
-  intersectionCallback(entries, observer) {
-    for (let entry of entries) {
-      if(!entry.isIntersecting && entry.intersectionRatio === 0){
+  intersectionCallback (entries, observer) {
+    for (const entry of entries) {
+      if (!entry.isIntersecting && entry.intersectionRatio === 0) {
         this.classList.add('visible')
         break
       }
       if (entry.isIntersecting && entry.intersectionRatio > 0) {
         this.classList.add('visible')
-        break;
-      }else{
+        break
+      } else {
         this.classList.remove('visible')
         break
       }
     }
   }
-      
-  connectedCallback() {
+
+  connectedCallback () {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     const showPromises = []
@@ -55,7 +55,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     super.disconnectedCallback()
     this.shuffle(false)
   }
@@ -65,7 +65,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -74,7 +74,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {void}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         display: grid !important;
@@ -130,7 +130,6 @@ export default class EmotionPictures extends Intersection() {
     }
   `, undefined, '', false)
 
-
     const styles = [
       {
         // @ts-ignore
@@ -146,16 +145,16 @@ export default class EmotionPictures extends Intersection() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`,
           namespace: false
         }, ...styles], false)
-        case 'emotion-pictures-default-':
+      case 'emotion-pictures-default-':
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
-        }],false)
+        }], false)
     }
   }
 
-  shuffle(start = true) {
+  shuffle (start = true) {
     clearInterval(this.interval || null)
     if (start) {
       this.interval = setInterval(() => {
@@ -172,7 +171,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  get shown() {
+  get shown () {
     return this.root.querySelector('.shown') || (() => {
       if (this.root.childNodes[0]) this.root.childNodes[0].classList.add('shown')
       return this.root.childNodes[0]

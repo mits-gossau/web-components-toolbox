@@ -1,9 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global Link */
-/* global customElements */
-
 /**
  * Footer is sticky and hosts uls
  * Example at: /src/es/components/organisms/Playlist.html
@@ -162,7 +159,7 @@ export default class Footer extends Shadow() {
   renderHTML () {
     this.footer = this.root.querySelector('footer') || document.createElement('footer')
     Array.from(this.root.children).forEach(node => {
-      if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'FOOTER' ) return false
+      if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'FOOTER') return false
       this.footer.appendChild(node)
     })
     this.html = this.footer
