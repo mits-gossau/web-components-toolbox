@@ -151,7 +151,7 @@ export default class Picture extends Shadow() {
         max-width: var(--img-max-width, 100%);
         height: var(--img-height, auto);
         min-height: var(--img-min-height, unset);
-        max-height: var(--img-max-height, unset);
+        max-height: var(--img-max-height, 75vh);
         object-fit: var(--img-object-fit, cover);
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
       }
