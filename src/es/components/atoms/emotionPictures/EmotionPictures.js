@@ -29,7 +29,6 @@ export default class EmotionPictures extends Intersection() {
         break
       } else {
         this.classList.remove('visible')
-        break
       }
     }
   }
