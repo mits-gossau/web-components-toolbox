@@ -428,7 +428,7 @@ export default class Navigation extends Shadow() {
           flex-direction: row;
           justify-content: center;
         }
-        :host > nav > .language-switcher > li, :host > nav > .language-switcher > li:hover:not(.search) {
+        :host > nav > .language-switcher > li:hover:not(.search) {
           border: 0;
           width: auto;
         }
@@ -449,7 +449,7 @@ export default class Navigation extends Shadow() {
           justify-content: space-between;
           width: 100%;
         }
-        :host > nav > ul > li:hover:not(.search) {
+        :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
           border-bottom: var(--header-default-border-bottom);
         }
         :host > nav > ul li.open {
