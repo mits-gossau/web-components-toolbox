@@ -592,7 +592,6 @@ export default class Navigation extends Shadow() {
                 if (this.focusLostClose) event.stopPropagation()
                 Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
                   aLink.classList.remove('open')
-                  if (aLink.parentElement) aLink.parentElement.classList.remove('open')
                   let arrow
                   if (aLink.parentNode && event.target && !aLink.parentNode.classList.contains('open') && (arrow = aLink.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
                 })
