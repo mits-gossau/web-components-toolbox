@@ -13,7 +13,7 @@ self.Environment = {
       case constructor.includes('Header'):
       case constructor.includes('Navigation'):
       case constructor.includes('Footer'):
-        return '1500px'
+        return '1835px'
       default:
         return '767px'
     }

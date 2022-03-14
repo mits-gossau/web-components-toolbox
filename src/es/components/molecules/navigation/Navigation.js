@@ -428,7 +428,7 @@ export default class Navigation extends Shadow() {
           flex-direction: row;
           justify-content: center;
         }
-        :host > nav > .language-switcher > li:hover:not(.search) {
+        :host > nav > .language-switcher > li, :host > nav > .language-switcher > li:hover:not(.search) {
           border: 0;
           width: auto;
         }
