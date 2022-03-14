@@ -332,7 +332,7 @@ export default class Navigation extends Shadow() {
         border-bottom: 2px solid transparent;
         transition: all 0.1s ease;
       }
-      :host > nav > ul > li:hover:not(.search) {
+      :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
         border-bottom: 2px solid var(--color);
       }
       :host > nav > ul li.open {
@@ -564,7 +564,10 @@ export default class Navigation extends Shadow() {
         const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
         aLink.setAttribute('hit-area', this.getAttribute('hit-area') || 'true')
         if (this.hasAttribute('set-active')) aLink.setAttribute('set-active', this.getAttribute('set-active'))
-        if (a.classList.contains('active')) aLink.classList.add('active')
+        if (a.classList.contains('active')) {
+          aLink.classList.add('active')
+          li.classList.add('active')
+        }
         const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
         arrow.setAttribute('direction', arrowDirections[1])
         const arrowClickListener = event => {
