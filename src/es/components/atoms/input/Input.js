@@ -175,14 +175,9 @@ export default class Input extends Shadow() {
         width: var(--search-input-width, min(12vw, 12em));
         min-width: 9.7em;
       }
-      @media only screen and (min-width: 1000px) {
+      @media only screen and (min-width: 1800px) {
         :host([search]) input {
-          width: var(--search-input-width-big, var(--search-input-width, min(15vw, 12em)));
-        }
-      }
-      @media only screen and (min-width: 1600px) {
-        :host([search]) input {
-          width: var(--search-input-width-large, var(--search-input-width, min(18vw, 12em)));
+          width: var(--search-input-width-big, var(--search-input-width, min(15vw, 20em)));
         }
       }
 
