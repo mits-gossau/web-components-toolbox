@@ -21,6 +21,7 @@
   --font-weight: 400;
   --line-height: 1.5em;
 }
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: var(--m-black);
@@ -31,3 +32,4 @@
     --navigation-default-color-custom: var(--color);
   }
 }
+*/
