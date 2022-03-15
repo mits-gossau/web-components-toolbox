@@ -574,10 +574,12 @@ export default class Navigation extends Shadow() {
         const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
         arrow.setAttribute('direction', arrowDirections[1])
         const arrowClickListener = event => {
-          if (this.hasAttribute('focus-lost-close-mobile')) Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
-            li.classList.remove('open')
-            if (li.parentElement) li.parentElement.classList.remove('open')
-          })
+          if (this.hasAttribute('focus-lost-close-mobile')) {
+            Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
+              li.classList.remove('open')
+              if (li.parentElement) li.parentElement.classList.remove('open')
+            })
+          }
           li.classList.toggle('open')
           arrow.setAttribute('direction', li.classList.contains('open') ? arrowDirections[0] : arrowDirections[1])
         }
