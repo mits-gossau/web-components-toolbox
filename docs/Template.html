@@ -14,15 +14,17 @@
   <title>Web Components Toolbox 😎</title>
 </head>
 <body>
-  <p-general>
-    <o-header menu-icon="true" namespace="header-default-" namespace-fallback role="header">
-      <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/molecules/navigation/default-/default-.html -->
-    </o-header>
-    <o-body>
-      <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/pages/Template.html?path=../molecules/teaser/tile-/tile-.html -->
-    </o-body>
-    <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/organisms/footer/default-/default-.html -->
-  </p-general>
+  <c-fetch-css>
+    <p-general>
+      <o-header menu-icon="true" namespace="header-default-" namespace-fallback role="header">
+        <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/molecules/navigation/default-/default-.html -->
+      </o-header>
+      <o-body>
+        <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/pages/Template.html?path=../molecules/teaser/tile-/tile-.html -->
+      </o-body>
+      <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/organisms/footer/default-/default-.html -->
+    </p-general>
+  </c-fetch-css>
 <!-- start - important for loading animation -->
   <section class="loading">
     <script>

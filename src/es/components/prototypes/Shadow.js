@@ -1,14 +1,21 @@
 // @ts-check
 /** @typedef {ShadowRootMode | 'false'} mode */
 /** @typedef {{
- path: string,
- cssSelector?: string,
- namespace?: string|false,
- namespaceFallback?: boolean,
- styleNode?: HTMLStyleElement,
- style?: string,
- error?: string
+  path: string,
+  cssSelector?: string,
+  namespace?: string|false,
+  namespaceFallback?: boolean,
+  styleNode?: HTMLStyleElement,
+  style?: string,
+  appendStyleNode?: boolean,
+  error?: string
 }} fetchCSSParams */
+/** @typedef {{
+ fetchCSSParams: fetchCSSParams[],
+ hide?: boolean,
+ resolve: (fetchCSSParams: fetchCSSParams[]) => fetchCSSParams[],
+ child: HTMLElement
+}} fetchCssEventDetail */
 
 /* global HTMLElement */
 /* global document */
@@ -185,15 +192,16 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {string|false} [namespace = this.namespace]
    * @param {boolean} [namespaceFallback = this.namespaceFallback]
    * @param {HTMLStyleElement} [styleNode = this._css]
+   * @param {boolean} [appendStyleNode = true]
    * @return {string}
    */
-  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css) {
+  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true) {
     if (!styleNode) {
     /** @type {HTMLStyleElement} */
       styleNode = document.createElement('style')
       styleNode.setAttribute('_css', '')
       styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-      this.root.appendChild(styleNode)
+      if (appendStyleNode) this.root.appendChild(styleNode)
       this._css = styleNode
     }
     if (!style) {
@@ -289,39 +297,153 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
 
   /**
    * renders the o-highlight-list css
-   * @param {fetchCSSParams | [fetchCSSParams]} fetchCSSParams
+   * 
+   * @param {fetchCSSParams[]} fetchCSSParams
    * @param {boolean} [hide = true]
+   * @param {boolean} [useController = true]
    * @return {Promise<fetchCSSParams[]>}
    */
-  fetchCSS (fetchCSSParams, hide = true) {
+  fetchCSS (fetchCSSParams, hide = true, useController = true) {
     if (hide) this.hidden = true
     if (!Array.isArray(fetchCSSParams)) fetchCSSParams = [fetchCSSParams]
-    return Promise.all(fetchCSSParams.map(
-      fetchCSSParam => fetch(fetchCSSParam.path).then(response => {
-        if (response.status >= 200 && response.status <= 299) return Promise.all([Promise.resolve(fetchCSSParam), response.text()])
-        throw new Error(response.statusText)
-      }).then(([fetchCSSParam, style]) => ({ ...fetchCSSParam, style })).catch(error => {
-        if (hide) this.hidden = false
-        error = `${fetchCSSParam.path} ${error}!!!`
-        // @ts-ignore
-        return { ...fetchCSSParam, error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`) }
-      })
-    )).then(fetchCSSParams => {
-      if (hide) this.hidden = false
-      return fetchCSSParams.map(({ path, cssSelector, namespace, namespaceFallback, styleNode, style, error }, i) => {
-        if (error) return fetchCSSParams[i]
-        // create a new style node if none is supplied
-        if (!styleNode) {
-          /** @type {HTMLStyleElement} */
-          styleNode = document.createElement('style')
-          styleNode.setAttribute('_css', path)
-          styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-          if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
+    if (useController && document.body.hasAttribute(this.getAttribute('fetch-css') || 'fetch-css')) {
+      // use: /src/es/components/controllers/fetchCss/FetchCss.js instead of fetching here, to use the cache from within the controller
+      return new Promise(
+        /**
+         * setup Promise function
+         * 
+         * @param {(fetchCSSParams: fetchCSSParams[]) => fetchCSSParams[] | any} resolve
+         * @return {boolean}
+         */
+        resolve => {
+          /**
+           * avoid setCSS to use default values for the properties set below from the controllers scope
+           * 
+           * @param {fetchCSSParams[]} fetchCSSParams
+           * @return {Promise<fetchCSSParams[]>}
+           */
+          const fetchCSSParamsWithDefaultParams = fetchCSSParams.map(
+            /**
+             * @param {fetchCSSParams} fetchCSSParams
+             * @return {fetchCSSParams}
+             */
+            fetchCSSParam => {return {cssSelector: this.cssSelector, namespace: this.namespace, namespaceFallback: this.namespaceFallback, ...fetchCSSParam}}
+          )
+          return this.dispatchEvent(new CustomEvent(this.getAttribute('fetch-css') || 'fetch-css', {
+            /** @type {fetchCssEventDetail} */
+            detail: {
+              fetchCSSParams: fetchCSSParamsWithDefaultParams,
+              hide,
+              resolve,
+              child: this
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
         }
-        this.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
-        return { ...fetchCSSParams[i], styleNode, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode) }
-      })
-    }).catch(error => error)
+      ).then(
+        /**
+         * the controller resolving fetch-css will return with its fetchCSS results
+         * 
+         * @param {fetchCSSParams[]} newFetchCSSParams
+         * @return {fetchCSSParams[]}
+         */
+        newFetchCSSParams => {
+          if (hide) this.hidden = false
+          /**
+           * the fetchCss controller does not append any styles and for that has all appendStyleNode = false, here we merge the new object properly with the original to restore those changes
+           * 
+           * @param {fetchCSSParams[]} newFetchCSSParams
+           * @return {Promise<fetchCSSParams[]>}
+           */
+          const mergedFetchCSSParams = newFetchCSSParams.map(
+            /**
+             * @param {fetchCSSParams} newFetchCSSParam
+             * @return {fetchCSSParams}
+             */
+            (newFetchCSSParam, i) => {return {...newFetchCSSParam, appendStyleNode: fetchCSSParams[i].appendStyleNode}}
+          )
+          // append those styleNodes which were originally meant so, default is true
+          mergedFetchCSSParams.forEach(fetchCSSParam => {
+            if (fetchCSSParam.appendStyleNode !== false) this.root.appendChild(fetchCSSParam.styleNode)
+          })
+          return mergedFetchCSSParams
+        }
+      )
+    } else {
+      return Promise.all(fetchCSSParams.map(
+        /**
+         * fetch each fetchCSSParam.path and return the promise
+         * 
+         * @param {fetchCSSParams} fetchCSSParam
+         * @return {Promise<fetchCSSParams>}
+         */
+        fetchCSSParam => fetch(fetchCSSParam.path).then(
+            /**
+             * return the fetchCSSParam with the response.text or an Error
+             * 
+             * @param {Response} response
+             * @return {Promise<[fetchCSSParams, string]>}
+             */
+            response => {
+              if (response.status >= 200 && response.status <= 299) return Promise.all([Promise.resolve(fetchCSSParam), response.text()])
+              throw new Error(response.statusText)
+            }
+          ).then(
+            /**
+             * Resolve both promises and return it into one
+             * 
+             * @param {[fetchCSSParams, string]} fetchCSSParam, style
+             * @return {fetchCSSParams}
+             */
+            ([fetchCSSParam, style]) => ({ ...fetchCSSParam, style })
+          ).catch(
+            /**
+             * Return the fetchCSSParams with the attached error
+             * 
+             * @param {string} error
+             * @return {fetchCSSParams}
+             */
+            error => {
+              if (hide) this.hidden = false
+              error = `${fetchCSSParam.path} ${error}!!!`
+              // @ts-ignore
+              return { ...fetchCSSParam, error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`) }
+            }
+          )
+        )
+      ).then(
+        /**
+         * Process each fetchCSSParam, make a styleNode if needed and return them with the result of setStyle
+         * 
+         * @param {fetchCSSParams[]} fetchCSSParams
+         * @return {fetchCSSParams[]}
+         */
+        fetchCSSParams => {
+          if (hide) this.hidden = false
+          return fetchCSSParams.map(
+            /**
+             * @param {{path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error}} path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error
+             * @return {fetchCSSParams}
+             */
+            ({ path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode = true, style, error }, i) => {
+              if (error) return fetchCSSParams[i]
+              // create a new style node if none is supplied
+              if (!styleNode) {
+                /** @type {HTMLStyleElement} */
+                styleNode = document.createElement('style')
+                styleNode.setAttribute('_css', path)
+                styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
+                if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
+                if (appendStyleNode) this.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
+              }
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode) }
+            }
+          )
+        }
+      ).catch(error => error)
+    }
   }
 
   /**
