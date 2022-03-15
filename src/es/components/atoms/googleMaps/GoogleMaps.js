@@ -17,7 +17,6 @@ export default class GoogleMaps extends Shadow() {
     this.MAP_URL = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyC090D7EbD_s04g-_Gn1Fdf5kHtiXZ3V5c&callback=initMap'
     this.DEFAULT_COORDINATES = { lat: 47.375600, lng: 8.675320 }
     this.googleMapTransport = e => {
-      console.log('ok', e)
       window.open(`https://www.google.com/maps?daddr=${this.lat},${this.lng}`, '_blank').focus()
     }
   }
