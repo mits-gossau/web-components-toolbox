@@ -118,7 +118,7 @@
   --color: var(--bg-color, var(--background-color, red));
   background-color: var(--bg-background-color, var(--color-secondary, green));
   box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color, var(--color-secondary, green)), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color, var(--color-secondary, green));
-  line-height: var(--bg-line-height, 1.6em);
+  line-height: var(--bg-line-height, 1.7em);
   transition: var(--bg-transition, background-color 0.3s ease-out, box-shadow 0.3s ease-out);
   position: relative;
   left: var(--bg-padding, 0.5em);
@@ -137,6 +137,9 @@
   --color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
   background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
   box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green)))), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
+}
+:host *.bg-color.font-family-secondary, :host *.bg-color-hover.font-family-secondary {
+  line-height: var(--bg-line-height-secondary, var(--bg-line-height, 1.4em));
 }
 /* p-tag */
 :host p {
