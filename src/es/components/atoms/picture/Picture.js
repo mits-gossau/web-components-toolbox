@@ -146,7 +146,7 @@ export default class Picture extends Shadow() {
         aspect-ratio: var(--aspect-ratio, attr(width, auto) / attr(height, auto));
         display: var(--img-display, inline);
         border-radius: var(--border-radius, 0);
-        width: var(--img-width, auto);
+        width: var(--img-width, 100%);
         min-width: var(--img-min-width, unset);
         max-width: var(--img-max-width, 100%);
         height: var(--img-height, auto);
