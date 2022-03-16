@@ -62,27 +62,27 @@ export default class GoogleMaps extends Shadow() {
   renderCSS () {
     this.css = /* css */` 
     :host {
-       width: 100% !important;
-       position:var(--position, relative);
        display:var(--display, block);
+       position:var(--position, relative);
+       width: var(--width, 100%) !important;
     }
     :host > #map {
       width: var(--map-width, 100%);
-      height: var(--map-height, 560px);
+      height: var(--map-height, 50vh);
     }  
     :host > hr {
       display: none;
     }
-    :host .control-events{
-      position: absolute;
-      z-index: 1;
-      top: 455px;
-      right: 70px;
-      width: 220px;
-      height: 81px;
-      padding: 0 12px 0 0;
+    :host .control-events {
       background-color: #fff;
       box-shadow: 2px 2px 2px -2px #999;
+      height: 81px;
+      padding: 0 12px 0 0;
+      position: absolute;
+      right: 70px;
+      top: 455px;
+      width: 220px;
+      z-index: 1;
     }
     :host .control-events > div {
       margin:6px 0 6px 6px;
@@ -93,25 +93,25 @@ export default class GoogleMaps extends Shadow() {
         flex-direction: column;
       }
       :host > #map {
+        height: var(--map-height-mobile, 25vh);
         order: 1;
         width: var(--map-width-mobile, 100%);
-        height: var(--map-height-mobile, 290px);
       }  
       :host > hr {
-        order: 3;
         display: block;
-        width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
+        order: 3;
+        width: var(--hr-width, 200px);
       }
       :host .control-events{
+        box-shadow: none;
+        height: 70px;
         order: 2;
+        padding: 15px 0 0 0;
         position: static;
         width: 100%;
-        height: 70px;
-        padding: 15px 0 0 0;
-        box-shadow: none;
       }
       :host .control-events > div {
-        margin:0 0 6px var(--content-spacing-mobile, 0);
+        margin:0 0 6px var(--control-events-div-margin-left-mobile, 0);
       }
     }`
 
@@ -215,7 +215,7 @@ export default class GoogleMaps extends Shadow() {
       icon: this.markerIcon
     })
     marker.setMap(map)
-    //imarker.setAnimation(googleMap.Animation.DROP);
+    // marker.setAnimation(googleMap.Animation.DROP);
   }
 
   get scripts () {

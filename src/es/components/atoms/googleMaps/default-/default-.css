@@ -1,2 +1,8 @@
 :host {
+    --google-maps-default-map-width:100%;
+    --google-maps-default-map-width-mobile:100%;
+    --google-maps-default-map-height:560px;
+    --google-maps-default-map-height-mobile:290px;
+    --google-maps-default-hr-width:var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
+    --google-maps-default-control-events-div-margin-left-mobile:var(--content-spacing-mobile);
 }
