@@ -21,7 +21,6 @@ export default class GoogleMaps extends Shadow() {
       const windowOpen = position => {
         const saddr = position && position.coords ? `&saddr=${position.coords.latitude},${position.coords.longitude}` : ''
         // dirflg driving did not work as expected, it has no id for that reason
-        console.log('changed', eventTarget, `https://www.google.com/maps?daddr=${this.lat},${this.lng}${saddr}${eventTarget.id ? `&dirflg=${eventTarget.id}` : eventTarget.parentElement && eventTarget.parentElement.id ? `&dirflg=${eventTarget.parentElement.id}` : ''}`);
         self.open(`https://www.google.com/maps?daddr=${this.lat},${this.lng}${saddr}${eventTarget.id ? `&dirflg=${eventTarget.id}` : eventTarget.parentElement && eventTarget.parentElement.id ? `&dirflg=${eventTarget.parentElement.id}` : ''}`, '_blank')
       }
       navigator.geolocation.getCurrentPosition(windowOpen, windowOpen)
@@ -225,11 +224,11 @@ export default class GoogleMaps extends Shadow() {
     return wrapper.root ? wrapper.root.querySelectorAll('a') : wrapper.querySelectorAll('a')
   }
 
-  get apiKey (){
-    return this.getAttribute('api-key') || ""
+  get apiKey () {
+    return this.getAttribute('api-key') || ''
   }
 
-  get markerIcon(){
-    return this.getAttribute('marker-icon');
+  get markerIcon () {
+    return this.getAttribute('marker-icon')
   }
 }
