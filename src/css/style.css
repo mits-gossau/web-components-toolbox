@@ -4,7 +4,7 @@
   color: var(--h1-color, var(--color, black));
   display: var(--h1-display, block);
   font-size: var(--h1-font-size, 1.75em);
-  font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h1-font-weight, 800);
   line-height: var(--h1-line-height, 1.286em);
   text-align: var(--h1-text-align, start);
@@ -14,13 +14,13 @@
   padding: var(--h1-padding, unset);
 }
 :host h1.font-family-secondary, :host h6.font-family-secondary {
-  font-family: var(--h1-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family))));
+  font-family: var(--h1-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h2 {
   color: var(--h2-color, var(--color, black));
   display: var(--h2-display, block);
   font-size: var(--h2-font-size, 1.5em);
-  font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h2-font-weight, 700);
   line-height: var(--h2-line-height, 1.334em);
   text-align: var(--h2-text-align, start);
@@ -30,13 +30,13 @@
   padding: var(--h2-padding, unset);
 }
 :host h2.font-family-secondary {
-  font-family: var(--h2-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family))));
+  font-family: var(--h2-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h3 {
   color: var(--h3-color, var(--color, black));
   display: var(--h3-display, block);
   font-size: var(--h3-font-size, 1.25em);
-  font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h3-font-weight, 700);
   line-height: var(--h3-line-height, 1.4em);
   text-align: var(--h3-text-align, start);
@@ -46,13 +46,13 @@
   padding: var(--h3-padding, unset);
 }
 :host h3.font-family-secondary {
-  font-family: var(--h3-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family))));
+  font-family: var(--h3-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h4 {
   color: var(--h4-color, var(--color, black));
   display: var(--h4-display, block);
   font-size: var(--h4-font-size, 1.125em);
-  font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h4-font-weight, 700);
   line-height: var(--h4-line-height, 1.334em);
   text-align: var(--h4-text-align, start);
@@ -62,13 +62,13 @@
   padding: var(--h4-padding, unset);
 }
 :host h4.font-family-secondary {
-  font-family: var(--h4-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family))));
+  font-family: var(--h4-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h5 {
   color: var(--h5-color, var(--color, black));
   display: var(--h5-display, block);
   font-size: var(--h5-font-size, 1em);
-  font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h5-font-weight, 700);
   line-height: var(--h5-line-height, 1.334em);
   text-align: var(--h5-text-align, start);
@@ -78,11 +78,14 @@
   padding: var(--h5-padding, unset);
 }
 :host h5.font-family-secondary {
-  font-family: var(--h5-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family))));
+  font-family: var(--h5-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
 }
 /* text stylings */
+:host .font-family-secondary {
+  font-family: var(--font-family-secondary, var(--font-family, inherit));
+}
 :host .bold, :host strong, :host b {
-  font-family: var(--font-family-strong, var(--font-family-bold, var(--font-family)));
+  font-family: var(--font-family-strong, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--font-weight-strong, bold);
   text-transform: var(--text-transform-strong, none);
 }
@@ -144,7 +147,7 @@
 }
 /* p-tag */
 :host p {
-  font-family: var(--p-font-family, var(--font-family));
+  font-family: var(--p-font-family, var(--font-family, inherit));
   font-size: var(--p-font-size, 1em);
   font-weight: var(--p-font-weight, var(--font-weight, normal));
   line-height: var(--p-line-height, var(--line-height, normal));
