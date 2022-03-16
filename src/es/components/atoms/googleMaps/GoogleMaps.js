@@ -16,21 +16,28 @@ export default class GoogleMaps extends Shadow() {
     super(...args)
     this.MAP_URL = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyC090D7EbD_s04g-_Gn1Fdf5kHtiXZ3V5c&callback=initMap'
     this.DEFAULT_COORDINATES = { lat: 47.375600, lng: 8.675320 }
-    this.googleMapTransport = e => {
-      window.open(`https://www.google.com/maps?daddr=${this.lat},${this.lng}`, '_blank').focus()
+    this.googleMapTransport = event => {
+      const eventTarget = event.target
+      const windowOpen = position => {
+        const saddr = position && position.coords ? `&saddr=${position.coords.latitude},${position.coords.longitude}` : ''
+        // dirflg driving did not work as expected, it has no id for that reason
+        console.log('changed', eventTarget, `https://www.google.com/maps?daddr=${this.lat},${this.lng}${saddr}${eventTarget.id ? `&dirflg=${eventTarget.id}` : eventTarget.parentElement && eventTarget.parentElement.id ? `&dirflg=${eventTarget.parentElement.id}` : ''}`);
+        self.open(`https://www.google.com/maps?daddr=${this.lat},${this.lng}${saddr}${eventTarget.id ? `&dirflg=${eventTarget.id}` : eventTarget.parentElement && eventTarget.parentElement.id ? `&dirflg=${eventTarget.parentElement.id}` : ''}`, '_blank')
+      }
+      navigator.geolocation.getCurrentPosition(windowOpen, windowOpen)
     }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    this.root.querySelector('o-wrapper').querySelectorAll('a').forEach(transportIcon => {
+    this.transportIcons.forEach(transportIcon => {
       transportIcon.addEventListener('click', this.googleMapTransport)
     })
   }
 
   disconnectedCallback () {
-    this.root.querySelector('o-wrapper').querySelectorAll('a').forEach(transportIcon => {
+    this.transportIcons.forEach(transportIcon => {
       transportIcon.removeEventListener('click', this.googleMapTransport)
     })
   }
@@ -63,6 +70,9 @@ export default class GoogleMaps extends Shadow() {
       width: 100%;
       height: 560px;
     }  
+    :host > hr {
+      display: none;
+    }
     :host .control-events{
       position: absolute;
       z-index: 1;
@@ -78,13 +88,23 @@ export default class GoogleMaps extends Shadow() {
       margin:6px 0 6px 6px;
     }
     @media only screen and (max-width: _max-width_) {
+      :host {
+        display: flex !important;
+        flex-direction: column;
+      }
       :host > #map {
+        order: 1;
         width: 100%;
         height: 290px;
       }  
+      :host > hr {
+        order: 3;
+        display: block;
+        width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
+      }
       :host .control-events{
-        top: 290px;
-        right: 0;
+        order: 2;
+        position: static;
         width: 100%;
         height: 70px;
         padding-top: 15px;
@@ -198,5 +218,10 @@ export default class GoogleMaps extends Shadow() {
 
   get lng () {
     return Number(this.getAttribute('lng')) || this.DEFAULT_COORDINATES.lng
+  }
+
+  get transportIcons () {
+    const wrapper = this.root.querySelector('o-wrapper')
+    return wrapper.root ? wrapper.root.querySelectorAll('a') : wrapper.querySelectorAll('a')
   }
 }
