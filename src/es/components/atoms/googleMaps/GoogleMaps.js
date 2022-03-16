@@ -80,7 +80,7 @@ export default class GoogleMaps extends Shadow() {
       right: 70px;
       width: 220px;
       height: 80px;
-      padding: 0 12px 0 6px;
+      padding: 0 12px 0 0;
       background-color: #fff;
       box-shadow: 2px 2px 2px -2px #999;
     }
@@ -107,11 +107,11 @@ export default class GoogleMaps extends Shadow() {
         position: static;
         width: 100%;
         height: 70px;
-        padding-top: 15px;
+        padding: 15px 0;
         box-shadow: none;
       }
       :host .control-events > div {
-        margin:0 0 6px var(--content-spacing);
+        margin:0 0 6px var(--content-spacing-mobile);
       }
     }`
 
