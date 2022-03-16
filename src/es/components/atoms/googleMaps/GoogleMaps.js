@@ -202,7 +202,7 @@ export default class GoogleMaps extends Shadow() {
   setMarker (googleMap, map, lat, lng) {
     const marker = new googleMap.Marker({
       position: { lat, lng },
-      icon: '../src/img/marker.svg'
+      icon: this.markerIcon
     })
     marker.setMap(map)
     // marker.setAnimation(googleMap.Animation.DROP);
@@ -227,5 +227,9 @@ export default class GoogleMaps extends Shadow() {
 
   get apiKey (){
     return this.getAttribute('api-key') || ""
+  }
+
+  get markerIcon(){
+    return this.getAttribute('marker-icon');
   }
 }
