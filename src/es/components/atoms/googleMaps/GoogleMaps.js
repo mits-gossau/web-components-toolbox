@@ -63,11 +63,12 @@ export default class GoogleMaps extends Shadow() {
     this.css = /* css */` 
     :host {
        width: 100% !important;
-       position:relative;
+       position:var(--position, relative);
+       display:var(--display, block);
     }
     :host > #map {
-      width: 100%;
-      height: 560px;
+      width: var(--map-width, 100%);
+      height: var(--map-height, 560px);
     }  
     :host > hr {
       display: none;
@@ -93,8 +94,8 @@ export default class GoogleMaps extends Shadow() {
       }
       :host > #map {
         order: 1;
-        width: 100%;
-        height: 290px;
+        width: var(--map-width-mobile, 100%);
+        height: var(--map-height-mobile, 290px);
       }  
       :host > hr {
         order: 3;
@@ -110,7 +111,7 @@ export default class GoogleMaps extends Shadow() {
         box-shadow: none;
       }
       :host .control-events > div {
-        margin:0 0 6px var(--content-spacing-mobile);
+        margin:0 0 6px var(--content-spacing-mobile, 0);
       }
     }`
 
@@ -119,7 +120,17 @@ export default class GoogleMaps extends Shadow() {
       path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
       namespaceFallback: true
     }]
-    this.fetchCSS(styles)
+
+    switch (this.getAttribute('namespace')) {
+      case 'google-maps-default-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          namespace: false
+        }, ...styles], false)
+    }
+
+    // this.fetchCSS(styles)
   }
 
   renderHTML () {
@@ -204,7 +215,7 @@ export default class GoogleMaps extends Shadow() {
       icon: this.markerIcon
     })
     marker.setMap(map)
-    // marker.setAnimation(googleMap.Animation.DROP);
+    //imarker.setAnimation(googleMap.Animation.DROP);
   }
 
   get scripts () {
