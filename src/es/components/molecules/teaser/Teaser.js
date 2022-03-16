@@ -100,6 +100,9 @@ export default class Teaser extends Shadow() {
           :host figure figcaption {
             z-index: 1;
           }
+          :host figure figcaption *.bg-color {
+            padding-top: 0;
+          }
           :host(:hover) figure figcaption * {
             color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
             background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));

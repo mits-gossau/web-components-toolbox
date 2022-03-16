@@ -62,7 +62,7 @@ export default class Form extends Shadow() {
     this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
     this.css = /* css */`
       legend {
-        font-weight: bold;
+        font-family: var(--font-family-bold, var(--font-family, inherit));
       }
       input, textarea {
         caret-color: var(--color-secondary);

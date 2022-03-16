@@ -12,8 +12,9 @@ self.Environment = {
     switch (true) {
       case constructor.includes('Header'):
       case constructor.includes('Navigation'):
+      case tagName.includes('O-NAV-WRAPPER'):
       case constructor.includes('Footer'):
-        return '1835px'
+        return '1600px'
       default:
         return '767px'
     }

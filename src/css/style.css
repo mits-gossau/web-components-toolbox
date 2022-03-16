@@ -1,9 +1,10 @@
 /* https://www.figma.com/file/qrlDSGcoLRt6NDU3p7O0T3/Typography?node-id=3194%3A213 */
+/* h-tags */
 :host h1, :host h6 {
   color: var(--h1-color, var(--color, black));
   display: var(--h1-display, block);
   font-size: var(--h1-font-size, 1.75em);
-  font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h1-font-weight, 800);
   line-height: var(--h1-line-height, 1.286em);
   text-align: var(--h1-text-align, start);
@@ -12,11 +13,14 @@
   margin: var(--h1-margin, 0 auto 1.143em);
   padding: var(--h1-padding, unset);
 }
+:host h1.font-family-secondary, :host h6.font-family-secondary {
+  font-family: var(--h1-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
+}
 :host h2 {
   color: var(--h2-color, var(--color, black));
   display: var(--h2-display, block);
   font-size: var(--h2-font-size, 1.5em);
-  font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h2-font-weight, 700);
   line-height: var(--h2-line-height, 1.334em);
   text-align: var(--h2-text-align, start);
@@ -25,11 +29,14 @@
   margin: var(--h2-margin, 0 auto 1.143em);
   padding: var(--h2-padding, unset);
 }
+:host h2.font-family-secondary {
+  font-family: var(--h2-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
+}
 :host h3 {
   color: var(--h3-color, var(--color, black));
   display: var(--h3-display, block);
   font-size: var(--h3-font-size, 1.25em);
-  font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h3-font-weight, 700);
   line-height: var(--h3-line-height, 1.4em);
   text-align: var(--h3-text-align, start);
@@ -38,11 +45,14 @@
   margin: var(--h3-margin, 0 auto 1.143em);
   padding: var(--h3-padding, unset);
 }
+:host h3.font-family-secondary {
+  font-family: var(--h3-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
+}
 :host h4 {
   color: var(--h4-color, var(--color, black));
   display: var(--h4-display, block);
   font-size: var(--h4-font-size, 1.125em);
-  font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h4-font-weight, 700);
   line-height: var(--h4-line-height, 1.334em);
   text-align: var(--h4-text-align, start);
@@ -51,11 +61,14 @@
   margin: var(--h4-margin, 0 auto 1.143em);
   padding: var(--h4-padding, unset);
 }
+:host h4.font-family-secondary {
+  font-family: var(--h4-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
+}
 :host h5 {
   color: var(--h5-color, var(--color, black));
   display: var(--h5-display, block);
   font-size: var(--h5-font-size, 1em);
-  font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family)));
+  font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h5-font-weight, 700);
   line-height: var(--h5-line-height, 1.334em);
   text-align: var(--h5-text-align, start);
@@ -64,14 +77,77 @@
   margin: var(--h5-margin, 0 auto 1.143em);
   padding: var(--h5-padding, unset);
 }
+:host h5.font-family-secondary {
+  font-family: var(--h5-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
+}
+/* text stylings */
+:host .font-family-secondary {
+  font-family: var(--font-family-secondary, var(--font-family, inherit));
+}
+:host .bold, :host strong, :host b {
+  font-family: var(--font-family-strong, var(--font-family-bold, var(--font-family, inherit)));
+  font-weight: var(--font-weight-strong, bold);
+  text-transform: var(--text-transform-strong, none);
+}
+:host .line-height-one-em {
+  line-height: 1em;
+}
+:host .title-border:before {
+  width: 1.5em;
+  height: 0.25em;
+  background-color: var(--color-secondary);
+  content: '';
+  display: block;
+  margin-bottom: 0.3em;
+}
 :host .font-size-big {
   font-size: calc(var(--h1-font-size, 1.75em) * 1.5);
 }
 :host .font-size-tiny {
   font-size: calc(var(--p-font-size, 1em) * 0.75);
 }
+:host .quote {
+  text-align: var(--q-text-align, center);
+}
+:host .quote > q {
+  font-style: var(--q-font-style, italic);
+}
+:host .quote > small {
+  font-size: var(--q-font-size, 0.8em);
+}
+:host *.bg-color, :host *.bg-color-hover {
+  display: inline;
+  color: var(--bg-color, var(--background-color, red));
+  --color: var(--bg-color, var(--background-color, red));
+  background-color: var(--bg-background-color, var(--color-secondary, green));
+  box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color, var(--color-secondary, green)), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color, var(--color-secondary, green));
+  box-decoration-break: clone;
+  line-height: var(--bg-line-height, 1.7em);
+  transition: var(--bg-transition, background-color 0.3s ease-out, box-shadow 0.3s ease-out);
+  position: relative;
+  left: var(--bg-padding, 0.5em);
+  margin: 0;
+  padding: 0.1em 0 0;
+}
+:host *.bg-color::after, :host *.bg-color-hover::after {
+  display: block;
+  width: 0px;
+  height: 0px;
+  clear: both;
+  content: '';
+}
+:host *.bg-color-hover {
+  color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
+  --color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
+  background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
+  box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green)))), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
+}
+:host *.bg-color.font-family-secondary, :host *.bg-color-hover.font-family-secondary {
+  line-height: var(--bg-line-height-secondary, var(--bg-line-height, 1.4em));
+}
+/* p-tag */
 :host p {
-  font-family: var(--p-font-family, var(--font-family));
+  font-family: var(--p-font-family, var(--font-family, inherit));
   font-size: var(--p-font-size, 1em);
   font-weight: var(--p-font-weight, var(--font-weight, normal));
   line-height: var(--p-line-height, var(--line-height, normal));
@@ -79,6 +155,7 @@
   text-transform: var(--p-text-transform, none);
   margin: var(--p-margin, 0 auto var(--content-spacing));
 }
+/* a-tag */
 :host a {
   cursor: pointer;
   color: var(--a-color, var(--color-secondary, var(--color, pink)));
@@ -115,60 +192,6 @@
 :host a:hover *.a-arrow {
   --color: var(--a-color-hover, var(--color-hover, green));
 }
-:host ul {
-  text-align: var(--ul-text-align, var(--ol-text-align, start));
-  display: var(--ul-display, var(--ol-display, block));
-  flex-direction: var(--ul-flex-direction, var(--ol-flex-direction, column));
-  box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
-  list-style: var(--ul-list-style, disc);
-}
-:host ul.icons {
-  list-style: var(--ul-icon-list-style, none);
-  padding: var(--ul-icon-padding, 0);;
-}
-:host ul li, :host ol li {
-  align-self: var(--li-align-self, auto);
-}
-:host ol {
-  text-align: var(--ol-text-align, var(--ul-text-align, start));
-  display: var(--ol-display, var(--ul-display, block));
-  flex-direction: var(--ol-flex-direction, var(--ul-flex-direction, column));
-  box-sizing: var(--ol-box-sizing, var(--ul-box-sizing, border-box));
-}
-:host .bold, :host strong {
-  font-family: var(--font-family-strong, var(--font-family-bold, var(--font-family)));
-  font-weight: var(--font-weight-strong, bold);
-  text-transform: var(--text-transform-strong, none);
-}
-:host .line-height-one-em {
-  line-height: 1em;
-}
-:host .title-border:before {
-  width: 1.5em;
-  height: 0.25em;
-  background-color: var(--color-secondary);
-  content: '';
-  display: block;
-  margin-bottom: 0.3em;
-}
-:host hr {
-  border: var(--hr-border, 0);
-  border-bottom: var(--hr-border-bottom, 1px dotted var(--color));
-  background: var(--hr-background, 0);
-  opacity: var(--hr-opacity, 0.5);
-  margin: var(--hr-margin, var(--content-spacing) auto);
-}
-:host img {
-  max-width: 100%;
-}
-:host table {
-  border-collapse: var(--table-border-collapse, collapse);
-  border-spacing: var(--table-border-spacing, 0);
-  max-width: var(--table-max-width, 100%);
-}
-:host table:not([border=0]) td {
-  border: var(--table-td-border, 1px solid var(--color));
-}
 /* https://heroicons.com/ */
 :host a[href^="/"].icon:before {
   content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="white"><path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd" /></svg>');
@@ -196,15 +219,55 @@
 :host a[href^="/"].icon:hover:before, :host a[href^="http"].icon:hover:before, :host a[href$=".pdf"].icon:hover:before, :host a[href$=".xls"].icon:hover:before {
   background-color: var(--a-color-hover, var(--color-hover, var(--color, green)));
 }
-:host .quote {
-  text-align: var(--q-text-align, center);
+/* hr-tag */
+:host hr {
+  border: var(--hr-border, 0);
+  border-bottom: var(--hr-border-bottom, 1px dotted var(--color));
+  background: var(--hr-background, 0);
+  opacity: var(--hr-opacity, 0.5);
+  margin: var(--hr-margin, var(--content-spacing) auto);
 }
-:host .quote > q {
-  font-style: var(--q-font-style, italic);
+/* img-tag */
+:host img {
+  max-width: 100%;
 }
-:host .quote > small {
-  font-size: var(--q-font-size, 0.8em);
+img[style="float: left;"] {
+  margin: var(--img-float-left-margin, 0 var(--content-spacing) calc(0.5 * var(--content-spacing)) 0);
 }
+img[style="float: right;"] {
+  margin: var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing)) var(--content-spacing));
+}
+/* list-tags */
+:host ul {
+  text-align: var(--ul-text-align, var(--ol-text-align, start));
+  display: var(--ul-display, var(--ol-display, block));
+  flex-direction: var(--ul-flex-direction, var(--ol-flex-direction, column));
+  box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
+  list-style: var(--ul-list-style, disc);
+}
+:host ul.icons {
+  list-style: var(--ul-icon-list-style, none);
+  padding: var(--ul-icon-padding, 0);;
+}
+:host ul li, :host ol li {
+  align-self: var(--li-align-self, auto);
+}
+:host ol {
+  text-align: var(--ol-text-align, var(--ul-text-align, start));
+  display: var(--ol-display, var(--ul-display, block));
+  flex-direction: var(--ol-flex-direction, var(--ul-flex-direction, column));
+  box-sizing: var(--ol-box-sizing, var(--ul-box-sizing, border-box));
+}
+/* table-tags */
+:host table {
+  border-collapse: var(--table-border-collapse, collapse);
+  border-spacing: var(--table-border-spacing, 0);
+  max-width: var(--table-max-width, 100%);
+}
+:host table:not([border=0]) td {
+  border: var(--table-td-border, 1px solid var(--color));
+}
+/* spacer-stylings */
 .spacer, .spacer-two, .spacer-three, .spacer-four {
   display: block;
   height: 1px;
@@ -220,39 +283,8 @@
 .spacer-four {
   height: var(--spacer-height, calc(var(--content-spacing) * 3));
 }
-:host *.bg-color, :host *.bg-color-hover {
-  display: inline;
-  color: var(--bg-color, var(--background-color, red));
-  --color: var(--bg-color, var(--background-color, red));
-  background-color: var(--bg-background-color, var(--color-secondary, green));
-  box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color, var(--color-secondary, green)), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color, var(--color-secondary, green));
-  line-height: var(--bg-line-height, 1.6em);
-  transition: var(--bg-transition, background-color 0.3s ease-out, box-shadow 0.3s ease-out);
-  position: relative;
-  left: var(--bg-padding, 0.5em);
-  margin: 0;
-  padding: 0;
-}
-:host *.bg-color::after, :host *.bg-color-hover::after {
-  display: block;
-  width: 0px;
-  height: 0px;
-  clear: both;
-  content: '';
-}
-:host *.bg-color-hover {
-  color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
-  --color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
-  background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
-  box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green)))), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
-}
-img[style="float: left;"] {
-  margin: var(--img-float-left-margin, 0 var(--content-spacing) calc(0.5 * var(--content-spacing)) 0);
-}
-img[style="float: right;"] {
-  margin: var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing)) var(--content-spacing));
-}
 @media only screen and (max-width: _max-width_) {
+  /* h-tags */
   :host h1, :host h6 {
     font-size: var(--h1-font-size-mobile, var(--h1-font-size, 1.75em));
     line-height: var(--h1-line-height-mobile, var(--h1-line-height, 1.286em));
@@ -288,21 +320,21 @@ img[style="float: right;"] {
     text-transform: var(--h5-text-transform-mobile, var(--h5-text-transform, none));
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto 1.143em));
   }
+  /* text stylings */
   :host .font-size-big {
     font-size: calc(var(--h1-font-size-mobile, var(--h1-font-size, 1.75em)) * 1.5);
   }
   :host .font-size-tiny {
     font-size: calc(var(--p-font-size-mobile, var(--p-font-size, 1em)) * 0.75);
   }
+  /* p-tag */
   :host p {
     font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));
     line-height: var(--p-line-height-mobile, var(--p-line-height, var(--line-height, normal)));
     text-transform: var(--p-text-transform-mobile, var(--p-text-transform, none));
     margin: var(--p-margin-mobile, var(--p-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
   }
-  :host hr {
-    margin: var(--hr-margin-mobile, var(--hr-margin, var(--content-spacing-mobile) auto));
-  }
+  /* a-tag */
   :host a {
     font-size: var(--a-font-size-mobile, var(--a-font-size, 1em));
     margin: var(--a-margin-mobile, var(--a-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
@@ -310,6 +342,18 @@ img[style="float: right;"] {
   :host *:not(main) a {
     display: var(--any-a-display-mobile, var(--any-a-display, var(--a-display-mobile, var(--a-display, inline))));
   }
+  /* hr-tag */
+  :host hr {
+    margin: var(--hr-margin-mobile, var(--hr-margin, var(--content-spacing-mobile) auto));
+  }
+  /* img-tag */
+  img[style="float: left;"] {
+    margin: var(--img-float-left-margin-mobile, var(--img-float-left-margin, 0 var(--content-spacing-mobile, var(--content-spacing)) calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) 0));
+  }
+  img[style="float: right;"] {
+    margin: var(--img-float-right-margin-mobile, var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) var(--content-spacing-mobile, var(--content-spacing))));
+  }
+  /* spacer-stylings */
   .spacer-two {
     height: calc(var(--spacer-height-mobile, var(--spacer-height, calc(var(--content-spacing-mobile, var(--content-spacing)) * 2))) / 2);
   }
@@ -318,11 +362,5 @@ img[style="float: right;"] {
   }
   .spacer-four {
     height: var(--spacer-height-mobile, var(--spacer-height, calc(var(--content-spacing-mobile, var(--content-spacing)) * 3)));
-  }
-  img[style="float: left;"] {
-    margin: var(--img-float-left-margin-mobile, var(--img-float-left-margin, 0 var(--content-spacing-mobile, var(--content-spacing)) calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) 0));
-  }
-  img[style="float: right;"] {
-    margin: var(--img-float-right-margin-mobile, var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) var(--content-spacing-mobile, var(--content-spacing))));
   }
 }

@@ -7,8 +7,7 @@
   --navigation-default-a-link-content-spacing: 1.1rem var(--content-spacing-mobile);
   --navigation-default-a-link-font-size-no-scroll: var(--navigation-default-a-link-font-size);
   --navigation-default-a-link-font-size: var(--header-default-a-font-size, var(--font-size));
-  --navigation-default-a-link-font-weight-no-scroll: var(--navigation-default-a-link-font-weight);
-  --navigation-default-a-link-font-weight: bold;
+  --navigation-default-font-family: var(--font-family-bold);
   --navigation-default-background-color: var(--header-default-background-color);
   --navigation-default-color-active: var(--color-active);
   --navigation-default-color-hover: var(--color-hover);

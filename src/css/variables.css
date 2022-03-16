@@ -11,15 +11,17 @@
   --color-hover: var(--m-orange-800);
   --color-secondary: var(--m-orange-600);
   --color: var(--m-black);
-  --content-spacing-mobile: 0.75rem;
-  --content-spacing: 1.5rem;
-  --font-family-secondary: micro, Helvetica, Arial, sans-serif;
-  --font-family: text, Helvetica, Arial, sans-serif;
+  --content-spacing-mobile: 1rem;
+  --content-spacing: 1.143rem;
+  --font-family-bold: HelveticaNowTextBold, HelveticaNowText, Helvetica, Arial, sans-serif;
+  --font-family-secondary: Avenir35Light, sans-serif;
+  --font-family: HelveticaNowText, Helvetica, Arial, sans-serif;
   --font-size-mobile: min(14px, 5vw);
   --font-size: max(16px, 0.8vw);
   --font-weight: 400;
   --line-height: 1.5em;
 }
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: var(--m-black);
@@ -30,3 +32,4 @@
     --navigation-default-color-custom: var(--color);
   }
 }
+*/

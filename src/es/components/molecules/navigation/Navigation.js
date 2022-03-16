@@ -80,7 +80,10 @@ export default class Navigation extends Shadow() {
         this.root.querySelector('nav > ul:not(.language-switcher)').classList[event.target.parentNode && event.target.parentNode.classList.contains('open') ? 'add' : 'remove']('open')
         if (this.checkMedia('mobile')) {
           Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
-            if (link !== event.target.parentNode) link.classList.remove('open')
+            if (link !== event.target.parentNode) {
+              link.classList.remove('open')
+              if (link.parentElement) link.parentElement.classList.remove('open')
+            }
           })
         }
       }
@@ -332,11 +335,11 @@ export default class Navigation extends Shadow() {
         border-bottom: 2px solid transparent;
         transition: all 0.1s ease;
       }
-      :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
+      :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
         border-bottom: 2px solid var(--color);
       }
-      :host > nav > ul li.open {
-        border-bottom: 2px solid var(--color-secondary);
+      :host > nav > ul li:not(:hover).open {
+        border-bottom: 2px solid var(--color);
       }
       :host > nav > ul > li > div.background {
         cursor: auto;
@@ -381,7 +384,7 @@ export default class Navigation extends Shadow() {
         padding-bottom: 0.5rem;
       }
       :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li:first-child, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
-        --a-link-font-weight: bold;
+        --a-link-font-family: var(--font-family-bold, var(--font-family, inherit));
         --a-link-font-size: 1.25rem;
         padding-bottom: 0.875rem;
       }
@@ -449,7 +452,7 @@ export default class Navigation extends Shadow() {
           justify-content: space-between;
           width: 100%;
         }
-        :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
+        :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
           border-bottom: var(--header-default-border-bottom);
         }
         :host > nav > ul li.open {
@@ -571,7 +574,12 @@ export default class Navigation extends Shadow() {
         const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
         arrow.setAttribute('direction', arrowDirections[1])
         const arrowClickListener = event => {
-          if (this.hasAttribute('focus-lost-close-mobile')) Array.from(this.root.querySelectorAll('li.open')).forEach(li => li.classList.remove('open'))
+          if (this.hasAttribute('focus-lost-close-mobile')) {
+            Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
+              li.classList.remove('open')
+              if (li.parentElement) li.parentElement.classList.remove('open')
+            })
+          }
           li.classList.toggle('open')
           arrow.setAttribute('direction', li.classList.contains('open') ? arrowDirections[0] : arrowDirections[1])
         }
@@ -606,11 +614,15 @@ export default class Navigation extends Shadow() {
         self.addEventListener('click', event => {
           if (this.focusLostClose) {
             if (this.hasAttribute('focus-lost-close-mobile')) {
-              Array.from(this.root.querySelectorAll('li.open')).forEach(li => li.classList.remove('open'))
+              Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
+                li.classList.remove('open')
+                if (li.parentElement) li.parentElement.classList.remove('open')
+              })
               if (this.hasAttribute('no-scroll')) document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
             }
             Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
               aLink.classList.remove('open')
+              if (aLink.parentElement) aLink.parentElement.classList.remove('open')
               let arrow
               if (aLink.parentNode && event.target && !aLink.parentNode.classList.contains('open') && (arrow = aLink.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
             })

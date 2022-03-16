@@ -29,12 +29,10 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
+    let timeout = null
     this.resizeListener = event => {
-      const media = this.getMedia()
-      if (this.lastMedia !== media) {
-        this.calcColumnWidth()
-        this.lastMedia = media
-      }
+      clearTimeout(timeout)
+      timeout = setTimeout(() => this.calcColumnWidth(), 200)
     }
   }
 
@@ -43,7 +41,6 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener('resize', this.resizeListener)
-    this.lastMedia = this.getMedia()
   }
 
   disconnectedCallback () {
@@ -280,10 +277,6 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
     value = unitRegex.test(values[1] || '') ? Number(values[1].replace(unitRegex, '')) : 0
     value += unitRegex.test(values[3] || '') ? Number(values[3].replace(unitRegex, '')) : 0
     return [value, unit]
-  }
-
-  getMedia () {
-    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 
   get style () {
