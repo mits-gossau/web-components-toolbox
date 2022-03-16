@@ -12,7 +12,7 @@
  
 @font-face{
 	font-family:"HelveticaNowTextBold";
-	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW01-XBold.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW01-XBold.woff") format("woff");
+	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Bold.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Bold.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
