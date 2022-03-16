@@ -148,7 +148,7 @@ export default class GoogleMaps extends Shadow() {
       googleMapScript.setAttribute('src', this.MAP_URL)
       googleMapScript.onload = () => {
         // @ts-ignore
-        if ('google' in self === true) resolve(self.google.maps)
+        if ('google' in self) resolve(self.google.maps)
       }
       this.html = googleMapScript
     })
