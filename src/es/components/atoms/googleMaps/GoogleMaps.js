@@ -14,7 +14,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class GoogleMaps extends Shadow() {
   constructor (...args) {
     super(...args)
-    this.MAP_URL = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyC090D7EbD_s04g-_Gn1Fdf5kHtiXZ3V5c&callback=initMap'
+    this.MAP_URL = `https://maps.googleapis.com/maps/api/js?key=${this.apiKey}&callback=initMap`
     this.DEFAULT_COORDINATES = { lat: 47.375600, lng: 8.675320 }
     this.googleMapTransport = event => {
       const eventTarget = event.target
@@ -223,5 +223,9 @@ export default class GoogleMaps extends Shadow() {
   get transportIcons () {
     const wrapper = this.root.querySelector('o-wrapper')
     return wrapper.root ? wrapper.root.querySelectorAll('a') : wrapper.querySelectorAll('a')
+  }
+
+  get apiKey (){
+    return this.getAttribute('api-key') || ""
   }
 }
