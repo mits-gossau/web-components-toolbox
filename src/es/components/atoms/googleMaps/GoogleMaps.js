@@ -107,7 +107,7 @@ export default class GoogleMaps extends Shadow() {
         position: static;
         width: 100%;
         height: 70px;
-        padding: 15px 0;
+        padding: 15px 0 0 0;
         box-shadow: none;
       }
       :host .control-events > div {
