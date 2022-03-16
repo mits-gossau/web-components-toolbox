@@ -8,7 +8,9 @@
   styleNode?: HTMLStyleElement,
   style?: string,
   appendStyleNode?: boolean,
-  error?: string
+  error?: string,
+  maxWidth: string,
+  node: HTMLElement
 }} fetchCSSParams */
 /** @typedef {{
  fetchCSSParams: fetchCSSParams[],
@@ -193,9 +195,11 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {boolean} [namespaceFallback = this.namespaceFallback]
    * @param {HTMLStyleElement} [styleNode = this._css]
    * @param {boolean} [appendStyleNode = true]
+   * @param {string} [maxWidth = this.mobileBreakpoint]
+   * @param {HTMLElement} [node = this]
    * @return {string}
    */
-  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true) {
+  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true, maxWidth = this.mobileBreakpoint, node = this) {
     if (!styleNode) {
     /** @type {HTMLStyleElement} */
       styleNode = document.createElement('style')
@@ -207,8 +211,8 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (!style) {
       return (styleNode.textContent = '')
     } else {
-      style = this.cssMaxWidth(style)
-      if (!this.hasShadowRoot) style = Shadow.cssHostFallback(style, cssSelector)
+      style = Shadow.cssMaxWidth(style, maxWidth)
+      if (cssSelector !== ':host') style = Shadow.cssHostFallback(style, cssSelector)
       if (namespace) {
         if (style.includes('---')) console.error('this.css has illegal dash characters at:', this)
         if (namespaceFallback) {
@@ -220,7 +224,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       }
       // TODO: Review the safari fix below, if the bug got fixed within safari itself (NOTE: -webkit prefix did not work for text-decoration-thickness). DONE 2021.11.10 | LAST CHECKED 2021.11.10
       // safari text-decoration un-supported shorthand fix
-      if (navigator.userAgent.includes('Mac') && style.includes('text-decoration:')) style = Shadow.cssTextDecorationShortHandFix(style, this)
+      if (navigator.userAgent.includes('Mac') && style.includes('text-decoration:')) style = Shadow.cssTextDecorationShortHandFix(style, node)
       return (styleNode.textContent += style)
     }
   }
@@ -287,12 +291,40 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    *
    * @static
    * @param {string} style
-   * @param {string} [maxWidth = this.mobileBreakpoint]
+   * @param {string} maxWidth
    * @return {string}
    */
   // @ts-ignore
-  cssMaxWidth (style, maxWidth = this.mobileBreakpoint) {
+  static cssMaxWidth (style, maxWidth) {
     return style.replace(/_max-width_/g, maxWidth)
+  }
+
+  /**
+   * spread text-decoration shorthand to text-decoration-line, text-decoration-style, text-decoration-color and text-decoration-thickness
+   *
+   * @static
+   * @param {string} style
+   * @param {HTMLElement} node
+   * @return {string}
+   */
+  static cssTextDecorationShortHandFix (style, node) {
+    return style.replace(/text-decoration:\s*([^;]*);/g, (match, p1) => {
+      if (p1.includes('var(--')) p1.match(/var\(--[^,)]*/g).some(variable => (p1 = self.getComputedStyle(node).getPropertyValue(variable.replace('var(', ''))) !== '')
+      return `${p1.split(' ').filter(prop => /\w/g.test(prop)).reduce((acc, prop, i) => {
+        switch (i) {
+          case 0:
+            return `${acc}text-decoration-line: ${prop};`
+          case 1:
+            return `${acc}text-decoration-style: ${prop};`
+          case 2:
+            return `${acc}text-decoration-color: ${prop};`
+          case 3:
+            return `${acc}text-decoration-thickness: ${prop};`
+          default:
+            return acc
+        }
+      }, `${match}/* Safari fix of text-decoration shorthand bug which only supports the first two arguments. */`)}/* end of fix. More Infos at: src/es/components/web-components-cms-template/src/es/components/prototypes/Shadow.js */`
+    }) // find text-decoration: and spread the arguments to line, style, color and thickness
   }
 
   /**
@@ -324,10 +356,12 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
            */
           const fetchCSSParamsWithDefaultParams = fetchCSSParams.map(
             /**
+             * fill in the defaults taken from this scope
+             * 
              * @param {fetchCSSParams} fetchCSSParams
              * @return {fetchCSSParams}
              */
-            fetchCSSParam => {return {cssSelector: this.cssSelector, namespace: this.namespace, namespaceFallback: this.namespaceFallback, ...fetchCSSParam}}
+            fetchCSSParam => {return {cssSelector: this.cssSelector, namespace: this.namespace, namespaceFallback: this.namespaceFallback, maxWidth: this.mobileBreakpoint, node: this, ...fetchCSSParam}}
           )
           return this.dispatchEvent(new CustomEvent(this.getAttribute('fetch-css') || 'fetch-css', {
             /** @type {fetchCssEventDetail} */
@@ -365,8 +399,8 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
             (newFetchCSSParam, i) => {return {...newFetchCSSParam, appendStyleNode: fetchCSSParams[i].appendStyleNode}}
           )
           // append those styleNodes which were originally meant so, default is true
-          mergedFetchCSSParams.forEach(fetchCSSParam => {
-            if (fetchCSSParam.appendStyleNode !== false) this.root.appendChild(fetchCSSParam.styleNode)
+          mergedFetchCSSParams.forEach(mergedFetchCSSParam => {
+            if (mergedFetchCSSParam.appendStyleNode !== false) this.root.appendChild(mergedFetchCSSParam.styleNode)
           })
           return mergedFetchCSSParams
         }
@@ -424,10 +458,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           if (hide) this.hidden = false
           return fetchCSSParams.map(
             /**
-             * @param {{path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error}} path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error
+             * @param {fetchCSSParams} path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error
              * @return {fetchCSSParams}
              */
-            ({ path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode = true, style, error }, i) => {
+            ({ path, cssSelector, namespace, namespaceFallback, styleNode, style, appendStyleNode = true, error, maxWidth, node }, i) => {
               if (error) return fetchCSSParams[i]
               // create a new style node if none is supplied
               if (!styleNode) {
@@ -438,40 +472,12 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
                 if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
                 if (appendStyleNode) this.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
               }
-              return { ...fetchCSSParams[i], styleNode, appendStyleNode, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode) }
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
             }
           )
         }
       ).catch(error => error)
     }
-  }
-
-  /**
-   * spread text-decoration shorthand to text-decoration-line, text-decoration-style, text-decoration-color and text-decoration-thickness
-   *
-   * @static
-   * @param {string} style
-   * @param {HTMLElement} node
-   * @return {string}
-   */
-  static cssTextDecorationShortHandFix (style, node) {
-    return style.replace(/text-decoration:\s*([^;]*);/g, (match, p1) => {
-      if (p1.includes('var(--')) p1.match(/var\(--[^,)]*/g).some(variable => (p1 = self.getComputedStyle(node).getPropertyValue(variable.replace('var(', ''))) !== '')
-      return `${p1.split(' ').filter(prop => /\w/g.test(prop)).reduce((acc, prop, i) => {
-        switch (i) {
-          case 0:
-            return `${acc}text-decoration-line: ${prop};`
-          case 1:
-            return `${acc}text-decoration-style: ${prop};`
-          case 2:
-            return `${acc}text-decoration-color: ${prop};`
-          case 3:
-            return `${acc}text-decoration-thickness: ${prop};`
-          default:
-            return acc
-        }
-      }, `${match}/* Safari fix of text-decoration shorthand bug which only supports the first two arguments. */`)}/* end of fix. More Infos at: src/es/components/web-components-cms-template/src/es/components/prototypes/Shadow.js */`
-    }) // find text-decoration: and spread the arguments to line, style, color and thickness
   }
 
   /**
