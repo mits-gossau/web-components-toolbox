@@ -384,7 +384,7 @@ export default class Navigation extends Shadow() {
         padding-bottom: 0.5rem;
       }
       :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li:first-child, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
-        --a-link-font-weight: bold;
+        --a-link-font-family: var(--font-family-bold, var(--font-family, inherit));
         --a-link-font-size: 1.25rem;
         padding-bottom: 0.875rem;
       }

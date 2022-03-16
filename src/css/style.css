@@ -81,7 +81,7 @@
   font-family: var(--h5-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family))));
 }
 /* text stylings */
-:host .bold, :host strong {
+:host .bold, :host strong, :host b {
   font-family: var(--font-family-strong, var(--font-family-bold, var(--font-family)));
   font-weight: var(--font-weight-strong, bold);
   text-transform: var(--text-transform-strong, none);

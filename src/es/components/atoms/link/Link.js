@@ -95,6 +95,7 @@ export default class Link extends Shadow() {
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
         font-weight: var(--font-weight, normal);
+        font-family: var(--font-family, inherit);
         height: var(--height, 100%);
         padding: var(--padding, 14px 10px);
         text-align: var(--text-align, left);
@@ -103,19 +104,18 @@ export default class Link extends Shadow() {
         text-transform: var(--text-transform, none);
         transition: var(--transition, all 0.3s ease-out);
         width: var(--width, 100%);
-        font-family: var(--font-family);
         white-space: var(--white-space, normal);
         word-break: var(--word-break, normal);
       }
       :host(.active) > a, :host(.active) > a ~ ${this.hitAreaTagName} {
         color: var(--color-active, var(--color-hover, var(--color, yellow)));
         text-decoration: var(--text-decoration-active, var(--text-decoration-hover, var(--text-decoration, none)));
-        font-family: var(--font-family-active, var(--font-family-hover));
+        font-family: var(--font-family-active, var(--font-family-hover, var(--font-family, inherit)));
       }
       :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName} {
         color: var(--color-hover, var(--color, yellow));
         text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
-        font-family: var(--font-family-hover);
+        font-family: var(--font-family-hover, var(--font-family, inherit));
       }
       :host > a:focus {
         text-decoration: var(--text-decoration-focus, unset);

@@ -5,7 +5,7 @@
 @font-face{
 	font-family:"HelveticaNowText";
 	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Regular.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Regular.woff") format("woff");
-	font-weight: 100;
+	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
 }
@@ -13,7 +13,7 @@
 @font-face{
 	font-family:"HelveticaNowTextBold";
 	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW01-XBold.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW01-XBold.woff") format("woff");
-	font-weight: 100;
+	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
 }
@@ -21,7 +21,7 @@
 @font-face{
 	font-family:"Avenir35Light";
 	src:url("https://cdn.migros.ch/ch.migros/static/fonts/Avenir/Avenir35Light.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/Avenir/Avenir35Light.woff") format("woff");
-	font-weight: 100;
+	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
 }
