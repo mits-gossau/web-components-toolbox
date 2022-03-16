@@ -13,9 +13,9 @@
   --color: var(--m-black);
   --content-spacing-mobile: 1rem;
   --content-spacing: 1.143rem;
-  --font-family-bold: HelveticaNowDisplayBold, HelveticaNowDisplay, Helvetica, Arial, sans-serif;
+  --font-family-bold: HelveticaNowTextBold, HelveticaNowText, Helvetica, Arial, sans-serif;
   --font-family-secondary: Avenir35Light, sans-serif;
-  --font-family: HelveticaNowDisplay, Helvetica, Arial, sans-serif;
+  --font-family: HelveticaNowText, Helvetica, Arial, sans-serif;
   --font-size-mobile: min(14px, 5vw);
   --font-size: max(16px, 0.8vw);
   --font-weight: 400;

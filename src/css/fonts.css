@@ -3,16 +3,16 @@
 @import url("https://cdn.fonts.net/t/1.css?apiType=css&projectid=15e0d230-9ed9-11ec-b670-06c4e8753e28");
 
 @font-face{
-	font-family:"HelveticaNowDisplay";
-	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowDisplayW05-Rg.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowDisplayW05-Rg.woff") format("woff");
+	font-family:"HelveticaNowText";
+	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Regular.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Regular.woff") format("woff");
 	font-weight: 100;
 	font-style: normal;
 	font-display: swap;
 }
  
 @font-face{
-	font-family:"HelveticaNowDisplayBold";
-	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowDisplayW05-XBd.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowDisplayW05-XBd.woff") format("woff");
+	font-family:"HelveticaNowTextBold";
+	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW01-XBold.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW01-XBold.woff") format("woff");
 	font-weight: 100;
 	font-style: normal;
 	font-display: swap;
