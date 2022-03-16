@@ -99,6 +99,9 @@ export default class Body extends Shadow() {
       :host > main > a-emotion-pictures:first-child {
         margin-top: var(--a-emotion-pictures-margin-top-first-child, calc(-1 * var(--content-spacing, unset)));
       }
+      :host > main > a-google-maps:first-child {
+        margin-top: var(--a-google-maps-margin-top-first-child, calc(-1 * var(--content-spacing, unset)));
+      }
       @media only screen and (max-width: _max-width_) {
         :host > main {
           padding: var(--main-padding-mobile, var(--main-padding, 0));
