@@ -169,7 +169,7 @@ export default class GoogleMaps extends Shadow() {
     return new googleMap.Map(mapTarget, {
       center: { lat, lng },
       zoom: 15,
-      scrollwheel: true,
+      scrollwheel: false,
       mapTypeControl: false,
       streetViewControl: false,
       zoomControl: true,
