@@ -68,7 +68,7 @@ export default class GoogleMaps extends Shadow() {
     }
     :host > #map {
       width: var(--map-width, 100%);
-      height: var(--map-height, 50vh);
+      height: var(--map-height, 75vh);
     }  
     :host > hr {
       display: none;
