@@ -3,7 +3,7 @@
   --footer-default-content-spacing: var(--content-spacing);
   --footer-default-gap: var(--footer-default-gap-custom, var(--content-spacing));
   --footer-default-invert-a-color-hover: var(--footer-default-invert-a-color-hover-custom, var(--color-hover));
-  --footer-default-invert-background-color: var(--color-secondary);
+  --footer-default-invert-background-color: var(--footer-default-invert-background-color-custom, var(--color-secondary));
   --footer-default-invert-color: var(--footer-default-invert-color-custom, var(--background-color));
   --picture-footer-logo-img-width: min(35px, 10vw);
   --picture-store-logo-text-align: left;
