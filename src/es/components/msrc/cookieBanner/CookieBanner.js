@@ -86,8 +86,8 @@ export default class CookieBanner extends Shadow() {
       }
       #msrc-widget > div {
         background-color: var(--background-color, white) !important;
-        box-shadow: var(--box-shadow-color, white 0px -3px 3px) !important;
-        border-top: var(--border-top, 0) !important;
+        box-shadow: var(--box-shadow-color, var(--color) 0px -1px 3px) !important;
+        border-top: var(--border-top, 1px solid var(--color)) !important;
       }
       #msrc-widget button {
         background-color: var(--button-background-color, var(--color-secondary, var(--color, orange))) !important;
