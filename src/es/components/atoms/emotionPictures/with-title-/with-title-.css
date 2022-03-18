@@ -4,6 +4,8 @@
    --emotion-pictures-with-title-bg-transition: opacity 0.5s ease-out;
    --emotion-pictures-with-title-div-margin-mobile:var(--content-spacing-mobile);
    --emotion-pictures-with-title-h1-font-size-mobile: var(--emotion-pictures-with-title-h1-font-size-mobile-custom, min(calc(1.75em * 1.75), 7vw));
+   --emotion-pictures-with-title-h1-font-weight: var(--emotion-pictures-with-title-h2-font-weight);
+   --emotion-pictures-with-title-h1-text-transform: var(--emotion-pictures-with-title-h2-text-transform);
    --emotion-pictures-with-title-h2-font-size-mobile: var(--emotion-pictures-with-title-h2-font-size-mobile-custom, min(calc(1.5em * 1.5), 7vw));
    --emotion-pictures-with-title-h2-font-weight: normal;
    --emotion-pictures-with-title-h2-text-transform: uppercase;
