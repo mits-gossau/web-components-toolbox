@@ -109,7 +109,7 @@ export default class Header extends Shadow() {
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
     self.addEventListener('resize', this.resizeListener)
-    this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
+    if (this.mNavigation) this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
     self.addEventListener('resize', this.mutationCallback)
     this.observer.observe(this.header, { attributes: true })
   }
@@ -118,7 +118,7 @@ export default class Header extends Shadow() {
     if (this.hasAttribute('sticky')) self.removeEventListener('scroll', this.scrollListener)
     this.removeEventListener('click', this.clickAnimationListener)
     self.removeEventListener('resize', this.resizeListener)
-    this.mNavigation.removeEventListener('animationend', this.clickAnimationListener)
+    if (this.mNavigation) this.mNavigation.removeEventListener('animationend', this.clickAnimationListener)
     self.removeEventListener('resize', this.mutationCallback)
     this.observer.disconnect()
   }
@@ -472,7 +472,7 @@ export default class Header extends Shadow() {
     if (this.getMedia() !== 'desktop') return
     this._adjustLogoPosCounter = resetCouter ? 1 : !this._adjustLogoPosCounter ? 1 : this._adjustLogoPosCounter + 1
     self.requestAnimationFrame(timeStamp => {
-      const navHeight = this.mNavigation.offsetHeight
+      const navHeight = this.mNavigation ? this.mNavigation.offsetHeight : 200
       const logoHeight = this.aLogo.offsetHeight
       if (this._adjustLogoPosCounter < 10 && (!navHeight || !logoHeight)) return setTimeout(() => this.adjustLogoPos(false), 500)
       this.css = /* CSS */`
