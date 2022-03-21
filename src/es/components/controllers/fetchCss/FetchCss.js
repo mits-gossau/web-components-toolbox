@@ -22,8 +22,13 @@ export default class FetchCss extends Shadow() {
     super(...args)
 
     /**
+     * caching the fetchCSS fetched strings processed by setCSS
+     *
+     * @type {WeakMap<import("../../prototypes/Shadow.js").fetchCSSParams[], Promise<import("../../prototypes/Shadow.js").fetchCSSParams[]>>}
+     */
+    this.fetchCSSParamsCache = new WeakMap()
+    /**
      * Listens to the event 'fetch-css' and resolve it with the fetchCSSParams returned by fetchCSS
-     * important don't appendStyleNode here but let the requestor do it at there web component
      *
      * @param {CustomEvent & {detail: fetchCssEventDetail}} event
      */
@@ -34,7 +39,12 @@ export default class FetchCss extends Shadow() {
        * @type {import("../../prototypes/Shadow.js").fetchCSSParams[]}
        */
       const fetchCSSParamsWithDefaultValues = event.detail.fetchCSSParams.map(fetchCSSParam => { return { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam } })
-      event.detail.resolve(this.fetchCSS(fetchCSSParamsWithDefaultValues, false, false))
+      const resultFetchCSSParams = this.fetchCSS(fetchCSSParamsWithDefaultValues, false, false)
+      for (let i = 0; i < fetchCSSParamsWithDefaultValues.length; i++) {
+        this.fetchCSSParamsCache.set(fetchCSSParamsWithDefaultValues[i], resultFetchCSSParams.then(resultFetchCSSParam => resultFetchCSSParam[i]))  
+      }
+      event.detail.resolve(resultFetchCSSParams)
+      console.log('changed', this.fetchCSSParamsCache);
     }
   }
 

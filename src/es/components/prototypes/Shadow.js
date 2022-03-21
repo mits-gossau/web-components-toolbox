@@ -6,6 +6,7 @@
   namespace?: string|false,
   namespaceFallback?: boolean,
   styleNode?: HTMLStyleElement,
+  origStyle?: string | Promise<string>,
   style?: string,
   appendStyleNode?: boolean,
   error?: string,
@@ -367,6 +368,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }
       )
     } else {
+      // TODO: typeof fetchCSSParam.then === 'function'
       return Promise.all(fetchCSSParams.map(
         /**
          * fetch each fetchCSSParam.path and return the promise
@@ -374,18 +376,20 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
          * @param {fetchCSSParams} fetchCSSParam
          * @return {Promise<fetchCSSParams>}
          */
-        fetchCSSParam => fetch(fetchCSSParam.path).then(
+        fetchCSSParam => (fetchCSSParam.origStyle 
+          ? Promise.all([Promise.resolve(fetchCSSParam), Promise.resolve(fetchCSSParam.origStyle)])
+          : fetch(fetchCSSParam.path).then(
           /**
-             * return the fetchCSSParam with the response.text or an Error
-             *
-             * @param {Response} response
-             * @return {Promise<[fetchCSSParams, string]>}
-             */
+           * return the fetchCSSParam with the response.text or an Error
+           *
+           * @param {Response} response
+           * @return {Promise<[fetchCSSParams, string]>}
+           */
           response => {
             if (response.status >= 200 && response.status <= 299) return Promise.all([Promise.resolve(fetchCSSParam), response.text()])
             throw new Error(response.statusText)
           }
-        ).then(
+        )).then(
           /**
              * Resolve both promises and return it into one
              *
@@ -407,8 +411,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
             return { ...fetchCSSParam, error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`) }
           }
         )
-      )
-      ).then(
+      )).then(
         /**
          * Process each fetchCSSParam, make a styleNode if needed and return them with the result of setStyle
          *
@@ -433,7 +436,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
                 if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, node)
                 if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
               }
-              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, origStyle: style, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
             }
           )
         }
