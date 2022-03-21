@@ -30,10 +30,10 @@ export default class FetchCss extends Shadow() {
     this.fetchCssListener = event => {
       /**
        * fill default values for setCSS from the web component host scope
-       * 
+       *
        * @type {import("../../prototypes/Shadow.js").fetchCSSParams[]}
        */
-      const fetchCSSParamsWithDefaultValues = event.detail.fetchCSSParams.map(fetchCSSParam => {return {cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam}})
+      const fetchCSSParamsWithDefaultValues = event.detail.fetchCSSParams.map(fetchCSSParam => { return { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam } })
       event.detail.resolve(this.fetchCSS(fetchCSSParamsWithDefaultValues, false, false))
     }
   }

@@ -17,6 +17,7 @@
 /* global document */
 /* global self */
 /* global fetch */
+/* global CustomEvent */
 
 /**
  * Shadow is a helper with a few functions for every web component which possibly allows a shadowRoot (atom, organism and molecule)
@@ -323,7 +324,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
 
   /**
    * renders the o-highlight-list css
-   * 
+   *
    * @param {fetchCSSParams[]} fetchCSSParams
    * @param {boolean} [hide = true]
    * @param {boolean} [useController = true]
@@ -337,7 +338,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       return new Promise(
         /**
          * setup Promise function
-         * 
+         *
          * @param {(fetchCSSParams: fetchCSSParams[]) => fetchCSSParams[] | any} resolve
          * @return {boolean}
          */
@@ -356,7 +357,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       ).then(
         /**
          * the controller resolving fetch-css will return with its fetchCSS results
-         * 
+         *
          * @param {fetchCSSParams[]} resultFetchCSSParams
          * @return {fetchCSSParams[]}
          */
@@ -369,48 +370,48 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       return Promise.all(fetchCSSParams.map(
         /**
          * fetch each fetchCSSParam.path and return the promise
-         * 
+         *
          * @param {fetchCSSParams} fetchCSSParam
          * @return {Promise<fetchCSSParams>}
          */
         fetchCSSParam => fetch(fetchCSSParam.path).then(
-            /**
+          /**
              * return the fetchCSSParam with the response.text or an Error
-             * 
+             *
              * @param {Response} response
              * @return {Promise<[fetchCSSParams, string]>}
              */
-            response => {
-              if (response.status >= 200 && response.status <= 299) return Promise.all([Promise.resolve(fetchCSSParam), response.text()])
-              throw new Error(response.statusText)
-            }
-          ).then(
-            /**
+          response => {
+            if (response.status >= 200 && response.status <= 299) return Promise.all([Promise.resolve(fetchCSSParam), response.text()])
+            throw new Error(response.statusText)
+          }
+        ).then(
+          /**
              * Resolve both promises and return it into one
-             * 
+             *
              * @param {[fetchCSSParams, string]} fetchCSSParam, style
              * @return {fetchCSSParams}
              */
-            ([fetchCSSParam, style]) => ({ ...fetchCSSParam, style })
-          ).catch(
-            /**
+          ([fetchCSSParam, style]) => ({ ...fetchCSSParam, style })
+        ).catch(
+          /**
              * Return the fetchCSSParams with the attached error
-             * 
+             *
              * @param {string} error
              * @return {fetchCSSParams}
              */
-            error => {
-              if (hide) this.hidden = false
-              error = `${fetchCSSParam.path} ${error}!!!`
-              // @ts-ignore
-              return { ...fetchCSSParam, error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`) }
-            }
-          )
+          error => {
+            if (hide) this.hidden = false
+            error = `${fetchCSSParam.path} ${error}!!!`
+            // @ts-ignore
+            return { ...fetchCSSParam, error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`) }
+          }
         )
+      )
       ).then(
         /**
          * Process each fetchCSSParam, make a styleNode if needed and return them with the result of setStyle
-         * 
+         *
          * @param {fetchCSSParams[]} fetchCSSParams
          * @return {fetchCSSParams[]}
          */
