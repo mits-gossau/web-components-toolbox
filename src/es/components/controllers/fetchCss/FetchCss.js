@@ -1,4 +1,11 @@
 // @ts-check
+/** @typedef {{
+ fetchCSSParams: import("../../prototypes/Shadow.js").fetchCSSParams[],
+ hide?: boolean,
+ resolve: (fetchCSSParams: import("../../prototypes/Shadow.js").fetchCSSParams[]) => fetchCSSParams[],
+ node: HTMLElement
+}} fetchCssEventDetail */
+
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
@@ -18,9 +25,17 @@ export default class FetchCss extends Shadow() {
      * Listens to the event 'fetch-css' and resolve it with the fetchCSSParams returned by fetchCSS
      * important don't appendStyleNode here but let the requestor do it at there web component
      *
-     * @param {CustomEvent & {detail: import("../../prototypes/Shadow.js").fetchCssEventDetail}} event
+     * @param {CustomEvent & {detail: fetchCssEventDetail}} event
      */
-    this.fetchCssListener = event => event.detail.resolve(this.fetchCSS(event.detail.fetchCSSParams.map(fetchCSSParam => {return {...fetchCSSParam, appendStyleNode: false}}), false, false))
+    this.fetchCssListener = event => {
+      /**
+       * fill default values for setCSS from the web component host scope
+       * 
+       * @type {import("../../prototypes/Shadow.js").fetchCSSParams[]}
+       */
+      const fetchCSSParamsWithDefaultValues = event.detail.fetchCSSParams.map(fetchCSSParam => {return {cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam}})
+      event.detail.resolve(this.fetchCSS(fetchCSSParamsWithDefaultValues, false, false))
+    }
   }
 
   connectedCallback () {

@@ -9,15 +9,9 @@
   style?: string,
   appendStyleNode?: boolean,
   error?: string,
-  maxWidth: string,
-  node: HTMLElement
+  maxWidth?: string,
+  node?: HTMLElement & Shadow & *
 }} fetchCSSParams */
-/** @typedef {{
- fetchCSSParams: fetchCSSParams[],
- hide?: boolean,
- resolve: (fetchCSSParams: fetchCSSParams[]) => fetchCSSParams[],
- child: HTMLElement
-}} fetchCssEventDetail */
 
 /* global HTMLElement */
 /* global document */
@@ -196,7 +190,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {HTMLStyleElement} [styleNode = this._css]
    * @param {boolean} [appendStyleNode = true]
    * @param {string} [maxWidth = this.mobileBreakpoint]
-   * @param {HTMLElement} [node = this]
+   * @param {HTMLElement & Shadow} [node = this]
    * @return {string}
    */
   setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true, maxWidth = this.mobileBreakpoint, node = this) {
@@ -205,7 +199,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       styleNode = document.createElement('style')
       styleNode.setAttribute('_css', '')
       styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-      if (appendStyleNode) this.root.appendChild(styleNode)
+      if (appendStyleNode) node.root.appendChild(styleNode)
       this._css = styleNode
     }
     if (!style) {
@@ -347,62 +341,28 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
          * @param {(fetchCSSParams: fetchCSSParams[]) => fetchCSSParams[] | any} resolve
          * @return {boolean}
          */
-        resolve => {
-          /**
-           * avoid setCSS to use default values for the properties set below from the controllers scope
-           * 
-           * @param {fetchCSSParams[]} fetchCSSParams
-           * @return {Promise<fetchCSSParams[]>}
-           */
-          const fetchCSSParamsWithDefaultParams = fetchCSSParams.map(
-            /**
-             * fill in the defaults taken from this scope
-             * 
-             * @param {fetchCSSParams} fetchCSSParams
-             * @return {fetchCSSParams}
-             */
-            fetchCSSParam => {return {cssSelector: this.cssSelector, namespace: this.namespace, namespaceFallback: this.namespaceFallback, maxWidth: this.mobileBreakpoint, node: this, ...fetchCSSParam}}
-          )
-          return this.dispatchEvent(new CustomEvent(this.getAttribute('fetch-css') || 'fetch-css', {
-            /** @type {fetchCssEventDetail} */
-            detail: {
-              fetchCSSParams: fetchCSSParamsWithDefaultParams,
-              hide,
-              resolve,
-              child: this
-            },
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        }
+        resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('fetch-css') || 'fetch-css', {
+          /** @type {import("../controllers/fetchCss/FetchCss.js").fetchCssEventDetail} */
+          detail: {
+            fetchCSSParams,
+            hide,
+            resolve,
+            node: this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
       ).then(
         /**
          * the controller resolving fetch-css will return with its fetchCSS results
          * 
-         * @param {fetchCSSParams[]} newFetchCSSParams
+         * @param {fetchCSSParams[]} resultFetchCSSParams
          * @return {fetchCSSParams[]}
          */
-        newFetchCSSParams => {
+        resultFetchCSSParams => {
           if (hide) this.hidden = false
-          /**
-           * the fetchCss controller does not append any styles and for that has all appendStyleNode = false, here we merge the new object properly with the original to restore those changes
-           * 
-           * @param {fetchCSSParams[]} newFetchCSSParams
-           * @return {Promise<fetchCSSParams[]>}
-           */
-          const mergedFetchCSSParams = newFetchCSSParams.map(
-            /**
-             * @param {fetchCSSParams} newFetchCSSParam
-             * @return {fetchCSSParams}
-             */
-            (newFetchCSSParam, i) => {return {...newFetchCSSParam, appendStyleNode: fetchCSSParams[i].appendStyleNode}}
-          )
-          // append those styleNodes which were originally meant so, default is true
-          mergedFetchCSSParams.forEach(mergedFetchCSSParam => {
-            if (mergedFetchCSSParam.appendStyleNode !== false) this.root.appendChild(mergedFetchCSSParam.styleNode)
-          })
-          return mergedFetchCSSParams
+          return resultFetchCSSParams
         }
       )
     } else {
@@ -461,7 +421,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
              * @param {fetchCSSParams} path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error
              * @return {fetchCSSParams}
              */
-            ({ path, cssSelector, namespace, namespaceFallback, styleNode, style, appendStyleNode = true, error, maxWidth, node }, i) => {
+            ({ path, cssSelector, namespace, namespaceFallback, styleNode, style, appendStyleNode = true, error, maxWidth, node = this }, i) => {
               if (error) return fetchCSSParams[i]
               // create a new style node if none is supplied
               if (!styleNode) {
@@ -469,10 +429,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
                 styleNode = document.createElement('style')
                 styleNode.setAttribute('_css', path)
                 styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-                if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
-                if (appendStyleNode) this.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
+                if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, node)
+                if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
               }
-              return { ...fetchCSSParams[i], styleNode, appendStyleNode, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
             }
           )
         }
