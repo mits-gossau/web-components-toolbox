@@ -263,8 +263,10 @@ export default class Picture extends Shadow() {
           composed: true
         }))
       })
+      this.img.setAttribute('loading', 'eager') // must load eager, not that the loading event doesn't trigger emit picture-load
+    } else {
+      this.img.setAttribute('loading', this.getAttribute('loading') || 'lazy')
     }
-    this.img.setAttribute('loading', this.getAttribute('loading') || 'lazy')
   }
 
   get img () {
