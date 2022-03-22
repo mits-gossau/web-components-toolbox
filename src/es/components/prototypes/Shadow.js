@@ -6,7 +6,7 @@
   namespace?: string|false,
   namespaceFallback?: boolean,
   styleNode?: HTMLStyleElement,
-  origStyle?: string | Promise<string>,
+  fetchedStyle?: string,
   style?: string,
   appendStyleNode?: boolean,
   error?: string,
@@ -368,7 +368,6 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }
       )
     } else {
-      // TODO: typeof fetchCSSParam.then === 'function'
       return Promise.all(fetchCSSParams.map(
         /**
          * fetch each fetchCSSParam.path and return the promise
@@ -376,9 +375,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
          * @param {fetchCSSParams} fetchCSSParam
          * @return {Promise<fetchCSSParams>}
          */
-        fetchCSSParam => (fetchCSSParam.origStyle 
-          ? Promise.all([Promise.resolve(fetchCSSParam), Promise.resolve(fetchCSSParam.origStyle)])
-          : fetch(fetchCSSParam.path).then(
+        fetchCSSParam => (fetch(fetchCSSParam.path).then(
           /**
            * return the fetchCSSParam with the response.text or an Error
            *
@@ -436,7 +433,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
                 if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, node)
               }
               if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
-              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, origStyle: style, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, fetchedStyle: style, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
             }
           )
         }

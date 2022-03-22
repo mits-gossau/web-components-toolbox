@@ -24,9 +24,9 @@ export default class FetchCss extends Shadow() {
     /**
      * caching the fetchCSS fetched strings processed by setCSS
      *
-     * @type {WeakMap<import("../../prototypes/Shadow.js").fetchCSSParams[], Promise<import("../../prototypes/Shadow.js").fetchCSSParams[]>>}
+     * @type {Map<import("../../prototypes/Shadow.js").fetchCSSParams[], Promise<import("../../prototypes/Shadow.js").fetchCSSParams[]>>}
      */
-    this.fetchCSSParamsCache = new WeakMap()
+    this.fetchCSSParamsCache = new Map()
     /**
      * Listens to the event 'fetch-css' and resolve it with the fetchCSSParams returned by fetchCSS
      *
@@ -38,13 +38,16 @@ export default class FetchCss extends Shadow() {
        *
        * @type {import("../../prototypes/Shadow.js").fetchCSSParams[]}
        */
-      const fetchCSSParamsWithDefaultValues = event.detail.fetchCSSParams.map(fetchCSSParam => { return { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam } })
+      const fetchCSSParamsWithDefaultValues = event.detail.fetchCSSParams.map((fetchCSSParam, i) => {
+        const fetchCSSParamWithDefaultValues = { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam }
+        return fetchCSSParamWithDefaultValues
+      })
       const resultFetchCSSParams = this.fetchCSS(fetchCSSParamsWithDefaultValues, false, false)
-      for (let i = 0; i < fetchCSSParamsWithDefaultValues.length; i++) {
+      /*for (let i = 0; i < fetchCSSParamsWithDefaultValues.length; i++) {
         this.fetchCSSParamsCache.set(fetchCSSParamsWithDefaultValues[i], resultFetchCSSParams.then(resultFetchCSSParam => resultFetchCSSParam[i]))  
-      }
+      }*/
       event.detail.resolve(resultFetchCSSParams)
-      console.log('changed', this.fetchCSSParamsCache);
+      //console.log('changed', this.fetchCSSParamsCache);
     }
   }
 
