@@ -125,6 +125,7 @@ export default class Link extends Shadow() {
       }
       :host a[href$='.pdf'] {
         background: transparent url(../src/img/download-orange.svg) center left no-repeat;
+        background-position: left bottom;
         padding:var(--icon-padding);
         display:inline;
         vertical-align:middle;
