@@ -123,6 +123,25 @@ export default class Link extends Shadow() {
       :host > span {
         display: var(--span-display, inline);
       }
+      :host a[href$='.pdf'] {
+        background: transparent url(../src/img/download-orange.svg) center left no-repeat;
+        padding:var(--icon-padding);
+        display:inline;
+        vertical-align:middle;
+        transition: box-shadow .25s ease-out;
+      }
+      :host a[href$='.pdf'] span {
+        color: var(--icon-span-color);
+        font-family:var(--icon-span-font-family);
+        padding:var(--icon-span-padding);
+      }
+      ${this.getAttribute('namespace') === 'download-'
+        ? /* CSS */`
+          :host > a:hover {
+            box-shadow: 0 -2px 0 0 #ff9900 inset;
+          }
+        `
+        : ''}
       ${this.getAttribute('namespace') === 'underline-'
         ? /* CSS */`
           :host {
@@ -162,11 +181,15 @@ export default class Link extends Shadow() {
     `
     switch (this.getAttribute('namespace')) {
       case 'underline-':
-        this.fetchCSS([{
+        return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./underline-/underline-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
-        break
+        case 'download-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
     }
   }
 
