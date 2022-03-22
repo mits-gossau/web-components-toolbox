@@ -2,8 +2,8 @@
     --download-color-hover: var(--color-hover-custom, var(--color-hover));
     --download-color: var(--download-color-custom, var(--color-secondary));
     --download-font-family: var(--font-family-bold);
+    --download-icon-padding:var(--download-icon-padding-custom, 0 0 0 20px);
     --download-icon-span-color:var(--download-icon-span-color-custom, var(--color));
     --download-icon-span-font-family:var(--font-family);
     --download-icon-span-padding:var(--download-icon-span-padding-custom, 0 0 0 10px);
-    --download-icon-padding:var(--download-icon-padding-custom, 0 0 0 18px);
 }

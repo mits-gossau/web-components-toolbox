@@ -124,7 +124,7 @@ export default class Link extends Shadow() {
         display: var(--span-display, inline);
       }
       :host a[href$='.pdf'] {
-        background: transparent url(../src/img/download-orange.svg) center left no-repeat;
+        background: transparent url(${this.iconPath}) center left no-repeat;
         background-position: left bottom;
         padding:var(--icon-padding);
         display:inline;
@@ -222,5 +222,9 @@ export default class Link extends Shadow() {
 
   get a () {
     return this._a || (this._a = this.root.querySelector('a'))
+  }
+
+  get iconPath () {
+    return this.getAttribute('icon-path') || '../src/img/download.svg'
   }
 }
