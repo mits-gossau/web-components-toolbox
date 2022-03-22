@@ -172,13 +172,8 @@ export default class Input extends Shadow() {
         padding: var(--search-input-padding, 0.75em var(--content-spacing));
         padding-right: max(2.5em, 35px);
         border-radius: var(--border-radius, 0.5em);
-        width: var(--search-input-width, min(12vw, 12em));
+        width: var(--search-input-width-big, var(--search-input-width, min(15vw, 20em)));
         min-width: 9.7em;
-      }
-      @media only screen and (min-width: 1800px) {
-        :host([search]) input {
-          width: var(--search-input-width-big, var(--search-input-width, min(15vw, 20em)));
-        }
       }
 
       :host([search]) input::-webkit-search-cancel-button {
