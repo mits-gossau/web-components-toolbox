@@ -1,0 +1,9 @@
+:host {
+  --teaser-tile-text-center-figcaption-align-items: center;
+  --teaser-tile-text-center-figcaption-display: flex;
+  --teaser-tile-text-center-figcaption-flex-direction: column;
+  --teaser-tile-text-center-figcaption-justify-content: center;
+  --teaser-tile-text-center-h5-text-align: center;
+  --teaser-tile-text-center-p-text-align: var(--teaser-tile-text-center-h5-text-align);
+  --underline-text-align: center;
+}
