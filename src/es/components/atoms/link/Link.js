@@ -180,7 +180,7 @@ export default class Link extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./underline-/underline-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
-        case 'download-':
+      case 'download-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`, // apply namespace since it is specific and no fallback
           namespace: false

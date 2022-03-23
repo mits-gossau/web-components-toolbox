@@ -175,7 +175,7 @@ export default class Teaser extends Shadow() {
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the tile-.css namespace with teaser-tile-text-center-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--teaser-tile-/g, `--teaser-tile-text-center-`)
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--teaser-tile-/g, '--teaser-tile-text-center-')
         })
       case 'teaser-overlay-':
         return this.fetchCSS([{

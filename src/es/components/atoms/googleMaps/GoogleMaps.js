@@ -215,7 +215,7 @@ export default class GoogleMaps extends Shadow() {
       icon: this.markerIcon
     })
     marker.setMap(map)
-    marker.setAnimation(4);
+    marker.setAnimation(4)
   }
 
   get scripts () {
