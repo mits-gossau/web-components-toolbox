@@ -5,10 +5,10 @@
 	 width="14.78px" height="20px" viewBox="0 0 14.78 20" enable-background="new 0 0 14.78 20" xml:space="preserve">
 <g>
 	<g>
-		<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#FF9900" points="14.78,9.03 13.36,7.61 7.39,13.58 1.42,7.61 0,9.03
+		<polygon fill-rule="evenodd" clip-rule="evenodd" fill="#FF6600" points="14.78,9.03 13.36,7.61 7.39,13.58 1.42,7.61 0,9.03
 			7.39,16.42 		"/>
-		<rect x="6.39" fill-rule="evenodd" clip-rule="evenodd" fill="#FF9900" width="2" height="15"/>
-		<rect x="0.39" y="18" fill-rule="evenodd" clip-rule="evenodd" fill="#FF9900" width="14" height="2"/>
+		<rect x="6.39" fill-rule="evenodd" clip-rule="evenodd" fill="#FF6600" width="2" height="15"/>
+		<rect x="0.39" y="18" fill-rule="evenodd" clip-rule="evenodd" fill="#FF6600" width="14" height="2"/>
 	</g>
 </g>
 </svg>

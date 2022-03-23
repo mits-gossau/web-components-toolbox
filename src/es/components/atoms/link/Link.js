@@ -113,6 +113,7 @@ export default class Link extends Shadow() {
         font-family: var(--font-family-active, var(--font-family-hover, var(--font-family, inherit)));
       }
       :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName} {
+        box-shadow: var(--box-shadow-hover, none);
         color: var(--color-hover, var(--color, yellow));
         text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
         font-family: var(--font-family-hover, var(--font-family, inherit));
@@ -136,13 +137,6 @@ export default class Link extends Shadow() {
         font-family:var(--icon-span-font-family);
         padding:var(--icon-span-padding);
       }
-      ${this.getAttribute('namespace') === 'download-'
-        ? /* CSS */`
-          :host > a:hover {
-            box-shadow: 0 -2px 0 0 #ff9900 inset;
-          }
-        `
-        : ''}
       ${this.getAttribute('namespace') === 'underline-'
         ? /* CSS */`
           :host {
