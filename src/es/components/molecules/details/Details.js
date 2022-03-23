@@ -6,7 +6,6 @@ import { Mutation } from '../../prototypes/Mutation.js'
 
 /**
  * Details (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) aka. Bootstrap accordion
- * Example at: /src/es/components/molecules/NavigationClassics.html
  * As a molecule, this component shall hold Atoms
  *
  * @export
@@ -47,14 +46,14 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * }
  */
 
+// @ts-ignore
 export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends ChosenHTMLElement {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['open'] } }), ...args)
 
     this.svgWidth = '1em'
     this.svgHeight = '1em'
     this.svgColor = 'var(--m-gray-400)'
-    this.hasRendered = false
     // overwrite default Mutation observer parent function created at super
     this.mutationObserveStart = () => {
       // @ts-ignore
@@ -80,7 +79,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
@@ -88,13 +87,13 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.root.addEventListener('click', this.clickEventListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     document.body.removeEventListener(this.openEventName, this.openEventListener)
     this.root.removeEventListener('click', this.clickEventListener)
   }
 
-  mutationCallback (mutationList, observer) {
+  mutationCallback(mutationList, observer) {
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
         this.dispatchEvent(new CustomEvent(this.openEventName, {
@@ -114,7 +113,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -123,9 +122,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
-    // TODO: remove flag and do as usual with !this.summary or else
-    return !this.hasRendered
+  shouldComponentRenderHTML() {
+    return !this.divSummary
   }
 
   /**
@@ -133,7 +131,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */` 
       :host {
         border-bottom:var(--border-bottom, 0);
@@ -253,6 +251,27 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         }
       }
     `
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
+    switch (this.getAttribute('namespace')) {
+      case 'default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      
+      default:
+        return this.fetchCSS(styles, false)
+    }
   }
 
   /**
@@ -260,47 +279,51 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {void}
    */
-  renderHTML () {
-    this.hasRendered = true
+  renderHTML() {
+    this.divSummary = this.root.querySelector('div') || document.createElement('div')
     Array.from(this.summary.childNodes).forEach(node => this.divSummary.appendChild(node))
-    if (this.getAttribute('icon-image')) {
-      const iconImg = new Image()
-      iconImg.src = this.getAttribute('icon-image')
-      iconImg.alt = 'close detail'
-      this.divSummary.append(iconImg)
-      this.divSummary.classList.add('icon')
-    } else if (this.hasAttribute('icon-image')) {
-      const iconSvg = document.createElement('div')
-      iconSvg.innerHTML = `
-        <?xml version="1.0" encoding="UTF-8"?>
-        <svg width="${this.svgWidth || '35px'}" height="${this.svgHeight || '20px'}" viewBox="0 0 35 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
-            <title>Mobile Pfeil</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Mobile-Pfeil" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <polyline id="Path-2" stroke="${this.svgColor || `var(--color, --${this.namespace}color)`}" stroke-width="3" points="2 3 17 18 32 3"></polyline>
-            </g>
-        </svg>
-      `
-      this.divSummary.append(iconSvg)
-      this.divSummary.classList.add('icon')
-    }
+    this.divSummary = this.getAttribute('icon-image')
+      ? this.setIconFromAttribute(this.getAttribute('icon-image'), this.divSummary, 'icon-image')
+      : this.setIconDefault(this.divSummary, 'icon')
     this.summary.appendChild(this.divSummary)
   }
 
-  get openEventName () {
+  setIconFromAttribute(iconPath, node, cssClass) {
+    const iconImg = new Image()
+    iconImg.src = iconPath
+    iconImg.alt = 'close detail'
+    node.append(iconImg)
+    node.classList.add(cssClass)
+    return node
+  }
+
+  setIconDefault(node, cssClass) {
+    const iconSvg = document.createElement('div')
+    iconSvg.innerHTML = `
+      <?xml version="1.0" encoding="UTF-8"?>
+      <svg width="${this.svgWidth || '35px'}" height="${this.svgHeight || '20px'}" viewBox="0 0 35 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <title>Mobile Pfeil</title>
+          <desc>Created with Sketch.</desc>
+          <g id="Mobile-Pfeil" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <polyline id="Path-2" stroke="${this.svgColor || `var(--color, --${this.namespace}color)`}" stroke-width="3" points="2 3 17 18 32 3"></polyline>
+          </g>
+      </svg>
+    `
+    node.append(iconSvg)
+    node.classList.add(cssClass)
+    return node
+  }
+
+  get openEventName() {
     return this.getAttribute('open-event-name') || 'open'
   }
 
-  get summary () {
+  get summary() {
     return this.root.querySelector('summary')
   }
 
-  get details () {
+  get details() {
     return this.root.querySelector('details')
   }
 
-  get divSummary () {
-    return this._divSummary || (this._divSummary = document.createElement('div'))
-  }
 }
