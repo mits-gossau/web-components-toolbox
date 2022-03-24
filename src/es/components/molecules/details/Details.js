@@ -53,7 +53,9 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
     this.svgWidth = '2em'
     this.svgHeight = '1em'
-    this.svgColor = `var(--${this.getAttribute('namespace')}svg-color, --m-gray-400)`
+    this.svgColor = `var(--${this.getAttribute('namespace')}svg-color, var(--color))`
+    //this.themeColor = this.getAttribute('theme-color') || `var(--color-secondary)` 
+   
 
     // overwrite default Mutation observer parent function created at super
     this.mutationObserveStart = () => {
@@ -257,12 +259,15 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         }
       }
     `
+    this.setCss(/* css */`
+    :host > * {
+      --color-secondary: var(--theme-color-style);
+      
+    }
+  `, undefined, '', false)
+
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
-      {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
-        namespace: false
-      },
       {
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true

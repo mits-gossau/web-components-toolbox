@@ -1,10 +1,14 @@
-<m-details namespace="default-">
+<m-details namespace="default-"> 
+  <style>
+    :host {
+      --theme-color-style:pink;
+    }
+  </style>
   <details>
     <summary>
       <h4>Mehrweg: Der bessere Weg.</h4>
     </summary>
-   
-    <o-wrapper simulate-children="1" namespace="wrapper-teaser-" >
+    <o-wrapper simulate-children="1" >
       <style>
         :host > section {
           flex-direction:column;
@@ -56,11 +60,15 @@
     <summary>
       <h4>Food Waste: Wir haben es satt.</h4>
     </summary>
-    <p>Lebensmittel geniessen statt wegwerfen: Mit der App Too Good To Go können Sie bei uns Ihre Überraschungsportion
-      reservieren und zu einem attraktiven Preis abholen.</p>
+    <o-wrapper simulate-children="1" >
+      <h2 class="title-border font-family-secondary">Mehrwegschale</h2>
+      <p>Unsere Erde ist kein Mehrweg-Planet. Deshalb bieten wir in unserem Personalrestaurant Mehrwegschalen als
+        Alternative an (Depot Fr. 10.–).</p>
+    </o-wrapper>
+   
   </details>
 </m-details>
-<m-details namespace="default-">
+<!-- <m-details namespace="default-">
   <details>
     <summary>
       <h4>Food Waste: Wir haben es satt.</h4>
@@ -68,7 +76,7 @@
     <p>Lebensmittel geniessen statt wegwerfen: Mit der App Too Good To Go können Sie bei uns Ihre Überraschungsportion
       reservieren und zu einem attraktiven Preis abholen.</p>
   </details>
-</m-details>
+</m-details> -->
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./default-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
