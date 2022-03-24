@@ -1,3 +1,13 @@
 :host {
-    --default-icon-justify-content:space-between;
+    --default-border-bottom-last: 2px solid;
+    --default-border-bottom: 2px sold;
+    --default-border-color-last:var(--m-green-600);
+    --default-border-color:var(--m-green-600);
+    --default-border-top: 2px solid var(--m-green-600);
+    --default-icon-row: row-reverse;
+    --default-icon-justify-content: flex-end;
+    --default-summary-padding: 14px 0;
+    --default-h4-color: var(--m-green-600);
+    --default-svg-color: var(--m-green-600);
+    --default-icon-margin: 0 14px 0 0;
 }
