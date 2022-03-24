@@ -58,5 +58,11 @@ export default class BodyStyle extends Body {
         }
       }
     `
+    // it has width 100% if BodyStyle is directly placed in Body, see src/es/components/web-components-toolbox/src/es/components/organisms/body/Body.js:L88 (:host > main > o-body-style) else we must avoid to make it by default smaller 55%
+    if (this.parentNode.tagName !== 'MAIN' && !self.getComputedStyle(this).getPropertyValue('--content-width')) this.css = /* css */`
+      :host {
+        --content-width: calc(100% - var(--content-spacing) * 2);
+      }
+    `
   }
 }
