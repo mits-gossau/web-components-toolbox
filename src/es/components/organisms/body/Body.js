@@ -70,6 +70,7 @@ export default class Body extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host {
+        display: flow-root;
         background-color: var(--background-color, transparent);
         background-repeat: var(--background-repeat, initial) !important;
         background-position: var(--background-position, 0);

@@ -14,7 +14,7 @@ self.Environment = {
       case constructor.includes('Navigation'):
       case tagName.includes('O-NAV-WRAPPER'):
       case constructor.includes('Footer'):
-        return '1000px'
+        return '1100px'
       default:
         return '767px'
     }
