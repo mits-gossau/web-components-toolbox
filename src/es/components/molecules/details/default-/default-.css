@@ -10,4 +10,10 @@
     --default-h4-color: var(--m-green-600);
     --default-svg-color: var(--m-green-600);
     --default-icon-margin: 0 14px 0 0;
+    --default-child-margin-open:32px 0;
+    --default-child-padding-open:0 0 16px 0;
+    --default-summary-border-bottom-open: 1px dotted var(--m-green-600);
+    --justify-content:flex-start;
+    --color-secondary:var(--m-green-600);
+    --button-primary-background-color-hover-custom: var(--m-green-900);
 }

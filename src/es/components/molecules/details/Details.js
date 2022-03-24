@@ -51,7 +51,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['open'] } }), ...args)
 
-    this.svgWidth = '1em'
+    this.svgWidth = '2em'
     this.svgHeight = '1em'
     this.svgColor = `var(--${this.getAttribute('namespace')}svg-color, --m-gray-400)`
 
@@ -177,6 +177,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       :host details[open] summary > div {
         text-decoration: var(--summary-text-decoration-open, none);
         font-family: var(--summary-font-family, var(--font-family-bold, var(--font-family)));
+        border-bottom: var(--summary-border-bottom-open, none);
       }
       :host details summary > div > * {
         margin: var(--summary-child-margin, 0);
@@ -304,7 +305,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       <?xml version="1.0" encoding="UTF-8"?>
       <svg width="${this.svgWidth || '35px'}" height="${this.svgHeight || '20px'}" viewBox="0 0 35 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <title>Mobile Pfeil</title>
-          <desc>Created with Sketch.</desc>
           <g id="Mobile-Pfeil" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
               <polyline id="Path-2" stroke="${this.svgColor || `var(--color, --${this.namespace}color)`}" stroke-width="3" points="2 3 17 18 32 3"></polyline>
           </g>
