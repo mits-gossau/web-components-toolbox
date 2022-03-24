@@ -159,6 +159,9 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       :host details summary, :host details summary:focus {
         outline: none;
       }
+      :host details[open] summary {
+        border-bottom: var(--summary-border-bottom-open, none);
+      }
       :host details summary > div {
         cursor: var(--summary-cursor, pointer);
         font-family: var(--summary-font-family, var(--font-family, var(--font-family-bold)));
@@ -170,14 +173,15 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         text-decoration: var(--summary-text-decoration, var(--a-text-decoration, var(--text-decoration, none)));
         text-transform: var(--summary-text-transform, none);
         text-underline-offset: var(--a-text-underline-offset, unset);
+        transition: all .3s ease;
       }
       :host details summary > div:hover, :host details summary > div:active, :host details summary > div:focus {
         text-decoration: var(--summary-text-decoration-hover, var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none)))));
+        transform: translate(0,3px);
       }
       :host details[open] summary > div {
         text-decoration: var(--summary-text-decoration-open, none);
         font-family: var(--summary-font-family, var(--font-family-bold, var(--font-family)));
-        border-bottom: var(--summary-border-bottom-open, none);
       }
       :host details summary > div > * {
         margin: var(--summary-child-margin, 0);

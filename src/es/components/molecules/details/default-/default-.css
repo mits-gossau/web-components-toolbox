@@ -1,19 +1,20 @@
 :host {
+    --button-primary-background-color-hover-custom: var(--m-green-900);
+    --color-secondary:var(--m-green-600);
     --default-border-bottom-last: 2px solid;
     --default-border-bottom: 2px sold;
     --default-border-color-last:var(--m-green-600);
     --default-border-color:var(--m-green-600);
     --default-border-top: 2px solid var(--m-green-600);
-    --default-icon-row: row-reverse;
-    --default-icon-justify-content: flex-end;
-    --default-summary-padding: 14px 0;
-    --default-h4-color: var(--m-green-600);
-    --default-svg-color: var(--m-green-600);
-    --default-icon-margin: 0 14px 0 0;
-    --default-child-margin-open:32px 0;
+    --default-child-margin-open:32px 0 16px 0;
     --default-child-padding-open:0 0 16px 0;
+    --default-h4-color: var(--m-green-600);
+    --default-icon-align-items:center;
+    --default-icon-justify-content: flex-end;
+    --default-icon-margin: 0 14px 0 0;
+    --default-icon-row: row-reverse;
     --default-summary-border-bottom-open: 1px dotted var(--m-green-600);
+    --default-summary-padding: 14px 0;
+    --default-svg-color: var(--m-green-600);
     --justify-content:flex-start;
-    --color-secondary:var(--m-green-600);
-    --button-primary-background-color-hover-custom: var(--m-green-900);
 }
