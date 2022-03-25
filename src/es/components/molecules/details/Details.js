@@ -82,7 +82,9 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
     this.animationendListener = event => {
       this.details.removeAttribute('open')
+      this.details.classList.remove('closing')
       this.mutationObserveStart()
+      clearTimeout(this.timeoutAnimationend)
     }
   }
 
@@ -106,8 +108,16 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         this.style.textContent = ''
         this.setCss(/* CSS */`
           @keyframes open {
-            0% {height: 0px}
-            100% {height: ${this.content.offsetHeight}px}
+            0% {
+              height: 0px;
+              margin: 0px;
+              padding: opx;
+            }
+            100% {
+              height: ${this.content.offsetHeight}px;
+              margin: var(--child-margin, 0);
+              padding: var(--child-padding, 0);
+            }
           }
         `, undefined, undefined, undefined, this.style)
         this.dispatchEvent(new CustomEvent(this.openEventName, {
@@ -125,16 +135,25 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         this.timeoutAnimationend = setTimeout(() => {
           this.details.removeEventListener('animationend', this.animationendListener)
           this.animationendListener()
-        }, 310)
+        }, this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) + 100 : 1000) /* animation: var(--animation, open 0.3s ease-out); + 100ms */
         this.mutationObserveStop()
         this.details.setAttribute('open', '')
         this.style.textContent = ''
         this.setCss(/* CSS */`
           @keyframes open {
-            0% {height: ${this.content.offsetHeight}px}
-            100% {height: 0px}
+            0% {
+              height: ${this.content.offsetHeight}px;
+              margin: var(--child-margin, 0);
+              padding: var(--child-padding, 0);
+            }
+            100% {
+              height: 0px;
+              margin: 0px;
+              padding: opx
+            }
           }
         `, undefined, undefined, undefined, this.style)
+        this.details.classList.add('closing')
       }
     })
   }
@@ -227,7 +246,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         overflow: hidden;
       }
       :host details[open] summary ~ * {
-        animation: var(--animation, open 0.3s ease-out);
+        animation: var(--animation, open ${this.hasAttribute('open-duration') ? `${this.getAttribute('open-duration')}ms` : '.3s'} ease-out); /* if using an other value, change the timeout */
       }
       :host details summary ~ ul, :host details[open] summary ~ ul {
         display: var(--ul-display, inline-block);
@@ -254,10 +273,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         align-items: var(--icon-align-items, flex-start);
       }
       :host details .icon > img, :host details .icon > div > svg {
-        transition: var(--icon-transition, transform 0.15s ease);
+        transition: var(--icon-transition, transform 0.3s ease);
         margin: var(--icon-margin, 0 1em) !important;
       }
-      :host details[open] .icon > img, :host details[open] .icon > div > svg  {
+      :host details[open]:not(.closing) .icon > img, :host details[open]:not(.closing) .icon > div > svg  {
         transform: var(--icon-transform-open, rotate(180deg));
       }
       :host details summary ~ ul.icons, :host details[open] summary ~ ul.icons {
