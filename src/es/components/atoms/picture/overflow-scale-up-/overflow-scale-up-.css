@@ -1,0 +1,7 @@
+:host {
+  --picture-overflow-scale-up-transform: scale(2);
+  --picture-overflow-scale-up-img-width: 35.5%;
+  --picture-overflow-scale-up-transform-hover: scale(2.05,2.05);
+  --picture-overflow-scale-up-transition: transform .5s ease-out;
+}
+}

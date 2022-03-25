@@ -174,6 +174,16 @@ export default class Picture extends Shadow() {
       }
     `
     switch (this.getAttribute('namespace')) {
+      case 'picture-overflow-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overflow-/overflow-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+      case 'picture-overflow-scale-up-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overflow-scale-up-/overflow-scale-up-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
       case 'picture-scale-up-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./scale-up-/scale-up-.css`, // apply namespace since it is specific and no fallback

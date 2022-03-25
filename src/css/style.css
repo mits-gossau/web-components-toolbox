@@ -245,6 +245,19 @@ img[style="float: right;"] {
   box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
   list-style: var(--ul-list-style, disc);
 }
+/* https://www.fileformat.info/info/unicode/char/2022/index.htm */
+:host ul.bull {
+  list-style: none; /* Remove default bullets */
+}
+ul.bull li::before {
+  content: "\2022";
+  color: var(--ul-disc-color, var(--color-secondary));
+  font-weight: bold;
+  font-size: 1.4em;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
 :host ul.icons {
   list-style: var(--ul-icon-list-style, none);
   padding: var(--ul-icon-padding, 0);;
