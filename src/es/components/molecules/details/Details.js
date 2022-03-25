@@ -234,6 +234,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       :host details summary > div > * {
         margin: var(--summary-child-margin, 0);
         padding: var(--summary-child-padding, 0);
+        color:var(--summary-child-color, var(--color, unset));
       }
       :host details[open] summary > div > * {
         margin: var(--summary-child-margin-open, 0);
