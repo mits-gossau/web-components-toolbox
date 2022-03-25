@@ -51,10 +51,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['open'] } }), ...args)
 
-    this.svgWidth = '2em'
-    this.svgHeight = '1em'
+    this.svgWidth = '1.5em'
+    this.svgHeight = '1.5em'
     this.svgColor = `var(--${this.getAttribute('namespace')}svg-color, var(--color))`
-    //this.themeColor = this.getAttribute('theme-color') || `var(--color-secondary)` 
+    //this.themeColor = this.getAttribute('theme') 
    
 
     // overwrite default Mutation observer parent function created at super
@@ -137,6 +137,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   renderCSS () {
     this.css = /* css */` 
       :host {
+        --theme-color:  ${this.getAttribute('theme') || 'var(--color-secondary)'};
         border-bottom:var(--border-bottom, 0);
         border-color: var(--border-color, var(--color));
         border-top: var(--border-top, 0);
@@ -259,11 +260,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         }
       }
     `
-    this.setCss(/* css */`
-    :host > * {
-      --color-secondary: var(--theme-color-style);
-      
-    }
+      this.setCss(/* css */`
+      :host {
+        --color-secondary: ${this.getAttribute('theme') || 'var(--color-secondary)'};
+      }
   `, undefined, '', false)
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
