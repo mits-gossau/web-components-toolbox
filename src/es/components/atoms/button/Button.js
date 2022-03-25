@@ -93,7 +93,7 @@ export default class Button extends Shadow() {
         justify-content: center;
         letter-spacing: var(--letter-spacing, normal);
         line-height: var(--line-height, 1.5em);
-        margin: var(--margin, 0);
+        margin: var(--margin, auto);
         outline: var(--outline, none);
         overflow: hidden;
         padding: var(--padding, calc(0.75em - var(--border-width, 0px)) calc(1.5em - var(--border-width, 0px)));
@@ -143,7 +143,7 @@ export default class Button extends Shadow() {
       @media only screen and (max-width: _max-width_) {
         button {
           font-size: var(--font-size-mobile, var(--font-size, 1em));
-          margin: var(--margin-mobile, var(--margin, 0));
+          margin: var(--margin-mobile, var(--margin, auto));
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
         .icon-left {

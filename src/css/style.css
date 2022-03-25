@@ -85,6 +85,9 @@
 :host .font-family-secondary {
   font-family: var(--font-family-secondary, var(--font-family, inherit));
 }
+:host .center {
+  text-align: center;
+}
 :host .bold, :host strong, :host b {
   font-family: var(--font-family-strong, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--font-weight-strong, bold);
@@ -282,11 +285,14 @@ ul.bull li::before {
   border: var(--table-td-border, 1px solid var(--color));
 }
 /* spacer-stylings */
-.spacer, .spacer-two, .spacer-three, .spacer-four {
+.spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
   display: block;
-  height: var(--spacer-height, var(--content-spacing));
-  margin: 0 auto !important;
+  height: 1px;
+  margin: var(--spacer-margin, var(--content-spacing) auto) !important;
   padding: 0;
+}
+.spacer-one {
+  margin: var(--spacer-margin, var(--content-spacing) auto 0) !important;
 }
 .spacer-two {
   height: var(--spacer-two-height, calc(2 * var(--content-spacing)));
@@ -368,8 +374,11 @@ ul.bull li::before {
     margin: var(--img-float-right-margin-mobile, var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) var(--content-spacing-mobile, var(--content-spacing))));
   }
   /* spacer-stylings */
-  .spacer, .spacer-two, .spacer-three, .spacer-four {
-    height: var(--spacer-height-mobile, var(--spacer-height, var(--content-spacing-mobile, var(--content-spacing))));
+  .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
+    margin: var(--spacer-margin-mobile, var(--spacer-margin, var(--content-spacing-mobile, var(--content-spacing)) auto)) !important;
+  }
+  .spacer-one {
+    margin: var(--spacer-margin-mobile, var(--spacer-margin, var(--content-spacing-mobile, var(--content-spacing)) auto 0)) !important;
   }
   .spacer-two {
     height: var(--spacer-two-height-mobile, var(--spacer-two-height, calc(2 * var(--content-spacing-mobile, var(--content-spacing)))));

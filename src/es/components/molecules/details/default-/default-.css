@@ -12,4 +12,6 @@
     --details-default-svg-color: var(--color-secondary);
     --details-default-child-margin: var(--content-spacing) auto;
     --details-default-child-margin-mobile: var(--content-spacing-mobile) auto;
+    --details-default-content-spacing: var(--content-spacing);
+    --details-default-content-spacing-mobile: var(--content-spacing-mobile);
 }

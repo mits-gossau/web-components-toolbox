@@ -247,6 +247,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       :host details[open] summary ~ * {
         animation: var(--animation, open ${this.hasAttribute('open-duration') ? `${this.getAttribute('open-duration')}ms` : '.3s'} ease-out); /* if using an other value, change the timeout */
       }
+      :host details summary ~ * > *:not(style):not(script) {
+        margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+        display: var(--any-display, block);
+      }
       :host details summary ~ ul, :host details[open] summary ~ ul {
         display: var(--ul-display, inline-block);
         margin: var(--ul-margin, 0 0 0 1em);
@@ -295,6 +299,9 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         }
         :host details[open] summary ~ * {
           padding: var(--child-padding-open-mobile, var(--child-padding-open, 0));
+        }
+        :host details summary ~ * > *:not(style):not(script) {
+          margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         }
         :host details summary > div {
           font-size:var(--summary-font-size-mobile, var(--summary-font-size, inherit));
