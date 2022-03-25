@@ -1,17 +1,17 @@
 :host {
     --default-border-bottom-last: 2px solid ;
-    --default-border-color-last:var(--default-theme-color, var(--default-color-secondary));
-    --default-border-color:var(--default-theme-color, var(--default-color-secondary));
-    --default-border-top: 2px solid var(--default-theme-color, var(--default-color-secondary));
+    --default-border-color-last:var(--default-theme-color, var(--color-secondary));
+    --default-border-color:var(--default-theme-color, var(--color-secondary));
+    --default-border-top: 2px solid var(--default-theme-color, var(--color-secondary));
     --default-child-margin-open:32px 0 16px 0;
     --default-child-padding-open:0 0 16px 0;
-    --default-h4-color: var(--default-theme-color, var(--default-color-secondary));
+    --default-h4-color: var(--default-theme-color, var(--default-color-secondary, var(--color-secondary)));
     --default-icon-align-items:flex-start;
     --default-icon-justify-content: flex-end;
     --default-icon-margin: 0 14px 0 0;
     --default-icon-row: row-reverse;
     --default-summary-border-bottom-open: 1px dotted var(--default-theme-color, var(--color-secondary));
     --default-summary-padding: 14px 0;
-    --default-svg-color: var(--default-theme-color, var(--default-color-secondary));
+    --default-svg-color: var(--default-theme-color, var(--color-secondary));
 
 }
