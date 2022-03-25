@@ -1,17 +1,15 @@
 :host {
-    --default-border-bottom-last: 2px solid ;
-    --default-border-color-last:var(--default-theme-color, var(--color-secondary));
-    --default-border-color:var(--default-theme-color, var(--color-secondary));
-    --default-border-top: 2px solid var(--default-theme-color, var(--color-secondary));
-    --default-child-margin-open:32px 0 16px 0;
-    --default-child-padding-open:0 0 16px 0;
-    --default-h4-color: var(--default-theme-color, var(--default-color-secondary, var(--color-secondary)));
-    --default-icon-align-items:flex-start;
-    --default-icon-justify-content: flex-end;
-    --default-icon-margin: 0 14px 0 0;
-    --default-icon-row: row-reverse;
-    --default-summary-border-bottom-open: 1px dotted var(--default-theme-color, var(--color-secondary));
-    --default-summary-padding: 14px 0;
-    --default-svg-color: var(--default-theme-color, var(--color-secondary));
-
+    --details-default-border-bottom-last: 2px solid ;
+    --details-default-border-color-last:var(--color-secondary);
+    --details-default-border-color:var(--color-secondary);
+    --details-default-border-top: 2px solid var(--color-secondary);
+    --details-default-icon-align-items:flex-start;
+    --details-default-icon-justify-content: flex-end;
+    --details-default-icon-margin: 0 0.875em 0 0;
+    --details-default-icon-row: row-reverse;
+    --details-default-summary-border-bottom-open: var(--hr-border-bottom, 1px dotted var(--color));
+    --details-default-summary-padding: 0.875em 0;
+    --details-default-svg-color: var(--color-secondary);
+    --details-default-child-margin: var(--content-spacing) auto;
+    --details-default-child-margin-mobile: var(--content-spacing-mobile) auto;
 }

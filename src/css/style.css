@@ -1,5 +1,6 @@
 /* https://www.figma.com/file/qrlDSGcoLRt6NDU3p7O0T3/Typography?node-id=3194%3A213 */
 /* h-tags */
+/* IMPORTANT: This file will often be processed by namespace-fallback regex function src/es/components/web-components-toolbox/src/es/components/prototypes/Shadow.js:L244, which has trouble to detect proper closings with calc() functions. Be careful to use any factors before variables within calc! */
 :host h1, :host h6 {
   color: var(--h1-color, var(--color, black));
   display: var(--h1-display, block);
@@ -101,10 +102,10 @@
   margin-bottom: 0.3em;
 }
 :host .font-size-big {
-  font-size: calc(var(--h1-font-size, 1.75em) * 1.5);
+  font-size: calc(1.5 * var(--h1-font-size, 1.75em));
 }
 :host .font-size-tiny {
-  font-size: calc(var(--p-font-size, 1em) * 0.75);
+  font-size: calc(0.75 * var(--p-font-size, 1em));
 }
 :host .quote {
   text-align: var(--q-text-align, center);
@@ -270,18 +271,18 @@ img[style="float: right;"] {
 /* spacer-stylings */
 .spacer, .spacer-two, .spacer-three, .spacer-four {
   display: block;
-  height: 1px;
-  margin: 0 auto;
+  height: var(--spacer-height, var(--content-spacing));
+  margin: 0 auto !important;
   padding: 0;
 }
 .spacer-two {
-  height: calc(var(--spacer-height, calc(var(--content-spacing) * 2)) / 2);
+  height: var(--spacer-two-height, calc(2 * var(--content-spacing)));
 }
 .spacer-three {
-  height: var(--spacer-height, calc(var(--content-spacing) * 2));
+  height: var(--spacer-three-height, calc(3 * var(--content-spacing)));
 }
 .spacer-four {
-  height: var(--spacer-height, calc(var(--content-spacing) * 3));
+  height: var(--spacer-four-height, calc(4 * var(--content-spacing)));
 }
 @media only screen and (max-width: _max-width_) {
   /* h-tags */
@@ -322,10 +323,10 @@ img[style="float: right;"] {
   }
   /* text stylings */
   :host .font-size-big {
-    font-size: calc(var(--h1-font-size-mobile, var(--h1-font-size, 1.75em)) * 1.5);
+    font-size: calc(1.5 * var(--h1-font-size-mobile, var(--h1-font-size, 1.75em)));
   }
   :host .font-size-tiny {
-    font-size: calc(var(--p-font-size-mobile, var(--p-font-size, 1em)) * 0.75);
+    font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
   }
   /* p-tag */
   :host p {
@@ -354,13 +355,16 @@ img[style="float: right;"] {
     margin: var(--img-float-right-margin-mobile, var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) var(--content-spacing-mobile, var(--content-spacing))));
   }
   /* spacer-stylings */
+  .spacer, .spacer-two, .spacer-three, .spacer-four {
+    height: var(--spacer-height-mobile, var(--spacer-height, var(--content-spacing-mobile, var(--content-spacing))));
+  }
   .spacer-two {
-    height: calc(var(--spacer-height-mobile, var(--spacer-height, calc(var(--content-spacing-mobile, var(--content-spacing)) * 2))) / 2);
+    height: var(--spacer-two-height-mobile, var(--spacer-two-height, calc(2 * var(--content-spacing-mobile, var(--content-spacing)))));
   }
   .spacer-three {
-    height: var(--spacer-height-mobile, var(--spacer-height, calc(var(--content-spacing-mobile, var(--content-spacing)) * 2)));
+    height: var(--spacer-three-height-mobile, var(--spacer-three-height, calc(3 * var(--content-spacing-mobile, var(--content-spacing)))));
   }
   .spacer-four {
-    height: var(--spacer-height-mobile, var(--spacer-height, calc(var(--content-spacing-mobile, var(--content-spacing)) * 3)));
+    height: var(--spacer-four-height-mobile, var(--spacer-four-height, calc(4 * var(--content-spacing-mobile, var(--content-spacing)))));
   }
 }

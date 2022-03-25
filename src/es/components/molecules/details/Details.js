@@ -54,7 +54,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.svgWidth = '1.5em'
     this.svgHeight = '1.5em'
     this.svgColor = `var(--${this.getAttribute('namespace')}svg-color, var(--color))`
-    //this.themeColor = this.getAttribute('theme') 
    
 
     // overwrite default Mutation observer parent function created at super
@@ -67,7 +66,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       if (this.details && event.detail.child) {
         if (event.detail.child === this) {
           if (this.hasAttribute('scroll-into-view')) this.details.scrollIntoView({ behavior: 'smooth' })
-        } else {
+        } else if (!this.hasAttribute('no-auto-close')) {
           this.details.removeAttribute('open')
         }
       }
@@ -79,6 +78,11 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         this.details.removeAttribute('open')
         if (this.summary.getBoundingClientRect().top < 0) this.details.scrollIntoView({ behavior: 'smooth' })
       }
+    }
+
+    this.animationendListener = event => {
+      this.details.removeAttribute('open')
+      this.mutationObserveStart()
     }
   }
 
@@ -99,6 +103,13 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   mutationCallback (mutationList, observer) {
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
+        this.style.textContent = ''
+        this.setCss(/* CSS */`
+          @keyframes open {
+            0% {height: 0px}
+            100% {height: ${this.content.offsetHeight}px}
+          }
+        `, undefined, undefined, undefined, this.style)
         this.dispatchEvent(new CustomEvent(this.openEventName, {
           detail: {
             child: this
@@ -107,6 +118,23 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           cancelable: true,
           composed: true
         }))
+      } else {
+        this.details.addEventListener('animationend', this.animationendListener, { once: true })
+        // in case of fast double click the animationend event would not reach details, since the content would be hidden
+        clearTimeout(this.timeoutAnimationend)
+        this.timeoutAnimationend = setTimeout(() => {
+          this.details.removeEventListener('animationend', this.animationendListener)
+          this.animationendListener()
+        }, 310)
+        this.mutationObserveStop()
+        this.details.setAttribute('open', '')
+        this.style.textContent = ''
+        this.setCss(/* CSS */`
+          @keyframes open {
+            0% {height: ${this.content.offsetHeight}px}
+            100% {height: 0px}
+          }
+        `, undefined, undefined, undefined, this.style)
       }
     })
   }
@@ -137,7 +165,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   renderCSS () {
     this.css = /* css */` 
       :host {
-        --theme-color:  ${this.getAttribute('theme') || 'var(--color-secondary)'};
         border-bottom:var(--border-bottom, 0);
         border-color: var(--border-color, var(--color));
         border-top: var(--border-top, 0);
@@ -176,11 +203,11 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         text-decoration: var(--summary-text-decoration, var(--a-text-decoration, var(--text-decoration, none)));
         text-transform: var(--summary-text-transform, none);
         text-underline-offset: var(--a-text-underline-offset, unset);
-        transition: all .3s ease;
+        transition: var(--summary-transition, transform .3s ease);
       }
       :host details summary > div:hover, :host details summary > div:active, :host details summary > div:focus {
         text-decoration: var(--summary-text-decoration-hover, var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none)))));
-        transform: translate(0,3px);
+        transform: var(--summary-transform-hover, translate(0,0.1875em));
       }
       :host details[open] summary > div {
         text-decoration: var(--summary-text-decoration-open, none);
@@ -197,11 +224,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       :host details summary ~ * {
         margin: var(--child-margin, 0);
         padding: var(--child-padding, 0);
+        overflow: hidden;
       }
       :host details[open] summary ~ * {
-        animation: var(--animation, open 0.2s ease);
-        margin: var(--child-margin-open, 0);
-        padding: var(--child-padding-open, 0);
+        animation: var(--animation, open 0.3s ease-out);
       }
       :host details summary ~ ul, :host details[open] summary ~ ul {
         display: var(--ul-display, inline-block);
@@ -237,10 +263,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       :host details summary ~ ul.icons, :host details[open] summary ~ ul.icons {
         margin: var(--ul-icons-margin, 0 0 0 1em);
       }
-      @keyframes open {
-        0% {font-size: 0}
-        100% {font-size: inherit}
-      }
       @media only screen and (max-width: _max-width_) {
         :host {
           margin: 0 5% !important;
@@ -250,6 +272,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           width: var(--icon-width-mobile, min(1.7em, 10vw))
         }
         :host details summary ~ * {
+          margin: var(--child-margin-mobile, var(--child-margin, 0));
           padding: var(--child-padding-mobile, var(--child-padding, 0));
         }
         :host details[open] summary ~ * {
@@ -260,11 +283,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         }
       }
     `
-      this.setCss(/* css */`
-      :host {
-        --color-secondary: ${this.getAttribute('theme') || 'var(--color-secondary)'};
-      }
-  `, undefined, '', false)
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
@@ -274,7 +292,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'default-':
+      case 'details-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
@@ -291,12 +309,14 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    * @return {void}
    */
   renderHTML () {
-    this.divSummary = this.root.querySelector('div') || document.createElement('div')
+    this.divSummary = this.root.querySelector('div.summary') || document.createElement('div')
+    this.divSummary.classList.add('summary')
     Array.from(this.summary.childNodes).forEach(node => this.divSummary.appendChild(node))
     this.divSummary = this.getAttribute('icon-image')
       ? this.setIconFromAttribute(this.getAttribute('icon-image'), this.divSummary, 'icon-image')
       : this.setIconDefault(this.divSummary, 'icon')
     this.summary.appendChild(this.divSummary)
+    this.html = this.style
   }
 
   setIconFromAttribute (iconPath, node, cssClass) {
@@ -334,5 +354,17 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
   get details () {
     return this.root.querySelector('details')
+  }
+
+  get content () {
+    return this.details.querySelector('summary ~ *')
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 }
