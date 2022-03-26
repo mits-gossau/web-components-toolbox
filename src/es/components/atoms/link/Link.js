@@ -219,6 +219,6 @@ export default class Link extends Shadow() {
   }
 
   get iconPath () {
-    return this.getAttribute('icon-path') || '../src/img/download.svg'
+    return this.getAttribute('icon-path') || `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../molecules/teaser/download-/img/download.svg`
   }
 }
