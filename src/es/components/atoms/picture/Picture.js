@@ -127,6 +127,7 @@ export default class Picture extends Shadow() {
         cursor: pointer;
       }
       :host picture {
+        aspect-ratio: ${this.hasAttribute('aspect-ratio') ? `1/${this.getAttribute('aspect-ratio')}` : 'var(--aspect-ratio, auto)'};
         filter: var(--filter, none);
         display: var(--display, block); /* don't use flex here, it can have strange side effects */
         justify-content: var(--justify-content, center);
@@ -143,7 +144,6 @@ export default class Picture extends Shadow() {
         transform: var(--transform-hover, var(--transform, none));
       }
       :host picture img {
-        aspect-ratio: var(--aspect-ratio, attr(width, auto) / attr(height, auto));
         display: var(--img-display, inline);
         border-radius: var(--border-radius, 0);
         width: var(--img-width, 100%);
@@ -244,8 +244,6 @@ export default class Picture extends Shadow() {
       if (this.alt === '') {
         console.warn('a-picture alt is missing')
       }
-    } else {
-      console.warn(`a-picture defaultSource ${this.alt === '' ? '& alt ' : ''}is missing`)
     }
     if (this.hasAttribute('picture-load')) {
       this.img.addEventListener('load', event => {
