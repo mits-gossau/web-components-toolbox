@@ -108,11 +108,11 @@ export default class FetchCss extends Shadow(WebWorker()) {
       }
     ).catch(
       /**
-         * Return the fetchCSSParams with the attached error
-         *
-         * @param {string} error
-         * @return {string}
-         */
+       * Return the fetchCSSParams with the attached error
+       *
+       * @param {string} error
+       * @return {string}
+       */
       error => {
         error = `${path} ${error}!!!`
         // @ts-ignore
