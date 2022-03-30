@@ -31,7 +31,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
     /**
      * caching the processed style
      *
-     * @type {Map<import("../../prototypes/Shadow.js").fetchCSSParams, Promise<string>>}
+     * @type {Map<string, Promise<string>>}
      */
     this.processedStyleCache = new Map()
     /**
@@ -46,11 +46,16 @@ export default class FetchCss extends Shadow(WebWorker()) {
          * @return {Promise<import("../../prototypes/Shadow.js").fetchCSSParams>}
          */
         fetchCSSParam => {
+          // clean the path of ./ and ../
+          fetchCSSParam.path = FetchCss.pathResolver(fetchCSSParam.path)
           /**
+           * add nodes default values
+           * 
            * @type {import("../../prototypes/Shadow.js").fetchCSSParams}
            */
           const fetchCSSParamWithDefaultValues = { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam }
-          if (this.processedStyleCache.has(fetchCSSParam)) return this.processedStyleCache.get(fetchCSSParam).then(style => {
+          const processedStyleCacheKey = FetchCss.cacheKeyGenerator(fetchCSSParamWithDefaultValues)
+          if (this.processedStyleCache.has(processedStyleCacheKey)) return this.processedStyleCache.get(processedStyleCacheKey).then(style => {
             fetchCSSParamWithDefaultValues.style = style
             return FetchCss.appendStyle(fetchCSSParamWithDefaultValues)
           })
@@ -60,19 +65,18 @@ export default class FetchCss extends Shadow(WebWorker()) {
           } else {
             this.fetchStyleCache.set(fetchCSSParamWithDefaultValues.path, (fetchStyle = FetchCss.fetchStyle(fetchCSSParamWithDefaultValues.path)))
           }
-          return fetchStyle.then(style => {
-            const processedStyle = FetchCss.processStyle(fetchCSSParamWithDefaultValues, style)
-            this.processedStyleCache.set(fetchCSSParam, processedStyle)
-            return processedStyle.then(style => {
-              fetchCSSParamWithDefaultValues.style = style
-              return FetchCss.appendStyle(fetchCSSParamWithDefaultValues)
-            })
-          }).catch(
+          fetchStyle.catch(
             error => {
               fetchCSSParamWithDefaultValues.error = error
               return fetchCSSParamWithDefaultValues
             }
           )
+          const processedStyle = FetchCss.processStyle(fetchCSSParamWithDefaultValues, fetchStyle)
+          this.processedStyleCache.set(processedStyleCacheKey, processedStyle)
+          return processedStyle.then(style => {
+            fetchCSSParamWithDefaultValues.style = style
+            return FetchCss.appendStyle(fetchCSSParamWithDefaultValues)
+          })
         }
       )).then(fetchCSSParams => event.detail.resolve(fetchCSSParams)).catch(error => error)
     }
@@ -125,7 +129,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
    * process the style
    *
    * @param {import("../../prototypes/Shadow.js").fetchCSSParams} fetchCSSParam
-   * @param {string} style
+   * @param {Promise<string>} style
    * @return {Promise<string>}
    */
   static processStyle (fetchCSSParam, style) {
@@ -144,12 +148,24 @@ export default class FetchCss extends Shadow(WebWorker()) {
   }
 
   /**
-   * clean the path from ../ and ./
+   * resolve the path from ../ and ./ to have the absolute path which can be used as absolute key for the cache Map
    *
    * @param {string} path
    * @return {string}
    */
-  static pathCleaner (path) {
-    return path
+  static pathResolver (path) {
+    const a = document.createElement('a')
+    a.href = path
+    return a.href
+  }
+
+  /**
+   * key generator for cache
+   *
+   * @param {import("../../prototypes/Shadow.js").fetchCSSParams} fetchCSSParam
+   * @return {string}
+   */
+  static cacheKeyGenerator ({path, cssSelector, namespace, namespaceFallback, maxWidth}) {
+    return JSON.stringify({path, cssSelector, namespace, namespaceFallback, maxWidth})
   }
 }

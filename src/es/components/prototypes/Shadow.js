@@ -6,7 +6,6 @@
   namespace?: string|false,
   namespaceFallback?: boolean,
   styleNode?: HTMLStyleElement,
-  fetchedStyle?: string,
   style?: string,
   appendStyleNode?: boolean,
   error?: string,
@@ -433,7 +432,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
                 if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, node)
               }
               if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
-              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, fetchedStyle: style, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
             }
           )
         }
