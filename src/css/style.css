@@ -85,8 +85,17 @@
 :host .font-family-secondary {
   font-family: var(--font-family-secondary, var(--font-family, inherit));
 }
+:host *:not(a).left > *, :host *:not(a).center > *, :host *:not(a).right > * {
+  display: inline-block;
+}
+:host .left {
+  text-align: left;
+}
 :host .center {
   text-align: center;
+}
+:host .right {
+  text-align: right;
 }
 :host .bold, :host strong, :host b {
   font-family: var(--font-family-strong, var(--font-family-bold, var(--font-family, inherit)));
