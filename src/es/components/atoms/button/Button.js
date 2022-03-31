@@ -16,7 +16,7 @@ export default class Button extends Shadow() {
     return ['label', 'disabled']
   }
 
-  constructor (options = {}, ...args) {
+  constructor (...args) {
     super(...args)
 
     this.clickListener = event => {

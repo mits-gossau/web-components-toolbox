@@ -57,8 +57,8 @@ export default class Form extends Shadow() {
     /** @type {any} */
     const ButtonConstructor = class extends Button {} // otherwise the browser complains that this constructor was already defined
     if (!customElements.get('a-button')) customElements.define('a-button', ButtonConstructor)
-    const button = new ButtonConstructor({ namespace: 'btn-' })
-    button.renderCSS()
+    const button = new ButtonConstructor({ namespace: 'button-primary-' })
+    button.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
     this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
     this.css = /* css */`
       legend {

@@ -22,6 +22,7 @@
   --footer-default-content-width: var(--header-default-content-width);
   --header-default-content-width: max(calc(1100px - var(--content-spacing) * 2), 55%); /* Environment.js mobileBreakpoint must correspond to the calc 1100px */
   --line-height: 1.5em;
+  --navigation-default-content-width: var(--header-default-content-width);
 }
 /*
 @media (prefers-color-scheme: dark) {
