@@ -347,7 +347,6 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           /** @type {import("../controllers/fetchCss/FetchCss.js").fetchCssEventDetail} */
           detail: {
             fetchCSSParams,
-            hide,
             resolve,
             node: this
           },

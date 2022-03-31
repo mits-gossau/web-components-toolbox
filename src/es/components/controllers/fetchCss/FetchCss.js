@@ -1,7 +1,6 @@
 // @ts-check
 /** @typedef {{
  fetchCSSParams: import("../../prototypes/Shadow.js").fetchCSSParams[],
- hide?: boolean,
  resolve: (fetchCSSParams: import("../../prototypes/Shadow.js").fetchCSSParams[]) => fetchCSSParams[],
  node: HTMLElement
 }} fetchCssEventDetail */
