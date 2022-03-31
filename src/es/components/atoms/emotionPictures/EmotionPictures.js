@@ -96,7 +96,7 @@ export default class EmotionPictures extends Intersection() {
         position: relative;
         width: var(--width, 100%);
       }
-      :host > div > *:not(a-picture) {
+      :host > div > *:not(a-picture):not(a-video) {
         position: absolute;
         z-index:2;
         top: 4vw;
@@ -105,7 +105,7 @@ export default class EmotionPictures extends Intersection() {
         opacity: 0;
         transition: var(--text-transition, opacity 0.5s ease-out);
       }
-      :host(.visible) > div > *:not(a-picture) {
+      :host(.visible) > div > *:not(a-picture):not(a-video) {
         opacity: 1;
       }
       @media only screen and (max-width: _max-width_) {
@@ -115,7 +115,7 @@ export default class EmotionPictures extends Intersection() {
         :host > div h1.font-size-big {
           font-size: var(--h1-font-size-mobile);
         }
-        :host > div > *:not(a-picture) {
+        :host > div > *:not(a-picture):not(a-video) {
           top: 2vw;
           left: 0;
           margin:var(--div-margin-mobile);
@@ -145,6 +145,19 @@ export default class EmotionPictures extends Intersection() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`,
           namespace: false
         }, ...styles], false)
+      case 'emotion-pictures-with-video-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        },
+        {
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-video-/with-video-.css`,
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the emotion-picture-with-title-.css namespace with --emotion-picture-with-video
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--emotion-pictures-with-title-/g, '--emotion-pictures-with-video-')
+        })
       case 'emotion-pictures-default-':
         return this.fetchCSS([{
           // @ts-ignore

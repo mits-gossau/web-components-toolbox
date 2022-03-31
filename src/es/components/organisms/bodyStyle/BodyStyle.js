@@ -65,8 +65,8 @@ export default class BodyStyle extends Body {
     `
     // BodyStyle has to be 100% (minus content spacing) when it is not within o-body nor o-body-style
     // in case it is within  o-body or o-body-style, it's children have the inherit o-body :host > * (any direct child) width styling, desktop width (:host > main > * { width: var(--content-width, 55%);) since itself has 100% by line 54 (width: 100% !important;)
-    // !DON'T stack two o-body-style in each other, except directly within main 
-    if ((this.parentNode.tagName !== 'MAIN' && (this.parentNode.tagName || this.parentNode.host && this.parentNode.host.tagName) !== 'O-BODY-STYLE') && (!self.getComputedStyle(this).getPropertyValue('--content-width') || !self.getComputedStyle(this).getPropertyValue('--content-width-mobile'))) {
+    // !DON'T stack two o-body-style in each other, except directly within main
+    if ((this.parentNode.tagName !== 'MAIN' && (this.parentNode.tagName || (this.parentNode.host && this.parentNode.host.tagName)) !== 'O-BODY-STYLE') && (!self.getComputedStyle(this).getPropertyValue('--content-width') || !self.getComputedStyle(this).getPropertyValue('--content-width-mobile'))) {
       this.css = /* css */`
         :host > * {
           width: calc(100% - var(--content-spacing) * 2);

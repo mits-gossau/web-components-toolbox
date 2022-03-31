@@ -1,0 +1,5 @@
+:host {
+    --emotion-pictures-with-video-width: 100%;
+    --emotion-pictures-with-video-bg-color: var(--emotion-pictures-with-video-bg-color-custom, var(--m-white));
+    --emotion-pictures-with-video-bg-background-color: var(--emotion-pictures-with-video-bg-background-color-custom, transparent);
+}
