@@ -84,7 +84,7 @@ export default class Video extends Shadow() {
       display: var(--display, block);
       filter: var(--filter, none);
       margin: var(--margin, 0 auto);
-      max-height: var(--max-height, 100%);
+      max-height: var(--max-height, 75vh);
       max-width: var(--max-width, 100%);
       min-height: var(--min-height);
       min-width: var(--min-width);
