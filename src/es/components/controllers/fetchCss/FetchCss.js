@@ -20,7 +20,7 @@ import { WebWorker } from '../../prototypes/WebWorker.js'
  */
 export default class FetchCss extends Shadow(WebWorker()) {
   constructor (...args) {
-    super(...args)
+    super({ mode: 'false' }, ...args)
 
     /**
      * caching the fetched style by path
@@ -53,11 +53,11 @@ export default class FetchCss extends Shadow(WebWorker()) {
            * 
            * @type {import("../../prototypes/Shadow.js").fetchCSSParams}
            */
-          const fetchCSSParamWithDefaultValues = { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam }
+          const fetchCSSParamWithDefaultValues = { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, appendStyleNode: true, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam }
           const processedStyleCacheKey = FetchCss.cacheKeyGenerator(fetchCSSParamWithDefaultValues)
           if (this.processedStyleCache.has(processedStyleCacheKey)) return this.processedStyleCache.get(processedStyleCacheKey).then(style => {
-            fetchCSSParamWithDefaultValues.style = style
-            return FetchCss.appendStyle(fetchCSSParamWithDefaultValues)
+            FetchCss.appendStyle(fetchCSSParamWithDefaultValues).style = fetchCSSParamWithDefaultValues.styleNode.textContent = style
+            return fetchCSSParamWithDefaultValues
           })
           let fetchStyle
           if (this.fetchStyleCache.has(fetchCSSParamWithDefaultValues.path)) {
@@ -71,11 +71,11 @@ export default class FetchCss extends Shadow(WebWorker()) {
               return fetchCSSParamWithDefaultValues
             }
           )
-          const processedStyle = FetchCss.processStyle(fetchCSSParamWithDefaultValues, fetchStyle)
+          const processedStyle = this.processStyle(fetchCSSParamWithDefaultValues, fetchStyle)
           this.processedStyleCache.set(processedStyleCacheKey, processedStyle)
           return processedStyle.then(style => {
-            fetchCSSParamWithDefaultValues.style = style
-            return FetchCss.appendStyle(fetchCSSParamWithDefaultValues)
+            FetchCss.appendStyle(fetchCSSParamWithDefaultValues).style = fetchCSSParamWithDefaultValues.styleNode.textContent = style
+            return fetchCSSParamWithDefaultValues
           })
         }
       )).then(fetchCSSParams => event.detail.resolve(fetchCSSParams)).catch(error => error)
@@ -129,11 +129,28 @@ export default class FetchCss extends Shadow(WebWorker()) {
    * process the style
    *
    * @param {import("../../prototypes/Shadow.js").fetchCSSParams} fetchCSSParam
-   * @param {Promise<string>} style
+   * @param {Promise<string>} fetchStyle
    * @return {Promise<string>}
    */
-  static processStyle (fetchCSSParam, style) {
-    return Promise.resolve('baaahhh')
+  async processStyle (fetchCSSParam, fetchStyle) {
+    let style = await fetchStyle
+    // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/prototypes/Shadow.js
+    style = await this.webWorker(FetchCss.cssMaxWidth, style, fetchCSSParam.maxWidth)
+    if (fetchCSSParam.cssSelector !== ':host') style = await this.webWorker(FetchCss.cssHostFallback, style, fetchCSSParam.cssSelector)
+    if (fetchCSSParam.namespace) {
+      if (style.includes('---')) console.error('this.css has illegal dash characters at:', this)
+      if (fetchCSSParam.namespaceFallback) {
+        style = await this.webWorker(FetchCss.cssNamespaceToVarFunc, style, fetchCSSParam.namespace)
+        style = await this.webWorker(FetchCss.cssNamespaceToVarDec, style, fetchCSSParam.namespace)
+      } else {
+        style = await this.webWorker(FetchCss.cssNamespaceToVar, style, fetchCSSParam.namespace)
+      }
+    }
+    // TODO: Review the safari fix below, if the bug got fixed within safari itself (NOTE: -webkit prefix did not work for text-decoration-thickness). DONE 2021.11.10 | LAST CHECKED 2021.11.10
+    // safari text-decoration un-supported shorthand fix
+    // can not be run in web worker since it uses self
+    if (navigator.userAgent.includes('Mac') && style.includes('text-decoration:')) style = FetchCss.cssTextDecorationShortHandFix(style, fetchCSSParam.node)
+    return style
   }
 
   
@@ -144,6 +161,16 @@ export default class FetchCss extends Shadow(WebWorker()) {
    * @return {import("../../prototypes/Shadow.js").fetchCSSParams}
    */
   static appendStyle (fetchCSSParam) {
+    // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/prototypes/Shadow.js
+    // create a new style node if none is supplied
+    if (!fetchCSSParam.styleNode) {
+      /** @type {HTMLStyleElement} */
+      fetchCSSParam.styleNode = document.createElement('style')
+      fetchCSSParam.styleNode.setAttribute('_css', fetchCSSParam.path)
+      fetchCSSParam.styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
+      if (fetchCSSParam.node.root.querySelector(`[_css="${fetchCSSParam.path}"]`)) console.warn(`${fetchCSSParam.path} got imported more than once!!!`, fetchCSSParam.node)
+    }
+    if (fetchCSSParam.appendStyleNode) fetchCSSParam.node.root.appendChild(fetchCSSParam.styleNode) // append the style tag in order to which promise.all resolves
     return fetchCSSParam
   }
 

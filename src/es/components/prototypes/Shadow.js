@@ -206,6 +206,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (!style) {
       return (styleNode.textContent = '')
     } else {
+      // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/controllers/fetchCss/FetchCss.js
       style = Shadow.cssMaxWidth(style, maxWidth)
       if (cssSelector !== ':host') style = Shadow.cssHostFallback(style, cssSelector)
       if (namespace) {
@@ -423,6 +424,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
              */
             ({ path, cssSelector, namespace, namespaceFallback, styleNode, style, appendStyleNode = true, error, maxWidth, node = this }, i) => {
               if (error) return fetchCSSParams[i]
+              // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/controllers/fetchCss/FetchCss.js
               // create a new style node if none is supplied
               if (!styleNode) {
                 /** @type {HTMLStyleElement} */
