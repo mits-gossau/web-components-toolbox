@@ -14,6 +14,7 @@ export default class EmotionPictures extends Intersection() {
     super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 } }), ...args)
 
     Array.from(this.aPictures).forEach(node => node.setAttribute('loading', this.getAttribute('loading') || 'eager'))
+    Array.from(this.aVideos).forEach(node => node.setAttribute('loading', this.getAttribute('loading') || 'eager'))
   }
 
   intersectionCallback (entries, observer) {
@@ -46,6 +47,9 @@ export default class EmotionPictures extends Intersection() {
     const showPromises = []
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
       showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+    }
+    if (this.aVideo && this.aVideo.hasAttribute('video-load') && !this.aVideo.hasAttribute('loaded')) {
+      showPromises.push(new Promise(resolve => this.addEventListener('video-load', event => resolve(), { once: true })))
     }
     if (showPromises.length) {
       this.hidden = true
@@ -197,5 +201,13 @@ export default class EmotionPictures extends Intersection() {
 
   get aPictures () {
     return this.root.querySelectorAll('a-picture')
+  }
+
+  get aVideo () {
+    return this.root.querySelector('a-video')
+  }
+
+  get aVideos () {
+    return this.root.querySelectorAll('a-video')
   }
 }

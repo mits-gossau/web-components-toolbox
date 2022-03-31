@@ -135,5 +135,36 @@ export default class Video extends Shadow() {
       if (i.src !== '' && i.type !== '') return (this.video.innerHTML += `<source src="${i.src}" type="${i.type}">`)
       return false
     })) || this.video.querySelector('source')) this.html = this.video
+
+    if (this.hasAttribute('video-load')) {
+      this.video.addEventListener('load', event => {
+        this.setAttribute('loaded', 'true')
+        this.dispatchEvent(new CustomEvent(this.getAttribute('video-load') || 'video-load', {
+          detail: {
+            origEvent: event,
+            child: this,
+            video: this.video,
+            picture: this.picture
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+      this.video.addEventListener('error', event => {
+        this.setAttribute('loaded', 'false')
+        this.dispatchEvent(new CustomEvent(this.getAttribute('video-load') || 'video-load', {
+          detail: {
+            error: event
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+      this.video.setAttribute('loading', 'eager') // must load eager, not that the loading event doesn't trigger emit video-load
+    } else {
+      this.video.setAttribute('loading', this.getAttribute('loading') || 'lazy')
+    }
   }
 }
