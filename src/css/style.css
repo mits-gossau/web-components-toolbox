@@ -135,12 +135,17 @@
   background-color: var(--bg-background-color, var(--color-secondary, green));
   box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color, var(--color-secondary, green)), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color, var(--color-secondary, green));
   box-decoration-break: clone;
-  line-height: var(--bg-line-height, 1.7em);
   transition: var(--bg-transition, background-color 0.3s ease-out, box-shadow 0.3s ease-out);
   position: relative;
   left: var(--bg-padding, 0.5em);
   margin: 0;
   padding: 0.1em 0 0;
+}
+:host *:not(.font-family-secondary).bg-color, :host *:not(.font-family-secondary).bg-color-hover {
+  line-height: var(--bg-line-height, 1.7em);
+}
+*.bg-color, *.bg-color-hover {
+  line-height: var(--bg-line-height, 1.7em); /* specificity lower to not overwrite h-tag line-height */
 }
 :host *.bg-color::after, :host *.bg-color-hover::after {
   display: block;
