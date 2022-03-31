@@ -81,7 +81,7 @@ export default class EmotionPictures extends Intersection() {
       :host {
         display: grid !important;
         width: var(--width, 100%) !important;
-        line-height: var(--line-height, normal);
+        line-height: var(--line-height, 0);
         align-items: start;
         justify-items: start;
       }
