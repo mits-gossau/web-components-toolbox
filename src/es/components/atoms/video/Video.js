@@ -1,6 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global CustomEvent */
+
 /**
  * Video
  * Wrapper for a video-tag with multiple sources
