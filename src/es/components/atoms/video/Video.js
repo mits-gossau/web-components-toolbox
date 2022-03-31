@@ -82,7 +82,7 @@ export default class Video extends Shadow() {
     :host video, :host iframe {
       ${this.getAttribute('height') ? `height: ${this.getAttribute('height')}` : ''}
       ${this.getAttribute('width') ? `width: ${this.getAttribute('width')}` : ''}
-      aspect-ratio: var(--aspect-ratio, attr(width, auto) / attr(height, auto));
+      aspect-ratio: ${this.hasAttribute('aspect-ratio') ? `1/${this.getAttribute('aspect-ratio')}` : 'var(--aspect-ratio, auto)'};
       display: var(--display, block);
       filter: var(--filter, none);
       margin: var(--margin, 0 auto);
@@ -139,7 +139,7 @@ export default class Video extends Shadow() {
     })) || this.video.querySelector('source')) this.html = this.video
 
     if (this.hasAttribute('video-load')) {
-      this.video.addEventListener('load', event => {
+      this.video.addEventListener(this.hasAttribute('poster') ? 'loadedmetadata' : 'loadeddata', event => {
         this.setAttribute('loaded', 'true')
         this.dispatchEvent(new CustomEvent(this.getAttribute('video-load') || 'video-load', {
           detail: {
