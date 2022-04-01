@@ -14,6 +14,7 @@ export default class Teaser extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('role', 'figure')
     this.clickListener = event => {
       if (this.hasAttribute('href')) self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
     }

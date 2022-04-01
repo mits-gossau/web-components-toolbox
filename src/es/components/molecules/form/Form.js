@@ -21,6 +21,7 @@ export default class Form extends Shadow() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mode: 'false' }), ...args)
 
+    this.setAttribute('role', 'form')
     // scroll to first error
     this.clickListener = event => {
       setTimeout(() => {

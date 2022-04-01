@@ -42,6 +42,8 @@ export default class Header extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('role', 'banner')
+    this.setAttribute('aria-label', 'Header')
     this.scrollListener = event => {
       const lastScroll = self.scrollY
       setTimeout(() => {

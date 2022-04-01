@@ -22,6 +22,8 @@ export default class Input extends Shadow() {
     super(Object.assign(options, { mode: 'open' }), ...args)
 
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']
+    this.setAttribute('role', this.inputType)
+    this.setAttribute('aria-label', this.inputType)
     if (!this.children.length) this.labelText = this.textContent
 
     this.clickListener = event => {

@@ -45,6 +45,8 @@ export default class Navigation extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('role', 'navigation')
+    this.setAttribute('aria-label', 'Main')
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
     this.clickListener = event => {

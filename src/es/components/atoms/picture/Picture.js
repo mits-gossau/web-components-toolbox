@@ -41,6 +41,8 @@ export default class Picture extends Shadow() {
 
   constructor (...args) {
     super(...args)
+
+    this.setAttribute('role', 'img')
     this.sources = (this.getAttribute('sources') && Picture.parseAttribute(this.getAttribute('sources'))) || null
     this.defaultSource = this.getAttribute('defaultSource') ? this.getAttribute('defaultSource') : ''
     this.alt = this.getAttribute('alt') ? this.getAttribute('alt') : ''
@@ -68,7 +70,10 @@ export default class Picture extends Shadow() {
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    if (this.hasAttribute('open-modal')) this.addEventListener('click', this.clickListener)
+    if (this.hasAttribute('open-modal')) {
+      this.setAttribute('aria-haspopup', 'true')
+      this.addEventListener('click', this.clickListener)
+    }
     if (this.mouseEventElement) {
       this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
       this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)

@@ -26,6 +26,13 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Footer extends Shadow() {
+  constructor (...args) {
+    super(...args)
+
+    this.setAttribute('role', 'navigation')
+    this.setAttribute('aria-label', 'Footer')
+  }
+
   connectedCallback () {
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())

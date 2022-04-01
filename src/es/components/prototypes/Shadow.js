@@ -404,6 +404,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       this.root.appendChild(this._cssHidden)
     }
     this._cssHidden.textContent = ''
+    value ? this.setAttribute('aria-hidden', 'true') : this.removeAttribute('aria-hidden')
     this.setCss(value
       ? /* css */`
         :host {

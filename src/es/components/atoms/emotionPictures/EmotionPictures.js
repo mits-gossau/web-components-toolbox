@@ -13,6 +13,7 @@ export default class EmotionPictures extends Intersection() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 } }), ...args)
 
+    this.setAttribute('role', 'banner')
     Array.from(this.aPictures).forEach(node => node.setAttribute('loading', this.getAttribute('loading') || 'eager'))
     Array.from(this.aVideos).forEach(node => node.setAttribute('loading', this.getAttribute('loading') || 'eager'))
   }

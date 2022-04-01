@@ -31,6 +31,7 @@ export default class Link extends Shadow() {
     super(...args)
 
     this._a = a
+    this.setAttribute('role', 'link')
   }
 
   connectedCallback () {

@@ -19,6 +19,7 @@ export default class Button extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('role', 'button')
     this.clickListener = event => {
       this.button.classList.add('active')
       if (this.hasAttribute('href')) {
@@ -52,7 +53,10 @@ export default class Button extends Shadow() {
         this.label.textContent = this.labelText || ''
         this.label.classList[this.labelText ? 'remove' : 'add']('hide')
       }
-    } else if (this.button && name === 'disabled') this.hasAttribute('disabled') ? this.button.setAttribute('disabled', '') : this.button.removeAttribute('disabled')
+    } else if (this.button && name === 'disabled') {
+      this.hasAttribute('disabled') ? this.button.setAttribute('disabled', '') : this.button.removeAttribute('disabled')
+      this.hasAttribute('aria-disabled') ? this.button.setAttribute('aria-disabled', 'true') : this.button.removeAttribute('aria-disabled')
+    }
   }
 
   /**
