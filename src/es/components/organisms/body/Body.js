@@ -26,7 +26,12 @@ export default class Body extends Shadow() {
 
     this.clickAnchorEventListener = event => {
       let element = null
-      if (event && event.detail && event.detail.selector && (element = this.root.querySelector(event.detail.selector))) element.scrollIntoView({ behavior: 'smooth' })
+      if (event && (event.detail && event.detail.selector || location.hash) && (element = this.root.querySelector(event.detail && event.detail.selector || location.hash))) {
+        element.scrollIntoView({ behavior: 'smooth' })
+        self.removeEventListener('hashchange', this.clickAnchorEventListener)
+        location.hash = location.hash.replace('_scrolled', '') + '_scrolled'
+        self.addEventListener('hashchange', this.clickAnchorEventListener)
+      }
     }
   }
 
@@ -35,13 +40,15 @@ export default class Body extends Shadow() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
     if (location.hash) {
-      self.addEventListener('load', event => this.clickAnchorEventListener({ detail: { selector: location.hash } }), { once: true })
-      document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => setTimeout(() => this.clickAnchorEventListener({ detail: { selector: location.hash } }), 1000), { once: true })
+      self.addEventListener('load', event => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), { once: true })
+      document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => setTimeout(() => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), 1000), { once: true })
     }
+    self.addEventListener('hashchange', this.clickAnchorEventListener)
   }
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
+    self.removeEventListener('hashchange', this.clickAnchorEventListener)
   }
 
   /**
