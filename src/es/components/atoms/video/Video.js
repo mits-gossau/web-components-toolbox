@@ -101,6 +101,7 @@ export default class Video extends Shadow() {
     }
     :host video {
       object-fit: var(--video-object-fit, cover);
+      clip-path: var(--clip-path, none);
     }
 
     @media only screen and (max-width: _max-width_) {
@@ -111,8 +112,14 @@ export default class Video extends Shadow() {
         width: var(--width-mobile, 100%);
       }
     }
-      }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'video-crop-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./crop-/crop-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+    }
   }
 
   /**

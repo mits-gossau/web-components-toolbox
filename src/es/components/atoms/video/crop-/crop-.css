@@ -1,0 +1,4 @@
+:host {
+  --video-crop-clip-path: inset(2%);
+  --video-crop-transform: scale(104%);
+}
