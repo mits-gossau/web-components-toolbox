@@ -174,69 +174,71 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
 
   calcColumnWidth (children = this.section.children) {
     if (this.hasAttribute('no-calc-column-width')) return
-    // set width attributes as css vars
-    let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE')
-    const childNodesLength = Number(this.getAttribute('simulate-children')) || childNodes.length
-    if (childNodes.length < childNodesLength) {
-      childNodes = childNodes.concat(Array(childNodesLength - childNodes.length).fill(childNodes[0]))
-    } else if (childNodes.length > childNodesLength) {
-      childNodes = childNodes.splice(0, childNodesLength)
-    }
-    for (let i = 0; i < childNodesLength; i++) {
-      if (this.hasAttribute(`any-${i + 1}-width`) || (childNodes[i] && childNodes[i].hasAttribute('width'))) {
-        this.css = /* css */`
-          :host {
-            --any-${i + 1}-width: ${this.getAttribute(`any-${i + 1}-width`) || childNodes[i].getAttribute('width')};
-          }
-        `
+    self.requestAnimationFrame(timeStamp => { 
+      // set width attributes as css vars
+      let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE')
+      const childNodesLength = Number(this.getAttribute('simulate-children')) || childNodes.length
+      if (childNodes.length < childNodesLength) {
+        childNodes = childNodes.concat(Array(childNodesLength - childNodes.length).fill(childNodes[0]))
+      } else if (childNodes.length > childNodesLength) {
+        childNodes = childNodes.splice(0, childNodesLength)
       }
-    }
-    // calculate flex child width by CSS vars
-    const [bookedWidth, bookedCount, margin, unit] = childNodes.reduce((acc, node, i) => {
-      // width
-      let width = this.cleanPropertyWidthValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}any-${i + 1}-width`))
-      // width without namespace
-      if (!width && this.hasAttribute('namespace-fallback')) width = this.cleanPropertyWidthValue(self.getComputedStyle(node).getPropertyValue(`--any-${i + 1}-width`))
-      /** @type {false | number} */
-      let margin = false
-      /** @type {false | string} */
-      let unit = false
-      // margin-first-child
-      if (i === 0) {
-        [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}margin-first-child`))
-        // margin-first-child without namespace
-        if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin-first-child'))
-      }
-      // margin-last-child
-      if (i === childNodesLength - 1) {
-        [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}margin-last-child`))
-        // margin-last-child without namespace
-        if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin-last-child'))
-      }
-      // margin
-      if (margin === false) {
-        [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}margin`))
-        if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin'))
-      }
-      // gap (ether use gap or margin, both does not work)
-      if (margin === false && i < childNodesLength - 1) {
-        [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}gap`))
-        if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--gap'))
-        if (margin) margin = margin / 2 // gap has no shorthand and does not need to be duplicated like margin for lef and right
-      }
-      return [acc[0] + width, width ? acc[1] + 1 : acc[1], unit ? acc[2] + margin : acc[2], unit || acc[3]]
-    }, [0, 0, 0, ''])
-    let freeWidth = ((100 - bookedWidth) / (childNodesLength - bookedCount))
-    // @ts-ignore
-    if (freeWidth === Infinity) freeWidth = 0
-    this.style.textContent = ''
-    for (let i = 1; i < childNodesLength + 1; i++) {
-      this.setCss(/* CSS */`
-        :host > section > *:nth-child(${i}) {
-          width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodesLength}${unit || 'px'});
+      for (let i = 0; i < childNodesLength; i++) {
+        if (this.hasAttribute(`any-${i + 1}-width`) || (childNodes[i] && childNodes[i].hasAttribute('width'))) {
+          this.css = /* css */`
+            :host {
+              --any-${i + 1}-width: ${this.getAttribute(`any-${i + 1}-width`) || childNodes[i].getAttribute('width')};
+            }
+          `
         }
-      `, undefined, undefined, undefined, this.style)
-    }
+      }
+      // calculate flex child width by CSS vars
+      const [bookedWidth, bookedCount, margin, unit] = childNodes.reduce((acc, node, i) => {
+        // width
+        let width = this.cleanPropertyWidthValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}any-${i + 1}-width`))
+        // width without namespace
+        if (!width && this.hasAttribute('namespace-fallback')) width = this.cleanPropertyWidthValue(self.getComputedStyle(node).getPropertyValue(`--any-${i + 1}-width`))
+        /** @type {false | number} */
+        let margin = false
+        /** @type {false | string} */
+        let unit = false
+        // margin-first-child
+        if (i === 0) {
+          [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}margin-first-child`))
+          // margin-first-child without namespace
+          if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin-first-child'))
+        }
+        // margin-last-child
+        if (i === childNodesLength - 1) {
+          [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}margin-last-child`))
+          // margin-last-child without namespace
+          if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin-last-child'))
+        }
+        // margin
+        if (margin === false) {
+          [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}margin`))
+          if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--margin'))
+        }
+        // gap (ether use gap or margin, both does not work)
+        if (margin === false && i < childNodesLength - 1) {
+          [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}gap`))
+          if (margin === false && this.hasAttribute('namespace-fallback')) [margin, unit] = this.cleanPropertyMarginValue(self.getComputedStyle(node).getPropertyValue('--gap'))
+          if (margin) margin = margin / 2 // gap has no shorthand and does not need to be duplicated like margin for lef and right
+        }
+        return [acc[0] + width, width ? acc[1] + 1 : acc[1], unit ? acc[2] + margin : acc[2], unit || acc[3]]
+      }, [0, 0, 0, ''])
+      let freeWidth = ((100 - bookedWidth) / (childNodesLength - bookedCount))
+      // @ts-ignore
+      if (freeWidth === Infinity) freeWidth = 0
+      this.style.textContent = ''
+      for (let i = 1; i < childNodesLength + 1; i++) {
+        this.setCss(/* CSS */`
+          :host > section > *:nth-child(${i}) {
+            width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodesLength}${unit || 'px'});
+          }
+        `, undefined, undefined, undefined, this.style)
+      }
+    })
   }
 
   /**
