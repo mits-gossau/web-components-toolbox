@@ -256,6 +256,12 @@ img[style="float: right;"] {
   margin: var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing)) var(--content-spacing));
 }
 /* list-tags */
+:host ol {
+  text-align: var(--ol-text-align, var(--ul-text-align, start));
+  display: var(--ol-display, var(--ul-display, block));
+  flex-direction: var(--ol-flex-direction, var(--ul-flex-direction, column));
+  box-sizing: var(--ol-box-sizing, var(--ul-box-sizing, border-box));
+}
 :host ul {
   text-align: var(--ul-text-align, var(--ol-text-align, start));
   display: var(--ul-display, var(--ol-display, block));
@@ -280,14 +286,11 @@ ul.bull li::before {
   list-style: var(--ul-icon-list-style, none);
   padding: var(--ul-icon-padding, 0);;
 }
+:host ul.line {
+ /* TODO */
+}
 :host ul li, :host ol li {
   align-self: var(--li-align-self, auto);
-}
-:host ol {
-  text-align: var(--ol-text-align, var(--ul-text-align, start));
-  display: var(--ol-display, var(--ul-display, block));
-  flex-direction: var(--ol-flex-direction, var(--ul-flex-direction, column));
-  box-sizing: var(--ol-box-sizing, var(--ul-box-sizing, border-box));
 }
 /* table-tags */
 :host table {
