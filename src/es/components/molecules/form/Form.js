@@ -59,8 +59,11 @@ export default class Form extends Shadow() {
     const ButtonConstructor = class extends Button {} // otherwise the browser complains that this constructor was already defined
     if (!customElements.get('a-button')) customElements.define('a-button', ButtonConstructor)
     const button = new ButtonConstructor({ namespace: 'button-primary-' })
+    button.hidden
+    this.html = button
     button.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
     this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
+    button.remove()
     this.css = /* css */`
       legend {
         font-family: var(--font-family-bold, var(--font-family, inherit));
@@ -71,10 +74,12 @@ export default class Form extends Shadow() {
       textarea {
         resize: none;
       }
+      input[type=checkbox], input[type=text], input[type=password], textarea, input[type=checkbox], select {
+        border-radius: var(--border-radius, 0.5em);
+      }
       input[type=text], input[type=password], textarea, input[type=checkbox], select {
         background-color: transparent;
         box-sizing: border-box;
-        border-radius: 8px;
         border: 1px solid var(--m-gray-400);
         color: var(--color);
         padding: 10px;
@@ -105,6 +110,8 @@ export default class Form extends Shadow() {
       }
       fieldset {
         border: 0;
+        margin: 0;
+        padding: 0;
       }
       .help-block {
         font-style: italic;
@@ -116,7 +123,6 @@ export default class Form extends Shadow() {
         padding-left: var(--content-spacing);
       }
       input[type=checkbox] {
-        border-radius: 8px;
         height: 1.5em;
         width: 1.5em;
       }
@@ -138,11 +144,29 @@ export default class Form extends Shadow() {
         :host {
           width: 100% !important;
         }
-        input[type=text], input[type=password], textarea {
+        input[type=text], input[type=password], textarea, input[type=checkbox], select {
           font-size: var(--font-size-mobile);
+        }
+        input[type=checkbox], input[type=text], input[type=password], textarea, input[type=checkbox], select {
+          border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
       }
     `
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
+    switch (this.getAttribute('namespace')) {
+      default:
+        return this.fetchCSS(styles, false)
+    }
   }
 
   get submit () {
