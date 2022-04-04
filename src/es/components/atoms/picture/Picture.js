@@ -132,49 +132,39 @@ export default class Picture extends Shadow() {
         cursor: pointer;
       }
       :host picture {
-        aspect-ratio: ${this.hasAttribute('aspect-ratio') ? `1/${this.getAttribute('aspect-ratio')}` : 'var(--aspect-ratio, auto)'};
-        filter: var(--filter, none);
-        display: var(--display, block); /* don't use flex here, it can have strange side effects */
-        justify-content: var(--justify-content, center);
-        width: var(--width, unset);
-        height: var(--height, unset);
-        overflow: var(--overflow, initial);
-        transition: var(--transition, none);
-        transform: var(--transform, none);
-        margin: var(--margin, 0);
-        text-align: var(--text-align, center);
+        display: var(--display, inline); /* don't use flex here, it can have strange side effects */
       }
-      :host picture:hover, :host picture.hover {
+      :host picture img {
+        aspect-ratio: ${this.hasAttribute('aspect-ratio') ? `1/${this.getAttribute('aspect-ratio')}` : 'var(--aspect-ratio, auto)'};
+        border-radius: var(--border-radius, 0);
+        display: var(--img-display, block);
+        filter: var(--filter, none);
+        height: var(--img-height, auto);
+        max-height: var(--img-max-height, 75vh);
+        max-width: var(--img-max-width, 100%);
+        min-height: var(--img-min-height, unset);
+        min-width: var(--img-min-width, unset);
+        object-fit: var(--img-object-fit, cover);
+        overflow: var(--overflow, initial);
+        transform: var(--transform, none);
+        transition: var(--transition, none);
+        vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
+        width: var(--img-width, 100%);
+      }
+      :host picture img:hover, :host picture.hover img {
         filter: var(--filter-hover, var(--filter, none));
         transform: var(--transform-hover, var(--transform, none));
       }
-      :host picture img {
-        display: var(--img-display, inline);
-        border-radius: var(--border-radius, 0);
-        width: var(--img-width, 100%);
-        min-width: var(--img-min-width, unset);
-        max-width: var(--img-max-width, 100%);
-        height: var(--img-height, auto);
-        min-height: var(--img-min-height, unset);
-        max-height: var(--img-max-height, 75vh);
-        object-fit: var(--img-object-fit, cover);
-        vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
-      }
       @media only screen and (max-width: _max-width_) {
-        :host picture {
+        :host picture img {
+          border-radius: var(--border-radius-mobile, 0);
           transition: var(--transition-mobile, var(--transition, none));
           transform: var(--transform-mobile, var(--transform, none));
           filter: var(--filter-mobile, var(--filter, none));
-          width: var(--width-mobile, var(--width, auto));
-          height: var(--height-mobile, var(--height, auto));
-          text-align: var(--text-align-mobile, var(--text-align, center));
         }
-        :host picture:hover, :host picture.hover {
+        :host picture img:hover, :host picture.hover img {
           filter: var(--filter-mobile-hover, var(--filter-hover, var(--filter, none)));
           transform: var(--transform-mobile-hover, var(--transform-hover, var(--transform, none)));
-        }
-        :host picture img {
-          border-radius: var(--border-radius-mobile, 0);
         }
       }
     `
