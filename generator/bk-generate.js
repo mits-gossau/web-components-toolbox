@@ -3,7 +3,7 @@ const shell = require("shelljs");
 // CHANGE THIS
 const GIT_REPO = "https://github.com/edmgb/test-bk.git";
 const NEW_PROJECT_DIR = "/Users/m0595103/Documents";
-const NEW_PROJECT_NAME = "neues-bk-porjekt";
+const NEW_PROJECT_NAME = "iga-neues-bk-projekt";
 
 // LEAVE THIS AS IT IS!
 const REF_REPO = "https://github.com/mits-gossau/web-components-toolbox-betriebsrestaurant.git";
