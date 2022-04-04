@@ -1,7 +1,9 @@
 :host {
-  --picture-overflow-scale-up-transform: scale(2);
-  --picture-overflow-scale-up-img-width: 35.5%;
-  --picture-overflow-scale-up-transform-hover: scale(2.05,2.05);
+  --picture-overflow-scale-up-transform-mobile: none;
+  --picture-overflow-scale-up-transform: scale(2) translateX(25%);
+  --picture-overflow-scale-up-img-width-mobile: auto;
+  --picture-overflow-scale-up-img-width: 50%;
+  --picture-overflow-scale-up-transform-mobile-hover: scale(1.05,1.05);
+  --picture-overflow-scale-up-transform-hover: scale(2.05,2.05) translateX(25%);
   --picture-overflow-scale-up-transition: transform .5s ease-out;
-}
 }
