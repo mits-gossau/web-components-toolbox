@@ -3,7 +3,7 @@ const shell = require("shelljs");
 // CHANGE THIS
 const GIT_REPO = "https://github.com/edmgb/test-bk.git";
 const NEW_PROJECT_DIR = "/Users/m0595103/Documents";
-const NEW_PROJECT_NAME = "iga-neues-bk-projekt";
+const NEW_PROJECT_NAME = "neues-baukasten-projekt";
 
 // LEAVE THIS AS IT IS!
 const REF_REPO = "https://github.com/mits-gossau/web-components-toolbox-betriebsrestaurant.git";
@@ -43,6 +43,10 @@ function gitUpdateSubmodule() {
   shell.exec("git submodule update --init --recursive --remote --force");
 }
 
+function gitSetURLOrigin() {
+  shell.exec(`git remote set-url origin ${GIT_REPO}`);
+}
+
 function installNPMPackages() {
   shell.exec("npm i");
 }
@@ -62,6 +66,7 @@ cleanReadMe();
 replaceProjectName();
 gitUpdateSubmodule();
 installNPMPackages();
+gitSetURLOrigin();
 removeFiles();
 runLocalServer();
 
