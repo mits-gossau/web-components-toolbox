@@ -14,5 +14,6 @@
     --details-default-child-margin-mobile: var(--content-spacing-mobile) auto;
     --details-default-content-spacing: var(--content-spacing);
     --details-default-content-spacing-mobile: var(--content-spacing-mobile);
+    --details-default-summary-child-color-hover: var(--color-hover);
     --details-default-summary-child-color: var(--color-secondary);
 }

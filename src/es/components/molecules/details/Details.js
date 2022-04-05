@@ -236,6 +236,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         padding: var(--summary-child-padding, 0);
         color:var(--summary-child-color, var(--color, unset));
       }
+      :host details summary > div:hover > *, :host details summary > div:active > *, :host details summary > div:focus > * {
+        --svg-color: var(--summary-child-color-hover, var(--color-hover, var(--summary-child-color, var(--color, unset))));
+        color: var(--summary-child-color-hover, var(--color-hover, var(--summary-child-color, var(--color, unset))));
+      }
       :host details[open] summary > div > * {
         margin: var(--summary-child-margin-open, 0);
         padding: var(--summary-child-padding-open, 0);
