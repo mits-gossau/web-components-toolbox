@@ -65,8 +65,8 @@ moveFiles();
 cleanReadMe();
 replaceProjectName();
 gitUpdateSubmodule();
-installNPMPackages();
 gitSetURLOrigin();
+installNPMPackages();
 removeFiles();
 runLocalServer();
 

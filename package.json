@@ -5,7 +5,8 @@
   "main": "./index.html",
   "scripts": {
     "fix": "standard --fix",
-    "serve": "live-server --port=4200 --host=localhost"
+    "serve": "live-server --port=4200 --host=localhost",
+    "generate": "node generator/bk-generate.js"
   },
   "author": "weedshaker@gmail.com, edx.mgb@gmail.com",
   "license": "MIT",
