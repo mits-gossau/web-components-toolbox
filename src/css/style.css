@@ -85,7 +85,7 @@
 :host .font-family-secondary {
   font-family: var(--font-family-secondary, var(--font-family, inherit));
 }
-:host *:not(a).left > *, :host *:not(a).center > *, :host *:not(a).right > * {
+:host .left > *:not(a):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(p), :host .center > *:not(a):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(p), :host .right > *:not(a):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(p) {
   display: inline-block;
 }
 :host .left {
@@ -96,6 +96,9 @@
 }
 :host .right {
   text-align: right;
+}
+:host .margin-zero {
+  margin: 0;
 }
 :host .bold, :host strong, :host b {
   font-family: var(--font-family-strong, var(--font-family-bold, var(--font-family, inherit)));
