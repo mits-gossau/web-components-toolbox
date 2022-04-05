@@ -158,9 +158,11 @@ export default class Picture extends Shadow() {
       @media only screen and (max-width: _max-width_) {
         :host picture img {
           border-radius: var(--border-radius-mobile, 0);
-          transition: var(--transition-mobile, var(--transition, none));
-          transform: var(--transform-mobile, var(--transform, none));
           filter: var(--filter-mobile, var(--filter, none));
+          height: var(--img-height-mobile, var(--img-height, auto));
+          transform: var(--transform-mobile, var(--transform, none));
+          transition: var(--transition-mobile, var(--transition, none));
+          width: var(--img-width-mobile, var(--img-width, 100%));
         }
         :host picture img:hover, :host picture.hover img {
           filter: var(--filter-mobile-hover, var(--filter-hover, var(--filter, none)));

@@ -287,10 +287,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         margin: var(--ul-icons-margin, 0 0 0 1em);
       }
       @media only screen and (max-width: _max-width_) {
-        :host {
-          margin: 0 5% !important;
-          width: 90% !important;
-        }
         :host details .icon > img, :host details .icon > div > svg {
           width: var(--icon-width-mobile, min(1.7em, 10vw))
         }
