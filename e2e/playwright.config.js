@@ -2,7 +2,7 @@
 const { devices } = require('@playwright/test');
 
 const config = {
-  testDir: './e2e',
+  //testDir: './e2e',
   timeout: 30 * 1000,
   expect: {
     timeout: 5000
@@ -28,7 +28,7 @@ const config = {
       },
     },
   ],
-  outputDir: './e2e/test-results/',
+  outputDir: '../../../../../e2e/test-results/',
 };
 
 module.exports = config;
