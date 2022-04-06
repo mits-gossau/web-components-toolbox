@@ -272,28 +272,51 @@ img[style="float: right;"] {
   box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
   list-style: var(--ul-list-style, disc);
 }
-/* https://www.fileformat.info/info/unicode/char/2022/index.htm */
-:host ul.bull {
+:host ul.bull, :host ul.line {
   list-style: none; /* Remove default bullets */
+  padding-left: 1.5em;
 }
-ul.bull li::before {
-  content: "\2022";
-  color: var(--ul-disc-color, var(--color-secondary));
-  font-weight: bold;
-  font-size: 1.4em;
-  display: inline-block;
-  width: 1em;
-  margin-left: -1em;
+:host ul.bull li, :host ul.line li {
+  position: relative;
+}
+:host ul.bull li::before, :host ul.line li::before {
+  position: absolute;
+  top: 0.5em;
+  left: -1.5em;
+  display: block;
+  width: 0.7em;
+  height: 0.7em;
+  border-width: 0.3em;
+  border-style: solid;
+  border-color: var(--bull-color, var(--color-secondary, var(--color, green)));
+  background-color: var(--bull-color, var(--color-secondary, var(--color, green)));
+  border-radius: 50%;
+  content: '';
+  transition: var(--bull-transition, border-color 0.3s ease-out, background-color 0.3s ease-out);
+}
+:host ul.bull li:hover::before, :host ul.line li:hover::before {
+  border-color: var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green)))));
+  background-color: var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green)))));
+}
+:host ul.line li:hover:not(:last-child)::after {
+  background-color: var(--line-color-hover, var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green))))));
+}
+:host ul.line li {
+  margin-bottom: 1em;
+}
+:host ul.line li:not(:last-child)::after {
+  position: absolute;
+  top: 1.4em;
+  left: -1.2em;
+  display: block;
+  width: 1px;
+  height: calc(100% - 2px);
+  background-color: var(--line-color, var(--bull-color, var(--color-secondary, var(--color, green))));
+  content: '';
 }
 :host ul.icons {
   list-style: var(--ul-icon-list-style, none);
   padding: var(--ul-icon-padding, 0);;
-}
-:host ul.line {
- /* TODO */
-}
-:host ul li, :host ol li {
-  align-self: var(--li-align-self, auto);
 }
 /* table-tags */
 :host table {
