@@ -82,7 +82,7 @@ export default class Form extends Shadow() {
         box-sizing: border-box;
         border: 1px solid var(--m-gray-400);
         color: var(--color);
-        padding: 10px;
+        padding: 0.625em;
         font-size: var(--font-size);
         outline: none;
         width: 100%;
@@ -105,7 +105,7 @@ export default class Form extends Shadow() {
       }
       .field-validation-error {
         color: var(--color-secondary);
-        padding: 0 10px;
+        padding: 0 0.625em;
         font-size: 0.875em;
       }
       fieldset {
@@ -129,7 +129,7 @@ export default class Form extends Shadow() {
       *.steps__title {
         color: var(--background-color) !important;
         background-color: var(--color-secondary) !important;
-        padding: 10px !important;
+        padding: 0.625em !important;
       }
       .checkboxlist {
         align-items: center;
