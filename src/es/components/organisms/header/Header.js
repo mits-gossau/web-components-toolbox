@@ -70,8 +70,16 @@ export default class Header extends Shadow() {
     this.clickAnimationListener = event => {
       if (this.header.classList.contains('open')) {
         this.mNavigation.classList.add('open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', 'true')
       } else if (event && event.animationName === 'close') {
         this.mNavigation.classList.remove('open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', 'false')
+      }
+    }
+    this.keyupListener = event => {
+      if (event.key === 'Escape') {
+        document.body.click()
+        if (this.MenuIcon.classList.contains('open')) this.MenuIcon.click()
       }
     }
     let timeout = null
@@ -113,6 +121,7 @@ export default class Header extends Shadow() {
     self.addEventListener('resize', this.resizeListener)
     if (this.mNavigation) this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
     self.addEventListener('resize', this.mutationCallback)
+    document.addEventListener('keyup', this.keyupListener)
     this.observer.observe(this.header, { attributes: true })
   }
 
@@ -122,6 +131,7 @@ export default class Header extends Shadow() {
     self.removeEventListener('resize', this.resizeListener)
     if (this.mNavigation) this.mNavigation.removeEventListener('animationend', this.clickAnimationListener)
     self.removeEventListener('resize', this.mutationCallback)
+    document.removeEventListener('keyup', this.keyupListener)
     this.observer.disconnect()
   }
 
@@ -400,16 +410,17 @@ export default class Header extends Shadow() {
     self.addEventListener('resize', event => document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll'))
     return this.getAttribute('menu-icon')
       ? this.loadChildComponents().then(children => {
-          const MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback') })
-          MenuIcon.addEventListener('click', event => {
+          this.MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+          this.MenuIcon.addEventListener('click', event => {
             this.header.classList.toggle('open')
             const prop = this.header.classList.contains('open') ? 'add' : 'remove'
+            if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', this.header.classList.contains('open') ? 'true' : 'false')
             document.documentElement.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
             Array.from(this.header.children).forEach(node => {
               node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
             })
           })
-          this.header.appendChild(MenuIcon)
+          this.header.appendChild(this.MenuIcon)
           this.html = this.style
           this.adjustLogoPos(true)
         })

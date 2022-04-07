@@ -51,6 +51,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['open'] } }), ...args)
 
+    this.setAttribute('aria-expanded', 'false')
+    this.setAttribute('aria-label', 'Details')
     this.svgWidth = '1.5em'
     this.svgHeight = '1.5em'
     this.svgColor = `var(--${this.getAttribute('namespace')}svg-color, var(--color))`
@@ -127,6 +129,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           cancelable: true,
           composed: true
         }))
+        this.setAttribute('aria-expanded', 'true')
       } else {
         this.details.addEventListener('animationend', this.animationendListener, { once: true })
         // in case of fast double click the animationend event would not reach details, since the content would be hidden
@@ -153,6 +156,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           }
         `, undefined, undefined, undefined, this.style)
         this.details.classList.add('closing')
+        this.setAttribute('aria-expanded', 'false')
       }
     })
   }

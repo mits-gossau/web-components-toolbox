@@ -20,6 +20,12 @@ import Body from '../body/Body.js'
  * }
  */
 export default class BodyStyle extends Body {
+  constructor (...args) {
+    super(...args)
+
+    this.setAttribute('aria-label', 'Section')
+  }
+
   /**
    * evaluates if a render is necessary
    *

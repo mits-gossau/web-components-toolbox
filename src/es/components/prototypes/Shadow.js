@@ -79,6 +79,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       Array.from(this.children).forEach(node => {
         if (!node.getAttribute('slot')) shadowRoot.appendChild(node)
       })
+      this.setAttribute('tabindex', '0')
     }
     if (typeof options.namespace === 'string') this.setAttribute('namespace', options.namespace)
     /** @type {string} */

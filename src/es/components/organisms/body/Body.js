@@ -24,6 +24,7 @@ export default class Body extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('aria-label', 'Main')
     this.clickAnchorEventListener = event => {
       let element = null
       if (event && (event.detail && event.detail.selector || location.hash) && (element = this.root.querySelector(event.detail && event.detail.selector || location.hash))) {
