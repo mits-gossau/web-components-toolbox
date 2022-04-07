@@ -140,6 +140,7 @@ export default class Picture extends Shadow() {
         display: var(--img-display, block);
         filter: var(--filter, none);
         height: var(--img-height, auto);
+        margin: var(--img-margin, 0);
         max-height: var(--img-max-height, 75vh);
         max-width: var(--img-max-width, 100%);
         min-height: var(--img-min-height, unset);
@@ -160,6 +161,7 @@ export default class Picture extends Shadow() {
           border-radius: var(--border-radius-mobile, 0);
           filter: var(--filter-mobile, var(--filter, none));
           height: var(--img-height-mobile, var(--img-height, auto));
+          margin: var(--img-margin-mobile, var(--img-margin, auto));
           transform: var(--transform-mobile, var(--transform, none));
           transition: var(--transition-mobile, var(--transition, none));
           width: var(--img-width-mobile, var(--img-width, 100%));

@@ -85,8 +85,11 @@
 :host .font-family-secondary {
   font-family: var(--font-family-secondary, var(--font-family, inherit));
 }
-:host .left > *:not(a):not(span):not(div):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(p), :host .center > *:not(a):not(span):not(div):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(p), :host .right > *:not(a):not(span):not(div):not(h1):not(h2):not(h3):not(h4):not(h5):not(h6):not(p) {
+:host .left > *, :host .center > *, :host .right > * {
   display: inline-block;
+}
+:host .left > div, :host .center > div, :host .right > div {
+  display: block;
 }
 :host .left {
   text-align: left;
