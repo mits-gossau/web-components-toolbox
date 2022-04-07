@@ -73,7 +73,6 @@ export default class Footer extends Shadow() {
     this.css = /* css */`
       :host {
         grid-area: footer;
-        margin-top: var(--content-spacing);
       }
       :host > footer > *, :host > footer .invert > * {
         margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
