@@ -119,7 +119,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
       error => {
         error = `${path} ${error}!!!`
         // @ts-ignore
-        return Promise.reject(this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`)
+        return Promise.reject(console.error(error) || `<code style="color: red;">${error}</code>`)
       }
     )
   }
@@ -137,7 +137,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
     style = await this.webWorker(FetchCss.cssMaxWidth, style, fetchCSSParam.maxWidth)
     if (fetchCSSParam.cssSelector !== ':host') style = await this.webWorker(FetchCss.cssHostFallback, style, fetchCSSParam.cssSelector)
     if (fetchCSSParam.namespace) {
-      if (style.includes('---')) console.error('this.css has illegal dash characters at:', this)
+      if (style.includes('---')) console.error('this.css has illegal dash characters at:', fetchCSSParam.node)
       if (fetchCSSParam.namespaceFallback) {
         style = await this.webWorker(FetchCss.cssNamespaceToVarFunc, style, fetchCSSParam.namespace)
         style = await this.webWorker(FetchCss.cssNamespaceToVarDec, style, fetchCSSParam.namespace)
