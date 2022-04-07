@@ -4,7 +4,7 @@
   --teaser-tile-a-link-transform-hover: translateY(0);
   --teaser-tile-a-link-transform: translateY(2.5em);
   --teaser-tile-a-link-transition: transform .35s ease .1s;
-  --teaser-tile-background-color: var(--teaser-tile-background-color-custom, var(--background-color, var(--m-white)));
+  --teaser-tile-background-color: var(--teaser-tile-background-color-custom, var(--m-white));
   --teaser-tile-figcaption-background-color: var(--teaser-tile-figcaption-background-color-custom, var(--teaser-tile-background-color));
   --teaser-tile-p-font-size: 0.875em;
   --underline-font-size: var(--teaser-tile-p-font-size);
