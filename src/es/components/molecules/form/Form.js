@@ -74,10 +74,8 @@ export default class Form extends Shadow() {
       textarea {
         resize: none;
       }
-      input[type=checkbox], input[type=text], input[type=password], textarea, input[type=checkbox], select {
+      ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
         border-radius: var(--border-radius, 0.5em);
-      }
-      input[type=text], input[type=password], textarea, input[type=checkbox], select {
         background-color: transparent;
         box-sizing: border-box;
         border: 1px solid var(--m-gray-400);
@@ -87,14 +85,14 @@ export default class Form extends Shadow() {
         outline: none;
         width: 100%;
       }
-      input[type=text]::placeholder, input[type=password]::placeholder, textarea::placeholder {
+      ${this.getInputFieldsWithText('::placeholder')} {
         color: var(--m-gray-600);
         opacity: 1;
       }
-      input[type=text]:hover, input[type=password]:hover, textarea:hover, input[type=checkbox]:hover {
+      ${this.getInputFieldsWithText(':hover')} {
         border-color: var(--m-gray-600);
       }
-      input[type=text]:focus, input[type=password]:focus, textarea:focus, input[type=checkbox]:focus {
+      ${this.getInputFieldsWithText(':focus')} {
         border-color: var(--color-secondary);
       }
       .umbraco-forms-indicator {
@@ -116,13 +114,13 @@ export default class Form extends Shadow() {
       .help-block {
         font-style: italic;
       }
-      .checkbox > label {
+      .checkbox > label, .checkboxlist > label, .radiobutton > label, .radiobuttonlist > label {
         vertical-align: super;
       }
-      .checkbox > label, .checkbox > .help-block {
+      .checkbox > label, .checkbox > .help-block, .checkboxlist > label, .checkboxlist > .help-block, .radiobutton > label, .radiobutton > .help-block, .radiobuttonlist > label, .radiobuttonlist > .help-block {
         padding-left: var(--content-spacing);
       }
-      input[type=checkbox] {
+      ${this.getInputFieldsWithControl()} {
         height: 1.5em;
         width: 1.5em;
       }
@@ -144,10 +142,10 @@ export default class Form extends Shadow() {
         :host {
           width: 100% !important;
         }
-        input[type=text], input[type=password], textarea, input[type=checkbox], select {
+        ${this.getInputFieldsWithText()} {
           font-size: var(--font-size-mobile);
         }
-        input[type=checkbox], input[type=text], input[type=password], textarea, input[type=checkbox], select {
+        ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
       }
@@ -167,6 +165,32 @@ export default class Form extends Shadow() {
       default:
         return this.fetchCSS(styles, false)
     }
+  }
+
+  getInputFieldsWithText (add) {
+    return [
+      'input[type=text]',
+      'input[type=password]',
+      'input[type=tel]',
+      'input[type=email]',
+      'input[type=number]',
+      'input[type=search]',
+      'input[type=url]',
+      'input[type=datetime-local]',
+      'input[type=date]',
+      'input[type=month]',
+      'input[type=time]',
+      'input[type=week]',
+      'textarea',
+      'select'
+    ].reduce((acc, value, i) => `${acc}${i === 0 ? '' : ','}${value}${add ? add : ''}`, '')
+  }
+
+  getInputFieldsWithControl (add) {
+    return [
+      'input[type=radio]',
+      'input[type=checkbox]'
+    ].reduce((acc, value, i) => `${acc}${i === 0 ? '' : ','}${value}${add ? add : ''}`, '')
   }
 
   get submit () {
