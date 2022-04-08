@@ -112,7 +112,7 @@ export default class Teaser extends Shadow() {
         `
         : ''}
       :host figure a-picture {
-        height: var(--a-picture-height, 100%);
+        height: var(--a-picture-height, auto);
         width: var(--a-picture-width, 100%);
         transition: var(--a-picture-transition, none);
         transform: var(--a-picture-transform, none);
