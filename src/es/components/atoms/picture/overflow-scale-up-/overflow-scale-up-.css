@@ -6,4 +6,6 @@
   --picture-overflow-scale-up-transform-mobile-hover: scale(1.05,1.05);
   --picture-overflow-scale-up-transform-hover: scale(2.05,2.05) translateX(25%);
   --picture-overflow-scale-up-transition: transform .5s ease-out;
+  --picture-overflow-scale-up-img-margin-mobile: auto;
+  --picture-overflow-scale-up-img-margin: 0;
 }

@@ -503,7 +503,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       `
       : /* css */`
         :host, :host > *, :host > * > * {
-          animation: var(--show, show .2s ease-out);
+          animation: var(--show, show .3s ease-out);
         }
         @keyframes show {
           0%{opacity: 0}
