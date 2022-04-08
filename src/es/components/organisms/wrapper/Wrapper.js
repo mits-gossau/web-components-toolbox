@@ -174,7 +174,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
 
   calcColumnWidth (children = this.section.children) {
     if (this.hasAttribute('no-calc-column-width')) return
-    self.requestAnimationFrame(timeStamp => { 
+    self.requestAnimationFrame(timeStamp => {
       // set width attributes as css vars
       let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE')
       const childNodesLength = Number(this.getAttribute('simulate-children')) || childNodes.length

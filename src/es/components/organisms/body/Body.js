@@ -25,10 +25,13 @@ export default class Body extends Shadow() {
     super(...args)
 
     this.setAttribute('aria-label', 'Main')
+    this.timeout = null
     this.clickAnchorEventListener = event => {
       let element = null
-      if (event && (event.detail && event.detail.selector || location.hash) && (element = this.root.querySelector(event.detail && event.detail.selector || location.hash))) {
+      if ((element = this.root.querySelector((event && event.detail && event.detail.selector) || location.hash))) {
         element.scrollIntoView({ behavior: 'smooth' })
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => element.scrollIntoView({ behavior: 'smooth' }), 1000) // lazy loading pics make this necessary to reach target
         self.removeEventListener('hashchange', this.clickAnchorEventListener)
         location.hash = location.hash.replace('_scrolled', '') + '_scrolled'
         self.addEventListener('hashchange', this.clickAnchorEventListener)

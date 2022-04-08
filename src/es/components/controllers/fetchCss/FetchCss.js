@@ -8,6 +8,8 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 import { WebWorker } from '../../prototypes/WebWorker.js'
 
+/* global fetch */
+
 /**
  * FetchCss is an icon
  * Example at: /src/es/components/pages/Home.html
@@ -49,15 +51,17 @@ export default class FetchCss extends Shadow(WebWorker()) {
           fetchCSSParam.path = FetchCss.pathResolver(fetchCSSParam.path)
           /**
            * add nodes default values
-           * 
+           *
            * @type {import("../../prototypes/Shadow.js").fetchCSSParams}
            */
           const fetchCSSParamWithDefaultValues = { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, appendStyleNode: true, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam }
           const processedStyleCacheKey = FetchCss.cacheKeyGenerator(fetchCSSParamWithDefaultValues)
-          if (this.processedStyleCache.has(processedStyleCacheKey)) return this.processedStyleCache.get(processedStyleCacheKey).then(style => {
-            FetchCss.appendStyle(fetchCSSParamWithDefaultValues).style = fetchCSSParamWithDefaultValues.styleNode.textContent = style
-            return fetchCSSParamWithDefaultValues
-          })
+          if (this.processedStyleCache.has(processedStyleCacheKey)) {
+            return this.processedStyleCache.get(processedStyleCacheKey).then(style => {
+              FetchCss.appendStyle(fetchCSSParamWithDefaultValues).style = fetchCSSParamWithDefaultValues.styleNode.textContent = style
+              return fetchCSSParamWithDefaultValues
+            })
+          }
           let fetchStyle
           if (this.fetchStyleCache.has(fetchCSSParamWithDefaultValues.path)) {
             fetchStyle = this.fetchStyleCache.get(fetchCSSParamWithDefaultValues.path)
@@ -152,7 +156,6 @@ export default class FetchCss extends Shadow(WebWorker()) {
     return style
   }
 
-  
   /**
    * finalize the style
    *
@@ -191,7 +194,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
    * @param {import("../../prototypes/Shadow.js").fetchCSSParams} fetchCSSParam
    * @return {string}
    */
-  static cacheKeyGenerator ({path, cssSelector, namespace, namespaceFallback, maxWidth}) {
-    return JSON.stringify({path, cssSelector, namespace, namespaceFallback, maxWidth})
+  static cacheKeyGenerator ({ path, cssSelector, namespace, namespaceFallback, maxWidth }) {
+    return JSON.stringify({ path, cssSelector, namespace, namespaceFallback, maxWidth })
   }
 }

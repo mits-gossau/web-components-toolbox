@@ -104,6 +104,7 @@ export default class Picture extends Intersection() {
   intersectionCallback (entries, observer) {
     if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) this.intersecting()
   }
+
   // placeholder
   intersecting () {}
 
@@ -265,8 +266,8 @@ export default class Picture extends Intersection() {
         if (this.img.naturalWidth) naturalWidth = this.img.naturalWidth
         src.searchParams.delete('height') // height is not needed in query
         if (src.searchParams.get('format')) src.searchParams.set('format', 'webp') // force webp as format
-        let step = 50
-        let width = step 
+        const step = 50
+        let width = step
         let prevWidth = 0
         let nextWidth = 0
         while (width < naturalWidth) {

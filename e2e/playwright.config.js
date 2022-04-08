@@ -1,13 +1,13 @@
 // @ts-check
-const { devices } = require('@playwright/test');
+const { devices } = require('@playwright/test')
 
 const config = {
-  //testDir: './e2e',
+  // testDir: './e2e',
   timeout: 30 * 1000,
   expect: {
     timeout: 5000
   },
-  //reporter: [['html', { open: 'never' }]],
+  // reporter: [['html', { open: 'never' }]],
   reporter: [['html', {}]],
   use: {
     baseURL: 'http://localhost:4200',
@@ -18,17 +18,17 @@ const config = {
     {
       name: 'Mobile Safari',
       use: {
-        ...devices['iPhone 12'],
-      },
+        ...devices['iPhone 12']
+      }
     },
     {
       name: 'chromium',
       use: {
-        ...devices['Desktop Chrome'],
-      },
-    },
+        ...devices['Desktop Chrome']
+      }
+    }
   ],
-  outputDir: '../../../../../e2e/test-results/',
-};
+  outputDir: '../../../../../e2e/test-results/'
+}
 
-module.exports = config;
+module.exports = config
