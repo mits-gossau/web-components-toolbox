@@ -325,7 +325,12 @@ export default class Picture extends Intersection() {
     if (img === this.img) {
       this.sources.forEach(source => this.picture.appendChild(source))
       this.picture.appendChild(this.img)
-      this.img.setAttribute('src', this.img.getAttribute('data-src'))
+      this.intersecting = () => {
+        this.intersecting = () => {}
+        this.intersectionObserveStop()
+        this.img.setAttribute('src', this.img.getAttribute('data-src'))
+      }
+      if (this.isIntersecting || this.getAttribute('loading') === 'eager') this.intersecting()
     }
     // event stuff
     if (this.hasAttribute('picture-load')) {
