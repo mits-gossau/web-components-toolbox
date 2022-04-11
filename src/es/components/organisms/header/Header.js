@@ -106,7 +106,7 @@ export default class Header extends Shadow() {
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     showPromises.push(new Promise(resolve => this.addEventListener('navigation-load', event => resolve(), { once: true })))
-    if (this.aLogo && this.aLogo.hasAttribute('logo-load') && !this.aLogo.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('logo-load', event => resolve(), { once: true })))
+    if (this.aLogo && !this.aLogo.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('logo-load', event => resolve(), { once: true })))
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => {
@@ -363,6 +363,7 @@ export default class Header extends Shadow() {
         :host  > header > a-menu-icon{
           align-self: var(--a-menu-icon-align-self-mobile, var(--a-menu-icon-align-self, var(--align-self, auto)));
           display: var(--a-menu-icon-display-mobile, block);
+          z-index: 102;
         }
         :host  > header.open > a-menu-icon{
           --a-menu-icon-height: var(--a-menu-icon-height-open-mobile);
@@ -487,7 +488,7 @@ export default class Header extends Shadow() {
     self.requestAnimationFrame(timeStamp => {
       const navHeight = this.mNavigation ? this.mNavigation.offsetHeight : 200
       const logoHeight = this.aLogo.offsetHeight
-      if (this._adjustLogoPosCounter < 10 && (!navHeight || !logoHeight)) return setTimeout(() => this.adjustLogoPos(false), 500)
+      if (this._adjustLogoPosCounter < 30 && (!navHeight || !logoHeight)) return setTimeout(() => this.adjustLogoPos(false), 1000)
       this.css = /* CSS */`
         :host > header > a-logo {
           top: calc(${navHeight}px / 2 - ${logoHeight}px / 2);

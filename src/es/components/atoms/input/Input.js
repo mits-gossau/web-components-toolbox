@@ -275,6 +275,7 @@ export default class Input extends Shadow() {
         ${this.renderSearchHTML()}
       </div>
     `
+    this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint') ? this.getAttribute('enterkeyhint') : 'search')
   }
 
   renderLabelHTML () {

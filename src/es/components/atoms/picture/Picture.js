@@ -228,6 +228,8 @@ export default class Picture extends Intersection() {
       this.img.setAttribute('alt', this.alt)
       if (this.alt === '') console.warn('a-picture alt is missing', this)
     }
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/decoding
+    this.img.setAttribute('decoding', 'async')
     // set the loading attribute to the image
     this.setAttribute('loading', this.hasAttribute('picture-load') ? 'eager' : this.getAttribute('loading') || 'lazy') // 'picture-load' must load eager, not that the loading event doesn't trigger emit picture-load
     // deprecated but here for backwards compatibility... load sources through Attribute source
@@ -295,6 +297,7 @@ export default class Picture extends Intersection() {
           newSource.setAttribute('srcset', src.href)
           this.picture.appendChild(newSource)
         })
+        img.setAttribute('decoding', 'sync') // otherwise it is flashing
         img = this.img.cloneNode()
         src.searchParams.set('quality', '0')
         img.setAttribute('data-src', src.href)
@@ -309,6 +312,7 @@ export default class Picture extends Intersection() {
           picture.appendChild(this.img)
           this.img.setAttribute('src', this.img.getAttribute('data-src'))
           const replaceImg = event => {
+            // avoid this.hidden default appear animation from
             this.css = /* CSS */`
               :host {
                 --show: none;

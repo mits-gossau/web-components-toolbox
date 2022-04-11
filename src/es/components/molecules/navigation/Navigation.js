@@ -773,7 +773,7 @@ export default class Navigation extends Shadow() {
     if (this.getMedia() !== 'desktop') return
     this._checkIfWrappedCounter = resetCouter ? 1 : !this._checkIfWrappedCounter ? 1 : this._checkIfWrappedCounter + 1
     self.requestAnimationFrame(timeStamp => {
-      if (this._checkIfWrappedCounter < 10 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 500)
+      if (this._checkIfWrappedCounter < 30 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 1000)
       this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
       // TODO: should be this.mobileBreakpoint + 1px
       this.css = /* css */`
