@@ -262,7 +262,7 @@ export default class Picture extends Intersection() {
     }
     // generate sources if there aren't any but the query in the picture src would allow by width parameter
     if (!this.sources.length) {
-      const src = new URL(this.img.getAttribute('data-src'))
+      const src = Picture.newUrl(this.img.getAttribute('data-src'))
       let naturalWidth
       if ((naturalWidth = src.searchParams.get('width'))) {
         if (this.img.naturalWidth) naturalWidth = this.img.naturalWidth
@@ -288,11 +288,11 @@ export default class Picture extends Intersection() {
     let img = this.img
     // if loading eager and if bad quality pic available load the picture first with bad quality and then improve it
     if (this.getAttribute('loading') === 'eager') {
-      const src = new URL(this.img.getAttribute('data-src'))
+      const src = Picture.newUrl(this.img.getAttribute('data-src'))
       if (src.searchParams.get('quality')) {
         this.sources.forEach(source => {
           const newSource = source.cloneNode()
-          const src = new URL(source.getAttribute('srcset'))
+          const src = Picture.newUrl(source.getAttribute('srcset'))
           src.searchParams.set('quality', '0')
           newSource.setAttribute('srcset', src.href)
           this.picture.appendChild(newSource)
@@ -391,6 +391,16 @@ export default class Picture extends Intersection() {
 
   get mouseEventElement () {
     return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
+  }
+
+  /**
+   * harmonize new URL behavior
+   *
+   * @param {string} path
+   * @return {URL}
+   */
+  static newUrl (path) {
+    return new URL(path, path.charAt(0) === '/' ? location.origin : path.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
   }
 
   /**
