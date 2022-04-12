@@ -55,15 +55,18 @@ export default class Form extends Shadow() {
    * @return {void}
    */
   renderCSS () {
-    /** @type {any} */
-    const ButtonConstructor = class extends Button {} // otherwise the browser complains that this constructor was already defined
-    if (!customElements.get('a-button')) customElements.define('a-button', ButtonConstructor)
-    const button = new ButtonConstructor({ namespace: 'button-primary-' })
-    button.hidden = true
-    this.html = button
-    button.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
-    this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
-    button.remove()
+    // did trigger an error when executed more than once on umbraco, only able to reproduce by using m-form twice
+    try {
+      /** @type {any} */
+      const ButtonConstructor = class extends Button {} // otherwise the browser complains that this constructor was already defined
+      if (!customElements.get('a-button')) customElements.define('a-button', ButtonConstructor)
+      const button = new ButtonConstructor({ namespace: 'button-primary-' })
+      button.hidden = true
+      this.html = button
+      button.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
+      this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
+      button.remove()
+    } catch (error) {}
     this.css = /* css */`
       legend {
         font-family: var(--font-family-bold, var(--font-family, inherit));
