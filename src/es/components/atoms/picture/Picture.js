@@ -2,6 +2,7 @@
 import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global CustomEvent */
+/* global location */
 
 /**
  * Picture
