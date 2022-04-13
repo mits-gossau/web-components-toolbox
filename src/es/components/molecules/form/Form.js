@@ -68,12 +68,12 @@ export default class Form extends Shadow() {
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.submit) this.submit.addEventListener('click', this.clickListener)
-    if (this.getAttribute('use-recaptcha')) this.addEventListener('submit', this.submitListener)
+    if (this.getAttribute('use-recaptcha') !== null) this.addEventListener('submit', this.submitListener)
   }
 
   disconnectedCallback () {
     if (this.submit) this.submit.removeEventListener('click', this.clickListener)
-    if (this.getAttribute('use-recaptcha')) this.removeEventListener('submit', this.submitListener)
+    if (this.getAttribute('use-recaptcha') !== null) this.removeEventListener('submit', this.submitListener)
   }
 
   /**
