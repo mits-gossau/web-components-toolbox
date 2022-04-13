@@ -29,15 +29,51 @@ export default class Form extends Shadow() {
         if ((fieldValidationError = this.root.querySelector('.field-validation-error')) && fieldValidationError.parentNode && fieldValidationError.parentNode.parentNode) fieldValidationError.parentNode.parentNode.scrollIntoView()
       }, 50)
     }
+
+    this.submitListener = event => {
+      event.preventDefault()
+
+      if (this.getAttribute('site-key') && this.getAttribute('controller-name')) {
+        this.loadDependency().then(grecaptcha => {
+          // @ts-ignore
+          grecaptcha.ready(() => {
+            // @ts-ignore
+            grecaptcha.execute(this.getAttribute('site-key'), { action: 'submit_form' }).then(token => {
+              fetch(`/umbraco/api/${this.getAttribute('controller-name')}/VerifyRecaptcha`, {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ recaptchaToken: token })
+              })
+                .then(response => {
+                  if (response.ok) return response.json()
+                })
+                .then(response => {
+                  if (response) { // passed captcha
+                      console.info("TESTING: passed captcha")
+                      return
+                  } else {
+                    console.error('Failed captcha')
+                    //TODO stop form from sending 
+                  }
+                })
+                  //TODO stop form from sending 
+                .catch(error => console.error('Something went wrong while verifying captcha: ', error))
+            })
+          })
+        })
+      }
+    }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.submit) this.submit.addEventListener('click', this.clickListener)
+    if (this.getAttribute('use-recaptcha')) this.addEventListener('submit', this.submitListener)
   }
 
   disconnectedCallback () {
     if (this.submit) this.submit.removeEventListener('click', this.clickListener)
+    if (this.getAttribute('use-recaptcha')) this.removeEventListener('submit', this.submitListener)
   }
 
   /**
@@ -164,6 +200,29 @@ export default class Form extends Shadow() {
       default:
         return this.fetchCSS(styles, false)
     }
+  }
+
+  /**
+   * fetch dependency
+   *
+   * @returns {Promise<{components: any}>}
+   */
+   loadDependency () {
+    return this.dependencyPromise || (this.dependencyPromise = new Promise(resolve => {
+      // needs markdown
+      if ('grecaptcha' in self === true) {
+        resolve(self.grecaptcha) // eslint-disable-line
+      } else {
+        const vendorsMainScript = document.createElement('script')
+        vendorsMainScript.setAttribute('type', 'text/javascript')
+        vendorsMainScript.setAttribute('async', '')
+        vendorsMainScript.setAttribute('src', `https://www.google.com/recaptcha/api.js?render=${this.getAttribute('site-key')}`)
+        vendorsMainScript.onload = () => {
+          if ('grecaptcha' in self === true) resolve(self.grecaptcha) // eslint-disable-line
+        }
+        this.html = [vendorsMainScript]
+      }
+    }))
   }
 
   getInputFieldsWithText (add) {
