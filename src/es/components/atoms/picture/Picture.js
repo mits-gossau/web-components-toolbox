@@ -219,7 +219,7 @@ export default class Picture extends Intersection() {
     Array.from(this.root.children).forEach(node => {
       if (node.nodeName === 'IMG') {
         this.img = node
-        this.img.setAttribute('data-src', node.getAttribute('src'))
+        this.img.setAttribute('data-src', Picture.pathResolver(node.getAttribute('src')))
       } else if (node.nodeName === 'SOURCE') this.sources.push(node)
     })
     // through defaultSource Attribute add img
