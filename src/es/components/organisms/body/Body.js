@@ -24,9 +24,18 @@ export default class Body extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('aria-label', 'Main')
+    this.timeout = null
     this.clickAnchorEventListener = event => {
       let element = null
-      if (event && event.detail && event.detail.selector && (element = this.root.querySelector(event.detail.selector))) element.scrollIntoView({ behavior: 'smooth' })
+      if ((element = this.root.querySelector((event && event.detail && event.detail.selector) || location.hash))) {
+        element.scrollIntoView({ behavior: 'smooth' })
+        clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => element.scrollIntoView({ behavior: 'smooth' }), 500) // lazy loading pics make this necessary to reach target
+        self.removeEventListener('hashchange', this.clickAnchorEventListener)
+        location.hash = location.hash.replace('_scrolled', '') + '_scrolled'
+        self.addEventListener('hashchange', this.clickAnchorEventListener)
+      }
     }
   }
 
@@ -35,13 +44,15 @@ export default class Body extends Shadow() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
     if (location.hash) {
-      self.addEventListener('load', event => this.clickAnchorEventListener({ detail: { selector: location.hash } }), { once: true })
-      document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => setTimeout(() => this.clickAnchorEventListener({ detail: { selector: location.hash } }), 1000), { once: true })
+      self.addEventListener('load', event => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), { once: true })
+      document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => setTimeout(() => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), 1000), { once: true })
     }
+    self.addEventListener('hashchange', this.clickAnchorEventListener)
   }
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
+    self.removeEventListener('hashchange', this.clickAnchorEventListener)
   }
 
   /**
@@ -70,6 +81,7 @@ export default class Body extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host {
+        display: flow-root;
         background-color: var(--background-color, transparent);
         background-repeat: var(--background-repeat, initial) !important;
         background-position: var(--background-position, 0);
@@ -85,11 +97,6 @@ export default class Body extends Shadow() {
         margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--content-width, 55%);
       }
-      :host > main > o-body-style {
-        display: inline-block !important;
-        margin: 0;
-        width: 100%;
-      }
       :host(.content-max-width) > main > *:not(.ignore-max-width), :host> main > *.content-max-width {
         max-width: var(--content-max-width, none);
       }
@@ -98,6 +105,9 @@ export default class Body extends Shadow() {
       }
       :host > main > a-emotion-pictures:first-child {
         margin-top: var(--a-emotion-pictures-margin-top-first-child, calc(-1 * var(--content-spacing, unset)));
+      }
+      :host > main > a-google-maps:first-child {
+        margin-top: var(--a-google-maps-margin-top-first-child, calc(-1 * var(--content-spacing, unset)));
       }
       @media only screen and (max-width: _max-width_) {
         :host > main {
@@ -135,6 +145,7 @@ export default class Body extends Shadow() {
    * @return {void}
    */
   renderHTML () {
+    this.setAttribute('role', 'main')
     this.main = this.root.querySelector('main') || document.createElement('main')
     Array.from(this.root.children).forEach(node => {
       if (node === this.main || node.getAttribute('slot') || node.nodeName === 'STYLE') return false

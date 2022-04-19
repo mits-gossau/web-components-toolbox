@@ -226,7 +226,7 @@ export default class Logo extends Shadow() {
         detail: {
           origEvent: event,
           child: this,
-          img: this.img,
+          img: this.img
         },
         bubbles: true,
         cancelable: true,

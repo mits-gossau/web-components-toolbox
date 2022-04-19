@@ -14,6 +14,7 @@ export default class Teaser extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('role', 'figure')
     this.clickListener = event => {
       if (this.hasAttribute('href')) self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
     }
@@ -100,6 +101,9 @@ export default class Teaser extends Shadow() {
           :host figure figcaption {
             z-index: 1;
           }
+          :host figure figcaption *.bg-color {
+            padding-top: 0;
+          }
           :host(:hover) figure figcaption * {
             color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
             background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
@@ -108,7 +112,7 @@ export default class Teaser extends Shadow() {
         `
         : ''}
       :host figure a-picture {
-        height: var(--a-picture-height, 100%);
+        height: var(--a-picture-height, auto);
         width: var(--a-picture-width, 100%);
         transition: var(--a-picture-transition, none);
         transform: var(--a-picture-transform, none);
@@ -117,6 +121,10 @@ export default class Teaser extends Shadow() {
         transform: var(--a-picture-transform-hover, var(--a-picture-transform, none));
       }
       :host figure figcaption {
+        display: var(--figcaption-display, block);
+        flex-direction: var(--figcaption-flex-direction, row);
+        justify-content: var(--figcaption-justify-content, normal);
+        align-items: var(--figcaption-align-items, normal);
         align-self: var(--figcaption-align-self, auto);
         background-color: var(--figcaption-background-color, #c2262f);
         margin: var(--figcaption-margin, 0);
@@ -159,9 +167,25 @@ export default class Teaser extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
+      case 'teaser-tile-text-center-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-text-center-/tile-text-center-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the tile-.css namespace with teaser-tile-text-center-
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--teaser-tile-/g, '--teaser-tile-text-center-')
+        })
       case 'teaser-overlay-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overlay-/overlay-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      case 'teaser-download-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       default:

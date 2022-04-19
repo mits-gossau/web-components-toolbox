@@ -6,26 +6,33 @@
  */
 :root {
   --background-color: var(--m-white);
+  --color-active: var(--color-hover);
   --color-disabled: var(--m-orange-300);
   --color-hover: var(--m-orange-800);
   --color-secondary: var(--m-orange-600);
   --color: var(--m-black);
-  --content-spacing-mobile: 0.75rem;
-  --content-spacing: 1.5rem;
-  --font-family-secondary: micro, Helvetica, Arial, sans-serif;
-  --font-family: text, Helvetica, Arial, sans-serif;
+  --content-spacing-mobile: 1rem;
+  --content-spacing: 1.143rem;
+  --font-family-bold: HelveticaNowTextBold, HelveticaNowText, Helvetica, Arial, sans-serif;
+  --font-family-secondary: Avenir35Light, sans-serif;
+  --font-family: HelveticaNowText, Helvetica, Arial, sans-serif;
   --font-size-mobile: min(14px, 5vw);
   --font-size: max(16px, 0.8vw);
   --font-weight: 400;
+  --footer-default-content-width: var(--header-default-content-width);
+  --header-default-content-width: max(calc(1200px - var(--content-spacing) * 2), 55%); /* Environment.js mobileBreakpoint must correspond to the calc 1200px */
   --line-height: 1.5em;
+  --navigation-default-content-width: var(--header-default-content-width);
 }
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: var(--m-black);
     --color: var(--m-white);
-    --navigation-default-color-custom: var(--color);
+    --footer-default-invert-a-color-hover-custom: var(--color-hover);
+    --footer-default-invert-color-custom: var(--color);
     --header-default-a-menu-icon-background-color-custom: var(--color);
-    --footer-default-color-custom: var(--color);
-    --footer-default-hr-border-bottom-custom: 1px dotted var(--color);
+    --navigation-default-color-custom: var(--color);
   }
 }
+*/

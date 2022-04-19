@@ -45,6 +45,10 @@ export default class Navigation extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('role', 'navigation')
+    this.setAttribute('aria-label', 'Menu')
+    this.setAttribute('aria-labelledby', 'hamburger')
+    this.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
     this.clickListener = event => {
@@ -52,7 +56,10 @@ export default class Navigation extends Shadow() {
       this.setFocusLostClickBehavior()
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
       // console.log('changed', this.isDesktop === (this.isDesktop = this.checkMedia('desktop')));
-      if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((!this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) document.documentElement.classList.add(this.getAttribute('no-scroll') || 'no-scroll')
+      if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((!this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) {
+        document.documentElement.classList.add(this.getAttribute('no-scroll') || 'no-scroll')
+        if (this.getMedia() !== 'desktop') this.setAttribute('aria-expanded', 'true')
+      }
       let section
       if ((section = this.root.querySelector('li.open section'))) {
         if (this.checkMedia('desktop')) {
@@ -68,7 +75,10 @@ export default class Navigation extends Shadow() {
     }
     let timeout = null
     this.resizeListener = event => {
-      if (this.hasAttribute('no-scroll')) this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+      if (this.hasAttribute('no-scroll')) {
+        this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+        if (this.getMedia() !== 'desktop') this.setAttribute('aria-expanded', 'false')
+      }
       this.clickListener(event)
       clearTimeout(timeout)
       timeout = setTimeout(() => this.checkIfWrapped(true), 200)
@@ -80,7 +90,11 @@ export default class Navigation extends Shadow() {
         this.root.querySelector('nav > ul:not(.language-switcher)').classList[event.target.parentNode && event.target.parentNode.classList.contains('open') ? 'add' : 'remove']('open')
         if (this.checkMedia('mobile')) {
           Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
-            if (link !== event.target.parentNode) link.classList.remove('open')
+            if (link !== event.target.parentNode) {
+              link.classList.remove('open')
+              link.setAttribute('aria-expanded', 'false')
+              if (link.parentElement) link.parentElement.classList.remove('open')
+            }
           })
         }
       }
@@ -101,7 +115,7 @@ export default class Navigation extends Shadow() {
       Promise.all(showPromises).then(() => {
         this.hidden = false
         this.checkIfWrapped(true)
-        setTimeout(() => this.checkIfWrapped(true), 1000);
+        setTimeout(() => this.checkIfWrapped(true), 1000)
         this.setFocusLostClickBehavior()
         this.css = /* CSS */`
           :host {
@@ -332,11 +346,11 @@ export default class Navigation extends Shadow() {
         border-bottom: 2px solid transparent;
         transition: all 0.1s ease;
       }
-      :host > nav > ul > li:hover:not(.search) {
+      :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
         border-bottom: 2px solid var(--color);
       }
-      :host > nav > ul li.open {
-        border-bottom: 2px solid var(--color-secondary);
+      :host > nav > ul li:not(:hover).open {
+        border-bottom: 2px solid var(--color);
       }
       :host > nav > ul > li > div.background {
         cursor: auto;
@@ -381,7 +395,7 @@ export default class Navigation extends Shadow() {
         padding-bottom: 0.5rem;
       }
       :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li:first-child, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
-        --a-link-font-weight: bold;
+        --a-link-font-family: var(--font-family-bold, var(--font-family, inherit));
         --a-link-font-size: 1.25rem;
         padding-bottom: 0.875rem;
       }
@@ -449,7 +463,7 @@ export default class Navigation extends Shadow() {
           justify-content: space-between;
           width: 100%;
         }
-        :host > nav > ul > li:hover:not(.search) {
+        :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
           border-bottom: var(--header-default-border-bottom);
         }
         :host > nav > ul li.open {
@@ -553,23 +567,35 @@ export default class Navigation extends Shadow() {
   renderHTML (arrowDirections = ['left', 'right']) {
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
     Array.from(this.root.children).forEach(node => {
-      if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'NAV' ) return false
+      if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'NAV') return false
       this.nav.appendChild(node)
     })
     this.html = this.nav
     return this.loadChildComponents().then(children => {
       Array.from(this.root.querySelectorAll('a')).forEach(a => {
         const li = a.parentElement
+        li.setAttribute('aria-expanded', 'false')
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
         const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
         aLink.setAttribute('hit-area', this.getAttribute('hit-area') || 'true')
+        aLink.setAttribute('aria-expanded', 'false')
         if (this.hasAttribute('set-active')) aLink.setAttribute('set-active', this.getAttribute('set-active'))
-        if (a.classList.contains('active')) aLink.classList.add('active')
+        if (a.classList.contains('active')) {
+          aLink.classList.add('active')
+          li.classList.add('active')
+        }
         const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
         arrow.setAttribute('direction', arrowDirections[1])
         const arrowClickListener = event => {
-          if (this.hasAttribute('focus-lost-close-mobile')) Array.from(this.root.querySelectorAll('li.open')).forEach(li => li.classList.remove('open'))
+          if (this.hasAttribute('focus-lost-close-mobile')) {
+            Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
+              li.classList.remove('open')
+              li.setAttribute('aria-expanded', 'false')
+              if (li.parentElement) li.parentElement.classList.remove('open')
+            })
+          }
           li.classList.toggle('open')
+          li.setAttribute('aria-expanded', li.classList.contains('open') ? 'true' : 'false')
           arrow.setAttribute('direction', li.classList.contains('open') ? arrowDirections[0] : arrowDirections[1])
         }
         arrow.addEventListener('click', arrowClickListener)
@@ -583,10 +609,12 @@ export default class Navigation extends Shadow() {
                 if (this.focusLostClose) event.stopPropagation()
                 Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
                   aLink.classList.remove('open')
+                  aLink.setAttribute('aria-expanded', 'false')
                   let arrow
                   if (aLink.parentNode && event.target && !aLink.parentNode.classList.contains('open') && (arrow = aLink.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
                 })
                 event.target.classList.add('open')
+                event.target.setAttribute('aria-expanded', 'true')
               } else if (a.getAttribute('href')[0] === '#') {
                 this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
                   detail: {
@@ -603,11 +631,23 @@ export default class Navigation extends Shadow() {
         self.addEventListener('click', event => {
           if (this.focusLostClose) {
             if (this.hasAttribute('focus-lost-close-mobile')) {
-              Array.from(this.root.querySelectorAll('li.open')).forEach(li => li.classList.remove('open'))
-              if (this.hasAttribute('no-scroll')) document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+              Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
+                li.classList.remove('open')
+                li.setAttribute('aria-expanded', 'false')
+                if (li.parentElement) li.parentElement.classList.remove('open')
+              })
+              if (this.hasAttribute('no-scroll')) {
+                document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+                if (this.getMedia() !== 'desktop') this.setAttribute('aria-expanded', 'false')
+              }
             }
             Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
               aLink.classList.remove('open')
+              aLink.setAttribute('aria-expanded', 'false')
+              if (aLink.parentElement) {
+                aLink.parentElement.classList.remove('open')
+                aLink.parentElement.setAttribute('aria-expanded', 'false')
+              }
               let arrow
               if (aLink.parentNode && event.target && !aLink.parentNode.classList.contains('open') && (arrow = aLink.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
             })
@@ -733,10 +773,10 @@ export default class Navigation extends Shadow() {
     if (this.getMedia() !== 'desktop') return
     this._checkIfWrappedCounter = resetCouter ? 1 : !this._checkIfWrappedCounter ? 1 : this._checkIfWrappedCounter + 1
     self.requestAnimationFrame(timeStamp => {
-      if (this._checkIfWrappedCounter < 10 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 500)
+      if (this._checkIfWrappedCounter < 30 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 1000)
       this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
       // TODO: should be this.mobileBreakpoint + 1px
-      this.css = /*css*/`
+      this.css = /* css */`
         @media only screen and (min-width: ${this.mobileBreakpoint}) {
           :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
             margin-top: ${this.root.querySelector('nav > ul').offsetHeight + 1}px;

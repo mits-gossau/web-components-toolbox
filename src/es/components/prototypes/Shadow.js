@@ -1,19 +1,23 @@
 // @ts-check
 /** @typedef {ShadowRootMode | 'false'} mode */
 /** @typedef {{
- path: string,
- cssSelector?: string,
- namespace?: string|false,
- namespaceFallback?: boolean,
- styleNode?: HTMLStyleElement,
- style?: string,
- error?: string
+  path: string,
+  cssSelector?: string,
+  namespace?: string|false,
+  namespaceFallback?: boolean,
+  styleNode?: HTMLStyleElement,
+  style?: string,
+  appendStyleNode?: boolean,
+  error?: string,
+  maxWidth?: string,
+  node?: HTMLElement & Shadow & *
 }} fetchCSSParams */
 
 /* global HTMLElement */
 /* global document */
 /* global self */
 /* global fetch */
+/* global CustomEvent */
 
 /**
  * Shadow is a helper with a few functions for every web component which possibly allows a shadowRoot (atom, organism and molecule)
@@ -75,6 +79,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       Array.from(this.children).forEach(node => {
         if (!node.getAttribute('slot')) shadowRoot.appendChild(node)
       })
+      this.setAttribute('tabindex', '0')
     }
     if (typeof options.namespace === 'string') this.setAttribute('namespace', options.namespace)
     /** @type {string} */
@@ -185,22 +190,26 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {string|false} [namespace = this.namespace]
    * @param {boolean} [namespaceFallback = this.namespaceFallback]
    * @param {HTMLStyleElement} [styleNode = this._css]
+   * @param {boolean} [appendStyleNode = true]
+   * @param {string} [maxWidth = this.mobileBreakpoint]
+   * @param {HTMLElement & Shadow} [node = this]
    * @return {string}
    */
-  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css) {
+  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true, maxWidth = this.mobileBreakpoint, node = this) {
     if (!styleNode) {
     /** @type {HTMLStyleElement} */
       styleNode = document.createElement('style')
       styleNode.setAttribute('_css', '')
       styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-      this.root.appendChild(styleNode)
       this._css = styleNode
     }
+    if (appendStyleNode) node.root.appendChild(styleNode)
     if (!style) {
       return (styleNode.textContent = '')
     } else {
-      style = this.cssMaxWidth(style)
-      if (!this.hasShadowRoot) style = Shadow.cssHostFallback(style, cssSelector)
+      // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/controllers/fetchCss/FetchCss.js
+      style = Shadow.cssMaxWidth(style, maxWidth)
+      if (cssSelector !== ':host') style = Shadow.cssHostFallback(style, cssSelector)
       if (namespace) {
         if (style.includes('---')) console.error('this.css has illegal dash characters at:', this)
         if (namespaceFallback) {
@@ -212,7 +221,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       }
       // TODO: Review the safari fix below, if the bug got fixed within safari itself (NOTE: -webkit prefix did not work for text-decoration-thickness). DONE 2021.11.10 | LAST CHECKED 2021.11.10
       // safari text-decoration un-supported shorthand fix
-      if (navigator.userAgent.includes('Mac') && style.includes('text-decoration:')) style = Shadow.cssTextDecorationShortHandFix(style, this)
+      if (navigator.userAgent.includes('Mac') && style.includes('text-decoration:')) style = Shadow.cssTextDecorationShortHandFix(style, node)
       return (styleNode.textContent += style)
     }
   }
@@ -279,49 +288,12 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    *
    * @static
    * @param {string} style
-   * @param {string} [maxWidth = this.mobileBreakpoint]
+   * @param {string} maxWidth
    * @return {string}
    */
   // @ts-ignore
-  cssMaxWidth (style, maxWidth = this.mobileBreakpoint) {
+  static cssMaxWidth (style, maxWidth) {
     return style.replace(/_max-width_/g, maxWidth)
-  }
-
-  /**
-   * renders the o-highlight-list css
-   * @param {fetchCSSParams | [fetchCSSParams]} fetchCSSParams
-   * @param {boolean} [hide = true]
-   * @return {Promise<fetchCSSParams[]>}
-   */
-  fetchCSS (fetchCSSParams, hide = true) {
-    if (hide) this.hidden = true
-    if (!Array.isArray(fetchCSSParams)) fetchCSSParams = [fetchCSSParams]
-    return Promise.all(fetchCSSParams.map(
-      fetchCSSParam => fetch(fetchCSSParam.path).then(response => {
-        if (response.status >= 200 && response.status <= 299) return Promise.all([Promise.resolve(fetchCSSParam), response.text()])
-        throw new Error(response.statusText)
-      }).then(([fetchCSSParam, style]) => ({ ...fetchCSSParam, style })).catch(error => {
-        if (hide) this.hidden = false
-        error = `${fetchCSSParam.path} ${error}!!!`
-        // @ts-ignore
-        return { ...fetchCSSParam, error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`) }
-      })
-    )).then(fetchCSSParams => {
-      if (hide) this.hidden = false
-      return fetchCSSParams.map(({ path, cssSelector, namespace, namespaceFallback, styleNode, style, error }, i) => {
-        if (error) return fetchCSSParams[i]
-        // create a new style node if none is supplied
-        if (!styleNode) {
-          /** @type {HTMLStyleElement} */
-          styleNode = document.createElement('style')
-          styleNode.setAttribute('_css', path)
-          styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-          if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
-        }
-        this.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
-        return { ...fetchCSSParams[i], styleNode, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode) }
-      })
-    }).catch(error => error)
   }
 
   /**
@@ -350,6 +322,124 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }
       }, `${match}/* Safari fix of text-decoration shorthand bug which only supports the first two arguments. */`)}/* end of fix. More Infos at: src/es/components/web-components-cms-template/src/es/components/prototypes/Shadow.js */`
     }) // find text-decoration: and spread the arguments to line, style, color and thickness
+  }
+
+  /**
+   * renders the o-highlight-list css
+   *
+   * @param {fetchCSSParams[]} fetchCSSParams
+   * @param {boolean} [hide = true]
+   * @param {boolean} [useController = true]
+   * @return {Promise<fetchCSSParams[]>}
+   */
+  fetchCSS (fetchCSSParams, hide = true, useController = true) {
+    if (hide) this.hidden = true
+    if (!Array.isArray(fetchCSSParams)) fetchCSSParams = [fetchCSSParams]
+    if (useController && document.body.hasAttribute(this.getAttribute('fetch-css') || 'fetch-css')) {
+      // use: /src/es/components/controllers/fetchCss/FetchCss.js instead of fetching here, to use the cache from within the controller
+      return new Promise(
+        /**
+         * setup Promise function
+         *
+         * @param {(fetchCSSParams: fetchCSSParams[]) => fetchCSSParams[] | any} resolve
+         * @return {boolean}
+         */
+        resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('fetch-css') || 'fetch-css', {
+          /** @type {import("../controllers/fetchCss/FetchCss.js").fetchCssEventDetail} */
+          detail: {
+            fetchCSSParams,
+            resolve,
+            node: this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      ).then(
+        /**
+         * the controller resolving fetch-css will return with its fetchCSS results
+         *
+         * @param {fetchCSSParams[]} resultFetchCSSParams
+         * @return {fetchCSSParams[]}
+         */
+        resultFetchCSSParams => {
+          if (hide) this.hidden = false
+          return resultFetchCSSParams
+        }
+      )
+    } else {
+      return Promise.all(fetchCSSParams.map(
+        /**
+         * fetch each fetchCSSParam.path and return the promise
+         *
+         * @param {fetchCSSParams} fetchCSSParam
+         * @return {Promise<fetchCSSParams>}
+         */
+        fetchCSSParam => (fetch(fetchCSSParam.path).then(
+          /**
+           * return the fetchCSSParam with the response.text or an Error
+           *
+           * @param {Response} response
+           * @return {Promise<[fetchCSSParams, string]>}
+           */
+          response => {
+            if (response.status >= 200 && response.status <= 299) return Promise.all([Promise.resolve(fetchCSSParam), response.text()])
+            throw new Error(response.statusText)
+          }
+        )).then(
+          /**
+             * Resolve both promises and return it into one
+             *
+             * @param {[fetchCSSParams, string]} fetchCSSParam, style
+             * @return {fetchCSSParams}
+             */
+          ([fetchCSSParam, style]) => ({ ...fetchCSSParam, style })
+        ).catch(
+          /**
+             * Return the fetchCSSParams with the attached error
+             *
+             * @param {string} error
+             * @return {fetchCSSParams}
+             */
+          error => {
+            if (hide) this.hidden = false
+            error = `${fetchCSSParam.path} ${error}!!!`
+            // @ts-ignore
+            return { ...fetchCSSParam, error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`) }
+          }
+        )
+      )).then(
+        /**
+         * Process each fetchCSSParam, make a styleNode if needed and return them with the result of setStyle
+         *
+         * @param {fetchCSSParams[]} fetchCSSParams
+         * @return {fetchCSSParams[]}
+         */
+        fetchCSSParams => {
+          if (hide) this.hidden = false
+          return fetchCSSParams.map(
+            /**
+             * @param {fetchCSSParams} path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error
+             * @return {fetchCSSParams}
+             */
+            ({ path, cssSelector, namespace, namespaceFallback, styleNode, style, appendStyleNode = true, error, maxWidth, node = this }, i) => {
+              if (error) return fetchCSSParams[i]
+              // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/controllers/fetchCss/FetchCss.js
+              // create a new style node if none is supplied
+              if (!styleNode) {
+                /** @type {HTMLStyleElement} */
+                styleNode = document.createElement('style')
+                styleNode.setAttribute('_css', path)
+                styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
+                if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, node)
+              }
+              if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
+            }
+          )
+        }
+      ).catch(error => error)
+    }
   }
 
   /**
@@ -404,6 +494,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       this.root.appendChild(this._cssHidden)
     }
     this._cssHidden.textContent = ''
+    value ? this.setAttribute('aria-hidden', 'true') : this.removeAttribute('aria-hidden')
     this.setCss(value
       ? /* css */`
         :host {
@@ -412,7 +503,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       `
       : /* css */`
         :host, :host > *, :host > * > * {
-          animation: var(--show, show .2s ease-out);
+          animation: var(--show, show .3s ease-out);
         }
         @keyframes show {
           0%{opacity: 0}
@@ -434,6 +525,13 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    */
   get mobileBreakpoint () {
     // @ts-ignore ignoring self.Environment error
-    return this.getAttribute('mobile-breakpoint') ? this.getAttribute('mobile-breakpoint') : self.Environment && !!self.Environment.mobileBreakpoint ? self.Environment.mobileBreakpoint : '767px'
+    return this.getAttribute('mobile-breakpoint')
+      ? this.getAttribute('mobile-breakpoint')
+      : self.Environment && !!self.Environment.mobileBreakpoint
+        ? self.Environment.mobileBreakpoint({
+            constructor: this.constructor.name,
+            tagName: this.tagName
+          })
+        : '767px'
   }
 }

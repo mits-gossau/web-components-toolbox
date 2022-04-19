@@ -31,6 +31,7 @@ export default class Link extends Shadow() {
     super(...args)
 
     this._a = a
+    this.setAttribute('role', 'link')
   }
 
   connectedCallback () {
@@ -95,6 +96,7 @@ export default class Link extends Shadow() {
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
         font-weight: var(--font-weight, normal);
+        font-family: var(--font-family, inherit);
         height: var(--height, 100%);
         padding: var(--padding, 14px 10px);
         text-align: var(--text-align, left);
@@ -103,25 +105,38 @@ export default class Link extends Shadow() {
         text-transform: var(--text-transform, none);
         transition: var(--transition, all 0.3s ease-out);
         width: var(--width, 100%);
-        font-family: var(--font-family);
         white-space: var(--white-space, normal);
         word-break: var(--word-break, normal);
       }
       :host(.active) > a, :host(.active) > a ~ ${this.hitAreaTagName} {
         color: var(--color-active, var(--color-hover, var(--color, yellow)));
         text-decoration: var(--text-decoration-active, var(--text-decoration-hover, var(--text-decoration, none)));
-        font-family: var(--font-family-active, var(--font-family-hover));
+        font-family: var(--font-family-active, var(--font-family-hover, var(--font-family, inherit)));
       }
       :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName} {
+        box-shadow: var(--box-shadow-hover, none);
         color: var(--color-hover, var(--color, yellow));
         text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
-        font-family: var(--font-family-hover);
+        font-family: var(--font-family-hover, var(--font-family, inherit));
       }
       :host > a:focus {
         text-decoration: var(--text-decoration-focus, unset);
       }
       :host > span {
         display: var(--span-display, inline);
+      }
+      :host a[href$='.pdf'] {
+        background: transparent url(${this.iconPath}) center left no-repeat;
+        background-position: left bottom;
+        padding:var(--icon-padding);
+        display:inline;
+        vertical-align:middle;
+        transition: box-shadow .25s ease-out;
+      }
+      :host a[href$='.pdf'] span {
+        color: var(--icon-span-color);
+        font-family:var(--icon-span-font-family);
+        padding:var(--icon-span-padding);
       }
       ${this.getAttribute('namespace') === 'underline-'
         ? /* CSS */`
@@ -162,11 +177,15 @@ export default class Link extends Shadow() {
     `
     switch (this.getAttribute('namespace')) {
       case 'underline-':
-        this.fetchCSS([{
+        return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./underline-/underline-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
-        break
+      case 'download-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
     }
   }
 
@@ -198,5 +217,9 @@ export default class Link extends Shadow() {
 
   get a () {
     return this._a || (this._a = this.root.querySelector('a'))
+  }
+
+  get iconPath () {
+    return this.getAttribute('icon-path') || `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../molecules/teaser/download-/img/download.svg`
   }
 }

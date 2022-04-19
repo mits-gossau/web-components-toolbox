@@ -42,6 +42,8 @@ export default class Header extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('role', 'banner')
+    this.setAttribute('aria-label', 'Header')
     this.scrollListener = event => {
       const lastScroll = self.scrollY
       setTimeout(() => {
@@ -68,8 +70,16 @@ export default class Header extends Shadow() {
     this.clickAnimationListener = event => {
       if (this.header.classList.contains('open')) {
         this.mNavigation.classList.add('open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', 'true')
       } else if (event && event.animationName === 'close') {
         this.mNavigation.classList.remove('open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', 'false')
+      }
+    }
+    this.keyupListener = event => {
+      if (event.key === 'Escape') {
+        document.body.click()
+        if (this.MenuIcon.classList.contains('open')) this.MenuIcon.click()
       }
     }
     let timeout = null
@@ -96,21 +106,22 @@ export default class Header extends Shadow() {
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     showPromises.push(new Promise(resolve => this.addEventListener('navigation-load', event => resolve(), { once: true })))
-    if (this.aLogo && this.aLogo.hasAttribute('logo-load') && !this.aLogo.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('logo-load', event => resolve(), { once: true })))
+    if (this.aLogo && !this.aLogo.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('logo-load', event => resolve(), { once: true })))
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => {
         this.hidden = false
         this.setStickyOffsetHeight()
         this.adjustLogoPos(true)
-        setTimeout(() => this.adjustLogoPos(true), 1000);
+        setTimeout(() => this.adjustLogoPos(true), 1000)
       })
     }
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
     self.addEventListener('resize', this.resizeListener)
-    this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
+    if (this.mNavigation) this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
     self.addEventListener('resize', this.mutationCallback)
+    document.addEventListener('keyup', this.keyupListener)
     this.observer.observe(this.header, { attributes: true })
   }
 
@@ -118,8 +129,9 @@ export default class Header extends Shadow() {
     if (this.hasAttribute('sticky')) self.removeEventListener('scroll', this.scrollListener)
     this.removeEventListener('click', this.clickAnimationListener)
     self.removeEventListener('resize', this.resizeListener)
-    this.mNavigation.removeEventListener('animationend', this.clickAnimationListener)
+    if (this.mNavigation) this.mNavigation.removeEventListener('animationend', this.clickAnimationListener)
     self.removeEventListener('resize', this.mutationCallback)
+    document.removeEventListener('keyup', this.keyupListener)
     this.observer.disconnect()
   }
 
@@ -351,6 +363,7 @@ export default class Header extends Shadow() {
         :host  > header > a-menu-icon{
           align-self: var(--a-menu-icon-align-self-mobile, var(--a-menu-icon-align-self, var(--align-self, auto)));
           display: var(--a-menu-icon-display-mobile, block);
+          z-index: 102;
         }
         :host  > header.open > a-menu-icon{
           --a-menu-icon-height: var(--a-menu-icon-height-open-mobile);
@@ -398,16 +411,17 @@ export default class Header extends Shadow() {
     self.addEventListener('resize', event => document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll'))
     return this.getAttribute('menu-icon')
       ? this.loadChildComponents().then(children => {
-          const MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback') })
-          MenuIcon.addEventListener('click', event => {
+          this.MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+          this.MenuIcon.addEventListener('click', event => {
             this.header.classList.toggle('open')
             const prop = this.header.classList.contains('open') ? 'add' : 'remove'
+            if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', this.header.classList.contains('open') ? 'true' : 'false')
             document.documentElement.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
             Array.from(this.header.children).forEach(node => {
               node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
             })
           })
-          this.header.appendChild(MenuIcon)
+          this.header.appendChild(this.MenuIcon)
           this.html = this.style
           this.adjustLogoPos(true)
         })
@@ -472,9 +486,9 @@ export default class Header extends Shadow() {
     if (this.getMedia() !== 'desktop') return
     this._adjustLogoPosCounter = resetCouter ? 1 : !this._adjustLogoPosCounter ? 1 : this._adjustLogoPosCounter + 1
     self.requestAnimationFrame(timeStamp => {
-      const navHeight = this.mNavigation.offsetHeight
+      const navHeight = this.mNavigation ? this.mNavigation.offsetHeight : 200
       const logoHeight = this.aLogo.offsetHeight
-      if (this._adjustLogoPosCounter < 10 && (!navHeight || !logoHeight)) return setTimeout(() => this.adjustLogoPos(false), 500)
+      if (this._adjustLogoPosCounter < 30 && (!navHeight || !logoHeight)) return setTimeout(() => this.adjustLogoPos(false), 1000)
       this.css = /* CSS */`
         :host > header > a-logo {
           top: calc(${navHeight}px / 2 - ${logoHeight}px / 2);

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="68px" height="83px" viewBox="0 0 68 83" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7.2 (28276) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 15</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="49.9995398%" y1="100%" x2="49.9995398%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#000000" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0.3" offset="100%"></stop>
+        </linearGradient>
+        <path d="M40,74 C35.034,67.4783184 16,41.3576146 16,24 C16,10.8867912 26.767,0 40,0 C53.234,0 64,10.8867912 64,24 C64,41.3666086 44.966,67.4793177 40,74 Z M40,33 C45.5228475,33 50,28.5228475 50,23 C50,17.4771525 45.5228475,13 40,13 C34.4771525,13 30,17.4771525 30,23 C30,28.5228475 34.4771525,33 40,33 Z" id="path-2"></path>
+        <filter x="-50%" y="-50%" width="200%" height="200%" filterUnits="objectBoundingBox" id="filter-3">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="0" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Footer-Weiss" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="480-Event-Detailseite" transform="translate(-200.000000, -241.000000)">
+            <g id="Group-15" transform="translate(200.000000, 245.000000)">
+                <path d="M36.9146816,60.6921276 C42.9368246,67.0739628 40.2970234,74.0686642 40.2970234,74.0686642 C40.2970234,74.0686642 9.78647891,65.9655551 2.80258378,60.6921276 C-2.09108279,56.9948622 2.94615192,54 14.0549294,54 C18.2415615,54 31.2028311,54.643741 36.9146816,60.6921276 L36.9146816,60.6921276 Z" id="Shape" fill-opacity="0.3" fill="url(#linearGradient-1)"></path>
+                <g id="Combined-Shape">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="#003a56" fill-rule="evenodd" xlink:href="#path-2"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

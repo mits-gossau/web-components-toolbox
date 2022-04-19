@@ -25,6 +25,9 @@ export default class MenuIcon extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('id', 'hamburger')
+    this.setAttribute('aria-label', 'show navigation menu')
+    this.setAttribute('aria-expanded', 'false')
     this.openClass = this.getAttribute('openClass') ? this.getAttribute('openClass') : 'open'
     this.barClass = this.getAttribute('barClass') ? this.getAttribute('barClass') : 'bar'
 
@@ -120,5 +123,6 @@ export default class MenuIcon extends Shadow() {
 
   toggleAnimationClass (command = 'toggle') {
     this.classList[command](this.openClass)
+    this.setAttribute('aria-expanded', this.classList.contains(this.openClass) ? 'true' : 'false')
   }
 }

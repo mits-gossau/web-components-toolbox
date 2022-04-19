@@ -1,0 +1,8 @@
+:host {
+    --google-maps-default-map-width:var(--google-maps-default-map-width-custom, 100%);
+    --google-maps-default-map-width-mobile:var(--google-maps-default-map-width-mobile-custom, 100%);
+    --google-maps-default-map-height:var(--google-maps-default-map-height-custom, 560px);
+    --google-maps-default-map-height-mobile:var(--google-maps-default-map-height-mobile-custom, 290px);
+    --google-maps-default-hr-width:var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
+    --google-maps-default-control-events-div-margin-left-mobile:var(--content-spacing-mobile);
+}

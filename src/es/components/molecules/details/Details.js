@@ -6,7 +6,6 @@ import { Mutation } from '../../prototypes/Mutation.js'
 
 /**
  * Details (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) aka. Bootstrap accordion
- * Example at: /src/es/components/molecules/NavigationClassics.html
  * As a molecule, this component shall hold Atoms
  *
  * @export
@@ -47,14 +46,17 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * }
  */
 
+// @ts-ignore
 export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['open'] } }), ...args)
 
-    this.svgWidth = '1em'
-    this.svgHeight = '1em'
-    this.svgColor = 'var(--m-gray-400)'
-    this.hasRendered = false
+    this.setAttribute('aria-expanded', 'false')
+    this.setAttribute('aria-label', 'Details')
+    this.svgWidth = '1.5em'
+    this.svgHeight = '1.5em'
+    this.svgColor = `var(--${this.getAttribute('namespace')}svg-color, var(--color))`
+
     // overwrite default Mutation observer parent function created at super
     this.mutationObserveStart = () => {
       // @ts-ignore
@@ -65,7 +67,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       if (this.details && event.detail.child) {
         if (event.detail.child === this) {
           if (this.hasAttribute('scroll-into-view')) this.details.scrollIntoView({ behavior: 'smooth' })
-        } else {
+        } else if (!this.hasAttribute('no-auto-close')) {
           this.details.removeAttribute('open')
         }
       }
@@ -77,6 +79,13 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         this.details.removeAttribute('open')
         if (this.summary.getBoundingClientRect().top < 0) this.details.scrollIntoView({ behavior: 'smooth' })
       }
+    }
+
+    this.animationendListener = event => {
+      this.details.removeAttribute('open')
+      this.details.classList.remove('closing')
+      this.mutationObserveStart()
+      clearTimeout(this.timeoutAnimationend)
     }
   }
 
@@ -97,6 +106,21 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   mutationCallback (mutationList, observer) {
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
+        this.style.textContent = ''
+        this.setCss(/* CSS */`
+          @keyframes open {
+            0% {
+              height: 0px;
+              margin: 0px;
+              padding: opx;
+            }
+            100% {
+              height: ${this.content.offsetHeight}px;
+              margin: var(--child-margin, 0);
+              padding: var(--child-padding, 0);
+            }
+          }
+        `, undefined, undefined, undefined, this.style)
         this.dispatchEvent(new CustomEvent(this.openEventName, {
           detail: {
             child: this
@@ -105,6 +129,34 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           cancelable: true,
           composed: true
         }))
+        this.setAttribute('aria-expanded', 'true')
+      } else {
+        this.details.addEventListener('animationend', this.animationendListener, { once: true })
+        // in case of fast double click the animationend event would not reach details, since the content would be hidden
+        clearTimeout(this.timeoutAnimationend)
+        this.timeoutAnimationend = setTimeout(() => {
+          this.details.removeEventListener('animationend', this.animationendListener)
+          this.animationendListener()
+        }, this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) + 100 : 1000) /* animation: var(--animation, open 0.3s ease-out); + 100ms */
+        this.mutationObserveStop()
+        this.details.setAttribute('open', '')
+        this.style.textContent = ''
+        this.setCss(/* CSS */`
+          @keyframes open {
+            0% {
+              height: ${this.content.offsetHeight}px;
+              margin: var(--child-margin, 0);
+              padding: var(--child-padding, 0);
+            }
+            100% {
+              height: 0px;
+              margin: 0px;
+              padding: opx
+            }
+          }
+        `, undefined, undefined, undefined, this.style)
+        this.details.classList.add('closing')
+        this.setAttribute('aria-expanded', 'false')
       }
     })
   }
@@ -124,8 +176,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    // TODO: remove flag and do as usual with !this.summary or else
-    return !this.hasRendered
+    return !this.divSummary
   }
 
   /**
@@ -160,6 +211,9 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       :host details summary, :host details summary:focus {
         outline: none;
       }
+      :host details[open] summary {
+        border-bottom: var(--summary-border-bottom-open, none);
+      }
       :host details summary > div {
         cursor: var(--summary-cursor, pointer);
         font-family: var(--summary-font-family, var(--font-family, var(--font-family-bold)));
@@ -171,9 +225,11 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         text-decoration: var(--summary-text-decoration, var(--a-text-decoration, var(--text-decoration, none)));
         text-transform: var(--summary-text-transform, none);
         text-underline-offset: var(--a-text-underline-offset, unset);
+        transition: var(--summary-transition, transform .3s ease);
       }
       :host details summary > div:hover, :host details summary > div:active, :host details summary > div:focus {
         text-decoration: var(--summary-text-decoration-hover, var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none)))));
+        transform: var(--summary-transform-hover, translate(0,0.1875em));
       }
       :host details[open] summary > div {
         text-decoration: var(--summary-text-decoration-open, none);
@@ -182,6 +238,11 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       :host details summary > div > * {
         margin: var(--summary-child-margin, 0);
         padding: var(--summary-child-padding, 0);
+        color:var(--summary-child-color, var(--color, unset));
+      }
+      :host details summary > div:hover > *, :host details summary > div:active > *, :host details summary > div:focus > * {
+        --svg-color: var(--summary-child-color-hover, var(--color-hover, var(--summary-child-color, var(--color, unset))));
+        color: var(--summary-child-color-hover, var(--color-hover, var(--summary-child-color, var(--color, unset))));
       }
       :host details[open] summary > div > * {
         margin: var(--summary-child-margin-open, 0);
@@ -190,11 +251,14 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       :host details summary ~ * {
         margin: var(--child-margin, 0);
         padding: var(--child-padding, 0);
+        overflow: hidden;
       }
       :host details[open] summary ~ * {
-        animation: var(--animation, open 0.2s ease);
-        margin: var(--child-margin-open, 0);
-        padding: var(--child-padding-open, 0);
+        animation: var(--animation, open ${this.hasAttribute('open-duration') ? `${this.getAttribute('open-duration')}ms` : '.3s'} ease-out); /* if using an other value, change the timeout */
+      }
+      summary ~ * > *:not(style):not(script) {
+        display: var(--any-display, block);
+        margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
       }
       :host details summary ~ ul, :host details[open] summary ~ ul {
         display: var(--ul-display, inline-block);
@@ -221,38 +285,52 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         align-items: var(--icon-align-items, flex-start);
       }
       :host details .icon > img, :host details .icon > div > svg {
-        transition: var(--icon-transition, transform 0.15s ease);
+        transition: var(--icon-transition, transform 0.3s ease);
         margin: var(--icon-margin, 0 1em) !important;
       }
-      :host details[open] .icon > img, :host details[open] .icon > div > svg  {
+      :host details[open]:not(.closing) .icon > img, :host details[open]:not(.closing) .icon > div > svg  {
         transform: var(--icon-transform-open, rotate(180deg));
       }
       :host details summary ~ ul.icons, :host details[open] summary ~ ul.icons {
         margin: var(--ul-icons-margin, 0 0 0 1em);
       }
-      @keyframes open {
-        0% {font-size: 0}
-        100% {font-size: inherit}
-      }
       @media only screen and (max-width: _max-width_) {
-        :host {
-          margin: 0 5% !important;
-          width: 90% !important;
-        }
         :host details .icon > img, :host details .icon > div > svg {
           width: var(--icon-width-mobile, min(1.7em, 10vw))
         }
         :host details summary ~ * {
+          margin: var(--child-margin-mobile, var(--child-margin, 0));
           padding: var(--child-padding-mobile, var(--child-padding, 0));
         }
         :host details[open] summary ~ * {
           padding: var(--child-padding-open-mobile, var(--child-padding-open, 0));
+        }
+        summary ~ * > *:not(style):not(script) {
+          margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         }
         :host details summary > div {
           font-size:var(--summary-font-size-mobile, var(--summary-font-size, inherit));
         }
       }
     `
+
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
+    switch (this.getAttribute('namespace')) {
+      case 'details-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+
+      default:
+        return this.fetchCSS(styles, false)
+    }
   }
 
   /**
@@ -261,31 +339,39 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    * @return {void}
    */
   renderHTML () {
-    this.hasRendered = true
+    this.divSummary = this.root.querySelector('div.summary') || document.createElement('div')
+    this.divSummary.classList.add('summary')
     Array.from(this.summary.childNodes).forEach(node => this.divSummary.appendChild(node))
-    if (this.getAttribute('icon-image')) {
-      const iconImg = new Image()
-      iconImg.src = this.getAttribute('icon-image')
-      iconImg.alt = 'close detail'
-      this.divSummary.append(iconImg)
-      this.divSummary.classList.add('icon')
-    } else if (this.hasAttribute('icon-image')) {
-      const iconSvg = document.createElement('div')
-      iconSvg.innerHTML = `
-        <?xml version="1.0" encoding="UTF-8"?>
-        <svg width="${this.svgWidth || '35px'}" height="${this.svgHeight || '20px'}" viewBox="0 0 35 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
-            <title>Mobile Pfeil</title>
-            <desc>Created with Sketch.</desc>
-            <g id="Mobile-Pfeil" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <polyline id="Path-2" stroke="${this.svgColor || `var(--color, --${this.namespace}color)`}" stroke-width="3" points="2 3 17 18 32 3"></polyline>
-            </g>
-        </svg>
-      `
-      this.divSummary.append(iconSvg)
-      this.divSummary.classList.add('icon')
-    }
+    this.divSummary = this.getAttribute('icon-image')
+      ? this.setIconFromAttribute(this.getAttribute('icon-image'), this.divSummary, 'icon-image')
+      : this.setIconDefault(this.divSummary, 'icon')
     this.summary.appendChild(this.divSummary)
+    this.html = this.style
+  }
+
+  setIconFromAttribute (iconPath, node, cssClass) {
+    const iconImg = new Image()
+    iconImg.src = iconPath
+    iconImg.alt = 'close detail'
+    node.append(iconImg)
+    node.classList.add(cssClass)
+    return node
+  }
+
+  setIconDefault (node, cssClass) {
+    const iconSvg = document.createElement('div')
+    iconSvg.innerHTML = `
+      <?xml version="1.0" encoding="UTF-8"?>
+      <svg width="${this.svgWidth || '35px'}" height="${this.svgHeight || '20px'}" viewBox="0 0 35 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <title>Mobile Pfeil</title>
+          <g id="Mobile-Pfeil" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <polyline id="Path-2" stroke="${this.svgColor || `var(--color, --${this.namespace}color)`}" stroke-width="3" points="2 3 17 18 32 3"></polyline>
+          </g>
+      </svg>
+    `
+    node.append(iconSvg)
+    node.classList.add(cssClass)
+    return node
   }
 
   get openEventName () {
@@ -300,7 +386,15 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     return this.root.querySelector('details')
   }
 
-  get divSummary () {
-    return this._divSummary || (this._divSummary = document.createElement('div'))
+  get content () {
+    return this.details.querySelector('summary ~ *')
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 }

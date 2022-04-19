@@ -1,6 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global CustomEvent */
+
 /**
  * Video
  * Wrapper for a video-tag with multiple sources
@@ -73,26 +75,33 @@ export default class Video extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+    :host {
+      width: var(--width, 100%);
+      height: var(--height, auto);
+    }
     :host video, :host iframe {
       ${this.getAttribute('height') ? `height: ${this.getAttribute('height')}` : ''}
       ${this.getAttribute('width') ? `width: ${this.getAttribute('width')}` : ''}
-      aspect-ratio: var(--aspect-ratio, attr(width, auto) / attr(height, auto));
+      aspect-ratio: ${this.hasAttribute('aspect-ratio') ? `1/${this.getAttribute('aspect-ratio')}` : 'var(--aspect-ratio, auto)'};
       display: var(--display, block);
       filter: var(--filter, none);
       margin: var(--margin, 0 auto);
-      max-height: var(--max-height, 100%);
+      max-height: var(--max-height, 75vh);
       max-width: var(--max-width, 100%);
       min-height: var(--min-height);
       min-width: var(--min-width);
       outline: var(--outline, none);
       transform: var(--transform, none);
       transition: var(--transition, none);
+      width: var(--width, 100%);
+      height: var(--height, auto);
     }
     :host video:hover, :host iframe:hover {
       filter: var(--filter-hover, var(--filter, none));
     }
     :host video {
       object-fit: var(--video-object-fit, cover);
+      clip-path: var(--clip-path, none);
     }
 
     @media only screen and (max-width: _max-width_) {
@@ -103,8 +112,14 @@ export default class Video extends Shadow() {
         width: var(--width-mobile, 100%);
       }
     }
-      }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'video-crop-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./crop-/crop-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+    }
   }
 
   /**
@@ -113,7 +128,7 @@ export default class Video extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.video = this.root.querySelector('video') || document.createElement('div')
+    this.video = this.root.querySelector('div') || document.createElement('div')
     this.video.innerHTML = Array.from(this.attributes).reduce((acc, attribute) => {
       if (attribute.name && attribute.name !== 'sources') return `${acc} ${attribute.name}="${attribute.value || 'true'}"`
       return acc
@@ -129,5 +144,36 @@ export default class Video extends Shadow() {
       if (i.src !== '' && i.type !== '') return (this.video.innerHTML += `<source src="${i.src}" type="${i.type}">`)
       return false
     })) || this.video.querySelector('source')) this.html = this.video
+
+    if (this.hasAttribute('video-load')) {
+      this.video.addEventListener(this.hasAttribute('poster') ? 'loadedmetadata' : 'loadeddata', event => {
+        this.setAttribute('loaded', 'true')
+        this.dispatchEvent(new CustomEvent(this.getAttribute('video-load') || 'video-load', {
+          detail: {
+            origEvent: event,
+            child: this,
+            video: this.video,
+            picture: this.picture
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+      this.video.addEventListener('error', event => {
+        this.setAttribute('loaded', 'false')
+        this.dispatchEvent(new CustomEvent(this.getAttribute('video-load') || 'video-load', {
+          detail: {
+            error: event
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+      this.video.setAttribute('loading', 'eager') // must load eager, not that the loading event doesn't trigger emit video-load
+    } else {
+      this.video.setAttribute('loading', this.getAttribute('loading') || 'lazy')
+    }
   }
 }

@@ -1,223 +1,27 @@
-/*
-Ich habe die Font-Files hochgeladen:
-Avenir	35 Light	https://cdn.migros.ch/ch.migros/static/fonts/Avenir/Avenir35Light.woff
- 	 	https://cdn.migros.ch/ch.migros/static/fonts/Avenir/Avenir35Light.woff2
-Ihr habt die Möglichkeit, eine Zeile CSS code in eure Website einzubauen:
-https://cdn.fonts.net/t/1.css?apiType=css&projectid=b424dfd0-9958-11ec-b670-06c4e8753e28
-Damit wird sichergestellt, dass wir die Lizenz-Bedingungen erfüllen und page views an Monotype melden.
-Wenn ihr diesen Code nicht einbauen wollt, dann müsstet ihr quartalsmässig eure page views an Monotype reporten.
-
-https://wiki.migros.net/pages/viewpage.action?spaceKey=DIGOPS&title=Webfonts+auf+cdn.migros.net
-
-Ich habe ein neues Webfont-Projekt erstellt. Hier der entsprechende CSS-Code, den ihr einbinden solltet:
-
-
-@import url("https://cdn.fonts.net/t/1.css?apiType=css&projectid=15e0d230-9ed9-11ec-b670-06c4e8753e28"); 
- 
-Und hier eine Liste von Schriftschnitten, die auf dem CDN bereitliegen:
-
-https://cdn.migros.ch/?prefix=ch.migros/static/fonts/helvetica-now/
-*/
-/* font-faces analog: https://static.shop.migros.ch/fonts/mofonts.css */
+/* font-faces analog: https://wiki.migros.net/pages/viewpage.action?spaceKey=DIGOPS&title=Webfonts+auf+cdn.migros.net */
 @charset "utf-8";
-@import url("https://fast.fonts.net/t/1.css?apiType=css&projectid=074eae2d-ad11-4cc1-b08f-d23f76b718d2");
+@import url("https://cdn.fonts.net/t/1.css?apiType=css&projectid=15e0d230-9ed9-11ec-b670-06c4e8753e28");
 
-/* MFO-text */
 @font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts") format("woff2"),url("../fonts/nowfonts/7d2ea779-9a85-4f7f-88b1-5e284bc31302.woff") format("woff");
-	font-weight: 100;
+	font-family:"HelveticaNowText";
+	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Regular.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Regular.woff") format("woff");
+	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
 }
+ 
 @font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/8b6f62cc-cd64-4add-9247-d0e6b7c3880c.woff2") format("woff2"),url("../fonts/nowfonts/af8ab742-03ae-44ec-82ee-726e2c2fbef3.woff") format("woff");
-	font-weight: 100;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/8c8fb4ca-3120-4839-b10f-4ae5066e9b92.woff2") format("woff2"),url("../fonts/nowfonts/e23d8242-bebb-4c5b-9565-9a4aaec3aaac.woff") format("woff");
-	font-weight: 200;
+	font-family:"HelveticaNowTextBold";
+	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Bold.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Bold.woff") format("woff");
+	font-weight: normal;
 	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/059024db-175b-498f-a1b4-0ffe85505669.woff2") format("woff2"),url("../fonts/nowfonts/bc19b3ba-52c1-4111-90f0-e446125d574e.woff") format("woff");
-	font-weight: 200;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/8448bbbb-ba62-45df-ae79-4ded34b0727b.woff2") format("woff2"),url("../fonts/nowfonts/ad48d569-0df5-4f5d-8ad3-8ce63dd84d7d.woff") format("woff");
-	font-weight: 300;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/2f958d3c-f3cc-4efe-b100-525b1999997d.woff2") format("woff2"),url("../fonts/nowfonts/e8c04f4c-5199-4329-9987-a2feeb054ed3.woff") format("woff");
-	font-weight: 300;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/5eec4451-e90c-42e7-b4d8-9b8654a65568.woff2") format("woff2"),url("../fonts/nowfonts/f7cf763b-e79b-4c28-af92-803e0c3f16d4.woff") format("woff");
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/db2aea0d-59aa-466a-b1c2-17f44663a0fe.woff2") format("woff2"),url("../fonts/nowfonts/d99c363f-9e4a-47f4-b101-0ae1202ccd23.woff") format("woff");
-	font-weight: 400;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/2fd3ef81-07ed-45b4-a344-7a0defbdadcf.woff2") format("woff2"),url("../fonts/nowfonts/52492279-0374-4238-ba8b-751b50089cf0.woff") format("woff");
-	font-weight: 500;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/1f505f32-e1f2-45fa-b07b-2a6278c6b4ce.woff2") format("woff2"),url("../fonts/nowfonts/0cda45a7-32c2-4823-aee1-a4d3cadf2530.woff") format("woff");
-	font-weight: 500;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/2a13627f-dba8-48e1-935c-a404f5293139.woff2") format("woff2"),url("../fonts/nowfonts/ce7a1fe7-2605-427a-b064-a01ebce69295.woff") format("woff");
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/5dac2c2b-17c2-4d43-9e12-4d58e606d121.woff2") format("woff2"),url("../fonts/nowfonts/971a882a-be5d-4dc8-b37f-cd9182a2cd17.woff") format("woff");
-	font-weight: 700;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/41a92eaa-5ec3-4a56-bc82-51c599348ce7.woff2") format("woff2"),url("../fonts/nowfonts/3ea31da2-c426-4c13-8fc9-a4318c80c6c2.woff") format("woff");
-	font-weight: 800;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/03be491b-1f31-4c9c-961c-d5baf5f80db2.woff2") format("woff2"),url("../fonts/nowfonts/cbee02c8-267a-486b-a1bb-f6a5058b0863.woff") format("woff");
-	font-weight: 800;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/b8e8411f-89f5-4f84-b181-ee48f01fa1d7.woff2") format("woff2"),url("../fonts/nowfonts/59a010db-166d-44f3-9d49-ffe943ce2bc0.woff") format("woff");
-	font-weight: 900;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"text";
-	src:url("../fonts/nowfonts/14e70f7e-f058-491b-ba1c-a5f9a62a8465.woff2") format("woff2"),url("../fonts/nowfonts/bdd4a2b2-3432-4900-9f58-e3c5f381d3e3.woff") format("woff");
-	font-weight: 900;
-	font-style: italic;
 	font-display: swap;
 }
 
-/* MFO-micro */
 @font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/c7e7af5e-dac7-4b90-aac5-9dce30c16b07.woff2") format("woff2"),url("../fonts/nowfonts/6a38d022-be60-4016-9abe-a83b26de4831.woff") format("woff");
-	font-weight: 200;
+	font-family:"Avenir35Light";
+	src:url("https://cdn.migros.ch/ch.migros/static/fonts/Avenir/Avenir35Light.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/Avenir/Avenir35Light.woff") format("woff");
+	font-weight: normal;
 	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/f513fd92-8389-47cd-838d-5e79f4b3d11c.woff2") format("woff2"),url("../fonts/nowfonts/095fb168-7653-4783-bc01-1677574aec86.woff") format("woff");
-	font-weight: 200;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/6476c1a1-5b09-46ca-85ec-c99cdb075e11.woff2") format("woff2"),url("../fonts/nowfonts/ddc5e3cc-7759-4587-b70f-d499bd2c1210.woff") format("woff");
-	font-weight: 300;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/d8d871b3-2c17-4ef7-99c1-7ddcc70065b7.woff2") format("woff2"),url("../fonts/nowfonts/e20cc3c1-6101-4c8f-875f-351ae8b17887.woff") format("woff");
-	font-weight: 300;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/20adf2a3-ba10-4dc2-ae3c-c33cfb47164e.woff2") format("woff2"),url("../fonts/nowfonts/09d434d9-4e07-43d4-b159-c00c93148ba5.woff") format("woff");
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/d9a135e0-ec22-47bf-9148-4565ecb2e9fe.woff2") format("woff2"),url("../fonts/nowfonts/0f51eab9-b2b9-439f-b9fa-fc3a0e94638f.woff") format("woff");
-	font-weight: 400;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/22b7397b-8bc0-4fb2-8f41-aeffdbf3fa6c.woff2") format("woff2"),url("../fonts/nowfonts/6ebe2e12-616d-4b8f-bede-1804e8f73516.woff") format("woff");
-	font-weight: 500;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/1fa084cd-87f3-45e2-8189-59099bdf1692.woff2") format("woff2"),url("../fonts/nowfonts/4017f9a6-0674-4a49-825a-c72afec51015.woff") format("woff");
-	font-weight: 500;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/edec36be-f5fa-4fc9-9edd-cb4d0e454290.woff2") format("woff2"),url("../fonts/nowfonts/14139f86-d73e-4f4f-889f-55a0901642ff.woff") format("woff");
-	font-weight: 700;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/2f6affd6-04da-4e5a-98b7-25b3a89c90e9.woff2") format("woff2"),url("../fonts/nowfonts/eb283046-9ec0-4a39-88b7-2128d9530e69.woff") format("woff");
-	font-weight: 700;
-	font-style: italic;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/04bdad73-d556-4885-8b93-93319cc255a3.woff2") format("woff2"),url("../fonts/nowfonts/74ad594c-5e91-40f8-b2a9-e9615507a73c.woff") format("woff");
-	font-weight: 800;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face{
-	font-family:"micro";
-	src:url("../fonts/nowfonts/50b8f4cc-ca18-417f-9c1a-dd09d3fd696d.woff2") format("woff2"),url("../fonts/nowfonts/62e0040e-2d1e-490a-922a-685106fbe57f.woff") format("woff");
-	font-weight: 800;
-	font-style: italic;
 	font-display: swap;
 }

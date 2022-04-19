@@ -1,9 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global Link */
-/* global customElements */
-
 /**
  * Footer is sticky and hosts uls
  * Example at: /src/es/components/organisms/Playlist.html
@@ -29,13 +26,23 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Footer extends Shadow() {
+  constructor (...args) {
+    super(...args)
+
+    this.setAttribute('role', 'navigation')
+    this.setAttribute('aria-label', 'Footer')
+  }
+
   connectedCallback () {
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     if (showPromises.length) {
       this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
+      Promise.all(showPromises).then(() => {
+        this.recalcWrapper() // make sure that the wrapper has all the variables just set and recalc
+        this.hidden = false
+      })
     }
   }
 
@@ -66,75 +73,68 @@ export default class Footer extends Shadow() {
     this.css = /* css */`
       :host {
         grid-area: footer;
-        margin-top: var(--content-spacing);
       }
-      :host > footer > *, :host > footer > .invert > * {
+      :host > footer > *, :host > footer .invert > * {
         margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--content-width, 55%);
       }
       :host > footer a.logo {
         display: block;
       }
-      :host > footer > .invert {
+      :host > footer .invert {
         display: flow-root;
         margin: 0;
         width: 100%;
         color: var(--invert-color);
+        --a-color-hover: var(--invert-a-color-hover);
+        --a-color: var(--invert-color);
         --color: var(--invert-color);
         background-color: var(--invert-background-color);
       }
-      :host > footer o-wrapper {
+      :host > footer o-wrapper[namespace=footer-default-] {
         --align-items: normal;
         --gap: var(--gap-custom, var(--content-spacing));
         --justify-content: var(--justify-content-custom, left);
       }
-      :host > footer > ul.language-switcher {
+      :host > footer .language-switcher > ul, :host > footer .footer-links > ul {
         --color: var(--background-color);
         --color-hover: var(--m-orange-300);
         --padding: 1.1429em 1.2143em;
-        background-color: var(--language-switcher-color-secondary, var(--background-color));
-        color: var(--color);
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
+        margin: 0;
         padding: 0;
-        margin-right: 0;
-        margin-bottom: 0;
-        margin-left: 0;
-        width: 100%;
       }
-      :host > footer > ul.language-switcher > li {
-        align-items: center;
-        display: flex;
+      :host > footer .footer-links > ul {
+        flex-direction: column;
       }
-      :host > footer > ul.language-switcher > li.copy {
-        padding: var(--footer-padding);
-        position: absolute;
-        left: 0;
-      }
-      :host > footer > ul.language-switcher:not(:first-child) {
-        margin-top: 1px;
-      }
-      :host > footer > ul.language-switcher > li {
+      :host > footer .language-switcher > ul > li, :host > footer .footer-links > ul > li {
         border: 0;
         list-style: var(--list-style, none);
         width: auto;
+        padding: 0 var(--content-spacing);
+      }
+      :host > footer .footer-links > ul > li {
+        padding: 0;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
           margin-top: var(--content-spacing-mobile);
         }
-        :host > footer > *, :host > footer > .invert > * {
+        :host > footer > *, :host > footer .invert > * {
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
         }
-        :host > footer o-wrapper {
+        :host > footer o-wrapper[namespace=footer-default-] {
           --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
+        }
+        :host > footer .language-switcher > ul > li {
+          padding: 0 var(--content-spacing-mobile);
         }
       }
     `
-    console.log('css done');
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -165,11 +165,15 @@ export default class Footer extends Shadow() {
   renderHTML () {
     this.footer = this.root.querySelector('footer') || document.createElement('footer')
     Array.from(this.root.children).forEach(node => {
-      if (node.getAttribute('slot') || node.nodeName === 'STYLE' ||  node.tagName === 'FOOTER' ) return false
+      if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'FOOTER') return false
       this.footer.appendChild(node)
-      console.log('append');
     })
     this.html = this.footer
     return Promise.resolve()
+  }
+
+  recalcWrapper () {
+    // force the wrapper to recalc its column width with the new variables set in the css above
+    Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]')).forEach(wrapper => wrapper.calcColumnWidth())
   }
 }
