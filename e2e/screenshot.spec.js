@@ -8,7 +8,7 @@ test('demo page screenshot test', async ({ page, browserName }) => {
     await page.evaluate(() => window.scrollTo(0, 999999999))
     await page.waitForTimeout(5000)
     await page.evaluate(() => window.scrollTo(0, 0))
-    await page.screenshot({ path: `./e2e/master_${browserName}.png`, fullPage: true })
-    expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(`./e2e/master_${browserName}.png`)
+    await page.screenshot({ path: `master_${browserName}.png`, fullPage: true })
+    expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(`master_${browserName}.png`)
   }
 })
