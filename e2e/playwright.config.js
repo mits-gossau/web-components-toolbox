@@ -2,7 +2,7 @@
 const { devices } = require('@playwright/test')
 
 const config = {
-   timeout: 30 * 1000,
+  timeout: 30 * 1000,
   expect: {
     timeout: 5000
   },
