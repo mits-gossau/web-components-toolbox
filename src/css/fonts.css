@@ -1,6 +1,9 @@
 /* font-faces analog: https://wiki.migros.net/pages/viewpage.action?spaceKey=DIGOPS&title=Webfonts+auf+cdn.migros.net */
 @charset "utf-8";
-@import url("https://cdn.fonts.net/t/1.css?apiType=css&projectid=15e0d230-9ed9-11ec-b670-06c4e8753e28");
+/*
+each website must add the tracking import as shown below in their variablesCustom.css
+@import url("https://cdn.fonts.net/t/1.css?apiType=css&projectid=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+*/
 
 @font-face{
 	font-family:"HelveticaNowText";
