@@ -263,6 +263,7 @@ export default class Picture extends Intersection() {
     }
     // generate sources if there aren't any but the query in the picture src would allow by width parameter
     if (!this.sources.length) {
+      // TODO: "Nice to have once Umbraco doesn't send the sources anymore" incorporate self.getComputedStyle(node) CSS width limitation as max nextWidth as well as max raw img-tag width
       const src = Picture.newUrl(this.img.getAttribute('data-src'))
       let naturalWidth
       if ((naturalWidth = src.searchParams.get('width'))) {
