@@ -27,7 +27,7 @@
   --header-default-a-white-space: nowrap;
   --header-default-align-items: end;
   --header-default-background-color: var(--header-default-background-color-custom, var(--color-secondary));
-  --header-default-border-bottom: 1px solid var(--m-gray-300);
+  --header-default-border-bottom: var(--header-default-border-bottom-custom, none);
   --header-default-box-sizing-open-mobile: border-box;
   --header-default-content-width-mobile: 100%;
   --header-default-flex-wrap: wrap;
@@ -47,7 +47,7 @@
   --header-default-order: 0;
   --header-default-position-open-mobile: fixed;
   --header-default-position: static;
-  --header-default-sticky-border-bottom: var(--header-default-border-bottom);
+  --header-default-sticky-border-bottom: var(--header-default-sticky-border-bottom-custom, 1px solid var(--m-gray-300));
   --header-default-top-open-mobile: 0;
   --header-default-width-open-mobile: 100%;
   --logo-default-height-mobile: var(--logo-default-height);

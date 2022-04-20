@@ -218,9 +218,14 @@ export default class Picture extends Intersection() {
     // in case someone adds sources/img directly instead of using the attributes
     Array.from(this.root.children).forEach(node => {
       if (node.nodeName === 'IMG') {
+        node.setAttribute('data-src', Picture.pathResolver(node.getAttribute('src')))
+        node.removeAttribute('src') // would be too late, avoid html img-tag
         this.img = node
-        this.img.setAttribute('data-src', Picture.pathResolver(node.getAttribute('src')))
-      } else if (node.nodeName === 'SOURCE') this.sources.push(node)
+      } else if (node.nodeName === 'SOURCE') {
+        node.setAttribute('data-srcset', Picture.pathResolver(node.getAttribute('srcset')))
+        node.removeAttribute('srcset')
+        this.sources.push(node)
+      }
     })
     // through defaultSource Attribute add img
     if (this.defaultSource) {
@@ -240,19 +245,19 @@ export default class Picture extends Intersection() {
         if (i.src !== '' && i.type !== '' && i.size !== '') {
           switch (i.size) {
             case 'small':
-              div.innerHTML += `<source srcset="${i.src}" type="${i.type}" media="(max-width: 400px)">`
+              div.innerHTML += `<source data-srcset="${i.src}" type="${i.type}" media="(max-width: 400px)">`
               break
             case 'medium':
-              div.innerHTML += `<source srcset="${i.src}" type="${i.type}" media="(min-width: 401px) and (max-width: 600px)">`
+              div.innerHTML += `<source data-srcset="${i.src}" type="${i.type}" media="(min-width: 401px) and (max-width: 600px)">`
               break
             case 'large':
-              div.innerHTML += `<source srcset="${i.src}" type="${i.type}" media="(min-width: 601px) and (max-width: 1200px)">`
+              div.innerHTML += `<source data-srcset="${i.src}" type="${i.type}" media="(min-width: 601px) and (max-width: 1200px)">`
               break
             case 'extra-large':
-              div.innerHTML += `<source srcset="${i.src}" type="${i.type}" media="(min-width: 1201px)">`
+              div.innerHTML += `<source data-srcset="${i.src}" type="${i.type}" media="(min-width: 1201px)">`
               break
             default:
-              div.innerHTML += `<source srcset="${i.src}" type="${i.type}">`
+              div.innerHTML += `<source data-srcset="${i.src}" type="${i.type}">`
               break
           }
         } else {
@@ -263,6 +268,7 @@ export default class Picture extends Intersection() {
     }
     // generate sources if there aren't any but the query in the picture src would allow by width parameter
     if (!this.sources.length) {
+      // TODO: "Nice to have once Umbraco doesn't send the sources anymore" incorporate self.getComputedStyle(node) CSS width limitation as max nextWidth as well as max raw img-tag width
       const src = Picture.newUrl(this.img.getAttribute('data-src'))
       let naturalWidth
       if ((naturalWidth = src.searchParams.get('width'))) {
@@ -277,7 +283,7 @@ export default class Picture extends Intersection() {
           nextWidth = width + step < naturalWidth ? width + step : 0
           nextWidth ? src.searchParams.set('width', String(width)) : src.searchParams.delete('width')
           const source = document.createElement('source')
-          source.setAttribute('srcset', src.href)
+          source.setAttribute('data-srcset', src.href)
           if (src.searchParams.get('format')) source.setAttribute('type', 'image/webp') // force webp as format
           source.setAttribute('media', `${prevWidth ? `(min-width: ${prevWidth + 1}px)` : ''}${prevWidth && nextWidth ? ' and ' : ''}${nextWidth ? `(max-width: ${width}px)` : ''}`)
           this.sources.push(source)
@@ -293,10 +299,10 @@ export default class Picture extends Intersection() {
       if (src.searchParams.get('quality')) {
         this.sources.forEach(source => {
           const newSource = source.cloneNode()
-          const src = Picture.newUrl(source.getAttribute('srcset'))
+          const src = Picture.newUrl(source.getAttribute('data-srcset'))
           src.searchParams.set('quality', '0')
-          newSource.setAttribute('srcset', src.href)
           this.picture.appendChild(newSource)
+          newSource.setAttribute('srcset', src.href)
         })
         img.setAttribute('decoding', 'sync') // otherwise it is flashing
         img = this.img.cloneNode()
@@ -309,7 +315,10 @@ export default class Picture extends Intersection() {
           this.intersecting = () => {}
           this.intersectionObserveStop()
           const picture = document.createElement('picture')
-          this.sources.forEach(source => picture.appendChild(source))
+          this.sources.forEach(source => {
+            picture.appendChild(source)
+            source.setAttribute('srcset', source.getAttribute('data-srcset'))
+          })
           picture.appendChild(this.img)
           this.img.setAttribute('src', this.img.getAttribute('data-src'))
           const replaceImg = event => {
@@ -329,11 +338,14 @@ export default class Picture extends Intersection() {
     }
     // if no bad quality picture loaded
     if (img === this.img) {
-      this.sources.forEach(source => this.picture.appendChild(source))
-      this.picture.appendChild(this.img)
       this.intersecting = () => {
         this.intersecting = () => {}
         this.intersectionObserveStop()
+        this.sources.forEach(source => {
+          this.picture.appendChild(source)
+          source.setAttribute('srcset', source.getAttribute('data-srcset'))
+        })
+        this.picture.appendChild(this.img)
         this.img.setAttribute('src', this.img.getAttribute('data-src'))
       }
       if (this.isIntersecting || this.getAttribute('loading') === 'eager') this.intersecting()
