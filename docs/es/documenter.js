@@ -5,9 +5,14 @@
 // the documenter shall only be used at component previews within src/...
 const componentName = new URL(document.currentScript.src).searchParams.get('component')
 
+
 if (componentName) {
   document.body.addEventListener('wc-config-load', event => event.detail.imports.forEach(importPromise => importPromise.then(importEl => {
     if (importEl[3].includes(componentName)) {
+
+      Array(document.querySelectorAll(importEl[0])).forEach(element => {
+        console.log(element)
+      })
     
       const cssURL = location.href.split("/")
       const lastElement = cssURL[cssURL.length - 1]
