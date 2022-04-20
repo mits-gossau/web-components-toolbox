@@ -2,6 +2,10 @@
 :not(:defined) {
   display: none;
 }
+/* in general useful */
+a[href^="mailto:"] {
+  white-space: nowrap;
+}
 /* https://github.com/csstools/sanitize.css/blob/main/sanitize.css */
 *,
 ::before,
