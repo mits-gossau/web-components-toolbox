@@ -2,16 +2,14 @@
 const { devices } = require('@playwright/test')
 
 const config = {
-  // testDir: './e2e',
-  timeout: 30 * 1000,
-  expect: {
-    timeout: 5000
-  },
-  // reporter: [['html', { open: 'never' }]],
-  reporter: [['html', {}]],
+  //timeout: 30 * 1000,
+  // expect: {
+  //   timeout: 5000
+  // },
+  reporter: 'line',
   use: {
     baseURL: 'http://localhost:4200',
-    actionTimeout: 0,
+    //actionTimeout: 0,
     headless: true
   },
   projects: [
@@ -28,7 +26,7 @@ const config = {
       }
     }
   ],
-  outputDir: '../../../../../e2e/test-results/'
+  outputDir: '../../../../../test/'
 }
 
 module.exports = config

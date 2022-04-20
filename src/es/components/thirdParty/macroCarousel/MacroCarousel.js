@@ -67,7 +67,7 @@ export default class MacroCarousel extends Shadow() {
         // only grab the slides-per-view-mobile if mobile else without
         if (attribute.name.includes('slides-per-view')) {
           this.macroCarousel.setAttribute('slides-per-view', this.getAttribute(`slides-per-view${this.getMedia()}`) || '1')
-        } else {
+        } else if (attribute.name !== 'namespace' && !attribute.name.includes('hidden')) {
           this.macroCarousel.setAttribute(attribute.name, attribute.value || 'true')
         }
       }

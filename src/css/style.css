@@ -6,7 +6,7 @@
   display: var(--h1-display, block);
   font-size: var(--h1-font-size, 1.75em);
   font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family, inherit)));
-  font-weight: var(--h1-font-weight, 800);
+  font-weight: var(--h1-font-weight, var(--h-font-weight, normal));
   line-height: var(--h1-line-height, 1.286em);
   text-align: var(--h1-text-align, start);
   word-break: var(--h1-word-break, normal);
@@ -22,7 +22,7 @@
   display: var(--h2-display, block);
   font-size: var(--h2-font-size, 1.5em);
   font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family, inherit)));
-  font-weight: var(--h2-font-weight, 700);
+  font-weight: var(--h2-font-weight, var(--h-font-weight, normal));
   line-height: var(--h2-line-height, 1.334em);
   text-align: var(--h2-text-align, start);
   word-break: var(--h2-word-break, normal);
@@ -38,7 +38,7 @@
   display: var(--h3-display, block);
   font-size: var(--h3-font-size, 1.25em);
   font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family, inherit)));
-  font-weight: var(--h3-font-weight, 700);
+  font-weight: var(--h3-font-weight, var(--h-font-weight, normal));
   line-height: var(--h3-line-height, 1.4em);
   text-align: var(--h3-text-align, start);
   word-break: var(--h3-word-break, normal);
@@ -54,7 +54,7 @@
   display: var(--h4-display, block);
   font-size: var(--h4-font-size, 1.125em);
   font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family, inherit)));
-  font-weight: var(--h4-font-weight, 700);
+  font-weight: var(--h4-font-weight, var(--h-font-weight, normal));
   line-height: var(--h4-line-height, 1.334em);
   text-align: var(--h4-text-align, start);
   word-break: var(--h4-word-break, normal);
@@ -70,7 +70,7 @@
   display: var(--h5-display, block);
   font-size: var(--h5-font-size, 1em);
   font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family, inherit)));
-  font-weight: var(--h5-font-weight, 700);
+  font-weight: var(--h5-font-weight, var(--h-font-weight, normal));
   line-height: var(--h5-line-height, 1.334em);
   text-align: var(--h5-text-align, start);
   word-break: var(--h5-word-break, normal);
