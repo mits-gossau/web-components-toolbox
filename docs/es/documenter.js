@@ -10,10 +10,25 @@ if (componentName) {
   document.body.addEventListener('wc-config-load', event => event.detail.imports.forEach(importPromise => importPromise.then(importEl => {
     if (importEl[3].includes(componentName)) {
 
-      Array(document.querySelectorAll(importEl[0])).forEach(element => {
-        console.log(element)
+      // Fetch Examples
+      fetch(document.URL).then(res => res.text()).then(file => {
+        
+        const reg = new RegExp(`\\<\/${importEl[0]}\\>`) 
+        const items = file.split(reg).map(item => item+`</${importEl[0]}>`)
+        const modified = items.map(modEle => {
+          const rep = modEle.replaceAll('<', '&lt;')
+          rep.replaceAll('/>', '&lt;')
+          return rep
+        })
+
+        modified.slice(0,-1).forEach(item => {
+          const wrapper = document.createElement("div")
+          item.replace(/\s/g, '')
+          wrapper.innerHTML = `<pre><code class="language-markup">${item}</code></pre>`
+          document.body.appendChild(wrapper)
+        })
       })
-    
+
       const cssURL = location.href.split("/")
       const lastElement = cssURL[cssURL.length - 1]
       const cssFileName = lastElement.split('.').slice(0, -1).join('.') + '.css'
