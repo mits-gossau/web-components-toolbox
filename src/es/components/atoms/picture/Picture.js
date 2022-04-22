@@ -148,7 +148,7 @@ export default class Picture extends Intersection() {
         height: var(--img-height, auto);
         margin: var(--img-margin, auto);
         max-height: var(--img-max-height, 75vh);
-        max-width: var(--img-max-width, 100%);
+        max-width: var(--img-max-width, max-content);
         min-height: var(--img-min-height, unset);
         min-width: var(--img-min-width, unset);
         object-fit: var(--img-object-fit, cover);
