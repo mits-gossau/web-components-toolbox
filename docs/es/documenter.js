@@ -10,24 +10,44 @@ if (componentName) {
   document.body.addEventListener('wc-config-load', event => event.detail.imports.forEach(importPromise => importPromise.then(importEl => {
     if (importEl[3].includes(componentName)) {
 
+      // TODO
+      /*Promise.all(urls.map(url =>
+        fetch(url).then(resp => resp.text())
+      )).then(texts => {
+        …
+      })*/
+
       // Fetch Examples
       fetch(document.URL).then(res => res.text()).then(file => {
-        
-        const reg = new RegExp(`\\<\/${importEl[0]}\\>`) 
-        const items = file.split(reg).map(item => item+`</${importEl[0]}>`)
+
+        const reg = new RegExp(`\\<\/${importEl[0]}\\>`)
+        const items = file.split(reg).map(item => item + `</${importEl[0]}>`)
         const modified = items.map(modEle => {
           const rep = modEle.replaceAll('<', '&lt;')
           rep.replaceAll('/>', '&lt;')
           return rep
         })
 
-        modified.slice(0,-1).forEach(item => {
+        const exampleComponents = []
+        modified.slice(0, -1).forEach(item => {
           const wrapper = document.createElement("div")
           item.replace(/\s/g, '')
           wrapper.innerHTML = `<pre><code class="language-markup">${item}</code></pre>`
-          document.body.appendChild(wrapper)
+          //document.body.appendChild(wrapper)
+          exampleComponents.push(wrapper)
         })
+        const exampleDetails = document.createElement("details")
+        const exampleSummary = document.createElement("summary")
+        exampleComponents.forEach(component => exampleDetails.appendChild(component))
+        exampleSummary.innerText = "Examples"
+        exampleDetails.append(exampleSummary)
+        document.body.appendChild(exampleDetails)
+
       })
+
+
+
+
 
       const cssURL = location.href.split("/")
       const lastElement = cssURL[cssURL.length - 1]
@@ -70,5 +90,5 @@ function createDetailsElement(content, lang, summaryText) {
   const summary = document.createElement("summary")
   summary.innerText = summaryText
   details.append(summary)
-  return details 
+  return details
 }
