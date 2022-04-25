@@ -130,7 +130,7 @@ export default class Video extends Shadow() {
   renderHTML () {
     this.video = this.root.querySelector('div') || document.createElement('div')
     this.video.innerHTML = Array.from(this.attributes).reduce((acc, attribute) => {
-      if (attribute.name && attribute.name !== 'sources'  && attribute.name !== 'namespace' && !attribute.name.includes('hidden')) return `${acc} ${attribute.name}="${attribute.value || 'true'}"`
+      if (attribute.name && attribute.name !== 'sources' && attribute.name !== 'namespace' && !attribute.name.includes('hidden')) return `${acc} ${attribute.name}="${attribute.value || 'true'}"`
       return acc
     }, '<video') + '></video'
     this.video = this.video.children[0] // workaround, since autoplay did not trigger, when document.createElement('video')
