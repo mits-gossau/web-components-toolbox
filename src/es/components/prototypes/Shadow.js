@@ -533,7 +533,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
             tagName: this.tagName
           })
         : self.Environment && !!self.Environment.mobileBreakpoint
-        ? self.Environment.mobileBreakpoint
-        : '767px'
+          ? self.Environment.mobileBreakpoint
+          : '767px'
   }
 }
