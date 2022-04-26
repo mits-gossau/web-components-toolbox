@@ -49,14 +49,13 @@ export default class Form extends Shadow() {
                 })
                 .then(response => {
                   if (response) { // passed captcha
-                      console.info("TESTING: passed captcha")
-                      return
+                    console.info('TESTING: passed captcha')
                   } else {
                     console.error('Failed captcha')
-                    //TODO stop form from sending 
+                    // TODO stop form from sending
                   }
                 })
-                  //TODO stop form from sending 
+              // TODO stop form from sending
                 .catch(error => console.error('Something went wrong while verifying captcha: ', error))
             })
           })
@@ -207,7 +206,7 @@ export default class Form extends Shadow() {
    *
    * @returns {Promise<{components: any}>}
    */
-   loadDependency () {
+  loadDependency () {
     return this.dependencyPromise || (this.dependencyPromise = new Promise(resolve => {
       // needs markdown
       if ('grecaptcha' in self === true) {

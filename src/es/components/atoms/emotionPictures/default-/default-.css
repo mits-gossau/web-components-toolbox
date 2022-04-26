@@ -4,4 +4,5 @@
     --emotion-pictures-default-img-width:100%;
     --emotion-pictures-default-margin-mobile: calc(-1 * var(--content-spacing-mobile)) 0 0;
     --emotion-pictures-default-margin: calc(-1 * var(--content-spacing)) 0 0;
+    --img-max-width: 100%;
 }
