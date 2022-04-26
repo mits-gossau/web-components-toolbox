@@ -37,7 +37,12 @@ export default class Teaser extends Shadow() {
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     if (showPromises.length) {
       this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
+      Promise.all(showPromises).then(() => {
+        self.requestAnimationFrame(timeStamp => {
+          if (self.getComputedStyle(this.root.querySelector('figcaption')).getPropertyValue(`background-color`) === self.getComputedStyle(document.querySelector(':root')).getPropertyValue(`background-color`)) this.setAttribute('figcaption-bg-color-equal', true)
+        })
+        this.hidden = false
+      })
     }
     this.addEventListener('click', this.clickListener)
     if (this.getAttribute('namespace') === 'teaser-overlay-') {
@@ -135,6 +140,9 @@ export default class Teaser extends Shadow() {
         width: var(--figcaption-width, 100%);
         transition: var(--figcaption-transition, none);
         transform: var(--figcaption-transform, none);
+      }
+      :host([figcaption-bg-color-equal]) figure figcaption {
+        padding: var(--figcaption-bg-color-equal-padding, var(--figcaption-padding, 1em 0));
       }
       :host(:hover) figure figcaption {
         transform: var(--figcaption-transform-hover, none);

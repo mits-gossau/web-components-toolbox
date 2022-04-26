@@ -1,5 +1,6 @@
 :host {
   --teaser-tile-text-center-figcaption-align-items: center;
+  --teaser-tile-text-center-figcaption-bg-color-equal-padding: var(--teaser-tile-text-center-figcaption-bg-color-equal-padding-custom, 0.625em 0 0);
   --teaser-tile-text-center-figcaption-display: flex;
   --teaser-tile-text-center-figcaption-flex-direction: column;
   --teaser-tile-text-center-figcaption-justify-content: center;
