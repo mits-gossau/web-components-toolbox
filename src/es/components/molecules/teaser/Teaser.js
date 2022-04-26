@@ -147,6 +147,9 @@ export default class Teaser extends Shadow() {
       :host(:hover) figure figcaption {
         transform: var(--figcaption-transform-hover, none);
       }
+      :host(:hover) figure figcaption * {
+        color: var(--figcaption-color-hover, var(--figcaption-color, var(--background-color, red)));
+      }
       :host figure figcaption a-link {
         position: var(--a-link-position, static);
         top: var(--a-link-top, auto);
@@ -194,6 +197,11 @@ export default class Teaser extends Shadow() {
       case 'teaser-download-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      case 'teaser-round-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./round-/round-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       default:
