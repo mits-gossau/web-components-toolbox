@@ -40,7 +40,7 @@ export default class Teaser extends Shadow() {
       Promise.all(showPromises).then(() => {
         self.requestAnimationFrame(timeStamp => {
           let figcaption, figcaptionBackgroundColor
-          if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue(`--background-color`).trim() || figcaptionBackgroundColor === 'transparent')) {
+          if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
             this.setAttribute('figcaption-bg-color-equal', true)
           } else {
             this.removeAttribute('figcaption-bg-color-equal')
