@@ -39,7 +39,12 @@ export default class Teaser extends Shadow() {
       this.hidden = true
       Promise.all(showPromises).then(() => {
         self.requestAnimationFrame(timeStamp => {
-          if (self.getComputedStyle(this.root.querySelector('figcaption')).getPropertyValue(`background-color`) === self.getComputedStyle(document.querySelector(':root')).getPropertyValue(`background-color`)) this.setAttribute('figcaption-bg-color-equal', true)
+          let figcaption, figcaptionBackgroundColor
+          if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue(`--background-color`).trim() || figcaptionBackgroundColor === 'transparent')) {
+            this.setAttribute('figcaption-bg-color-equal', true)
+          } else {
+            this.removeAttribute('figcaption-bg-color-equal')
+          }
         })
         this.hidden = false
       })
@@ -141,7 +146,7 @@ export default class Teaser extends Shadow() {
         transition: var(--figcaption-transition, none);
         transform: var(--figcaption-transform, none);
       }
-      :host([figcaption-bg-color-equal]) figure figcaption {
+      :host([figcaption-bg-color-equal=true]) figure figcaption {
         padding: var(--figcaption-bg-color-equal-padding, var(--figcaption-padding, 1em 0));
       }
       :host(:hover) figure figcaption {
