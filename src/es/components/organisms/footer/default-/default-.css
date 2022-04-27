@@ -5,7 +5,7 @@
   --footer-default-invert-a-color-hover: var(--footer-default-invert-a-color-hover-custom, var(--color-hover));
   --footer-default-invert-background-color: var(--footer-default-invert-background-color-custom, var(--color-secondary));
   --footer-default-invert-color: var(--footer-default-invert-color-custom, var(--background-color));
-  --picture-footer-logo-img-width: min(35px, 10vw);
+  --picture-footer-logo-img-width: min(35px, 10vw, 100%);
   --picture-store-logo-img-margin-mobile: var(--picture-store-logo-img-margin);
   --picture-store-logo-img-margin: 0;
 }
