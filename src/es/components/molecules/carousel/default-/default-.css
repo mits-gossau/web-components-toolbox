@@ -3,12 +3,12 @@
   --carousel-default-flex-align-items:flex-start;
   --carousel-default-text-padding:var(--content-spacing);
   --carousel-default-background-color: var(--color-secondary);
-  --carousel-default-text-font-size:0.875em;
+  --carousel-default-p-font-size:0.875em;
   --carousel-default-text-background-color:var(--carousel-default-text-background-color-custom, var(--color-disabled));
   --carousel-default-navigation-icon-mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23000'%3E %3Cpath d='M 0 29.8945 L 29.3936 0.5 L 30.8147 1.9209 L 2.8398 29.8945 L 30.8147 57.8682 L 29.3936 59.2891 L 0 29.8945 Z'/%3E %3C/svg%3E");
   --carousel-default-navigation-icon-size:3.8rem;
   --carousel-default-navigation-color:var(--background-color);
-  --carousel-default-navigation-background-color:transparent;
+  --carousel-default-navigation-background-color: transparent;
   --carousel-default-navigation-color-focus:var(--background-color);
-
+  --carousel-default-color:var(--background-color);
 }

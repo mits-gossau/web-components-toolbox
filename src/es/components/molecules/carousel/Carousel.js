@@ -34,24 +34,24 @@ export default class Carousel extends BaseCarousel {
   renderCustomCSS () {
     
     this.css = /* css */` 
-      :host > macro-carousel > .container {} 
-      
-      :host > macro-carousel > .container > a-picture{} 
-
-      :host > macro-carousel > div > .text {
+      :host > macro-carousel > .container {
+        display: flex;
+        align-items: stretch;
+        color: var(--color, red);
+        font-size: var(--font-size, 1em);
         width:100%;
+        justify-content: flex-end;
+      } 
+      :host > macro-carousel > .container .text {
         background-color: var(--text-background-color, red);
       }
       :host > macro-carousel > div > .text > p {
-        padding:var(--text-padding, 0);
-        font-size: var(--text-font-size, 1em);
+        padding:var(--text-padding, 0); 
       }
       :host .macro-carousel-previous, .macro-carousel-next{
         padding:2em;
       }
-         
-
-
+        
       @media only screen and (max-width: _max-width_) {}
     `
 
