@@ -34,6 +34,10 @@ export default class Carousel extends BaseCarousel {
   renderCustomCSS () {
     
     this.css = /* css */` 
+
+      :host> macro-carousel >  macro-carousel-nav-button {
+        top: 40% !important;
+      }
       :host > macro-carousel > .container {
         display: flex;
         align-items: stretch;
@@ -49,10 +53,17 @@ export default class Carousel extends BaseCarousel {
         padding:var(--text-padding, 0); 
       }
       :host .macro-carousel-previous, .macro-carousel-next{
-        padding:2em;
+        padding:2rem;
       }
         
-      @media only screen and (max-width: _max-width_) {}
+      @media only screen and (max-width: _max-width_) {
+        :host> macro-carousel >  macro-carousel-nav-button {
+          top: 35% !important;
+        }
+        :host .macro-carousel-previous, .macro-carousel-next{
+          padding:5vw;
+        } 
+      }
     `
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
