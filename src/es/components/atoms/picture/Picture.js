@@ -148,7 +148,7 @@ export default class Picture extends Intersection() {
         height: var(--img-height, auto);
         margin: var(--img-margin, auto);
         max-height: var(--img-max-height, 75vh);
-        max-width: var(--img-max-width, max-content);
+        max-width: var(--img-max-width, 100%); /* max-content would have been nice to not scale up the image, but in general make the editor use big enough images and this must stay at 100% default value, otherwise there are several side effects */
         min-height: var(--img-min-height, unset);
         min-width: var(--img-min-width, unset);
         object-fit: var(--img-object-fit, cover);
@@ -156,7 +156,7 @@ export default class Picture extends Intersection() {
         transform: var(--transform, none);
         transition: var(--transition, none);
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
-        width: var(--img-width, 100%);
+        width: var(--img-width, max-content);
       }
       :host picture img:hover, :host picture.hover img {
         filter: var(--filter-hover, var(--filter, none));

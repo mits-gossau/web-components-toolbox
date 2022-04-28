@@ -37,7 +37,17 @@ export default class Teaser extends Shadow() {
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     if (showPromises.length) {
       this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
+      Promise.all(showPromises).then(() => {
+        self.requestAnimationFrame(timeStamp => {
+          let figcaption, figcaptionBackgroundColor
+          if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
+            this.setAttribute('figcaption-bg-color-equal', true)
+          } else {
+            this.removeAttribute('figcaption-bg-color-equal')
+          }
+        })
+        this.hidden = false
+      })
     }
     this.addEventListener('click', this.clickListener)
     if (this.getAttribute('namespace') === 'teaser-overlay-') {
@@ -136,8 +146,17 @@ export default class Teaser extends Shadow() {
         transition: var(--figcaption-transition, none);
         transform: var(--figcaption-transform, none);
       }
+      :host([figcaption-bg-color-equal=true]) figure figcaption {
+        padding: var(--figcaption-bg-color-equal-padding, var(--figcaption-padding, 1em 0));
+      }
       :host(:hover) figure figcaption {
         transform: var(--figcaption-transform-hover, none);
+      }
+      :host figure figcaption * {
+        color: var(--figcaption-color, var(--color, unset));
+      }
+      :host(:hover) figure figcaption * {
+        color: var(--figcaption-color-hover, var(--figcaption-color, var(--color, unset)));
       }
       :host figure figcaption a-link {
         position: var(--a-link-position, static);
@@ -186,6 +205,11 @@ export default class Teaser extends Shadow() {
       case 'teaser-download-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      case 'teaser-round-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./round-/round-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       default:

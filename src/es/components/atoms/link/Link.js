@@ -32,6 +32,8 @@ export default class Link extends Shadow() {
 
     this._a = a
     this.setAttribute('role', 'link')
+    this.removeAttribute('tabindex')
+    this.a.setAttribute('tabindex', '0')
   }
 
   connectedCallback () {

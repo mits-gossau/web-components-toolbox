@@ -1,3 +1,4 @@
 :host {
+  --picture-teaser-img-max-width: 100%;
   --picture-teaser-img-width: 100%;
 }
