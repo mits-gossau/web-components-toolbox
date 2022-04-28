@@ -156,7 +156,7 @@ export default class Picture extends Intersection() {
         transform: var(--transform, none);
         transition: var(--transition, none);
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
-        width: var(--img-width, 100%);
+        width: var(--img-width, max-content);
       }
       :host picture img:hover, :host picture.hover img {
         filter: var(--filter-hover, var(--filter, none));
