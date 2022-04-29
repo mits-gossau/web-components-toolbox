@@ -169,7 +169,6 @@ export default class MacroCarousel extends Shadow() {
    * @return {void}
    */
   renderCSS () {
-    console.log("parent");
     this.css = /* css */`
       :host > macro-carousel {
          width: var(--width, 100%) !important;
