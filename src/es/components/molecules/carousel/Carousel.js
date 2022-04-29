@@ -34,7 +34,6 @@ export default class Carousel extends BaseCarousel {
   renderCustomCSS () {
     
     this.css = /* css */` 
-
       :host> macro-carousel >  macro-carousel-nav-button {
         top: 40% !important;
       }
@@ -53,12 +52,11 @@ export default class Carousel extends BaseCarousel {
         padding:var(--text-padding, 0); 
       }
       :host .macro-carousel-previous, .macro-carousel-next{
-        padding:2rem;
+        padding:2em;
       }
-        
       @media only screen and (max-width: _max-width_) {
         :host> macro-carousel >  macro-carousel-nav-button {
-          top: 35% !important;
+          top:35% !important;
         }
         :host .macro-carousel-previous, .macro-carousel-next{
           padding:5vw;
