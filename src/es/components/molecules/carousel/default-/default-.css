@@ -1,0 +1,18 @@
+:host {
+  --carousel-default-color: var(--carousel-default-color-custom, var(--color, white));
+  --carousel-default-flex-direction: var(--carousel-default-flex-direction-custom, column);
+  --carousel-default-navigation-background-color: var(--carousel-default-navigation-background-color-custom, unset);
+  --carousel-default-navigation-color-focus: var(--color-hover);
+  --carousel-default-navigation-color: var(--carousel-default-navigation-color-custom, var(--background-color, black));
+  --carousel-default-navigation-icon-mask: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 58 58' fill='%23000'%3E %3Cpath d='M 0 29.8945 L 29.3936 0.5 L 30.8147 1.9209 L 2.8398 29.8945 L 30.8147 57.8682 L 29.3936 59.2891 L 0 29.8945 Z'/%3E %3C/svg%3E");
+  --carousel-default-p-font-size: var(--carousel-default-p-font-size-custom, 0.875em);
+  --carousel-default-p-margin:0;
+  --carousel-default-pagination-background-color: var(--carousel-default-pagination-background-color-custom, var(--m-white, white));
+  --carousel-default-pagination-border-selected:10px solid var(--color-secondary);
+  --carousel-default-pagination-bottom:15%;
+  --carousel-default-pagination-position:absolute;
+  --carousel-default-text-background-color: var(--carousel-default-text-background-color-custom, var(--color-disabled));
+  --carousel-default-text-padding-mobile: calc(var(--content-spacing) / 2);
+  --carousel-default-text-padding: var(--content-spacing);
+  --carousel-picture-img-width:100%;
+ }

@@ -2,6 +2,7 @@
 
   --teaser-download-background-color: var(--teaser-download-background-color-custom, var(--background-color, var(--m-white)));
   --teaser-download-figcaption-background-color: var(--teaser-download-figcaption-background-color-custom, var(--teaser-download-background-color));
+  --teaser-download-figcaption-bg-color-equal-padding: var(--teaser-download-figcaption-bg-color-equal-padding-custom, 0.625em 0 0);
   --teaser-download-figcaption-padding: 0.625em;
   --teaser-download-h5-margin: 0 0 0.5em;
   --teaser-download-p-font-size: 0.875em;

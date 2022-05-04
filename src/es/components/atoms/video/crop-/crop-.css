@@ -1,4 +1,5 @@
 :host {
   --video-crop-clip-path: inset(2%);
+  --video-crop-transform-mobile: var(--video-crop-transform);
   --video-crop-transform: scale(104%);
 }

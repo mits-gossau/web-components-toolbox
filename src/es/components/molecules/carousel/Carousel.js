@@ -171,54 +171,43 @@ export default class MacroCarousel extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host > macro-carousel {
-        width: var(--content-width, 100%);
-        margin: var(--margin, 0 auto);
+         width: var(--width, 100%) !important;
       }
       :host > macro-carousel > * {
-        --img-height: ${this.getAttribute('height') ? 'min(auto, 100%)' : 'auto'};
-        --img-width: ${this.getAttribute('height') ? 'auto' : '100%'};
-        --img-max-height: ${this.getAttribute('height') || '100%'};
-        --img-min-height: 0px;
-        --img-max-width: 100%;
-        --img-min-width: 0px;
-        --direction: var(--flex-direction, row);
-        --align-items: var(--flex-align-items, center);
         display: flex;
-        flex-direction: var(--direction);
-        align-items: var(--align-items);
-        justify-content: center;
+        align-items: var(--align-items, center);
+        flex-direction: var(--flex-direction, row);
+        justify-content: var(--justify-content, center);
+      }
+      :host > macro-carousel > .container {
+        color: var(--color, red);
+        width: 100%;
+      }  
+      :host> macro-carousel >  macro-carousel-nav-button {
+        top:40%;
+      }
+      :host > macro-carousel > .container {
+        display: flex;
+        align-items: stretch;
+        font-size: var(--font-size, 1em);
       } 
-      :host > macro-carousel p {
-        margin: var(--p-margin, 3px 0);
+      :host > macro-carousel > div > .text {
+        background-color: var(--text-background-color, red);
       }
-      :host > macro-carousel h3 {
-        font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family)));
-        font-weight: var(--h3-font-weight, var(--font-weight, normal));
-        font-size: var(--h3-font-size, min(3em, 10vw));
-        text-transform: var(--h3-text-transform, none);
-        margin: var(--h3-margin, 0);
+      :host > macro-carousel > div > .text p {
+        padding:var(--text-padding, 0); 
       }
-
-      :host > macro-carousel *:focus {
-        outline: var(--outline-focus, 0);
-      }
-      :host a {
-        color: var(--a-color, var(--color-secondary, var(--color, pink)));
-        text-align: var(--a-text-align, unset);
-        text-decoration: var(--a-text-decoration, var(--text-decoration, none));
-        text-underline-offset: var(--a-text-underline-offset, unset);
-        display: var(--a-display, inline);
-        margin: var(--a-margin, var(--content-spacing, unset)) auto;
-      }
-      :host a:hover, :host a:active, :host a:focus {
-        color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
-        text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
+      :host .macro-carousel-previous, .macro-carousel-next{
+         margin:1em;
       }
       @media only screen and (max-width: _max-width_) {
-        :host > macro-carousel {
-          width: var(--content-width-mobile, 100%);
-          margin: var(--margin-mobile, 0 auto);
+        :host> macro-carousel >  macro-carousel-nav-button {
+          top:35%;
         }
+        :host > macro-carousel > div > .text p {
+          padding:var(--text-padding-mobile, 0); 
+        }
+      }
       }
     `
     // inject style which can't be controlled through css vars
@@ -237,7 +226,8 @@ export default class MacroCarousel extends Shadow() {
       :host div ::slotted(macro-carousel-pagination-indicator) {
         --macro-carousel-pagination-color: var(--pagination-background-color, var(--background-color, black));
         --macro-carousel-pagination-color-selected: var(--pagination-background-color-selected, var(--background-color-selected, var(--background-color, pink)));
-        --macro-carousel-pagination-size-dot: var(--pagination-width, 5px);         
+        --macro-carousel-pagination-size-dot: var(--pagination-width, 12px);    
+        --macro-carousel-pagination-border-selected: var(--pagination-border-selected);   
         opacity: var(--pagination-opacity, 1);
       }
       :host div ::slotted(macro-carousel-nav-button) {
@@ -245,12 +235,28 @@ export default class MacroCarousel extends Shadow() {
         --macro-carousel-navigation-color-focus: var(--navigation-color-focus, var(--color-focus, var(--color, black)));
         --macro-carousel-navigation-color-background: var(--navigation-background-color, var(--background-color, transparent));
         --macro-carousel-navigation-color-background-focus: var(--navigation-background-color-focus, var(--navigation-background-color, var(--background-color, rgba(0, 0, 0, 0.2))));
-        --macro-carousel-navigation-button-size: var(--navigation-button-size, 48px);
-        --macro-carousel-navigation-icon-size: var(--navigation-icon-size, 24px);
+        --macro-carousel-navigation-button-size: var(--navigation-button-size, 6em);
+        --macro-carousel-navigation-icon-size: var(--navigation-icon-size, 5em);
         --macro-carousel-navigation-icon-mask: var(--navigation-icon-mask, url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E %3Cpath d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z'/%3E %3C/svg%3E")) ;
-        
       }
     `.replace(/var\(--/g, `var(--${this.namespace}`)
+
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
+    switch (this.getAttribute('namespace')) {
+      case 'carousel-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      default:
+        return this.fetchCSS(styles, false)
+    }
   }
 
   /**

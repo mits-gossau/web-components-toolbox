@@ -1,9 +1,11 @@
 :host {
-  --picture-teaser-border-radius-mobile:50%;
-  --picture-teaser-border-radius:50%;
-  --picture-teaser-img-width-mobile:50vw;
-  --teaser-round-background-color:var(--teaser-round-background-color-custom, var(--background-color, var(--m-white)));
+  --picture-teaser-border-radius-mobile: 50%;
+  --picture-teaser-border-radius: 50%;
+  --picture-teaser-img-width-mobile: 50vw;
+  --teaser-round-a-picture-width: var(--teaser-round-a-picture-width-custom, 100%);
+  --teaser-round-align-items: var(--teaser-round-align-items-custom, center);
+  --teaser-round-background-color: var(--teaser-round-background-color-custom, var(--background-color, var(--m-white)));
   --teaser-round-figcaption-background-color: var(--teaser-round-figcaption-background-color-custom, var(--teaser-round-background-color));
-  --teaser-round-figcaption-color-hover:var(--teaser-round-figcaption-color-hover-custom, var(--color-hover, var(--m-red-900)));
-  --teaser-round-h5-text-align:center;
+  --teaser-round-figcaption-color-hover: var(--teaser-round-figcaption-color-hover-custom, var(--color-hover, var(--m-red-900)));
+  --teaser-round-h5-text-align: center;
 }
