@@ -67,8 +67,7 @@ export default class Textarea extends Shadow() {
    * @return {void}
    */
   renderCSS () {
-    console.log("renderCSS")
-      this.css = /* css */`
+    this.css = /* css */`
       :host {
         position: relative;
         display: block;
@@ -101,16 +100,16 @@ export default class Textarea extends Shadow() {
   }
 
   renderHTML(){
-      var lable = this.textarea.hasAttribute('data-maxlength-lable') ? this.textarea.getAttribute('data-maxlength-lable') : ""
-      if (!lable.includes('#number')){
-        this.textarea.setAttribute('data-maxlength-lable', lable + "#number")
-        this.counter.innerHTML += '#number'
-      }
-      this.updateCounter()
+    var lable = this.textarea.hasAttribute('data-maxlength-lable') ? this.textarea.getAttribute('data-maxlength-lable') : ""
+    if (!lable.includes('#number')){
+      this.textarea.setAttribute('data-maxlength-lable', lable + "#number")
+      this.counter.innerHTML += '#number'
+    }
+    this.updateCounter()
 
-      this.counter.classList.add('counter')
-      this.html = this.counter
-      this.html = this.style
+    this.counter.classList.add('counter')
+    this.html = this.counter
+    this.html = this.style
   }
 
   get style () {
