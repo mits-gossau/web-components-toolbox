@@ -10,6 +10,8 @@ if (componentName) {
   document.body.addEventListener('wc-config-load', event => event.detail.imports.forEach(importPromise => importPromise.then(importEl => {
     if (importEl[3].includes(componentName)) {
 
+      // setup prism
+      setupPrism()
 
       // examples path
       const fetch_htmlExamples = document.URL;
@@ -20,7 +22,6 @@ if (componentName) {
       // css path
       const fetch_pathCss = this.getCSSPath(location)
 
-      // TODO
       const urls = [fetch_htmlExamples, fetch_pathCss, fetch_codeFile]
       Promise.all(urls.map(url =>
         fetch(url).then(resp => resp.text())
@@ -57,8 +58,7 @@ function exampleComponents(tagName, data) {
   modified.slice(0, -1).forEach(item => {
     const wrapper = document.createElement("div")
     item.replace(/\s/g, '')
-    wrapper.innerHTML = `<pre><code class="language-markup">${item}</code></pre>`
-    //document.body.appendChild(wrapper)
+    wrapper.innerHTML = `<pre><code class="language-markup">${item.trim()}</code></pre>`
     exampleComponents.push(wrapper)
   })
 
@@ -77,16 +77,6 @@ function componentCSS(data) {
 }
 
 function componentClass(data) {
-  const link = document.createElement('link')
-  link.setAttribute('href', '../../../../../../docs/es/prism.css')
-  link.setAttribute('rel', 'stylesheet')
-  link.setAttribute('type', 'text/css')
-  document.head.appendChild(link)
-
-  const script_js = document.createElement('script')
-  script_js.setAttribute('src', '../../../../../../docs/es/prism.js')
-  document.body.append(script_js)
-
   const wcCode = this.createDetailsElement(data, "javascript", "Component Class")
   document.body.appendChild(wcCode)
 }
@@ -100,4 +90,15 @@ function createDetailsElement(content, lang, summaryText) {
   summary.innerText = summaryText
   details.append(summary)
   return details
+}
+
+function setupPrism(){
+  const link = document.createElement('link')
+  link.setAttribute('href', '../../../../../../docs/es/prism.css')
+  link.setAttribute('rel', 'stylesheet')
+  link.setAttribute('type', 'text/css')
+  document.head.appendChild(link)
+  const script_js = document.createElement('script')
+  script_js.setAttribute('src', '../../../../../../docs/es/prism.js')
+  document.body.append(script_js) 
 }
