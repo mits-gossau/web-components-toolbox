@@ -8,9 +8,11 @@ test('demo page screenshot test', async ({ page, browserName }) => {
   const demoPage = await page.waitForSelector('body')
   const wcLoaded = await demoPage.getAttribute('wc-config-load')
   if (wcLoaded) {
+    await page.waitForTimeout(5000)
     await page.evaluate(() => window.scrollTo(0, 999999999))
     await page.waitForTimeout(5000)
     await page.evaluate(() => window.scrollTo(0, 0))
+    await page.waitForTimeout(5000)
     await page.screenshot({ path: `./test/${projectName}-${browserName}.png`, fullPage: true })
     expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(`${projectName}.png`)
   }
