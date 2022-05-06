@@ -15,5 +15,10 @@
     "live-server": "*",
     "shelljs": "^0.8.5",
     "standard": "*"
+  },
+  "standard": {
+    "ignore": [
+      "docs/es/prism.*"
+    ]
   }
 }
