@@ -113,6 +113,7 @@ export default class MacroCarousel extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     self.addEventListener('resize', this.resizeListener)
+    if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) this.addEventListener('picture-load', this.resizeListener)
     if (this.hasAttribute('sync-id')) {
       if (this.getAttribute('interval')) {
         this.macroCarousel.addEventListener('macro-carousel-selected-changed', this.macroCarouselSelectedChangedListener)
@@ -130,6 +131,7 @@ export default class MacroCarousel extends Shadow() {
 
   disconnectedCallback () {
     self.removeEventListener('resize', this.resizeListener)
+    if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) this.removeEventListener('picture-load', this.resizeListener)
     if (this.hasAttribute('sync-id')) {
       if (this.getAttribute('interval')) {
         this.macroCarousel.removeEventListener('macro-carousel-selected-changed', this.macroCarouselSelectedChangedListener)
@@ -326,5 +328,9 @@ export default class MacroCarousel extends Shadow() {
 
   get scripts () {
     return this.root.querySelectorAll('script')
+  }
+
+  get aPicture () {
+    return this.macroCarousel.querySelector('a-picture')
   }
 }

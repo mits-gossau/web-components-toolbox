@@ -10,10 +10,10 @@ test('demo page screenshot test', async ({ page, browserName }) => {
   if (wcLoaded) {
     await page.waitForTimeout(5000)
     await page.evaluate(() => window.scrollTo(0, 999999999))
-    await page.waitForTimeout(5000)
     await page.evaluate(() => window.scrollTo(0, 0))
     await page.waitForTimeout(5000)
     await page.screenshot({ path: `./test/${projectName}-${browserName}.png`, fullPage: true })
+    await page.waitForTimeout(5000)
     expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(`${projectName}.png`)
   }
 })

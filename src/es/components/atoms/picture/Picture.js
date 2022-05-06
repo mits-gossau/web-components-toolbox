@@ -157,6 +157,7 @@ export default class Picture extends Intersection() {
         transition: var(--transition, none);
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
         width: var(--img-width, max-content);
+        image-rendering: -webkit-optimize-contrast; /* fix blurred image on webkit: https://www.betriebsrestaurants-migros.ch/landingpages/swissgrid/info-menuplan/ */
       }
       :host picture img:hover, :host picture.hover img {
         filter: var(--filter-hover, var(--filter, none));

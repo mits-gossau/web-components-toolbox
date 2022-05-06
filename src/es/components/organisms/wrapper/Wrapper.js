@@ -85,6 +85,7 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         flex-wrap: wrap;
         align-items: var(--align-items, center);
         justify-content: var(--justify-content, center);
+        flex-direction: var(--flex-direction, row);
         width: 100%;
         gap: var(--gap, normal);
       }
@@ -106,6 +107,9 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
         padding: var(--any-padding-last-child, var(--any-padding, 0)) !important;
       }
       @media only screen and (max-width: _max-width_) {
+        :host > section {
+          flex-direction: var(--flex-direction-mobile, var(--flex-direction, row));
+        }
         :host > section > * {
           margin: var(--margin-mobile, var(--margin, 0)) !important;
           padding: var(--padding-mobile, var(--padding, 0)) !important;
