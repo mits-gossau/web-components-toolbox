@@ -10,7 +10,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class Arrow
  * @type {CustomElementConstructor}
  * @attribute {
- *  
+ *
  * }
  * @css {
  * }
@@ -19,16 +19,16 @@ export default class Textarea extends Shadow() {
   constructor (...args) {
     super({ mode: 'false' }, ...args)
 
-    //super(...args)
+    // super(...args)
     this.keyUpListener = event => {
       this.updateCounter()
     }
   }
 
-  updateCounter(){
-    var max = Number(this.textarea.getAttribute('maxlength'))
-    var value = this.textarea.value.length
-    var lable = this.textarea.getAttribute('data-maxlength-lable')
+  updateCounter () {
+    const max = Number(this.textarea.getAttribute('maxlength'))
+    const value = this.textarea.value.length
+    const lable = this.textarea.getAttribute('data-maxlength-lable')
     this.counter.innerHTML = lable.replace('#number', (max - value).toString())
   }
 
@@ -99,10 +99,10 @@ export default class Textarea extends Shadow() {
     `
   }
 
-  renderHTML(){
-    var lable = this.textarea.hasAttribute('data-maxlength-lable') ? this.textarea.getAttribute('data-maxlength-lable') : ""
-    if (!lable.includes('#number')){
-      this.textarea.setAttribute('data-maxlength-lable', lable + "#number")
+  renderHTML () {
+    const lable = this.textarea.hasAttribute('data-maxlength-lable') ? this.textarea.getAttribute('data-maxlength-lable') : ''
+    if (!lable.includes('#number')) {
+      this.textarea.setAttribute('data-maxlength-lable', lable + '#number')
       this.counter.innerHTML += '#number'
     }
     this.updateCounter()
@@ -134,7 +134,7 @@ export default class Textarea extends Shadow() {
     return this.root.querySelector('textarea')
   }
 
-  get counter (){
-      return this._counter || (this._counter = document.createElement('span'))
+  get counter () {
+    return this._counter || (this._counter = document.createElement('span'))
   }
 }
