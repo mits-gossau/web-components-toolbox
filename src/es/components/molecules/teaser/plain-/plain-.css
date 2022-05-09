@@ -1,0 +1,25 @@
+:host {
+  --color: var(--teaser-plain-color);
+  --teaser-plain-background-color: var(--teaser-plain-background-color-custom, var(--color-secondary, var(--background-color, var(--m-white))));
+  --teaser-plain-border-radius-mobile: var(--teaser-plain-border-radius-mobile-custom, 0.571em);
+  --teaser-plain-border-radius: var(--teaser-plain-border-radius-custom, 0.5em);
+  --teaser-plain-color: var(--teaser-plain-color-custom, var(--background-color, var(--m-white)));
+  --teaser-plain-figcaption-any-opacity: 0;
+  --teaser-plain-figcaption-any-transform-origin: center top;
+  --teaser-plain-figcaption-any-transform: perspective(400px) rotateX(-45deg);
+  --teaser-plain-figcaption-any-transition: transform .45s .2s cubic-bezier(.17,.67,.28,1),opacity .45s cubic-bezier(.17,.67,.28,1), opacity 0.3s ease-out;
+  --teaser-plain-figcaption-background-color-hover: var(--teaser-plain-background-color-hover-custom, var(--color-hover, var(--teaser-plain-background-color)));
+  --teaser-plain-figcaption-background-color: var(--teaser-plain-figcaption-background-color-custom, var(--teaser-plain-background-color));
+  --teaser-plain-figcaption-bg-color-equal-padding: var(--teaser-plain-figcaption-bg-color-equal-padding-custom, 0.625em 0 0);
+  --teaser-plain-figcaption-display: flex;
+  --teaser-plain-figcaption-flex-direction: column;
+  --teaser-plain-figcaption-justify-content: flex-end;
+  --teaser-plain-figcaption-padding: 0.625em;
+  --teaser-plain-figcaption-transition: background-color 0.3s ease-out;
+  --teaser-plain-h5-margin: 0 0 0.5em;
+  --teaser-plain-intersecting-figcaption-any-opacity: 1;
+  --teaser-plain-intersecting-figcaption-any-transform: perspective(400px) rotateX(0);
+  --teaser-plain-p-font-size: 0.875em;
+  --teaser-plain-p-line-height: 1.14em;
+  --teaser-plain-p-margin: 0 0 0.625em;
+}

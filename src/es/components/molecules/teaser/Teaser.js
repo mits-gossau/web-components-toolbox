@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global self */
 
@@ -10,9 +10,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class Teaser
  * @type {CustomElementConstructor}
  */
-export default class Teaser extends Shadow() {
-  constructor (...args) {
-    super(...args)
+export default class Teaser extends Intersection() {
+  constructor (options = {}, ...args) {
+    super(Object.assign(options, { intersectionObserverInit: { rootMargin: '-200px 0px -200px 0px' } }), ...args)
 
     this.setAttribute('role', 'figure')
     this.clickListener = event => {
@@ -32,6 +32,7 @@ export default class Teaser extends Shadow() {
   }
 
   connectedCallback () {
+    super.connectedCallback()
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
@@ -57,11 +58,16 @@ export default class Teaser extends Shadow() {
   }
 
   disconnectedCallback () {
+    super.disconnectedCallback()
     this.removeEventListener('click', this.clickListener)
     if (this.getAttribute('namespace') === 'teaser-overlay-') {
       this.removeEventListener('mouseover', this.mouseoverListener)
       this.removeEventListener('mouseout', this.mouseoutListener)
     }
+  }
+
+  intersectionCallback (entries, observer) {
+    this.classList[entries[0] && entries[0].isIntersecting ? 'add' : 'remove']('intersecting')
   }
 
   /**
@@ -87,6 +93,7 @@ export default class Teaser extends Shadow() {
       :host figure {
         display: var(--display, flex);
         background-color: var(--background-color, #c2262f);
+        border-radius: var(--border-radius, 0);
         flex-direction: var(--flex-direction, column);
         align-items: var(--align-items, flex-start);
         justify-content: var(--justify-content, space-between);
@@ -98,7 +105,7 @@ export default class Teaser extends Shadow() {
         position: var(--position, static);
       }
       ${this.getAttribute('namespace') === 'teaser-overlay-'
-        ? /* css */`
+      ? /* css */`
           :host figure {
             display: grid;
             grid-template-columns: 1fr;
@@ -131,6 +138,7 @@ export default class Teaser extends Shadow() {
         transform: var(--a-picture-transform-hover, var(--a-picture-transform, none));
       }
       :host figure figcaption {
+        border-radius: var(--figcaption-border-radius, var(--border-radius, 0));
         display: var(--figcaption-display, block);
         flex-direction: var(--figcaption-flex-direction, row);
         justify-content: var(--figcaption-justify-content, normal);
@@ -146,6 +154,9 @@ export default class Teaser extends Shadow() {
         transition: var(--figcaption-transition, none);
         transform: var(--figcaption-transform, none);
       }
+      :host(:hover) figure figcaption {
+        background-color: var(--figcaption-background-color-hover, var(--figcaption-background-color, #c2262f));
+      }
       :host([figcaption-bg-color-equal=true]) figure figcaption {
         padding: var(--figcaption-bg-color-equal-padding, var(--figcaption-padding, 1em 0));
       }
@@ -158,6 +169,17 @@ export default class Teaser extends Shadow() {
       :host(:hover) figure figcaption * {
         color: var(--figcaption-color-hover, var(--figcaption-color, var(--color, unset)));
       }
+      :host figure figcaption > * {
+        transition: var(--figcaption-any-transition, none);
+        transform: var(--figcaption-any-transform, none);
+        transform-origin: var(--figcaption-any-transform-origin, unset);
+        opacity: var(--figcaption-any-opacity, 1);
+      }
+      :host(.intersecting) figure figcaption > * {
+        transition: var(--intersecting-figcaption-any-transition, var(--figcaption-any-transition, none));
+        transform: var(--intersecting-figcaption-any-transform, var(--figcaption-any-transform, none));
+        opacity: var(--intersecting-figcaption-any-opacity, var(--figcaption-any-opacity, 1));
+      }
       :host figure figcaption a-link {
         position: var(--a-link-position, static);
         top: var(--a-link-top, auto);
@@ -167,6 +189,14 @@ export default class Teaser extends Shadow() {
       }
       :host(:hover) figure figcaption a-link {
         transform: var(--a-link-transform-hover, none);
+      }
+      @media only screen and (max-width: _max-width_) {
+        :host figure {
+          border-radius: var(--border-radius-mobile, var(--border-radius, 0));
+        }
+        :host figure figcaption {
+          border-radius: var(--figcaption-border-radius-mobile, var(--border-radius-mobile, var(--figcaption-border-radius, var(--border-radius, 0))));
+        }
       }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
@@ -210,6 +240,11 @@ export default class Teaser extends Shadow() {
       case 'teaser-round-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./round-/round-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      case 'teaser-plain-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./plain-/plain-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       default:

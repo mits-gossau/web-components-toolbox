@@ -694,7 +694,7 @@ export default class Navigation extends Shadow() {
       arrowPromise = import('../../atoms/arrow/Arrow.js')
     }
     try {
-      wrapperPromise = Promise.resolve({ Wrapper: Wrapper })
+      wrapperPromise = Promise.resolve({ Wrapper })
     } catch (error) {
       wrapperPromise = import('../../organisms/wrapper/Wrapper.js')
     }
