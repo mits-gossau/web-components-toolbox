@@ -41,18 +41,13 @@ function getCSSPath (browserLocation) {
 }
 
 function exampleComponents (tagName, data) {
-  const reg = new RegExp(`\\</${tagName}\\>`)
-  const items = data.split(reg).map(item => item + `</${tagName}>`)
-  const modified = items.map(modEle => {
-    const rep = modEle.replaceAll('<', '&lt;')
-    rep.replaceAll('/>', '&lt;')
-    return rep
-  })
+  const tagPattern = RegExp(`<${tagName}(.|\n)*?<\/${tagName}>`, "g") 
+  const tags = data.match(tagPattern)
+  const modified = tags.map(modEle => modEle.replaceAll('<', '&lt;'))
 
   const exampleComponents = []
-  modified.slice(0, -1).forEach(item => {
+  modified.forEach(item => {
     const wrapper = document.createElement('div')
-    item.replace(/\s/g, '')
     wrapper.innerHTML = `<pre><code class="language-markup">${item.trim()}</code></pre>`
     exampleComponents.push(wrapper)
   })
