@@ -180,15 +180,17 @@ export default class Teaser extends Intersection() {
         transform: var(--intersecting-figcaption-any-transform, var(--figcaption-any-transform, none));
         opacity: var(--intersecting-figcaption-any-opacity, var(--figcaption-any-opacity, 1));
       }
-      :host figure figcaption a-link {
+      :host figure figcaption a-link, :host(.intersecting) figure figcaption a-link {
         position: var(--a-link-position, static);
         top: var(--a-link-top, auto);
         bottom: var(--a-link-bottom, auto);
         transition: var(--a-link-transition, none);
         transform: var(--a-link-transform, none);
+        opacity: var(--a-link-opacity, 0);
       }
       :host(:hover) figure figcaption a-link {
         transform: var(--a-link-transform-hover, none);
+        opacity: var(--a-link-opacity-hover, 1);
       }
       @media only screen and (max-width: _max-width_) {
         :host figure {
