@@ -186,7 +186,7 @@ export default class Teaser extends Intersection() {
         bottom: var(--a-link-bottom, auto);
         transition: var(--a-link-transition, none);
         transform: var(--a-link-transform, none);
-        opacity: var(--a-link-opacity, 0);
+        opacity: var(--a-link-opacity, 1);
       }
       :host(:hover) figure figcaption a-link {
         transform: var(--a-link-transform-hover, none);

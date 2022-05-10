@@ -91,9 +91,10 @@ export default class Arrow extends Shadow() {
         cursor: pointer;
         display: inline-block;
         overflow: hidden;
+        margin-bottom: 0.225em;
         height: var(--svg-size, 1.5em);
         width: var(--svg-size, 1.5em);
-        vertical-align: text-top;
+        vertical-align: middle;
       }
       :host > svg {
         align-items: center;
