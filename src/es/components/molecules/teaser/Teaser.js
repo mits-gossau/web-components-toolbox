@@ -12,7 +12,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  */
 export default class Teaser extends Intersection() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { intersectionObserverInit: { rootMargin: '-200px 0px -200px 0px' } }), ...args)
+    super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px 0px 0px 0px' } }), ...args)
 
     this.setAttribute('role', 'figure')
     this.clickListener = event => {
