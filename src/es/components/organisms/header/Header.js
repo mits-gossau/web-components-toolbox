@@ -377,7 +377,7 @@ export default class Header extends Shadow() {
           flex-grow: 1;
           left: auto;
           right: var(--content-spacing-mobile, var(--content-spacing));
-          top: -1em !important;
+          top: -1em;
         }
         :host > header::before {
           order: 1;
