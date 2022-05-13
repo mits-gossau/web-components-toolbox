@@ -41,7 +41,7 @@ function getCSSPath (browserLocation) {
 }
 
 function exampleComponents (tagName, data) {
-  const tagPattern = RegExp(`<${tagName}(.|\n)*?<\/${tagName}>`, "g") 
+  const tagPattern = RegExp(`<${tagName}(.|\n)*?</${tagName}>`, 'g')
   const tags = data.match(tagPattern)
   const modified = tags.map(modEle => modEle.replaceAll('<', '&lt;'))
 
