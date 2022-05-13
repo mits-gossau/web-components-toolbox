@@ -216,6 +216,14 @@ export default class MacroCarousel extends Shadow() {
         :host > macro-carousel > div > .text p {
           padding:var(--text-padding-mobile, 0); 
         }
+        :host .title > h1.font-size-big {
+          font-size: var(--h1-font-size-mobile);
+        }
+        :host .title {
+          top: 2vw;
+          left: 0;
+          margin:var(--div-margin-mobile);
+        }
       }
       }
     `
