@@ -326,9 +326,7 @@ img[style="float: right;"] {
   border-collapse: var(--table-border-collapse, collapse);
   border-spacing: var(--table-border-spacing, 0);
   max-width: var(--table-max-width, 100%);
-}
-:host table:not([border=0]) td {
-  border: var(--table-td-border, 1px solid var(--color));
+  word-break: break-word;
 }
 /* spacer-stylings */
 .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
