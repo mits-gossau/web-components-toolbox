@@ -184,6 +184,7 @@ export default class MacroCarousel extends Shadow() {
       :host > macro-carousel > .container {
         color: var(--color, red);
         width: 100%;
+        position: relative;
       }  
       :host> macro-carousel >  macro-carousel-nav-button {
         top:40%;
@@ -198,6 +199,12 @@ export default class MacroCarousel extends Shadow() {
       }
       :host > macro-carousel > div > .text p {
         padding:var(--text-padding, 0); 
+      }
+      :host .title {
+        position:var(--title-position, absolute);
+        top: var(--title-top, 4vw);
+        left: var(--title-left, 10vw);
+        right: var(--title-right, 10vw);
       }
       :host .macro-carousel-previous, .macro-carousel-next{
          margin:1em;
@@ -258,9 +265,15 @@ export default class MacroCarousel extends Shadow() {
         }, ...styles], false)
       case 'carousel-emotion-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./emotion-/emotion-.css`, // apply namespace since it is specific and no fallback
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false)
+        }, {
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./emotion-/emotion-.css`,
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-default-/g, '--carousel-emotion-')
+        })
       default:
         return this.fetchCSS(styles, false)
     }
