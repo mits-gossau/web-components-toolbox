@@ -1,0 +1,10 @@
+:host {
+  --carousel-emotion-bg-background-color:var(--carousel-emotion-bg-background-color-custom, var(--m-white));
+  --carousel-emotion-bg-color:var(--carousel-emotion-bg-color-custom, var(--m-black));
+  --carousel-emotion-h1-font-size-mobile: var(--carousel-emotion-h1-font-size-mobile-custom, min(calc(1.75em * 1.75), 7vw));
+  --carousel-emotion-h1-font-weight: normal;
+  --carousel-emotion-h1-text-transform: uppercase;
+  --content-width:var(--carousel-emotion-content-width-custom, 100%);
+  --carousel-emotion-div-margin-mobile:var(--content-spacing-mobile);
+  --content-width-mobile:var(--carousel-emotion-content-width-mobile-custom, 100%);
+ }
