@@ -19,11 +19,11 @@ import Form from '../form/Form.js'
  * @return {CustomElementConstructor | *}
  */
 export default class FormZadb extends Form {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     this.initForm()
   }
@@ -32,9 +32,13 @@ export default class FormZadb extends Form {
     // TODO
   }
 
-  async initForm(){
-    const response = await fetch('https://www.betriebsrestaurants-migros.ch/umbraco/api/BetriebsrestaurantZadbApi/GetAllCities');
-    const cities = await response.json();
-    console.log(cities);
+  async initForm() {
+    try {
+      const response = await fetch('https://www.betriebsrestaurants-migros.ch/umbraco/api/BetriebsrestaurantZadbApi/GetAllCities');
+      const cities = await response.json();
+      console.log(cities);
+    } catch (error) {
+      console.log('There was a problem: ', error)
+    }
   }
 }
