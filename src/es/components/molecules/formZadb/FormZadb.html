@@ -1,4 +1,5 @@
 <m-form-zadb>
+  <form>
   <div class="umbraco-forms-page" id="d45d33f6-90b2-4345-9938-9bbaab73d830">
     <fieldset class="umbraco-forms-fieldset" id="007609e5-7996-4e3a-aae6-665ccf06c4c5">
       <div class="row-fluid">
@@ -23,7 +24,7 @@
             <label for="ee00474a-73ca-4440-e19e-2bbf1c6ec750" class="umbraco-forms-label">
               Anrede </label>
             <div class="umbraco-forms-field-wrapper">
-              <div class="  radiobuttonlist" id="ee00474a-73ca-4440-e19e-2bbf1c6ec750"
+              <div class="radiobuttonlist" id="ee00474a-73ca-4440-e19e-2bbf1c6ec750"
                 data-umb="ee00474a-73ca-4440-e19e-2bbf1c6ec750">
                 <input type="radio" name="ee00474a-73ca-4440-e19e-2bbf1c6ec750"
                   id="ee00474a-73ca-4440-e19e-2bbf1c6ec750_0" data-umb="ee00474a-73ca-4440-e19e-2bbf1c6ec750_0"
@@ -77,9 +78,10 @@
           <div class=" umbraco-forms-field plz shortanswer mandatory alternating">
             <label for="7fc7c299-4737-48e7-bdd1-17cbe13682f5" class="umbraco-forms-label">
               PLZ <span class="umbraco-forms-indicator">*</span>
+              <i class="loader"></i>
             </label>
             <div class="umbraco-forms-field-wrapper">
-              <input type="number" name="7fc7c299-4737-48e7-bdd1-17cbe13682f5" id="7fc7c299-4737-48e7-bdd1-17cbe13682f5"
+              <input id="zip" type="number" name="7fc7c299-4737-48e7-bdd1-17cbe13682f5" id="7fc7c299-4737-48e7-bdd1-17cbe13682f5"
                 data-umb="7fc7c299-4737-48e7-bdd1-17cbe13682f5" class="text " value="" maxlength="4" data-val="true"
                 data-val-required="Bitte geben Sie eine PLZ an" data-val-regex="Bitte geben Sie eine PLZ an"
                 data-val-regex-pattern="^[0-9]*$" />
@@ -92,7 +94,7 @@
               Ort <span class="umbraco-forms-indicator">*</span>
             </label>
             <div class="umbraco-forms-field-wrapper">
-              <input type="text" name="06d3b412-de66-4e8d-c240-7d470e395fb8" id="06d3b412-de66-4e8d-c240-7d470e395fb8"
+              <input id="city" type="text" name="06d3b412-de66-4e8d-c240-7d470e395fb8" id="06d3b412-de66-4e8d-c240-7d470e395fb8"
                 data-umb="06d3b412-de66-4e8d-c240-7d470e395fb8" class="text " value="" maxlength="255" data-val="true"
                 data-val-required="Bitte geben Sie einen Ort an" />
               <span class="field-validation-valid" data-valmsg-for="06d3b412-de66-4e8d-c240-7d470e395fb8"
@@ -104,7 +106,7 @@
               Strasse <span class="umbraco-forms-indicator">*</span>
             </label>
             <div class="umbraco-forms-field-wrapper">
-              <input type="text" name="3a7bc378-f85a-4f2a-9927-43bdb5ea5818" id="3a7bc378-f85a-4f2a-9927-43bdb5ea5818"
+              <input id="street" type="text" name="3a7bc378-f85a-4f2a-9927-43bdb5ea5818" id="3a7bc378-f85a-4f2a-9927-43bdb5ea5818"
                 data-umb="3a7bc378-f85a-4f2a-9927-43bdb5ea5818" class="text " value="" maxlength="255" data-val="true"
                 data-val-required="Bitte geben Sie eine Strasse an" />
               <span class="field-validation-valid" data-valmsg-for="3a7bc378-f85a-4f2a-9927-43bdb5ea5818"
@@ -186,10 +188,12 @@
       </div>
     </div>
   </div>
+</form>
 </m-form-zadb>
+
 <input name="ufprt" type="hidden"
   value="95514D447611C9386B52435FE4B0DFD50AB4260E461F3D89BB69DED5B9EDA72ED57AE37CD66CEA06CAFC5853148A798B7C188408D7C912A37BBD2ADD2DF8F085E141AEF86B5DB5492C8DF1C8A677EAADFC66FEAA4FD80E0DBAA7A8CB295A55FA35487874062AA2E64F7A99EC5F7979555691859A13B33BA62E51F061F1BAAFB1BF97680158CD5558B0ACB50958B0B361" />
-</form>
+
 <div class="umbraco-forms-form-config" style="display: none" data-id="211c67e98e734821aef0cf49f6207760"
   data-serialized-page-button-conditions="{}" data-serialized-fieldset-conditions="{}"
   data-serialized-field-conditions="{}" data-serialized-fields-not-displayed="{}"></div>
@@ -198,4 +202,3 @@
 <script type='application/javascript' src='/App_Plugins/UmbracoForms/Assets/Themes/Default/umbracoforms.js'
   defer='defer'></script>
 </div>
-</form>
