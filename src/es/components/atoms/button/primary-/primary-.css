@@ -3,5 +3,5 @@
   --button-primary-background-color-hover: var(--button-primary-background-color-hover-custom, var(--color-hover, var(--m-orange-800)));
   --button-primary-background-color: var(--button-primary-background-color-custom, var(--color-secondary, var(--m-orange-600)));
   --button-primary-color: var(--button-primary-color-custom, var(--m-white));
-  --button-primary-font-family: text, Helvetica, Arial, sans-serif;
+  --button-primary-font-family: var(--font-family);
 }

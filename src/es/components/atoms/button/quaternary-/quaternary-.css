@@ -8,6 +8,6 @@
   --button-quaternary-color-disabled:var(--button-quaternary-color-disabled-custom, var(--m-gray-300));
   --button-quaternary-color-hover: var(--button-quaternary-color-hover-custom, var(--m-gray-600));
   --button-quaternary-color: var(--button-quaternary-color-custom, var(--m-gray-600));
-  --button-quaternary-font-family: text, Helvetica, Arial, sans-serif;
+  --button-quaternary-font-family: var(--font-family);
   --button-quaternary-padding: 0.75em;
 }

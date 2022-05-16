@@ -8,7 +8,7 @@
   --button-tertiary-color-disabled:var(--button-tertiary-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
   --button-tertiary-color-hover: var(--button-tertiary-color-hover-custom, var(--color-secondary, var(--m-orange-600)));
   --button-tertiary-color: var(--button-tertiary-color-custom, var(--color-secondary, var(--m-orange-600)));
-  --button-tertiary-font-family: text, Helvetica, Arial, sans-serif;
+  --button-tertiary-font-family: var(--font-family);
   --button-tertiary-padding: 0.75em;
 
 
