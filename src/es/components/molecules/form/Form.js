@@ -24,6 +24,8 @@ export default class Form extends Shadow() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mode: 'false' }), ...args)
 
+    this.render = false
+
     this.setAttribute('role', 'form')
     // scroll to first error
     this.clickListener = event => {
@@ -65,17 +67,32 @@ export default class Form extends Shadow() {
         })
       }
     }
+
+    this.textAreaKeyUpListener = event => {
+      this.updateCounter(this.root.querySelector(':focus'))
+    }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.submit) this.submit.addEventListener('click', this.clickListener)
     if (this.hasAttribute('use-recaptcha') !== null) this.addEventListener('submit', this.submitListener)
+    this.textarea.forEach(a => {
+      if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')){
+        a.addEventListener('keyup', this.textAreaKeyUpListener)
+      }
+    });
   }
 
   disconnectedCallback () {
     if (this.submit) this.submit.removeEventListener('click', this.clickListener)
     if (this.hasAttribute('use-recaptcha') !== null) this.removeEventListener('submit', this.submitListener)
+    this.textarea.forEach(a => {
+      if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')){
+        a.addEventListener('keyup', this.textAreaKeyUpListener)
+      }
+    });
   }
 
   /**
@@ -86,6 +103,16 @@ export default class Form extends Shadow() {
   shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
+
+    /**
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
+     shouldComponentRenderHTML () {
+      return !this.render
+    }
+  
 
   /**
    * renders the css
@@ -115,6 +142,7 @@ export default class Form extends Shadow() {
         background-color:red;
       }
       ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
+        font-family: var(--font-family, inherit);
         border-radius: var(--border-radius, 0.5em);
         background-color: transparent;
         box-sizing: border-box;
@@ -177,6 +205,17 @@ export default class Form extends Shadow() {
       .checkboxlist img {
         padding: 0 var(--content-spacing);
         max-width: 30vw !important;
+      }
+      .umbraco-forms-field-wrapper{
+        display: grid;
+        grid-template-columns: auto;
+      }
+      .counter{
+        text-align: end;
+        padding: 0 0.625em;
+      }
+      textarea[maxlength]{
+        grid-area: 1/1 / 2 / span1;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -246,6 +285,31 @@ export default class Form extends Shadow() {
     }
   }
 
+  renderHTML () {
+    this.render = true
+
+    this.textarea.forEach(textarea => {
+      if (textarea.hasAttribute('maxlength') && !textarea.hasAttribute('no-counter')){
+        var lable = textarea.hasAttribute('data-maxlength-lable') ? textarea.getAttribute('data-maxlength-lable') : ''
+        if (lable !== '' && !lable.includes('#number')) {
+          textarea.setAttribute('data-maxlength-lable', lable + '#number')
+        }else{
+          textarea.setAttribute('data-maxlength-lable', '#number' + " / " + textarea.getAttribute('maxlength'))
+        }
+        
+        //new span for counter
+        const counter = document.createElement('span')
+        counter.classList.add('counter')
+        counter.id = 'id-' + textarea.getAttribute('id')
+        counter.innerHTML = lable
+        textarea.parentNode.append(counter)
+        
+        this.updateCounter(textarea)
+      }
+    });
+  }
+
+
   /**
    * fetch dependency
    *
@@ -267,6 +331,15 @@ export default class Form extends Shadow() {
         this.html = [vendorsMainScript]
       }
     }))
+  }
+
+  updateCounter (textArea) {
+    const max = Number(textArea.getAttribute('maxlength'))
+    const value = textArea.value.length
+    const lable = textArea.getAttribute('data-maxlength-lable')
+    const counter = this.root.querySelector('span#' + 'id-' + textArea.getAttribute('id'))
+
+    counter.innerHTML = lable.replace('#number', value)
   }
 
   getInputFieldsWithText (add) {
@@ -297,5 +370,9 @@ export default class Form extends Shadow() {
 
   get submit () {
     return this.root.querySelector('input[type=submit]')
+  }
+
+  get textarea () {
+    return this.root.querySelectorAll('textarea')
   }
 }
