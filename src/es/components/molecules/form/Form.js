@@ -10,7 +10,7 @@ import Button from '../../atoms/button/Button.js'
  * As a molecule, this component shall hold Atoms
  * Umbraco Forms Styling
  * Figma Example: https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=1904%3A17142
- * 
+ *
  *
  * @export
  * @class Wrapper
@@ -79,20 +79,20 @@ export default class Form extends Shadow() {
     if (this.submit) this.submit.addEventListener('click', this.clickListener)
     if (this.hasAttribute('use-recaptcha') !== null) this.addEventListener('submit', this.submitListener)
     this.textarea.forEach(a => {
-      if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')){
+      if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')) {
         a.addEventListener('keyup', this.textAreaKeyUpListener)
       }
-    });
+    })
   }
 
   disconnectedCallback () {
     if (this.submit) this.submit.removeEventListener('click', this.clickListener)
     if (this.hasAttribute('use-recaptcha') !== null) this.removeEventListener('submit', this.submitListener)
     this.textarea.forEach(a => {
-      if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')){
+      if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')) {
         a.addEventListener('keyup', this.textAreaKeyUpListener)
       }
-    });
+    })
   }
 
   /**
@@ -104,15 +104,14 @@ export default class Form extends Shadow() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-    /**
+  /**
    * evaluates if a render is necessary
    *
    * @return {boolean}
    */
-     shouldComponentRenderHTML () {
-      return !this.render
-    }
-  
+  shouldComponentRenderHTML () {
+    return !this.render
+  }
 
   /**
    * renders the css
@@ -289,26 +288,25 @@ export default class Form extends Shadow() {
     this.render = true
 
     this.textarea.forEach(textarea => {
-      if (textarea.hasAttribute('maxlength') && !textarea.hasAttribute('no-counter')){
-        var lable = textarea.hasAttribute('data-maxlength-lable') ? textarea.getAttribute('data-maxlength-lable') : ''
+      if (textarea.hasAttribute('maxlength') && !textarea.hasAttribute('no-counter')) {
+        const lable = textarea.hasAttribute('data-maxlength-lable') ? textarea.getAttribute('data-maxlength-lable') : ''
         if (lable !== '' && !lable.includes('#number')) {
           textarea.setAttribute('data-maxlength-lable', lable + '#number')
-        }else{
-          textarea.setAttribute('data-maxlength-lable', '#number' + " / " + textarea.getAttribute('maxlength'))
+        } else {
+          textarea.setAttribute('data-maxlength-lable', '#number' + ' / ' + textarea.getAttribute('maxlength'))
         }
-        
-        //new span for counter
+
+        // new span for counter
         const counter = document.createElement('span')
         counter.classList.add('counter')
         counter.id = 'id-' + textarea.getAttribute('id')
         counter.innerHTML = lable
         textarea.parentNode.append(counter)
-        
+
         this.updateCounter(textarea)
       }
-    });
+    })
   }
-
 
   /**
    * fetch dependency
@@ -334,7 +332,7 @@ export default class Form extends Shadow() {
   }
 
   updateCounter (textArea) {
-    const max = Number(textArea.getAttribute('maxlength'))
+    if (!textArea) return
     const value = textArea.value.length
     const lable = textArea.getAttribute('data-maxlength-lable')
     const counter = this.root.querySelector('span#' + 'id-' + textArea.getAttribute('id'))
