@@ -2,6 +2,7 @@
 
 // @ts-ignore
 self.Environment = {
+  isLocalhost: location.hostname === 'localhost',
   /**
    *
    *
@@ -17,6 +18,15 @@ self.Environment = {
         return '1200px'
       default:
         return '767px'
+    }
+  },
+  getApiBaseUrl: function(type){
+    switch (type) {
+      case 'zadb':
+        console.log(this)
+        return this.isLocalhost ? 'https://www.betriebsrestaurants-migros.ch' : ''
+      default:
+        return ''
     }
   }
 }

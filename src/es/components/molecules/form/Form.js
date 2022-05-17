@@ -228,6 +228,29 @@ export default class Form extends Shadow() {
         animation: around 0.7s ease-in-out 0.1s infinite;
         background: transparent;
       }
+      .suggestion{
+        background-color:#ccc;
+      }
+      .suggestion ul {
+        display: none;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+        max-height: 200px;
+        overflow-y: auto;
+      }
+        
+      .suggestion ul li {
+        padding: 10px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .suggestion ul li:hover {
+        background-color: orange;
+      }
+       
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
