@@ -117,6 +117,30 @@ export default class Form extends Shadow() {
       input[type]:disabled{
         background-color:red;
       }
+
+      datalist {
+
+        position: absolute;
+        max-height: 20em;
+        border: 0 none;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+      
+     datalist option {
+      font-size: 10.8em;
+      padding: 0.3em 1em;
+      background-color: #ccc;
+      cursor: pointer;
+    }
+      
+      datalist option:hover, datalist option:focus {
+        color: #fff;
+        background-color: #036;
+        outline: 0 none;
+      }
+      
+      
       ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
         border-radius: var(--border-radius, 0.5em);
         background-color: transparent;
@@ -193,8 +217,14 @@ export default class Form extends Shadow() {
         }
       }
       /* loader */
-      .loader {
+      .icon-container {
         position: relative;
+        right: 0px;
+        bottom: 30px;
+      }
+      .loader {
+        position: absolute;
+        right:10px;
         height: 20px;
         width: 20px;
         display: inline-block;
@@ -231,28 +261,7 @@ export default class Form extends Shadow() {
         animation: around 0.7s ease-in-out 0.1s infinite;
         background: transparent;
       }
-      .suggestion{
-        background-color:#ccc;
-      }
-      .suggestion ul {
-        display: none;
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
-        max-height: 200px;
-        overflow-y: auto;
-      }
-        
-      .suggestion ul li {
-        padding: 10px;
-        cursor: pointer;
-        background: rgba(255, 255, 255, 0.2);
-      }
-
-      .suggestion ul li:hover {
-        background-color: orange;
-      }
+    
        
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
