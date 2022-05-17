@@ -102,6 +102,9 @@ export default class Form extends Shadow() {
     this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
     button.remove()
     this.css = /* css */`
+      :host {
+        width:100%;
+      }
       legend {
         font-family: var(--font-family-bold, var(--font-family, inherit));
       }
