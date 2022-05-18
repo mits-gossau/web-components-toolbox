@@ -28,35 +28,35 @@ export default class FormZadb extends Form {
 
     this.zipResults = []
     this.streetResults = []
-    this.loader = this.root.querySelector('.loader')
-    this.loader.style.visibility = 'hidden'
-    console.log(this.loader)  
 
-   
+    this.hideLoader(this.zipLoader)
+  
     this.keydownListener = async event => {
+
       const inputVal = this.root.querySelector(':focus')
+      
       if (inputVal?.['list']) {
 
         if (inputVal.getAttribute('list') === 'zip-list') {
           if (inputVal?.value.length >= 2) {
-            this.loader.style.visibility = 'visible'
+            this.showLoader(this.zipLoader)
             this.zipResults = await this.searchCities(inputVal.value);
-            this.loader.style.visibility = 'hidden'
-          }else{
-            this.zipResults = [] 
+            this.hideLoader(this.zipLoader)
+          } else {
+            this.zipResults = []
           }
+
           this.cleanDataList('street-list')
-          this.city.value = ""
-          this.street.value = ""
+          this.clearFieldValues([this.city, this.street])
           this.showDataList(this.zipResults, 'zip-list', 'zip')
-          
+
         }
 
         if (inputVal.getAttribute('list') === 'street-list') {
           if (inputVal?.value.length >= 2) {
-            this.streetResults = await this.searchStreets(inputVal.value);
+            this.streetResults = await this.searchStreets(inputVal.value, this.zip.value);
             this.showDataList(this.streetResults, 'street-list', 'name')
-          }else{
+          } else {
             this.streetResults = []
           }
         }
@@ -75,30 +75,70 @@ export default class FormZadb extends Form {
     document.removeEventListener('keyup', this.keydownListener)
   }
 
-  cleanDataList(listName){
-    const container = this.root.querySelector(`#${listName}`) 
+  initForm() {
+
+    if (this.city) {
+      this.city.setAttribute('disabled', true)
+      this.city.setAttribute('readonly', true)
+    }
+
+    if (this.street) this.street.setAttribute('disabled', true)
+
+    this.getAllListFields()
+  }
+
+  getAllListFields() {
+    const fieldsWithList = this.root.querySelectorAll("input[list]")
+    Array.from(fieldsWithList).forEach(field => {
+      this.attachDataList(field, field.getAttribute('list'))
+      if (field.getAttribute('list') === 'zip-list') {
+        field.onchange = this.zipListener
+      }
+      if (field.getAttribute('list') === 'street-list') {
+        field.onchange = this.streetListener
+      }
+    })
+  }
+
+
+  cleanDataList(listName) {
+    const container = this.root.querySelector(`#${listName}`)
     container.innerHTML = ""
   }
 
-  zipListener = e => {
-    this.street.removeAttribute('disabled')
-    this.city.removeAttribute('disabled')
-    this.city.value = this.zipResults.find(city => city.zip === e.target.value).name
+  clearFieldValues(fields){
+    fields.forEach(field => field.value = '')
   }
 
+  zipListener = e => { 
+    this.disableFields([this.street, this.city])
+    this.setCityValue(this.city, this.zipResults, e.target.value)
+  }
 
   streetListener = e => {
-    console.log("eeeeee STREET")
+    console.log("STREET selected")
   }
+
+  setCityValue(cityField, zipList, zipValue) {
+    if(!zipList.length) return
+    cityField.value = zipList.find(city => city.zip === zipValue).name
+  }
+
+  disableFields(fields) {
+    fields.forEach(field => field.removeAttribute('disabled'))
+  }
+
 
   async searchCities(str) {
-    const allCities = await this.getCities()
-    return allCities.filter(city => city.zip.startsWith(str))
+    console.log("SEARCH CITY:", str)
+    const allCities = await this.getCities(str)
+    return allCities.cities.filter(city => city.zip.startsWith(str))
   }
 
-  async searchStreets(str) {
-    const allStreets = await this.getStreets()
-    return allStreets.filter(street => street.name.startsWith(str))
+  async searchStreets(str, zip) {
+    console.log("SEARCH STREET:", str)
+    const allStreets = await this.getStreets(zip)
+    return allStreets.streets.filter(street => street.name.startsWith(str))
   }
 
   showDataList(results, listName, value) {
@@ -111,124 +151,58 @@ export default class FormZadb extends Form {
     });
   }
 
-  attachDataList(field,name) {
+  attachDataList(field, name) {
     const dl = document.createElement('datalist')
     dl.setAttribute("id", name)
     dl.setAttribute("class", "suggestion")
     field.after(dl)
   }
 
-
-
-
-  initForm() {
-    if ((this.city = this.root.querySelector('#city'))) {
-      this.city.setAttribute('disabled', true)
-      this.city.setAttribute('readonly', true)
-    }
-    if ((this.street = this.root.querySelector('#street'))) {
-      this.street.setAttribute('disabled', true)
-    }
-    this.getAllListFields()
-  }
-
-  getAllListFields() {
-    const fieldsWithList = this.root.querySelectorAll("input[list]")
-    Array.from(fieldsWithList).forEach(field => {
-      this.attachDataList(field,field.getAttribute('list'))
-      if (field.getAttribute('list') === 'zip-list') {
-       
-        field.onchange = this.zipListener
-        //field.onchange = (field) => this.zipListener(field)
-        
-      }
-      if (field.getAttribute('list') === 'street-list') {
-        field.onchange = this.streetListener
-      }
-    })
-  }
-
-  async getCities() {
+  async getCities(zip) {
     try {
       // @ts-ignore
-      // const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetAllCities`)
-      // const cities = await response.json()
-      // console.log("...",cities)
-      const dummyCities = [
-        {
-          "id": 3647,
-          "name": "Aadorf",
-          "name_long": "Aadorf",
-          "zip": "8355",
-          "zip_extension": "00",
-          "municipality_id": 4551,
-          "canton": "TG",
-          "language_id": 1,
-          "country_iso": "CH"
-        },
-        {
-          "id": 43,
-          "name": "Aarau",
-          "name_long": "Aarau",
-          "zip": "8350",
-          "zip_extension": "00",
-          "municipality_id": 4001,
-          "canton": "AG",
-          "language_id": 1,
-          "country_iso": "CH"
-        },
-        {
-          "id": 51,
-          "name": "Aarau",
-          "name_long": "Aarau",
-          "zip": "8351",
-          "zip_extension": "00",
-          "municipality_id": 4001,
-          "canton": "AG",
-          "language_id": 1,
-          "country_iso": "CH"
-        },
-        {
-          "id": 48,
-          "name": "Aarau 1",
-          "name_long": "Aarau 1",
-          "zip": "8001",
-          "zip_extension": "00",
-          "municipality_id": 4001,
-          "canton": "AG",
-          "language_id": 1,
-          "country_iso": "CH"
-        },
-        {
-          "id": 148,
-          "name": "AAA",
-          "name_long": "AAA",
-          "zip": "0001",
-          "zip_extension": "00",
-          "municipality_id": 4001,
-          "canton": "AG",
-          "language_id": 1,
-          "country_iso": "CH"
-        }]
-      //return dummyCities.map(city => city.zip)
-      return dummyCities
+      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetCitiesByZip?zip=${zip}`)
+      const cities = await response.json()
+      console.log("...", cities)
+      return cities
     } catch (error) {
       console.log('There was a problem: ', error)
     }
   }
 
-  async getStreets() {
+  async getStreets(zip) {
     try {
       // @ts-ignore
-      // const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetAllCities`)
-      // const cities = await response.json()
-      // console.log("...",cities)
-      const dummyStreets = [{ "id": 11532, "type_id": 1, "name": "Kartonstrasse", "zip": "9425", "zip_extension": "00", "city": "Thal", "city_long": "Thal", "country_iso": "CH" }, { "id": 82094, "type_id": 1, "name": "Kartonbach", "zip": "9425", "zip_extension": "00", "city": "Thal", "city_long": "Thal", "country_iso": "CH" }, { "id": 82092, "type_id": 1, "name": "Am Mülibach", "zip": "9425", "zip_extension": "00", "city": "Thal", "city_long": "Thal", "country_iso": "CH" }, { "id": 11578, "type_id": 1, "name": "Am Rain", "zip": "9425", "zip_extension": "00", "city": "Thal", "city_long": "Thal", "country_iso": "CH" }, { "id": 11531, "type_id": 1, "name": "Am Steinlibach", "zip": "9425", "zip_extension": "00", "city": "Thal", "city_long": "Thal", "country_iso": "CH" }, { "id": 556472, "type_id": 1, "name": "Am Stutz", "zip": "9425", "zip_extension": "00", "city": "Thal", "city_long": "Thal", "country_iso": "CH" }]
-      //return dummyCities.map(city => city.zip)
-      return dummyStreets
+      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`)
+      const cities = await response.json()
+      console.log("...", cities)
+      return cities
     } catch (error) {
       console.log('There was a problem: ', error)
     }
   }
 
+  get zip() {
+    return this.root.querySelector('#zip') || null
+  }
+
+  get city() {
+    return this.root.querySelector('#city') || null
+  }
+
+  get street() {
+    return this.root.querySelector('#street') || null
+  }
+
+  get zipLoader(){
+    return this.root.querySelector('.loader')
+  }
+
+  hideLoader(loader){
+    loader.style.visibility = 'hidden' 
+  }
+
+  showLoader(loader){
+    loader.style.visibility = 'visible' 
+  }
 }

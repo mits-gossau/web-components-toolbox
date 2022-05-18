@@ -117,30 +117,6 @@ export default class Form extends Shadow() {
       input[type]:disabled{
         background-color:red;
       }
-
-      datalist {
-
-        position: absolute;
-        max-height: 20em;
-        border: 0 none;
-        overflow-x: hidden;
-        overflow-y: auto;
-      }
-      
-     datalist option {
-      font-size: 10.8em;
-      padding: 0.3em 1em;
-      background-color: #ccc;
-      cursor: pointer;
-    }
-      
-      datalist option:hover, datalist option:focus {
-        color: #fff;
-        background-color: #036;
-        outline: 0 none;
-      }
-      
-      
       ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
         border-radius: var(--border-radius, 0.5em);
         background-color: transparent;
@@ -216,7 +192,8 @@ export default class Form extends Shadow() {
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
       }
-      /* loader */
+
+      /* loading icon for form fields */
       .icon-container {
         position: relative;
         right: 0px;
@@ -230,7 +207,6 @@ export default class Form extends Shadow() {
         display: inline-block;
         animation: around 5.4s infinite;
       }
-      
       @keyframes around {
         0% {
           transform: rotate(0deg)
@@ -239,7 +215,6 @@ export default class Form extends Shadow() {
           transform: rotate(360deg)
         }
       }
-      
       .loader::after, .loader::before {
         content: "";
         background: white;
@@ -256,7 +231,6 @@ export default class Form extends Shadow() {
         left: 0;
         animation: around 0.7s ease-in-out infinite;
       }
-      
       .loader::after {
         animation: around 0.7s ease-in-out 0.1s infinite;
         background: transparent;
