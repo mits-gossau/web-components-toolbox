@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import Body from '../body/Body.js'
 
 /* global self */
 
@@ -17,10 +17,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  * @return {CustomElementConstructor | *}
  */
-export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends ChosenHTMLElement {
+export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends ChosenHTMLElement {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('aria-label', 'Section')
     this.clickListener = event => {
       if (this.hasAttribute('href')) self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
     }
@@ -37,13 +38,15 @@ export const Wrapper = (ChosenHTMLElement = Shadow()) => class Wrapper extends C
   }
 
   connectedCallback () {
-    this.addEventListener('click', this.clickListener)
+    super.connectedCallback()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    this.addEventListener('click', this.clickListener)
     self.addEventListener('resize', this.resizeListener)
   }
 
   disconnectedCallback () {
+    super.disconnectedCallback()
     this.removeEventListener('click', this.clickListener)
     self.removeEventListener('resize', this.resizeListener)
   }
