@@ -1,0 +1,3 @@
+:host {
+    --modal-default-transition: opacity .3s;
+}

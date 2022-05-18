@@ -19,7 +19,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  * @attribute {
  *  {boolean} [open=undefined]
- *  {number} [transition=500] transition time in ms
  *  {querySelector string} [listen-at=body]
  *  {string} [open-modal=open-modal] event name to which to listen to
  *  {string} [no-scroll=no-scroll] class to be set on body when modal is open
@@ -83,7 +82,9 @@ export default class Modal extends Shadow() {
     this.closeModalListener = event => {
       if (this.open) {
         this.open = false
-        this.section.animate({ opacity: '0' }, { duration: Number(this.getAttribute('transition')) }).onfinish = () => {
+        let duration = self.getComputedStyle(this).getPropertyValue(`--${this.namespace || ''}transition`)
+        duration = duration ? Number(duration.replace(/.*?\s([\d.]*)s/g, '$1')) * 1000 : 300
+        this.section.animate({ opacity: '0' }, { duration }).onfinish = () => {
           // move closeBtn back outside shadowDom
           if (this.closeBtn) this.appendChild(this.closeBtn)
           if (this.hasAttribute('open')) {
@@ -119,10 +120,12 @@ export default class Modal extends Shadow() {
   attributeChangedCallback (name, oldValue, newValue) {
     if (name === 'open') {
       if (this.hasAttribute('open')) {
+        this.scrollY = self.scrollY
         document.documentElement.classList.add(this.getAttribute('no-scroll') || 'no-scroll')
         this.openModalListener()
       } else {
         document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+        self.scrollTo(0, this.scrollY || 0)
         this.closeModalListener()
       }
     }
@@ -171,7 +174,7 @@ export default class Modal extends Shadow() {
         padding: var(--padding, min(50px, 4vw));
         position: var(--position, fixed);
         top: var(--top, 0);
-        transition: opacity ${this.getAttribute('transition') ? `${Number(this.getAttribute('transition')) / 1000}s` : '0.2s'};
+        transition: var(--transition, opacity .3s);
         width: var(--width, 100%);
         z-index: var(--z-index, 9999);
       }
@@ -207,6 +210,14 @@ export default class Modal extends Shadow() {
         }
       }
     `
+    switch (this.getAttribute('namespace')) {
+      case 'modal-default-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          namespace: false
+        }], false)
+    }
   }
 
   /**
