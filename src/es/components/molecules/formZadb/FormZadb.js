@@ -21,12 +21,9 @@ import Form from '../form/Form.js'
 export default class FormZadb extends Form {
   constructor (...args) {
     super(...args)
-
     this.zipResults = []
     this.streetResults = []
-
     this.hideLoader(this.zipLoader)
-
     this.keydownListener = async event => {
       const inputVal = this.root.querySelector(':focus')
 
@@ -68,14 +65,15 @@ export default class FormZadb extends Form {
   }
 
   initForm () {
-    if (this.city) {
-      this.city.setAttribute('disabled', true)
-      this.city.setAttribute('readonly', true)
-    }
-
-    if (this.street) this.street.setAttribute('disabled', true)
-
+    if (this.city) this.setFieldAttributes(this.city, { disabled: true, readonly: true })
+    if (this.street) this.setFieldAttributes(this.street, { disabled: true })
     this.setupListFields(this.allListFields)
+  }
+
+  setFieldAttributes (field, attributes) {
+    for (const key in attributes) {
+      field.setAttribute(key, attributes[key])
+    }
   }
 
   setupListFields (fields) {
@@ -116,7 +114,7 @@ export default class FormZadb extends Form {
   }
 
   zipChangeListener (e) {
-    this.disableFields([this.street, this.city])
+    this.enableFields([this.street, this.city])
     this.setCityValue(this.city, this.zipResults, e.target.value)
   }
 
@@ -129,7 +127,7 @@ export default class FormZadb extends Form {
     cityField.value = zipList.find(city => city.zip === zipValue).name
   }
 
-  disableFields (fields) {
+  enableFields (fields) {
     fields.forEach(field => field.removeAttribute('disabled'))
   }
 
@@ -157,8 +155,7 @@ export default class FormZadb extends Form {
 
   attachDataList (field, idName) {
     const dl = document.createElement('datalist')
-    dl.setAttribute('id', idName)
-    dl.setAttribute('class', 'suggestion')
+    this.setFieldAttributes(dl, { id: idName, class: 'suggestion' })
     field.after(dl)
   }
 
