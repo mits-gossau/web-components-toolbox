@@ -30,11 +30,11 @@ export default class FormZadb extends Form {
     this.streetResults = []
 
     this.hideLoader(this.zipLoader)
-  
+
     this.keydownListener = async event => {
 
       const inputVal = this.root.querySelector(':focus')
-      
+
       if (inputVal?.['list']) {
 
         if (inputVal.getAttribute('list') === 'zip-list') {
@@ -45,11 +45,9 @@ export default class FormZadb extends Form {
           } else {
             this.zipResults = []
           }
-
           this.cleanDataList('street-list')
           this.clearFieldValues([this.city, this.street])
           this.showDataList(this.zipResults, 'zip-list', 'zip')
-
         }
 
         if (inputVal.getAttribute('list') === 'street-list') {
@@ -84,12 +82,17 @@ export default class FormZadb extends Form {
 
     if (this.street) this.street.setAttribute('disabled', true)
 
-    this.getAllListFields()
+    this.makeDataListForListFields(this.listFields)
   }
 
-  getAllListFields() {
-    const fieldsWithList = this.root.querySelectorAll("input[list]")
-    Array.from(fieldsWithList).forEach(field => {
+  makeDataListForListFields(fields) {
+   
+    if (!fields.length) {
+      // TODO reset all FN
+      return
+    }
+   
+    Array.from(fields).forEach(field => {
       this.attachDataList(field, field.getAttribute('list'))
       if (field.getAttribute('list') === 'zip-list') {
         field.onchange = this.zipListener
@@ -106,11 +109,11 @@ export default class FormZadb extends Form {
     container.innerHTML = ""
   }
 
-  clearFieldValues(fields){
+  clearFieldValues(fields) {
     fields.forEach(field => field.value = '')
   }
 
-  zipListener = e => { 
+  zipListener = e => {
     this.disableFields([this.street, this.city])
     this.setCityValue(this.city, this.zipResults, e.target.value)
   }
@@ -120,7 +123,7 @@ export default class FormZadb extends Form {
   }
 
   setCityValue(cityField, zipList, zipValue) {
-    if(!zipList.length) return
+    if (!zipList.length) return
     cityField.value = zipList.find(city => city.zip === zipValue).name
   }
 
@@ -194,15 +197,19 @@ export default class FormZadb extends Form {
     return this.root.querySelector('#street') || null
   }
 
-  get zipLoader(){
+  get zipLoader() {
     return this.root.querySelector('.loader')
   }
 
-  hideLoader(loader){
-    loader.style.visibility = 'hidden' 
+  get listFields() {
+    return this.root.querySelectorAll("input[list]") || []
   }
 
-  showLoader(loader){
-    loader.style.visibility = 'visible' 
+  hideLoader(loader) {
+    loader.style.visibility = 'hidden'
+  }
+
+  showLoader(loader) {
+    loader.style.visibility = 'visible'
   }
 }
