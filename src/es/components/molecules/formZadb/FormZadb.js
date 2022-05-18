@@ -26,26 +26,28 @@ export default class FormZadb extends Form {
     this.hideLoader(this.zipLoader)
     this.hideLoader(this.streetLoader)
     this.keydownListener = async event => {
-      const inputVal = this.root.querySelector(':focus')
+      const inputField = this.root.querySelector(':focus')
 
-      if (inputVal?.list) {
-        if (inputVal.getAttribute('list') === 'zip-list') {
-          if (inputVal?.value.length >= 2) {
+      if (inputField?.list) {
+        if (inputField.getAttribute('list') === 'zip-list') {
+          if (inputField?.value.length >= 2) {
             this.showLoader(this.zipLoader)
-            this.zipResults = await this.searchCities(inputVal.value)
+            this.zipResults = await this.searchCities(inputField.value)
             this.hideLoader(this.zipLoader)
           } else {
             this.zipResults = []
-          }
+            this.setFieldAttributes(this.city, { disabled: true, readonly: true })
+            this.setFieldAttributes(this.street, { disabled: true })
+          } 
           this.cleanDataList('street-list')
           this.clearFieldValues([this.city, this.street])
           this.showDataList(this.zipResults, 'zip-list', 'zip')
         }
 
-        if (inputVal.getAttribute('list') === 'street-list') {
-          if (inputVal?.value.length >= 1) {
+        if (inputField.getAttribute('list') === 'street-list') {
+          if (inputField?.value.length >= 1) {
             this.showLoader(this.streetLoader)
-            this.streetResults = await this.searchStreets(inputVal.value, this.zip.value)
+            this.streetResults = await this.searchStreets(inputField.value, this.zip.value)
             this.hideLoader(this.streetLoader)
             this.showDataList(this.streetResults, 'street-list', 'name')
           } else {
@@ -81,7 +83,7 @@ export default class FormZadb extends Form {
 
   setupListFields (fields) {
     if (!fields.length) {
-      // TODO reset all FN
+      this.abortAll()
       return
     }
 
@@ -193,6 +195,7 @@ export default class FormZadb extends Form {
 
   abortAll(){
     this.hideLoader(this.zipLoader)
+    this.hideLoader(this.streetLoader)
     this.enableFields([this.street, this.city])
     this.city.removeAttribute('readonly')
     document.removeEventListener('keyup', this.keydownListener)
