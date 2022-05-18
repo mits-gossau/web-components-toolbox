@@ -24,6 +24,7 @@ export default class FormZadb extends Form {
     this.zipResults = []
     this.streetResults = []
     this.hideLoader(this.zipLoader)
+    this.hideLoader(this.streetLoader)
     this.keydownListener = async event => {
       const inputVal = this.root.querySelector(':focus')
 
@@ -43,7 +44,9 @@ export default class FormZadb extends Form {
 
         if (inputVal.getAttribute('list') === 'street-list') {
           if (inputVal?.value.length >= 1) {
+            this.showLoader(this.streetLoader)
             this.streetResults = await this.searchStreets(inputVal.value, this.zip.value)
+            this.hideLoader(this.streetLoader)
             this.showDataList(this.streetResults, 'street-list', 'name')
           } else {
             this.streetResults = []
@@ -208,7 +211,11 @@ export default class FormZadb extends Form {
   }
 
   get zipLoader () {
-    return this.root.querySelector('.loader') || null
+    return this.root.querySelector('#zip-loader') || null
+  }
+
+  get streetLoader () {
+    return this.root.querySelector('#street-loader') || null
   }
 
   get allListFields () {
