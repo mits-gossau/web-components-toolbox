@@ -269,15 +269,19 @@ img[style="float: right;"] {
   box-sizing: var(--ol-box-sizing, var(--ul-box-sizing, border-box));
 }
 :host ul {
-  text-align: var(--ul-text-align, var(--ol-text-align, start));
+  box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
   display: var(--ul-display, var(--ol-display, block));
   flex-direction: var(--ul-flex-direction, var(--ol-flex-direction, column));
-  box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
   list-style: var(--ul-list-style, disc);
+  padding-left: 1.5em;
+  text-align: var(--ul-text-align, var(--ol-text-align, start));
+}
+/* overwrite abuse of o-wrapper with simulate-children="1" src/es/components/pages/Home.html */
+:host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
+  padding-left: 1.5em !important;
 }
 :host ul.bull, :host ul.line {
   list-style: none; /* Remove default bullets */
-  padding-left: 1.5em;
 }
 :host ul.bull li, :host ul.line li {
   position: relative;
