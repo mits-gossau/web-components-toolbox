@@ -42,7 +42,7 @@ export default class FormZadb extends Form {
         }
 
         if (inputVal.getAttribute('list') === 'street-list') {
-          if (inputVal?.value.length >= 2) {
+          if (inputVal?.value.length >= 1) {
             this.streetResults = await this.searchStreets(inputVal.value, this.zip.value)
             this.showDataList(this.streetResults, 'street-list', 'name')
           } else {
@@ -114,6 +114,7 @@ export default class FormZadb extends Form {
   }
 
   zipChangeListener (e) {
+    if(!this.zipResults.length) return
     this.enableFields([this.street, this.city])
     this.setCityValue(this.city, this.zipResults, e.target.value)
   }
@@ -134,6 +135,7 @@ export default class FormZadb extends Form {
   async searchCities (str) {
     console.log('SEARCH CITY:', str)
     const allCities = await this.getCities(str)
+    if(!allCities) return;
     return allCities.cities.filter(city => city.zip.startsWith(str))
   }
 
@@ -144,6 +146,7 @@ export default class FormZadb extends Form {
   }
 
   showDataList (results, listName, value) {
+    if(!results) return
     const container = this.root.querySelector(`#${listName}`)
     container.innerHTML = ''
     results.forEach(element => {
@@ -168,7 +171,7 @@ export default class FormZadb extends Form {
       return cities
     } catch (error) {
       console.log('There was a problem: ', error)
-      // TODO reset all FN
+      this.abortAll()
     }
   }
 
@@ -181,8 +184,15 @@ export default class FormZadb extends Form {
       return cities
     } catch (error) {
       console.log('There was a problem: ', error)
-      // TODO reset all FN
+      this.abortAll()
     }
+  }
+
+  abortAll(){
+    this.hideLoader(this.zipLoader)
+    this.enableFields([this.street, this.city])
+    this.city.removeAttribute('readonly')
+    document.removeEventListener('keyup', this.keydownListener)
   }
 
   get zip () {

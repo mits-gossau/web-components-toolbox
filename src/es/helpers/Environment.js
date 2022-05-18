@@ -24,7 +24,6 @@ self.Environment = {
   getApiBaseUrl: function (type) {
     switch (type) {
       case 'zadb':
-        console.log(this)
         return this.isLocalhost ? 'https://www.betriebsrestaurants-migros.ch' : ''
       default:
         return ''
