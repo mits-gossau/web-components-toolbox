@@ -1,4 +1,5 @@
 /* global self */
+/* global location */
 
 // @ts-ignore
 self.Environment = {
@@ -20,7 +21,7 @@ self.Environment = {
         return '767px'
     }
   },
-  getApiBaseUrl: function(type){
+  getApiBaseUrl: function (type) {
     switch (type) {
       case 'zadb':
         console.log(this)

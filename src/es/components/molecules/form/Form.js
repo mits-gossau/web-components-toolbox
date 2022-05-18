@@ -10,7 +10,7 @@ import Button from '../../atoms/button/Button.js'
  * As a molecule, this component shall hold Atoms
  * Umbraco Forms Styling
  * Figma Example: https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=1904%3A17142
- * 
+ *
  *
  * @export
  * @class Wrapper
