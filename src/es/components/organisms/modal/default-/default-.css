@@ -1,0 +1,6 @@
+:host {
+    --modal-default-close-btn-background-color: var(--color-secondary);
+    --modal-default-content-spacing-mobile: var(--content-spacing-mobile);
+    --modal-default-content-spacing: var(--content-spacing);
+    --modal-default-transition: opacity .3s;
+}
