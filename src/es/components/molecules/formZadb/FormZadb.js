@@ -147,7 +147,7 @@ export default class FormZadb extends Form {
   async searchStreets (str, zip) {
     console.log('SEARCH STREET:', str)
     const allStreets = await this.getStreets(zip)
-    return allStreets.streets.filter(street => street.name.startsWith(str))
+    return allStreets.streets.filter(street => street.name.toLowerCase().startsWith(str.toLowerCase()))
   }
 
   showDataList (results, listName, value) {
@@ -184,9 +184,9 @@ export default class FormZadb extends Form {
     try {
       // @ts-ignore
       const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`)
-      const cities = await response.json()
-      console.log('...', cities)
-      return cities
+      const streets = await response.json()
+      console.log('...', streets)
+      return streets
     } catch (error) {
       console.log('There was a problem: ', error)
       this.abortAll()
