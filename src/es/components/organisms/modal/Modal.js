@@ -21,7 +21,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  {boolean} [open=undefined]
  *  {querySelector string} [listen-at=body]
  *  {string} [open-modal=open-modal] event name to which to listen to
- *  {string} [no-scroll=no-scroll] class to be set on body when modal is open
  * }
  * @css {
  * --background-color, rgba(0, 0, 0, 0.8)
@@ -48,21 +47,26 @@ export default class Modal extends Shadow() {
   }
 
   constructor (...args) {
-    super({ mode: 'open' }, ...args)
+    super(...args)
 
     this.open = false
     this.clone = null
+    this.eventDetail = null
     // open
     this.openModalListener = event => {
       if (!this.open) {
         this.open = true
+        this.eventDetail = event.detail
         if (event && typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation()
         let child
         if (!this.clone && event && event.detail && (child = event.detail.child) && child instanceof HTMLElement) {
           if (event.detail.showOriginal === true) {
             // clone node to have a placeholder keeping the space a picture would occupy
-            child.replaceWith(this.clone = child.cloneNode())
+            const height = child.offsetHeight
+            child.replaceWith(this.clone = document.createElement('div'))
             this.container.appendChild(child)
+            this.clone.style.height = `${height}px`
+            this.clone.style.visibility = 'hidden'
           } else {
             this.clone = child.cloneNode()
             this.container.appendChild(this.clone)
@@ -74,11 +78,15 @@ export default class Modal extends Shadow() {
         if (!this.hasAttribute('open')) {
           this.setAttribute('open', '')
           this.clone.setAttribute('open', '')
+          child.setAttribute('open', '')
         }
         self.requestAnimationFrame(timeStamp => this.setContainerMaxWidth())
       }
     }
     // close
+    this.anyCloseModalListener = event => {
+      if (this.eventDetail && !this.eventDetail.btnCloseOnly) this.closeModalListener(event)
+    }
     this.closeModalListener = event => {
       if (this.open) {
         this.open = false
@@ -87,13 +95,14 @@ export default class Modal extends Shadow() {
         this.section.animate({ opacity: '0' }, { duration }).onfinish = () => {
           // move closeBtn back outside shadowDom
           if (this.closeBtn) this.appendChild(this.closeBtn)
-          if (this.hasAttribute('open')) {
-            this.removeAttribute('open')
-            this.clone.removeAttribute('open')
-          }
           let child
           // if showOriginal this will be triggered by this.clone !== child to move the original back to its origin
           if (this.clone && (child = this.container.childNodes[0]) && this.clone !== child) this.clone.replaceWith(child)
+          if (this.hasAttribute('open')) {
+            this.removeAttribute('open')
+            this.clone.removeAttribute('open')
+            child.removeAttribute('open', '')
+          }
           this.clone = null
           this.container.innerHTML = ''
           this.style.textContent = ''
@@ -107,24 +116,24 @@ export default class Modal extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML();
     (this.getAttribute('listen-at') ? document.querySelector(this.getAttribute('listen-at')) : document.body).addEventListener(this.getAttribute('open-modal') || 'open-modal', this.openModalListener);
-    (this.hasAttribute('btn-close-only') && this.closeBtn ? this.closeBtn : this).addEventListener('click', this.closeModalListener)
     this.addEventListener('click', this.clickListener)
+    this.addEventListener('click', this.anyCloseModalListener)
+    if (this.closeBtn) this.closeBtn.addEventListener('click', this.closeModalListener)
   }
 
   disconnectedCallback () {
     (this.getAttribute('listen-at') ? document.querySelector(this.getAttribute('listen-at')) : document.body).removeEventListener(this.getAttribute('open-modal') || 'open-modal', this.openModalListener);
-    (this.hasAttribute('btn-close-only') && this.closeBtn ? this.closeBtn : this).removeEventListener('click', this.closeModalListener)
     this.removeEventListener('click', this.clickListener)
+    this.removeEventListener('click', this.anyCloseModalListener)
+    if (this.closeBtn) this.closeBtn.removeEventListener('click', this.closeModalListener)
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
     if (name === 'open') {
       if (this.hasAttribute('open')) {
         this.scrollY = self.scrollY
-        document.documentElement.classList.add(this.getAttribute('no-scroll') || 'no-scroll')
         this.openModalListener()
       } else {
-        document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
         self.scrollTo(0, this.scrollY || 0)
         this.closeModalListener()
       }

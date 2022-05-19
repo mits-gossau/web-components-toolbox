@@ -101,12 +101,35 @@ export default class MacroCarousel extends Shadow() {
         }
       }
     }
+    this.clickListener = event => {
+      if (!this.hasAttribute('open')) event.stopPropagation()
+      this.dispatchEvent(new CustomEvent(this.getAttribute('open-modal') || 'open-modal', {
+        detail: {
+          origEvent: event,
+          child: this,
+          showOriginal: true,
+          btnCloseOnly: true
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
 
     this.interval = null
 
     // stop interval when clicking outside window eg. iframe, etc.
     this.blurEventListener = event => this.clearInterval()
     this.focusEventListener = event => this.setInterval()
+
+    // workaround open-modal (carousel in modal) bug where buttons stop working
+    if (this.hasAttribute('open-modal')) {
+      this.nextEventListener = event => this.macroCarousel.next()
+      this.prevEventListener = event => this.macroCarousel.previous()
+      this.indicatorEventListener = event => {
+        this.macroCarousel.selected = Number(event.target.getAttribute('aria-label').replace(/.*?(\d)/, '$1')) - 1
+      }
+    }
   }
 
   connectedCallback () {
@@ -121,12 +144,20 @@ export default class MacroCarousel extends Shadow() {
         document.body.addEventListener((this.getAttribute('macro-carousel-selected-changed') || 'macro-carousel-selected-changed') + this.getAttribute('sync-id'), this.macroCarouselSelectedChangedListenerSyncId)
       }
     }
+    if (this.hasAttribute('open-modal')) {
+      this.setAttribute('aria-haspopup', 'true')
+      this.addEventListener('click', this.clickListener)
+      if (this.macroCarousel.querySelector('.macro-carousel-next')) this.macroCarousel.querySelector('.macro-carousel-next').addEventListener('click', this.nextEventListener)
+      if (this.macroCarousel.querySelector('.macro-carousel-previous')) this.macroCarousel.querySelector('.macro-carousel-previous').addEventListener('click', this.prevEventListener)
+      Array.from(this.macroCarousel.querySelectorAll('macro-carousel-pagination-indicator')).forEach(indicator => indicator.addEventListener('click', this.indicatorEventListener))
+    }
     if (this.getAttribute('interval')) {
       self.addEventListener('blur', this.blurEventListener)
       self.addEventListener('focus', this.focusEventListener)
       document.body.addEventListener('play', this.blurEventListener, true)
       document.body.addEventListener('pause', this.focusEventListener, true)
     }
+    this.resizeListener() // resets the picture calculations
   }
 
   disconnectedCallback () {
@@ -138,6 +169,12 @@ export default class MacroCarousel extends Shadow() {
       } else {
         document.body.removeEventListener((this.getAttribute('macro-carousel-selected-changed') || 'macro-carousel-selected-changed') + this.getAttribute('sync-id'), this.macroCarouselSelectedChangedListenerSyncId)
       }
+    }
+    if (this.hasAttribute('open-modal')) {
+      this.removeEventListener('click', this.clickListener)
+      if (this.macroCarousel.querySelector('.macro-carousel-next')) this.macroCarousel.querySelector('.macro-carousel-next').removeEventListener('click', this.nextEventListener)
+      if (this.macroCarousel.querySelector('.macro-carousel-previous')) this.macroCarousel.querySelector('.macro-carousel-previous').removeEventListener('click', this.prevEventListener)
+      Array.from(this.macroCarousel.querySelectorAll('macro-carousel-pagination-indicator')).forEach(indicator => indicator.removeEventListener('click', this.indicatorEventListener))
     }
     if (this.getAttribute('interval')) {
       self.removeEventListener('blur', this.blurEventListener)
