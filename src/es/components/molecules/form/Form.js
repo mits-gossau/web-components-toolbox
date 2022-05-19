@@ -4,7 +4,6 @@ import Button from '../../atoms/button/Button.js'
 
 /* global customElements */
 /* global self */
-/* global fetch */
 
 /**
  * As a molecule, this component shall hold Atoms
@@ -32,7 +31,6 @@ export default class Form extends Shadow() {
         if ((fieldValidationError = this.root.querySelector('.field-validation-error')) && fieldValidationError.parentNode && fieldValidationError.parentNode.parentNode) fieldValidationError.parentNode.parentNode.scrollIntoView()
       }, 50)
     }
-
   }
 
   connectedCallback () {
@@ -158,6 +156,27 @@ export default class Form extends Shadow() {
         ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
+      }
+
+      datalist {
+        position: absolute;
+        background-color: white;
+        border: 1px solid var(--m-gray-400);
+        border-top: none;
+        width: 350px;
+        // border-radius: var(--border-radius, 0.5em);
+        // padding: 5px;
+      }
+      
+      option {
+        background-color: white;
+        padding: 4px;
+        color: blue;   
+        cursor: pointer;
+      }
+
+      option:hover, .active{
+        background-color: #ccc;
       }
 
       /* loading icon for form fields */
