@@ -246,6 +246,39 @@ export default class MacroCarousel extends Shadow() {
       :host .macro-carousel-previous, .macro-carousel-next{
          margin:1em;
       }
+      :host([open-modal]) {
+        position: relative;
+      }
+      :host([open]) > .close-btn {
+        opacity: 0;
+      }
+      :host(:not([open])) > .close-btn {
+        opacity: 1;
+      }
+      :host([open-modal]) > .close-btn {
+        background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
+        border-radius: 50%;
+        border: 0;
+        box-sizing: border-box;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 7px;
+        transition: var(--close-btn-transition, opacity 0.3s ease-out);
+        padding: 0.75em;
+        width: 7px;
+        position: absolute;
+        right: calc(var(--close-btn-right, var(--content-spacing)) / 2);
+        bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
+      }
+      :host([open-modal]) > .close-btn > span {
+        height: 7px;
+        width: 7px;
+      }
+      :host([open-modal]) > .close-btn > span > svg {
+        margin: -3.5px 3.5px 1.5px -3.5px;
+      }
       @media only screen and (max-width: _max-width_) {
         :host> macro-carousel >  macro-carousel-nav-button {
           top:35%;
@@ -261,7 +294,16 @@ export default class MacroCarousel extends Shadow() {
           left: 0;
           margin:var(--div-margin-mobile);
         }
-      }
+        :host(:not([open-modal-mobile])) {
+          position: static;
+        }
+        :host(:not([open-modal-mobile])) > .close-btn {
+          display: none;
+        }
+        :host([open-modal-mobile]) > .close-btn {
+          right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
+          bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
+        }
       }
     `
     // inject style which can't be controlled through css vars
@@ -339,6 +381,22 @@ export default class MacroCarousel extends Shadow() {
           this.macroCarouselReady()
         }
       }, 100)
+      // modal stuff
+      if (this.hasAttribute('open-modal')) {
+        this.closeBtn = document.createElement('button')
+        this.closeBtn.innerHTML = `
+          <span>
+            <svg id="Untitled-Seite%201" viewBox="0 0 14 14" style="background-color:#ffffff00" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" width="14px" height="14px">
+              <path d="M 5.9689 7.7071 L 7.7071 5.9689 L 12.5416 10.8034 L 10.8033 12.5416 L 5.9689 7.7071 Z" fill="#FFFFFF"/>
+              <path d="M 5.9033 5.9689 L 7.6415 7.7071 L 2.807 12.5416 L 1.0688 10.8034 L 5.9033 5.9689 Z" fill="#FFFFFF"/>
+              <path d="M 7.6415 5.9034 L 5.9033 7.6416 L 1.0688 2.8071 L 2.807 1.0689 L 7.6415 5.9034 Z" fill="#FFFFFF"/>
+              <path d="M 7.707 7.6416 L 5.9689 5.9033 L 10.8033 1.0689 L 12.5416 2.8071 L 7.707 7.6416 Z" fill="#FFFFFF"/>
+            </svg>
+          </span>
+        `
+        this.closeBtn.classList.add('close-btn')
+        this.html = this.closeBtn
+      }
     })
   }
 

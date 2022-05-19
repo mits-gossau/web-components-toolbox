@@ -54,7 +54,7 @@ export default class Modal extends Shadow() {
     this.eventDetail = null
     // open
     this.openModalListener = event => {
-      if (!this.open) {
+      if (!this.open && (!this.hasAttribute('no-mobile') || this.checkMedia('desktop'))) {
         this.open = true
         this.eventDetail = event.detail
         if (event && typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation()
@@ -74,13 +74,13 @@ export default class Modal extends Shadow() {
         } else {
           this.container.appendChild(this.initialContent)
         }
+        this.origChild = child
         if (this.closeBtn) this.container.appendChild(this.closeBtn)
         if (!this.hasAttribute('open')) {
           this.setAttribute('open', '')
           this.clone.setAttribute('open', '')
           child.setAttribute('open', '')
         }
-        self.requestAnimationFrame(timeStamp => this.setContainerMaxWidth())
       }
     }
     // close
@@ -102,14 +102,17 @@ export default class Modal extends Shadow() {
             this.removeAttribute('open')
             this.clone.removeAttribute('open')
             child.removeAttribute('open', '')
+            this.origChild.removeAttribute('open', '')
           }
           this.clone = null
           this.container.innerHTML = ''
-          this.style.textContent = ''
         }
       }
     }
     this.clickListener = event => event.stopPropagation()
+    this.resizeListener = event => {
+      if(this.hasAttribute('no-mobile') && this.checkMedia('mobile')) this.closeModalListener()
+    }
   }
 
   connectedCallback () {
@@ -119,6 +122,7 @@ export default class Modal extends Shadow() {
     this.addEventListener('click', this.clickListener)
     this.addEventListener('click', this.anyCloseModalListener)
     if (this.closeBtn) this.closeBtn.addEventListener('click', this.closeModalListener)
+    self.addEventListener('resize', this.resizeListener)
   }
 
   disconnectedCallback () {
@@ -126,6 +130,7 @@ export default class Modal extends Shadow() {
     this.removeEventListener('click', this.clickListener)
     this.removeEventListener('click', this.anyCloseModalListener)
     if (this.closeBtn) this.closeBtn.removeEventListener('click', this.closeModalListener)
+    self.removeEventListener('resize', this.resizeListener)
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -180,7 +185,7 @@ export default class Modal extends Shadow() {
         height: var(--height, 100%);
         justify-content: center;
         opacity: 1;
-        padding: var(--padding, min(50px, 4vw));
+        padding: var(--padding, min(var(--content-spacing), 4vw));
         position: var(--position, fixed);
         top: var(--top, 0);
         transition: var(--transition, opacity .3s);
@@ -188,12 +193,10 @@ export default class Modal extends Shadow() {
         z-index: var(--z-index, 9999);
       }
       :host([open]) > section > div {
-        align-items: var(--align-items, start);
+        align-items: var(--align-items, end);
         display: var(--display, flex);
-        flex-direction: var(--flex-direction, row);
+        flex-direction: var(--flex-direction, column-reverse);
         justify-content: var(--justify-content, center);
-        max-height: var(--max-height, 100vh);
-        margin: var(--margin, 0 10px);
       }
       :host([open]) > section > div > #close {
         display: var(--close-display, block);
@@ -202,21 +205,38 @@ export default class Modal extends Shadow() {
         right: var(--close-right, auto);
         bottom: var(--close-bottom, auto);
         left: var(--close-left, auto);
-        margin: var(--close-margin, 0 10px);
+        margin: var(--close-margin, 0 0 var(--content-spacing)) 0;
       }
-      :host([open]) > section > div > #close > ${this.getAttribute('a-menu-icon') || 'a-menu-icon'}.open {
-        font-size: var(--a-font-size-open, var(--font-size-open, var(--a-font-size, var(--font-size))));
-        transform: translate(-0.9em, max(-8vw, -1.5em));
+      :host([open]) > section > div > #close.close-btn {
+        background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
+        border-radius: 50%;
+        border: 0;
+        box-sizing: border-box;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 14px;
+        padding: 1.5em;
+        width: 14px;
+      }
+      :host([open]) > section > div > #close.close-btn span {
+        height: 14px;
+        width: 14px;
       }
       @media only screen and (max-width: _max-width_) {
-        :host([open]) > section {
-          padding: var(--padding-mobile, min(50px, 4vw));
-        }
-        :host([open]) > section > div {
-          align-items: var(--align-items-mobile, start);
-          flex-direction: var(--flex-direction-mobile, row);
-          justify-content: var(--justify-content-mobile, center);
-        }
+        ${this.hasAttribute('no-mobile') ? /* css */`
+          :host {
+            display: none;
+          }
+        ` : /* css */`
+          :host([open]) > section {
+            padding: var(--padding-mobile, var(--padding, min(var(--content-spacing-mobile, var(--content-spacing)), 4vw)));
+          }
+          :host([open]) > section > div > #close {
+            margin: var(--close-margin-mobile, var(--close-margin, 0 0 var(--content-spacing-mobile, var(--content-spacing)) 0));
+          }
+        `}
       }
     `
     switch (this.getAttribute('namespace')) {
@@ -240,6 +260,19 @@ export default class Modal extends Shadow() {
       if (node.id === 'close') {
         // move close btn outside of shadow
         this.appendChild(this.closeBtn = node)
+        if (!this.closeBtn.innerHTML) {
+          this.closeBtn.innerHTML = `
+            <span>
+              <svg id="Untitled-Seite%201" viewBox="0 0 14 14" style="background-color:#ffffff00" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" width="14px" height="14px">
+                <path d="M 5.9689 7.7071 L 7.7071 5.9689 L 12.5416 10.8034 L 10.8033 12.5416 L 5.9689 7.7071 Z" fill="#FFFFFF"/>
+                <path d="M 5.9033 5.9689 L 7.6415 7.7071 L 2.807 12.5416 L 1.0688 10.8034 L 5.9033 5.9689 Z" fill="#FFFFFF"/>
+                <path d="M 7.6415 5.9034 L 5.9033 7.6416 L 1.0688 2.8071 L 2.807 1.0689 L 7.6415 5.9034 Z" fill="#FFFFFF"/>
+                <path d="M 7.707 7.6416 L 5.9689 5.9033 L 10.8033 1.0689 L 12.5416 2.8071 L 7.707 7.6416 Z" fill="#FFFFFF"/>
+              </svg>
+            </span>
+          `
+          this.closeBtn.classList.add('close-btn')
+        }
         return false
       }
       if (node.getAttribute('slot') || node.nodeName === 'STYLE') return false
@@ -248,47 +281,17 @@ export default class Modal extends Shadow() {
     this.section = document.createElement('section')
     this.section.appendChild(this.container = document.createElement('div'))
     this.html = this.section
-    this.html = this.style
-  }
-
-  setContainerMaxWidth () {
-    const margins = this.cleanPropertyMarginValue(self.getComputedStyle(this.container).getPropertyValue(`--${this.namespace || ''}margin`))
-    const height = `calc(100vh - ${margins[0]} - ${margins[2]})`
-    this.style.textContent = ''
-    this.setCss(/* CSS */`
-      :host([open]) > section > div {
-        ${this.containerNamespaces.reduce((acc, namespace) => acc + this.getMaxWidthString(namespace, height), `max-height: ${height};${this.getMaxWidthString('', height)}`)}
-      }
-    }`, undefined, undefined, undefined, this.style)
-  }
-
-  getMaxWidthString (namespace = '', height = '100vh') {
-    return `--${namespace}img-max-height: ${height};--${namespace}max-height: ${height};`
   }
 
   /**
-   * @param {string | any} value
-   * @returns {number | false}
+   *
+   *
+   * @param {'mobile' | 'desktop'} [media=this.getAttribute('media')]
+   * @returns {boolean}
+   * @memberof IntersectionScrollEffect
    */
-  cleanPropertyMarginValue (value) {
-    if (!value) return false
-    let values = value.trimStart().split(' ').map(val => !val || val === '0' ? '0px' : val)
-    if (values.length === 0) return false
-    if (values.length === 1) values = Array(4).fill(values[0])
-    if (values.length === 2) values = [values[0], values[1], values[0], values[1]]
-    if (values.length === 3) values = [values[0], values[1], values[2], values[1]]
-    return values
-  }
-
-  get style () {
-    return this._style || (this._style = (() => {
-      const style = document.createElement('style')
-      style.setAttribute('protected', 'true')
-      return style
-    })())
-  }
-
-  get containerNamespaces () {
-    return Array.from(this.container.children).map(child => child.getAttribute('namespace') || '')
+  checkMedia (media = this.getAttribute('media')) {
+    const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
+    return (isMobile ? 'mobile' : 'desktop') === media
   }
 }
