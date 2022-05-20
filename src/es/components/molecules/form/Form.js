@@ -160,23 +160,22 @@ export default class Form extends Shadow() {
 
       datalist {
         position: absolute;
-        background-color: white;
         border: 1px solid var(--m-gray-400);
         border-top: none;
         width: 350px;
-        // border-radius: var(--border-radius, 0.5em);
-        // padding: 5px;
+        max-height: 10em;
+        overflow-y: auto;
       }
       
       option {
-        background-color: white;
+        background-color: var(--background-color);
         padding: 4px;
-        color: blue;   
         cursor: pointer;
       }
 
       option:hover, .active{
-        background-color: #ccc;
+        background-color: var(--color-secondary);
+        color: var(--background-color);
       }
 
       /* loading icon for form fields */

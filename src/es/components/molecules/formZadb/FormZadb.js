@@ -35,6 +35,7 @@ export default class FormZadb extends Form {
 
     this.zipResults = []
     this.streetResults = []
+    this.streetsByZip = {}
 
     this.hideLoader(this.zipLoader)
     this.hideLoader(this.streetLoader)
@@ -44,7 +45,7 @@ export default class FormZadb extends Form {
 
       // TODO: Refactor > Switch
       if (inputField.getAttribute('id') === this.inputFields.zip.id) {
-        
+
         this.addListIdAttribute(inputField, this.inputFields.zip.listId)
 
         if (inputField?.value.length >= 2) {
@@ -59,6 +60,7 @@ export default class FormZadb extends Form {
           this.setFieldAttributes(this.city, { disabled: true, readonly: true })
           this.setFieldAttributes(this.street, { disabled: true })
         }
+        this.cleanDialogList(this.inputFields.street.listId)
         this.clearFieldValues([this.city, this.street])
       }
 
@@ -68,7 +70,11 @@ export default class FormZadb extends Form {
           this.showLoader(this.streetLoader)
           this.streetResults = await this.searchStreets(inputField.value, this.zip.value)
           this.hideLoader(this.streetLoader)
-          this.showDataList(this.streetResults, this.inputFields.street.listId, 'name', inputField)
+          if (this.streetResults.length) {
+            this.showDataList(this.streetResults, this.inputFields.street.listId, 'name', inputField)
+          } else {
+            this.cleanDialogList(this.inputFields.street.listId)
+          }
           this.removeListIdAttribute(inputField)
         } else {
           this.streetResults = []
@@ -76,17 +82,27 @@ export default class FormZadb extends Form {
         }
       }
     }
+
+    this.clickOutsideListener = (event) => {
+      // https://lamplightdev.com/blog/2021/04/10/how-to-detect-clicks-outside-of-a-web-component/
+      if (!event.composedPath().includes(this)) {
+        this.cleanDialogList(this.inputFields.zip.listId)
+        this.cleanDialogList(this.inputFields.street.listId)
+      }
+    };
   }
 
   connectedCallback() {
     super.connectedCallback()
     document.addEventListener('keyup', this.keydownListener)
+    document.addEventListener('click', this.clickOutsideListener)
     this.initForm()
   }
 
   disconnectedCallback() {
     super.disconnectedCallback()
     document.removeEventListener('keyup', this.keydownListener)
+    document.removeEventListener('click', this.clickOutsideListener)
   }
 
   initForm() {
@@ -148,6 +164,7 @@ export default class FormZadb extends Form {
   }
 
   zipChangeListener(e) {
+    this.streetsByZip = {}
     if (!this.zipResults.length) return
     this.enableFields([this.street, this.city])
     this.setCityValue(this.city, this.zipResults, e.target.value)
@@ -175,9 +192,8 @@ export default class FormZadb extends Form {
   }
 
   async searchStreets(str, zip) {
-    console.log('SEARCH STREET:', str)
-    const allStreets = await this.getStreets(zip)
-    return allStreets.streets.filter(street => street.name.toLowerCase().startsWith(str.toLowerCase()))
+    if (Object.keys(this.streetsByZip).length === 0) this.streetsByZip = await this.getStreets(zip)
+    return this.streetsByZip.streets.filter(street => street.name.toLowerCase().startsWith(str.toLowerCase()))
   }
 
   showDataList(results, listName, value, inputField) {
@@ -218,7 +234,11 @@ export default class FormZadb extends Form {
   }
 
   async getStreets(zip) {
+
     try {
+      //if (this.controller) this.controller.abort()
+      //this.streetFetchController = new AbortController();
+      //const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`, { signal: this.streetFetchController.signal })
       // @ts-ignore
       const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`)
       const streets = await response.json()
