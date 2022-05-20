@@ -436,6 +436,20 @@ export default class Picture extends Intersection() {
         </span>
       `
       this.closeBtn.classList.add('close-btn')
+      // adjust for img being smaller than the picture container
+      img.addEventListener('load', event => {
+        const widthDiff = this.picture.getBoundingClientRect().width - this.img.getBoundingClientRect().width
+        if (widthDiff > 0) this.css = /* css */`
+          :host([open-modal]) > .close-btn {
+            right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);
+          }
+          @media only screen and (max-width: _max-width_) {
+            :host([open-modal-mobile]) > .close-btn {
+              right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff / 2}px);
+            }
+          }
+        `
+      }, { once: true })
       this.html = this.closeBtn
     }
   }
