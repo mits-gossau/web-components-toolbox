@@ -69,7 +69,7 @@ export default class Form extends Shadow() {
     }
 
     this.textAreaKeyUpListener = event => {
-      this.updateCounter(this.root.querySelector(':focus'))
+      this.updateCounter(event.target)
     }
   }
 
@@ -80,7 +80,7 @@ export default class Form extends Shadow() {
     if (this.hasAttribute('use-recaptcha') !== null) this.addEventListener('submit', this.submitListener)
     this.textarea.forEach(a => {
       if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')) {
-        a.addEventListener('keyup', this.textAreaKeyUpListener)
+        a.addEventListener('keyup', this.textAreaKeyUpListener)       
       }
     })
   }
@@ -332,7 +332,7 @@ export default class Form extends Shadow() {
   }
 
   updateCounter (textArea) {
-    if (!textArea) return
+    if (!textArea || textArea.value === undefined) return
     const value = textArea.value.length
     const lable = textArea.getAttribute('data-maxlength-lable')
     const counter = this.root.querySelector('span#' + 'id-' + textArea.getAttribute('id'))
