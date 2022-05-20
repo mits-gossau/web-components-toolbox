@@ -273,11 +273,8 @@ export default class MacroCarousel extends Shadow() {
         bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
       }
       :host([open-modal]) > .close-btn > span {
-        height: 7px;
-        width: 7px;
-      }
-      :host([open-modal]) > .close-btn > span > svg {
-        margin: -3.5px 3.5px 1.5px -3.5px;
+        height: 22px;
+        width: 22px;
       }
       @media only screen and (max-width: _max-width_) {
         :host> macro-carousel >  macro-carousel-nav-button {
@@ -386,11 +383,12 @@ export default class MacroCarousel extends Shadow() {
         this.closeBtn = document.createElement('button')
         this.closeBtn.innerHTML = `
           <span>
-            <svg id="Untitled-Seite%201" viewBox="0 0 14 14" style="background-color:#ffffff00" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" x="0px" y="0px" width="14px" height="14px">
-              <path d="M 5.9689 7.7071 L 7.7071 5.9689 L 12.5416 10.8034 L 10.8033 12.5416 L 5.9689 7.7071 Z" fill="#FFFFFF"/>
-              <path d="M 5.9033 5.9689 L 7.6415 7.7071 L 2.807 12.5416 L 1.0688 10.8034 L 5.9033 5.9689 Z" fill="#FFFFFF"/>
-              <path d="M 7.6415 5.9034 L 5.9033 7.6416 L 1.0688 2.8071 L 2.807 1.0689 L 7.6415 5.9034 Z" fill="#FFFFFF"/>
-              <path d="M 7.707 7.6416 L 5.9689 5.9033 L 10.8033 1.0689 L 12.5416 2.8071 L 7.707 7.6416 Z" fill="#FFFFFF"/>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
+              <g>
+                <path id="Ellipse" d="M 1 11 C 1 5.4771 5.4771 1 11 1 C 16.5229 1 21 5.4771 21 11 C 21 16.5229 16.5229 21 11 21 C 5.4771 21 1 16.5229 1 11 Z" fill="#FF6600"/>
+                <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>
+                <path d="M 12 15 L 10 15 L 10 7 L 12 7 L 12 15 Z" fill="#ffffff"/>
+              </g>
             </svg>
           </span>
         `
