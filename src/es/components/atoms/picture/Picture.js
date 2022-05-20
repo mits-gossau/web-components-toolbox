@@ -437,7 +437,8 @@ export default class Picture extends Intersection() {
       `
       this.closeBtn.classList.add('close-btn')
       // adjust for img being smaller than the picture container
-      img.addEventListener('load', event => {
+      const adjustBtnPositionRight = () => {
+        if (!this.isConnected) return
         const widthDiff = this.picture.getBoundingClientRect().width - this.img.getBoundingClientRect().width
         if (widthDiff > 0) this.css = /* css */`
           :host([open-modal]) > .close-btn {
@@ -449,7 +450,9 @@ export default class Picture extends Intersection() {
             }
           }
         `
-      }, { once: true })
+      }
+      self.addEventListener('resize', adjustBtnPositionRight)
+      img.addEventListener('load', adjustBtnPositionRight, { once: true })
       this.html = this.closeBtn
     }
   }
