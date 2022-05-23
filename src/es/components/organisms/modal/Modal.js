@@ -68,7 +68,7 @@ export default class Modal extends Shadow() {
             this.clone.style.height = `${height}px`
             this.clone.style.visibility = 'hidden'
           } else {
-            this.clone = child.cloneNode()
+            this.clone = child.cloneNode(true)
             this.container.appendChild(this.clone)
           }
         } else {
