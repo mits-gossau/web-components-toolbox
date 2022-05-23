@@ -84,11 +84,8 @@ export default class FormZadb extends Form {
     }
 
     this.clickOutsideListener = (event) => {
-      // https://lamplightdev.com/blog/2021/04/10/how-to-detect-clicks-outside-of-a-web-component/
-      if (!event.composedPath().includes(this)) {
         this.cleanDialogList(this.inputFields.zip.listId)
         this.cleanDialogList(this.inputFields.street.listId)
-      }
     };
   }
 
