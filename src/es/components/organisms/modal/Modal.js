@@ -49,6 +49,8 @@ export default class Modal extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.setAttribute('aria-label', 'Section')
+    this.setAttribute('aria-expanded', 'false')
     this.open = false
     this.clone = null
     this.eventDetail = null
@@ -80,6 +82,7 @@ export default class Modal extends Shadow() {
           this.setAttribute('open', '')
           this.clone.setAttribute('open', '')
           child.setAttribute('open', '')
+          this.setAttribute('aria-expanded', 'true')
         }
       }
     }
@@ -103,6 +106,7 @@ export default class Modal extends Shadow() {
             this.clone.removeAttribute('open')
             child.removeAttribute('open', '')
             this.origChild.removeAttribute('open', '')
+            this.setAttribute('aria-expanded', 'false')
           }
           this.clone = null
           this.container.innerHTML = ''
@@ -271,6 +275,7 @@ export default class Modal extends Shadow() {
               </svg>
             </span>
           `
+          this.closeBtn.setAttribute('aria-label', 'Close')
           this.closeBtn.classList.add('close-btn')
         }
         return false
