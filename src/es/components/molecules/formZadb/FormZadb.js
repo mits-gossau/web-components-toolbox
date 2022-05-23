@@ -1,7 +1,6 @@
 // @ts-check
 import Form from '../form/Form.js'
 
-/* global customElements */
 /* global self */
 /* global fetch */
 
@@ -20,7 +19,7 @@ import Form from '../form/Form.js'
  */
 
 export default class FormZadb extends Form {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
 
     this.inputFields = {
@@ -45,8 +44,7 @@ export default class FormZadb extends Form {
       const inputField = this.root.querySelector(':focus')
 
       // TODO: Refactor > Switch
-      if (inputField.getAttribute('id') === this.inputFields.zip.id) {
-
+      if (inputField?.getAttribute('id') === this.inputFields.zip.id) {
         this.addListIdAttribute(inputField, this.inputFields.zip.listId)
 
         if (inputField?.value.length >= 2) {
@@ -85,51 +83,51 @@ export default class FormZadb extends Form {
     }
 
     this.clickOutsideListener = (event) => {
-        this.cleanDialogList(this.inputFields.zip.listId)
-        this.cleanDialogList(this.inputFields.street.listId)
-    };
+      this.cleanDialogList(this.inputFields.zip.listId)
+      this.cleanDialogList(this.inputFields.street.listId)
+    }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     document.addEventListener('keyup', this.keydownListener)
     document.addEventListener('click', this.clickOutsideListener)
     this.initForm()
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     super.disconnectedCallback()
     document.removeEventListener('keyup', this.keydownListener)
     document.removeEventListener('click', this.clickOutsideListener)
   }
 
-  initForm() {
+  initForm () {
     if (this.city) this.setFieldAttributes(this.city, { disabled: true, readonly: true })
     if (this.street) this.setFieldAttributes(this.street, { disabled: true })
     this.setupListFields(this.allListFields)
   }
 
-  cleanDialogList(list) {
+  cleanDialogList (list) {
     const container = this.root.querySelector(`#${list}`)
     container.innerHTML = ''
     container.style.display = 'none'
   }
 
-  removeListIdAttribute(inputField) {
+  removeListIdAttribute (inputField) {
     inputField.setAttribute('list', '')
   }
 
-  addListIdAttribute(inputField, listId) {
+  addListIdAttribute (inputField, listId) {
     inputField.setAttribute('list', listId)
   }
 
-  setFieldAttributes(field, attributes) {
+  setFieldAttributes (field, attributes) {
     for (const key in attributes) {
       field.setAttribute(key, attributes[key])
     }
   }
 
-  setupListFields(fields) {
+  setupListFields (fields) {
     if (!fields.length) {
       this.abortAll()
       return
@@ -141,7 +139,7 @@ export default class FormZadb extends Form {
     })
   }
 
-  setOnChangeListener(field, listAttributeName) {
+  setOnChangeListener (field, listAttributeName) {
     switch (listAttributeName) {
       case this.inputFields.zip.listId:
         field.onchange = (e) => this.zipChangeListener(e)
@@ -154,14 +152,14 @@ export default class FormZadb extends Form {
     }
   }
 
-  clearFieldValues(fields) {
+  clearFieldValues (fields) {
     fields.forEach(field => {
       field.value = ''
       return field
     })
   }
 
-  zipChangeListener(e) {
+  zipChangeListener (e) {
     this.streetsByZip = {}
     if (!this.zipResults.length) return
     this.enableFields([this.street, this.city])
@@ -169,32 +167,32 @@ export default class FormZadb extends Form {
   }
 
   // TODO: Remove?
-  streetChangeListener(e) {
+  streetChangeListener (e) {
     console.log('STREET selected', e.target.value)
   }
 
-  setCityValue(cityField, zipList, zipValue) {
+  setCityValue (cityField, zipList, zipValue) {
     if (!zipList.length) return
     cityField.value = zipList.find(city => city.zip === zipValue).name
   }
 
-  enableFields(fields) {
+  enableFields (fields) {
     fields.forEach(field => field.removeAttribute('disabled'))
   }
 
-  async searchCities(str) {
+  async searchCities (str) {
     console.log('SEARCH CITY:', str)
     const allCities = await this.getCities(str)
     if (!allCities) return
     return allCities.cities.filter(city => city.zip.startsWith(str))
   }
 
-  async searchStreets(str, zip) {
+  async searchStreets (str, zip) {
     if (Object.keys(this.streetsByZip).length === 0) this.streetsByZip = await this.getStreets(zip)
     return this.streetsByZip.streets.filter(street => street.name.toLowerCase().startsWith(str.toLowerCase()))
   }
 
-  showDataList(results, listName, value, inputField) {
+  showDataList (results, listName, value, inputField) {
     if (!results || !results.length) return
     const container = this.root.querySelector(`#${listName}`)
     container.innerHTML = ''
@@ -212,13 +210,13 @@ export default class FormZadb extends Form {
     })
   }
 
-  attachDataList(field, idName) {
+  attachDataList (field, idName) {
     const dl = document.createElement('datalist')
     this.setFieldAttributes(dl, { id: idName, class: 'suggestion' })
     field.after(dl)
   }
 
-  async getCities(zip) {
+  async getCities (zip) {
     try {
       // @ts-ignore
       const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetCitiesByZip?zip=${zip}`)
@@ -231,12 +229,11 @@ export default class FormZadb extends Form {
     }
   }
 
-  async getStreets(zip) {
-
+  async getStreets (zip) {
     try {
-      //if (this.controller) this.controller.abort()
-      //this.streetFetchController = new AbortController();
-      //const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`, { signal: this.streetFetchController.signal })
+      // if (this.controller) this.controller.abort()
+      // this.streetFetchController = new AbortController();
+      // const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`, { signal: this.streetFetchController.signal })
       // @ts-ignore
       const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`)
       const streets = await response.json()
@@ -248,7 +245,7 @@ export default class FormZadb extends Form {
     }
   }
 
-  abortAll() {
+  abortAll () {
     this.hideLoader(this.zipLoader)
     this.hideLoader(this.streetLoader)
     this.enableFields([this.street, this.city])
@@ -256,36 +253,36 @@ export default class FormZadb extends Form {
     document.removeEventListener('keyup', this.keydownListener)
   }
 
-  get zip() {
+  get zip () {
     return this.root.querySelector('#zip') || null
   }
 
-  get city() {
+  get city () {
     return this.root.querySelector('#city') || null
   }
 
-  get street() {
+  get street () {
     return this.root.querySelector('#street') || null
   }
 
-  get zipLoader() {
+  get zipLoader () {
     return this.root.querySelector('#zip-loader') || null
   }
 
-  get streetLoader() {
+  get streetLoader () {
     return this.root.querySelector('#street-loader') || null
   }
 
-  get allListFields() {
+  get allListFields () {
     return this.root.querySelectorAll('input[list]') || []
   }
 
-  hideLoader(loader) {
+  hideLoader (loader) {
     if (!loader) return
     loader.style.visibility = 'hidden'
   }
 
-  showLoader(loader) {
+  showLoader (loader) {
     if (!loader) return
     loader.style.visibility = 'visible'
   }

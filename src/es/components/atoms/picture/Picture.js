@@ -3,6 +3,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global CustomEvent */
 /* global location */
+/* global self */
 
 /**
  * Picture

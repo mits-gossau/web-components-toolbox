@@ -10,7 +10,6 @@ import Button from '../../atoms/button/Button.js'
  * Umbraco Forms Styling
  * Figma Example: https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=1904%3A17142
  *
- *
  * @export
  * @class Wrapper
  * @type {CustomElementConstructor}
