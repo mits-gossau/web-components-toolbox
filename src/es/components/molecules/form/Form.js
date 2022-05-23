@@ -24,8 +24,6 @@ export default class Form extends Shadow() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mode: 'false' }), ...args)
 
-    this.render = false
-
     this.setAttribute('role', 'form')
     // scroll to first error
     this.clickListener = event => {
@@ -110,7 +108,7 @@ export default class Form extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.render
+    return !this.root.querySelector('span.counter')
   }
 
   /**
@@ -285,8 +283,6 @@ export default class Form extends Shadow() {
   }
 
   renderHTML () {
-    this.render = true
-
     this.textarea.forEach(textarea => {
       if (textarea.hasAttribute('maxlength') && !textarea.hasAttribute('no-counter')) {
         const lable = textarea.hasAttribute('data-maxlength-lable') ? textarea.getAttribute('data-maxlength-lable') : ''
