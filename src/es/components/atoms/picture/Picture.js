@@ -438,7 +438,8 @@ export default class Picture extends Intersection() {
       const adjustBtnPositionRight = () => {
         if (!this.isConnected || !this.picture || typeof this.picture.getBoundingClientRect !== 'function' || !this.img || typeof this.img.getBoundingClientRect !== 'function') return
         const widthDiff = this.picture.getBoundingClientRect().width - this.img.getBoundingClientRect().width
-        if (widthDiff > 0) this.css = /* css */`
+        if (widthDiff > 0) {
+          this.css = /* css */`
           :host([open-modal]) > .close-btn {
             right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);
           }
@@ -448,6 +449,7 @@ export default class Picture extends Intersection() {
             }
           }
         `
+        }
       }
       self.addEventListener('resize', adjustBtnPositionRight)
       img.addEventListener('load', adjustBtnPositionRight, { once: true })

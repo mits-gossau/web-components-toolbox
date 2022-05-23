@@ -4,7 +4,6 @@ import Button from '../../atoms/button/Button.js'
 
 /* global customElements */
 /* global self */
-/* global fetch */
 
 /**
  * As a molecule, this component shall hold Atoms
@@ -32,9 +31,9 @@ export default class Form extends Shadow() {
         if ((fieldValidationError = this.root.querySelector('.field-validation-error')) && fieldValidationError.parentNode && fieldValidationError.parentNode.parentNode) fieldValidationError.parentNode.parentNode.scrollIntoView()
       }, 50)
     }
-      this.textAreaKeyUpListener = event => {
-          this.updateCounter(event.target)
-      }
+    this.textAreaKeyUpListener = event => {
+      this.updateCounter(event.target)
+    }
   }
 
   connectedCallback () {
@@ -43,7 +42,7 @@ export default class Form extends Shadow() {
     if (this.submit) this.submit.addEventListener('click', this.clickListener)
     this.textarea.forEach(a => {
       if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')) {
-        a.addEventListener('keyup', this.textAreaKeyUpListener)       
+        a.addEventListener('keyup', this.textAreaKeyUpListener)
       }
     })
   }
