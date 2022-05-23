@@ -31,6 +31,7 @@ export default class Form extends Shadow() {
         if ((fieldValidationError = this.root.querySelector('.field-validation-error')) && fieldValidationError.parentNode && fieldValidationError.parentNode.parentNode) fieldValidationError.parentNode.parentNode.scrollIntoView()
       }, 50)
     }
+    
     this.textAreaKeyUpListener = event => {
       this.updateCounter(event.target)
     }
@@ -51,7 +52,7 @@ export default class Form extends Shadow() {
     if (this.submit) this.submit.removeEventListener('click', this.clickListener)
     this.textarea.forEach(a => {
       if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')) {
-        a.addEventListener('keyup', this.textAreaKeyUpListener)
+        a.removeEventListener('keyup', this.textAreaKeyUpListener)
       }
     })
   }
