@@ -103,11 +103,15 @@ export default class Picture extends Intersection() {
   }
 
   intersectionCallback (entries, observer) {
-    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) this.intersecting()
+    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
+      this.intersecting()
+      this.openModalIntersecting()
+    }
   }
 
   // placeholder
   intersecting () {}
+  openModalIntersecting () {}
 
   /**
    * evaluates if a render is necessary
@@ -436,24 +440,30 @@ export default class Picture extends Intersection() {
       this.closeBtn.classList.add('close-btn')
       // adjust for img being smaller than the picture container
       const adjustBtnPositionRight = () => {
-        if (!this.isConnected || !this.picture || typeof this.picture.getBoundingClientRect !== 'function' || !this.img || typeof this.img.getBoundingClientRect !== 'function') return
+        if (!this.isConnected || !this.picture || typeof this.picture.getBoundingClientRect !== 'function' || !this.picture.getBoundingClientRect().width || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width) return
         const widthDiff = this.picture.getBoundingClientRect().width - this.img.getBoundingClientRect().width
         if (widthDiff > 0) {
-          this.css = /* css */`
-          :host([open-modal]) > .close-btn {
-            right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);
-          }
-          @media only screen and (max-width: _max-width_) {
-            :host([open-modal-mobile]) > .close-btn {
-              right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff / 2}px);
+          this.style.textContent = ''
+          this.setCss(/* CSS */`
+            :host([open-modal]) > .close-btn {
+              right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);
             }
-          }
-        `
+            @media only screen and (max-width: _max-width_) {
+              :host([open-modal-mobile]) > .close-btn {
+                right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff / 2}px);
+              }
+            }
+          `, undefined, undefined, undefined, this.style)
         }
       }
       self.addEventListener('resize', adjustBtnPositionRight)
       img.addEventListener('load', adjustBtnPositionRight, { once: true })
+      this.openModalIntersecting = () => {
+        this.openModalIntersecting = () => {}
+        adjustBtnPositionRight()
+      }
       this.html = this.closeBtn
+      this.html = this.style
     }
   }
 
@@ -481,6 +491,14 @@ export default class Picture extends Intersection() {
 
   get mouseEventElement () {
     return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 
   /**
