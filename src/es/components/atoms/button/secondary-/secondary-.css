@@ -9,5 +9,5 @@
   --button-secondary-color-disabled: var(--button-secondary-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
   --button-secondary-color-hover: var(--button-secondary-color-hover-custom, var(--color-hover, var(--m-orange-800)));
   --button-secondary-color: var(--button-secondary-color-custom, var(--color-secondary, var(--m-orange-600)));
-  --button-secondary-font-family: text, Helvetica, Arial, sans-serif;
+  --button-secondary-font-family: var(--font-family);
 }

@@ -32,50 +32,15 @@ export default class Form extends Shadow() {
         if ((fieldValidationError = this.root.querySelector('.field-validation-error')) && fieldValidationError.parentNode && fieldValidationError.parentNode.parentNode) fieldValidationError.parentNode.parentNode.scrollIntoView()
       }, 50)
     }
-
-    this.submitListener = event => {
-      event.preventDefault()
-
-      if (this.getAttribute('site-key') && this.getAttribute('controller-name')) {
-        this.loadDependency().then(grecaptcha => {
-          // @ts-ignore
-          grecaptcha.ready(() => {
-            // @ts-ignore
-            grecaptcha.execute(this.getAttribute('site-key'), { action: 'submit_form' }).then(token => {
-              fetch(`/umbraco/api/${this.getAttribute('controller-name')}/VerifyRecaptcha`, {
-                method: 'post',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ recaptchaToken: token })
-              })
-                .then(response => {
-                  if (response.ok) return response.json()
-                })
-                .then(response => {
-                  if (response) { // passed captcha
-                    console.info('TESTING: passed captcha')
-                  } else {
-                    console.error('Failed captcha')
-                    // TODO stop form from sending
-                  }
-                })
-              // TODO stop form from sending
-                .catch(error => console.error('Something went wrong while verifying captcha: ', error))
-            })
-          })
-        })
+      this.textAreaKeyUpListener = event => {
+          this.updateCounter(event.target)
       }
-    }
-
-    this.textAreaKeyUpListener = event => {
-      this.updateCounter(event.target)
-    }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.submit) this.submit.addEventListener('click', this.clickListener)
-    if (this.hasAttribute('use-recaptcha') !== null) this.addEventListener('submit', this.submitListener)
     this.textarea.forEach(a => {
       if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')) {
         a.addEventListener('keyup', this.textAreaKeyUpListener)       
@@ -85,7 +50,6 @@ export default class Form extends Shadow() {
 
   disconnectedCallback () {
     if (this.submit) this.submit.removeEventListener('click', this.clickListener)
-    if (this.hasAttribute('use-recaptcha') !== null) this.removeEventListener('submit', this.submitListener)
     this.textarea.forEach(a => {
       if (a.hasAttribute('maxlength') && !a.hasAttribute('no-counter')) {
         a.addEventListener('keyup', this.textAreaKeyUpListener)
@@ -126,6 +90,9 @@ export default class Form extends Shadow() {
     this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
     button.remove()
     this.css = /* css */`
+      :host {
+        width:100%;
+      }
       legend {
         font-family: var(--font-family-bold, var(--font-family, inherit));
       }

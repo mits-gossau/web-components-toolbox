@@ -1,4 +1,7 @@
 :host {
+  --carousel-default-close-btn-background-color: var(--color-secondary);
+  --carousel-default-close-btn-bottom: var(--content-spacing);
+  --carousel-default-close-btn-right: var(--content-spacing);
   --carousel-default-color: var(--carousel-default-color-custom, var(--color, white));
   --carousel-default-flex-direction: var(--carousel-default-flex-direction-custom, column);
   --carousel-default-navigation-background-color: var(--carousel-default-navigation-background-color-custom, unset);

@@ -163,6 +163,36 @@ export default class Picture extends Intersection() {
         filter: var(--filter-hover, var(--filter, none));
         transform: var(--transform-hover, var(--transform, none));
       }
+      :host([open-modal]) {
+        position: relative;
+      }
+      :host([open]) > .close-btn {
+        opacity: 0;
+      }
+      :host(:not([open])) > .close-btn {
+        opacity: 1;
+      }
+      :host([open-modal]) > .close-btn {
+        background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
+        border-radius: 50%;
+        border: 0;
+        box-sizing: border-box;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 7px;
+        transition: var(--close-btn-transition, opacity 0.3s ease-out);
+        padding: 0.75em;
+        width: 7px;
+        position: absolute;
+        right: calc(var(--close-btn-right, var(--content-spacing)) / 2);
+        bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
+      }
+      :host([open-modal]) > .close-btn > span {
+        height: 22px;
+        width: 22px;
+      }
       @media only screen and (max-width: _max-width_) {
         :host picture img {
           border-radius: var(--border-radius-mobile, 0);
@@ -176,6 +206,16 @@ export default class Picture extends Intersection() {
         :host picture img:hover, :host picture.hover img {
           filter: var(--filter-mobile-hover, var(--filter-hover, var(--filter, none)));
           transform: var(--transform-mobile-hover, var(--transform-hover, var(--transform, none)));
+        }
+        :host(:not([open-modal-mobile])) {
+          position: static;
+        }
+        :host(:not([open-modal-mobile])) > .close-btn {
+          display: none;
+        }
+        :host([open-modal-mobile]) > .close-btn {
+          right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
+          bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
         }
       }
     `
@@ -378,6 +418,40 @@ export default class Picture extends Intersection() {
           composed: true
         }))
       }, { once: true })
+    }
+    // modal stuff
+    if (this.hasAttribute('open-modal')) {
+      this.closeBtn = document.createElement('button')
+      this.closeBtn.innerHTML = `
+        <span>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
+            <g>
+              <path id="Ellipse" d="M 1 11 C 1 5.4771 5.4771 1 11 1 C 16.5229 1 21 5.4771 21 11 C 21 16.5229 16.5229 21 11 21 C 5.4771 21 1 16.5229 1 11 Z" fill="#FF6600"/>
+              <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>
+              <path d="M 12 15 L 10 15 L 10 7 L 12 7 L 12 15 Z" fill="#ffffff"/>
+            </g>
+          </svg>
+        </span>
+      `
+      this.closeBtn.classList.add('close-btn')
+      // adjust for img being smaller than the picture container
+      const adjustBtnPositionRight = () => {
+        if (!this.isConnected || !this.picture || typeof this.picture.getBoundingClientRect !== 'function' || !this.img || typeof this.img.getBoundingClientRect !== 'function') return
+        const widthDiff = this.picture.getBoundingClientRect().width - this.img.getBoundingClientRect().width
+        if (widthDiff > 0) this.css = /* css */`
+          :host([open-modal]) > .close-btn {
+            right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);
+          }
+          @media only screen and (max-width: _max-width_) {
+            :host([open-modal-mobile]) > .close-btn {
+              right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff / 2}px);
+            }
+          }
+        `
+      }
+      self.addEventListener('resize', adjustBtnPositionRight)
+      img.addEventListener('load', adjustBtnPositionRight, { once: true })
+      this.html = this.closeBtn
     }
   }
 

@@ -101,12 +101,35 @@ export default class MacroCarousel extends Shadow() {
         }
       }
     }
+    this.clickListener = event => {
+      if (!this.hasAttribute('open')) event.stopPropagation()
+      this.dispatchEvent(new CustomEvent(this.getAttribute('open-modal') || 'open-modal', {
+        detail: {
+          origEvent: event,
+          child: this,
+          showOriginal: true,
+          btnCloseOnly: true
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
 
     this.interval = null
 
     // stop interval when clicking outside window eg. iframe, etc.
     this.blurEventListener = event => this.clearInterval()
     this.focusEventListener = event => this.setInterval()
+
+    // workaround open-modal (carousel in modal) bug where buttons stop working
+    if (this.hasAttribute('open-modal')) {
+      this.nextEventListener = event => this.macroCarousel.next()
+      this.prevEventListener = event => this.macroCarousel.previous()
+      this.indicatorEventListener = event => {
+        this.macroCarousel.selected = Number(event.target.getAttribute('aria-label').replace(/.*?(\d)/, '$1')) - 1
+      }
+    }
   }
 
   connectedCallback () {
@@ -121,12 +144,20 @@ export default class MacroCarousel extends Shadow() {
         document.body.addEventListener((this.getAttribute('macro-carousel-selected-changed') || 'macro-carousel-selected-changed') + this.getAttribute('sync-id'), this.macroCarouselSelectedChangedListenerSyncId)
       }
     }
+    if (this.hasAttribute('open-modal')) {
+      this.setAttribute('aria-haspopup', 'true')
+      this.addEventListener('click', this.clickListener)
+      if (this.macroCarousel.querySelector('.macro-carousel-next')) this.macroCarousel.querySelector('.macro-carousel-next').addEventListener('click', this.nextEventListener)
+      if (this.macroCarousel.querySelector('.macro-carousel-previous')) this.macroCarousel.querySelector('.macro-carousel-previous').addEventListener('click', this.prevEventListener)
+      Array.from(this.macroCarousel.querySelectorAll('macro-carousel-pagination-indicator')).forEach(indicator => indicator.addEventListener('click', this.indicatorEventListener))
+    }
     if (this.getAttribute('interval')) {
       self.addEventListener('blur', this.blurEventListener)
       self.addEventListener('focus', this.focusEventListener)
       document.body.addEventListener('play', this.blurEventListener, true)
       document.body.addEventListener('pause', this.focusEventListener, true)
     }
+    this.resizeListener() // resets the picture calculations
   }
 
   disconnectedCallback () {
@@ -138,6 +169,12 @@ export default class MacroCarousel extends Shadow() {
       } else {
         document.body.removeEventListener((this.getAttribute('macro-carousel-selected-changed') || 'macro-carousel-selected-changed') + this.getAttribute('sync-id'), this.macroCarouselSelectedChangedListenerSyncId)
       }
+    }
+    if (this.hasAttribute('open-modal')) {
+      this.removeEventListener('click', this.clickListener)
+      if (this.macroCarousel.querySelector('.macro-carousel-next')) this.macroCarousel.querySelector('.macro-carousel-next').removeEventListener('click', this.nextEventListener)
+      if (this.macroCarousel.querySelector('.macro-carousel-previous')) this.macroCarousel.querySelector('.macro-carousel-previous').removeEventListener('click', this.prevEventListener)
+      Array.from(this.macroCarousel.querySelectorAll('macro-carousel-pagination-indicator')).forEach(indicator => indicator.removeEventListener('click', this.indicatorEventListener))
     }
     if (this.getAttribute('interval')) {
       self.removeEventListener('blur', this.blurEventListener)
@@ -209,6 +246,36 @@ export default class MacroCarousel extends Shadow() {
       :host .macro-carousel-previous, .macro-carousel-next{
          margin:1em;
       }
+      :host([open-modal]) {
+        position: relative;
+      }
+      :host([open]) > .close-btn {
+        opacity: 0;
+      }
+      :host(:not([open])) > .close-btn {
+        opacity: 1;
+      }
+      :host([open-modal]) > .close-btn {
+        background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
+        border-radius: 50%;
+        border: 0;
+        box-sizing: border-box;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 7px;
+        transition: var(--close-btn-transition, opacity 0.3s ease-out);
+        padding: 0.75em;
+        width: 7px;
+        position: absolute;
+        right: calc(var(--close-btn-right, var(--content-spacing)) / 2);
+        bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
+      }
+      :host([open-modal]) > .close-btn > span {
+        height: 22px;
+        width: 22px;
+      }
       @media only screen and (max-width: _max-width_) {
         :host> macro-carousel >  macro-carousel-nav-button {
           top:35%;
@@ -224,7 +291,16 @@ export default class MacroCarousel extends Shadow() {
           left: 0;
           margin:var(--div-margin-mobile);
         }
-      }
+        :host(:not([open-modal-mobile])) {
+          position: static;
+        }
+        :host(:not([open-modal-mobile])) > .close-btn {
+          display: none;
+        }
+        :host([open-modal-mobile]) > .close-btn {
+          right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
+          bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
+        }
       }
     `
     // inject style which can't be controlled through css vars
@@ -302,6 +378,23 @@ export default class MacroCarousel extends Shadow() {
           this.macroCarouselReady()
         }
       }, 100)
+      // modal stuff
+      if (this.hasAttribute('open-modal')) {
+        this.closeBtn = document.createElement('button')
+        this.closeBtn.innerHTML = `
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
+              <g>
+                <path id="Ellipse" d="M 1 11 C 1 5.4771 5.4771 1 11 1 C 16.5229 1 21 5.4771 21 11 C 21 16.5229 16.5229 21 11 21 C 5.4771 21 1 16.5229 1 11 Z" fill="#FF6600"/>
+                <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>
+                <path d="M 12 15 L 10 15 L 10 7 L 12 7 L 12 15 Z" fill="#ffffff"/>
+              </g>
+            </svg>
+          </span>
+        `
+        this.closeBtn.classList.add('close-btn')
+        this.html = this.closeBtn
+      }
     })
   }
 
