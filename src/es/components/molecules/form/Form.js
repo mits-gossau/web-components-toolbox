@@ -195,7 +195,7 @@ export default class Form extends Shadow() {
       }
 
       datalist {
-        position: absolute;
+        position: relative; 
         border: 1px solid var(--m-gray-400);
         border-top: none;
         width: 350px;
@@ -208,12 +208,10 @@ export default class Form extends Shadow() {
         padding: 4px;
         cursor: pointer;
       }
-
       option:hover, .active{
         background-color: var(--color-secondary);
         color: var(--background-color);
       }
-
       /* loading icon for form fields */
       .icon-container {
         position: relative;
@@ -252,7 +250,6 @@ export default class Form extends Shadow() {
         left: 0;
         animation: around 0.7s ease-in-out infinite;
       }
-      
       .loader::after {
         animation: around 0.7s ease-in-out 0.1s infinite;
         background: transparent;
