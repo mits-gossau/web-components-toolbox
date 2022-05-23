@@ -1,6 +1,7 @@
 // @ts-check
 import Form from '../form/Form.js'
 
+/* global customElements */
 /* global self */
 /* global fetch */
 

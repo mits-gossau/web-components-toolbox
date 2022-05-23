@@ -52,6 +52,7 @@ export default class Arrow extends Shadow() {
   attributeChangedCallback (name, oldValue, newValue) {
     if (name === 'hover') {
       const duration = 300
+      // NOTE: Don't copy below part, usually setting css must go through function setCss but the below is an exception, since it does not contain css variables!
       this.style.textContent = /* CSS */`
         :host > svg{
           animation: move ${duration}ms ease-out ${newValue ? '' : 'reverse'};
