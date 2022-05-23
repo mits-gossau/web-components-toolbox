@@ -103,7 +103,8 @@ export default class Form extends Shadow() {
         resize: none;
       }
       input[type]:disabled{
-        background-color:red;
+        background-color:#E0E0E0;
+        border: 1px solid #E0E0E0;
       }
       ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
         font-family: var(--font-family, inherit);
