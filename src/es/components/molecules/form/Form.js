@@ -31,7 +31,7 @@ export default class Form extends Shadow() {
         if ((fieldValidationError = this.root.querySelector('.field-validation-error')) && fieldValidationError.parentNode && fieldValidationError.parentNode.parentNode) fieldValidationError.parentNode.parentNode.scrollIntoView()
       }, 50)
     }
-    
+
     this.textAreaKeyUpListener = event => {
       this.updateCounter(event.target)
     }
