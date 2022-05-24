@@ -57,10 +57,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
           const fetchCSSParamWithDefaultValues = { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, appendStyleNode: true, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam }
           const processedStyleCacheKey = FetchCss.cacheKeyGenerator(fetchCSSParamWithDefaultValues)
           if (this.processedStyleCache.has(processedStyleCacheKey)) {
-            return this.processedStyleCache.get(processedStyleCacheKey).then(style => {
-              FetchCss.appendStyle(fetchCSSParamWithDefaultValues).style = fetchCSSParamWithDefaultValues.styleNode.textContent = style
-              return fetchCSSParamWithDefaultValues
-            })
+            return Promise.resolve(fetchCSSParamWithDefaultValues)
           }
           let fetchStyle
           if (this.fetchStyleCache.has(fetchCSSParamWithDefaultValues.path)) {
@@ -76,12 +73,15 @@ export default class FetchCss extends Shadow(WebWorker()) {
           )
           const processedStyle = this.processStyle(fetchCSSParamWithDefaultValues, fetchStyle)
           this.processedStyleCache.set(processedStyleCacheKey, processedStyle)
-          return processedStyle.then(style => {
-            FetchCss.appendStyle(fetchCSSParamWithDefaultValues).style = fetchCSSParamWithDefaultValues.styleNode.textContent = style
-            return fetchCSSParamWithDefaultValues
-          })
+          return Promise.resolve(fetchCSSParamWithDefaultValues)
         }
-      )).then(fetchCSSParams => event.detail.resolve(fetchCSSParams)).catch(error => error)
+      )).then(fetchCSSParams => {
+        // do append in order
+        Promise.all(fetchCSSParams.map(fetchCSSParam => this.processedStyleCache.get(FetchCss.cacheKeyGenerator(fetchCSSParam)).then(style => {
+          FetchCss.appendStyle(fetchCSSParam).style = fetchCSSParam.styleNode.textContent = style
+          return fetchCSSParam
+        }))).then(fetchCSSParams => event.detail.resolve(fetchCSSParams)).catch(error => error)
+      }).catch(error => error)
     }
   }
 
