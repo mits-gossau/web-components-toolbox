@@ -168,14 +168,15 @@ export default class Picture extends Intersection() {
         filter: var(--filter-hover, var(--filter, none));
         transform: var(--transform-hover, var(--transform, none));
       }
+      /* modal stuff */
       :host([open-modal]) {
         position: relative;
       }
-      :host([open]) > .close-btn {
-        opacity: 0;
+      :host([open-modal][open]) > .close-btn {
+        display: none;
       }
-      :host(:not([open])) > .close-btn {
-        opacity: 1;
+      :host([open-modal]:not([open])) > .close-btn {
+        display: flex;
       }
       :host([open-modal]) > .close-btn {
         background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
@@ -187,7 +188,6 @@ export default class Picture extends Intersection() {
         align-items: center;
         justify-content: center;
         height: 7px;
-        transition: var(--close-btn-transition, opacity 0.3s ease-out);
         padding: 0.75em;
         width: 7px;
         position: absolute;
@@ -212,6 +212,7 @@ export default class Picture extends Intersection() {
           filter: var(--filter-mobile-hover, var(--filter-hover, var(--filter, none)));
           transform: var(--transform-mobile-hover, var(--transform-hover, var(--transform, none)));
         }
+        /* modal stuff */
         :host(:not([open-modal-mobile])) {
           position: static;
         }
@@ -397,9 +398,9 @@ export default class Picture extends Intersection() {
       if (this.isIntersecting || this.getAttribute('loading') === 'eager') this.intersecting()
     }
     // event stuff
+    img.addEventListener('load', event => this.setAttribute('loaded', 'true'), { once: true })
     if (this.hasAttribute('picture-load')) {
       img.addEventListener('load', event => {
-        this.setAttribute('loaded', 'true')
         this.dispatchEvent(new CustomEvent(this.getAttribute('picture-load') || 'picture-load', {
           detail: {
             origEvent: event,
@@ -447,18 +448,24 @@ export default class Picture extends Intersection() {
           this.style.textContent = ''
           this.setCss(/* CSS */`
             :host([open-modal]) > .close-btn {
+              bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
               right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);
             }
             @media only screen and (max-width: _max-width_) {
               :host([open-modal-mobile]) > .close-btn {
+                bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
                 right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff / 2}px);
               }
             }
-          `, undefined, undefined, undefined, this.style)
+          `, undefined, undefined, true, this.style)
         }
       }
       self.addEventListener('resize', adjustBtnPositionRight)
-      img.addEventListener('load', adjustBtnPositionRight, { once: true })
+      img.addEventListener('load', () => {
+        adjustBtnPositionRight()
+        setTimeout(() => adjustBtnPositionRight(), 200)
+        setTimeout(() => adjustBtnPositionRight(), 500)
+      }, { once: true })
       this.openModalIntersecting = () => {
         this.openModalIntersecting = () => {}
         adjustBtnPositionRight()

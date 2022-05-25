@@ -159,6 +159,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./no-calc-column-width-/no-calc-column-width-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles]).then(() => this.calcColumnWidth())
+      case 'wrapper-no-calc-column-width-left-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./no-calc-column-width-left-/no-calc-column-width-left-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles]).then(() => this.calcColumnWidth())
       default:
         if (!this.hasAttribute('namespace')) {
           this.css = /* css */`

@@ -62,16 +62,20 @@ export default class Modal extends Shadow() {
         if (event && typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation()
         let child
         if (!this.clone && event && event.detail && (child = event.detail.child) && child instanceof HTMLElement) {
-          if (event.detail.showOriginal === true) {
+          if (event.detail.showOriginal === false) {
+            this.clone = child.cloneNode(true)
+            this.container.appendChild(this.clone)
+          } else {
             // clone node to have a placeholder keeping the space a picture would occupy
             const height = child.offsetHeight
             child.replaceWith(this.clone = document.createElement('div'))
             this.container.appendChild(child)
             this.clone.style.height = `${height}px`
             this.clone.style.visibility = 'hidden'
-          } else {
-            this.clone = child.cloneNode(true)
-            this.container.appendChild(this.clone)
+            // below correct certain template settings of Pictures to display fullscreen without any side effects
+            this.container.querySelectorAll('a-picture').forEach(aPicture => {
+              if (aPicture.root && aPicture.img) aPicture.img.setAttribute('style', 'transform: none; height: auto; width: max-content;')
+            })
           }
         } else {
           this.container.appendChild(this.initialContent)
@@ -100,7 +104,13 @@ export default class Modal extends Shadow() {
           if (this.closeBtn) this.appendChild(this.closeBtn)
           let child
           // if showOriginal this will be triggered by this.clone !== child to move the original back to its origin
-          if (this.clone && (child = this.container.childNodes[0]) && this.clone !== child) this.clone.replaceWith(child)
+          if (this.clone && (child = this.container.childNodes[0]) && this.clone !== child) {
+            this.clone.replaceWith(child)
+            // undo: below correct certain template settings of Pictures to display fullscreen without any side effects
+            if (child.tagName === 'A-PICTURE' && child.root && child.img) {
+              child.img.removeAttribute('style')
+            }
+          }
           if (this.hasAttribute('open')) {
             this.removeAttribute('open')
             this.clone.removeAttribute('open')
@@ -229,18 +239,21 @@ export default class Modal extends Shadow() {
         width: 14px;
       }
       @media only screen and (max-width: _max-width_) {
-        ${this.hasAttribute('no-mobile') ? /* css */`
-          :host {
-            display: none;
-          }
-        ` : /* css */`
-          :host([open]) > section {
-            padding: var(--padding-mobile, var(--padding, min(var(--content-spacing-mobile, var(--content-spacing)), 4vw)));
-          }
-          :host([open]) > section > div > #close {
-            margin: var(--close-margin-mobile, var(--close-margin, 0 0 var(--content-spacing-mobile, var(--content-spacing)) 0));
-          }
-        `}
+        ${this.hasAttribute('no-mobile')
+          ? /* css */`
+            :host {
+              display: none;
+            }
+          `
+          : /* css */`
+            :host([open]) > section {
+              padding: var(--padding-mobile, var(--padding, min(var(--content-spacing-mobile, var(--content-spacing)), 4vw)));
+            }
+            :host([open]) > section > div > #close {
+              margin: var(--close-margin-mobile, var(--close-margin, 0 0 var(--content-spacing-mobile, var(--content-spacing)) 0));
+            }
+          `
+        }
       }
     `
     switch (this.getAttribute('namespace')) {

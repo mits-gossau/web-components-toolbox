@@ -107,7 +107,6 @@ export default class MacroCarousel extends Shadow() {
         detail: {
           origEvent: event,
           child: this,
-          showOriginal: true,
           btnCloseOnly: true
         },
         bubbles: true,
@@ -265,7 +264,6 @@ export default class MacroCarousel extends Shadow() {
         align-items: center;
         justify-content: center;
         height: 7px;
-        transition: var(--close-btn-transition, opacity 0.3s ease-out);
         padding: 0.75em;
         width: 7px;
         position: absolute;
