@@ -76,11 +76,18 @@ export default class FetchCss extends Shadow(WebWorker()) {
           return Promise.resolve(fetchCSSParamWithDefaultValues)
         }
       )).then(fetchCSSParams => {
-        // do append in order
+        // wait for styles to load and set them fetchCSSParam.style = style in order
         Promise.all(fetchCSSParams.map(fetchCSSParam => this.processedStyleCache.get(FetchCss.cacheKeyGenerator(fetchCSSParam)).then(style => {
-          FetchCss.appendStyle(fetchCSSParam).style = fetchCSSParam.styleNode.textContent = style
+          fetchCSSParam.style = style
           return fetchCSSParam
-        }))).then(fetchCSSParams => event.detail.resolve(fetchCSSParams)).catch(error => error)
+        }))).then(fetchCSSParams => {
+          fetchCSSParams.forEach(fetchCSSParam => {
+            // append styles in order, since this is important for overwrite
+            FetchCss.appendStyle(fetchCSSParam)
+            fetchCSSParam.styleNode.textContent = fetchCSSParam.style
+          })
+          event.detail.resolve(fetchCSSParams)
+        }).catch(error => error)
       }).catch(error => error)
     }
   }
