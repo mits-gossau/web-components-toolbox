@@ -132,10 +132,14 @@ export default class MacroCarousel extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     self.addEventListener('resize', this.resizeListener)
-    if (this.aPictures.some(aPicture => aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded'))) this.aPictures.forEach(aPicture => aPicture.addEventListener('picture-load', this.resizeListener, { once: true }))
+    if (this.aPictures.some(aPicture => aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded'))) this.aPictures.forEach(aPicture => {
+      aPicture.addEventListener('picture-load', this.resizeListener, { once: true })
+      showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+    })
     if (this.hasAttribute('sync-id')) {
       if (this.getAttribute('interval')) {
         this.macroCarousel.addEventListener('macro-carousel-selected-changed', this.macroCarouselSelectedChangedListener)
@@ -156,9 +160,14 @@ export default class MacroCarousel extends Shadow() {
       document.body.addEventListener('play', this.blurEventListener, true)
       document.body.addEventListener('pause', this.focusEventListener, true)
     }
-    this.resizeListener() // resets the picture calculations
-    setTimeout(() => this.resizeListener(), 200)
-    setTimeout(() => this.resizeListener(), 500)
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => {
+        // resets the picture calculations
+        self.requestAnimationFrame(timeStamp => this.resizeListener())
+        this.hidden = false
+      })
+    }
   }
 
   disconnectedCallback () {
@@ -205,7 +214,7 @@ export default class MacroCarousel extends Shadow() {
   /**
    * renders the css
    *
-   * @return {void}
+   * @return {Promise<void>|void}
    */
   renderCSS () {
     this.css = /* css */`
@@ -386,10 +395,10 @@ export default class MacroCarousel extends Shadow() {
   /**
    * renders the html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
-    this.loadDependency().then(() => {
+    return this.loadDependency().then(() => {
       this.html = this.macroCarousel
       // wait for the carousel component to initiate the shadowDom and be ready
       const interval = setInterval(() => {
