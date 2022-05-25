@@ -136,7 +136,7 @@ export default class MacroCarousel extends Shadow() {
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     self.addEventListener('resize', this.resizeListener)
-    if (this.aPictures.some(aPicture => aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded'))) this.aPictures.forEach(aPicture => {
+    if (this.aPictures.some(aPicture => aPicture.hasAttribute('picture-load') && !aPicture.hasAttribute('loaded'))) this.aPictures.forEach(aPicture => {
       aPicture.addEventListener('picture-load', this.resizeListener, { once: true })
       showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     })
@@ -161,6 +161,7 @@ export default class MacroCarousel extends Shadow() {
       document.body.addEventListener('pause', this.focusEventListener, true)
     }
     if (showPromises.length) {
+      console.log('changed', showPromises);
       this.hidden = true
       Promise.all(showPromises).then(() => {
         // resets the picture calculations
