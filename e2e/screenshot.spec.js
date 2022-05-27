@@ -14,6 +14,6 @@ test('demo page screenshot test', async ({ page, browserName }) => {
     await page.waitForTimeout(5000)
     await page.screenshot({ path: `./test/${projectName}-${browserName}.png`, fullPage: true })
     await page.waitForTimeout(5000)
-    expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(`${projectName}.png`, {maxDiffPixels:200})
+    expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(`${projectName}.png`, { maxDiffPixels: 200 })
   }
 })

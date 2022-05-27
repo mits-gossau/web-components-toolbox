@@ -136,10 +136,12 @@ export default class MacroCarousel extends Shadow() {
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     self.addEventListener('resize', this.resizeListener)
-    if (this.aPictures.some(aPicture => aPicture.hasAttribute('picture-load') && !aPicture.hasAttribute('loaded'))) this.aPictures.forEach(aPicture => {
-      aPicture.addEventListener('picture-load', this.resizeListener, { once: true })
-      showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
-    })
+    if (this.aPictures.some(aPicture => aPicture.hasAttribute('picture-load') && !aPicture.hasAttribute('loaded'))) {
+      this.aPictures.forEach(aPicture => {
+        aPicture.addEventListener('picture-load', this.resizeListener, { once: true })
+        showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+      })
+    }
     if (this.hasAttribute('sync-id')) {
       if (this.getAttribute('interval')) {
         this.macroCarousel.addEventListener('macro-carousel-selected-changed', this.macroCarouselSelectedChangedListener)
@@ -161,7 +163,7 @@ export default class MacroCarousel extends Shadow() {
       document.body.addEventListener('pause', this.focusEventListener, true)
     }
     if (showPromises.length) {
-      console.log('changed', showPromises);
+      console.log('changed', showPromises)
       this.hidden = true
       Promise.all(showPromises).then(() => {
         // resets the picture calculations
@@ -378,16 +380,16 @@ export default class MacroCarousel extends Shadow() {
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-default-/g, '--carousel-emotion-')
         })
       case 'carousel-portrait-':
-          return this.fetchCSS([{
-            path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
-            namespace: false
-          }, {
-            // @ts-ignore
-            path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./portrait-/portrait-.css`,
-            namespace: false
-          }, ...styles], false).then(fetchCSSParams => {
-            fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-default-/g, '--carousel-portrait-')
-          })
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./portrait-/portrait-.css`,
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-default-/g, '--carousel-portrait-')
+        })
       default:
         return this.fetchCSS(styles, false)
     }
