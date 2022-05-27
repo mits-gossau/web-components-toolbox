@@ -1,0 +1,11 @@
+:host {
+  --carousel-picture-img-height: max-content;
+  --carousel-picture-img-width: auto;
+  --carousel-portrait-background: var(--carousel-portrait-background-custom, linear-gradient(90deg, var(--m-black) 0%, var(--m-gray-800) 50%, var(--m-black) 100%));
+  --carousel-portrait-pagination-bottom-mobile: var(--content-spacing-mobile, var(--content-spacing, 2.5%));
+  --carousel-portrait-pagination-bottom: var(--content-spacing, 2.5%);
+  --carousel-portrait-pagination-top-mobile: unset;
+  --carousel-portrait-pagination-top: unset;
+  --img-height: max-content;
+  --img-width: auto;
+}
