@@ -132,10 +132,16 @@ export default class MacroCarousel extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     self.addEventListener('resize', this.resizeListener)
-    if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) this.addEventListener('picture-load', this.resizeListener)
+    if (this.aPictures.some(aPicture => aPicture.hasAttribute('picture-load') && !aPicture.hasAttribute('loaded'))) {
+      this.aPictures.forEach(aPicture => {
+        aPicture.addEventListener('picture-load', this.resizeListener, { once: true })
+        showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+      })
+    }
     if (this.hasAttribute('sync-id')) {
       if (this.getAttribute('interval')) {
         this.macroCarousel.addEventListener('macro-carousel-selected-changed', this.macroCarouselSelectedChangedListener)
@@ -156,12 +162,19 @@ export default class MacroCarousel extends Shadow() {
       document.body.addEventListener('play', this.blurEventListener, true)
       document.body.addEventListener('pause', this.focusEventListener, true)
     }
-    this.resizeListener() // resets the picture calculations
+    if (showPromises.length) {
+      console.log('changed', showPromises)
+      this.hidden = true
+      Promise.all(showPromises).then(() => {
+        // resets the picture calculations
+        self.requestAnimationFrame(timeStamp => this.resizeListener())
+        this.hidden = false
+      })
+    }
   }
 
   disconnectedCallback () {
     self.removeEventListener('resize', this.resizeListener)
-    if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) this.removeEventListener('picture-load', this.resizeListener)
     if (this.hasAttribute('sync-id')) {
       if (this.getAttribute('interval')) {
         this.macroCarousel.removeEventListener('macro-carousel-selected-changed', this.macroCarouselSelectedChangedListener)
@@ -204,10 +217,13 @@ export default class MacroCarousel extends Shadow() {
   /**
    * renders the css
    *
-   * @return {void}
+   * @return {Promise<void>|void}
    */
   renderCSS () {
     this.css = /* css */`
+      :host {
+        background: var(--background, none);
+      }
       :host > macro-carousel {
          width: var(--width, 100%) !important;
       }
@@ -312,6 +328,7 @@ export default class MacroCarousel extends Shadow() {
       }
       :host > #pagination {
         position: var(--pagination-position);
+        top: var(--pagination-top);
         bottom: var(--pagination-bottom);
       }
       :host div ::slotted(macro-carousel-pagination-indicator) {
@@ -329,6 +346,12 @@ export default class MacroCarousel extends Shadow() {
         --macro-carousel-navigation-button-size: var(--navigation-button-size, 6em);
         --macro-carousel-navigation-icon-size: var(--navigation-icon-size, 5em);
         --macro-carousel-navigation-icon-mask: var(--navigation-icon-mask, url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E %3Cpath d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z'/%3E %3C/svg%3E")) ;
+      }
+      @media only screen and (max-width: ${this.mobileBreakpoint}) {
+        :host > #pagination {
+          top: var(--pagination-top-mobile, var(--pagination-top));
+          bottom: var(--pagination-bottom-mobile, var(--pagination-bottom));
+        }
       }
     `.replace(/var\(--/g, `var(--${this.namespace}`)
 
@@ -356,6 +379,17 @@ export default class MacroCarousel extends Shadow() {
         }, ...styles], false).then(fetchCSSParams => {
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-default-/g, '--carousel-emotion-')
         })
+      case 'carousel-portrait-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./portrait-/portrait-.css`,
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-default-/g, '--carousel-portrait-')
+        })
       default:
         return this.fetchCSS(styles, false)
     }
@@ -364,10 +398,10 @@ export default class MacroCarousel extends Shadow() {
   /**
    * renders the html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
-    this.loadDependency().then(() => {
+    return this.loadDependency().then(() => {
       this.html = this.macroCarousel
       // wait for the carousel component to initiate the shadowDom and be ready
       const interval = setInterval(() => {
@@ -447,7 +481,7 @@ export default class MacroCarousel extends Shadow() {
     return this.root.querySelectorAll('script')
   }
 
-  get aPicture () {
-    return this.macroCarousel.querySelector('a-picture')
+  get aPictures () {
+    return Array.from(this.macroCarousel.querySelectorAll('a-picture'))
   }
 }

@@ -7,9 +7,6 @@ const componentName = new URL(document.currentScript.src).searchParams.get('comp
 if (componentName) {
   document.body.addEventListener('wc-config-load', event => event.detail.imports.forEach(importPromise => importPromise.then(importEl => {
     if (importEl[3].includes(componentName)) {
-      // setup prism
-      setupPrism()
-
       // examples path
       const fetchHtmlExamples = document.URL
 
@@ -23,6 +20,7 @@ if (componentName) {
       Promise.all(urls.map(url =>
         fetch(url).then(resp => resp.text())
       )).then(texts => {
+        setupPrism()
         exampleComponents(importEl[0], texts[0])
         componentCSS(texts[1])
         componentClass(texts[2])

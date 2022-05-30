@@ -12,8 +12,8 @@
   --carousel-default-p-margin:0;
   --carousel-default-pagination-background-color: var(--carousel-default-pagination-background-color-custom, var(--m-white, white));
   --carousel-default-pagination-border-selected:10px solid var(--color-secondary);
-  --carousel-default-pagination-bottom:15%;
   --carousel-default-pagination-position:absolute;
+  --carousel-default-pagination-top: var(--content-spacing, 2.5%);
   --carousel-default-text-background-color: var(--carousel-default-text-background-color-custom, var(--color-disabled));
   --carousel-default-text-padding-mobile: calc(var(--content-spacing) / 2);
   --carousel-default-text-padding: var(--content-spacing);
