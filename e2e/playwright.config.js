@@ -2,14 +2,9 @@
 const { devices } = require('@playwright/test')
 
 const config = {
-  // timeout: 30 * 1000,
-  // expect: {
-  //   timeout: 5000
-  // },
   reporter: 'line',
   use: {
-    baseURL: 'http://localhost:4200',
-    // actionTimeout: 0,
+    baseURL: 'http://localhost:2200',
     headless: true
   },
   projects: [
