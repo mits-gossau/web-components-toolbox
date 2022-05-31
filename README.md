@@ -26,3 +26,5 @@ TODO:
 - [ ] documenter.js to document the web components
 - [ ] live-server reload on css file changes
 - [ ] redo header and navigation /\drem/, then eliminate all rem values
+- [ ] save reference screenshots in corresponding project folder
+- [ ] set page.goto() path in corresponding project

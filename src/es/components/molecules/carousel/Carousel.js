@@ -113,6 +113,7 @@ export default class MacroCarousel extends Shadow() {
         cancelable: true,
         composed: true
       }))
+      setTimeout(() => this.resizeListener(), 500)
     }
 
     this.interval = null
@@ -132,14 +133,15 @@ export default class MacroCarousel extends Shadow() {
   }
 
   connectedCallback () {
-    const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    const runResizePromises = []
+    if (this.shouldComponentRenderCSS()) runResizePromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) runResizePromises.push(this.renderHTML())
+    const showPromises = Array.from(runResizePromises)
     self.addEventListener('resize', this.resizeListener)
     if (this.aPictures.some(aPicture => aPicture.hasAttribute('picture-load') && !aPicture.hasAttribute('loaded'))) {
       this.aPictures.forEach(aPicture => {
         aPicture.addEventListener('picture-load', this.resizeListener, { once: true })
-        showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+        runResizePromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
       })
     }
     if (this.hasAttribute('sync-id')) {
@@ -162,14 +164,10 @@ export default class MacroCarousel extends Shadow() {
       document.body.addEventListener('play', this.blurEventListener, true)
       document.body.addEventListener('pause', this.focusEventListener, true)
     }
+    if (runResizePromises.length) Promise.all(runResizePromises).then(() => self.requestAnimationFrame(timeStamp => this.resizeListener()))
     if (showPromises.length) {
-      console.log('changed', showPromises)
       this.hidden = true
-      Promise.all(showPromises).then(() => {
-        // resets the picture calculations
-        self.requestAnimationFrame(timeStamp => this.resizeListener())
-        this.hidden = false
-      })
+      Promise.all(showPromises).then(() => (this.hidden = false))
     }
   }
 

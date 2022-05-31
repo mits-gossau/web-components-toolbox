@@ -7,12 +7,15 @@
 <br>
 <br>
 <br>
-<a-picture open-modal namespace="picture-store-logo-" defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
+<a-picture open-modal namespace="picture-store-logo-" namespace-fallback defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
 <br>
 <br>
 <o-body-style>
   <style>
-    :host {--content-width: 35%;}
+    :host {
+      --content-width: 35%;
+      --color-secondary: pink;
+    }
   </style>
 <a-picture open-modal defaultSource="https://admin.logistikplattform.migros.ch/media/ahdjjigc/genossenschaft-aare-logstikplattform-2030-areale_aktuell.jpg?anchor=center&mode=crop&width=1748&format=jpg&quality=80&rnd=132971781997830000" alt="Migros"></a-picture>
 </o-body-style>
@@ -20,19 +23,19 @@
 <hr>
 <m-carousel open-modal navigation pagination loop height="auto" namespace="carousel-default-" interval="200000">
   <div class="container">
-    <a-picture loading="eager" defaultSource="./img/jcr_content2.jpeg" alt="Migros"></a-picture>
+    <a-picture picture-load  defaultSource="./img/jcr_content2.jpeg" alt="Migros"></a-picture>
     <div class="text">
       <p>Sushi-Herstellung vor Ort.</p>
     </div>
   </div>
   <div class="container">
-    <a-picture loading="eager" defaultSource="./img/jcr_content3.jpeg" alt="Migros"></a-picture>
+    <a-picture picture-load  defaultSource="./img/jcr_content3.jpeg" alt="Migros"></a-picture>
     <div class="text">
       <p>Sandwicheria: für jeden Geschmack das Richtige.</p>
     </div>
   </div>
   <div class="container">
-    <a-picture loading="eager" defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
+    <a-picture picture-load  defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
     <div class="text">
       <p>Gefüllte Sandwiches</p>
     </div>
@@ -91,4 +94,4 @@
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./default-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
-<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=EmotionPictures.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=Picture.js"></script>

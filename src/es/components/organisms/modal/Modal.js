@@ -62,6 +62,15 @@ export default class Modal extends Shadow() {
         if (event && typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation()
         let child
         if (!this.clone && event && event.detail && (child = event.detail.child) && child instanceof HTMLElement) {
+          let closeBtn
+          if (event.detail.child.root && (closeBtn = event.detail.child.root.querySelector('.close-btn'))) {
+            this.style.textContent = ''
+            this.setCss(/* CSS */`
+              :host([open]) > section > div > #close.close-btn {
+                background-color: ${self.getComputedStyle(closeBtn).getPropertyValue('background-color')};
+              }
+            `, undefined, undefined, true, this.style)
+          }
           if (event.detail.showOriginal === false) {
             this.clone = child.cloneNode(true)
             this.container.appendChild(this.clone)
@@ -311,5 +320,13 @@ export default class Modal extends Shadow() {
   checkMedia (media = this.getAttribute('media')) {
     const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
     return (isMobile ? 'mobile' : 'desktop') === media
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 }
