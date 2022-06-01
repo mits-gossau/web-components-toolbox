@@ -1,5 +1,4 @@
 :host {
-
   --teaser-download-background-color: var(--teaser-download-background-color-custom, var(--background-color, var(--m-white)));
   --teaser-download-figcaption-background-color: var(--teaser-download-figcaption-background-color-custom, var(--teaser-download-background-color));
   --teaser-download-figcaption-bg-color-equal-padding: var(--teaser-download-figcaption-bg-color-equal-padding-custom, 0.625em 0 0);
