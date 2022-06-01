@@ -8,12 +8,12 @@ const config = {
     headless: true
   },
   projects: [
-    {
+    /*{
       name: 'Mobile Safari',
       use: {
         ...devices['iPhone 12']
       }
-    },
+    },*/
     {
       name: 'chromium',
       use: {
@@ -21,7 +21,8 @@ const config = {
       }
     }
   ],
-  outputDir: '../../../../../test/'
+  snapshotDir: '../../../../../e2e/',
+  outputDir: '../../../../../e2e/tests/'
 }
 
 module.exports = config
