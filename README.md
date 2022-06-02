@@ -17,14 +17,14 @@ TODO:
 - [x] :host *.bg-color, :host *.bg-color-hover try to make this display inline and with box-shadow analog https://www.betriebsrestaurants-migros.ch/de.html
 - [x] review each component, css Dino + Weedy
 - [x] integration laurin's picture aspect-ratio and low qual 5k image in advance loading, picture source generation at umbraco (set all to loading="lazy" but may check with intersection observer and switch to loading="eager" on component intersection)
-- [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src
-- [ ] style.css demo page
-- [ ] Template.html fix image path issue http://localhost:4200/src/es/components/web-components-toolbox/docs/Template.html?logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/atoms/button/primary-/primary-.html
-- [ ] Template.html api call to fetch page content for previews
-- [ ] https://playwright.dev/ visual regression tests
-- [ ] new flex-box wrapper: flex-grow (flex: 1) wrapper with empty children to simulate instead of o-wrapper width approach
-- [ ] documenter.js to document the web components
-- [ ] live-server reload on css file changes
+- [x] style.css demo page
+- [x] Template.html fix image path issue http://localhost:4200/src/es/components/web-components-toolbox/docs/Template.html?logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/atoms/button/primary-/primary-.html
+- [x] https://playwright.dev/ visual regression tests
+- [x] documenter.js to document the web components
+- [x] live-server reload on css file changes
+- [x] save reference screenshots in corresponding project folder
+- [x] set page.goto() path in corresponding project
 - [ ] redo header and navigation /\drem/, then eliminate all rem values
-- [ ] save reference screenshots in corresponding project folder
-- [ ] set page.goto() path in corresponding project
+- [ ] Template.html api call to fetch page content for previews
+- [ ] new flex-box wrapper: flex-grow (flex: 1) wrapper with empty children to simulate instead of o-wrapper width approach
+- [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src

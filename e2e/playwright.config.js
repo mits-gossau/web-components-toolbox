@@ -9,9 +9,9 @@ const config = {
   },
   projects: [
     {
-      name: 'Mobile Safari',
+      name: 'Mobile Android',
       use: {
-        ...devices['iPhone 12']
+        ...devices['Pixel 2']
       }
     },
     {
@@ -21,7 +21,8 @@ const config = {
       }
     }
   ],
-  outputDir: '../../../../../test/'
+  snapshotDir: '../../../../../e2e/',
+  outputDir: '../../../../../e2e/tests/'
 }
 
 module.exports = config
