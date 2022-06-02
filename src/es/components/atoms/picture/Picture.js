@@ -156,7 +156,7 @@ export default class Picture extends Intersection() {
         max-width: var(--img-max-width, 100%); /* max-content would have been nice to not scale up the image, but in general make the editor use big enough images and this must stay at 100% default value, otherwise there are several side effects */
         min-height: var(--img-min-height, unset);
         min-width: var(--img-min-width, unset);
-        object-fit: var(--img-object-fit, cover);
+        object-fit: var(--img-object-fit, contain); /* cover does not render the same on IOS */
         overflow: var(--overflow, initial);
         transform: var(--transform, none);
         transition: var(--transition, none);
