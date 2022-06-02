@@ -8,12 +8,12 @@ const config = {
     headless: true
   },
   projects: [
-    /*{
-      name: 'Mobile Safari',
+    {
+      name: 'Mobile Android',
       use: {
-        ...devices['iPhone 12']
+        ...devices['Pixel 2']
       }
-    },*/
+    },
     {
       name: 'chromium',
       use: {
