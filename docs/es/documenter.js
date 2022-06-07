@@ -8,15 +8,16 @@ if (componentName) {
   document.body.addEventListener('wc-config-load', event => event.detail.imports.forEach(importPromise => importPromise.then(importEl => {
     if (importEl[3].includes(componentName)) {
       // examples path
-      const currentPagePath = location.href
+      const fetchHtmlExamples = document.URL
 
       // class path
-      const componentClassPath = currentComponentClass(location, replaceComponentPath(importEl[3]))
+      const fetchCodeFile = location.href.replace(/\/(?:.(?!src\/))+$/g, importEl[3].replace('./', '/'))
 
       // css path
-      const cssPath = getCSSPath(location)
+      const fetchPathCss = getCSSPath(location)
 
-      Promise.all([currentPagePath, cssPath, componentClassPath].map(url =>
+      const urls = [fetchHtmlExamples, fetchPathCss, fetchCodeFile]
+      Promise.all(urls.map(url =>
         fetch(url).then(resp => resp.text())
       )).then(texts => {
         setupPrism()
@@ -28,26 +29,13 @@ if (componentName) {
   })))
 }
 
-const replaceComponentPath = path => path.replace('./', '/')
-const currentComponentClass = (location, component) => location.origin + component
-const replaceFileType = (fileName, newType) => fileName.split('.').slice(0, -1).join('.') + `.${newType}`
-
-const getFileNameFromPath = path => {
-  const elements = path.split('/')
-  return elements[elements.length - 1]
-}
-
-const replaceFile = (original, newFile) => {
-  const pathElements = original.pathname.split('/')
-  pathElements.pop()
-  pathElements.push(newFile)
-  return pathElements
-}
-
 function getCSSPath (browserLocation) {
-  const fileName = getFileNameFromPath(browserLocation.pathname)
-  const newFileName = replaceFileType(fileName, 'css')
-  return browserLocation.origin + replaceFile(browserLocation, newFileName).join('/')
+  const cssURL = browserLocation.href.split('/')
+  const lastElement = cssURL[cssURL.length - 1]
+  const cssFileName = lastElement.split('.').slice(0, -1).join('.') + '.css'
+  cssURL.pop()
+  cssURL.push(cssFileName)
+  return cssURL.join('/')
 }
 
 function exampleComponents (tagName, data) {
@@ -57,7 +45,6 @@ function exampleComponents (tagName, data) {
 
   const exampleComponents = []
   modified.forEach(item => {
-
     const btn = document.createElement('button')
     btn.innerText = 'copy'
     btn.classList.add('copy-btn')
