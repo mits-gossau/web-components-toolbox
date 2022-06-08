@@ -16,7 +16,7 @@ test('demo page screenshot test', async ({ page, browserName }) => {
     await page.waitForTimeout(WAITING_TIMEOUT)
     await page.evaluate(() => window.scrollTo(0, 999999999))
     await page.evaluate(() => window.scrollTo(0, 0))
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(() => document.fonts.ready)
     await page.waitForTimeout(WAITING_TIMEOUT)
     expect(await page.screenshot({ fullPage: true })).toMatchSnapshot(`${PROJECT_NAME}.png`)
   }

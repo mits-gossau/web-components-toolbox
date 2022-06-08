@@ -45,18 +45,18 @@ function exampleComponents (tagName, data) {
 
   const exampleComponents = []
   modified.forEach(item => {
-    const btn = document.createElement('button')    
-    btn.innerText = "copy"
+    const btn = document.createElement('button')
+    btn.innerText = 'copy'
     btn.classList.add('copy-btn')
-    btn.addEventListener('click', function(){
-      navigator.clipboard.writeText(item.replaceAll('&lt;', '<'));
-    });
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(item.replaceAll('&lt;', '<'))
+    })
 
     const pre = document.createElement('pre')
-    pre.classList.add("pre-wrapper")
+    pre.classList.add('pre-wrapper')
 
     const code = document.createElement('code')
-    code.classList.add("language-markup")
+    code.classList.add('language-markup')
     code.innerHTML = item.trim()
 
     const wrapper = document.createElement('div')
@@ -64,7 +64,7 @@ function exampleComponents (tagName, data) {
     pre.appendChild(btn)
     pre.appendChild(code)
     wrapper.append(pre)
-    
+
     exampleComponents.push(wrapper)
   })
 
