@@ -13,4 +13,5 @@
   --content-width-mobile:var(--carousel-emotion-content-width-mobile-custom, 100%);
   --content-width:var(--carousel-emotion-content-width-custom, 100%);
   --img-object-fit: cover;
+  --picture-teaser-img-object-fit: var(--img-object-fit);
  }
