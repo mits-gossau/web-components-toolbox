@@ -1,9 +1,9 @@
 const shell = require('shelljs')
 
 // CHANGE THIS
-const GIT_REPO = 'https://github.com/mits-gossau/web-components-toolbox-logistikplattform.git'
+const GIT_REPO = 'https://github.com/mits-gossau/web-components-toolbox-hitzberger.git'
 const NEW_PROJECT_DIR = ''
-const NEW_PROJECT_NAME = 'web-components-toolbox-logistikplattform'
+const NEW_PROJECT_NAME = 'web-components-toolbox-hitzberger'
 
 // LEAVE THIS AS IT IS!
 const REF_REPO = 'https://github.com/mits-gossau/web-components-toolbox-betriebsrestaurant.git'
