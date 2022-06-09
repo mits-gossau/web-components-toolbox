@@ -171,7 +171,7 @@ export default class Picture extends Intersection() {
         cursor: pointer;
         position: relative;
       }
-      :host([open-modal][open]) > .close-btn {
+      :host([open-modal][open]) > .close-btn.adjusted {
         display: none;
       }
       :host([open-modal]:not([open])) > .close-btn.adjusted {
@@ -214,9 +214,10 @@ export default class Picture extends Intersection() {
         }
         /* modal stuff */
         :host(:not([open-modal-mobile])) {
+          cursor: auto;
           position: static;
         }
-        :host(:not([open-modal-mobile])) > .close-btn {
+        :host(:not([open-modal-mobile]):not([open])) > .close-btn.adjusted {
           display: none;
         }
         :host([open-modal-mobile]) > .close-btn {
@@ -463,9 +464,12 @@ export default class Picture extends Intersection() {
             }
           `, undefined, undefined, true, this.style)
         }
-        setTimeout(() => this.closeBtn.classList.add('adjusted'), 2000) // wait with showing the bubble until all is adjusted
+        setTimeout(() => this.closeBtn.classList.add('adjusted'), 1000) // wait with showing the bubble until all is adjusted
       }
-      self.addEventListener('resize', adjustBtnPosition)
+      self.addEventListener('resize', () => {
+        adjustBtnPosition()
+        setTimeout(() => adjustBtnPosition(), 500)
+      })
       img.addEventListener('load', () => {
         adjustBtnPosition()
         setTimeout(() => adjustBtnPosition(), 200)
