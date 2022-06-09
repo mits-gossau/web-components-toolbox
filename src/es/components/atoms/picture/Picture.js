@@ -160,6 +160,11 @@ export default class Picture extends Intersection() {
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
         width: var(--img-width, max-content);
         image-rendering: -webkit-optimize-contrast; /* fix blurred image on webkit: https://www.betriebsrestaurants-migros.ch/landingpages/swissgrid/info-menuplan/ */
+        opacity: 0;
+      }
+      :host([loaded]) picture img {
+        animation: var(--appear, appear .3s ease-out);
+        opacity: 1;
       }
       :host picture img:hover, :host picture.hover img {
         filter: var(--filter-hover, var(--filter, none));
@@ -174,9 +179,9 @@ export default class Picture extends Intersection() {
       :host([open-modal][open]) > .close-btn.adjusted {
         display: none;
       }
-      :host([open-modal]:not([open])) > .close-btn.adjusted {
+      :host([open-modal][loaded]:not([open])) > .close-btn.adjusted {
         display: flex;
-        animation: close-btn .3s ease-out;
+        animation: var(--close-btn-appear, appear .3s ease-out);
       }
       :host([open-modal]) > .close-btn {
         background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
@@ -225,7 +230,7 @@ export default class Picture extends Intersection() {
           bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
         }
       }
-      @keyframes close-btn {
+      @keyframes appear {
         0%{opacity: 0}
         100%{opacity: 1}
       }
