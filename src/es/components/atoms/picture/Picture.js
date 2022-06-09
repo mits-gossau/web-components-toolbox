@@ -139,9 +139,6 @@ export default class Picture extends Intersection() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host([open-modal]) {
-        cursor: pointer;
-      }
       :host picture {
         display: var(--display, inline); /* don't use flex here, it can have strange side effects */
       }
@@ -170,6 +167,8 @@ export default class Picture extends Intersection() {
       }
       /* modal stuff */
       :host([open-modal]) {
+        display: block; /* must be display block for adjustBtnPosition */
+        cursor: pointer;
         position: relative;
       }
       :host([open-modal][open]) > .close-btn {
@@ -445,7 +444,7 @@ export default class Picture extends Intersection() {
       `
       this.closeBtn.classList.add('close-btn')
       // adjust for img being smaller than the picture container
-      const adjustBtnPositionRight = () => {
+      const adjustBtnPosition = () => {
         if (!this.isConnected || !this || typeof this.getBoundingClientRect !== 'function' || !this.getBoundingClientRect().width || !this.getBoundingClientRect().height || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width || !this.img.getBoundingClientRect().height) return
         const widthDiff = this.getBoundingClientRect().width - this.img.getBoundingClientRect().width
         const heightDiff = this.getBoundingClientRect().height - this.img.getBoundingClientRect().height
@@ -466,15 +465,15 @@ export default class Picture extends Intersection() {
         }
         setTimeout(() => this.closeBtn.classList.add('adjusted'), 2000) // wait with showing the bubble until all is adjusted
       }
-      self.addEventListener('resize', adjustBtnPositionRight)
+      self.addEventListener('resize', adjustBtnPosition)
       img.addEventListener('load', () => {
-        adjustBtnPositionRight()
-        setTimeout(() => adjustBtnPositionRight(), 200)
-        setTimeout(() => adjustBtnPositionRight(), 500)
+        adjustBtnPosition()
+        setTimeout(() => adjustBtnPosition(), 200)
+        setTimeout(() => adjustBtnPosition(), 500)
       }, { once: true })
       this.openModalIntersecting = () => {
         this.openModalIntersecting = () => {}
-        adjustBtnPositionRight()
+        adjustBtnPosition()
       }
       this.html = this.closeBtn
       this.html = this.style
