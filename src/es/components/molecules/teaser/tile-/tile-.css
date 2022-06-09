@@ -1,5 +1,6 @@
 :host {
   --teaser-tile-a-link-bottom: -1.625em;
+  --teaser-tile-a-link-opacity: 0;
   --teaser-tile-a-link-position: absolute;
   --teaser-tile-a-link-transform-hover: translateY(0);
   --teaser-tile-a-link-transform: translateY(2.5em);
