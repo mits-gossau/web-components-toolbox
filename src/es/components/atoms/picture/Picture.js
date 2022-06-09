@@ -175,8 +175,9 @@ export default class Picture extends Intersection() {
       :host([open-modal][open]) > .close-btn {
         display: none;
       }
-      :host([open-modal]:not([open])) > .close-btn {
+      :host([open-modal]:not([open])) > .close-btn.adjusted {
         display: flex;
+        animation: close-btn .3s ease-out;
       }
       :host([open-modal]) > .close-btn {
         background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
@@ -184,7 +185,7 @@ export default class Picture extends Intersection() {
         border: 0;
         box-sizing: border-box;
         cursor: pointer;
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         height: 7px;
@@ -223,6 +224,10 @@ export default class Picture extends Intersection() {
           right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
           bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
         }
+      }
+      @keyframes close-btn {
+        0%{opacity: 0}
+        100%{opacity: 1}
       }
     `
     switch (this.getAttribute('namespace')) {
@@ -441,23 +446,25 @@ export default class Picture extends Intersection() {
       this.closeBtn.classList.add('close-btn')
       // adjust for img being smaller than the picture container
       const adjustBtnPositionRight = () => {
-        if (!this.isConnected || !this.picture || typeof this.picture.getBoundingClientRect !== 'function' || !this.picture.getBoundingClientRect().width || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width) return
-        const widthDiff = this.picture.getBoundingClientRect().width - this.img.getBoundingClientRect().width
-        if (widthDiff > 0) {
+        if (!this.isConnected || !this || typeof this.getBoundingClientRect !== 'function' || !this.getBoundingClientRect().width || !this.getBoundingClientRect().height || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width || !this.img.getBoundingClientRect().height) return
+        const widthDiff = this.getBoundingClientRect().width - this.img.getBoundingClientRect().width
+        const heightDiff = this.getBoundingClientRect().height - this.img.getBoundingClientRect().height
+        if (widthDiff > 0 || heightDiff > 0) {
           this.style.textContent = ''
           this.setCss(/* CSS */`
             :host([open-modal]) > .close-btn {
-              bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
-              right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);
+              bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2 + ${heightDiff > 0 ? heightDiff : 0}px);
+              right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff > 0 ? widthDiff / 2 : 0}px);
             }
             @media only screen and (max-width: _max-width_) {
               :host([open-modal-mobile]) > .close-btn {
-                bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
-                right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff / 2}px);
+                bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${heightDiff > 0 ? heightDiff : 0}px);
+                right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff > 0 ? widthDiff / 2 : 0}px);
               }
             }
           `, undefined, undefined, true, this.style)
         }
+        setTimeout(() => this.closeBtn.classList.add('adjusted'), 2000) // wait with showing the bubble until all is adjusted
       }
       self.addEventListener('resize', adjustBtnPositionRight)
       img.addEventListener('load', () => {
