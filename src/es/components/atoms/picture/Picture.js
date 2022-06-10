@@ -139,9 +139,6 @@ export default class Picture extends Intersection() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host([open-modal]) {
-        cursor: pointer;
-      }
       :host picture {
         display: var(--display, inline); /* don't use flex here, it can have strange side effects */
       }
@@ -163,6 +160,11 @@ export default class Picture extends Intersection() {
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
         width: var(--img-width, max-content);
         image-rendering: -webkit-optimize-contrast; /* fix blurred image on webkit: https://www.betriebsrestaurants-migros.ch/landingpages/swissgrid/info-menuplan/ */
+        opacity: 0;
+      }
+      :host([loaded]) picture img {
+        animation: var(--appear, appear .3s ease-out);
+        opacity: 1;
       }
       :host picture img:hover, :host picture.hover img {
         filter: var(--filter-hover, var(--filter, none));
@@ -170,13 +172,16 @@ export default class Picture extends Intersection() {
       }
       /* modal stuff */
       :host([open-modal]) {
+        display: block; /* must be display block for adjustBtnPosition */
+        cursor: pointer;
         position: relative;
       }
-      :host([open-modal][open]) > .close-btn {
+      :host([open-modal][open]) > .close-btn.adjusted {
         display: none;
       }
-      :host([open-modal]:not([open])) > .close-btn {
+      :host([open-modal][loaded]:not([open])) > .close-btn.adjusted {
         display: flex;
+        animation: var(--close-btn-appear, appear .3s ease-out);
       }
       :host([open-modal]) > .close-btn {
         background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
@@ -184,7 +189,7 @@ export default class Picture extends Intersection() {
         border: 0;
         box-sizing: border-box;
         cursor: pointer;
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         height: 7px;
@@ -214,15 +219,20 @@ export default class Picture extends Intersection() {
         }
         /* modal stuff */
         :host(:not([open-modal-mobile])) {
+          cursor: auto;
           position: static;
         }
-        :host(:not([open-modal-mobile])) > .close-btn {
+        :host(:not([open-modal-mobile]):not([open])) > .close-btn.adjusted {
           display: none;
         }
         :host([open-modal-mobile]) > .close-btn {
           right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
           bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
         }
+      }
+      @keyframes appear {
+        0%{opacity: 0}
+        100%{opacity: 1}
       }
     `
     switch (this.getAttribute('namespace')) {
@@ -440,34 +450,39 @@ export default class Picture extends Intersection() {
       `
       this.closeBtn.classList.add('close-btn')
       // adjust for img being smaller than the picture container
-      const adjustBtnPositionRight = () => {
-        if (!this.isConnected || !this.picture || typeof this.picture.getBoundingClientRect !== 'function' || !this.picture.getBoundingClientRect().width || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width) return
-        const widthDiff = this.picture.getBoundingClientRect().width - this.img.getBoundingClientRect().width
-        if (widthDiff > 0) {
+      const adjustBtnPosition = () => {
+        if (!this.isConnected || !this || typeof this.getBoundingClientRect !== 'function' || !this.getBoundingClientRect().width || !this.getBoundingClientRect().height || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width || !this.img.getBoundingClientRect().height) return
+        const widthDiff = this.getBoundingClientRect().width - this.img.getBoundingClientRect().width
+        const heightDiff = this.getBoundingClientRect().height - this.img.getBoundingClientRect().height
+        if (widthDiff > 0 || heightDiff > 0) {
           this.style.textContent = ''
           this.setCss(/* CSS */`
             :host([open-modal]) > .close-btn {
-              bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
-              right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);
+              bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2 + ${heightDiff > 0 ? heightDiff : 0}px);
+              right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff > 0 ? widthDiff / 2 : 0}px);
             }
             @media only screen and (max-width: _max-width_) {
               :host([open-modal-mobile]) > .close-btn {
-                bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
-                right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff / 2}px);
+                bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${heightDiff > 0 ? heightDiff : 0}px);
+                right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff > 0 ? widthDiff / 2 : 0}px);
               }
             }
           `, undefined, undefined, true, this.style)
         }
+        setTimeout(() => this.closeBtn.classList.add('adjusted'), 1000) // wait with showing the bubble until all is adjusted
       }
-      self.addEventListener('resize', adjustBtnPositionRight)
+      self.addEventListener('resize', () => {
+        adjustBtnPosition()
+        setTimeout(() => adjustBtnPosition(), 500)
+      })
       img.addEventListener('load', () => {
-        adjustBtnPositionRight()
-        setTimeout(() => adjustBtnPositionRight(), 200)
-        setTimeout(() => adjustBtnPositionRight(), 500)
+        adjustBtnPosition()
+        setTimeout(() => adjustBtnPosition(), 200)
+        setTimeout(() => adjustBtnPosition(), 500)
       }, { once: true })
       this.openModalIntersecting = () => {
         this.openModalIntersecting = () => {}
-        adjustBtnPositionRight()
+        adjustBtnPosition()
       }
       this.html = this.closeBtn
       this.html = this.style

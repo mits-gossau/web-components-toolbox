@@ -2,5 +2,5 @@
     --emotion-pictures-with-video-h1-color: var(--emotion-pictures-with-video-h1-color-custom, var(--m-white));
     --emotion-pictures-with-video-width: 100%;
     --img-object-fit: cover;
-    --img-max-width: 100%;
+    --img-width: 100%;
 }

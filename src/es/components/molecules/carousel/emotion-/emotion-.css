@@ -10,8 +10,11 @@
   --carousel-emotion-pagination-top-mobile: unset;
   --carousel-emotion-pagination-top: unset;
   --carousel-picture-img-object-fit: var(--img-object-fit);
+  --carousel-picture-img-width: var(--img-width);
   --content-width-mobile:var(--carousel-emotion-content-width-mobile-custom, 100%);
   --content-width:var(--carousel-emotion-content-width-custom, 100%);
   --img-object-fit: cover;
+  --img-width: 100%;
   --picture-teaser-img-object-fit: var(--img-object-fit);
+  --picture-teaser-img-width: var(--img-width);
  }

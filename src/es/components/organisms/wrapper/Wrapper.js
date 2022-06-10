@@ -39,8 +39,15 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
 
   connectedCallback () {
     super.connectedCallback()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    const showPromises = []
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+      })
+    }
     this.addEventListener('click', this.clickListener)
     self.addEventListener('resize', this.resizeListener)
   }
@@ -256,7 +263,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
   /**
    * renders the a-link html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
     this.section = this.root.querySelector('section') || document.createElement('section')
@@ -264,6 +271,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
     this.html = [this.section, this.style]
+    return Promise.resolve()
   }
 
   /**
