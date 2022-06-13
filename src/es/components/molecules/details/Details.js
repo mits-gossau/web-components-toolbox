@@ -110,7 +110,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         if (this.constructor.isMac) {
           Array.from(this.root.querySelectorAll(':host details[open] summary ~ *')).forEach(element => element.animate([
             { // from
-    
               height: '0px',
               margin: '0px',
               padding: '0px'
