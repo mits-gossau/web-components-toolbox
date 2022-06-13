@@ -41,6 +41,7 @@ export default class EmotionPictures extends Intersection() {
       this.css = /* CSS */`
       :host {
         --show: none;
+        --appear: none;
       }
       `
     }

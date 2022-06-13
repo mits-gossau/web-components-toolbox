@@ -120,6 +120,7 @@ export default class Navigation extends Shadow() {
         this.css = /* CSS */`
           :host {
             --show: none;
+            --appear: none;
           }
         `
         this.dispatchEvent(new CustomEvent(this.getAttribute('navigation-load') || 'navigation-load', {
