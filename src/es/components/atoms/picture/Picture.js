@@ -367,6 +367,8 @@ export default class Picture extends Intersection() {
         img.setAttribute('data-src', src.href)
         this.picture.appendChild(img)
         img.setAttribute('src', img.getAttribute('data-src'))
+        img.addEventListener('load', event => this.setAttribute('loaded-bad-quality', 'true'), { once: true })
+        img.addEventListener('error', event => this.setAttribute('loaded-bad-quality', 'false'), { once: true })
         // on intersection swap the images
         this.intersecting = () => {
           this.intersecting = () => {}
@@ -383,12 +385,14 @@ export default class Picture extends Intersection() {
             this.css = /* CSS */`
               :host {
                 --show: none;
+                --appear: none;
               }
             `
             this.picture.replaceWith(picture)
             this.picture = picture
           }
           this.img.addEventListener('load', replaceImg, { once: true })
+          img.addEventListener('error', replaceImg, { once: true })
         }
         if (this.isIntersecting) this.intersecting()
       }
@@ -409,6 +413,7 @@ export default class Picture extends Intersection() {
     }
     // event stuff
     img.addEventListener('load', event => this.setAttribute('loaded', 'true'), { once: true })
+    img.addEventListener('error', event => this.setAttribute('loaded', 'false'), { once: true })
     if (this.hasAttribute('picture-load')) {
       img.addEventListener('load', event => {
         this.dispatchEvent(new CustomEvent(this.getAttribute('picture-load') || 'picture-load', {
@@ -424,7 +429,6 @@ export default class Picture extends Intersection() {
         }))
       }, { once: true })
       img.addEventListener('error', event => {
-        this.setAttribute('loaded', 'false')
         this.dispatchEvent(new CustomEvent(this.getAttribute('picture-load') || 'picture-load', {
           detail: {
             error: event
