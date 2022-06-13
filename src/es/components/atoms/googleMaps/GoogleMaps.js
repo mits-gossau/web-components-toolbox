@@ -12,30 +12,34 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {}
  */
 export default class GoogleMaps extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.MAP_URL = `https://maps.googleapis.com/maps/api/js?key=${this.apiKey}&callback=initMap`
     this.DEFAULT_COORDINATES = { lat: 47.375600, lng: 8.675320 }
-    this.googleMapTransport = event => {
-      const eventTarget = event.target
-      const windowOpen = position => {
-        const saddr = position && position.coords ? `&saddr=${position.coords.latitude},${position.coords.longitude}` : ''
-        // dirflg driving did not work as expected, it has no id for that reason
-        self.open(`https://www.google.com/maps?daddr=${this.lat},${this.lng}${saddr}${eventTarget.id ? `&dirflg=${eventTarget.id}` : eventTarget.parentElement && eventTarget.parentElement.id ? `&dirflg=${eventTarget.parentElement.id}` : ''}`, '_blank')
+    if (!this.iframeUrl) {
+      this.googleMapTransport = event => {
+        const eventTarget = event.target
+        const windowOpen = position => {
+          const saddr = position && position.coords ? `&saddr=${position.coords.latitude},${position.coords.longitude}` : ''
+          // dirflg driving did not work as expected, it has no id for that reason
+          self.open(`https://www.google.com/maps?daddr=${this.lat},${this.lng}${saddr}${eventTarget.id ? `&dirflg=${eventTarget.id}` : eventTarget.parentElement && eventTarget.parentElement.id ? `&dirflg=${eventTarget.parentElement.id}` : ''}`, '_blank')
+        }
+        navigator.geolocation.getCurrentPosition(windowOpen, windowOpen)
       }
-      navigator.geolocation.getCurrentPosition(windowOpen, windowOpen)
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    this.transportIcons.forEach(transportIcon => {
-      transportIcon.addEventListener('click', this.googleMapTransport)
-    })
+    if (this.transportIcons) {
+      this.transportIcons.forEach(transportIcon => {
+        transportIcon.addEventListener('click', this.googleMapTransport)
+      })
+    }
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.transportIcons.forEach(transportIcon => {
       transportIcon.removeEventListener('click', this.googleMapTransport)
     })
@@ -46,7 +50,7 @@ export default class GoogleMaps extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -55,11 +59,11 @@ export default class GoogleMaps extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.scripts.length
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */` 
     :host {
        display:var(--display, block);
@@ -86,6 +90,11 @@ export default class GoogleMaps extends Shadow() {
     }
     :host .control-events > div {
       margin:6px 0 6px 6px;
+    }
+    :host iframe {
+      border:var(--iframe-border, none);
+      width:var(--iframe-width, 100%);
+      height:var(--iframe-height, 75vh);
     }
     @media only screen and (max-width: _max-width_) {
       :host {
@@ -130,17 +139,25 @@ export default class GoogleMaps extends Shadow() {
         }, ...styles], false)
     }
 
-    // this.fetchCSS(styles)
   }
 
-  renderHTML () {
-    const mapDiv = document.createElement('div')
-    mapDiv.setAttribute('id', 'map')
-    this.loadDependency().then(googleMap => {
-      const map = this.createMap(googleMap, mapDiv, this.lat, this.lng)
-      this.setMarker(googleMap, map, this.lat, this.lng)
-    })
-    this.html = mapDiv
+  renderHTML() {
+    let element = null 
+    if (this.iframeUrl) {
+      const iframe = document.createElement("iframe")
+      iframe.src = this.iframeUrl
+      iframe.name = 'map'
+      element = iframe
+    } else {
+      const mapDiv = document.createElement('div')
+      mapDiv.setAttribute('id', 'map')
+      this.loadDependency().then(googleMap => {
+        const map = this.createMap(googleMap, mapDiv, this.lat, this.lng)
+        this.setMarker(googleMap, map, this.lat, this.lng)
+      })
+      element = mapDiv
+    }
+    this.html = element
   }
 
   /**
@@ -148,7 +165,7 @@ export default class GoogleMaps extends Shadow() {
    *
    * @returns {Promise<{components: any}>}
    */
-  loadDependency () {
+  loadDependency() {
     // @ts-ignore
     self.initMap = () => { }
 
@@ -165,7 +182,7 @@ export default class GoogleMaps extends Shadow() {
     })
   }
 
-  createMap (googleMap, mapTarget, lat, lng) {
+  createMap(googleMap, mapTarget, lat, lng) {
     return new googleMap.Map(mapTarget, {
       center: { lat, lng },
       zoom: 15,
@@ -209,7 +226,7 @@ export default class GoogleMaps extends Shadow() {
     })
   }
 
-  setMarker (googleMap, map, lat, lng) {
+  setMarker(googleMap, map, lat, lng) {
     const marker = new googleMap.Marker({
       position: { lat, lng },
       icon: this.markerIcon
@@ -218,28 +235,33 @@ export default class GoogleMaps extends Shadow() {
     marker.setAnimation(4)
   }
 
-  get scripts () {
+  get scripts() {
     return this.root.querySelectorAll('script')
   }
 
-  get lat () {
+  get lat() {
     return Number(this.getAttribute('lat')) || this.DEFAULT_COORDINATES.lat
   }
 
-  get lng () {
+  get lng() {
     return Number(this.getAttribute('lng')) || this.DEFAULT_COORDINATES.lng
   }
 
-  get transportIcons () {
+  get transportIcons() {
     const wrapper = this.root.querySelector('o-wrapper')
+    if (!wrapper) return;
     return wrapper.root ? wrapper.root.querySelectorAll('a') : wrapper.querySelectorAll('a')
   }
 
-  get apiKey () {
+  get apiKey() {
     return this.getAttribute('api-key') || ''
   }
 
-  get markerIcon () {
+  get markerIcon() {
     return this.getAttribute('marker-icon')
+  }
+
+  get iframeUrl() {
+    return this.getAttribute('iframe-url') || '';
   }
 }
