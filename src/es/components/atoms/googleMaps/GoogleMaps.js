@@ -137,6 +137,12 @@ export default class GoogleMaps extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
         }, ...styles], false)
+      case 'google-maps-iframe-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./iframe-/iframe-.css`,
+          namespace: false
+        }, ...styles], false)
     }
 
   }
