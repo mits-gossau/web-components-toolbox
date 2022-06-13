@@ -50,7 +50,8 @@
     cssMaxWidth,
     fetchCSS,
     Shadow.cssTextDecorationShortHandFix,
-    html
+    html,
+    Shadow.isMac
   }
  * @return {CustomElementConstructor | *}
  */
@@ -221,7 +222,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       }
       // TODO: Review the safari fix below, if the bug got fixed within safari itself (NOTE: -webkit prefix did not work for text-decoration-thickness). DONE 2021.11.10 | LAST CHECKED 2021.11.10
       // safari text-decoration un-supported shorthand fix
-      if (navigator.userAgent.includes('Mac') && style.includes('text-decoration:')) style = Shadow.cssTextDecorationShortHandFix(style, node)
+      if (Shadow.isMac && style.includes('text-decoration:')) style = Shadow.cssTextDecorationShortHandFix(style, node)
       return (styleNode.textContent += style)
     }
   }
@@ -322,6 +323,17 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }
       }, `${match}/* Safari fix of text-decoration shorthand bug which only supports the first two arguments. */`)}/* end of fix. More Infos at: src/es/components/web-components-cms-template/src/es/components/prototypes/Shadow.js */`
     }) // find text-decoration: and spread the arguments to line, style, color and thickness
+  }
+
+  /**
+   * check if is IOS device
+   *
+   * @static
+   * @readonly
+   * @return {boolean}
+   */
+  static get isMac () {
+    return navigator.userAgent.includes('Mac')
   }
 
   /**
