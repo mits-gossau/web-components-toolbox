@@ -172,7 +172,7 @@ export default class Picture extends Intersection() {
       }
       /* modal stuff */
       :host([open-modal]) {
-        display: block; /* must be display block for adjustBtnPosition */
+        display: block !important; /* must be display block for adjustBtnPosition calculations of this.getBoundingClientRect */
         cursor: pointer;
         position: relative;
       }
@@ -222,8 +222,8 @@ export default class Picture extends Intersection() {
           cursor: auto;
           position: static;
         }
-        :host(:not([open-modal-mobile]):not([open])) > .close-btn.adjusted {
-          display: none;
+        :host(:not([open-modal-mobile])) > .close-btn.adjusted {
+          display: none !important;
         }
         :host([open-modal-mobile]) > .close-btn {
           right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
@@ -450,36 +450,38 @@ export default class Picture extends Intersection() {
       `
       this.closeBtn.classList.add('close-btn')
       // adjust for img being smaller than the picture container
-      const adjustBtnPosition = () => {
-        if (!this.isConnected || !this || typeof this.getBoundingClientRect !== 'function' || !this.getBoundingClientRect().width || !this.getBoundingClientRect().height || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width || !this.img.getBoundingClientRect().height) return
+      const adjustBtnPosition = (hasRepeat = true) => {
+        this.style.textContent = ''
+        // the css only displays the button icon at mobile viewport when having open-modal-mobile
+        if (!this.isConnected || this.getMedia() === 'mobile' && !this.hasAttribute('open-modal-mobile')) return
+        // until the browser properly rendered the image to align it with the getBoundingClientRect needs some time, thats why we repeat it
+        if (hasRepeat) setTimeout(() => self.requestAnimationFrame(timeStamp => adjustBtnPosition(false)), 1000)
+        if (typeof this.getBoundingClientRect !== 'function' || !this.getBoundingClientRect().width || !this.getBoundingClientRect().height || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width || !this.img.getBoundingClientRect().height) return
         const widthDiff = this.getBoundingClientRect().width - this.img.getBoundingClientRect().width
         const heightDiff = this.getBoundingClientRect().height - this.img.getBoundingClientRect().height
-        if (widthDiff > 0 || heightDiff > 0) {
-          this.style.textContent = ''
-          this.setCss(/* CSS */`
-            :host([open-modal]) > .close-btn {
-              bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2 + ${heightDiff > 0 ? heightDiff : 0}px);
-              right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff > 0 ? widthDiff / 2 : 0}px);
-            }
-            @media only screen and (max-width: _max-width_) {
-              :host([open-modal-mobile]) > .close-btn {
-                bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${heightDiff > 0 ? heightDiff : 0}px);
-                right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff > 0 ? widthDiff / 2 : 0}px);
-              }
-            }
-          `, undefined, undefined, true, this.style)
-        }
-        setTimeout(() => this.closeBtn.classList.add('adjusted'), 1000) // wait with showing the bubble until all is adjusted
+        if (widthDiff > 0 || heightDiff > 0) this.setCss(/* CSS */`
+          ${this.getMedia() === 'desktop'
+            ? /* CSS */`
+                :host([open-modal]) > .close-btn {
+                  ${heightDiff > 0 ? `bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2 + ${heightDiff}px);` : ''}
+                  ${widthDiff > 0 ? `right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);` : ''}
+                }
+              `
+            : /* CSS */`
+                @media only screen and (max-width: _max-width_) {
+                  :host([open-modal-mobile]) > .close-btn {
+                    ${heightDiff > 0 ? `bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${heightDiff}px);` : ''}
+                    ${widthDiff > 0 ? `right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff / 2}px);` : ''}
+                  }
+                }
+              `
+          }
+          
+        `, undefined, undefined, true, this.style)
+        if (!hasRepeat) this.closeBtn.classList.add('adjusted') // wait with showing the bubble until all is lastRepeat adjusted
       }
-      self.addEventListener('resize', () => {
-        adjustBtnPosition()
-        setTimeout(() => adjustBtnPosition(), 500)
-      })
-      img.addEventListener('load', () => {
-        adjustBtnPosition()
-        setTimeout(() => adjustBtnPosition(), 200)
-        setTimeout(() => adjustBtnPosition(), 500)
-      }, { once: true })
+      self.addEventListener('resize', () => adjustBtnPosition())
+      img.addEventListener('load', () => adjustBtnPosition(), { once: true })
       this.openModalIntersecting = () => {
         this.openModalIntersecting = () => {}
         adjustBtnPosition()
@@ -521,6 +523,10 @@ export default class Picture extends Intersection() {
       style.setAttribute('protected', 'true')
       return style
     })())
+  }
+
+  getMedia () {
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 
   /**
