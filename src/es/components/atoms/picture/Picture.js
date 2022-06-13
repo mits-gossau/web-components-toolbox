@@ -453,13 +453,14 @@ export default class Picture extends Intersection() {
       const adjustBtnPosition = (hasRepeat = true) => {
         this.style.textContent = ''
         // the css only displays the button icon at mobile viewport when having open-modal-mobile
-        if (!this.isConnected || this.getMedia() === 'mobile' && !this.hasAttribute('open-modal-mobile')) return
+        if (!this.isConnected || (this.getMedia() === 'mobile' && !this.hasAttribute('open-modal-mobile'))) return
         // until the browser properly rendered the image to align it with the getBoundingClientRect needs some time, thats why we repeat it
         if (hasRepeat) setTimeout(() => self.requestAnimationFrame(timeStamp => adjustBtnPosition(false)), 1000)
         if (typeof this.getBoundingClientRect !== 'function' || !this.getBoundingClientRect().width || !this.getBoundingClientRect().height || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width || !this.img.getBoundingClientRect().height) return
         const widthDiff = this.getBoundingClientRect().width - this.img.getBoundingClientRect().width
         const heightDiff = this.getBoundingClientRect().height - this.img.getBoundingClientRect().height
-        if (widthDiff > 0 || heightDiff > 0) this.setCss(/* CSS */`
+        if (widthDiff > 0 || heightDiff > 0) {
+          this.setCss(/* CSS */`
           ${this.getMedia() === 'desktop'
             ? /* CSS */`
                 :host([open-modal]) > .close-btn {
@@ -478,6 +479,7 @@ export default class Picture extends Intersection() {
           }
           
         `, undefined, undefined, true, this.style)
+        }
         if (!hasRepeat) this.closeBtn.classList.add('adjusted') // wait with showing the bubble until all is lastRepeat adjusted
       }
       self.addEventListener('resize', () => adjustBtnPosition())
