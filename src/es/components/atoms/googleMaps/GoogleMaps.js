@@ -12,7 +12,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {}
  */
 export default class GoogleMaps extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.MAP_URL = `https://maps.googleapis.com/maps/api/js?key=${this.apiKey}&callback=initMap`
     this.DEFAULT_COORDINATES = { lat: 47.375600, lng: 8.675320 }
@@ -29,7 +29,7 @@ export default class GoogleMaps extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.transportIcons) {
@@ -39,7 +39,7 @@ export default class GoogleMaps extends Shadow() {
     }
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.transportIcons.forEach(transportIcon => {
       transportIcon.removeEventListener('click', this.googleMapTransport)
     })
@@ -50,7 +50,7 @@ export default class GoogleMaps extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -59,11 +59,11 @@ export default class GoogleMaps extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.scripts.length
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */` 
     :host {
        display:var(--display, block);
@@ -144,13 +144,12 @@ export default class GoogleMaps extends Shadow() {
           namespace: false
         }, ...styles], false)
     }
-
   }
 
-  renderHTML() {
-    let element = null 
+  renderHTML () {
+    let element = null
     if (this.iframeUrl) {
-      const iframe = document.createElement("iframe")
+      const iframe = document.createElement('iframe')
       iframe.src = this.iframeUrl
       iframe.name = 'map'
       element = iframe
@@ -171,7 +170,7 @@ export default class GoogleMaps extends Shadow() {
    *
    * @returns {Promise<{components: any}>}
    */
-  loadDependency() {
+  loadDependency () {
     // @ts-ignore
     self.initMap = () => { }
 
@@ -188,7 +187,7 @@ export default class GoogleMaps extends Shadow() {
     })
   }
 
-  createMap(googleMap, mapTarget, lat, lng) {
+  createMap (googleMap, mapTarget, lat, lng) {
     return new googleMap.Map(mapTarget, {
       center: { lat, lng },
       zoom: 15,
@@ -232,7 +231,7 @@ export default class GoogleMaps extends Shadow() {
     })
   }
 
-  setMarker(googleMap, map, lat, lng) {
+  setMarker (googleMap, map, lat, lng) {
     const marker = new googleMap.Marker({
       position: { lat, lng },
       icon: this.markerIcon
@@ -241,33 +240,33 @@ export default class GoogleMaps extends Shadow() {
     marker.setAnimation(4)
   }
 
-  get scripts() {
+  get scripts () {
     return this.root.querySelectorAll('script')
   }
 
-  get lat() {
+  get lat () {
     return Number(this.getAttribute('lat')) || this.DEFAULT_COORDINATES.lat
   }
 
-  get lng() {
+  get lng () {
     return Number(this.getAttribute('lng')) || this.DEFAULT_COORDINATES.lng
   }
 
-  get transportIcons() {
+  get transportIcons () {
     const wrapper = this.root.querySelector('o-wrapper')
-    if (!wrapper) return;
+    if (!wrapper) return
     return wrapper.root ? wrapper.root.querySelectorAll('a') : wrapper.querySelectorAll('a')
   }
 
-  get apiKey() {
+  get apiKey () {
     return this.getAttribute('api-key') || ''
   }
 
-  get markerIcon() {
+  get markerIcon () {
     return this.getAttribute('marker-icon')
   }
 
-  get iframeUrl() {
-    return this.getAttribute('iframe-url') || '';
+  get iframeUrl () {
+    return this.getAttribute('iframe-url') || ''
   }
 }

@@ -106,21 +106,40 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   mutationCallback (mutationList, observer) {
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
-        this.style.textContent = ''
-        this.setCss(/* CSS */`
-          @keyframes open {
-            0% {
-              height: 0px;
-              margin: 0px;
-              padding: opx;
+        // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
+        if (this.constructor.isMac) {
+          Array.from(this.root.querySelectorAll(':host details[open] summary ~ *')).forEach(element => element.animate([
+            { // from
+              height: '0px',
+              margin: '0px',
+              padding: '0px'
+            },
+            { // to
+              height: `${this.content.offsetHeight}px`,
+              margin: `var(--${this.namespace || ''}child-margin, 0)`,
+              padding: `var(--${this.namespace || ''}child-padding, 0)`
             }
-            100% {
-              height: ${this.content.offsetHeight}px;
-              margin: var(--child-margin, 0);
-              padding: var(--child-padding, 0);
+          ], {
+            duration: this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) : 300,
+            easing: this.hasAttribute('easing') ? this.getAttribute('easing') : 'ease-out'
+          }))
+        } else {
+          this.style.textContent = ''
+          this.setCss(/* CSS */`
+            @keyframes open {
+              0% {
+                height: 0px;
+                margin: 0px;
+                padding: 0px;
+              }
+              100% {
+                height: ${this.content.offsetHeight}px;
+                margin: var(--child-margin, 0);
+                padding: var(--child-padding, 0);
+              }
             }
-          }
-        `, undefined, undefined, undefined, this.style)
+          `, undefined, undefined, undefined, this.style)
+        }
         this.dispatchEvent(new CustomEvent(this.openEventName, {
           detail: {
             child: this
@@ -137,24 +156,45 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         this.timeoutAnimationend = setTimeout(() => {
           this.details.removeEventListener('animationend', this.animationendListener)
           this.animationendListener()
-        }, this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) + 100 : 1000) /* animation: var(--animation, open 0.3s ease-out); + 100ms */
+        }, this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) : 300)
         this.mutationObserveStop()
         this.details.setAttribute('open', '')
-        this.style.textContent = ''
-        this.setCss(/* CSS */`
-          @keyframes open {
-            0% {
-              height: ${this.content.offsetHeight}px;
-              margin: var(--child-margin, 0);
-              padding: var(--child-padding, 0);
+        // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
+        if (this.constructor.isMac) {
+          Array.from(this.root.querySelectorAll(':host details[open] summary ~ *')).forEach(element => {
+            element.animate([
+              { // from
+                height: `${this.content.offsetHeight}px`,
+                margin: `var(--${this.namespace || ''}child-margin, 0)`,
+                padding: `var(--${this.namespace || ''}child-padding, 0)`
+              },
+              { // to
+                height: '0px',
+                margin: '0px',
+                padding: '0px'
+              }
+            ], {
+              duration: this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) : 300,
+              easing: this.hasAttribute('easing') ? this.getAttribute('easing') : 'ease-out'
+            }).onfinish = this.animationendListener
+          })
+        } else {
+          this.style.textContent = ''
+          this.setCss(/* CSS */`
+            @keyframes open {
+              0% {
+                height: ${this.content.offsetHeight}px;
+                margin: var(--child-margin, 0);
+                padding: var(--child-padding, 0);
+              }
+              100% {
+                height: 0px;
+                margin: 0px;
+                padding: 0px
+              }
             }
-            100% {
-              height: 0px;
-              margin: 0px;
-              padding: opx
-            }
-          }
-        `, undefined, undefined, undefined, this.style)
+          `, undefined, undefined, undefined, this.style)
+        }
         this.details.classList.add('closing')
         this.setAttribute('aria-expanded', 'false')
       }
@@ -254,7 +294,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         overflow: hidden;
       }
       :host details[open] summary ~ * {
-        animation: var(--animation, open ${this.hasAttribute('open-duration') ? `${this.getAttribute('open-duration')}ms` : '.3s'} ease-out); /* if using an other value, change the timeout */
+        animation: var(--animation, open ${this.hasAttribute('open-duration') ? `${this.getAttribute('open-duration')}ms` : '.3s'} ${this.hasAttribute('easing') ? this.getAttribute('easing') : 'ease-out'}); /* if using an other value, change the timeout */
       }
       summary ~ * > *:not(style):not(script) {
         display: var(--any-display, block);
