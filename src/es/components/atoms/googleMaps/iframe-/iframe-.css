@@ -1,2 +1,3 @@
 :host {
+    --google-maps-iframe-height:var(--google-maps-iframe-height-custom, 50vh);
 }
