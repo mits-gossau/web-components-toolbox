@@ -48,7 +48,9 @@ export default class EmotionPictures extends Intersection() {
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
-      showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+      showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => {
+        if (!event || !event.detail || !event.detail.error) resolve()
+      }, { once: true })))
     }
     if (this.aVideo && this.aVideo.hasAttribute('video-load') && !this.aVideo.hasAttribute('loaded')) {
       showPromises.push(new Promise(resolve => this.addEventListener('video-load', event => resolve(), { once: true })))
@@ -106,8 +108,8 @@ export default class EmotionPictures extends Intersection() {
         position: absolute;
         z-index:2;
         top: 4vw;
-        left: 10vw;
-        right:10vw;
+        left: var(--text-left, 10vw);
+        right: var(--text-right, 10vw);
         opacity: 0;
         transition: var(--text-transition, opacity 0.5s ease-out);
       }
@@ -123,18 +125,20 @@ export default class EmotionPictures extends Intersection() {
         }
         :host > div > *:not(a-picture):not(a-video) {
           top: 2vw;
-          left: 0;
+          left: var(--text-left-mobile, 0);
+          right: var(--text-right-mobile, 0);
           margin:var(--div-margin-mobile);
         }
       }
     `
-
     this.setCss(/* css */`
-    :host > * {
-      --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
-      --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 100vh);
-    }
-  `, undefined, '', false)
+      :host > * {
+        ${this.hasAttribute('height') ? `--img-height: ${this.getAttribute('height')};` : ''}
+        ${this.hasAttribute('height-mobile') ? `--img-height-mobile: ${this.getAttribute('height-mobile')};` : ''}
+        --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
+        --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 100vh);
+      }
+    `, undefined, '', false)
 
     const styles = [
       {
