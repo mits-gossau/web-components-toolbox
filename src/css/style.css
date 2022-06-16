@@ -140,6 +140,9 @@
 :host .font-size-big {
   font-size: calc(1.5 * var(--h1-font-size, 1.75em));
 }
+:host .font-size-h2 {
+  font-size: var(--h2-font-size, 1.5em);
+}
 :host .font-size-tiny {
   font-size: calc(0.75 * var(--p-font-size, 1em));
 }
@@ -412,6 +415,9 @@ img[style="float: right;"] {
   /* text stylings */
   :host .font-size-big {
     font-size: calc(1.5 * var(--h1-font-size-mobile, var(--h1-font-size, 1.75em)));
+  }
+  :host .font-size-h2 {
+    font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5em));
   }
   :host .font-size-tiny {
     font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));

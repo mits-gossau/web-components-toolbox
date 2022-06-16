@@ -130,6 +130,7 @@ export default class Teaser extends Intersection() {
         : ''}
       :host figure a-picture {
         height: var(--a-picture-height, auto);
+        margin: var(--a-picture-margin, 0);
         width: var(--a-picture-width, 100%);
         transition: var(--a-picture-transition, none);
         transform: var(--a-picture-transform, none);
@@ -156,6 +157,9 @@ export default class Teaser extends Intersection() {
       }
       :host(:hover) figure figcaption {
         background-color: var(--figcaption-background-color-hover, var(--figcaption-background-color, #c2262f));
+      }
+      :host(:hover) figure a-picture ~ figcaption {
+        background-color: var(--a-picture-figcaption-background-color-hover, var(--figcaption-background-color-hover, var(--figcaption-background-color, #c2262f)));
       }
       :host([figcaption-bg-color-equal=true]) figure figcaption {
         padding: var(--figcaption-bg-color-equal-padding, var(--figcaption-padding, 1em 0));
