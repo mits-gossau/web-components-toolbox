@@ -17,6 +17,9 @@
 :host h1.font-family-secondary, :host h6.font-family-secondary {
   font-family: var(--h1-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
 }
+:host h1.font-family-tertiary, :host h6.font-family-tertiary {
+  font-family: var(--h1-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit))));
+}
 :host h2 {
   color: var(--h2-color, var(--color, black));
   display: var(--h2-display, block);
@@ -32,6 +35,9 @@
 }
 :host h2.font-family-secondary {
   font-family: var(--h2-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
+}
+:host h2.font-family-tertiary {
+  font-family: var(--h2-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h3 {
   color: var(--h3-color, var(--color, black));
@@ -49,6 +55,9 @@
 :host h3.font-family-secondary {
   font-family: var(--h3-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
 }
+:host h3.font-family-tertiary {
+  font-family: var(--h3-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit))));
+}
 :host h4 {
   color: var(--h4-color, var(--color, black));
   display: var(--h4-display, block);
@@ -64,6 +73,9 @@
 }
 :host h4.font-family-secondary {
   font-family: var(--h4-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
+}
+:host h4.font-family-tertiary {
+  font-family: var(--h4-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h5 {
   color: var(--h5-color, var(--color, black));
@@ -81,9 +93,15 @@
 :host h5.font-family-secondary {
   font-family: var(--h5-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
 }
+:host h5.font-family-tertiary {
+  font-family: var(--h5-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit))));
+}
 /* text stylings */
 :host .font-family-secondary {
   font-family: var(--font-family-secondary, var(--font-family, inherit));
+}
+:host .font-family-tertiary {
+  font-family: var(--font-family-tertiary, var(--font-family, inherit));
 }
 :host .left > *, :host .center > *, :host .right > * {
   display: inline-block;
@@ -147,7 +165,7 @@
   margin: 0;
   padding: 0.1em 0 0;
 }
-:host *:not(.font-family-secondary).bg-color, :host *:not(.font-family-secondary).bg-color-hover {
+:host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color, :host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color-hover {
   line-height: var(--bg-line-height, 1.7em);
 }
 *.bg-color, *.bg-color-hover {
@@ -168,6 +186,9 @@
 }
 :host *.bg-color.font-family-secondary, :host *.bg-color-hover.font-family-secondary {
   line-height: var(--bg-line-height-secondary, var(--bg-line-height, 1.4em));
+}
+:host *.bg-color.font-family-tertiary, :host *.bg-color-hover.font-family-tertiary {
+  line-height: var(--bg-line-height-tertiary, var(--bg-line-height, 1.6em));
 }
 /* p-tag */
 :host p {
