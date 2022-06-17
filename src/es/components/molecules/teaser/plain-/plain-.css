@@ -1,5 +1,8 @@
 :host {
   --color: var(--teaser-plain-color);
+  --teaser-plain-a-picture-figcaption-background-color-hover: var(--teaser-plain-a-picture-figcaption-background-color-hover-custom,var(--teaser-plain-background-color-hover-custom, var(--teaser-plain-background-color)));
+  --teaser-plain-a-picture-margin: 0.5em;
+  --teaser-plain-a-picture-width: calc(100% - var(--teaser-plain-a-picture-margin) * 2);
   --teaser-plain-background-color: var(--teaser-plain-background-color-custom, var(--color-secondary, var(--background-color, var(--m-white))));
   --teaser-plain-border-radius-mobile: var(--teaser-plain-border-radius-mobile-custom, 0.571em);
   --teaser-plain-border-radius: var(--teaser-plain-border-radius-custom, 0.5em);
@@ -16,6 +19,7 @@
   --teaser-plain-figcaption-justify-content: flex-end;
   --teaser-plain-figcaption-padding: 0.625em;
   --teaser-plain-figcaption-transition: background-color 0.3s ease-out;
+  --teaser-plain-h2-margin: var(--teaser-plain-h2-margin-custom);
   --teaser-plain-h5-margin: 0 0 0.5em;
   --teaser-plain-intersecting-figcaption-any-opacity: 1;
   --teaser-plain-intersecting-figcaption-any-transform: perspective(400px) rotateX(0);

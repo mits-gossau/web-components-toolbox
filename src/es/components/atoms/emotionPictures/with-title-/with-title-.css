@@ -2,7 +2,7 @@
    --emotion-pictures-with-title-bg-background-color:var(--emotion-pictures-with-title-bg-background-color-custom, var(--m-white));
    --emotion-pictures-with-title-bg-color:var(--emotion-pictures-with-title-bg-color-custom, var(--m-black));
    --emotion-pictures-with-title-bg-transition: opacity 0.5s ease-out;
-   --emotion-pictures-with-title-div-margin-mobile:var(--content-spacing-mobile);
+   --emotion-pictures-with-title-div-margin-mobile:var(--emotion-pictures-with-title-div-margin-mobile-custom, var(--content-spacing-mobile));
    --emotion-pictures-with-title-h1-font-size-mobile: var(--emotion-pictures-with-title-h1-font-size-mobile-custom, min(calc(1.75em * 1.75), 7vw));
    --emotion-pictures-with-title-h1-font-weight: var(--emotion-pictures-with-title-h2-font-weight);
    --emotion-pictures-with-title-h1-text-transform: var(--emotion-pictures-with-title-h2-text-transform);
@@ -12,7 +12,18 @@
    --emotion-pictures-with-title-img-max-height:75vh;
    --emotion-pictures-with-title-img-width:100%;
    --emotion-pictures-with-title-subline-font-size:var(--emotion-pictures-with-title-subline-font-size-custom, 1.2em);
+   --emotion-pictures-with-title-text-left-mobile: var(--emotion-pictures-with-title-text-left-mobile-custom);
+   --emotion-pictures-with-title-text-left: var(--emotion-pictures-with-title-text-left-custom);
+   --emotion-pictures-with-title-text-right-mobile: var(--emotion-pictures-with-title-text-right-mobile-custom);
+   --emotion-pictures-with-title-text-right: var(--emotion-pictures-with-title-text-right-custom);
    --img-object-fit: cover;
    --img-width: 100%;
+}
 
+:host([inline]) {
+   --emotion-pictures-with-title-div-margin-mobile-custom: 0;
+   --emotion-pictures-with-title-text-left-custom: calc((100% - var(--content-width, 55%)) / 2);
+   --emotion-pictures-with-title-text-left-mobile-custom: var(--content-spacing-mobile, var(--content-spacing));
+   --emotion-pictures-with-title-text-right-custom: var(--emotion-pictures-with-title-text-left-custom);
+   --emotion-pictures-with-title-text-right-mobile-custom: var(--emotion-pictures-with-title-text-left-mobile-custom);
 }
