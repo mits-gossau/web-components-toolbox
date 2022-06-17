@@ -8,9 +8,11 @@
    --emotion-pictures-with-title-h1-text-transform: var(--emotion-pictures-with-title-h2-text-transform);
    --emotion-pictures-with-title-h2-font-size-mobile: var(--emotion-pictures-with-title-h2-font-size-mobile-custom, min(calc(1.5em * 1.5), 7vw));
    --emotion-pictures-with-title-h2-font-weight: normal;
-   --emotion-pictures-with-title-h2-text-transform: uppercase;
+   --emotion-pictures-with-title-h2-text-transform: var(--emotion-pictures-with-title-h2-text-transform-custom, uppercase);
    --emotion-pictures-with-title-img-max-height:75vh;
    --emotion-pictures-with-title-img-width:100%;
+   --emotion-pictures-with-title-subline-font-size:var(--emotion-pictures-with-title-subline-font-size-custom, 1.2em);
    --img-object-fit: cover;
    --img-width: 100%;
+
 }
