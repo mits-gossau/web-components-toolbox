@@ -116,6 +116,9 @@ export default class EmotionPictures extends Intersection() {
       :host(.visible) > div > *:not(a-picture):not(a-video) {
         opacity: 1;
       }
+      :host .subline {
+        font-size: var(--subline-font-size, 1.2em);
+      }
       @media only screen and (max-width: _max-width_) {
         :host > div h2.font-size-big {
           font-size: var(--h2-font-size-mobile);
