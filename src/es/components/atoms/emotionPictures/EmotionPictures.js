@@ -10,7 +10,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * @type {CustomElementConstructor}
  */
 export default class EmotionPictures extends Intersection() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 } }), ...args)
 
     this.setAttribute('role', 'banner')
@@ -18,7 +18,7 @@ export default class EmotionPictures extends Intersection() {
     Array.from(this.aVideos).forEach(node => node.setAttribute('loading', this.getAttribute('loading') || 'eager'))
   }
 
-  intersectionCallback (entries, observer) {
+  intersectionCallback(entries, observer) {
     for (const entry of entries) {
       if (!entry.isIntersecting && entry.intersectionRatio === 0) {
         this.classList.add('visible')
@@ -33,7 +33,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     const init = () => {
       this.hidden = false
@@ -63,7 +63,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     this.shuffle(false)
   }
@@ -73,7 +73,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -82,7 +82,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {Promise<void>|void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         display: grid !important;
@@ -118,6 +118,7 @@ export default class EmotionPictures extends Intersection() {
       }
       :host .subline {
         font-size: var(--subline-font-size, 1.2em);
+        padding:var(--subline-padding, unset);
       }
       @media only screen and (max-width: _max-width_) {
         :host > div h2.font-size-big {
@@ -180,7 +181,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  shuffle (start = true) {
+  shuffle(start = true) {
     clearInterval(this.interval || null)
     if (start) {
       this.interval = setInterval(() => {
@@ -197,26 +198,26 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  get shown () {
+  get shown() {
     return this.root.querySelector('.shown') || (() => {
       if (this.root.childNodes[0]) this.root.childNodes[0].classList.add('shown')
       return this.root.childNodes[0]
     })()
   }
 
-  get aPicture () {
+  get aPicture() {
     return this.root.querySelector('a-picture')
   }
 
-  get aPictures () {
+  get aPictures() {
     return this.root.querySelectorAll('a-picture')
   }
 
-  get aVideo () {
+  get aVideo() {
     return this.root.querySelector('a-video')
   }
 
-  get aVideos () {
+  get aVideos() {
     return this.root.querySelectorAll('a-video')
   }
 }
