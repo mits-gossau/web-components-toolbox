@@ -377,7 +377,7 @@ export default class Header extends Shadow() {
           flex-grow: 1;
           left: auto;
           right: var(--content-spacing-mobile, var(--content-spacing));
-          top: -1em;
+          top: var(--a-logo-top-mobile, -1em);
         }
         :host > header::before {
           order: 1;
@@ -423,6 +423,7 @@ export default class Header extends Shadow() {
           })
           this.header.appendChild(this.MenuIcon)
           this.html = this.style
+          this.html = this.styleTwo
           this.adjustLogoPos(true)
         })
       : Promise.resolve()
@@ -483,17 +484,18 @@ export default class Header extends Shadow() {
 
   // adjust logo top position
   adjustLogoPos (resetCouter) {
+    this.styleTwo.textContent = ''
     if (this.getMedia() !== 'desktop') return
     this._adjustLogoPosCounter = resetCouter ? 1 : !this._adjustLogoPosCounter ? 1 : this._adjustLogoPosCounter + 1
     self.requestAnimationFrame(timeStamp => {
       const navHeight = this.mNavigation ? this.mNavigation.offsetHeight : 200
       const logoHeight = this.aLogo.offsetHeight
       if (this._adjustLogoPosCounter < 30 && (!navHeight || !logoHeight)) return setTimeout(() => this.adjustLogoPos(false), 1000)
-      this.css = /* CSS */`
+      this.setCss(/* CSS */`
         :host > header > a-logo {
           top: calc(${navHeight}px / 2 - ${logoHeight}px / 2);
         }
-      `
+      `, undefined, undefined, undefined, this.styleTwo)
     })
   }
 
@@ -505,7 +507,17 @@ export default class Header extends Shadow() {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
+      style.setAttribute('_csssetStickyOffsetHeight', '')
       return style
+    })())
+  }
+
+  get styleTwo () {
+    return this._styleTwo || (this._styleTwo = (() => {
+      const styleTwo = document.createElement('style')
+      styleTwo.setAttribute('protected', 'true')
+      styleTwo.setAttribute('_cssadjustLogoPos', '')
+      return styleTwo
     })())
   }
 }

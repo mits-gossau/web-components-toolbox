@@ -132,7 +132,7 @@ export default class Input extends Shadow() {
         width: 100%;
         font-family: inherit;
         font-size: var(--input-font-size, var(--font-size));
-        line-height: 1.5;
+        line-height: 1.4;
         color: var(--input-color, var(--color));
         appearance: none;
         background: var(--input-bg-color, var(--m-gray-200));
