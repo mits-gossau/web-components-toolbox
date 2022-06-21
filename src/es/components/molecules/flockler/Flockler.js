@@ -23,7 +23,7 @@ export default class Flockler extends Shadow() {
       if (event.origin !== 'https://plugins.flockler.com') return
       if (event.data.eventName !== 'FlockerIframeResizeEvent') return
       this.iframe.setAttribute('height', event.data.nativeHeight)
-      this.iframe.contentWindow.postMessage({ eventName: 'FlockerIframeResizeReceivedEvent' }, '*');
+      this.iframe.contentWindow.postMessage({ eventName: 'FlockerIframeResizeReceivedEvent' }, '*')
     }
     let timeout
     this.messageListenerAppear = event => {
