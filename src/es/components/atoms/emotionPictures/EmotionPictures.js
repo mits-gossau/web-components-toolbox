@@ -119,6 +119,7 @@ export default class EmotionPictures extends Intersection() {
       :host .subline {
         font-size: var(--subline-font-size, 1.2em);
         padding:var(--subline-padding, unset);
+        display:var(--subline-display, initial);
       }
       @media only screen and (max-width: _max-width_) {
         :host > div h2.font-size-big {
@@ -133,6 +134,9 @@ export default class EmotionPictures extends Intersection() {
           right: var(--text-right-mobile, 0);
           margin:var(--div-margin-mobile);
         }
+        :host .subline {
+          display:var(--subline-display-mobile, initial);
+      }
       }
     `
     this.setCss(/* css */`
