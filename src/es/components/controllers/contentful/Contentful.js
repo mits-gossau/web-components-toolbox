@@ -15,8 +15,9 @@ export default class Contentful extends Shadow() {
     const TOKEN = this.getAttribute('token')
     const SPACE_ID = this.getAttribute('space-id')
     const ENDPOINT = `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}`
-    const LIMIT = this.getAttribute('limit')
-    const QUERY_VARS = { limit: Number(LIMIT) };
+    const limit = this.getAttribute('limit')
+    console.log("limit", limit)
+    const variables = { limit: Number(limit) };
 
     this.requestListArticlesListener = event => {
       console.log("request article listener....");
@@ -26,7 +27,7 @@ export default class Contentful extends Shadow() {
           Authorization: "Bearer " + TOKEN + " ",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query, QUERY_VARS })
+        body: JSON.stringify({ query, variables })
       }
 
       fetch(ENDPOINT, fetchOptions)
