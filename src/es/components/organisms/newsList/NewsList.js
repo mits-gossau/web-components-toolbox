@@ -28,7 +28,7 @@ export default class NewsList extends Shadow() {
 
   renderHTML() {
     Promise.all([this.loadChildComponents()]).then(result => {
-      console.log("result", result)
+      console.log("child components loaded....", result)
       this.innerHTML = '<m-article></m-article>'
     })
   }
