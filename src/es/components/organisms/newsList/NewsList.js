@@ -6,13 +6,14 @@ export default class NewsList extends Shadow() {
   constructor(...args) {
     super(...args)
     this.listArticlesListener = event => {
-      console.log("data", event.detail);
+      console.log("news list data", event.detail);
+      this.renderHTML(event.detail)
     }
   }
 
   connectedCallback() {
     console.log("connected... NewsList");
-    if (this.shouldComponentRenderHTML()) this.renderHTML();
+    //if (this.shouldComponentRenderHTML()) this.renderHTML();
     self.addEventListener('listArticles', this.listArticlesListener)
     this.dispatchEvent(new CustomEvent('requestListArticles', {
       detail: {},
@@ -22,11 +23,12 @@ export default class NewsList extends Shadow() {
     }))
   }
 
-  shouldComponentRenderHTML() {
-    return !this.section
-  }
+  // shouldComponentRenderHTML() {
+  //   return !this.section
+  // }
 
-  renderHTML() {
+  renderHTML(articles) {
+    console.log("render articles....", articles.data.data.newsEntryCollection.items);
     Promise.all([this.loadChildComponents()]).then(result => {
       console.log("child components loaded....", result)
       this.innerHTML = '<m-article></m-article>'
