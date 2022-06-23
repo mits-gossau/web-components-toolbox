@@ -1,4 +1,4 @@
-const QUERY = `query GetNews($limit: Int!) {
+const QUERY = `query GetNews($limit: Int) {
   newsEntryCollection(
     order: date_DESC,
     locale: "de-DE",
