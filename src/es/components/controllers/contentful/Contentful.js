@@ -14,7 +14,7 @@ export default class Contentful extends Shadow() {
       fetch('https://dummyjson.com/products/1')
         .then(res => res.json())
         .then(json => {
-          console.log(json)
+          console.log("fetch data...", json)
           this.dispatchEvent(new CustomEvent('listArticles', {
             detail: {
               data: json
@@ -28,7 +28,7 @@ export default class Contentful extends Shadow() {
   }
 
   connectedCallback() {
-    console.log("running....");
+    console.log("controller running....");
     this.addEventListener('requestListArticles', this.requestListArticlesListener)
   }
 
