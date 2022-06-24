@@ -12,9 +12,13 @@ export default class Contentful extends Shadow() {
   constructor(...args) {
     super({ mode: 'false' }, ...args)
 
-    const TOKEN = this.getAttribute('token')
-    const SPACE_ID = this.getAttribute('space-id')
-    const ENDPOINT = `https://graphql.contentful.com/content/v1/spaces/${SPACE_ID}`
+    // TODO:
+    // AbortController()
+    // Move Base URL to Environment
+
+    const token = this.getAttribute('token')
+    const spaceId = this.getAttribute('space-id')
+    const endpoint = `https://graphql.contentful.com/content/v1/spaces/${spaceId}`
     const limit = this.getAttribute('limit')
     console.log("limit", limit)
     const variables = { limit: Number(limit) };
@@ -24,16 +28,16 @@ export default class Contentful extends Shadow() {
       const fetchOptions = {
         method: "POST",
         headers: {
-          Authorization: "Bearer " + TOKEN + " ",
+          Authorization: "Bearer " + token + " ",
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ query, variables })
       }
 
-      fetch(ENDPOINT, fetchOptions)
+      fetch(endpoint, fetchOptions)
         .then(response => response.json())
         .then(data => {
-          console.log(data)
+          console.log("fetched data", data)
           this.dispatchEvent(new CustomEvent('listArticles', {
             detail: {
               data
