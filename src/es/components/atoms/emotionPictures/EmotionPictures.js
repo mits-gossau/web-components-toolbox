@@ -107,7 +107,7 @@ export default class EmotionPictures extends Intersection() {
       :host > div > *:not(a-picture):not(a-video) {
         position: absolute;
         z-index:2;
-        top: 4vw;
+        top: var(--text-top, 4vw);
         left: var(--text-left, 10vw);
         right: var(--text-right, 10vw);
         opacity: 0;
@@ -129,7 +129,8 @@ export default class EmotionPictures extends Intersection() {
           font-size: var(--h1-font-size-mobile);
         }
         :host > div > *:not(a-picture):not(a-video) {
-          top: 2vw;
+          ${this.hasAttribute('height-mobile') ? `--text-top-mobile: calc((${this.getAttribute('height-mobile')}/2) - var(--h2-font-size-mobile, 1em));` : ''}
+          top: var(--text-top-mobile, 2vw);
           left: var(--text-left-mobile, 0);
           right: var(--text-right-mobile, 0);
           margin:var(--div-margin-mobile);
@@ -141,6 +142,7 @@ export default class EmotionPictures extends Intersection() {
     `
     this.setCss(/* css */`
       :host > * {
+        //${this.hasAttribute('height-mobile') ? `--text-top-mobile: calc((${this.getAttribute('height-mobile')}/2) - var(--h2-font-size-mobile, 11em));` : ''}
         ${this.hasAttribute('height') ? `--img-height: ${this.getAttribute('height')};` : ''}
         ${this.hasAttribute('height-mobile') ? `--img-height-mobile: ${this.getAttribute('height-mobile')};` : ''}
         --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
@@ -186,6 +188,7 @@ export default class EmotionPictures extends Intersection() {
   }
 
   shuffle(start = true) {
+    // @ts-ignore
     clearInterval(this.interval || null)
     if (start) {
       this.interval = setInterval(() => {
