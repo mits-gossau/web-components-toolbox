@@ -42,8 +42,8 @@ export default class NewsList extends Shadow() {
 
   loadChildComponents() {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
-      import('../../molecules/article/Article.js').then(
-        module => ['m-article', module.default]
+      import('../../molecules/articlePreview/ArticlePreview.js').then(
+        module => ['m-article-preview', module.default]
       )
     ]).then(elements => {
       elements.forEach(element => {
