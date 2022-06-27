@@ -321,15 +321,24 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         namespaceFallback: true
       }
     ]
+    console.log(this.getAttribute('namespace'))
     switch (this.getAttribute('namespace')) {
       case 'details-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
         }, ...styles], false)
-
-      default:
-        return this.fetchCSS(styles, false)
+      case 'details-menu-single-':
+        console.log("test")
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-single-/menu-single-.css`,
+          namespace: false
+        }, ...styles], false)
+      case 'details-menu-portion-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-portion-/menu-portion-.css`,
+          namespace: false
+        }, ...styles], false)
     }
   }
 
