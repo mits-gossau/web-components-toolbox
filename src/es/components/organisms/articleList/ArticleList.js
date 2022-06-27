@@ -8,6 +8,7 @@ export default class NewsList extends Shadow() {
     this.listArticlesListener = event => {
       console.log("news list data", event.detail);
       this.renderHTML(event.detail)
+      sessionStorage.setItem('articles', JSON.stringify(event.detail))
     }
   }
 

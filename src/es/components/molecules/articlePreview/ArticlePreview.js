@@ -7,12 +7,24 @@ export default class ArticlePreview extends Shadow() {
     super(...args)
     console.log("article preview", article)
     this.article = article || null
+    // this.articleListener = () => {
+    //   console.log("click")
+    //   this.dispatchEvent(new CustomEvent('article', {
+    //     detail: {},
+    //     bubbles: true,
+    //     cancelable: true,
+    //     composed: true
+    //   }))
+    // }
   }
 
   connectedCallback() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     console.log("article preview connected....");
+    // this.link = this.root.querySelector('a')
+    // console.log(this.link)
+    // this.link.addEventListener("click", this.articleListener)
   }
 
   disconnectedCallback() {
@@ -28,11 +40,9 @@ export default class ArticlePreview extends Shadow() {
 
   renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
-    // this.newsWrapper.innerText = this.article.slug
     this.newsWrapper.innerHTML = `
       <div class="article-preview">
-        <div class="article-meta"></div>
-          <h1><a href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html#${this.article.slug}" class="preview-link">${this.article.slug}</a></h1>
+          <h1><a class="link" href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html&article=${this.article.slug}">${this.article.slug}</a></h1>
           <p>${this.article.description}</p>
       </div>
     `
