@@ -43,7 +43,10 @@ export default class Article extends Shadow() {
 
   renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
-    this.newsWrapper.innerText = this.found.title
+    this.newsWrapper = `<div class="article">
+      <h1>${this.found.title}</h1>
+      <p>${this.found.description}</p>
+    </div>`
 
 
     this.html = this.newsWrapper
@@ -52,11 +55,31 @@ export default class Article extends Shadow() {
   renderCSS() {
     this.css = /* css */`
       :host  {
-        display: block;
-        background-color:yellow;
-        height:200px;
-        color:red;
+        // display: block;
+        // background-color:yellow;
+        // height:200px;
+        // color:red;
       }
     `
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
+    switch (this.getAttribute('namespace')) {
+      case 'article-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      default:
+        return this.fetchCSS(styles)
+    }
   }
 }

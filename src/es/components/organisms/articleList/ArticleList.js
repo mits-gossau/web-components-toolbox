@@ -37,6 +37,7 @@ export default class NewsList extends Shadow() {
         //console.log("article", article);
         // @ts-ignore
         const articleEle = new child[0][1](article)
+        articleEle.setAttribute('namespace', 'preview-default-')
         console.log(articleEle)
         this.html = articleEle
       })
