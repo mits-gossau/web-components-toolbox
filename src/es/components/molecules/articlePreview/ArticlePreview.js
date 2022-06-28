@@ -5,27 +5,14 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class ArticlePreview extends Shadow() {
   constructor(article, ...args) {
     super(...args)
-    console.log("article preview", article)
+    this.namespace = args[0]['namespace']
+    // console.log(this.namespace);
     this.article = article || null
-
-    // this.articleListener = () => {
-    //   console.log("click")
-    //   this.dispatchEvent(new CustomEvent('article', {
-    //     detail: {},
-    //     bubbles: true,
-    //     cancelable: true,
-    //     composed: true
-    //   }))
-    // }
   }
 
   connectedCallback() {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    console.log("article preview connected....");
-    // this.link = this.root.querySelector('a')
-    // console.log(this.link)
-    // this.link.addEventListener("click", this.articleListener)
+    if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
   disconnectedCallback() {
@@ -41,14 +28,16 @@ export default class ArticlePreview extends Shadow() {
 
   renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
-    console.log("this.newsWrapper", this.newsWrapper)
     this.newsWrapper.innerHTML = `
-    <o-wrapper>
-    <div class="article-preview">
-      <h3><a class="link" href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html&article=${this.article.slug}">${this.article.slug}</a></h3>
-      <p>${this.article.description}</p>
-    </div>
-    </o-wrapper>`
+    <o-wrapper namespace="preview-default-">
+      <div class="article-preview">
+          <h3><a class="link" href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html&article=${this.article.slug}">${this.article.slug}</a></h3>
+          <p>${this.article.description}</p>
+        </div>
+    </o-wrapper>
+  `
+
+
     this.html = this.newsWrapper
 
 
@@ -67,6 +56,7 @@ export default class ArticlePreview extends Shadow() {
       @media only screen and (max-width: _max-width_) { 
       }
     `
+
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -78,12 +68,13 @@ export default class ArticlePreview extends Shadow() {
         namespaceFallback: true
       }
     ]
+
     switch (this.getAttribute('namespace')) {
       case 'preview-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false)
+        }, ...styles])
       default:
         return this.fetchCSS(styles)
     }

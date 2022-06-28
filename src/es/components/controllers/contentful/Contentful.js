@@ -20,11 +20,9 @@ export default class Contentful extends Shadow() {
     const spaceId = this.getAttribute('space-id')
     const endpoint = `https://graphql.contentful.com/content/v1/spaces/${spaceId}`
     const limit = this.getAttribute('limit')
-    console.log("limit", limit)
 
     this.requestListArticlesListener = event => {
       const variables = { limit: Number(limit), skip: event.detail.skip || 0 };
-      console.log("request article listener....", event.detail.skip || 0);
       const fetchOptions = {
         method: "POST",
         headers: {
@@ -52,40 +50,10 @@ export default class Contentful extends Shadow() {
         cancelable: true,
         composed: true
       }))
-
-      // .then(data => {
-      //   console.log("fetched data", data)
-      //   this.dispatchEvent(new CustomEvent('listArticles', {
-      //     detail: {
-      //       data,
-      //       skip: 0,
-      //     },
-      //     bubbles: true,
-      //     cancelable: true,
-      //     composed: true
-      //   }))
-      // });
-
-
-      // fetch(endpoint, fetchOptions)
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log("fetched data", data)
-      //     this.dispatchEvent(new CustomEvent('listArticles', {
-      //       detail: {
-      //         data,
-      //         skip: 0,
-      //       },
-      //       bubbles: true,
-      //       cancelable: true,
-      //       composed: true
-      //     }))
-      //   });
     }
   }
 
   connectedCallback() {
-    console.log("controller running....");
     this.addEventListener('requestListArticles', this.requestListArticlesListener)
   }
 
