@@ -28,15 +28,13 @@ export default class ArticlePreview extends Shadow() {
   renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper.innerHTML = `
-    <o-wrapper namespace="${this.namespace}">
+    <a class="link" href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html&article=${this.article.slug}">
       <div class="article-preview">
-          <h3><a class="link" href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html&article=${this.article.slug}">${this.article.slug}</a></h3>
+          <h3 class="title">${this.article.slug}</h3>
           <p>${this.article.description}</p>
         </div>
-    </o-wrapper>
+      </a>
   `
-
-
     this.html = this.newsWrapper
 
 
@@ -44,16 +42,23 @@ export default class ArticlePreview extends Shadow() {
 
   renderCSS() {
     this.css = /* css */`
-      :host > div {
-        border-width: 0 0 2px;
-        border-image: url(/src/img/border-dotted.png) 0 0 2 0 repeat;
-        border-style: dotted;
-        border-color: #ddd;
-        padding: 2em 0;
-        }
-      }
-      @media only screen and (max-width: _max-width_) { 
-      }
+    :host > div {
+      border-width: 0 0 2px;
+      border-image: url(/src/img/border-dotted.png) 0 0 2 0 repeat;
+      border-style: dotted;
+    }
+    :host > div > a > div   {
+      padding:2em 0;
+    }
+    :host > div > a  h3 {
+      color:var(--h3-color, black);
+    }
+    :host > div > a:hover h3 {
+      color:var(--h3-color-hover, white);
+    }
+    :host > div > a p {
+    }
+    @media only screen and (max-width: _max-width_) {}
     `
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
