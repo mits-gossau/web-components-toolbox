@@ -7,7 +7,8 @@ export default class NewsList extends Shadow() {
     super(...args)
     this.listArticlesListener = event => {
       this.hidden = false
-      this.renderHTML(event.detail.fetch)
+      const articlePreviewNamespace = this.getAttribute('article-preview-namespace') || 'preview-default-'
+      this.renderHTML(event.detail.fetch, articlePreviewNamespace)
     }
   }
 
@@ -32,15 +33,13 @@ export default class NewsList extends Shadow() {
 
   renderCSS() {
     this.css = /* css */`
-      :host {
-        display:flex;
-        // background-color:red;
-      }
-     
-      @media only screen and (max-width: _max-width_) {
-        
-      }
+    :host > div {
+      display: var(--display, flex);
+      flex-direction: var(--flex-direction, column);
+    }
+    @media only screen and (max-width: _max-width_) {}
     `
+
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -49,7 +48,7 @@ export default class NewsList extends Shadow() {
       },
       {
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
-        namespaceFallback: true
+        namespaceFallback: false
       }
     ]
     switch (this.getAttribute('namespace')) {
@@ -63,16 +62,19 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  renderHTML(articleFetch) {
+  renderHTML(articleFetch, namespace) {
     Promise.all([articleFetch, this.loadChildComponents()]).then(([article, child]) => {
       const { items } = article.data.newsEntryCollection;
+      const wrapper = document.createElement('div')
       items.forEach(article => {
         // @ts-ignore
-        const articleEle = new child[0][1](article, { namespace: 'preview-default-' })
+        const articleEle = new child[0][1](article, { namespace })
         //articleEle.setAttribute('namespace', 'preview-default-')
         articleEle.setAttribute('article-url', this.getAttribute('article-url'))
-        this.html = articleEle
+        //this.html = articleEle
+        wrapper.appendChild(articleEle)
       })
+      this.html = wrapper
     }).catch(e => this.html = "error")
   }
 
