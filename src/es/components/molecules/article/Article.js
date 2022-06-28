@@ -13,8 +13,8 @@ export default class Article extends Shadow() {
     const articles = sessionStorage.getItem('articles')
     // @ts-ignore
     const articlesData = JSON.parse(articles)
-    console.log(articlesData);
-    const { items } = articlesData.data.data.newsEntryCollection;
+    console.log("article", articlesData);
+    const { items } = articlesData.data.newsEntryCollection;
     console.log(items)
     this.found = items.find(e => e.slug === article);
     console.log(this.found);

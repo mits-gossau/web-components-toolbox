@@ -6,15 +6,17 @@ export default class NewsList extends Shadow() {
   constructor(...args) {
     super(...args)
     this.listArticlesListener = event => {
+      this.hidden = false
       console.log("news list data", event.detail);
-      this.renderHTML(event.detail)
-      sessionStorage.setItem('articles', JSON.stringify(event.detail))
+      this.renderHTML(event.detail.fetch)
+      // sessionStorage.setItem('articles', JSON.stringify(event.detail))
     }
   }
 
   connectedCallback() {
     console.log("connected... NewsList");
-    self.addEventListener('listArticles', this.listArticlesListener)
+    document.body.addEventListener('listArticles', this.listArticlesListener)
+    this.hidden = true
     this.dispatchEvent(new CustomEvent('requestListArticles', {
       detail: {},
       bubbles: true,
@@ -24,20 +26,21 @@ export default class NewsList extends Shadow() {
   }
 
 
-  renderHTML(articles) {
-    const { items } = articles.data.data.newsEntryCollection;
-    console.log("render articles....", items);
-    Promise.all([this.loadChildComponents()]).then(child => {
-      console.log("child components loaded....", child)
+  renderHTML(articleFetch) {
+    //console.log("render articles....", items);
+    Promise.all([articleFetch, this.loadChildComponents()]).then(([article, child]) => {
+      console.log("child components loaded....", article, child)
+      const { items } = article.data.newsEntryCollection;
+      console.log(items)
       items.forEach(article => {
         //console.log("child", child[0][0][1])
         //console.log("article", article);
         // @ts-ignore
-        const articleEle = new child[0][0][1](article)
+        const articleEle = new child[0][1](article)
         console.log(articleEle)
         this.html = articleEle
       })
-    })
+    }).catch(e => this.html = "error")
   }
 
 

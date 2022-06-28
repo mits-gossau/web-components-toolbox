@@ -21,10 +21,10 @@ export default class Contentful extends Shadow() {
     const endpoint = `https://graphql.contentful.com/content/v1/spaces/${spaceId}`
     const limit = this.getAttribute('limit')
     console.log("limit", limit)
-    const variables = { limit: Number(limit) };
 
     this.requestListArticlesListener = event => {
-      console.log("request article listener....");
+      const variables = { limit: Number(limit), skip: event.detail.skip || 0 };
+      console.log("request article listener....", event.detail.skip || 0);
       const fetchOptions = {
         method: "POST",
         headers: {
@@ -33,20 +33,54 @@ export default class Contentful extends Shadow() {
         },
         body: JSON.stringify({ query, variables })
       }
+      this.dispatchEvent(new CustomEvent('listArticles', {
+        detail: {
+          fetch: fetch(endpoint, fetchOptions).then(response => {
+            if (response.status >= 200 && response.status <= 299) {
+              const json = response.json()
+              json.then(data => {
+                sessionStorage.setItem('articles', JSON.stringify(data))
+              })
+              return json
+            }
+            throw new Error(response.statusText)
+            // @ts-ignore
+          }),
+          skip: 0,
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
 
-      fetch(endpoint, fetchOptions)
-        .then(response => response.json())
-        .then(data => {
-          console.log("fetched data", data)
-          this.dispatchEvent(new CustomEvent('listArticles', {
-            detail: {
-              data
-            },
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        });
+      // .then(data => {
+      //   console.log("fetched data", data)
+      //   this.dispatchEvent(new CustomEvent('listArticles', {
+      //     detail: {
+      //       data,
+      //       skip: 0,
+      //     },
+      //     bubbles: true,
+      //     cancelable: true,
+      //     composed: true
+      //   }))
+      // });
+
+
+      // fetch(endpoint, fetchOptions)
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     console.log("fetched data", data)
+      //     this.dispatchEvent(new CustomEvent('listArticles', {
+      //       detail: {
+      //         data,
+      //         skip: 0,
+      //       },
+      //       bubbles: true,
+      //       cancelable: true,
+      //       composed: true
+      //     }))
+      //   });
     }
   }
 
