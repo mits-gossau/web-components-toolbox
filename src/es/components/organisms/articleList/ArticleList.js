@@ -5,7 +5,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class NewsList extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.listArticlesListener = event => {
       this.hidden = false
@@ -14,7 +14,7 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     document.body.addEventListener('listArticles', this.listArticlesListener)
     this.hidden = true
@@ -26,11 +26,11 @@ export default class NewsList extends Shadow() {
     }))
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host > div {
       display: var(--display, flex);
@@ -61,7 +61,8 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  renderHTML (articleFetch, namespace) {
+  renderHTML(articleFetch, namespace) {
+
     Promise.all([articleFetch, this.loadChildComponents()]).then(([article, child]) => {
       const { items } = article.data.newsEntryCollection
       const wrapper = document.createElement('div')
@@ -79,7 +80,7 @@ export default class NewsList extends Shadow() {
     })
   }
 
-  loadChildComponents () {
+  loadChildComponents() {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
       import('../../molecules/articlePreview/ArticlePreview.js').then(
         module => ['m-article-preview', module.default]

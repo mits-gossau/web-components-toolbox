@@ -361,7 +361,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         namespaceFallback: true
       }
     ]
-    console.log(this.getAttribute('namespace'))
     switch (this.getAttribute('namespace')) {
       case 'details-default-':
         return this.fetchCSS([{
