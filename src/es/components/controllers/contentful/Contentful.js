@@ -1,6 +1,10 @@
 // @ts-check
+/* global CustomEvent */
+/* global fetch */
+/* global sessionStorage */
+
 import { Shadow } from '../../prototypes/Shadow.js'
-import query from './Query.js';
+import query from './Query.js'
 
 /**
  * TODO
@@ -9,7 +13,7 @@ import query from './Query.js';
  * @type {CustomElementConstructor}
  */
 export default class Contentful extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super({ mode: 'false' }, ...args)
 
     // TODO:
@@ -22,12 +26,12 @@ export default class Contentful extends Shadow() {
     const limit = this.getAttribute('limit')
 
     this.requestListArticlesListener = event => {
-      const variables = { limit: Number(limit), skip: event.detail.skip || 0 };
+      const variables = { limit: Number(limit), skip: event.detail.skip || 0 }
       const fetchOptions = {
-        method: "POST",
+        method: 'POST',
         headers: {
-          Authorization: "Bearer " + token + " ",
-          "Content-Type": "application/json",
+          Authorization: 'Bearer ' + token + ' ',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ query, variables })
       }
@@ -44,7 +48,7 @@ export default class Contentful extends Shadow() {
             throw new Error(response.statusText)
             // @ts-ignore
           }),
-          skip: 0,
+          skip: 0
         },
         bubbles: true,
         cancelable: true,
@@ -53,12 +57,11 @@ export default class Contentful extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.addEventListener('requestListArticles', this.requestListArticlesListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.removeEventListener('requestListArticles', this.requestListArticlesListener)
   }
-
 }

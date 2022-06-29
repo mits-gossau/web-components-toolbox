@@ -1,48 +1,48 @@
 // @ts-check
+/* global sessionStorage */
+
 import { Shadow } from '../../prototypes/Shadow.js'
 
-
 export default class Article extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
     const article = urlParams.get('article')
     const articles = sessionStorage.getItem('articles')
     // @ts-ignore
     const articlesData = JSON.parse(articles)
-    const { items } = articlesData.data.newsEntryCollection;
-    this.found = items.find(e => e.slug === article);
+    const { items } = articlesData.data.newsEntryCollection
+    this.found = items.find(e => e.slug === article)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
   }
 
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.newsWrapper
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML () {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `<div class="article">
       <h1 class="font-size-big">${this.found.title}</h1>
       <p>${this.found.description}</p>
     </div>`
 
-
     this.html = this.newsWrapper
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host  { }
     `

@@ -1,19 +1,19 @@
 // @ts-check
+/* global CustomEvent */
 import { Shadow } from '../../prototypes/Shadow.js'
 
-
 export default class Pagination extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     let skip = 0
     this.clickListener = event => {
       skip = skip + 1
-      console.log("skip", skip)
+      console.log('skip', skip)
       // if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
       this.dispatchEvent(new CustomEvent('requestListArticles', {
         detail: {
-          skip: skip,
+          skip: skip
         },
         bubbles: true,
         cancelable: true,
@@ -22,25 +22,25 @@ export default class Pagination extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.addEventListener('click', this.clickListener)
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    console.log("pagination connected....");
+    console.log('pagination connected....')
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
   }
 
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.pagination
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML () {
     this.pagination = this.root.querySelector('div') || document.createElement('div')
     this.pagination.innerHTML =
       `<nav>
@@ -52,7 +52,7 @@ export default class Pagination extends Shadow() {
     this.html = this.pagination
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host  {
       display: block;

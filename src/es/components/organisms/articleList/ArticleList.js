@@ -1,9 +1,11 @@
 // @ts-check
+/* global CustomEvent */
+/* global customElements */
+
 import { Shadow } from '../../prototypes/Shadow.js'
 
-
 export default class NewsList extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.listArticlesListener = event => {
       this.hidden = false
@@ -12,10 +14,7 @@ export default class NewsList extends Shadow() {
     }
   }
 
-
-
-
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     document.body.addEventListener('listArticles', this.listArticlesListener)
     this.hidden = true
@@ -27,11 +26,11 @@ export default class NewsList extends Shadow() {
     }))
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
     :host > div {
       display: var(--display, flex);
@@ -62,24 +61,25 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  renderHTML(articleFetch, namespace) {
+  renderHTML (articleFetch, namespace) {
     Promise.all([articleFetch, this.loadChildComponents()]).then(([article, child]) => {
-      const { items } = article.data.newsEntryCollection;
+      const { items } = article.data.newsEntryCollection
       const wrapper = document.createElement('div')
       items.forEach(article => {
         // @ts-ignore
         const articleEle = new child[0][1](article, { namespace })
-        //articleEle.setAttribute('namespace', 'preview-default-')
+        // articleEle.setAttribute('namespace', 'preview-default-')
         articleEle.setAttribute('article-url', this.getAttribute('article-url'))
-        //this.html = articleEle
+        // this.html = articleEle
         wrapper.appendChild(articleEle)
       })
       this.html = wrapper
-    }).catch(e => this.html = "error")
+    }).catch(e => {
+      this.html = 'error'
+    })
   }
 
-
-  loadChildComponents() {
+  loadChildComponents () {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
       import('../../molecules/articlePreview/ArticlePreview.js').then(
         module => ['m-article-preview', module.default]
