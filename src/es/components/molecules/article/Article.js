@@ -4,7 +4,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Article extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
@@ -14,35 +14,38 @@ export default class Article extends Shadow() {
     const articlesData = JSON.parse(articles)
     const { items } = articlesData.data.newsEntryCollection
     this.found = items.find(e => e.slug === article)
+    console.log("article", this.found);
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
   }
 
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.newsWrapper
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML () {
+  renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `<div class="article">
+      <p>${new Date(this.found.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
       <h1 class="font-size-big">${this.found.title}</h1>
-      <p>${this.found.description}</p>
+      <p>${this.found.location} - ${window.documentToHtmlString(this.found.intro.json)} </p>
+      <p>${window.documentToHtmlString(this.found.content.json)}</p>
     </div>`
 
     this.html = this.newsWrapper
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host  { }
     `

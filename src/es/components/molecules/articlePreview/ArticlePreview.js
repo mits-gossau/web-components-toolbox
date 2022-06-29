@@ -6,6 +6,10 @@ export default class ArticlePreview extends Shadow() {
     super(...args)
     this.namespace = args[0].namespace
     this.article = article || null
+    console.log("article", this.article)
+
+    // @ts-ignore
+    console.log("--", window.documentToHtmlString(this.article.intro.json))
   }
 
   connectedCallback() {
@@ -30,11 +34,14 @@ export default class ArticlePreview extends Shadow() {
       <a class="link" href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html&article=${this.article.slug}">
         <div class="article-preview">
           <div> 
-            <a-picture namespace="article-preview-" picture-load defaultSource="../../../../img/test-news.jpeg" alt="randomized image"></a-picture>
+            <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}" alt="randomized image"></a-picture>
           </div>
           <div>
-            <h3 class="title">${this.article.slug}</h3>
-            <p>${this.article.description}</p>
+            <p>${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
+            <h3 class="title">${this.article.title}</h3>
+            ${window.
+        // @ts-ignore
+        documentToHtmlString(this.article.intro.json)}
           </div> 
         </div>
       </a>
