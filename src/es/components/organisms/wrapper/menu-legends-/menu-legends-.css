@@ -10,7 +10,7 @@
     align-items: center;
     width: 80px;
     height: 80px;
-    background-color: #97A619;
+    background-color: var(--color-secondary);
     border-radius: 50%;
     margin-right: 30px;
     padding: 8px;
