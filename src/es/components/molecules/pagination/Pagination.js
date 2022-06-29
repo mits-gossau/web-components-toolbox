@@ -8,7 +8,7 @@ export default class Pagination extends Shadow() {
     const articles = sessionStorage.getItem('articles')
     // @ts-ignore
     const articlesData = JSON.parse(articles)
-    const { total, limit, skip } = articlesData.data.newsEntryCollection
+    const { total, limit, skip } = articlesData?.data.newsEntryCollection
     this.pages = Math.ceil(total / limit)
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
