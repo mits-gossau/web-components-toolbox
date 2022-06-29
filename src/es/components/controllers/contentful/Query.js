@@ -45,10 +45,10 @@ const QUERY = `query GetNews($limit: Int!, $skip: Int!) {
       intro {
         json
       },
-       introImage{
-      url(transform:{width:300, height:300, format:WEBP})
-      description
-    },
+      introImage{
+        url(transform:{width:300, height:300, format:WEBP})
+        description
+      },
       content {
         json
       }

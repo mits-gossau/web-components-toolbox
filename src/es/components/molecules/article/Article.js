@@ -36,7 +36,7 @@ export default class Article extends Shadow() {
   renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `<div class="article">
-      <p>${this.found.date}</p>
+      <p>${new Date(this.found.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
       <h1 class="font-size-big">${this.found.title}</h1>
       <p>${this.found.location} - ${window.documentToHtmlString(this.found.intro.json)} </p>
       <p>${window.documentToHtmlString(this.found.content.json)}</p>

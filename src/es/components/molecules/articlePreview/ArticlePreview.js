@@ -38,7 +38,7 @@ export default class ArticlePreview extends Shadow() {
             <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}" alt="randomized image"></a-picture>
           </div>
           <div>
-            <p>${this.article.date}</p>
+            <p>${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
             <h3 class="title">${this.article.title}</h3>
             ${window.
         // @ts-ignore
