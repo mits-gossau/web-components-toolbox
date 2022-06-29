@@ -1,6 +1,5 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
-//import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 
 export default class ArticlePreview extends Shadow() {
   constructor(article, ...args) {
