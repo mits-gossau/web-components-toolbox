@@ -3,6 +3,15 @@
     --details-menu-portion-summary-child-margin: 16px 0;
     --details-menu-portion-summary-child-margin-open: var(--details-menu-portion-summary-child-margin);
     --details-menu-portion-icon-justify-content: flex-start;
+    --details-menu-portion-border-top: 2px dotted #ddd;
+    --details-menu-portion-summary-transform-hover: none;
+
+    border-image: url(../assets/img/border-dotted-grey2.png) 2 0 0 0 repeat;
+    width: calc(100% - 60px);
+}
+
+:host .nutrients-div {
+    padding-bottom: 24px;
 }
 
 :host .nutrients-list {
@@ -26,7 +35,7 @@
     flex-direction: column;
     justify-content: center;
     margin: 3px auto 0;
-    background-color: #97A619;
+    background-color: var(--color-secondary);
     border-radius: 50%;
     text-align: center;
 }
@@ -39,7 +48,7 @@
     left: 5px;
     width: 90px;
     height: 90px;
-    border: 2px solid #97A619;
+    border: 2px solid var(--color-secondary);
     border-radius: 50%;
 }
 
@@ -54,6 +63,39 @@
     text-transform: uppercase;
 }
 
-:host h4 {
-    
+
+:host .portion-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 20px !important;
+    transform: rotate(0);
+}
+
+:host .portion-icon::before {
+    top: 0;
+    left: 50%;
+    width: 3px;
+    height: 100%;
+    position: absolute;
+    display: block;
+    content: '';
+    background-color: #97A619;
+    transform: rotate(0);
+    transition: transform .25s ease-out;
+}
+:host .portion-icon::after {
+    top: 0;
+    left: 50%;
+    width: 3px;
+    height: 100%;
+    position: absolute;
+    display: block;
+    content: '';
+    background-color: #97A619;
+    transform: rotate(90deg);
+}
+
+:host details[open] .portion-icon::before{
+    transform: rotate(90deg);
+    transition: transform .25s ease-out;
 }

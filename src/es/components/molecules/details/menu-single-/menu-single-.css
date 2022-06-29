@@ -3,20 +3,26 @@
 
     --details-menu-single-icon-display: flex;
     --details-menu-single-icon-row: row;
+    --details-menu-single-icon-justify-content: space-between;
     --details-menu-single-summary-margin: var(--padding) 0;
     --details-menu-single-a-color-hover: var(--color);
     --details-menu-single-a-text-decoration: none;
     --details-menu-single-a-text-decoration-hover: none;
     --details-menu-single-summary-transform-hover: none;
-    --details-menu-single-summary-child-color-hover: green;
-    --details-menu-single-summary-child-color: green;
+    --details-menu-single-summary-child-color-hover: var(--color-secondary);
+    --details-menu-single-summary-child-color: var(--color-secondary);
+    --details-menu-single-svg-color: var(--color-secondary);
     --details-menu-single-ul-list-style: none;
+    --details-menu-single-a-margin: none;
 
     padding-bottom: var(--padding);
 }
 
 :host details {
     background-color: black;
+}
+:host .details-container{
+    padding: 0 var(--padding);
 }
 
 :host summary {
@@ -37,6 +43,7 @@
 :host .content-box {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 :host .content-box > h3 {
@@ -64,8 +71,9 @@
     align-items: center;
     position: relative;
     width: 24px;
+    height: 24px;
     margin: 0 10px 0 0;
-    background-color: #97A619;
+    background-color: var(--color-secondary);
     border-radius: 50%;
     padding: 3px;
 }
@@ -73,7 +81,7 @@
 :host .legende > li .tooltip {
     visibility: hidden;
     width: 120px;
-    background-color: #555;
+    background-color: var(--color-secondary);
     color: #fff;
     text-align: center;
     padding: 5px 0;
@@ -100,7 +108,7 @@
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: #555 transparent transparent transparent;
+    border-color: var(--color-secondary) transparent transparent transparent;
 }
   
 /* Show the tooltip text when you mouse over the tooltip container */
@@ -110,12 +118,8 @@
 }
 
 
-
-:host hr{
-    width: calc(100% - 60px);
-    --details-menu-single-child-margin: 0 var(--padding);
-    --details-menu-single-hr-border: 2px dotted #ddd;
-    border-image: url(../assets/img/border-dotted-grey2.png) 2 0 0 0 repeat;
-    --details-menu-single-hr-opacity: 1;
-    --details-menu-single-hr-border-bottom: none;
+@media screen and (max-width: 768px){
+    :host{
+        --details-menu-single-icon-row: column;
+    }
 }
