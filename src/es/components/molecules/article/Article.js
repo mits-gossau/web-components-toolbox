@@ -34,7 +34,7 @@ export default class Article extends Shadow() {
   renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `<div class="article">
-      <h1>${this.found.title}</h1>
+      <h1 class="font-size-big">${this.found.title}</h1>
       <p>${this.found.description}</p>
     </div>`
 
