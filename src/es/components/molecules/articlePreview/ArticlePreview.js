@@ -2,42 +2,47 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ArticlePreview extends Shadow() {
-  constructor (article, ...args) {
+  constructor(article, ...args) {
     super(...args)
     this.namespace = args[0].namespace
     this.article = article || null
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
   }
 
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.newsWrapper
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML () {
+  renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper.innerHTML = `
-    <a class="link" href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html&article=${this.article.slug}">
-      <div class="article-preview">
-          <h3 class="title">${this.article.slug}</h3>
-          <p>${this.article.description}</p>
+      <a class="link" href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html&article=${this.article.slug}">
+        <div class="article-preview">
+          <div> 
+            <a-picture namespace="article-preview-" picture-load defaultSource="../../../../img/test-news.jpeg" alt="randomized image"></a-picture>
+          </div>
+          <div>
+            <h3 class="title">${this.article.slug}</h3>
+            <p>${this.article.description}</p>
+          </div> 
         </div>
       </a>
   `
     this.html = this.newsWrapper
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host > div {
       border-width: 0 0 2px;
@@ -45,7 +50,12 @@ export default class ArticlePreview extends Shadow() {
       border-style: dotted;
     }
     :host > div > a > div   {
+      display:flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
       padding:2em 0;
+      gap:2em;
     }
     :host > div > a  h3 {
       color:var(--h3-color, black);
