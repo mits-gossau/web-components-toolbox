@@ -13,7 +13,7 @@ import query from './Query.js'
  * @type {CustomElementConstructor}
  */
 export default class Contentful extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super({ mode: 'false' }, ...args)
 
     // TODO:
@@ -26,7 +26,7 @@ export default class Contentful extends Shadow() {
     const limit = this.getAttribute('limit')
 
     this.requestListArticlesListener = event => {
-      console.log("skip:", event.detail.skip)
+      console.log('skip:', event.detail.skip)
       const variables = { limit: Number(limit), skip: Number(event.detail.skip) || 0 }
       const fetchOptions = {
         method: 'POST',
@@ -48,7 +48,7 @@ export default class Contentful extends Shadow() {
             }
             throw new Error(response.statusText)
             // @ts-ignore
-          }),
+          })
         },
         bubbles: true,
         cancelable: true,
@@ -57,11 +57,11 @@ export default class Contentful extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.addEventListener('requestListArticles', this.requestListArticlesListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.removeEventListener('requestListArticles', this.requestListArticlesListener)
   }
 }

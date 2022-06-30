@@ -1,14 +1,16 @@
 // @ts-check
 /* global CustomEvent */
+/* global sessionStorage */
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     const articles = sessionStorage.getItem('articles')
     // @ts-ignore
     const articlesData = JSON.parse(articles)
     const { total, limit, skip } = articlesData?.data.newsEntryCollection
+    console.log('skip ', skip)
     this.pages = Math.ceil(total / limit)
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
@@ -25,7 +27,7 @@ export default class Pagination extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     this.nav = this.root.querySelector('.pagination')
@@ -33,19 +35,19 @@ export default class Pagination extends Shadow() {
     console.log('pagination connected....')
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.nav.removeEventListener('click', this.clickListener)
   }
 
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.pagination
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML () {
     let pageItems = ''
     for (let i = 0; i < this.pages; ++i) {
       pageItems += `<li class="page-item" page="${i + 1}"><a class="page-link" href="#">${i + 1}</a></li>`
@@ -62,7 +64,7 @@ export default class Pagination extends Shadow() {
     this.html = this.pagination
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
     :host {
       display: block;

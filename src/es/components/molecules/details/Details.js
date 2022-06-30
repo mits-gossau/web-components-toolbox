@@ -48,7 +48,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
 
 // @ts-ignore
 export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends ChosenHTMLElement {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['open'] } }), ...args)
 
     this.setAttribute('aria-expanded', 'false')
@@ -89,7 +89,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
@@ -97,13 +97,13 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.root.addEventListener('click', this.clickEventListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     super.disconnectedCallback()
     document.body.removeEventListener(this.openEventName, this.openEventListener)
     this.root.removeEventListener('click', this.clickEventListener)
   }
 
-  mutationCallback(mutationList, observer) {
+  mutationCallback (mutationList, observer) {
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
         // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
@@ -206,7 +206,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -215,7 +215,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.divSummary
   }
 
@@ -224,7 +224,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {void}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */` 
       :host {
         border-bottom:var(--border-bottom, 0);
@@ -385,7 +385,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {void}
    */
-  renderHTML() {
+  renderHTML () {
     this.divSummary = this.root.querySelector('div.summary') || document.createElement('div')
     this.divSummary.classList.add('summary')
     Array.from(this.summary.childNodes).forEach(node => this.divSummary.appendChild(node))
@@ -396,7 +396,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.html = this.style
   }
 
-  setIconFromAttribute(iconPath, node, cssClass) {
+  setIconFromAttribute (iconPath, node, cssClass) {
     const iconImg = new Image()
     iconImg.src = iconPath
     iconImg.alt = 'close detail'
@@ -405,14 +405,14 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     return node
   }
 
-  setIconDefault(node, cssClass) {
+  setIconDefault (node, cssClass) {
     const iconSvg = document.createElement('div')
 
     switch (this.getAttribute('namespace')) {
       case 'details-menu-portion-':
-        iconSvg.classList.add("portion-icon")
+        iconSvg.classList.add('portion-icon')
         node.prepend(iconSvg)
-        break;
+        break
       default:
         iconSvg.innerHTML = `
           <?xml version="1.0" encoding="UTF-8"?>
@@ -429,23 +429,23 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     return node
   }
 
-  get openEventName() {
+  get openEventName () {
     return this.getAttribute('open-event-name') || 'open'
   }
 
-  get summary() {
+  get summary () {
     return this.root.querySelector('summary')
   }
 
-  get details() {
+  get details () {
     return this.root.querySelector('details')
   }
 
-  get content() {
+  get content () {
     return this.details.querySelector('summary ~ *')
   }
 
-  get style() {
+  get style () {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
