@@ -62,16 +62,15 @@ export default class NewsList extends Shadow() {
   }
 
   renderHTML(articleFetch, namespace) {
-
-    Promise.all([articleFetch, this.loadChildComponents()]).then(([article, child]) => {
-      const { items } = article.data.newsEntryCollection
+    this.html = ''
+    Promise.all([articleFetch, this.loadChildComponents()]).then(([articles, child]) => {
+      console.log("articles", articles)
+      const { items } = articles.data.newsEntryCollection
       const wrapper = document.createElement('div')
       items.forEach(article => {
         // @ts-ignore
         const articleEle = new child[0][1](article, { namespace })
-        // articleEle.setAttribute('namespace', 'preview-default-')
         articleEle.setAttribute('article-url', this.getAttribute('article-url'))
-        // this.html = articleEle
         wrapper.appendChild(articleEle)
       })
       this.html = wrapper
