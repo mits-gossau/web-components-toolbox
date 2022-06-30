@@ -2,41 +2,43 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ArticlePreview extends Shadow() {
-  constructor (article, ...args) {
+  constructor(article, ...args) {
     super(...args)
     this.namespace = args[0].namespace
     this.article = article || null
     console.log('article preview', this.article)
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
   }
 
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.newsWrapper
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML () {
+  renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper.innerHTML = `
       <a class="link" href="/src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html&article=${this.article.slug}">
         <div class="article-preview">
-          <div> 
-            <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}" alt="randomized image"></a-picture>
-          </div>
-          <div>
-            <p>${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
-            <h3 class="title">${this.article.introHeadline}</h3>
-            <p>${this.article.introText}</p>
+        <div>
+        <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}" alt="randomized image"></a-picture>
+        </div>
+        <div>
+        <p>${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
+        <h3 class="title">${this.article.introHeadline}</h3>
+        <p>${this.article.introText}</p>
+        <hr />
+        <p>${documentToHtmlString(this.article.contentOne.json)}</p>
           </div> 
         </div>
       </a>
@@ -44,7 +46,7 @@ export default class ArticlePreview extends Shadow() {
     this.html = this.newsWrapper
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host > div {
       border-width: 0 0 2px;
