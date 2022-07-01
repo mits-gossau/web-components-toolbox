@@ -2,36 +2,33 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ArticlePreview extends Shadow() {
-  constructor (article, ...args) {
+  constructor(article, ...args) {
     super(...args)
-    this.namespace = args[0].namespace
     this.article = article || null
-    console.log('article preview', this.article, this.namespace)
+    console.log('article preview', this.article)
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
   }
 
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.newsWrapper
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML () {
-    /// src/es/components/web-components-toolbox/docs/Template.html?rootFolder=src&css=./src/css/variablesCustom.css&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/News.html
-    console.log(this.articleUrl)
+  renderHTML() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper.innerHTML = /* html */ `
     <a class="link" href="${this.articleUrl}&article=${this.article.slug}">
-      <div class="article-preview">
+      <div>
         <div>
           <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}" alt="randomized image"></a-picture>
         </div>
@@ -46,7 +43,7 @@ export default class ArticlePreview extends Shadow() {
     this.html = this.newsWrapper
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host > div {
       border-width: 0 0 2px;
@@ -67,8 +64,7 @@ export default class ArticlePreview extends Shadow() {
     :host > div > a:hover h3 {
       color:var(--h3-color-hover, white);
     }
-    :host > div > a p {
-    }
+   
     @media only screen and (max-width: _max-width_) {}
     `
 
@@ -95,7 +91,7 @@ export default class ArticlePreview extends Shadow() {
     }
   }
 
-  get articleUrl () {
+  get articleUrl() {
     return this.getAttribute('article-url') || null
   }
 }
