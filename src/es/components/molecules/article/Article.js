@@ -4,24 +4,23 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Article extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
-    const queryString = window.location.search
-    const urlParams = new URLSearchParams(queryString)
-    const article = urlParams.get('article')
-    const articles = sessionStorage.getItem('articles') || ''
-    this.RESOLVE_STATE = 'LOADED'
-    if (articles === '') {
+    this.RESOLVE_MSG = 'LOADED'
+    const articles = this.loadArticles(window, sessionStorage)
+    this.article = this.getArticle(articles.slug, articles.articles)
+  }
+
+  connectedCallback() {
+    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (!this.article) {
       // TODO
       this.html = 'Error!'
     } else {
-      const articlesData = JSON.parse(articles)
-      const { items } = articlesData.data.newsEntryCollection
-      this.found = items.find(e => e.slug === article)
       this.loadScriptDependency().then(script => {
-        if (script === this.RESOLVE_STATE) {
+        if (script === this.RESOLVE_MSG) {
           this.loadDependency().then(dependency => {
-            if (dependency === this.RESOLVE_STATE) {
+            if (dependency === this.RESOLVE_MSG) {
               this.renderHTML()
             }
           })
@@ -30,47 +29,61 @@ export default class Article extends Shadow() {
     }
   }
 
-  connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+  disconnectedCallback() {
   }
 
-  disconnectedCallback () {
+  loadArticles(window, sessionStorage) {
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
+    const slug = urlParams.get('article')
+    const articles = sessionStorage.getItem('articles')
+    return { slug, articles }
   }
 
-  shouldComponentRenderCSS () {
+  getArticle(slug, articles) {
+    if (!articles || !slug) return
+    const articlesData = JSON.parse(articles)
+    const { items } = articlesData.data.newsEntryCollection
+    const article = items.find(item => item.slug === slug)
+    return article
+  }
+
+
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML () {
+  renderHTML() {
+    const { date, tags, introHeadline, location, introText, contentOne, imageOne, contentTwo, imageTwo } = this.article
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `
     <div class="article">
-      <p>${new Date(this.found.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${this.found.tags[1]}</p>
-      <h1 class="font-size-big">${this.found.metaTitle}</h1>
-      <p><b>${this.found.introText}</b></p>
+      <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
+      <h1 class="font-size-big">${introHeadline}</h1>
+      <p><b>${location ? `${location} - ` : ''}${introText}</b></p>
       <div>
-          ${this.found.contentOne
+          ${contentOne
         ? `<p>${window
           // @ts-ignore
-          .documentToHtmlString(this.found.contentOne.json)}</p>`
+          .documentToHtmlString(contentOne.json)}</p>`
         : ''}
-          ${this.found.imageOne ? `<div><a-picture namespace="article-preview-" picture-load defaultSource="${this.found.imageOne.url}" alt="randomized image"></a-picture></div>` : ''} 
-          ${this.found.contentTwo
+          ${imageOne ? `<div><a-picture namespace="article-preview-" picture-load defaultSource="${imageOne.url}" alt="randomized image"></a-picture></div>` : ''} 
+          ${contentTwo
         ? `<p>${window
           // @ts-ignore
-          .documentToHtmlString(this.found.contentTwo.json)}</p>`
+          .documentToHtmlString(contentTwo.json)}</p>`
         : ''} 
-          ${this.found.imageTwo ? `<div><a-picture namespace="article-preview-" picture-load defaultSource="${this.found.imageTwo.url}" alt="randomized image"></a-picture></div>` : ''} 
+          ${imageTwo ? `<div><a-picture namespace="article-preview-" picture-load defaultSource="${imageTwo.url}" alt="randomized image"></a-picture></div>` : ''} 
       </div>
     </div>`
     this.html = this.newsWrapper
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host ul li{
       position: var(--li-position, relative);
-      padding-left: 2em;
+      padding-left: var(--li-padding-left, 2em);
     }
     :host ul li::before {
       position: absolute;
@@ -106,11 +119,9 @@ export default class Article extends Shadow() {
     }
   }
 
-  loadScriptDependency () {
+  loadScriptDependency() {
     return new Promise((resolve, reject) => {
-      if (document.getElementById('contentful-module-export')) {
-        return resolve(this.RESOLVE_STATE)
-      }
+      if (document.getElementById('contentful-module-export')) resolve(this.RESOLVE_MSG)
       const moduleExportScript = document.createElement('script')
       moduleExportScript.setAttribute('id', 'contentful-module-export')
       moduleExportScript.type = 'text/javascript'
@@ -118,25 +129,23 @@ export default class Article extends Shadow() {
       try {
         moduleExportScript.appendChild(document.createTextNode(code))
         document.body.appendChild(moduleExportScript)
-        return resolve(this.RESOLVE_STATE)
+        return resolve(this.RESOLVE_MSG)
       } catch (e) {
         return reject(e)
       }
     })
   }
 
-  loadDependency () {
+  loadDependency() {
     return new Promise((resolve, reject) => {
-      if (document.getElementById('contentful-renderer')) {
-        return resolve(this.RESOLVE_STATE)
-      }
+      if (document.getElementById('contentful-renderer')) resolve(this.RESOLVE_MSG)
       const contentfulRenderer = document.createElement('script')
       contentfulRenderer.setAttribute('type', 'text/javascript')
       contentfulRenderer.setAttribute('id', 'contentful-renderer')
       try {
         contentfulRenderer.setAttribute('src', '//cdn.jsdelivr.net/npm/@contentful/rich-text-html-renderer@15.13.1/dist/rich-text-html-renderer.es5.min.js')
         document.body.appendChild(contentfulRenderer)
-        contentfulRenderer.onload = () => resolve(this.RESOLVE_STATE)
+        contentfulRenderer.onload = () => resolve(this.RESOLVE_MSG)
       } catch (e) {
         return reject(e)
       }
