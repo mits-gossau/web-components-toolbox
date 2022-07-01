@@ -1,0 +1,126 @@
+:host {
+    --padding: 30px;
+
+    --details-menu-single-icon-display: flex;
+    --details-menu-single-icon-row: row;
+    --details-menu-single-icon-justify-content: space-between;
+    --details-menu-single-summary-margin: var(--padding) 0;
+    --details-menu-single-a-color-hover: var(--color);
+    --details-menu-single-a-text-decoration: none;
+    --details-menu-single-a-text-decoration-hover: none;
+    --details-menu-single-summary-transform-hover: none;
+    --details-menu-single-summary-child-color-hover: var(--color-secondary);
+    --details-menu-single-summary-child-color: var(--color-secondary);
+    --details-menu-single-svg-color: var(--color-secondary);
+    --details-menu-single-ul-list-style: none;
+    --details-menu-single-a-margin: none;
+
+    padding-bottom: var(--padding);
+}
+
+:host details {
+    background-color: black;
+}
+:host .details-container{
+    padding: 0 var(--padding);
+}
+
+:host summary {
+    padding-top: 1px;
+    height: 110%;
+}
+
+:host .summary {
+    padding: 0 var(--padding);
+}
+
+:host .image-box,
+:host details[open] .image-box{
+    flex-basis: 43.56%;
+    margin-right: 25px;
+}
+
+:host .content-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-basis: 50%;
+}
+
+:host .content-box > h3 {
+    margin: 0 0 16px;
+}
+
+:host .content-box > .description {
+    overflow-wrap: break-word;
+    height: 70px;
+}
+
+:host .content-box > .end {
+    margin: 0 0 16px;
+}
+
+:host .legende {
+    color: var(--color);
+    display: flex;
+    flex-direction: row;
+    padding-left: 0;
+}
+
+:host .legende > li {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 24px;
+    height: 24px;
+    margin: 0 10px 0 0;
+    background-color: var(--color-secondary);
+    border-radius: 50%;
+    padding: 3px;
+}
+
+:host .legende > li .tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--color-secondary);
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+  
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+  
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+:host .legende > li .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--color-secondary) transparent transparent transparent;
+}
+  
+/* Show the tooltip text when you mouse over the tooltip container */
+:host .legende > li:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+@media screen and (max-width: 768px){
+    :host{
+        --details-menu-single-icon-row: column;
+    }
+}
