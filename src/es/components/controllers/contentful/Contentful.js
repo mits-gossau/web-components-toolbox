@@ -2,9 +2,10 @@
 /* global CustomEvent */
 /* global fetch */
 /* global sessionStorage */
+/* global AbortController */
 
 import { Shadow } from '../../prototypes/Shadow.js'
-import query from './Query.js'
+import query from '../../../../../../controllers/contenful/Query.js'
 
 /**
  * TODO
@@ -17,16 +18,16 @@ export default class Contentful extends Shadow() {
     super({ mode: 'false' }, ...args)
 
     // TODO:
-    // AbortController()
     // Move Base URL to Environment
 
     const token = this.getAttribute('token')
     const spaceId = this.getAttribute('space-id')
     const endpoint = `https://graphql.contentful.com/content/v1/spaces/${spaceId}`
     const limit = this.getAttribute('limit')
-
+    this.abortController = null
     this.requestListArticlesListener = event => {
-      console.log('skip:', event.detail.skip)
+      if (this.abortController) this.abortController.abort()
+      this.abortController = new AbortController()
       const variables = { limit: Number(limit), skip: Number(event.detail.skip) || 0 }
       const fetchOptions = {
         method: 'POST',
@@ -34,8 +35,10 @@ export default class Contentful extends Shadow() {
           Authorization: 'Bearer ' + token + ' ',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ query, variables })
+        body: JSON.stringify({ query, variables }),
+        signal: this.abortController.signal
       }
+
       this.dispatchEvent(new CustomEvent('listArticles', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(response => {
@@ -47,7 +50,6 @@ export default class Contentful extends Shadow() {
               return json
             }
             throw new Error(response.statusText)
-            // @ts-ignore
           })
         },
         bubbles: true,

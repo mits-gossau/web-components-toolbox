@@ -7,19 +7,15 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class NewsList extends Shadow() {
   constructor (...args) {
     super(...args)
-    this.RESOLVE_STATES = {
-      LOADED: 'LOADED',
-      EXIST: 'EXIST'
-    }
+    this.RESOLVE_STATE = 'LOADED'
     this.listArticlesListener = event => {
       this.hidden = false
       const articlePreviewNamespace = this.getAttribute('article-preview-namespace') || 'preview-default-'
       this.loadScriptDependency().then(script => {
-        console.log('script', script)
-        if (script === this.RESOLVE_STATES.EXIST || this.RESOLVE_STATES.LOADED) {
+        if (script === this.RESOLVE_STATE) {
           this.loadDependency().then(dependency => {
-            console.log('dependency', dependency)
-            if (dependency === this.RESOLVE_STATES.EXIST || this.RESOLVE_STATES.LOADED) {
+            console.log(dependency)
+            if (dependency === this.RESOLVE_STATE) {
               this.renderHTML(event.detail.fetch, articlePreviewNamespace)
             }
           })
@@ -47,17 +43,16 @@ export default class NewsList extends Shadow() {
   loadScriptDependency () {
     return new Promise((resolve, reject) => {
       if (document.getElementById('contentful-module-export')) {
-        console.log('-----iEXPORTER---------')
-        return resolve(this.RESOLVE_STATES.EXIST)
+        return resolve(this.RESOLVE_STATE)
       }
-      const s = document.createElement('script')
-      s.setAttribute('id', 'contentful-module-export')
-      s.type = 'text/javascript'
+      const moduleExportScripts = document.createElement('script')
+      moduleExportScripts.setAttribute('id', 'contentful-module-export')
+      moduleExportScripts.type = 'text/javascript'
       const code = 'var exports = { "__esModule": true };'
       try {
-        s.appendChild(document.createTextNode(code))
-        document.body.appendChild(s)
-        return resolve(this.RESOLVE_STATES.LOADED)
+        moduleExportScripts.appendChild(document.createTextNode(code))
+        document.body.appendChild(moduleExportScripts)
+        return resolve(this.RESOLVE_STATE)
       } catch (e) {
         return reject(e)
       }
@@ -67,16 +62,15 @@ export default class NewsList extends Shadow() {
   loadDependency () {
     return new Promise((resolve, reject) => {
       if (document.getElementById('contentful-renderer')) {
-        console.log('----RENDERER----------')
-        return resolve(this.RESOLVE_STATES.EXIST)
+        return resolve(this.RESOLVE_STATE)
       }
-      const macroCarouselScript = document.createElement('script')
-      macroCarouselScript.setAttribute('type', 'text/javascript')
-      macroCarouselScript.setAttribute('id', 'contentful-renderer')
+      const contentfulRenderer = document.createElement('script')
+      contentfulRenderer.setAttribute('type', 'text/javascript')
+      contentfulRenderer.setAttribute('id', 'contentful-renderer')
       try {
-        macroCarouselScript.setAttribute('src', '//cdn.jsdelivr.net/npm/@contentful/rich-text-html-renderer@15.13.1/dist/rich-text-html-renderer.es5.min.js')
-        document.body.appendChild(macroCarouselScript)
-        macroCarouselScript.onload = () => resolve('loaded')
+        contentfulRenderer.setAttribute('src', '//cdn.jsdelivr.net/npm/@contentful/rich-text-html-renderer@15.13.1/dist/rich-text-html-renderer.es5.min.js')
+        document.body.appendChild(contentfulRenderer)
+        contentfulRenderer.onload = () => resolve(this.RESOLVE_STATE)
       } catch (e) {
         return reject(e)
       }
@@ -121,7 +115,6 @@ export default class NewsList extends Shadow() {
   renderHTML (articleFetch, namespace) {
     this.html = ''
     Promise.all([articleFetch, this.loadChildComponents()]).then(([articles, child]) => {
-      console.log('articles', articles)
       const { items } = articles.data.newsEntryCollection
       const wrapper = document.createElement('div')
       items.forEach(article => {
@@ -132,8 +125,7 @@ export default class NewsList extends Shadow() {
       })
       this.html = wrapper
     }).catch(e => {
-      console.log(e)
-      this.html = 'error'
+      this.html = 'Error'
     })
   }
 

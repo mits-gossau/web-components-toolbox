@@ -2,33 +2,36 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ArticlePreview extends Shadow() {
-  constructor(article, ...args) {
+  constructor (article, ...args) {
     super(...args)
     this.article = article || null
-    console.log('article preview', this.article)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
   }
 
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.newsWrapper
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML () {
+    if (!this.article) {
+      this.html = 'Error'
+      return
+    }
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper.innerHTML = /* html */ `
     <a class="link" href="${this.articleUrl}&article=${this.article.slug}">
-      <div>
+      <div class="preview-wrapper">
         <div>
           <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}" alt="randomized image"></a-picture>
         </div>
@@ -43,7 +46,7 @@ export default class ArticlePreview extends Shadow() {
     this.html = this.newsWrapper
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
     :host > div {
       border-width: 0 0 2px;
@@ -91,7 +94,7 @@ export default class ArticlePreview extends Shadow() {
     }
   }
 
-  get articleUrl() {
+  get articleUrl () {
     return this.getAttribute('article-url') || null
   }
 }

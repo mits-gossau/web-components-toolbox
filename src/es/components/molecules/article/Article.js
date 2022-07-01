@@ -4,7 +4,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Article extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
@@ -13,7 +13,7 @@ export default class Article extends Shadow() {
     this.RESOLVE_STATE = 'LOADED'
     if (articles === '') {
       // TODO
-      this.html = "Error!"
+      this.html = 'Error!'
     } else {
       const articlesData = JSON.parse(articles)
       const { items } = articlesData.data.newsEntryCollection
@@ -30,18 +30,18 @@ export default class Article extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML () {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `
     <div class="article">
@@ -49,16 +49,24 @@ export default class Article extends Shadow() {
       <h1 class="font-size-big">${this.found.metaTitle}</h1>
       <p><b>${this.found.introText}</b></p>
       <div>
-          ${this.found.contentOne ? `<p>${window.documentToHtmlString(this.found.contentOne.json)}</p>` : ''}
+          ${this.found.contentOne
+        ? `<p>${window
+          // @ts-ignore
+          .documentToHtmlString(this.found.contentOne.json)}</p>`
+        : ''}
           ${this.found.imageOne ? `<div><a-picture namespace="article-preview-" picture-load defaultSource="${this.found.imageOne.url}" alt="randomized image"></a-picture></div>` : ''} 
-          ${this.found.contentTwo ? `<p>${window.documentToHtmlString(this.found.contentTwo.json)}</p>` : ''} 
+          ${this.found.contentTwo
+        ? `<p>${window
+          // @ts-ignore
+          .documentToHtmlString(this.found.contentTwo.json)}</p>`
+        : ''} 
           ${this.found.imageTwo ? `<div><a-picture namespace="article-preview-" picture-load defaultSource="${this.found.imageTwo.url}" alt="randomized image"></a-picture></div>` : ''} 
       </div>
     </div>`
     this.html = this.newsWrapper
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
     :host ul li{
       position: var(--li-position, relative);
@@ -98,7 +106,7 @@ export default class Article extends Shadow() {
     }
   }
 
-  loadScriptDependency() {
+  loadScriptDependency () {
     return new Promise((resolve, reject) => {
       if (document.getElementById('contentful-module-export')) {
         return resolve(this.RESOLVE_STATE)
@@ -117,7 +125,7 @@ export default class Article extends Shadow() {
     })
   }
 
-  loadDependency() {
+  loadDependency () {
     return new Promise((resolve, reject) => {
       if (document.getElementById('contentful-renderer')) {
         return resolve(this.RESOLVE_STATE)
