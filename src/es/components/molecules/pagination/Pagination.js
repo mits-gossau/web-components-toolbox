@@ -6,7 +6,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
 
     this.pagination = this.root.querySelector('div') || document.createElement('div')
@@ -34,22 +34,22 @@ export default class Pagination extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener('listArticles', this.listArticlesListener)
     this.pagination.addEventListener('click', this.clickListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listArticles', this.listArticlesListener)
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML(pages) {
+  renderHTML (pages) {
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
       pageItems += `<li class="page-item" page="${i + 1}"><a class="page-link" href="#">${i + 1}</a></li>`
@@ -65,8 +65,8 @@ export default class Pagination extends Shadow() {
     this.html = this.pagination
   }
 
-  renderCSS() {
-    this.css = /* css */`
+  renderCSS () {
+    this.css = /* css */ `
     :host {
       display: block;
       background-color: black;
@@ -122,7 +122,7 @@ export default class Pagination extends Shadow() {
     ]
 
     switch (this.getAttribute('namespace')) {
-      case 'preview-default-':
+      case 'pagination-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false

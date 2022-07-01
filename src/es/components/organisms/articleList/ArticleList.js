@@ -88,7 +88,7 @@ export default class NewsList extends Shadow() {
   }
 
   renderCSS () {
-    this.css = /* css */`
+    this.css = /* css */ `
     :host > div {
       display: var(--display, flex);
       flex-direction: var(--flex-direction, column);

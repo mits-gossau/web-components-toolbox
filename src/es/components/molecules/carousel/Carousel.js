@@ -50,7 +50,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class MacroCarousel extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
 
     this.macroCarousel = document.createElement('macro-carousel')
@@ -132,7 +132,7 @@ export default class MacroCarousel extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     const runResizePromises = []
     if (this.shouldComponentRenderCSS()) runResizePromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) runResizePromises.push(this.renderHTML())
@@ -171,7 +171,7 @@ export default class MacroCarousel extends Shadow() {
     }
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     self.removeEventListener('resize', this.resizeListener)
     if (this.hasAttribute('sync-id')) {
       if (this.getAttribute('interval')) {
@@ -199,7 +199,7 @@ export default class MacroCarousel extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -208,7 +208,7 @@ export default class MacroCarousel extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.scripts.length
   }
 
@@ -217,7 +217,7 @@ export default class MacroCarousel extends Shadow() {
    *
    * @return {Promise<void>|void}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         background: var(--background, none);
@@ -398,7 +398,7 @@ export default class MacroCarousel extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderHTML() {
+  renderHTML () {
     return this.loadDependency().then(() => {
       this.html = this.macroCarousel
       // wait for the carousel component to initiate the shadowDom and be ready
@@ -433,7 +433,7 @@ export default class MacroCarousel extends Shadow() {
    *
    * @returns {Promise<{components: any}>}
    */
-  loadDependency() {
+  loadDependency () {
     // make it global to self so that other components can know when it has been loaded
     return self.macroCarousel || (self.macroCarousel = new Promise(resolve => {
       if (customElements.get('macro-carousel')) {
@@ -452,7 +452,7 @@ export default class MacroCarousel extends Shadow() {
     }))
   }
 
-  macroCarouselReady() {
+  macroCarouselReady () {
     // style which has to be injected to take effect
     this.macroCarousel.shadowRoot.appendChild(this.injectStyle)
     // autoplay
@@ -462,24 +462,24 @@ export default class MacroCarousel extends Shadow() {
     }
   }
 
-  setInterval() {
+  setInterval () {
     clearInterval(this.interval)
     this.interval = setInterval(() => this.macroCarousel.next(), Number(this.getAttribute('interval')))
   }
 
-  clearInterval() {
+  clearInterval () {
     clearInterval(this.interval)
   }
 
-  getMedia() {
+  getMedia () {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? '' : '-mobile'
   }
 
-  get scripts() {
+  get scripts () {
     return this.root.querySelectorAll('script')
   }
 
-  get aPictures() {
+  get aPictures () {
     return Array.from(this.macroCarousel.querySelectorAll('a-picture'))
   }
 }
