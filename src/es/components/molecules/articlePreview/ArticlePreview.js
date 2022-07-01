@@ -38,7 +38,9 @@ export default class ArticlePreview extends Shadow() {
         <h3 class="title">${this.article.introHeadline}</h3>
         <p>${this.article.introText}</p>
         <hr />
-        <p>${documentToHtmlString(this.article.contentOne.json)}</p>
+        <p>${window.
+        // @ts-ignore
+        documentToHtmlString(this.article.contentOne.json)}</p>
           </div> 
         </div>
       </a>
