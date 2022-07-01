@@ -48,7 +48,6 @@ export default class Article extends Shadow() {
     return article
   }
 
-
   shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
