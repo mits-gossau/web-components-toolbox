@@ -93,7 +93,7 @@ export default class MacroCarousel extends Shadow() {
         // current slide is last and going to first
         if (event.detail.slide === 0 && Number(this.macroCarousel.getAttribute('selected')) === this.macroCarousel.querySelectorAll('[role=listitem]').length - 1) {
           this.macroCarousel.next()
-        // current slide is first and going to the last
+          // current slide is first and going to the last
         } else if (event.detail.slide === this.macroCarousel.querySelectorAll('[role=listitem]').length - 1 && Number(this.macroCarousel.getAttribute('selected')) === 0) {
           this.macroCarousel.previous()
         } else {
