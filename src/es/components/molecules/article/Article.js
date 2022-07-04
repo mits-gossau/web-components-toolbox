@@ -1,6 +1,8 @@
 // @ts-check
 /* global sessionStorage */
 /* global self */
+/* global customElements */
+/* global DocumentFragment */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -10,6 +12,9 @@ export default class Article extends Shadow() {
     this.RESOLVE_MSG = 'LOADED'
     const articles = this.loadArticles(window, sessionStorage)
     this.article = this.getArticle(articles.slug, articles.articles)
+    this.clickListener = event => {
+      window.open(this.articleListUrl)
+    }
   }
 
   connectedCallback () {
@@ -23,6 +28,7 @@ export default class Article extends Shadow() {
           this.loadDependency().then(dependency => {
             if (dependency === this.RESOLVE_MSG) {
               this.renderHTML()
+              this.backBtn.addEventListener('click', this.clickListener)
             }
           })
         }
@@ -31,6 +37,7 @@ export default class Article extends Shadow() {
   }
 
   disconnectedCallback () {
+    this.backBtn.removeEventListener('click', this.clickListener)
   }
 
   loadArticles (window, sessionStorage) {
@@ -76,14 +83,14 @@ export default class Article extends Shadow() {
         : ''} 
           ${imageTwo ? `<div><a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
       </div>
-      <a-button namespace=button-primary->hello</a-button>
+      <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->Zurück zu allen Beiträgen</a-button></div>
     </div>`
     this.html = this.newsWrapper
   }
 
   renderCSS () {
     this.css = /* css */`
-    :host ul li{
+    :host ul li {
       position: var(--li-position, relative);
       padding-left: var(--li-padding-left, 2em);
     }
@@ -97,6 +104,10 @@ export default class Article extends Shadow() {
       background-color: #97A619;
       border-radius: 50%;
       content: '';
+    }
+    :host .back-btn-wrapper {
+      padding:var(--back-btn-padding, 5em);
+      text-align:var(--back-btn-text-align, center);
     }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
@@ -169,5 +180,13 @@ export default class Article extends Shadow() {
       })
       return elements
     }))
+  }
+
+  get articleListUrl () {
+    return this.getAttribute('news-list-url') || ''
+  }
+
+  get backBtn () {
+    return this.root.querySelector('a-button') || new DocumentFragment()
   }
 }

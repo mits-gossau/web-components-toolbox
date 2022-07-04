@@ -15,7 +15,6 @@ export default class NewsList extends Shadow() {
       this.loadScriptDependency().then(script => {
         if (script === this.RESOLVE_STATE) {
           this.loadDependency().then(dependency => {
-            console.log(dependency)
             if (dependency === this.RESOLVE_STATE) {
               this.renderHTML(event.detail.fetch, articlePreviewNamespace)
             }

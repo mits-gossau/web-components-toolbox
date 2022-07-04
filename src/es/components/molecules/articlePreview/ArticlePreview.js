@@ -28,16 +28,15 @@ export default class ArticlePreview extends Shadow() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper.innerHTML = /* html */ `
     <a class="link" href="${this.articleUrl}&article=${this.article.slug}">
-      <div class="preview-wrapper">
-        <div>
-          <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}" alt="randomized image"></a-picture>
+        <div class="image-wrapper">
+          <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
         </div>
-        <div>
+       <div class="text-wrapper">
           <p>${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
           <h3 class="title">${this.article.introHeadline}</h3>
           <p>${this.article.introText}</p>
         </div> 
-      </div>
+      
     </a>
   `
     this.html = this.newsWrapper
@@ -50,13 +49,21 @@ export default class ArticlePreview extends Shadow() {
       border-image: url(/src/img/border-dotted.png) 0 0 2 0 repeat;
       border-style: dotted;
     }
-    :host > div > a > div   {
-      display:flex;
+    :host > div > a {
+      display:flex !important;
       flex-direction: row;
-      justify-content: flex-start;
+      flex-wrap: nowrap;
       align-items: flex-start;
-      padding:2em 0;
       gap:2em;
+      padding:1em 0;
+    }
+    :host > div > a > div   {
+      // display:flex;
+      // flex-direction: row;
+      // justify-content: flex-start;
+      // align-items: flex-start;
+      // padding:2em 0;
+      // gap:2em;
     }
     :host > div > a  h3 {
       color:var(--h3-color, black);
