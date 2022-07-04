@@ -142,7 +142,7 @@ export default class Article extends Shadow() {
       contentfulRenderer.setAttribute('type', 'text/javascript')
       contentfulRenderer.setAttribute('id', 'contentful-renderer')
       try {
-        contentfulRenderer.setAttribute('src', '//cdn.jsdelivr.net/npm/@contentful/rich-text-html-renderer@15.13.1/dist/rich-text-html-renderer.es5.min.js')
+        contentfulRenderer.setAttribute('src', self.Environment.contentfulRenderer)
         document.body.appendChild(contentfulRenderer)
         contentfulRenderer.onload = () => resolve(this.RESOLVE_MSG)
       } catch (e) {
