@@ -1,10 +1,7 @@
 :host {
-    --padding: 30px;
-
     --details-menu-single-icon-display: flex;
     --details-menu-single-icon-row: row;
     --details-menu-single-icon-justify-content: space-between;
-    --details-menu-single-summary-margin: var(--padding) 0;
     --details-menu-single-a-color-hover: var(--color);
     --details-menu-single-a-text-decoration: none;
     --details-menu-single-a-text-decoration-hover: none;
@@ -14,24 +11,16 @@
     --details-menu-single-svg-color: var(--color-secondary);
     --details-menu-single-ul-list-style: none;
     --details-menu-single-a-margin: none;
+    --details-menu-single-summary-padding: 24px 30px;
+    --details-menu-single-summary-padding-mobile: 24px 16px;
+    --details-menu-single-child-padding: 0 30px;
+    --details-menu-single-child-padding-open-mobile: 24px 16px;
 
-    padding-bottom: var(--padding);
+    padding-bottom: 30px;
 }
 
 :host details {
     background-color: black;
-}
-:host .details-container{
-    padding: 0 var(--padding);
-}
-
-:host summary {
-    padding-top: 1px;
-    height: 110%;
-}
-
-:host .summary {
-    padding: 0 var(--padding);
 }
 
 :host .image-box,
@@ -45,10 +34,15 @@
     flex-direction: column;
     align-items: flex-start;
     flex-basis: 50%;
+    white-space: pre-line;
 }
 
 :host .content-box > h3 {
     margin: 0 0 16px;
+}
+
+:host .content-box > * {
+    text-align: left;
 }
 
 :host .content-box > .description {
@@ -67,19 +61,28 @@
     padding-left: 0;
 }
 
-:host .legende > li {
+:host .legende > li  {
     display: flex;
-    align-items: center;
-    position: relative;
-    width: 24px;
-    height: 24px;
+    height: 30px;
     margin: 0 10px 0 0;
     background-color: var(--color-secondary);
-    border-radius: 50%;
-    padding: 3px;
 }
 
-:host .legende > li .tooltip {
+:host .legende > .legend-lable {
+    width: auto;
+    padding: 0 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+}
+
+:host .legende > .legend-icon {
+    align-items: center;
+    position: relative;
+    width: 30px;
+    border-radius: 50%;
+}
+
+:host .legende > .legend-icon .tooltip {
     visibility: hidden;
     width: 120px;
     background-color: var(--color-secondary);
@@ -101,7 +104,7 @@
 }
 
 /* Tooltip arrow */
-:host .legende > li .tooltip::after {
+:host .legende > .legend-icon .tooltip::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -113,7 +116,7 @@
 }
   
 /* Show the tooltip text when you mouse over the tooltip container */
-:host .legende > li:hover .tooltip {
+:host .legende > .legend-icon:hover .tooltip {
     visibility: visible;
     opacity: 1;
 }
@@ -123,4 +126,16 @@
     :host{
         --details-menu-single-icon-row: column;
     }
+
+    :host .image-box,
+    :host details[open] .image-box{
+        flex-basis: 100%;
+        margin-right: 0;
+        margin-bottom: 24px;
+    }
+
+    :host .details-container{
+        padding: var(--details-menu-single-summary-padding-mobile, var(--details-menu-single-summary-padding, 0));
+    }
+
 }

@@ -350,6 +350,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         }
         :host details summary > div {
           font-size:var(--summary-font-size-mobile, var(--summary-font-size, inherit));
+          margin: var(--summary-margin-mobile, var(--summary-margin, 0));
+          padding: var(--summary-padding-mobile, var(--summary-padding, 0));
         }
       }
     `
