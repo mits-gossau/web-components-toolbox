@@ -100,11 +100,11 @@ export default class EmotionPictures extends Intersection() {
       :host > *.shown {
         opacity: 1;
       }
-      :host > div {
+      :host > div, :host > a {
         position: relative;
         width: var(--width, 100%);
       }
-      :host > div > *:not(a-picture):not(a-video) {
+      :host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video) {
         position: absolute;
         z-index:2;
         top: var(--text-top, 4vw);
@@ -113,7 +113,7 @@ export default class EmotionPictures extends Intersection() {
         opacity: 0;
         transition: var(--text-transition, opacity 0.5s ease-out);
       }
-      :host(.visible) > div > *:not(a-picture):not(a-video) {
+      :host(.visible) > div > *:not(a-picture):not(a-video), :host(.visible) > a > *:not(a-picture):not(a-video) {
         opacity: 1;
       }
       :host .subline {
@@ -122,13 +122,13 @@ export default class EmotionPictures extends Intersection() {
         display:var(--subline-display, initial);
       }
       @media only screen and (max-width: _max-width_) {
-        :host > div h2.font-size-big {
+        :host > div h2.font-size-big, :host > a h2.font-size-big {
           font-size: var(--h2-font-size-mobile);
         }
-        :host > div h1.font-size-big {
+        :host > div h1.font-size-big, :host > a h1.font-size-big {
           font-size: var(--h1-font-size-mobile);
         }
-        :host > div > *:not(a-picture):not(a-video) {
+        :host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video) {
           ${this.hasAttribute('height-mobile') ? `--text-top-mobile: calc((${this.getAttribute('height-mobile')}/2) - var(--h2-font-size-mobile, 1em));` : ''}
           top: var(--text-top-mobile, 2vw);
           left: var(--text-left-mobile, 0);
