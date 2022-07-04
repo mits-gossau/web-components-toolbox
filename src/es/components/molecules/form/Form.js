@@ -133,10 +133,11 @@ export default class Form extends Shadow() {
       .umbraco-forms-field {
         padding-bottom: var(--content-spacing);
       }
-      .umbraco-forms-field.checkbox {
+      .umbraco-forms-field.checkbox .umbraco-forms-field-wrapper {
         display:var(--checkbox-display, flex);
-        flex-direction:var(--checkbox-flex-direction, row);
-        justify-content:var(--checkbox-justify-content, flex-start);
+      }
+      .umbraco-forms-field.checkbox .umbraco-forms-field-wrapper label {
+        padding: var(--checkbox-label-padding, 0 0 0 10px);
       }
       .field-validation-error {
         color: var(--color-secondary);
