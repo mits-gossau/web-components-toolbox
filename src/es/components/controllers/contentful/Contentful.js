@@ -24,11 +24,12 @@ export default class Contentful extends Shadow() {
     const spaceId = this.getAttribute('space-id')
     const endpoint = `https://graphql.contentful.com/content/v1/spaces/${spaceId}`
     const limit = this.getAttribute('limit')
+    const skip = this.getAttribute('skip') || 0
     this.abortController = null
     this.requestListArticlesListener = event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-      const variables = { limit: Number(limit), skip: Number(event.detail.skip) || 0 }
+      const variables = { limit: Number(limit), skip: Number(event.detail.skip * skip) || 0 }
       const fetchOptions = {
         method: 'POST',
         headers: {
