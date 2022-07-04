@@ -54,6 +54,7 @@ export default class Article extends Shadow() {
   }
 
   renderHTML () {
+    this.loadChildComponents()
     const { date, tags, introHeadline, location, introText, contentOne, imageOne, contentTwo, imageTwo } = this.article
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `
@@ -67,14 +68,15 @@ export default class Article extends Shadow() {
           // @ts-ignore
           .documentToHtmlString(contentOne.json)}</p>`
         : ''}
-          ${imageOne ? `<div><a-picture namespace="article-preview-" picture-load defaultSource="${imageOne.url}" alt="randomized image"></a-picture></div>` : ''} 
+          ${imageOne ? `<div><a-picture picture-load defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
           ${contentTwo
         ? `<p>${window
           // @ts-ignore
           .documentToHtmlString(contentTwo.json)}</p>`
         : ''} 
-          ${imageTwo ? `<div><a-picture namespace="article-preview-" picture-load defaultSource="${imageTwo.url}" alt="randomized image"></a-picture></div>` : ''} 
+          ${imageTwo ? `<div><a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
       </div>
+      <a-button namespace=button-primary->hello</a-button>
     </div>`
     this.html = this.newsWrapper
   }
@@ -150,5 +152,22 @@ export default class Article extends Shadow() {
         return reject(e)
       }
     })
+  }
+
+  loadChildComponents () {
+    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
+      import('../../atoms/picture/Picture.js').then(
+        module => ['a-picture', module.default]
+      ),
+      import('../../atoms/button/Button.js').then(
+        module => ['a-button', module.default]
+      )
+    ]).then(elements => {
+      elements.forEach(element => {
+        // @ts-ignore
+        if (!customElements.get(element[0])) customElements.define(...element)
+      })
+      return elements
+    }))
   }
 }
