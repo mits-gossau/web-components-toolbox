@@ -1,8 +1,17 @@
 :host section {
+    --menu-legends-justify-content: flex-start;
+    --menu-legends-align-items: flex-start;
+    --menu-legends-gap: 60px;
+}
+
+:host section .legend{
     display: flex;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
+    width: 144px;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--color-secondary);
 }
 
 :host section .legendImage{
@@ -12,7 +21,6 @@
     height: 80px;
     background-color: var(--color-secondary);
     border-radius: 50%;
-    margin-right: 30px;
     padding: 8px;
 }
 
