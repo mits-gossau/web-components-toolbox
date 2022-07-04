@@ -91,7 +91,7 @@ export default class EmotionPictures extends Intersection() {
         align-items: start;
         justify-items: start;
       }
-      :host > * {
+      :host > *, :host > a {
         grid-column: 1;
         grid-row: 1;
         opacity: 0;
@@ -99,6 +99,7 @@ export default class EmotionPictures extends Intersection() {
       }
       :host > *.shown {
         opacity: 1;
+        z-index: 3;
       }
       :host > div, :host > a {
         position: relative;

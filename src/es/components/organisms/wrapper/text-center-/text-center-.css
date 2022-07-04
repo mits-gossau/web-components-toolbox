@@ -1,0 +1,10 @@
+:host {
+  --wrapper-text-center-align-items: start;
+  --wrapper-text-center-gap: var(--wrapper-text-center-gap-custom, var(--content-spacing));
+  --wrapper-text-center-justify-content: var(--wrapper-text-center-justify-content-custom, center);
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --wrapper-text-center-gap: var(--wrapper-text-center-gap-mobile-custom, var(--wrapper-text-center-gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
+  }
+}
