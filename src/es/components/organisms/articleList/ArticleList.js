@@ -1,11 +1,12 @@
 // @ts-check
 /* global CustomEvent */
 /* global customElements */
+/* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class NewsList extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.RESOLVE_STATE = 'LOADED'
     this.listArticlesListener = event => {
@@ -24,7 +25,7 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     document.body.addEventListener('listArticles', this.listArticlesListener)
     this.hidden = true
@@ -36,11 +37,11 @@ export default class NewsList extends Shadow() {
     }))
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     document.body.removeEventListener('listArticles', this.listArticlesListener)
   }
 
-  loadScriptDependency() {
+  loadScriptDependency () {
     return new Promise((resolve, reject) => {
       if (document.getElementById('contentful-module-export')) {
         return resolve(this.RESOLVE_STATE)
@@ -59,7 +60,7 @@ export default class NewsList extends Shadow() {
     })
   }
 
-  loadDependency() {
+  loadDependency () {
     return new Promise((resolve, reject) => {
       if (document.getElementById('contentful-renderer')) {
         return resolve(this.RESOLVE_STATE)
@@ -77,11 +78,11 @@ export default class NewsList extends Shadow() {
     })
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */ `
     :host > div {
       display: var(--display, flex);
@@ -112,7 +113,7 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  renderHTML(articleFetch, namespace) {
+  renderHTML (articleFetch, namespace) {
     this.html = ''
     Promise.all([articleFetch, this.loadChildComponents()]).then(([articles, child]) => {
       const { items } = articles.data.newsEntryCollection
@@ -129,7 +130,7 @@ export default class NewsList extends Shadow() {
     })
   }
 
-  loadChildComponents() {
+  loadChildComponents () {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
       import('../../molecules/articlePreview/ArticlePreview.js').then(
         module => ['m-article-preview', module.default]

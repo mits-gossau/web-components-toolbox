@@ -1,17 +1,18 @@
 // @ts-check
 /* global sessionStorage */
+/* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Article extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.RESOLVE_MSG = 'LOADED'
     const articles = this.loadArticles(window, sessionStorage)
     this.article = this.getArticle(articles.slug, articles.articles)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (!this.article) {
       // TODO
@@ -29,10 +30,10 @@ export default class Article extends Shadow() {
     }
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
   }
 
-  loadArticles(window, sessionStorage) {
+  loadArticles (window, sessionStorage) {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
     const slug = urlParams.get('article')
@@ -40,7 +41,7 @@ export default class Article extends Shadow() {
     return { slug, articles }
   }
 
-  getArticle(slug, articles) {
+  getArticle (slug, articles) {
     if (!articles || !slug) return
     const articlesData = JSON.parse(articles)
     const { items } = articlesData.data.newsEntryCollection
@@ -48,11 +49,11 @@ export default class Article extends Shadow() {
     return article
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML () {
     const { date, tags, introHeadline, location, introText, contentOne, imageOne, contentTwo, imageTwo } = this.article
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `
@@ -78,7 +79,7 @@ export default class Article extends Shadow() {
     this.html = this.newsWrapper
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
     :host ul li{
       position: var(--li-position, relative);
@@ -118,7 +119,7 @@ export default class Article extends Shadow() {
     }
   }
 
-  loadScriptDependency() {
+  loadScriptDependency () {
     return new Promise((resolve, reject) => {
       if (document.getElementById('contentful-module-export')) resolve(this.RESOLVE_MSG)
       const moduleExportScript = document.createElement('script')
@@ -135,7 +136,7 @@ export default class Article extends Shadow() {
     })
   }
 
-  loadDependency() {
+  loadDependency () {
     return new Promise((resolve, reject) => {
       if (document.getElementById('contentful-renderer')) resolve(this.RESOLVE_MSG)
       const contentfulRenderer = document.createElement('script')
