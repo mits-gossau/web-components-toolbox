@@ -1,19 +1,28 @@
 // @ts-check
+/* global self */
 /* global CustomEvent */
+/* global sessionStorage */
+
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
-    const articles = sessionStorage.getItem('articles')
-    // @ts-ignore
-    const articlesData = JSON.parse(articles)
-    const { total, limit, skip } = articlesData?.data.newsEntryCollection
-    this.pages = Math.ceil(total / limit)
+
+    this.pagination = this.root.querySelector('div') || document.createElement('div')
+    this.listArticlesListener = event => {
+      event.detail.fetch.then(() => {
+        const articles = sessionStorage.getItem('articles') || ''
+        const articlesData = JSON.parse(articles)
+        const { total, limit } = articlesData?.data.newsEntryCollection
+        const pages = Math.ceil(total / limit)
+        this.renderHTML(pages)
+      })
+    }
+
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
-      console.log(event.target.textContent - 1)
       this.dispatchEvent(new CustomEvent('requestListArticles', {
         detail: {
           skip: event.target.textContent - 1
@@ -25,33 +34,27 @@ export default class Pagination extends Shadow() {
     }
   }
 
-  connectedCallback() {
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    this.nav = this.root.querySelector('.pagination')
-    this.nav.addEventListener('click', this.clickListener)
-    console.log('pagination connected....')
+    self.addEventListener('listArticles', this.listArticlesListener)
+    this.pagination.addEventListener('click', this.clickListener)
   }
 
-  disconnectedCallback() {
-    this.nav.removeEventListener('click', this.clickListener)
+  disconnectedCallback () {
+    this.pagination.removeEventListener('click', this.clickListener)
+    self.removeEventListener('listArticles', this.listArticlesListener)
   }
 
-  shouldComponentRenderHTML() {
-    return !this.pagination
-  }
-
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML (pages) {
     let pageItems = ''
-    for (let i = 0; i < this.pages; ++i) {
+    for (let i = 0; i < pages; ++i) {
       pageItems += `<li class="page-item" page="${i + 1}"><a class="page-link" href="#">${i + 1}</a></li>`
     }
 
-    this.pagination = this.root.querySelector('div') || document.createElement('div')
     this.pagination.innerHTML =
       `<nav>
         <ul class="pagination">
@@ -62,8 +65,8 @@ export default class Pagination extends Shadow() {
     this.html = this.pagination
   }
 
-  renderCSS() {
-    this.css = /* css */`
+  renderCSS () {
+    this.css = /* css */ `
     :host {
       display: block;
       background-color: black;
@@ -119,7 +122,7 @@ export default class Pagination extends Shadow() {
     ]
 
     switch (this.getAttribute('namespace')) {
-      case 'preview-default-':
+      case 'pagination-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false

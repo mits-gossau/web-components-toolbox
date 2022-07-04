@@ -1,20 +1,31 @@
 // @ts-check
 /* global CustomEvent */
 /* global customElements */
+/* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class NewsList extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
+    this.RESOLVE_STATE = 'LOADED'
     this.listArticlesListener = event => {
       this.hidden = false
       const articlePreviewNamespace = this.getAttribute('article-preview-namespace') || 'preview-default-'
-      this.renderHTML(event.detail.fetch, articlePreviewNamespace)
+      this.loadScriptDependency().then(script => {
+        if (script === this.RESOLVE_STATE) {
+          this.loadDependency().then(dependency => {
+            console.log(dependency)
+            if (dependency === this.RESOLVE_STATE) {
+              this.renderHTML(event.detail.fetch, articlePreviewNamespace)
+            }
+          })
+        }
+      })
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     document.body.addEventListener('listArticles', this.listArticlesListener)
     this.hidden = true
@@ -26,12 +37,53 @@ export default class NewsList extends Shadow() {
     }))
   }
 
-  shouldComponentRenderCSS() {
+  disconnectedCallback () {
+    document.body.removeEventListener('listArticles', this.listArticlesListener)
+  }
+
+  loadScriptDependency () {
+    return new Promise((resolve, reject) => {
+      if (document.getElementById('contentful-module-export')) {
+        return resolve(this.RESOLVE_STATE)
+      }
+      const moduleExportScripts = document.createElement('script')
+      moduleExportScripts.setAttribute('id', 'contentful-module-export')
+      moduleExportScripts.type = 'text/javascript'
+      const code = 'var exports = { "__esModule": true };'
+      try {
+        moduleExportScripts.appendChild(document.createTextNode(code))
+        document.body.appendChild(moduleExportScripts)
+        return resolve(this.RESOLVE_STATE)
+      } catch (e) {
+        return reject(e)
+      }
+    })
+  }
+
+  loadDependency () {
+    return new Promise((resolve, reject) => {
+      if (document.getElementById('contentful-renderer')) {
+        return resolve(this.RESOLVE_STATE)
+      }
+      const contentfulRenderer = document.createElement('script')
+      contentfulRenderer.setAttribute('type', 'text/javascript')
+      contentfulRenderer.setAttribute('id', 'contentful-renderer')
+      try {
+        contentfulRenderer.setAttribute('src', self.Environment.contentfulRenderer)
+        document.body.appendChild(contentfulRenderer)
+        contentfulRenderer.onload = () => resolve(this.RESOLVE_STATE)
+      } catch (e) {
+        return reject(e)
+      }
+    })
+  }
+
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderCSS() {
-    this.css = /* css */`
+  renderCSS () {
+    this.css = /* css */ `
     :host > div {
       display: var(--display, flex);
       flex-direction: var(--flex-direction, column);
@@ -61,10 +113,9 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  renderHTML(articleFetch, namespace) {
+  renderHTML (articleFetch, namespace) {
     this.html = ''
     Promise.all([articleFetch, this.loadChildComponents()]).then(([articles, child]) => {
-      console.log("articles", articles)
       const { items } = articles.data.newsEntryCollection
       const wrapper = document.createElement('div')
       items.forEach(article => {
@@ -75,14 +126,17 @@ export default class NewsList extends Shadow() {
       })
       this.html = wrapper
     }).catch(e => {
-      this.html = 'error'
+      this.html = 'Error'
     })
   }
 
-  loadChildComponents() {
+  loadChildComponents () {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
       import('../../molecules/articlePreview/ArticlePreview.js').then(
         module => ['m-article-preview', module.default]
+      ),
+      import('../../atoms/picture/Picture.js').then(
+        module => ['a-picture', module.default]
       )
     ]).then(elements => {
       elements.forEach(element => {

@@ -1,53 +1,103 @@
 // @ts-check
 /* global sessionStorage */
+/* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Article extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
+    this.RESOLVE_MSG = 'LOADED'
+    const articles = this.loadArticles(window, sessionStorage)
+    this.article = this.getArticle(articles.slug, articles.articles)
+  }
+
+  connectedCallback () {
+    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (!this.article) {
+      // TODO
+      this.html = 'Error!'
+    } else {
+      this.loadScriptDependency().then(script => {
+        if (script === this.RESOLVE_MSG) {
+          this.loadDependency().then(dependency => {
+            if (dependency === this.RESOLVE_MSG) {
+              this.renderHTML()
+            }
+          })
+        }
+      })
+    }
+  }
+
+  disconnectedCallback () {
+  }
+
+  loadArticles (window, sessionStorage) {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
-    const article = urlParams.get('article')
+    const slug = urlParams.get('article')
     const articles = sessionStorage.getItem('articles')
-    // @ts-ignore
+    return { slug, articles }
+  }
+
+  getArticle (slug, articles) {
+    if (!articles || !slug) return
     const articlesData = JSON.parse(articles)
     const { items } = articlesData.data.newsEntryCollection
-    this.found = items.find(e => e.slug === article)
-    console.log("article", this.found);
+    const article = items.find(item => item.slug === slug)
+    return article
   }
 
-  connectedCallback() {
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-  }
-
-  disconnectedCallback() {
-  }
-
-  shouldComponentRenderHTML() {
-    return !this.newsWrapper
-  }
-
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML () {
+    this.loadChildComponents()
+    const { date, tags, introHeadline, location, introText, contentOne, imageOne, contentTwo, imageTwo } = this.article
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
-    this.newsWrapper = `<div class="article">
-      <p>${new Date(this.found.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
-      <h1 class="font-size-big">${this.found.title}</h1>
-      <p>${this.found.location} - ${window.documentToHtmlString(this.found.intro.json)} </p>
-      <p>${window.documentToHtmlString(this.found.content.json)}</p>
+    this.newsWrapper = `
+    <div class="article">
+      <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
+      <h1 class="font-size-big">${introHeadline}</h1>
+      <p><b>${location ? `${location} - ` : ''}${introText}</b></p>
+      <div>
+          ${contentOne
+        ? `<p>${window
+          // @ts-ignore
+          .documentToHtmlString(contentOne.json)}</p>`
+        : ''}
+          ${imageOne ? `<div><a-picture picture-load defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
+          ${contentTwo
+        ? `<p>${window
+          // @ts-ignore
+          .documentToHtmlString(contentTwo.json)}</p>`
+        : ''} 
+          ${imageTwo ? `<div><a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
+      </div>
+      <a-button namespace=button-primary->hello</a-button>
     </div>`
-
     this.html = this.newsWrapper
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
-      :host  { }
+    :host ul li{
+      position: var(--li-position, relative);
+      padding-left: var(--li-padding-left, 2em);
+    }
+    :host ul li::before {
+      position: absolute;
+      top: 10px;
+      left: 8px;
+      display: block;
+      width: 5px;
+      height: 5px;
+      background-color: #97A619;
+      border-radius: 50%;
+      content: '';
+    }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
@@ -69,5 +119,55 @@ export default class Article extends Shadow() {
       default:
         return this.fetchCSS(styles)
     }
+  }
+
+  loadScriptDependency () {
+    return new Promise((resolve, reject) => {
+      if (document.getElementById('contentful-module-export')) resolve(this.RESOLVE_MSG)
+      const moduleExportScript = document.createElement('script')
+      moduleExportScript.setAttribute('id', 'contentful-module-export')
+      moduleExportScript.type = 'text/javascript'
+      const code = 'var exports = { "__esModule": true };'
+      try {
+        moduleExportScript.appendChild(document.createTextNode(code))
+        document.body.appendChild(moduleExportScript)
+        return resolve(this.RESOLVE_MSG)
+      } catch (e) {
+        return reject(e)
+      }
+    })
+  }
+
+  loadDependency () {
+    return new Promise((resolve, reject) => {
+      if (document.getElementById('contentful-renderer')) resolve(this.RESOLVE_MSG)
+      const contentfulRenderer = document.createElement('script')
+      contentfulRenderer.setAttribute('type', 'text/javascript')
+      contentfulRenderer.setAttribute('id', 'contentful-renderer')
+      try {
+        contentfulRenderer.setAttribute('src', self.Environment.contentfulRenderer)
+        document.body.appendChild(contentfulRenderer)
+        contentfulRenderer.onload = () => resolve(this.RESOLVE_MSG)
+      } catch (e) {
+        return reject(e)
+      }
+    })
+  }
+
+  loadChildComponents () {
+    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
+      import('../../atoms/picture/Picture.js').then(
+        module => ['a-picture', module.default]
+      ),
+      import('../../atoms/button/Button.js').then(
+        module => ['a-button', module.default]
+      )
+    ]).then(elements => {
+      elements.forEach(element => {
+        // @ts-ignore
+        if (!customElements.get(element[0])) customElements.define(...element)
+      })
+      return elements
+    }))
   }
 }

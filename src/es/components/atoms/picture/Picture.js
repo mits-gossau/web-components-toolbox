@@ -328,20 +328,21 @@ export default class Picture extends Intersection() {
       // TODO: "Nice to have once Umbraco doesn't send the sources anymore" incorporate self.getComputedStyle(node) CSS width limitation as max nextWidth as well as max raw img-tag width
       const src = Picture.newUrl(this.img.getAttribute('data-src'))
       let naturalWidth
-      if ((naturalWidth = src.searchParams.get('width'))) {
+      if ((naturalWidth = src.searchParams.get(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width'))) {
         if (this.img.naturalWidth) naturalWidth = this.img.naturalWidth
-        src.searchParams.delete('height') // height is not needed in query
-        if (src.searchParams.get('format')) src.searchParams.set('format', 'webp') // force webp as format
+        src.searchParams.delete(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height') // height is not needed in query
+        if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) src.searchParams.set(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format', 'webp') // force webp as format
+        if (src.searchParams.get(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality')) src.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '80') // force quality as 80
         const step = 50
         let width = step
         let prevWidth = 0
         let nextWidth = 0
         while (width < naturalWidth) {
           nextWidth = width + step < naturalWidth ? width + step : 0
-          nextWidth ? src.searchParams.set('width', String(width)) : src.searchParams.delete('width')
+          nextWidth ? src.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width)) : src.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
           const source = document.createElement('source')
           source.setAttribute('data-srcset', src.href)
-          if (src.searchParams.get('format')) source.setAttribute('type', 'image/webp') // force webp as format
+          if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) source.setAttribute('type', 'image/webp') // force webp as format
           source.setAttribute('media', `${prevWidth ? `(min-width: ${prevWidth + 1}px)` : ''}${prevWidth && nextWidth ? ' and ' : ''}${nextWidth ? `(max-width: ${width}px)` : ''}`)
           this.sources.push(source)
           prevWidth = width
@@ -353,17 +354,17 @@ export default class Picture extends Intersection() {
     // if loading eager and if bad quality pic available load the picture first with bad quality and then improve it
     if (this.getAttribute('loading') === 'eager') {
       const src = Picture.newUrl(this.img.getAttribute('data-src'))
-      if (src.searchParams.get('quality')) {
+      if (src.searchParams.get(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality')) {
         this.sources.forEach(source => {
           const newSource = source.cloneNode()
           const src = Picture.newUrl(source.getAttribute('data-srcset'))
-          src.searchParams.set('quality', '0')
+          src.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '0')
           this.picture.appendChild(newSource)
           newSource.setAttribute('srcset', src.href)
         })
         img.setAttribute('decoding', 'sync') // otherwise it is flashing
         img = this.img.cloneNode()
-        src.searchParams.set('quality', '0')
+        src.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '0')
         img.setAttribute('data-src', src.href)
         this.picture.appendChild(img)
         img.setAttribute('src', img.getAttribute('data-src'))
