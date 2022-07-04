@@ -14,9 +14,9 @@ export default class Pagination extends Shadow() {
       event.detail.fetch.then(() => {
         const articles = sessionStorage.getItem('articles') || ''
         const articlesData = JSON.parse(articles)
-        const { total, limit } = articlesData?.data.newsEntryCollection
+        const { total, limit, skip } = articlesData?.data.newsEntryCollection
         const pages = Math.ceil(total / limit)
-        this.renderHTML(pages)
+        this.renderHTML(pages, limit, skip)
       })
     }
 
@@ -49,10 +49,11 @@ export default class Pagination extends Shadow() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML (pages) {
+  renderHTML (pages, limit, skip) {
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
-      pageItems += `<li class="page-item" page="${i + 1}"><a class="page-link" href="#">${i + 1}</a></li>`
+      const active = (skip / limit)
+      pageItems += `<li class="page-item ${i === active ? 'active' : ''}" page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="#">${i + 1}</a></li>`
     }
 
     this.pagination.innerHTML =
@@ -73,7 +74,7 @@ export default class Pagination extends Shadow() {
       height: 62px;
     }
     :host ul {
-      margin: 0;
+      margin: 0 0.75em 0 0;
       float: right;
       display:flex;
     }
@@ -95,6 +96,9 @@ export default class Pagination extends Shadow() {
       background-color: #bbb;
       content: '';
     }
+    :host li.active {
+      background:white;
+    }
     :host nav ul li > a {
       border-top: 6px solid black;
       height:100%;
@@ -102,6 +106,9 @@ export default class Pagination extends Shadow() {
       flex-direction: row;
       justify-content: center;
       align-items: center;
+    }
+    :host nav ul li > a.active {
+      color:black;
     }
     :host nav ul li > a:hover {
       border-top: 6px solid #97A619;
