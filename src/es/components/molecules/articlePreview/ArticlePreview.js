@@ -56,15 +56,7 @@ export default class ArticlePreview extends Shadow() {
       align-items: flex-start;
       gap:2em;
       padding:1em 0;
-    }
-    :host > div > a > div   {
-      // display:flex;
-      // flex-direction: row;
-      // justify-content: flex-start;
-      // align-items: flex-start;
-      // padding:2em 0;
-      // gap:2em;
-    }
+    }   
     :host > div > a  h3 {
       color:var(--h3-color, black);
     }
