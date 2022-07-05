@@ -8,7 +8,6 @@
     --details-menu-portion-child-padding-open-mobile: 0 0 24px 0;
 
     border-image: url(../assets/img/border-dotted-grey2.png) 2 0 0 0 repeat;
-    width: calc(100% - 60px);
 }
 
 :host .nutrients-div {
@@ -52,14 +51,14 @@
     text-transform: uppercase;
 }
 
-:host .portion-icon {
+:host .dropdown-icon {
     width: 24px;
     height: 24px;
     margin-right: 20px !important;
     transform: rotate(0);
 }
 
-:host .portion-icon::before {
+:host .dropdown-icon::before {
     top: 0;
     left: 50%;
     width: 3px;
@@ -71,7 +70,7 @@
     transform: rotate(0);
     transition: transform .25s ease-out;
 }
-:host .portion-icon::after {
+:host .dropdown-icon::after {
     top: 0;
     left: 50%;
     width: 3px;
@@ -83,7 +82,7 @@
     transform: rotate(90deg);
 }
 
-:host details[open] .portion-icon::before{
+:host details[open] .dropdown-icon::before{
     transform: rotate(90deg);
     transition: transform .25s ease-out;
 }

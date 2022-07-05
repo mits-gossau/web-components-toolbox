@@ -87,6 +87,22 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       this.mutationObserveStart()
       clearTimeout(this.timeoutAnimationend)
     }
+
+    let timeout = null
+    this.resizeListener = event => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        this.checkMedia()
+      }, 200)
+    }
+
+    this.checkMedia = () => {
+      if (this.isMobile && this.mobileOpen)
+        this.details.setAttribute('open', '')
+      else if (!this.isMobile && this.mobileOpen)
+        this.details.removeAttribute('open')
+    }
+
   }
 
   connectedCallback () {
@@ -94,16 +110,20 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.openEventName, this.openEventListener)
+    self.addEventListener('resize', this.resizeListener)
     this.root.addEventListener('click', this.clickEventListener)
+    this.checkMedia()
   }
 
   disconnectedCallback () {
     super.disconnectedCallback()
     document.body.removeEventListener(this.openEventName, this.openEventListener)
     this.root.removeEventListener('click', this.clickEventListener)
+    self.removeEventListener('resize', this.resizeListener)
   }
 
   mutationCallback (mutationList, observer) {
+    if (this.isMobile && this.mobileOpen) return null
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
         // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
@@ -255,7 +275,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         border-bottom: var(--summary-border-bottom-open, none);
       }
       :host details summary > div {
-        cursor: var(--summary-cursor, pointer);
+        ${!this.mobileOpen ? 'cursor: var(--summary-cursor, pointer);' : ''}
         font-family: var(--summary-font-family, var(--font-family, var(--font-family-bold)));
         font-size:var(--summary-font-size, inherit);
         font-weight: var(--summary-font-weight, var(--font-weight, normal));
@@ -353,8 +373,15 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           margin: var(--summary-margin-mobile, var(--summary-margin, 0));
           padding: var(--summary-padding-mobile, var(--summary-padding, 0));
         }
+        ${this.mobileOpen ? `
+        :host summary .dropdown-icon {
+          display: none;
+        }
+        ` : ''}
+
+        
       }
-    `
+      `
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
@@ -409,10 +436,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
   setIconDefault (node, cssClass) {
     const iconSvg = document.createElement('div')
+    iconSvg.classList.add('dropdown-icon')
 
     switch (this.getAttribute('namespace')) {
       case 'details-menu-portion-':
-        iconSvg.classList.add('portion-icon')
         node.prepend(iconSvg)
         break
       default:
@@ -429,6 +456,14 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     }
     node.classList.add(cssClass)
     return node
+  }
+
+  get mobileOpen () {
+    return this.hasAttribute('mobile-open')
+  }
+
+  get isMobile () {
+    return self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
   }
 
   get openEventName () {

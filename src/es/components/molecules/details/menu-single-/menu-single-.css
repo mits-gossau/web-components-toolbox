@@ -6,7 +6,7 @@
     --details-menu-single-a-text-decoration: none;
     --details-menu-single-a-text-decoration-hover: none;
     --details-menu-single-summary-transform-hover: none;
-    --details-menu-single-summary-child-color-hover: var(--color-secondary);
+    --details-menu-single-summary-child-color-hover: var(--color);
     --details-menu-single-summary-child-color: var(--color-secondary);
     --details-menu-single-svg-color: var(--color-secondary);
     --details-menu-single-ul-list-style: none;
@@ -15,6 +15,7 @@
     --details-menu-single-summary-padding-mobile: 24px 16px;
     --details-menu-single-child-padding: 0 30px;
     --details-menu-single-child-padding-open-mobile: 24px 16px;
+    --details-menu-single-svg-color-hover: var(--color-secondary);
 
     padding-bottom: 30px;
 }
@@ -35,6 +36,7 @@
     align-items: flex-start;
     flex-basis: 50%;
     white-space: pre-line;
+    color: var(--color);
 }
 
 :host .content-box > h3 {
@@ -52,6 +54,10 @@
 
 :host .content-box > .end {
     margin: 0 0 16px;
+}
+
+:host details summary > div:hover > *, :host details summary > div:active > *, :host details summary > div:focus > * {
+    --details-menu-single-svg-color: var(--details-menu-single-svg-color-hover);
 }
 
 :host .legende {
