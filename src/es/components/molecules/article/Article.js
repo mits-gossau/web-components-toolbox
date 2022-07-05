@@ -62,13 +62,14 @@ export default class Article extends Shadow() {
 
   renderHTML () {
     this.loadChildComponents()
-    const { date, tags, introHeadline, location, introText, contentOne, imageOne, contentTwo, imageTwo } = this.article
+    const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo } = this.article
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `
     <div class="article">
       <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
       <h1 class="font-size-big">${introHeadline}</h1>
       <p><b>${location ? `${location} - ` : ''}${introText}</b></p>
+       ${introImage ? `<div><a-picture picture-load defaultSource="${introImage.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
       <div>
           ${contentOne
         ? `<p>${window
