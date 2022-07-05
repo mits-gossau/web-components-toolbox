@@ -29,6 +29,7 @@ export default class Article extends Shadow() {
             if (dependency === this.RESOLVE_MSG) {
               this.renderHTML()
               this.backBtn.addEventListener('click', this.clickListener)
+              sessionStorage.setItem('article-viewed', 'TRUE')
             }
           })
         }

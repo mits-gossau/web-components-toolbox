@@ -2,6 +2,7 @@
 /* global CustomEvent */
 /* global customElements */
 /* global self */
+/* global sessionStorage */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -28,8 +29,14 @@ export default class NewsList extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     document.body.addEventListener('listArticles', this.listArticlesListener)
     this.hidden = true
+    const articleViewed = sessionStorage.getItem('article-viewed')?.toLowerCase() === 'true'
+    const currentPageSkip = articleViewed ? this.getCurrentPageSkip(sessionStorage.getItem('articles') || '') : 0
+    sessionStorage.removeItem('article-viewed')
+
     this.dispatchEvent(new CustomEvent('requestListArticles', {
-      detail: {},
+      detail: {
+        skip: currentPageSkip
+      },
       bubbles: true,
       cancelable: true,
       composed: true
@@ -38,6 +45,13 @@ export default class NewsList extends Shadow() {
 
   disconnectedCallback () {
     document.body.removeEventListener('listArticles', this.listArticlesListener)
+  }
+
+  getCurrentPageSkip (sessionData) {
+    if (sessionData === '') return 0
+    const articlesData = JSON.parse(sessionData)
+    const { skip, limit } = articlesData.data.newsEntryCollection
+    return skip / limit
   }
 
   loadScriptDependency () {
