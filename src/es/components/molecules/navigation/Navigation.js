@@ -244,9 +244,6 @@ export default class Navigation extends Shadow() {
       :host > nav > ul li:last-child ul{
         right: 0;
       }
-      :host > nav > ul li:hover{
-        cursor: pointer;
-      }
       :host > nav > ul > li > ul li {
         margin-bottom: var(--li-ul-margin-bottom, 0);
       }

@@ -18,7 +18,7 @@ if (componentName) {
 
       const urls = [fetchHtmlExamples, fetchPathCss, fetchCodeFile]
       Promise.all(urls.map(url =>
-        fetch(url).then(resp => resp.text())
+        fetch(url).then(resp => !resp.ok ? null : resp.text())
       )).then(texts => {
         setupPrism()
         exampleComponents(importEl[0], texts[0])
@@ -77,6 +77,7 @@ function exampleComponents (tagName, data) {
 }
 
 function componentCSS (data) {
+  if (!data) return
   const detailsElement = createDetailsElement(data, 'css', 'CSS')
   document.body.appendChild(detailsElement)
 }

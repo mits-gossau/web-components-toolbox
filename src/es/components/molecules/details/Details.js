@@ -350,6 +350,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         }
         :host details summary > div {
           font-size:var(--summary-font-size-mobile, var(--summary-font-size, inherit));
+          margin: var(--summary-margin-mobile, var(--summary-margin, 0));
+          padding: var(--summary-padding-mobile, var(--summary-padding, 0));
         }
       }
     `
@@ -364,12 +366,19 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     switch (this.getAttribute('namespace')) {
       case 'details-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
         }, ...styles], false)
-
-      default:
-        return this.fetchCSS(styles, false)
+      case 'details-menu-single-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-single-/menu-single-.css`,
+          namespace: false
+        }, ...styles], false)
+      case 'details-menu-portion-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-portion-/menu-portion-.css`,
+          namespace: false
+        }, ...styles], false)
     }
   }
 
@@ -400,16 +409,24 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
   setIconDefault (node, cssClass) {
     const iconSvg = document.createElement('div')
-    iconSvg.innerHTML = `
-      <?xml version="1.0" encoding="UTF-8"?>
-      <svg width="${this.svgWidth || '35px'}" height="${this.svgHeight || '20px'}" viewBox="0 0 35 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-          <title>Mobile Pfeil</title>
-          <g id="Mobile-Pfeil" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-              <polyline id="Path-2" stroke="${this.svgColor || `var(--color, --${this.namespace}color)`}" stroke-width="3" points="2 3 17 18 32 3"></polyline>
-          </g>
-      </svg>
-    `
-    node.append(iconSvg)
+
+    switch (this.getAttribute('namespace')) {
+      case 'details-menu-portion-':
+        iconSvg.classList.add('portion-icon')
+        node.prepend(iconSvg)
+        break
+      default:
+        iconSvg.innerHTML = `
+          <?xml version="1.0" encoding="UTF-8"?>
+          <svg width="${this.svgWidth || '35px'}" height="${this.svgHeight || '20px'}" viewBox="0 0 35 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <title>Mobile Pfeil</title>
+              <g id="Mobile-Pfeil" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <polyline id="Path-2" stroke="${this.svgColor || `var(--color, --${this.namespace}color)`}" stroke-width="3" points="2 3 17 18 32 3"></polyline>
+              </g>
+          </svg>
+        `
+        node.append(iconSvg)
+    }
     node.classList.add(cssClass)
     return node
   }

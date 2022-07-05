@@ -161,6 +161,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./text-/text-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles]).then(() => this.calcColumnWidth())
+      case 'wrapper-text-center-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./text-center-/text-center-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles]).then(() => this.calcColumnWidth())
       case 'wrapper-no-calc-column-width-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./no-calc-column-width-/no-calc-column-width-.css`, // apply namespace since it is specific and no fallback
@@ -169,6 +174,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       case 'wrapper-no-calc-column-width-left-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./no-calc-column-width-left-/no-calc-column-width-left-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles]).then(() => this.calcColumnWidth())
+      case 'menu-legends-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-legends-/menu-legends-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles]).then(() => this.calcColumnWidth())
       default:

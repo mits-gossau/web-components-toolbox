@@ -1,0 +1,26 @@
+:host section {
+    --menu-legends-justify-content: flex-start;
+    --menu-legends-align-items: flex-start;
+    --menu-legends-gap: 60px;
+}
+
+:host section .legend{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 144px;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+}
+
+:host section .legendImage{
+    display: flex;
+    align-items: center;
+    width: 80px;
+    height: 80px;
+    background-color: var(--color-secondary);
+    border-radius: 50%;
+    padding: 8px;
+}
+

@@ -48,7 +48,9 @@ export default class EmotionPictures extends Intersection() {
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
-      showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+      showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => {
+        if (!event || !event.detail || !event.detail.error) resolve()
+      }, { once: true })))
     }
     if (this.aVideo && this.aVideo.hasAttribute('video-load') && !this.aVideo.hasAttribute('loaded')) {
       showPromises.push(new Promise(resolve => this.addEventListener('video-load', event => resolve(), { once: true })))
@@ -89,7 +91,7 @@ export default class EmotionPictures extends Intersection() {
         align-items: start;
         justify-items: start;
       }
-      :host > * {
+      :host > *, :host > a {
         grid-column: 1;
         grid-row: 1;
         opacity: 0;
@@ -97,44 +99,57 @@ export default class EmotionPictures extends Intersection() {
       }
       :host > *.shown {
         opacity: 1;
+        z-index: 3;
       }
-      :host > div {
+      :host > div, :host > a {
         position: relative;
         width: var(--width, 100%);
       }
-      :host > div > *:not(a-picture):not(a-video) {
+      :host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video) {
         position: absolute;
         z-index:2;
-        top: 4vw;
-        left: 10vw;
-        right:10vw;
+        top: var(--text-top, 4vw);
+        left: var(--text-left, 10vw);
+        right: var(--text-right, 10vw);
         opacity: 0;
         transition: var(--text-transition, opacity 0.5s ease-out);
       }
-      :host(.visible) > div > *:not(a-picture):not(a-video) {
+      :host(.visible) > div > *:not(a-picture):not(a-video), :host(.visible) > a > *:not(a-picture):not(a-video) {
         opacity: 1;
       }
+      :host .subline {
+        font-size: var(--subline-font-size, 1.2em);
+        padding:var(--subline-padding, unset);
+        display:var(--subline-display, initial);
+      }
       @media only screen and (max-width: _max-width_) {
-        :host > div h2.font-size-big {
+        :host > div h2.font-size-big, :host > a h2.font-size-big {
           font-size: var(--h2-font-size-mobile);
         }
-        :host > div h1.font-size-big {
+        :host > div h1.font-size-big, :host > a h1.font-size-big {
           font-size: var(--h1-font-size-mobile);
         }
-        :host > div > *:not(a-picture):not(a-video) {
-          top: 2vw;
-          left: 0;
+        :host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video) {
+          ${this.hasAttribute('height-mobile') ? `--text-top-mobile: calc((${this.getAttribute('height-mobile')}/2) - var(--h2-font-size-mobile, 1em));` : ''}
+          top: var(--text-top-mobile, 2vw);
+          left: var(--text-left-mobile, 0);
+          right: var(--text-right-mobile, 0);
           margin:var(--div-margin-mobile);
         }
+        :host .subline {
+          display:var(--subline-display-mobile, initial);
+      }
       }
     `
-
     this.setCss(/* css */`
-    :host > * {
-      --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
-      --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 100vh);
-    }
-  `, undefined, '', false)
+      :host > * {
+        //${this.hasAttribute('height-mobile') ? `--text-top-mobile: calc((${this.getAttribute('height-mobile')}/2) - var(--h2-font-size-mobile, 11em));` : ''}
+        ${this.hasAttribute('height') ? `--img-height: ${this.getAttribute('height')};` : ''}
+        ${this.hasAttribute('height-mobile') ? `--img-height-mobile: ${this.getAttribute('height-mobile')};` : ''}
+        --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
+        --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 100vh);
+      }
+    `, undefined, '', false)
 
     const styles = [
       {
@@ -174,6 +189,7 @@ export default class EmotionPictures extends Intersection() {
   }
 
   shuffle (start = true) {
+    // @ts-ignore
     clearInterval(this.interval || null)
     if (start) {
       this.interval = setInterval(() => {

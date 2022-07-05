@@ -11,7 +11,7 @@ import { WebWorker } from '../../prototypes/WebWorker.js'
 /* global fetch */
 
 /**
- * FetchCss is an icon
+ * FetchCss is a caching mechanism for src/es/components/prototypes/Shadow.js:fetchCSS L:347 and can just be set as an ancestor which listens to the fetch-css events
  * Example at: /src/es/components/pages/Home.html
  * As a controller, this component communicates exclusively through events
  *

@@ -3,6 +3,7 @@
   --header-default-a-color: var(--color);
   --header-default-a-font-size: var(--h4-font-size);
   --header-default-a-line-height: 2rem;
+  --header-default-a-logo-top-mobile: var(--header-default-a-logo-top-mobile-custom, -1em);
   --header-default-a-logo-top: var(--header-default-a-logo-top-custom, calc(62px / 2 - 90px / 2)); /* gets calculated by adjustLogoPos but preset here for desktop with these values: "calc(${navHeight}px / 2 - ${logoHeight}px / 2)" to avoid visible adjustment at load */
   --header-default-a-margin-mobile: 0 5% 0 0;
   --header-default-a-margin: 0 max(4.5625rem, 3vw) 0 0;

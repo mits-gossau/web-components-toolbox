@@ -98,13 +98,14 @@ export default class Button extends Shadow() {
         letter-spacing: var(--letter-spacing, normal);
         line-height: var(--line-height, 1.5em);
         margin: var(--margin, auto);
+        opacity: var(--opacity, 1);
         outline: var(--outline, none);
         overflow: hidden;
         padding: var(--padding, calc(0.75em - var(--border-width, 0px)) calc(1.5em - var(--border-width, 0px)));
+        text-transform: var(--text-transform, none);
         touch-action: manipulation;
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
-        opacity: var(--opacity, 1);
       }
       button:hover {
         background-color: var(--background-color-hover, var(--background-color, #B24800));

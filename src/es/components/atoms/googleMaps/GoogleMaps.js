@@ -92,9 +92,9 @@ export default class GoogleMaps extends Shadow() {
       margin:6px 0 6px 6px;
     }
     :host iframe {
-      border:var(--iframe-border, none);
-      width:var(--iframe-width, 100%);
-      height:var(--iframe-height, 75vh);
+      border:var(--border, none);
+      width:var(--width, 100%);
+      height:var(--height, 75vh);
     }
     @media only screen and (max-width: _max-width_) {
       :host {

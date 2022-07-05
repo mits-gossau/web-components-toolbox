@@ -1,8 +1,8 @@
 /* global self */
-/* global location */
 
 // @ts-ignore
 self.Environment = {
+  contentfulRenderer: '//cdn.jsdelivr.net/npm/@contentful/rich-text-html-renderer@15.13.1/dist/rich-text-html-renderer.es5.min.js',
   isLocalhost: location.hostname === 'localhost',
   /**
    *
