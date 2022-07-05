@@ -99,7 +99,7 @@ export default class Article extends Shadow() {
         return `<p><a href="${item.linkUrl}">${item.linkText}</a></p>`
       }
     })
-    return items
+    return items.join('')
   }
 
   renderCSS () {
