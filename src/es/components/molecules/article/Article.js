@@ -10,18 +10,18 @@ export default class Article extends Shadow() {
   constructor (...args) {
     super(...args)
     this.RESOLVE_MSG = 'LOADED'
+    this.ERROR_MSG = 'Error. Article could not be displayed.'
     const articles = this.loadArticles(window, sessionStorage)
     this.article = this.getArticle(articles.slug, articles.articles)
     this.clickListener = event => {
-      window.open(this.articleListUrl, "_self")
+      window.open(this.articleListUrl, '_self')
     }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (!this.article) {
-      // TODO
-      this.html = 'Error!'
+      this.html = this.ERROR_MSG
     } else {
       this.loadScriptDependency().then(script => {
         if (script === this.RESOLVE_MSG) {
@@ -86,7 +86,7 @@ export default class Article extends Shadow() {
           ${imageTwo ? `<div><a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
       </div>
       ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
-      <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->Zurück zu allen Beiträgen</a-button></div>
+      <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
     </div>`
     this.html = this.newsWrapper
   }
@@ -124,7 +124,7 @@ export default class Article extends Shadow() {
       text-align:var(--back-btn-text-align, center);
     }
     :host .link-collection {
-      padding:2em 0;
+      padding:var(--link-collection-padding, 2em 0);
     }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
@@ -205,5 +205,9 @@ export default class Article extends Shadow() {
 
   get backBtn () {
     return this.root.querySelector('a-button') || new DocumentFragment()
+  }
+
+  get backBtnLabel () {
+    return this.getAttribute('back-btn-label') || 'Back'
   }
 }

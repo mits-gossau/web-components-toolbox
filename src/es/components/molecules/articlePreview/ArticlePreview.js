@@ -5,6 +5,7 @@ export default class ArticlePreview extends Shadow() {
   constructor (article, ...args) {
     super(...args)
     this.article = article || null
+    this.ERROR_MSG = 'Error. Article could not be displayed.'
   }
 
   connectedCallback () {
@@ -22,7 +23,7 @@ export default class ArticlePreview extends Shadow() {
 
   renderHTML () {
     if (!this.article) {
-      this.html = 'Error'
+      this.html = this.ERROR_MSG
       return
     }
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
@@ -36,7 +37,6 @@ export default class ArticlePreview extends Shadow() {
           <h3 class="title">${this.article.introHeadline}</h3>
           <p>${this.article.introText}</p>
         </div> 
-      
     </a>
   `
     this.html = this.newsWrapper
@@ -45,26 +45,26 @@ export default class ArticlePreview extends Shadow() {
   renderCSS () {
     this.css = /* css */`
     :host > div {
-      border-width: 0 0 2px;
-      border-image: url(/src/img/border-dotted.png) 0 0 2 0 repeat;
-      border-style: dotted;
+      border-width:var(--border-width, 0 0 2px);
+      border-image:var(--border-image-source, url(/src/img/border-dotted.png)) var(--border-image-slice, 0 0 2 0) var(--border-image-repeat, repeat);
+      border-style:var(--border-style, dotted);
     }
     
     ${this.getAttribute('is-on-home') !== null
         ? /* CSS */`
           :host(:first-child) > div {
-            border-width: 2px 0 2px 0;
+            border-width: var(--first-child-border-width, 2px 0 2px 0);
           }
         `
-      : ''}
+        : ''}
 
     :host > div > a {
       display:flex !important;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: flex-start;
-      gap:2em;
-      padding:1em 0;
+      flex-direction:var(--preview-a-flex-direction, row);
+      flex-wrap:var(--preview-a-flex-wrap, nowrap);
+      align-items:var(--preview-a-align-items, flex-start);
+      gap:var(--preview-a-flex-gap, 2em);
+      padding:var(--preview-a-padding, 1em 0);
     }   
     :host > div > a  h3 {
       color:var(--h3-color, black);
@@ -72,7 +72,6 @@ export default class ArticlePreview extends Shadow() {
     :host > div > a:hover h3 {
       color:var(--h3-color-hover, white);
     }
-   
     @media only screen and (max-width: _max-width_) {}
     `
 
