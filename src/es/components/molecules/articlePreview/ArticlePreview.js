@@ -27,7 +27,7 @@ export default class ArticlePreview extends Shadow() {
     }
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper.innerHTML = /* html */ `
-    <a class="link" href="${this.articleUrl}&article=${this.article.slug}">
+    <a class="link" href="${this.articleUrl}?article=${this.article.slug}">
         <div class="image-wrapper">
           <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
         </div>
