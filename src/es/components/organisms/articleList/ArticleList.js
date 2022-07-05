@@ -135,6 +135,9 @@ export default class NewsList extends Shadow() {
         // @ts-ignore
         const articleEle = new child[0][1](article, { namespace })
         articleEle.setAttribute('article-url', this.getAttribute('article-url'))
+        if (this.getAttribute('is-on-home') !== null) {
+          articleEle.setAttribute('is-on-home', this.getAttribute('is-on-home'))
+        }
         wrapper.appendChild(articleEle)
       })
       this.html = wrapper

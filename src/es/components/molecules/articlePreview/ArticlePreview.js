@@ -49,6 +49,15 @@ export default class ArticlePreview extends Shadow() {
       border-image: url(/src/img/border-dotted.png) 0 0 2 0 repeat;
       border-style: dotted;
     }
+    
+    ${this.getAttribute('is-on-home') !== null
+        ? /* CSS */`
+          :host(:first-child) > div {
+            border-width: 2px 0 2px 0;
+          }
+        `
+      : ''}
+
     :host > div > a {
       display:flex !important;
       flex-direction: row;
