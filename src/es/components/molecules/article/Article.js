@@ -62,7 +62,7 @@ export default class Article extends Shadow() {
 
   renderHTML () {
     this.loadChildComponents()
-    const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo } = this.article
+    const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection } = this.article
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `
     <div class="article">
@@ -84,9 +84,21 @@ export default class Article extends Shadow() {
         : ''} 
           ${imageTwo ? `<div><a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
       </div>
+      ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
       <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->Zurück zu allen Beiträgen</a-button></div>
     </div>`
     this.html = this.newsWrapper
+  }
+
+  renderLinkListCollection (collection) {
+    const items = collection.map(item => {
+      if (item.downloadItem) {
+        return `<p><a href="${item.downloadItem.url}">${item.downloadItem.title}</a></p>`
+      } else {
+        return `<p><a href="${item.linkUrl}">${item.linkText}</a></p>`
+      }
+    })
+    return items
   }
 
   renderCSS () {
@@ -109,6 +121,9 @@ export default class Article extends Shadow() {
     :host .back-btn-wrapper {
       padding:var(--back-btn-padding, 5em);
       text-align:var(--back-btn-text-align, center);
+    }
+    :host .link-collection {
+      padding:2em 0;
     }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
