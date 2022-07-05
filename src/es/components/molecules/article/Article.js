@@ -1,6 +1,8 @@
 // @ts-check
 /* global sessionStorage */
 /* global self */
+/* global customElements */
+/* global DocumentFragment */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -8,21 +10,26 @@ export default class Article extends Shadow() {
   constructor (...args) {
     super(...args)
     this.RESOLVE_MSG = 'LOADED'
+    this.ERROR_MSG = 'Error. Article could not be displayed.'
     const articles = this.loadArticles(window, sessionStorage)
     this.article = this.getArticle(articles.slug, articles.articles)
+    this.clickListener = event => {
+      window.open(this.articleListUrl, '_blank')
+    }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (!this.article) {
-      // TODO
-      this.html = 'Error!'
+      this.html = this.ERROR_MSG
     } else {
       this.loadScriptDependency().then(script => {
         if (script === this.RESOLVE_MSG) {
           this.loadDependency().then(dependency => {
             if (dependency === this.RESOLVE_MSG) {
               this.renderHTML()
+              this.backBtn.addEventListener('click', this.clickListener)
+              sessionStorage.setItem('article-viewed', 'TRUE')
             }
           })
         }
@@ -31,6 +38,7 @@ export default class Article extends Shadow() {
   }
 
   disconnectedCallback () {
+    this.backBtn.removeEventListener('click', this.clickListener)
   }
 
   loadArticles (window, sessionStorage) {
@@ -55,13 +63,14 @@ export default class Article extends Shadow() {
 
   renderHTML () {
     this.loadChildComponents()
-    const { date, tags, introHeadline, location, introText, contentOne, imageOne, contentTwo, imageTwo } = this.article
+    const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection } = this.article
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `
     <div class="article">
       <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
       <h1 class="font-size-big">${introHeadline}</h1>
       <p><b>${location ? `${location} - ` : ''}${introText}</b></p>
+       ${introImage ? `<div><a-picture picture-load defaultSource="${introImage.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
       <div>
           ${contentOne
         ? `<p>${window
@@ -76,14 +85,26 @@ export default class Article extends Shadow() {
         : ''} 
           ${imageTwo ? `<div><a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
       </div>
-      <a-button namespace=button-primary->hello</a-button>
+      ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
+      <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
     </div>`
     this.html = this.newsWrapper
   }
 
+  renderLinkListCollection (collection) {
+    const items = collection.map(item => {
+      if (item.downloadItem) {
+        return `<p><a href="${item.downloadItem.url}">${item.downloadItem.title}</a></p>`
+      } else {
+        return `<p><a href="${item.linkUrl}">${item.linkText}</a></p>`
+      }
+    })
+    return items.join('')
+  }
+
   renderCSS () {
     this.css = /* css */`
-    :host ul li{
+    :host ul li {
       position: var(--li-position, relative);
       padding-left: var(--li-padding-left, 2em);
     }
@@ -97,6 +118,13 @@ export default class Article extends Shadow() {
       background-color: #97A619;
       border-radius: 50%;
       content: '';
+    }
+    :host .back-btn-wrapper {
+      padding:var(--back-btn-padding, 5em);
+      text-align:var(--back-btn-text-align, center);
+    }
+    :host .link-collection {
+      padding:var(--link-collection-padding, 2em 0);
     }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
@@ -169,5 +197,17 @@ export default class Article extends Shadow() {
       })
       return elements
     }))
+  }
+
+  get articleListUrl () {
+    return this.getAttribute('news-list-url') || ''
+  }
+
+  get backBtn () {
+    return this.root.querySelector('a-button') || new DocumentFragment()
+  }
+
+  get backBtnLabel () {
+    return this.getAttribute('back-btn-label') || 'Back'
   }
 }
