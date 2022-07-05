@@ -69,49 +69,49 @@ export default class Pagination extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-      display: block;
-      background-color: black;
-      height: 62px;
+      display: var(--display, block);
+      background-color:var(--background-color, black);
+      height:var(--height, 62px);
     }
     :host ul {
-      margin: 0 0.75em 0 0;
-      float: right;
-      display:flex;
+      margin:var(--ul-margin, 0 0.75em 0 0);
+      float:var(--ul-float, right);
+      display:var(--ul-display, flex);
     }
     :host li {
-      display: inline;
-      width: 60px;
-      height: 54px;
-      padding: 0;
-      border: 0;
-      font-size: 1.2em;
-      position:relative;
+      display:var(--li-display, inline);
+      width:var(--li-width, 60px);
+      height:var(--li-height, 54px);
+      padding:var(--li-padding, 0);
+      border:var(--li-border, 0);
+      font-size:var(--li-font-size, 1.2em);
+      position:var(--li-position, relative);
     }
     :host li::after {
-      position:absolute;
-      top: 9px;
-      left: 0;
-      width: 1px;
-      height: 43px;
-      background-color: #bbb;
-      content: '';
+      position:var(--li-after-position, absolute);
+      top:var(--li-after-top, 9px);
+      left:var(--li-after-left, 0);
+      width:var(--li-after-width, 1px);
+      height:var(--li-after-height, 43px);
+      background-color:var(--li-after-background, #bbb);
+      content:var(--li-after-content, '');
     }
     :host li.active {
-      background:white;
+      background:var(--li-active-background, white);
     }
     :host nav ul li > a {
-      border-top: 6px solid black;
-      height:100%;
-      display:flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
+      border-top:var(--li-a-border-top, 6px solid black);
+      height:var(--li-a-height, 100%);
+      display:var(--li-a-display, flex);
+      flex-direction:var(--li-a-flex-direction, row);
+      justify-content:var(--li-a-justify-content, center);
+      align-items:var(--li-a-align-items, center);
     }
     :host nav ul li > a.active {
-      color:black;
+      color:var(--li-a-active, black);
     }
     :host nav ul li > a:hover {
-      border-top: 6px solid #97A619;
+      border-top: var(--li-a-hover, 6px solid #97A619);
     }
      @media only screen and (max-width: _max-width_) {}
     `
