@@ -14,7 +14,8 @@ export default class Article extends Shadow() {
     const articles = this.loadArticles(window, sessionStorage)
     this.article = this.getArticle(articles.slug, articles.articles)
     this.clickListener = event => {
-      window.open(this.articleListUrl, '_blank')
+      const windowOpenTarget = event.target.tagName === 'A-BUTTON' ? '_self' : '_blank'
+      window.open(this.articleListUrl, windowOpenTarget)
     }
   }
 
