@@ -113,7 +113,12 @@ export default class Pagination extends Shadow() {
     :host nav ul li > a:hover {
       border-top: var(--li-a-hover, 6px solid #97A619);
     }
-     @media only screen and (max-width: _max-width_) {}
+     @media only screen and (max-width: _max-width_) {
+      :host li {
+        width:var(--li-width-mobile, 40px);
+        font-size:var(--li-font-size-mobile, 1em);
+      }
+     }
     `
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */

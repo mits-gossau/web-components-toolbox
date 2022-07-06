@@ -1,1 +1,6 @@
-:host {}
+:host {
+    --align-items: start;
+    --article-preview-aspect-ratio: 1.75/1;
+    --article-preview-img-object-fit: cover;
+
+}

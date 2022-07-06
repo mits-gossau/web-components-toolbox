@@ -1,1 +1,4 @@
-:host {}
+:host {
+    --aspect-ratio: 1.75/1;
+    --img-object-fit: cover;
+}

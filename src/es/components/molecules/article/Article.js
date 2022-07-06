@@ -67,23 +67,25 @@ export default class Article extends Shadow() {
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `
     <div class="article">
-      <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
-      <h1 class="font-size-big">${introHeadline}</h1>
-      <p><b>${location ? `${location} - ` : ''}${introText}</b></p>
-       ${introImage ? `<div><a-picture picture-load defaultSource="${introImage.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
-      <div>
+      <div class="intro">
+        <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
+        <h1 class="font-size-big">${introHeadline}</h1>
+        <p><b>${location ? `${location} - ` : ''}${introText}</b></p>
+        ${introImage ? `<div><a-picture picture-load defaultSource="${introImage.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
+      </div>
+      <div class="content">
           ${contentOne
         ? `<p>${window
           // @ts-ignore
           .documentToHtmlString(contentOne.json)}</p>`
         : ''}
-          ${imageOne ? `<div><a-picture picture-load defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
+          ${imageOne ? `<a-picture picture-load defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
           ${contentTwo
         ? `<p>${window
           // @ts-ignore
           .documentToHtmlString(contentTwo.json)}</p>`
         : ''} 
-          ${imageTwo ? `<div><a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''} 
+          ${imageTwo ? `<a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
       </div>
       ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
       <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
@@ -104,6 +106,12 @@ export default class Article extends Shadow() {
 
   renderCSS () {
     this.css = /* css */`
+    :host .article  {
+      display:flex;
+      flex-direction: column;
+      align-items: flex-start;
+      align-content: flex-start;
+    }
     :host ul li {
       position: var(--li-position, relative);
       padding-left: var(--li-padding-left, 2em);
@@ -122,6 +130,7 @@ export default class Article extends Shadow() {
     :host .back-btn-wrapper {
       padding:var(--back-btn-padding, 5em);
       text-align:var(--back-btn-text-align, center);
+      width:var(--back-btn-width, 100%);
     }
     :host .link-collection {
       padding:var(--link-collection-padding, 2em 0);

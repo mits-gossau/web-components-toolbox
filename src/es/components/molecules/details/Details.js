@@ -3,6 +3,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
 
 /* global CustomEvent */
 /* global Image */
+/* global self */
 
 /**
  * Details (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) aka. Bootstrap accordion
@@ -97,12 +98,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     }
 
     this.checkMedia = () => {
-      if (this.isMobile && this.mobileOpen)
-        this.details.setAttribute('open', '')
-      else if (!this.isMobile && this.mobileOpen)
-        this.details.removeAttribute('open')
+      if (this.isMobile && this.mobileOpen) { this.details.setAttribute('open', '') } else if (!this.isMobile && this.mobileOpen) { this.details.removeAttribute('open') }
     }
-
   }
 
   connectedCallback () {
@@ -373,11 +370,13 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           margin: var(--summary-margin-mobile, var(--summary-margin, 0));
           padding: var(--summary-padding-mobile, var(--summary-padding, 0));
         }
-        ${this.mobileOpen ? `
+        ${this.mobileOpen
+        ? `
         :host summary .dropdown-icon {
           display: none;
         }
-        ` : ''}
+        `
+        : ''}
 
         
       }

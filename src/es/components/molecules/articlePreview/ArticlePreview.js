@@ -28,15 +28,18 @@ export default class ArticlePreview extends Shadow() {
     }
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper.innerHTML = /* html */ `
-    <a class="link" href="${this.articleUrl}?article=${this.article.slug}">
+   
+    <a class="link" href="${this.articleUrl}&article=${this.article.slug}">
+      <o-wrapper namespace="article-preview-">
         <div class="image-wrapper">
           <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
         </div>
-       <div class="text-wrapper">
-          <p>${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
+        <div class="text-wrapper">
+          <p class="margin-zero">${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
           <h3 class="title">${this.article.introHeadline}</h3>
-          <p>${this.article.introText}</p>
+          <p class="margin-zero">${this.article.introText}</p>
         </div> 
+      </o-wrapper>
     </a>
   `
     this.html = this.newsWrapper
@@ -66,12 +69,6 @@ export default class ArticlePreview extends Shadow() {
       gap:var(--preview-a-flex-gap, 2em);
       padding:var(--preview-a-padding, 1em 0);
     }   
-    :host > div > a  h3 {
-      color:var(--h3-color, black);
-    }
-    :host > div > a:hover h3 {
-      color:var(--h3-color-hover, white);
-    }
     @media only screen and (max-width: _max-width_) {}
     `
 
