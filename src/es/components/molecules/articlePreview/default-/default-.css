@@ -7,4 +7,5 @@
 
 :host(:hover) {
     --h3-color: var(--color-hover);
+    --h3-margin: 0;
 }
