@@ -48,7 +48,6 @@
 :host .nutrients-item > span {
     margin-top: 10px;
     font-size: 0.7rem;
-    text-transform: uppercase;
 }
 
 :host .dropdown-icon {

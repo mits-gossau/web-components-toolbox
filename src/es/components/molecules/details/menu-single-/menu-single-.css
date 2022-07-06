@@ -78,7 +78,6 @@
     width: auto;
     padding: 0 10px;
     border-radius: 12px;
-    text-transform: uppercase;
 }
 
 :host .legende > .legend-icon {
