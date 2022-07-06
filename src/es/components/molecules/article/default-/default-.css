@@ -1,4 +1,11 @@
 :host {
     --aspect-ratio: 1.75/1;
     --img-object-fit: cover;
+    --h1-color: #97A619;
+    --ul-list-style: none;
+}
+
+:host ul>li>p {
+    /* remove margin from contentful */
+    margin: 0;
 }

@@ -223,17 +223,17 @@
   color: var(--a-color-hover, var(--color-hover, var(--color, green)));
   text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, underline))));
 }
-:host a > h1, :host a > h2, :host a > h3, :host a > h4, :host a > h5, :host a > h6 {
+:host a h1, :host a h2, :host a h3, :host a h4, :host a h5, :host a h6 {
   color: var(--a-color, var(--color-secondary, var(--color, pink)));
   text-decoration: var(--a-text-decoration, var(--text-decoration, underline));
   text-underline-offset: var(--a-text-underline-offset, unset);
 }
-:host a:hover > h1, :host a:active > h1, :host a:focus > h1,
-:host a:hover > h2, :host a:active > h2, :host a:focus > h2,
-:host a:hover > h3, :host a:active > h3, :host a:focus > h3,
-:host a:hover > h4, :host a:active > h4, :host a:focus > h4,
-:host a:hover > h5, :host a:active > h5, :host a:focus > h5,
-:host a:hover > h6, :host a:active > h6, :host a:focus > h6 {
+:host a:hover h1, :host a:active h1, :host a:focus h1,
+:host a:hover h2, :host a:active h2, :host a:focus h2,
+:host a:hover h3, :host a:active h3, :host a:focus h3,
+:host a:hover h4, :host a:active h4, :host a:focus h4,
+:host a:hover h5, :host a:active h5, :host a:focus h5,
+:host a:hover h6, :host a:active h6, :host a:focus h6 {
   color: var(--a-color-hover, var(--color-hover, var(--color, green)));
   text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, underline))));
 }

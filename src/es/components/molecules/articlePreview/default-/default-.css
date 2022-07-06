@@ -1,6 +1,10 @@
 :host {
     --align-items: start;
-    --article-preview-aspect-ratio: 1.75/1;
-    --article-preview-img-object-fit: cover;
+    --aspect-ratio: 1.75/1;
+    --img-object-fit: cover;
+    --h3-color: var(--color-secondary);
+}
 
+:host(:hover) {
+    --h3-color: var(--color-hover);
 }

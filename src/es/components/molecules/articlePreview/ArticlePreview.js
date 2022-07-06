@@ -2,37 +2,36 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ArticlePreview extends Shadow() {
-  constructor (article, ...args) {
+  constructor(article, ...args) {
     super(...args)
     this.article = article || null
     this.ERROR_MSG = 'Error. Article could not be displayed.'
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.newsWrapper
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML () {
+  renderHTML() {
     if (!this.article) {
       this.html = this.ERROR_MSG
       return
     }
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper.innerHTML = /* html */ `
-   
     <a class="link" href="${this.articleUrl}&article=${this.article.slug}">
-      <o-wrapper namespace="article-preview-">
-        <div class="image-wrapper">
-          <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
+    <o-wrapper>
+        <div class="image-wrapper" width="30%">
+          <a-picture picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
         </div>
         <div class="text-wrapper">
           <p class="margin-zero">${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
@@ -45,8 +44,9 @@ export default class ArticlePreview extends Shadow() {
     this.html = this.newsWrapper
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
+    
     :host > div {
       border-width:var(--border-width, 0 0 2px);
       border-image:var(--border-image-source, url(/src/img/border-dotted.png)) var(--border-image-slice, 0 0 2 0) var(--border-image-repeat, repeat);
@@ -95,7 +95,7 @@ export default class ArticlePreview extends Shadow() {
     }
   }
 
-  get articleUrl () {
+  get articleUrl() {
     return this.getAttribute('article-url') || null
   }
 }

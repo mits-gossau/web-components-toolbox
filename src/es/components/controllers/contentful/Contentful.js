@@ -14,7 +14,7 @@ import query from '../../../../../../controllers/contenful/Query.js'
  * @type {CustomElementConstructor}
  */
 export default class Contentful extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super({ mode: 'false' }, ...args)
 
     // TODO:
@@ -26,10 +26,20 @@ export default class Contentful extends Shadow() {
     const limit = this.getAttribute('limit')
     const skip = this.getAttribute('skip') || 0
     this.abortController = null
-    this.requestListArticlesListener = event => {
+
+    //this.requestListArticlesListener = async event => {
+    this.requestListArticlesListener =  event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
       const variables = { limit: Number(limit), skip: Number(event.detail.skip * skip) || 0 }
+      // try {
+      //   let query = await import('../../../../../../controllers/contenful/Query.js')
+      //   query = query.default
+
+      // } catch (e) {
+      //   console.log(e)
+      // }
+      // console.log(query);
       const fetchOptions = {
         method: 'POST',
         headers: {
@@ -60,11 +70,11 @@ export default class Contentful extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.addEventListener('requestListArticles', this.requestListArticlesListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.removeEventListener('requestListArticles', this.requestListArticlesListener)
   }
 }
