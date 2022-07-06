@@ -2,26 +2,26 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ArticlePreview extends Shadow() {
-  constructor(article, ...args) {
+  constructor (article, ...args) {
     super(...args)
     this.article = article || null
     this.ERROR_MSG = 'Error. Article could not be displayed.'
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
 
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.newsWrapper
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML () {
     if (!this.article) {
       this.html = this.ERROR_MSG
       return
@@ -44,7 +44,7 @@ export default class ArticlePreview extends Shadow() {
     this.html = this.newsWrapper
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
     
     :host > div {
@@ -95,7 +95,7 @@ export default class ArticlePreview extends Shadow() {
     }
   }
 
-  get articleUrl() {
+  get articleUrl () {
     return this.getAttribute('article-url') || null
   }
 }

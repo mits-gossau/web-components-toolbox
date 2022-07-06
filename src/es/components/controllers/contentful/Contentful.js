@@ -3,9 +3,9 @@
 /* global fetch */
 /* global sessionStorage */
 /* global AbortController */
+/* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
-import query from '../../../../../../controllers/contenful/Query.js'
 
 /**
  * TODO
@@ -14,32 +14,29 @@ import query from '../../../../../../controllers/contenful/Query.js'
  * @type {CustomElementConstructor}
  */
 export default class Contentful extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super({ mode: 'false' }, ...args)
-
-    // TODO:
-    // Move Base URL to Environment
-
     const token = this.getAttribute('token')
     const spaceId = this.getAttribute('space-id')
-    const endpoint = `https://graphql.contentful.com/content/v1/spaces/${spaceId}`
+    // @ts-ignore
+    const endpoint = self.Environment.contentfulEndpoint + spaceId
     const limit = this.getAttribute('limit')
     const skip = this.getAttribute('skip') || 0
     this.abortController = null
 
-    //this.requestListArticlesListener = async event => {
-    this.requestListArticlesListener =  event => {
+    this.requestListArticlesListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
       const variables = { limit: Number(limit), skip: Number(event.detail.skip * skip) || 0 }
-      // try {
-      //   let query = await import('../../../../../../controllers/contenful/Query.js')
-      //   query = query.default
-
-      // } catch (e) {
-      //   console.log(e)
-      // }
-      // console.log(query);
+      let query = null
+      try {
+        // @ts-ignore
+        query = await import('../../../../../../controllers/contenful/Query.js')
+        query = query.default
+      } catch (e) {
+        query = await import('./Query.js')
+        query = query.default
+      }
       const fetchOptions = {
         method: 'POST',
         headers: {
@@ -70,11 +67,11 @@ export default class Contentful extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.addEventListener('requestListArticles', this.requestListArticlesListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.removeEventListener('requestListArticles', this.requestListArticlesListener)
   }
 }
