@@ -3,9 +3,9 @@
     --aspect-ratio: 1.75/1;
     --img-object-fit: cover;
     --h3-color: var(--color-secondary);
+    --h3-margin: 0;
 }
 
 :host(:hover) {
     --h3-color: var(--color-hover);
-    --h3-margin: 0;
 }
