@@ -97,9 +97,9 @@ export default class Article extends Shadow() {
   renderLinkListCollection (collection) {
     const items = collection.map(item => {
       if (item.downloadItem) {
-        return `<p><a href="${item.downloadItem.url}">${item.downloadItem.title}</a></p>`
+        return `<p><a target="_blank" href="${item.downloadItem.url}">${item.downloadItem.title}</a></p>`
       } else {
-        return `<p><a href="${item.linkUrl}">${item.linkText}</a></p>`
+        return `<p><a target="_blank" href="${item.linkUrl}">${item.linkText}</a></p>`
       }
     })
     return items.join('')
