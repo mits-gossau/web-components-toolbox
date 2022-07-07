@@ -46,29 +46,28 @@ export default class ArticlePreview extends Shadow() {
 
   renderCSS () {
     this.css = /* css */`
-    
     :host > div {
       border-width:var(--border-width, 0 0 2px);
       border-image:var(--border-image-source, url(/src/img/border-dotted.png)) var(--border-image-slice, 0 0 2 0) var(--border-image-repeat, repeat);
       border-style:var(--border-style, dotted);
     }
-    
+
+    :host > div > a {
+      align-items:var(--preview-a-align-items, flex-start);
+      display:flex !important;
+      flex-direction:var(--preview-a-flex-direction, row);
+      flex-wrap:var(--preview-a-flex-wrap, nowrap);
+      gap:var(--preview-a-flex-gap, 2em);
+      padding:var(--preview-a-padding, 1em 0);
+      text-decoration:var(--preview-a-text-decoration, none);
+    }
     ${this.getAttribute('is-on-home') !== null
         ? /* CSS */`
           :host(:first-child) > div {
             border-width: var(--first-child-border-width, 2px 0 2px 0);
           }
         `
-        : ''}
-
-    :host > div > a {
-      display:flex !important;
-      flex-direction:var(--preview-a-flex-direction, row);
-      flex-wrap:var(--preview-a-flex-wrap, nowrap);
-      align-items:var(--preview-a-align-items, flex-start);
-      gap:var(--preview-a-flex-gap, 2em);
-      padding:var(--preview-a-padding, 1em 0);
-    }   
+        : ''}   
     @media only screen and (max-width: _max-width_) {}
     `
 
