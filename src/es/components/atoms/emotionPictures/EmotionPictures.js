@@ -138,7 +138,7 @@ export default class EmotionPictures extends Intersection() {
         }
         :host .subline {
           display:var(--subline-display-mobile, initial);
-      }
+        }
       }
     `
     this.setCss(/* css */`

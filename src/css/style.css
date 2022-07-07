@@ -227,6 +227,7 @@
   color: var(--a-color, var(--color-secondary, var(--color, pink)));
   text-decoration: var(--a-text-decoration, var(--text-decoration, underline));
   text-underline-offset: var(--a-text-underline-offset, unset);
+  transition: var(--a-transition, color 0.3s ease-out);
 }
 :host a:hover h1, :host a:active h1, :host a:focus h1,
 :host a:hover h2, :host a:active h2, :host a:focus h2,
