@@ -119,8 +119,8 @@ export default class EmotionPictures extends Intersection() {
       }
       :host .subline {
         font-size: var(--subline-font-size, 1.2em);
-        padding:var(--subline-padding, unset);
         display:var(--subline-display, initial);
+        --bg-padding: var(--bg-padding-custom, 1.2em);
       }
       @media only screen and (max-width: _max-width_) {
         :host > div h2.font-size-big, :host > a h2.font-size-big {
