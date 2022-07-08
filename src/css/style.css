@@ -301,6 +301,25 @@ img[style="float: right;"] {
   padding-left: 1.5em;
   text-align: var(--ul-text-align, var(--ol-text-align, start));
 }
+:host details ul li, :host section ul li {
+  position: var(--li-position, static);
+  padding-left: var(--li-padding-left, 0);
+}
+:host details ul li::marker, :host section ul li::marker {
+  display: var(--marker-display, inline);
+  content: var(--marker-content, normal);
+}
+:host details ul li::before, :host section ul li::before {
+  display: var(--li-before-display, none);
+  position: absolute;
+  top: 10px;
+  left: 8px;
+  width: 5px;
+  height: 5px;
+  background-color: #97A619;
+  border-radius: 50%;
+  content: '';
+}
 /* overwrite abuse of o-wrapper with simulate-children="1" src/es/components/pages/Home.html */
 :host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
   padding-left: 1.5em !important;
