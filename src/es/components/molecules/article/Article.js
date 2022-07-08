@@ -42,6 +42,10 @@ export default class Article extends Shadow() {
     this.backBtn.removeEventListener('click', this.clickListener)
   }
 
+  shouldComponentRenderCSS () {
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+  }
+
   loadArticles (window, sessionStorage) {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
@@ -58,16 +62,12 @@ export default class Article extends Shadow() {
     return article
   }
 
-  shouldComponentRenderCSS () {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
-  }
-
   renderHTML () {
     this.loadChildComponents()
     const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection } = this.article
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     this.newsWrapper = `
-    <div class="article">
+    <article>
       <div class="intro">
         <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
         <h1 class="font-size-big">${introHeadline}</h1>
@@ -90,7 +90,7 @@ export default class Article extends Shadow() {
       </div>
       ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
       <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
-    </div>`
+    </article>`
     this.html = this.newsWrapper
   }
 
@@ -107,26 +107,26 @@ export default class Article extends Shadow() {
 
   renderCSS () {
     this.css = /* css */`
-    :host .article  {
-      display:flex;
-      flex-direction: column;
-      align-items: flex-start;
-      align-content: flex-start;
+    :host > article  {
+      display:var(--display, flex);
+      flex-direction:var(--flex-direction,  column);
+      align-items:var(--align-items, flex-start);
+      align-content:var(--align-content, flex-start);
     }
     :host ul li {
       position: var(--li-position, relative);
       padding-left: var(--li-padding-left, 2em);
     }
     :host ul li::before {
-      position: absolute;
-      top: 10px;
-      left: 8px;
-      display: block;
-      width: 5px;
-      height: 5px;
-      background-color: #97A619;
-      border-radius: 50%;
-      content: '';
+      position:var(--li-before-position,  absolute);
+      top:var(--li-before-top, 10px);
+      left:var(--li-before-left, 8px);
+      display:var(--li-before-display, block);
+      width:var(--li-before-width, 5px);
+      height:var(--li-before-height, 5px);
+      background-color:var(--li-before-background-color, #97A619);
+      border-radius:var(--li-before-radius, 50%);
+      content: var(--li-before-content, '');
     }
     :host .back-btn-wrapper {
       padding:var(--back-btn-padding, 5em);
