@@ -15,6 +15,7 @@
   --teaser-overlay-bg-background-color: var(--teaser-overlay-bg-background-color-custom, var(--color-secondary, var(--m-red-800)));
   --teaser-overlay-bg-color-hover: var(--teaser-overlay-bg-color-hover-custom, var(--background-color, var(--m-red-900)));
   --teaser-overlay-bg-color: var(--teaser-overlay-bg-color-custom, var(--background-color, var(--m-red-800)));
+  --teaser-overlay-bg-padding: 0.75rem;
   --teaser-overlay-figcaption-align-self: end;
   --teaser-overlay-figcaption-background-color: var(--teaser-overlay-background-color);
   --teaser-overlay-figcaption-height: auto;
