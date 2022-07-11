@@ -82,6 +82,11 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       }
     }
 
+
+    this.scrollToAnchorEventListener = event => {
+      if (this.details && event.detail && event.detail.child === this) this.details.setAttribute('open', 'true')
+    }
+
     this.animationendListener = event => {
       this.details.removeAttribute('open')
       this.details.classList.remove('closing')
@@ -109,6 +114,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     document.body.addEventListener(this.openEventName, this.openEventListener)
     self.addEventListener('resize', this.resizeListener)
     this.root.addEventListener('click', this.clickEventListener)
+    document.body.addEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
     this.checkMedia()
   }
 
@@ -116,6 +122,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     super.disconnectedCallback()
     document.body.removeEventListener(this.openEventName, this.openEventListener)
     this.root.removeEventListener('click', this.clickEventListener)
+    document.body.removeEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
     self.removeEventListener('resize', this.resizeListener)
   }
 

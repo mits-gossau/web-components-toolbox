@@ -152,6 +152,17 @@
       </ul>
     `
   </script>
+  <h3>Body</h3>
+  <div id=body></div>
+  <script>
+    document.querySelector('#body').innerHTML = /* HTML */`
+      <ul>
+        <li><a href="./docs/Template.html?${headerFooterQuery}&content=../../../../src/es/components/pages/Home.html">"mandant preview" Page</a></li>
+        <li><a href="./docs/Template.html?${headerFooterQuery}&content=../../../../src/es/components/pages/Home.html#testAnchor">"anchor preview" Page</a></li>
+        <li><a href="./docs/Template.html?${headerFooterQuery}&content=../../../../src/es/components/pages/Home.html#der-bessere-weg">"m-details (accordion) open on anchor preview" Page</a></li>
+      </ul>
+    `
+  </script>
 </body>
 
 </html>
