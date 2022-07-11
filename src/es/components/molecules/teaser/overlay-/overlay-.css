@@ -7,7 +7,7 @@
   --picture-teaser-img-object-fit: var(--img-object-fit);
   --picture-teaser-img-width: var(--img-width);
   --teaser-overlay-a-picture-height: 100%;
-  --teaser-overlay-a-picture-transform-hover: scale(1.05,1.05);
+  --teaser-overlay-a-picture-transform-hover: scale(1.05, 1.05);
   --teaser-overlay-a-picture-transition: transform .5s ease-out;
   --teaser-overlay-align-items: center;
   --teaser-overlay-background-color: transparent;
@@ -18,7 +18,7 @@
   --teaser-overlay-figcaption-align-self: end;
   --teaser-overlay-figcaption-background-color: var(--teaser-overlay-background-color);
   --teaser-overlay-figcaption-height: auto;
-  --teaser-overlay-figcaption-padding: 0 0 1em;
+  --teaser-overlay-figcaption-padding: 0 var(--teaser-overlay-bg-padding, var(--bg-padding, 0.5em)) 1em 0;
   --teaser-overlay-h2-margin: 0.09em 0;
   --teaser-overlay-overflow: hidden;
 }
