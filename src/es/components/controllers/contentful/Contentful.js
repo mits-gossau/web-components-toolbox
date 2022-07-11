@@ -27,7 +27,7 @@ export default class Contentful extends Shadow() {
     this.requestListArticlesListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-      const variables = { limit: Number(limit), skip: Number(event.detail.skip * skip) || 0 }
+      const variables = { limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit), skip: event.detail && event.detail.skip !== undefined ? Number(event.detail.skip) * skip : 0 }
       let query = null
       try {
         // @ts-ignore
@@ -49,13 +49,11 @@ export default class Contentful extends Shadow() {
 
       this.dispatchEvent(new CustomEvent('listArticles', {
         detail: {
-          fetch: fetch(endpoint, fetchOptions).then(response => {
+          fetch: fetch(endpoint, fetchOptions).then(async response => {
             if (response.status >= 200 && response.status <= 299) {
-              const json = response.json()
-              json.then(data => {
-                sessionStorage.setItem('articles', JSON.stringify(data))
-              })
-              return json
+              const data = await response.json()
+              sessionStorage.setItem('articles', JSON.stringify(data))
+              return data
             }
             throw new Error(response.statusText)
           })

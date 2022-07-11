@@ -27,8 +27,10 @@ export default class ArticlePreview extends Shadow() {
       return
     }
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
+    const url = new URL(this.articleUrl, this.articleUrl.charAt(0) === '/' ? location.origin : this.articleUrl.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    url.searchParams.set('article', this.article.slug)
     this.newsWrapper.innerHTML = /* html */ `
-    <a class="link" href="${this.articleUrl}?article=${this.article.slug}">
+    <a class="link" href="${url.href}">
     <o-wrapper>
         <div class="image-wrapper" width="30%">
           <a-picture picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
