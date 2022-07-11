@@ -166,6 +166,12 @@ export default class EmotionPictures extends Intersection() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`,
           namespace: false
         }, ...styles], false)
+      case 'emotion-pictures-with-button-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-button-/with-button-.css`,
+          namespace: false
+        }, ...styles], false)
       case 'emotion-pictures-with-video-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`, // apply namespace since it is specific and no fallback
