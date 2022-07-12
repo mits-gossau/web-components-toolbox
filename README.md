@@ -8,8 +8,8 @@ CSS Rules:
 - variablesCustom.css has to be kept as tiny as possible
 - use templates instead of namespace-fallback
 - each template must have a local preview
-- use _max-width_ for "@media only screen and (max-width:" selector
-- use _import-meta-url_ for all urls (!important, pass option "importMetaUrl: import.meta.url" to Shadow.js in the constructor to have the viewpoint of the Class inheriting Shadow.js)
+- use _\_max-width_\_ for "@media only screen and (max-width:" selector
+- use _\_import-meta-url_\_ for all urls (!important, pass option "importMetaUrl: import.meta.url" to Shadow.js in the constructor to have the viewpoint of the Class inheriting Shadow.js)
 - sort css properties and variables alphabetically
 - variables naming rule: --{selector aka component aka namespace}-{css property}-{pseudo class or media query name} eg. --p-background-color-hover
 - within the component don't use any name spacing eg. component header don't use --header-default-color just use --color the namespace can be added by the Shadow as an html attribute
