@@ -308,20 +308,17 @@ img[style="float: right;"] {
 :host ul.bull, :host ul[style="list-style-type: disc;"], :host ul.line {
   list-style: none !important; /* Remove default bullets */
 }
-:host ul.bull li, :host ul[style="list-style-type: disc;"] li {
-  padding: var(--ul-bull-li-padding, 0);
-}
 :host ul.bull li, :host ul[style="list-style-type: disc;"] li, :host ul.line li {
   position: relative;
 }
 :host ul.bull li::before, :host ul[style="list-style-type: disc;"] li::before, :host ul.line li::before {
   position: absolute;
-  top: var(--ul-bull-li-before-top, 0.5em);
-  left: var(--ul-bull-li-before-left, -1.5em);
+  top: var(--bull-li-before-top, 0.5em);
+  left: var(--bull-li-before-left, -1.5em);
   display: block;
-  width: var(--ul-bull-li-before-width, 0.7em);
-  height: var(--ul-bull-li-before-height, 0.7em);
-  border-width: var(--ul-bull-li-before-border-width, 0.3em);
+  width: var(--bull-li-before-width, 0.7em);
+  height: var(--bull-li-before-height, 0.7em);
+  border-width: var(--bull-li-before-border-width, 0.3em);
   border-style: solid;
   border-color: var(--bull-color, var(--color-secondary, var(--color, green)));
   background-color: var(--bull-color, var(--color-secondary, var(--color, green)));
@@ -333,8 +330,16 @@ img[style="float: right;"] {
   border-color: var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green)))));
   background-color: var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green)))));
 }
+:host ul.line li::before {
+  top: 0.5em;
+  left: -1.5em;
+  width: 0.7em;
+  height: 0.7em;
+  border-width: 0.3em;
+}
 :host ul.line li:hover:not(:last-child)::after {
   background-color: var(--line-color-hover, var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green))))));
+  transition: var(--bull-transition, background-color 0.3s ease-out);
 }
 :host ul.line li {
   margin-bottom: 1em;
