@@ -50,7 +50,7 @@ export default class ArticlePreview extends Shadow() {
     this.css = /* css */`
     :host > div {
       border-width:var(--border-width, 0 0 2px);
-      border-image:var(--border-image-source, url(/src/img/border-dotted.png)) var(--border-image-slice, 0 0 2 0) var(--border-image-repeat, repeat);
+      border-image:var(--border-image-source, url(${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/img/border-dotted.png)) var(--border-image-slice, 0 0 2 0) var(--border-image-repeat, repeat);
       border-style:var(--border-style, dotted);
     }
 
