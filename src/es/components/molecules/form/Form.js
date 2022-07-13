@@ -108,7 +108,7 @@ export default class Form extends Shadow() {
       ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
         font-family: var(--font-family, inherit);
         border-radius: var(--border-radius, 0.5em);
-        background-color: transparent;
+        background-color: var(--background-color, transparent);
         box-sizing: border-box;
         border: 1px solid var(--m-gray-400);
         color: var(--color);
