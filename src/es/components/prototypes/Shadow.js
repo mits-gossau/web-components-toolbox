@@ -10,6 +10,7 @@
   appendStyleNode?: boolean,
   error?: string,
   maxWidth?: string,
+  importMetaUrl?: string,
   node?: HTMLElement & Shadow & *
 }} fetchCSSParams */
 
@@ -36,6 +37,7 @@
     mode,
     namespace,
     namespaceFallback,
+    importMetaUrl,
     hasShadowRoot,
     root,
     cssSelector,
@@ -48,6 +50,7 @@
     Shadow.cssNamespaceToVarDec,
     Shadow.cssNamespaceToVar,
     cssMaxWidth,
+    cssImportMetaUrl,
     fetchCSS,
     Shadow.cssTextDecorationShortHandFix,
     html,
@@ -59,10 +62,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   /**
    * Creates an instance of Shadow. The constructor will be called for every custom element using this class when initially created.
    *
-   * @param {{mode?: mode | undefined, namespace?: string | undefined, namespaceFallback?: boolean | undefined}} [options = {mode: undefined, namespace: undefined, namespaceFallback: undefined}]
+   * @param {{mode?: mode | undefined, namespace?: string | undefined, namespaceFallback?: boolean | undefined, importMetaUrl?: string | undefined}} [options = {mode: undefined, namespace: undefined, namespaceFallback: undefined, importMetaUrl: undefined}]
    * @param {*} args
    */
-  constructor (options = { mode: undefined, namespace: undefined, namespaceFallback: undefined }, ...args) {
+  constructor (options = { mode: undefined, namespace: undefined, namespaceFallback: undefined, importMetaUrl: undefined }, ...args) {
     // @ts-ignore
     super(...args)
 
@@ -88,6 +91,8 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (options.namespaceFallback) this.setAttribute('namespace-fallback', '')
     /** @type {boolean} */
     this.namespaceFallback = this.hasAttribute('namespace-fallback')
+    /** @type {string} */
+    this.importMetaUrl = (options.importMetaUrl || import.meta.url).replace(/(.*\/)(.*)$/, '$1')
   }
 
   /**
@@ -210,6 +215,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     } else {
       // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/controllers/fetchCss/FetchCss.js
       style = Shadow.cssMaxWidth(style, maxWidth)
+      style = Shadow.cssImportMetaUrl(style, this.importMetaUrl)
       if (cssSelector !== ':host') style = Shadow.cssHostFallback(style, cssSelector)
       if (namespace) {
         if (style.includes('---')) console.error('this.css has illegal dash characters at:', this)
@@ -295,6 +301,20 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   // @ts-ignore
   static cssMaxWidth (style, maxWidth) {
     return style.replace(/_max-width_/g, maxWidth)
+  }
+
+  /**
+   * importMetaUrl replaces _import-meta-url_ with the url from the viewpoint of the module
+   * !important, pass option "importMetaUrl: import.meta.url" to Shadow.js in the constructor to have the viewpoint of the Class inheriting Shadow.js
+   *
+   * @static
+   * @param {string} style
+   * @param {string} importMetaUrl
+   * @return {string}
+   */
+  // @ts-ignore
+  static cssImportMetaUrl (style, importMetaUrl) {
+    return style.replace(/_import-meta-url_/g, importMetaUrl)
   }
 
   /**

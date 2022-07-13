@@ -3,27 +3,18 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 
 ## [organize components](https://wiki.migros.net/display/OCC/Web+Components+CMS+Template)
 
+CSS Rules:
+- no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
+- variablesCustom.css has to be kept as tiny as possible
+- use templates instead of namespace-fallback
+- each template must have a local preview
+- use _\_max-width_\_ for "@media only screen and (max-width:" selector
+- use _\_import-meta-url_\_ for all urls (!important, pass option "importMetaUrl: import.meta.url" to Shadow.js in the constructor to have the viewpoint of the Class inheriting Shadow.js)
+- sort css properties and variables alphabetically
+- variables naming rule: --{selector aka component aka namespace}-{css property}-{pseudo class or media query name} eg. --p-background-color-hover
+- within the component don't use any name spacing eg. component header don't use --header-default-color just use --color the namespace can be added by the Shadow as an html attribute
+
 TODO:
-- [x] move each web component in its own folder
-- [x] reset file setup
-- [x] merge src/es/components/web-components-cms-template down
-- [x] variablesMigros.css move default styles into body if possible
-- [x] body.js css to separate file which can be fetched and setCss through shadow with namespace
-- [x] body.js css to import reset.css
-- [x] teaser templates by namespace
-- [x] tile https://www.betriebsrestaurants-migros.ch/de/referenzen.html
-- [x] button 1-4 version (3 + 4 -color-disabled) https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=2866%3A55901
-- [x] Wrapper.js onresize newly calculate calcColumnWidth
-- [x] :host *.bg-color, :host *.bg-color-hover try to make this display inline and with box-shadow analog https://www.betriebsrestaurants-migros.ch/de.html
-- [x] review each component, css Dino + Weedy
-- [x] integration laurin's picture aspect-ratio and low qual 5k image in advance loading, picture source generation at umbraco (set all to loading="lazy" but may check with intersection observer and switch to loading="eager" on component intersection)
-- [x] style.css demo page
-- [x] Template.html fix image path issue http://localhost:4200/src/es/components/web-components-toolbox/docs/Template.html?logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/atoms/button/primary-/primary-.html
-- [x] https://playwright.dev/ visual regression tests
-- [x] documenter.js to document the web components
-- [x] live-server reload on css file changes
-- [x] save reference screenshots in corresponding project folder
-- [x] set page.goto() path in corresponding project
 - [ ] redo header and navigation /\drem/, then eliminate all rem values
 - [ ] Template.html api call to fetch page content for previews
 - [ ] new flex-box wrapper: flex-grow (flex: 1) wrapper with empty children to simulate instead of o-wrapper width approach

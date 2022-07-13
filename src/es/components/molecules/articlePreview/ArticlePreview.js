@@ -2,8 +2,8 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ArticlePreview extends Shadow() {
-  constructor (article, ...args) {
-    super(...args)
+  constructor (article, options = {}, ...args) {
+    super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)
     this.article = article || null
     this.ERROR_MSG = 'Error. Article could not be displayed.'
   }
@@ -50,7 +50,7 @@ export default class ArticlePreview extends Shadow() {
     this.css = /* css */`
     :host > div {
       border-width:var(--border-width, 0 0 2px);
-      border-image:var(--border-image-source, url(${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/img/border-dotted.png)) var(--border-image-slice, 0 0 2 0) var(--border-image-repeat, repeat);
+      border-image:var(--border-image-source, url(_import-meta-url_./default-/img/border-dotted.png)) var(--border-image-slice, 0 0 2 0) var(--border-image-repeat, repeat);
       border-style:var(--border-style, dotted);
     }
 
