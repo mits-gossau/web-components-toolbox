@@ -143,7 +143,6 @@ export default class EmotionPictures extends Intersection() {
     `
     this.setCss(/* css */`
       :host > * {
-        //${this.hasAttribute('height-mobile') ? `--text-top-mobile: calc((${this.getAttribute('height-mobile')}/2) - var(--h2-font-size-mobile, 11em));` : ''}
         ${this.hasAttribute('height') ? `--img-height: ${this.getAttribute('height')};` : ''}
         ${this.hasAttribute('height-mobile') ? `--img-height-mobile: ${this.getAttribute('height-mobile')};` : ''}
         --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);

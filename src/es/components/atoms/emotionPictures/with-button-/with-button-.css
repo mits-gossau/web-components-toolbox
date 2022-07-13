@@ -1,6 +1,5 @@
 :host {
    --emotion-pictures-with-button-a-color-hover: var(--emotion-pictures-with-button-a-color-hover-custom, var(--color-hover));
-   --emotion-pictures-with-button-a-text-decoration: none;
    --emotion-pictures-with-button-bg-background-color: var(--emotion-pictures-with-button-bg-background-color-custom, var(--m-white));
    --emotion-pictures-with-button-bg-color: var(--emotion-pictures-with-button-bg-color-custom, var(--m-black));
    --emotion-pictures-with-button-bg-transition: opacity 0.5s ease-out, var(--a-transition, color 0.3s ease-out);
@@ -8,16 +7,28 @@
    --emotion-pictures-with-button-h1-font-size-mobile: var(--emotion-pictures-with-button-h1-font-size-mobile-custom, min(calc(1.75em * 1.75), 7vw));
    --emotion-pictures-with-button-h1-font-weight: var(--emotion-pictures-with-button-h2-font-weight);
    --emotion-pictures-with-button-h1-text-transform: var(--emotion-pictures-with-button-h2-text-transform);
+   --emotion-pictures-with-button-h2-font-family-secondary: var(--emotion-pictures-with-button-h2-font-family-secondary-custom, var(--font-family-bold));
    --emotion-pictures-with-button-h2-font-size-mobile: var(--emotion-pictures-with-button-h2-font-size-mobile-custom, min(calc(1.5em * 1.5), 7vw));
    --emotion-pictures-with-button-h2-font-weight: normal;
    --emotion-pictures-with-button-h2-text-transform: var(--emotion-pictures-with-button-h2-text-transform-custom, uppercase);
    --emotion-pictures-with-button-img-max-height: 75vh;
    --emotion-pictures-with-button-img-width: 100%;
+   --emotion-pictures-with-button-subline-display-mobile: var(--emotion-pictures-with-button-subline-display-mobile-custom, none);
    --emotion-pictures-with-button-subline-font-size: var(--emotion-pictures-with-button-subline-font-size-custom, 1.2em);
    --emotion-pictures-with-button-text-left-mobile: var(--emotion-pictures-with-button-text-left-mobile-custom);
    --emotion-pictures-with-button-text-left: var(--emotion-pictures-with-button-text-left-custom);
    --emotion-pictures-with-button-text-right-mobile: var(--emotion-pictures-with-button-text-right-mobile-custom);
    --emotion-pictures-with-button-text-right: var(--emotion-pictures-with-button-text-right-custom);
+   --emotion-pictures-with-button-text-top-mobile: var(--emotion-pictures-with-button-text-top-mobile-custom, 6em);
+   --emotion-pictures-with-button-text-top: var(--emotion-pictures-with-button-text-top-custom, 8em);
    --img-object-fit: cover;
    --img-width: 100%;
+}
+
+:host([inline]) {
+   --emotion-pictures-with-button-div-margin-mobile-custom: 0;
+   --emotion-pictures-with-button-text-left-custom: calc((100% - var(--content-width, 55%)) / 2);
+   --emotion-pictures-with-button-text-left-mobile-custom: var(--content-spacing-mobile, var(--content-spacing));
+   --emotion-pictures-with-button-text-right-custom: var(--emotion-pictures-with-button-text-left-custom);
+   --emotion-pictures-with-button-text-right-mobile-custom: var(--emotion-pictures-with-button-text-left-mobile-custom);
 }

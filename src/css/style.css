@@ -167,6 +167,7 @@
   left: var(--bg-padding, 0.5em);
   margin: 0;
   padding: 0.1em 0 0;
+  text-decoration-line: none;
 }
 :host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color, :host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color-hover {
   line-height: var(--bg-line-height, 1.7em);
