@@ -1,5 +1,6 @@
 :host {
    --emotion-pictures-with-button-a-color-hover: var(--emotion-pictures-with-button-a-color-hover-custom, var(--color-hover));
+   --emotion-pictures-with-button-a-text-decoration:none;
    --emotion-pictures-with-button-bg-background-color: var(--emotion-pictures-with-button-bg-background-color-custom, var(--m-white));
    --emotion-pictures-with-button-bg-color: var(--emotion-pictures-with-button-bg-color-custom, var(--m-black));
    --emotion-pictures-with-button-bg-transition: opacity 0.5s ease-out, var(--a-transition, color 0.3s ease-out);
