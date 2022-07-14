@@ -1,11 +1,12 @@
 :host {
-    --article-default-h1-color: var(--article-default-h1-color-custom, var(--color));
+    --article-default-h1-color: var(--article-default-h1-color-custom, var(--color-secondary, var(--color)));
     --article-default-h1-margin: var(--content-spacing) 0;
+    --article-default-intro-font-size: var(--article-default-intro-font-size-custom, inherit);
+    --article-default-li-before-background-color: var(--article-default-li-before-background-color-custom, var(--color));
     --article-default-link-collection-padding: var(--article-default-link-collection-padding-custom, var(--content-spacing));
     --article-default-ul-list-style: var(--article-default-ul-list-style-custom, none);
     --aspect-ratio: 1.75/1;
     --img-object-fit: cover;
-    --article-default-intro-font-size: 1.1em;
 }
 
 :host ul>li>p {
