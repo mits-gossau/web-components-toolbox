@@ -115,7 +115,7 @@ export default class Article extends Shadow() {
           ? `<p>${window
             // @ts-ignore
             .documentToHtmlString(contentTwo.json)}</p>`
-          : ''} 
+          : imageTwo ? '<br />' : ''} 
             ${imageTwo ? `<a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
         </div>
         ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
