@@ -69,51 +69,59 @@ export default class Pagination extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-      display: var(--display, block);
       background-color:var(--background-color, black);
-      height:var(--height, 62px);
+      display: var(--display, block);
+      height:var(--height, 100%);
     }
     :host ul {
-      margin:var(--ul-margin, 0 0.75em 0 0);
-      float:var(--ul-float, right);
       display:var(--ul-display, flex);
+      float:var(--ul-float, right);
+      margin:var(--ul-margin, 0);
     }
     :host li {
-      display:var(--li-display, inline);
-      width:var(--li-width, 60px);
-      height:var(--li-height, 54px);
-      padding:var(--li-padding, 0);
       border:var(--li-border, 0);
-      font-size:var(--li-font-size, 1.2em);
+      display:var(--li-display, inline);
+      font-size:var(--li-font-size, 1em);
+      height:var(--li-height, 5em);
+      padding:var(--li-padding, 0);
       position:var(--li-position, relative);
+      width:var(--li-width, 5em);
     }
     :host li::after {
-      position:var(--li-after-position, absolute);
-      top:var(--li-after-top, 9px);
-      left:var(--li-after-left, 0);
-      width:var(--li-after-width, 1px);
-      height:var(--li-after-height, 43px);
-      background-color:var(--li-after-background, #bbb);
+      background-color:var(--li-after-background, red);
       content:var(--li-after-content, '');
+      height:var(--li-after-height, 100%);
+      left:var(--li-after-left, 0);
+      position:var(--li-after-position, absolute);
+      top:var(--li-after-top, 1em);
+      width:var(--li-after-width, 1px);
     }
     :host li.active {
       background:var(--li-active-background, white);
     }
     :host nav ul li > a {
-      border-top:var(--li-a-border-top, 6px solid black);
-      height:var(--li-a-height, 100%);
+      align-items:var(--li-a-align-items, center);
+      border-top:var(--li-a-border-top, 1px solid black);
       display:var(--li-a-display, flex);
       flex-direction:var(--li-a-flex-direction, row);
+      height:var(--li-a-height, 100%);
       justify-content:var(--li-a-justify-content, center);
-      align-items:var(--li-a-align-items, center);
+      margin:var(--li-a-margin, 0);
+      text-decoration:var(--li-a-text-decoration, none);
     }
     :host nav ul li > a.active {
       color:var(--li-a-active, black);
     }
     :host nav ul li > a:hover {
-      border-top: var(--li-a-hover, 6px solid #97A619);
+      border-top: var(--li-a-border-top-hover, 1px solid red);
     }
-     @media only screen and (max-width: _max-width_) {}
+     @media only screen and (max-width: _max-width_) {
+      :host li {
+        font-size:var(--li-font-size-mobile, 1em);
+        height:var(--li-height-mobile, 5em);
+        width:var(--li-width-mobile, 2.5em);
+      }
+     }
     `
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */

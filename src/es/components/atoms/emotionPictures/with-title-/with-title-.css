@@ -1,21 +1,27 @@
 :host {
-   --emotion-pictures-with-title-bg-background-color:var(--emotion-pictures-with-title-bg-background-color-custom, var(--m-white));
-   --emotion-pictures-with-title-bg-color:var(--emotion-pictures-with-title-bg-color-custom, var(--m-black));
-   --emotion-pictures-with-title-bg-transition: opacity 0.5s ease-out;
-   --emotion-pictures-with-title-div-margin-mobile:var(--emotion-pictures-with-title-div-margin-mobile-custom, var(--content-spacing-mobile));
+   --emotion-pictures-with-title-a-color-hover: var(--emotion-pictures-with-title-a-color-hover-custom, var(--color-hover));
+   --emotion-pictures-with-title-a-text-decoration:none;
+   --emotion-pictures-with-title-bg-background-color: var(--emotion-pictures-with-title-bg-background-color-custom, var(--m-white));
+   --emotion-pictures-with-title-bg-color: var(--emotion-pictures-with-title-bg-color-custom, var(--m-black));
+   --emotion-pictures-with-title-bg-transition: opacity 0.5s ease-out, var(--a-transition, color 0.3s ease-out);
+   --emotion-pictures-with-title-div-margin-mobile: var(--emotion-pictures-with-title-div-margin-mobile-custom, var(--content-spacing-mobile));
    --emotion-pictures-with-title-h1-font-size-mobile: var(--emotion-pictures-with-title-h1-font-size-mobile-custom, min(calc(1.75em * 1.75), 7vw));
    --emotion-pictures-with-title-h1-font-weight: var(--emotion-pictures-with-title-h2-font-weight);
    --emotion-pictures-with-title-h1-text-transform: var(--emotion-pictures-with-title-h2-text-transform);
+   --emotion-pictures-with-title-h2-font-family-secondary: var(--emotion-pictures-with-title-h2-font-family-secondary-custom, var(--font-family-bold));
    --emotion-pictures-with-title-h2-font-size-mobile: var(--emotion-pictures-with-title-h2-font-size-mobile-custom, min(calc(1.5em * 1.5), 7vw));
    --emotion-pictures-with-title-h2-font-weight: normal;
    --emotion-pictures-with-title-h2-text-transform: var(--emotion-pictures-with-title-h2-text-transform-custom, uppercase);
-   --emotion-pictures-with-title-img-max-height:75vh;
-   --emotion-pictures-with-title-img-width:100%;
-   --emotion-pictures-with-title-subline-font-size:var(--emotion-pictures-with-title-subline-font-size-custom, 1.2em);
+   --emotion-pictures-with-title-img-max-height: 75vh;
+   --emotion-pictures-with-title-img-width: 100%;
+   --emotion-pictures-with-title-subline-display-mobile: var(--emotion-pictures-with-title-subline-display-mobile-custom, none);
+   --emotion-pictures-with-title-subline-font-size: var(--emotion-pictures-with-title-subline-font-size-custom, 1.2em);
    --emotion-pictures-with-title-text-left-mobile: var(--emotion-pictures-with-title-text-left-mobile-custom);
    --emotion-pictures-with-title-text-left: var(--emotion-pictures-with-title-text-left-custom);
    --emotion-pictures-with-title-text-right-mobile: var(--emotion-pictures-with-title-text-right-mobile-custom);
    --emotion-pictures-with-title-text-right: var(--emotion-pictures-with-title-text-right-custom);
+   --emotion-pictures-with-title-text-top-mobile: var(--emotion-pictures-with-title-text-top-mobile-custom, 6em);
+   --emotion-pictures-with-title-text-top: var(--emotion-pictures-with-title-text-top-custom, 8em);
    --img-object-fit: cover;
    --img-width: 100%;
 }

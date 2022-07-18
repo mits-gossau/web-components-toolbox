@@ -29,9 +29,17 @@ export default class Body extends Shadow() {
     this.clickAnchorEventListener = event => {
       let element = null
       if ((element = this.root.querySelector((event && event.detail && event.detail.selector) || location.hash))) {
+        this.dispatchEvent(new CustomEvent(this.getAttribute('scroll-to-anchor') || 'scroll-to-anchor', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          detail: {
+            child: element
+          }
+        }))
         element.scrollIntoView({ behavior: 'smooth' })
         clearTimeout(this.timeout)
-        this.timeout = setTimeout(() => element.scrollIntoView({ behavior: 'smooth' }), 500) // lazy loading pics make this necessary to reach target
+        this.timeout = setTimeout(() => element.scrollIntoView({ behavior: 'auto' }), 500) // lazy loading pics make this necessary to reach target
         self.removeEventListener('hashchange', this.clickAnchorEventListener)
         location.hash = location.hash.replace('_scrolled', '') + '_scrolled'
         self.addEventListener('hashchange', this.clickAnchorEventListener)
