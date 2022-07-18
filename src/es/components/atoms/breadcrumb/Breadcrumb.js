@@ -13,7 +13,7 @@ export default class Breadcrumb extends Shadow() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)
   }
-  
+
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
   }
@@ -72,7 +72,7 @@ export default class Breadcrumb extends Shadow() {
         text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
       }
       :host > ul > li > span {
-        ${this.getAttribute('icon') !== 'false' ? `background-image: var(--background-image, url(${this.getAttribute('icon') || `_import-meta-url_../web-components/src/icons/chevron_right.svg`}));` : ''}
+        ${this.getAttribute('icon') !== 'false' ? `background-image: var(--background-image, url(${this.getAttribute('icon') || '_import-meta-url_../web-components/src/icons/chevron_right.svg'}));` : ''}
         background-position: center;
         background-repeat: no-repeat;
         background-size: 1em;

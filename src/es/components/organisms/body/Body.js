@@ -3,6 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global location */
 /* global self */
+/* global CustomEvent */
 
 /**
  * Defines a body body for content and maps variables to global tags

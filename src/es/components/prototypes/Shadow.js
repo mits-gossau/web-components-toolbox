@@ -561,9 +561,9 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       ? this.getAttribute('mobile-breakpoint')
       : self.Environment && typeof self.Environment.mobileBreakpoint === 'function'
         ? self.Environment.mobileBreakpoint({
-          constructor: this.constructor.name,
-          tagName: this.tagName
-        })
+            constructor: this.constructor.name,
+            tagName: this.tagName
+          })
         : self.Environment && !!self.Environment.mobileBreakpoint
           ? self.Environment.mobileBreakpoint
           : '767px'

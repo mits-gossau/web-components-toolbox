@@ -1,6 +1,7 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+/* global location */
 
+import { Shadow } from '../../prototypes/Shadow.js'
 export default class ArticlePreview extends Shadow() {
   constructor (article, options = {}, ...args) {
     super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)

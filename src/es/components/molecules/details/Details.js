@@ -82,7 +82,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       }
     }
 
-
     this.scrollToAnchorEventListener = event => {
       if (this.details && event.detail && event.detail.child === this) this.details.setAttribute('open', 'true')
     }

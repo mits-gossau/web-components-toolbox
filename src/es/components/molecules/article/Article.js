@@ -3,11 +3,12 @@
 /* global self */
 /* global customElements */
 /* global DocumentFragment */
+/* global CustomEvent */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Article extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.RESOLVE_MSG = 'LOADED'
     this.ERROR_MSG = 'Error. Article could not be displayed.'
@@ -17,7 +18,7 @@ export default class Article extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     const renderedHTML = () => {
@@ -26,7 +27,7 @@ export default class Article extends Shadow() {
     }
     if (!this.loadArticles(window, sessionStorage).articles) {
       document.body.addEventListener('listArticles', event => event.detail.fetch.then(data => {
-        showPromises.push(this.renderHTML(data).then(renderedHTML).catch(error => (this.html = this.ERROR_MSG)))
+        showPromises.push(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
       }), { once: true })
       this.dispatchEvent(new CustomEvent('requestListArticles', {
         detail: { limit: 0 },
@@ -35,7 +36,7 @@ export default class Article extends Shadow() {
         composed: true
       }))
     } else {
-      showPromises.push(this.renderHTML().then(renderedHTML).catch(error => (this.html = this.ERROR_MSG)))
+      showPromises.push(this.renderHTML().then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
     }
     if (showPromises.length) {
       this.hidden = true
@@ -45,11 +46,11 @@ export default class Article extends Shadow() {
     }
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.backBtn.removeEventListener('click', this.clickListener)
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -61,7 +62,7 @@ export default class Article extends Shadow() {
    * @return {{slug: string, articles: string}}
    * @memberof Article
    */
-  loadArticles(window, sessionStorage) {
+  loadArticles (window, sessionStorage) {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
     const slug = urlParams.get('article')
@@ -75,7 +76,7 @@ export default class Article extends Shadow() {
    * @param {string | undefined} [articles=undefined]
    * @return {any | false}
    */
-  getArticle(slug, articles) {
+  getArticle (slug, articles) {
     if (!articles || !slug) {
       const data = this.loadArticles(window, sessionStorage)
       if (!slug) slug = data.slug
@@ -92,7 +93,7 @@ export default class Article extends Shadow() {
    * @param {undefined | any} [data=undefined]
    * @return {Promise<void>}
    */
-  renderHTML(data) {
+  renderHTML (data) {
     return Promise.all([this.loadChildComponents(), this.loadScriptDependency(), this.loadDependency()]).then(() => {
       const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection } = this.getArticle(undefined, data)
       this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
@@ -123,10 +124,9 @@ export default class Article extends Shadow() {
       </article>`
       this.html = this.newsWrapper
     })
-
   }
 
-  renderLinkListCollection(collection) {
+  renderLinkListCollection (collection) {
     const items = collection.map(item => {
       if (item.downloadItem) {
         return `<p><a target="_blank" href="${item.downloadItem.url}">${item.downloadItem.title}</a></p>`
@@ -140,7 +140,7 @@ export default class Article extends Shadow() {
   /**
    * @return {Promise<void>}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
     :host > article  {
       display:var(--display, flex);
@@ -197,7 +197,7 @@ export default class Article extends Shadow() {
     }
   }
 
-  loadScriptDependency() {
+  loadScriptDependency () {
     return this.loadScriptDependencyPromise || (this.loadScriptDependencyPromise = new Promise((resolve, reject) => {
       if (document.getElementById('contentful-module-export')) resolve(this.RESOLVE_MSG)
       const moduleExportScript = document.createElement('script')
@@ -214,7 +214,7 @@ export default class Article extends Shadow() {
     }))
   }
 
-  loadDependency() {
+  loadDependency () {
     return this.loadDependencyPromise || (this.loadDependencyPromise = new Promise((resolve, reject) => {
       if (document.getElementById('contentful-renderer')) resolve(this.RESOLVE_MSG)
       const contentfulRenderer = document.createElement('script')
@@ -230,7 +230,7 @@ export default class Article extends Shadow() {
     }))
   }
 
-  loadChildComponents() {
+  loadChildComponents () {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
       import('../../atoms/picture/Picture.js').then(
         module => ['a-picture', module.default]
@@ -247,15 +247,15 @@ export default class Article extends Shadow() {
     }))
   }
 
-  get articleListUrl() {
+  get articleListUrl () {
     return this.getAttribute('news-list-url') || ''
   }
 
-  get backBtn() {
+  get backBtn () {
     return this.root.querySelector('a-button') || new DocumentFragment()
   }
 
-  get backBtnLabel() {
+  get backBtnLabel () {
     return this.getAttribute('back-btn-label') || 'Back'
   }
 }
