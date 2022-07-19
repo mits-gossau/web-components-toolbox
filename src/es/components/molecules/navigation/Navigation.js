@@ -1,5 +1,6 @@
 // @ts-check
 import { Mutation } from '../../prototypes/Mutation.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
 /* global Link */
@@ -43,7 +44,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
  */
 export default class Navigation extends Mutation() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded', 'class'] } }), ...args)
+    super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] } }), ...args)
 
     this.setAttribute('role', 'navigation')
     this.setAttribute('aria-label', 'Menu')
@@ -60,24 +61,14 @@ export default class Navigation extends Mutation() {
         document.documentElement.classList.add(this.getAttribute('no-scroll') || 'no-scroll')
         if (this.getMedia() !== 'desktop') this.setAttribute('aria-expanded', 'true')
       }
-      let section
-      if ((section = this.root.querySelector('li.open section'))) {
-        if (this.checkMedia('desktop')) {
-          this.style.textContent = ''
-          this.setCss(/* CSS */`
-            :host > nav > ul > li.open > div.background {
-              top: ${section.getBoundingClientRect().bottom}px;
-            }
-          `, undefined, undefined, undefined, this.style)
-        }
-      }
+      self.requestAnimationFrame(timeStamp => this.backgroundAdjust())
       this.liClickListener(event)
     }
     let timeout = null
     this.resizeListener = event => {
       if (this.hasAttribute('no-scroll')) {
         this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
-        if (this.getMedia() !== 'desktop') this.setAttribute('aria-expanded', 'false')
+        this.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
       }
       this.clickListener(event)
       clearTimeout(timeout)
@@ -88,14 +79,27 @@ export default class Navigation extends Mutation() {
     this.liClickListener = event => {
       if (event && event.target) {
         this.root.querySelector('nav > ul:not(.language-switcher)').classList[event.target.parentNode && event.target.parentNode.classList.contains('open') ? 'add' : 'remove']('open')
-        if (this.checkMedia('mobile')) this.adjustArrowDirections(event)
+        if (this.checkMedia('mobile')) {
+          this.adjustArrowDirections(event)
+        } else {
+          Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
+            if (link !== event.target.parentNode) {
+              link.classList.remove('open')
+              link.setAttribute('aria-expanded', 'false')
+              if (link.parentElement) link.parentElement.classList.remove('open')
+            }
+          })
+        }
       }
     }
     // correct the arrow direction when closing the menu on global or parent event
-    this.selfClickListener = event => Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher) > li > a-link')).forEach(aLink => {
-      const arrow = aLink.parentNode.querySelector('a-arrow')
-      if (arrow) arrow.setAttribute('direction', aLink.classList.contains('open') || aLink.parentNode.classList.contains('open') ? 'left' : 'right')
-    })
+    this.selfClickListener = event => {
+      this.openClose(false)
+      Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher) > li > a-link')).forEach(aLink => {
+        const arrow = aLink.parentNode.querySelector('a-arrow')
+        if (arrow) arrow.setAttribute('direction', aLink.classList.contains('open') || aLink.parentNode.classList.contains('open') ? 'left' : 'right')
+      })
+    }
   }
 
   connectedCallback () {
@@ -706,7 +710,7 @@ export default class Navigation extends Mutation() {
       ),
       wrapperPromise.then(
         /** @returns {[string, any]} */
-        module => [this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper', module.Wrapper(Mutation())]
+        module => [this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper', module.Wrapper(Shadow())]
       ),
       ...promises
     ]).then(elements => {
@@ -742,10 +746,49 @@ export default class Navigation extends Mutation() {
   }
 
   adjustArrowDirections (event, arrowDirections = undefined, selector = 'li.open') {
+    if (!event) return
     Array.from(this.root.querySelectorAll(selector)).forEach(link => {
       let arrow
       if (arrowDirections && link.parentNode && event.target && !link.parentNode.classList.contains('open') && (arrow = link.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
     })
+  }
+
+  backgroundAdjust() {
+    if (this.checkMedia('desktop')) {
+      let section
+      if (!(section = this.root.querySelector('li.open section'))) return
+      this.style.textContent = ''
+      this.setCss(/* CSS */`
+        :host > nav > ul > li.open > div.background {
+          top: ${section.getBoundingClientRect().bottom}px;
+        }
+      `, undefined, undefined, undefined, this.style)
+    }
+  }
+
+  openClose (open = true) {
+    if (open) {
+      Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher)')).forEach(ul => ul.setAttribute('aria-expanded', 'true'))
+    } else if (this.getAttribute('aria-expanded') === 'true') {
+      Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
+        link.classList.remove('open')
+        link.setAttribute('aria-expanded', 'false')
+        if (link.parentElement) {
+          link.parentElement.classList.remove('open')
+          link.parentElement.setAttribute('aria-expanded', 'false')
+        }
+      })
+      Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
+        aLink.classList.remove('open')
+        aLink.setAttribute('aria-expanded', 'false')
+        if (aLink.parentElement) {
+          aLink.parentElement.classList.remove('open')
+          aLink.parentElement.setAttribute('aria-expanded', 'false')
+        }
+      })
+      Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => ul.classList.remove('open'))
+      Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher)')).forEach(ul => ul.setAttribute('aria-expanded', 'false'))
+    }
   }
 
   /**
