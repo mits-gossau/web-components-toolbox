@@ -634,7 +634,7 @@ export default class Navigation extends Mutation() {
                 this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
                 event.target.classList.add('open')
                 event.target.setAttribute('aria-expanded', 'true')
-              } else if (a.getAttribute('href')[0] === '#') {
+              } else if (a.getAttribute('href').includes('#')) {
                 this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
                   detail: {
                     selector: a.getAttribute('href')
