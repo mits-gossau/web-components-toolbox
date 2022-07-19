@@ -71,6 +71,8 @@ export default class Navigation extends Mutation() {
         this.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
       }
       this.clickListener(event)
+      this.adjustArrowDirections(event)
+      this.openClose(false)
       clearTimeout(timeout)
       timeout = setTimeout(() => this.checkIfWrapped(true), 200)
     }
@@ -491,6 +493,9 @@ export default class Navigation extends Mutation() {
         :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
           border-bottom: var(--header-default-border-bottom);
         }
+        :host > nav > ul li:not(:hover).open {
+          border: none;
+        }
         :host > nav > ul li.open {
           --a-link-content-spacing-no-scroll: var(--a-link-font-size-no-scroll-mobile) 1.2143rem var(--a-link-font-size-no-scroll-mobile) 0;
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
@@ -745,7 +750,7 @@ export default class Navigation extends Mutation() {
     }, 50)
   }
 
-  adjustArrowDirections (event, arrowDirections = undefined, selector = 'li.open') {
+  adjustArrowDirections (event, arrowDirections = ['left', 'right'], selector = 'li.open') {
     if (!event) return
     Array.from(this.root.querySelectorAll(selector)).forEach(link => {
       let arrow
