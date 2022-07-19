@@ -3,6 +3,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
 
 /* global CustomEvent */
 /* global Image */
+/* global self */
 
 /**
  * Details (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) aka. Bootstrap accordion
@@ -87,6 +88,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       }
     }
 
+    this.scrollToAnchorEventListener = event => {
+      if (this.details && event.detail && event.detail.child === this) this.details.setAttribute('open', 'true')
+    }
+
     this.animationendListener = event => {
       console.log("open animationendListener", this)
 
@@ -130,6 +135,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     document.body.addEventListener(this.openEventName, this.openEventListener)
     self.addEventListener('resize', this.resizeListener)
     this.root.addEventListener('click', this.clickEventListener)
+    document.body.addEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
     this.checkMedia()
   }
 
@@ -137,6 +143,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     super.disconnectedCallback()
     document.body.removeEventListener(this.openEventName, this.openEventListener)
     this.root.removeEventListener('click', this.clickEventListener)
+    document.body.removeEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
     self.removeEventListener('resize', this.resizeListener)
   }
 
@@ -145,7 +152,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
-        console.log("mutation in open", this)
         // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
         if (this.constructor.isMac) {
           Array.from(this.root.querySelectorAll(':host details[open] summary ~ *')).forEach(element => element.animate([

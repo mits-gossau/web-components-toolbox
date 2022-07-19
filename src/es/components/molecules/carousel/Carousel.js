@@ -138,6 +138,7 @@ export default class MacroCarousel extends Shadow() {
     if (this.shouldComponentRenderHTML()) runResizePromises.push(this.renderHTML())
     const showPromises = Array.from(runResizePromises)
     self.addEventListener('resize', this.resizeListener)
+    setTimeout(() => this.resizeListener(), 5000)
     if (this.aPictures.some(aPicture => aPicture.hasAttribute('picture-load') && !aPicture.hasAttribute('loaded'))) {
       this.aPictures.forEach(aPicture => {
         aPicture.addEventListener('picture-load', this.resizeListener, { once: true })

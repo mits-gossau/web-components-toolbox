@@ -119,8 +119,8 @@ export default class EmotionPictures extends Intersection() {
       }
       :host .subline {
         font-size: var(--subline-font-size, 1.2em);
-        padding:var(--subline-padding, unset);
         display:var(--subline-display, initial);
+        --bg-padding: var(--bg-padding-custom, 1.2em);
       }
       @media only screen and (max-width: _max-width_) {
         :host > div h2.font-size-big, :host > a h2.font-size-big {
@@ -138,12 +138,11 @@ export default class EmotionPictures extends Intersection() {
         }
         :host .subline {
           display:var(--subline-display-mobile, initial);
-      }
+        }
       }
     `
     this.setCss(/* css */`
       :host > * {
-        //${this.hasAttribute('height-mobile') ? `--text-top-mobile: calc((${this.getAttribute('height-mobile')}/2) - var(--h2-font-size-mobile, 11em));` : ''}
         ${this.hasAttribute('height') ? `--img-height: ${this.getAttribute('height')};` : ''}
         ${this.hasAttribute('height-mobile') ? `--img-height-mobile: ${this.getAttribute('height-mobile')};` : ''}
         --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
@@ -164,6 +163,12 @@ export default class EmotionPictures extends Intersection() {
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`,
+          namespace: false
+        }, ...styles], false)
+      case 'emotion-pictures-with-button-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-button-/with-button-.css`,
           namespace: false
         }, ...styles], false)
       case 'emotion-pictures-with-video-':

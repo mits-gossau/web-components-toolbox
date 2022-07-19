@@ -1,1 +1,14 @@
-:host {}
+:host {
+    --align-items: start;
+    --aspect-ratio: 1.75/1;
+    --h3-color: var(--color-secondary);
+    --h3-margin: 0;
+    --img-object-fit: cover;
+    --preview-default-a-margin: 0;
+    --preview-default-a-text-decoration: none;
+}
+
+:host(:hover) {
+    --h3-color: var(--color-hover);
+    --preview-default-a-color-hover: var(--color);
+}
