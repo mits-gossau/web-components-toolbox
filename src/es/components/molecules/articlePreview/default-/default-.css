@@ -4,6 +4,7 @@
     --h3-color: var(--color-secondary);
     --h3-margin: 0;
     --img-object-fit: cover;
+    --preview-default-a-color:var(--preview-default-a-color-custom, --color);
     --preview-default-a-margin: 0;
     --preview-default-a-text-decoration: none;
 }
