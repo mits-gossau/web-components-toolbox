@@ -73,7 +73,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         if (event.detail.child === this) {
           if (this.hasAttribute('scroll-into-view')) this.details.scrollIntoView({ behavior: 'smooth' })
         } else if (!this.hasAttribute('no-auto-close')) {
-          console.log("open eventlistener", this)
           this.details.removeAttribute('open')
         }
       }
@@ -82,7 +81,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.clickEventListener = event => {
       if (this.details && event.target && event.target.classList.contains('close')) {
         event.preventDefault()
-        console.log("open clickEventListener", this)
         this.details.removeAttribute('open')
         if (this.summary.getBoundingClientRect().top < 0) this.details.scrollIntoView({ behavior: 'smooth' })
       }
@@ -93,8 +91,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     }
 
     this.animationendListener = event => {
-      console.log("open animationendListener", this)
-
       this.details.removeAttribute('open')
       this.details.classList.remove('closing')
       this.mutationObserveStart()
