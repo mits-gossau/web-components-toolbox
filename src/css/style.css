@@ -306,13 +306,14 @@ img[style="float: right;"] {
 :host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
   padding-left: 1.5em !important;
 }
-:host ul.bull, :host ul[style="list-style-type: disc;"], :host ul.line {
+/* Note: razor debugger :host ul[style="list-style-type: disc;"] / razor compiled :host ul[style="list-style-type:disc"]*/
+:host ul.bull, :host ul[style="list-style-type: disc;"], :host ul[style="list-style-type:disc"], :host ul.line {
   list-style: none !important; /* Remove default bullets */
 }
-:host ul.bull li, :host ul[style="list-style-type: disc;"] li, :host ul.line li {
+:host ul.bull li, :host ul[style="list-style-type: disc;"] li, :host ul[style="list-style-type:disc"] li, :host ul.line li {
   position: relative;
 }
-:host ul.bull li::before, :host ul[style="list-style-type: disc;"] li::before, :host ul.line li::before {
+:host ul.bull li::before, :host ul[style="list-style-type: disc;"] li::before, :host ul[style="list-style-type:disc"] li::before, :host ul.line li::before {
   position: absolute;
   top: var(--bull-li-before-top, 0.5em);
   left: var(--bull-li-before-left, -1.5em);
@@ -327,7 +328,7 @@ img[style="float: right;"] {
   content: '';
   transition: var(--bull-transition, border-color 0.3s ease-out, background-color 0.3s ease-out);
 }
-:host ul.bull li:hover::before, :host ul[style="list-style-type: disc;"] li:hover::before, :host ul.line li:hover::before {
+:host ul.bull li:hover::before, :host ul[style="list-style-type: disc;"] li:hover::before, :host ul[style="list-style-type:disc"] li:hover::before, :host ul.line li:hover::before {
   border-color: var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green)))));
   background-color: var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green)))));
 }
