@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Mutation } from '../../prototypes/Mutation.js'
 
 /* global self */
 /* global Link */
@@ -41,9 +41,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  --min-width-mobile [50px]
  * }
  */
-export default class Navigation extends Shadow() {
-  constructor (...args) {
-    super(...args)
+export default class Navigation extends Mutation() {
+  constructor (options = {}, ...args) {
+    super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded', 'class'] } }), ...args)
 
     this.setAttribute('role', 'navigation')
     this.setAttribute('aria-label', 'Menu')
@@ -88,15 +88,7 @@ export default class Navigation extends Shadow() {
     this.liClickListener = event => {
       if (event && event.target) {
         this.root.querySelector('nav > ul:not(.language-switcher)').classList[event.target.parentNode && event.target.parentNode.classList.contains('open') ? 'add' : 'remove']('open')
-        if (this.checkMedia('mobile')) {
-          Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
-            if (link !== event.target.parentNode) {
-              link.classList.remove('open')
-              link.setAttribute('aria-expanded', 'false')
-              if (link.parentElement) link.parentElement.classList.remove('open')
-            }
-          })
-        }
+        if (this.checkMedia('mobile')) this.adjustArrowDirections(event)
       }
     }
     // correct the arrow direction when closing the menu on global or parent event
@@ -135,6 +127,7 @@ export default class Navigation extends Shadow() {
     }
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
+    super.connectedCallback()
   }
 
   disconnectedCallback () {
@@ -142,6 +135,36 @@ export default class Navigation extends Shadow() {
     self.removeEventListener('click', this.selfClickListener)
     this.root.querySelectorAll('a-link').forEach(link => link.removeEventListener('click', this.clickListener))
     this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.removeEventListener('click', this.liClickListener))
+    super.disconnectedCallback()
+  }
+
+  mutationCallback (mutationList, observer) {
+    // TODO: It takes too long to find out why certain behaviors happen, for this reason we patch it with this mutation observer
+    mutationList.forEach(mutation => {
+      if (!mutation.target) return
+      if (this.getAttribute('aria-expanded') === 'false') {
+        Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
+          link.classList.remove('open')
+          link.setAttribute('aria-expanded', 'false')
+          if (link.parentElement) {
+            link.parentElement.classList.remove('open')
+            link.parentElement.setAttribute('aria-expanded', 'false')
+          }
+        })
+        Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
+          aLink.classList.remove('open')
+          aLink.setAttribute('aria-expanded', 'false')
+          if (aLink.parentElement) {
+            aLink.parentElement.classList.remove('open')
+            aLink.parentElement.setAttribute('aria-expanded', 'false')
+          }
+        })
+        Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => ul.classList.remove('open'))
+        Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher)')).forEach(ul => ul.setAttribute('aria-expanded', 'false'))
+      } else if (this.getAttribute('aria-expanded') === 'true') {
+        Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher)')).forEach(ul => ul.setAttribute('aria-expanded', 'true'))
+      }
+    })
   }
 
   /**
@@ -585,13 +608,7 @@ export default class Navigation extends Shadow() {
         const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
         arrow.setAttribute('direction', arrowDirections[1])
         const arrowClickListener = event => {
-          if (this.hasAttribute('focus-lost-close-mobile')) {
-            Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
-              li.classList.remove('open')
-              li.setAttribute('aria-expanded', 'false')
-              if (li.parentElement) li.parentElement.classList.remove('open')
-            })
-          }
+          if (this.hasAttribute('focus-lost-close-mobile')) this.adjustArrowDirections(event, arrowDirections)
           li.classList.toggle('open')
           li.setAttribute('aria-expanded', li.classList.contains('open') ? 'true' : 'false')
           arrow.setAttribute('direction', li.classList.contains('open') ? arrowDirections[0] : arrowDirections[1])
@@ -605,12 +622,7 @@ export default class Navigation extends Shadow() {
               if (!a.getAttribute('href') || a.getAttribute('href') === '#') {
                 event.preventDefault()
                 if (this.focusLostClose) event.stopPropagation()
-                Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
-                  aLink.classList.remove('open')
-                  aLink.setAttribute('aria-expanded', 'false')
-                  let arrow
-                  if (aLink.parentNode && event.target && !aLink.parentNode.classList.contains('open') && (arrow = aLink.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
-                })
+                this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
                 event.target.classList.add('open')
                 event.target.setAttribute('aria-expanded', 'true')
               } else if (a.getAttribute('href')[0] === '#') {
@@ -629,26 +641,13 @@ export default class Navigation extends Shadow() {
         self.addEventListener('click', event => {
           if (this.focusLostClose) {
             if (this.hasAttribute('focus-lost-close-mobile')) {
-              Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
-                li.classList.remove('open')
-                li.setAttribute('aria-expanded', 'false')
-                if (li.parentElement) li.parentElement.classList.remove('open')
-              })
+              this.adjustArrowDirections(event, arrowDirections)
               if (this.hasAttribute('no-scroll')) {
                 document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
                 if (this.getMedia() !== 'desktop') this.setAttribute('aria-expanded', 'false')
               }
             }
-            Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
-              aLink.classList.remove('open')
-              aLink.setAttribute('aria-expanded', 'false')
-              if (aLink.parentElement) {
-                aLink.parentElement.classList.remove('open')
-                aLink.parentElement.setAttribute('aria-expanded', 'false')
-              }
-              let arrow
-              if (aLink.parentNode && event.target && !aLink.parentNode.classList.contains('open') && (arrow = aLink.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
-            })
+            this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
           }
         })
         li.prepend(arrow)
@@ -707,7 +706,7 @@ export default class Navigation extends Shadow() {
       ),
       wrapperPromise.then(
         /** @returns {[string, any]} */
-        module => [this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper', module.Wrapper(Shadow())]
+        module => [this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper', module.Wrapper(Mutation())]
       ),
       ...promises
     ]).then(elements => {
@@ -740,6 +739,13 @@ export default class Navigation extends Shadow() {
         this.removeAttribute('focus-lost-close-mobile')
       }
     }, 50)
+  }
+
+  adjustArrowDirections (event, arrowDirections = undefined, selector = 'li.open') {
+    Array.from(this.root.querySelectorAll(selector)).forEach(link => {
+      let arrow
+      if (arrowDirections && link.parentNode && event.target && !link.parentNode.classList.contains('open') && (arrow = link.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
+    })
   }
 
   /**
