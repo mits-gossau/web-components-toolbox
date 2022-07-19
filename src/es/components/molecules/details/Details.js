@@ -43,6 +43,10 @@ import { Mutation } from '../../prototypes/Mutation.js'
  *  {string} [openEventName='open'] the event to which it listens on body
  *  {has} [scroll-into-view=n.a.] scrolls into view if set
  *  {has} [icon-image=n.a] add open/close icon
+ *  {has} [mobile-open=n.a.] open when in mobile with resize listener
+ *  {has} [mobile-close=n.a.] close when in mobile with resize listener
+ *  {has} [desktop-open=n.a.] open when in desktop with resize listener
+ *  {has} [desktop-close=n.a.] close when in desktop with resize listener
  * }
  */
 
@@ -68,6 +72,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         if (event.detail.child === this) {
           if (this.hasAttribute('scroll-into-view')) this.details.scrollIntoView({ behavior: 'smooth' })
         } else if (!this.hasAttribute('no-auto-close')) {
+          console.log("open eventlistener", this)
           this.details.removeAttribute('open')
         }
       }
@@ -76,12 +81,15 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.clickEventListener = event => {
       if (this.details && event.target && event.target.classList.contains('close')) {
         event.preventDefault()
+        console.log("open clickEventListener", this)
         this.details.removeAttribute('open')
         if (this.summary.getBoundingClientRect().top < 0) this.details.scrollIntoView({ behavior: 'smooth' })
       }
     }
 
     this.animationendListener = event => {
+      console.log("open animationendListener", this)
+
       this.details.removeAttribute('open')
       this.details.classList.remove('closing')
       this.mutationObserveStart()
@@ -97,10 +105,20 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     }
 
     this.checkMedia = () => {
-      if (this.isMobile && this.mobileOpen)
-        this.details.setAttribute('open', '')
-      else if (!this.isMobile && this.mobileOpen)
-        this.details.removeAttribute('open')
+      if (this.isMobile) {
+        if (this.hasAttribute('mobile-open') && !this.details.hasAttribute('open')) {
+          this.details.setAttribute('open', '')
+        } else if (this.hasAttribute('mobile-close') && this.details.hasAttribute('open')) {
+          this.details.removeAttribute('open')
+        }
+      } else {
+        if (this.hasAttribute('desktop-open') && !this.details.hasAttribute('open')) {
+          this.details.setAttribute('open', '')
+        } else if (this.hasAttribute('desktop-close') && this.details.hasAttribute('open')) {
+          this.details.removeAttribute('open')
+        }
+      }
+
     }
 
   }
@@ -123,9 +141,11 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   }
 
   mutationCallback (mutationList, observer) {
-    if (this.isMobile && this.mobileOpen) return null
+    if (this.isMobile && this.hasAttribute('mobile-open')) return null
+    
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
+        console.log("mutation in open", this)
         // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
         if (this.constructor.isMac) {
           Array.from(this.root.querySelectorAll(':host details[open] summary ~ *')).forEach(element => element.animate([
@@ -275,7 +295,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         border-bottom: var(--summary-border-bottom-open, none);
       }
       :host details summary > div {
-        ${!this.mobileOpen ? 'cursor: var(--summary-cursor, pointer);' : ''}
+        cursor: var(--summary-cursor, pointer);
         font-family: var(--summary-font-family, var(--font-family, var(--font-family-bold)));
         font-size:var(--summary-font-size, inherit);
         font-weight: var(--summary-font-weight, var(--font-weight, normal));
@@ -373,9 +393,15 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           margin: var(--summary-margin-mobile, var(--summary-margin, 0));
           padding: var(--summary-padding-mobile, var(--summary-padding, 0));
         }
-        ${this.mobileOpen ? `
+        ${this.hasAttribute('mobile-open') ? `
         :host summary .dropdown-icon {
           display: none;
+        }
+        :host details summary > div {
+          cursor: default;
+        }
+        :host details summary {
+          pointer-events: none;
         }
         ` : ''}
 
@@ -456,10 +482,6 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     }
     node.classList.add(cssClass)
     return node
-  }
-
-  get mobileOpen () {
-    return this.hasAttribute('mobile-open')
   }
 
   get isMobile () {
