@@ -82,6 +82,9 @@ export default class Header extends Shadow() {
         if (this.MenuIcon.classList.contains('open')) this.MenuIcon.click()
       }
     }
+    this.clickAnchorListener = event => {
+      if (this.getMedia() !== 'desktop' && this.MenuIcon.classList.contains('open')) this.MenuIcon.click()
+    }
     let timeout = null
     this.resizeListener = event => {
       clearTimeout(timeout)
@@ -118,6 +121,7 @@ export default class Header extends Shadow() {
     }
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
+    this.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorListener)
     self.addEventListener('resize', this.resizeListener)
     if (this.mNavigation) this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
     self.addEventListener('resize', this.mutationCallback)
@@ -128,6 +132,7 @@ export default class Header extends Shadow() {
   disconnectedCallback () {
     if (this.hasAttribute('sticky')) self.removeEventListener('scroll', this.scrollListener)
     this.removeEventListener('click', this.clickAnimationListener)
+    this.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorListener)
     self.removeEventListener('resize', this.resizeListener)
     if (this.mNavigation) this.mNavigation.removeEventListener('animationend', this.clickAnimationListener)
     self.removeEventListener('resize', this.mutationCallback)
