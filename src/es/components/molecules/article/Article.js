@@ -174,6 +174,10 @@ export default class Article extends Shadow() {
     :host .intro {
       font-size:var(--intro-font-size, 1em);
     }
+    :host p {
+      /* contenful renderer bug: https://github.com/contentful/rich-text/issues/96 */
+      white-space:var(--p-white-space, normal);
+    }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
