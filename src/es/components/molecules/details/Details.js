@@ -119,9 +119,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           this.details.removeAttribute('open')
         }
       }
-
     }
-
   }
 
   connectedCallback () {
@@ -145,7 +143,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
   mutationCallback (mutationList, observer) {
     if (this.isMobile && this.hasAttribute('mobile-open')) return null
-    
+
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
         // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
@@ -395,7 +393,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           margin: var(--summary-margin-mobile, var(--summary-margin, 0));
           padding: var(--summary-padding-mobile, var(--summary-padding, 0));
         }
-        ${this.hasAttribute('mobile-open') ? `
+        ${this.hasAttribute('mobile-open')
+? `
         :host summary .dropdown-icon {
           display: none;
         }
@@ -405,7 +404,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         :host details summary {
           pointer-events: none;
         }
-        ` : ''}
+        `
+: ''}
 
         
       }

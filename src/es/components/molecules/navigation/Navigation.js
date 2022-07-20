@@ -758,7 +758,7 @@ export default class Navigation extends Mutation() {
     })
   }
 
-  backgroundAdjust() {
+  backgroundAdjust () {
     if (this.checkMedia('desktop')) {
       let section
       if (!(section = this.root.querySelector('li.open section'))) return
