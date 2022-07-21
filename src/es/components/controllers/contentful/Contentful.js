@@ -3,9 +3,9 @@
 /* global fetch */
 /* global sessionStorage */
 /* global AbortController */
+/* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
-import query from '../../../../../../controllers/contenful/Query.js'
 
 /**
  * TODO
@@ -16,19 +16,27 @@ import query from '../../../../../../controllers/contenful/Query.js'
 export default class Contentful extends Shadow() {
   constructor (...args) {
     super({ mode: 'false' }, ...args)
-
-    // TODO:
-    // Move Base URL to Environment
-
     const token = this.getAttribute('token')
     const spaceId = this.getAttribute('space-id')
-    const endpoint = `https://graphql.contentful.com/content/v1/spaces/${spaceId}`
+    // @ts-ignore
+    const endpoint = self.Environment.contentfulEndpoint + spaceId
     const limit = this.getAttribute('limit')
+    const skip = this.getAttribute('skip') || 0
     this.abortController = null
-    this.requestListArticlesListener = event => {
+
+    this.requestListArticlesListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-      const variables = { limit: Number(limit), skip: Number(event.detail.skip) || 0 }
+      const variables = { limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit), skip: event.detail && event.detail.skip !== undefined ? Number(event.detail.skip) * skip : 0 }
+      let query = null
+      try {
+        // @ts-ignore
+        query = await import('../../../../../../controllers/contenful/Query.js')
+        query = query.default
+      } catch (e) {
+        query = await import('./Query.js')
+        query = query.default
+      }
       const fetchOptions = {
         method: 'POST',
         headers: {
@@ -41,13 +49,11 @@ export default class Contentful extends Shadow() {
 
       this.dispatchEvent(new CustomEvent('listArticles', {
         detail: {
-          fetch: fetch(endpoint, fetchOptions).then(response => {
+          fetch: fetch(endpoint, fetchOptions).then(async response => {
             if (response.status >= 200 && response.status <= 299) {
-              const json = response.json()
-              json.then(data => {
-                sessionStorage.setItem('articles', JSON.stringify(data))
-              })
-              return json
+              const data = await response.json()
+              sessionStorage.setItem('articles', JSON.stringify(data))
+              return data
             }
             throw new Error(response.statusText)
           })

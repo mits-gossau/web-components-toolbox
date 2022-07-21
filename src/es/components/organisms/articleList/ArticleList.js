@@ -1,6 +1,8 @@
 // @ts-check
 /* global CustomEvent */
 /* global customElements */
+/* global self */
+/* global sessionStorage */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -14,7 +16,6 @@ export default class NewsList extends Shadow() {
       this.loadScriptDependency().then(script => {
         if (script === this.RESOLVE_STATE) {
           this.loadDependency().then(dependency => {
-            console.log(dependency)
             if (dependency === this.RESOLVE_STATE) {
               this.renderHTML(event.detail.fetch, articlePreviewNamespace)
             }
@@ -28,8 +29,14 @@ export default class NewsList extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     document.body.addEventListener('listArticles', this.listArticlesListener)
     this.hidden = true
+    const articleViewed = sessionStorage.getItem('article-viewed')?.toLowerCase() === 'true'
+    const currentPageSkip = articleViewed ? this.getCurrentPageSkip(sessionStorage.getItem('articles') || '') : 0
+    sessionStorage.removeItem('article-viewed')
+
     this.dispatchEvent(new CustomEvent('requestListArticles', {
-      detail: {},
+      detail: {
+        skip: currentPageSkip
+      },
       bubbles: true,
       cancelable: true,
       composed: true
@@ -38,6 +45,13 @@ export default class NewsList extends Shadow() {
 
   disconnectedCallback () {
     document.body.removeEventListener('listArticles', this.listArticlesListener)
+  }
+
+  getCurrentPageSkip (sessionData) {
+    if (sessionData === '') return 0
+    const articlesData = JSON.parse(sessionData)
+    const { skip, limit } = articlesData.data.newsEntryCollection
+    return skip / limit
   }
 
   loadScriptDependency () {
@@ -68,7 +82,7 @@ export default class NewsList extends Shadow() {
       contentfulRenderer.setAttribute('type', 'text/javascript')
       contentfulRenderer.setAttribute('id', 'contentful-renderer')
       try {
-        contentfulRenderer.setAttribute('src', '//cdn.jsdelivr.net/npm/@contentful/rich-text-html-renderer@15.13.1/dist/rich-text-html-renderer.es5.min.js')
+        contentfulRenderer.setAttribute('src', self.Environment.contentfulRenderer)
         document.body.appendChild(contentfulRenderer)
         contentfulRenderer.onload = () => resolve(this.RESOLVE_STATE)
       } catch (e) {
@@ -121,6 +135,9 @@ export default class NewsList extends Shadow() {
         // @ts-ignore
         const articleEle = new child[0][1](article, { namespace })
         articleEle.setAttribute('article-url', this.getAttribute('article-url'))
+        if (this.getAttribute('is-on-home') !== null) {
+          articleEle.setAttribute('is-on-home', this.getAttribute('is-on-home'))
+        }
         wrapper.appendChild(articleEle)
       })
       this.html = wrapper
@@ -133,6 +150,9 @@ export default class NewsList extends Shadow() {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
       import('../../molecules/articlePreview/ArticlePreview.js').then(
         module => ['m-article-preview', module.default]
+      ),
+      import('../../atoms/picture/Picture.js').then(
+        module => ['a-picture', module.default]
       )
     ]).then(elements => {
       elements.forEach(element => {

@@ -92,7 +92,7 @@ export const Mutation = (ChosenClass = Shadow()) => class Mutation extends Chose
       this.mutationObserveStart = () => {}
       /** @return {void} */
       this.mutationObserveStop = () => {}
-      console.warn('MutationObserver got not started, due to missing options.mutationObserverInit. At least supply an empty object to activate the observer with the default settings!')
+      console.warn('MutationObserver got not started, due to missing options.mutationObserverInit. At least supply an empty object to activate the observer with the default settings!', this)
     }
   }
 

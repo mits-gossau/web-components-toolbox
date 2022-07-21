@@ -14,9 +14,9 @@ export default class Pagination extends Shadow() {
       event.detail.fetch.then(() => {
         const articles = sessionStorage.getItem('articles') || ''
         const articlesData = JSON.parse(articles)
-        const { total, limit } = articlesData?.data.newsEntryCollection
+        const { total, limit, skip } = articlesData?.data.newsEntryCollection
         const pages = Math.ceil(total / limit)
-        this.renderHTML(pages)
+        this.renderHTML(pages, limit, skip)
       })
     }
 
@@ -49,10 +49,11 @@ export default class Pagination extends Shadow() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML (pages) {
+  renderHTML (pages, limit, skip) {
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
-      pageItems += `<li class="page-item" page="${i + 1}"><a class="page-link" href="#">${i + 1}</a></li>`
+      const active = (skip / limit)
+      pageItems += `<li class="page-item ${i === active ? 'active' : ''}" page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="#">${i + 1}</a></li>`
     }
 
     this.pagination.innerHTML =
@@ -68,45 +69,59 @@ export default class Pagination extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-      display: block;
-      background-color: black;
-      height: 62px;
+      background-color:var(--background-color, black);
+      display: var(--display, block);
+      height:var(--height, 100%);
     }
     :host ul {
-      margin: 0;
-      float: right;
-      display:flex;
+      display:var(--ul-display, flex);
+      float:var(--ul-float, right);
+      margin:var(--ul-margin, 0);
     }
     :host li {
-      display: inline;
-      width: 60px;
-      height: 54px;
-      padding: 0;
-      border: 0;
-      font-size: 1.2em;
-      position:relative;
+      border:var(--li-border, 0);
+      display:var(--li-display, inline);
+      font-size:var(--li-font-size, 1em);
+      height:var(--li-height, 5em);
+      padding:var(--li-padding, 0);
+      position:var(--li-position, relative);
+      width:var(--li-width, 5em);
     }
     :host li::after {
-      position:absolute;
-      top: 9px;
-      left: 0;
-      width: 1px;
-      height: 43px;
-      background-color: #bbb;
-      content: '';
+      background-color:var(--li-after-background, red);
+      content:var(--li-after-content, '');
+      height:var(--li-after-height, 100%);
+      left:var(--li-after-left, 0);
+      position:var(--li-after-position, absolute);
+      top:var(--li-after-top, 1em);
+      width:var(--li-after-width, 1px);
+    }
+    :host li.active {
+      background:var(--li-active-background, white);
     }
     :host nav ul li > a {
-      border-top: 6px solid black;
-      height:100%;
-      display:flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
+      align-items:var(--li-a-align-items, center);
+      border-top:var(--li-a-border-top, 1px solid black);
+      display:var(--li-a-display, flex);
+      flex-direction:var(--li-a-flex-direction, row);
+      height:var(--li-a-height, 100%);
+      justify-content:var(--li-a-justify-content, center);
+      margin:var(--li-a-margin, 0);
+      text-decoration:var(--li-a-text-decoration, none);
+    }
+    :host nav ul li > a.active {
+      color:var(--li-a-active, black);
     }
     :host nav ul li > a:hover {
-      border-top: 6px solid #97A619;
+      border-top: var(--li-a-border-top-hover, 1px solid red);
     }
-     @media only screen and (max-width: _max-width_) {}
+     @media only screen and (max-width: _max-width_) {
+      :host li {
+        font-size:var(--li-font-size-mobile, 1em);
+        height:var(--li-height-mobile, 5em);
+        width:var(--li-width-mobile, 2.5em);
+      }
+     }
     `
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */

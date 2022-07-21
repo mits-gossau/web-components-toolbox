@@ -1,18 +1,17 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+/* global location */
 
+import { Shadow } from '../../prototypes/Shadow.js'
 export default class ArticlePreview extends Shadow() {
-  constructor (article, ...args) {
-    super(...args)
+  constructor (article, options = {}, ...args) {
+    super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)
     this.article = article || null
+    this.ERROR_MSG = 'Error. Article could not be displayed.'
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-  }
-
-  disconnectedCallback () {
   }
 
   shouldComponentRenderHTML () {
@@ -25,22 +24,24 @@ export default class ArticlePreview extends Shadow() {
 
   renderHTML () {
     if (!this.article) {
-      this.html = 'Error'
+      this.html = this.ERROR_MSG
       return
     }
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
+    const url = new URL(this.articleUrl, this.articleUrl.charAt(0) === '/' ? location.origin : this.articleUrl.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    url.searchParams.set('article', this.article.slug)
     this.newsWrapper.innerHTML = /* html */ `
-    <a class="link" href="${this.articleUrl}&article=${this.article.slug}">
-      <div class="preview-wrapper">
-        <div>
-          <a-picture namespace="article-preview-" picture-load defaultSource="${this.article.introImage.url}" alt="randomized image"></a-picture>
+    <a class="link" href="${url.href}">
+    <o-wrapper>
+        <div class="image-wrapper" width="30%">
+          <a-picture picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
         </div>
-        <div>
-          <p>${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
+        <div class="text-wrapper">
+          <p class="margin-zero">${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
           <h3 class="title">${this.article.introHeadline}</h3>
-          <p>${this.article.introText}</p>
+          <p class="margin-zero">${this.article.introText}</p>
         </div> 
-      </div>
+      </o-wrapper>
     </a>
   `
     this.html = this.newsWrapper
@@ -49,25 +50,27 @@ export default class ArticlePreview extends Shadow() {
   renderCSS () {
     this.css = /* css */`
     :host > div {
-      border-width: 0 0 2px;
-      border-image: url(/src/img/border-dotted.png) 0 0 2 0 repeat;
-      border-style: dotted;
+      border-width:var(--border-width, 0 0 2px);
+      border-image:var(--border-image-source, url(_import-meta-url_./default-/img/border-dotted.png)) var(--border-image-slice, 0 0 2 0) var(--border-image-repeat, repeat);
+      border-style:var(--border-style, dotted);
     }
-    :host > div > a > div   {
-      display:flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: flex-start;
-      padding:2em 0;
-      gap:2em;
+
+    :host > div > a {
+      align-items:var(--preview-a-align-items, flex-start);
+      display:flex !important;
+      flex-direction:var(--preview-a-flex-direction, row);
+      flex-wrap:var(--preview-a-flex-wrap, nowrap);
+      gap:var(--preview-a-flex-gap, 2em);
+      padding:var(--preview-a-padding, 1em 0);
+      text-decoration:var(--preview-a-text-decoration, none);
     }
-    :host > div > a  h3 {
-      color:var(--h3-color, black);
-    }
-    :host > div > a:hover h3 {
-      color:var(--h3-color-hover, white);
-    }
-   
+    ${this.getAttribute('is-on-home') !== null
+        ? /* CSS */`
+          :host(:first-child) > div {
+            border-width: var(--first-child-border-width, 2px 0 2px 0);
+          }
+        `
+        : ''}   
     @media only screen and (max-width: _max-width_) {}
     `
 

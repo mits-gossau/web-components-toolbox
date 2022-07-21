@@ -108,7 +108,7 @@ export default class Form extends Shadow() {
       ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
         font-family: var(--font-family, inherit);
         border-radius: var(--border-radius, 0.5em);
-        background-color: transparent;
+        background-color: var(--background-color, transparent);
         box-sizing: border-box;
         border: 1px solid var(--m-gray-400);
         color: var(--color);
@@ -133,10 +133,11 @@ export default class Form extends Shadow() {
       .umbraco-forms-field {
         padding-bottom: var(--content-spacing);
       }
-      .umbraco-forms-field.checkbox {
+      .umbraco-forms-field.checkbox .umbraco-forms-field-wrapper {
         display:var(--checkbox-display, flex);
-        flex-direction:var(--checkbox-flex-direction, row);
-        justify-content:var(--checkbox-justify-content, flex-start);
+      }
+      .umbraco-forms-field.checkbox .umbraco-forms-field-wrapper label {
+        padding: var(--checkbox-label-padding, 0 0 0 10px);
       }
       .field-validation-error {
         color: var(--color-secondary);

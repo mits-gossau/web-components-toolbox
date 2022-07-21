@@ -3,6 +3,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
 
 /* global CustomEvent */
 /* global Image */
+/* global self */
 
 /**
  * Details (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/details) aka. Bootstrap accordion
@@ -43,6 +44,10 @@ import { Mutation } from '../../prototypes/Mutation.js'
  *  {string} [openEventName='open'] the event to which it listens on body
  *  {has} [scroll-into-view=n.a.] scrolls into view if set
  *  {has} [icon-image=n.a] add open/close icon
+ *  {has} [mobile-open=n.a.] open when in mobile with resize listener
+ *  {has} [mobile-close=n.a.] close when in mobile with resize listener
+ *  {has} [desktop-open=n.a.] open when in desktop with resize listener
+ *  {has} [desktop-close=n.a.] close when in desktop with resize listener
  * }
  */
 
@@ -81,11 +86,39 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       }
     }
 
+    this.scrollToAnchorEventListener = event => {
+      if (this.details && event.detail && event.detail.child === this) this.details.setAttribute('open', 'true')
+    }
+
     this.animationendListener = event => {
       this.details.removeAttribute('open')
       this.details.classList.remove('closing')
       this.mutationObserveStart()
       clearTimeout(this.timeoutAnimationend)
+    }
+
+    let timeout = null
+    this.resizeListener = event => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        this.checkMedia()
+      }, 200)
+    }
+
+    this.checkMedia = () => {
+      if (this.isMobile) {
+        if (this.hasAttribute('mobile-open') && !this.details.hasAttribute('open')) {
+          this.details.setAttribute('open', '')
+        } else if (this.hasAttribute('mobile-close') && this.details.hasAttribute('open')) {
+          this.details.removeAttribute('open')
+        }
+      } else {
+        if (this.hasAttribute('desktop-open') && !this.details.hasAttribute('open')) {
+          this.details.setAttribute('open', '')
+        } else if (this.hasAttribute('desktop-close') && this.details.hasAttribute('open')) {
+          this.details.removeAttribute('open')
+        }
+      }
     }
   }
 
@@ -94,16 +127,23 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.openEventName, this.openEventListener)
+    self.addEventListener('resize', this.resizeListener)
     this.root.addEventListener('click', this.clickEventListener)
+    document.body.addEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
+    this.checkMedia()
   }
 
   disconnectedCallback () {
     super.disconnectedCallback()
     document.body.removeEventListener(this.openEventName, this.openEventListener)
     this.root.removeEventListener('click', this.clickEventListener)
+    document.body.removeEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
+    self.removeEventListener('resize', this.resizeListener)
   }
 
   mutationCallback (mutationList, observer) {
+    if (this.isMobile && this.hasAttribute('mobile-open')) return null
+
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
         // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
@@ -350,9 +390,26 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         }
         :host details summary > div {
           font-size:var(--summary-font-size-mobile, var(--summary-font-size, inherit));
+          margin: var(--summary-margin-mobile, var(--summary-margin, 0));
+          padding: var(--summary-padding-mobile, var(--summary-padding, 0));
         }
+        ${this.hasAttribute('mobile-open')
+? `
+        :host summary .dropdown-icon {
+          display: none;
+        }
+        :host details summary > div {
+          cursor: default;
+        }
+        :host details summary {
+          pointer-events: none;
+        }
+        `
+: ''}
+
+        
       }
-    `
+      `
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
@@ -407,10 +464,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
   setIconDefault (node, cssClass) {
     const iconSvg = document.createElement('div')
+    iconSvg.classList.add('dropdown-icon')
 
     switch (this.getAttribute('namespace')) {
       case 'details-menu-portion-':
-        iconSvg.classList.add('portion-icon')
         node.prepend(iconSvg)
         break
       default:
@@ -427,6 +484,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     }
     node.classList.add(cssClass)
     return node
+  }
+
+  get isMobile () {
+    return self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
   }
 
   get openEventName () {

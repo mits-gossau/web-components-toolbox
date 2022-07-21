@@ -3,6 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global location */
 /* global self */
+/* global CustomEvent */
 
 /**
  * Defines a body body for content and maps variables to global tags
@@ -28,10 +29,21 @@ export default class Body extends Shadow() {
     this.timeout = null
     this.clickAnchorEventListener = event => {
       let element = null
-      if ((element = this.root.querySelector((event && event.detail && event.detail.selector) || location.hash))) {
+      if ((element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash))) {
+        this.dispatchEvent(new CustomEvent(this.getAttribute('scroll-to-anchor') || 'scroll-to-anchor', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          detail: {
+            child: element
+          }
+        }))
         element.scrollIntoView({ behavior: 'smooth' })
         clearTimeout(this.timeout)
-        this.timeout = setTimeout(() => element.scrollIntoView({ behavior: 'smooth' }), 500) // lazy loading pics make this necessary to reach target
+        this.timeout = setTimeout(() => {
+          element.scrollIntoView({ behavior: 'auto' })
+          document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+        }, 500) // lazy loading pics make this necessary to reach target
         self.removeEventListener('hashchange', this.clickAnchorEventListener)
         location.hash = location.hash.replace('_scrolled', '') + '_scrolled'
         self.addEventListener('hashchange', this.clickAnchorEventListener)

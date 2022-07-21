@@ -54,7 +54,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
            *
            * @type {import("../../prototypes/Shadow.js").fetchCSSParams}
            */
-          const fetchCSSParamWithDefaultValues = { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, appendStyleNode: true, maxWidth: event.detail.node.mobileBreakpoint, node: event.detail.node, ...fetchCSSParam }
+          const fetchCSSParamWithDefaultValues = { cssSelector: event.detail.node.cssSelector, namespace: event.detail.node.namespace, namespaceFallback: event.detail.node.namespaceFallback, appendStyleNode: true, maxWidth: event.detail.node.mobileBreakpoint, importMetaUrl: event.detail.node.importMetaUrl, node: event.detail.node, ...fetchCSSParam }
           const processedStyleCacheKey = FetchCss.cacheKeyGenerator(fetchCSSParamWithDefaultValues)
           if (this.processedStyleCache.has(processedStyleCacheKey)) {
             return Promise.resolve(fetchCSSParamWithDefaultValues)
@@ -146,6 +146,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
     let style = await fetchStyle
     // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/prototypes/Shadow.js
     style = await this.webWorker(FetchCss.cssMaxWidth, style, fetchCSSParam.maxWidth)
+    style = await this.webWorker(FetchCss.cssImportMetaUrl, style, fetchCSSParam.importMetaUrl)
     if (fetchCSSParam.cssSelector !== ':host') style = await this.webWorker(FetchCss.cssHostFallback, style, fetchCSSParam.cssSelector)
     if (fetchCSSParam.namespace) {
       if (style.includes('---')) console.error('this.css has illegal dash characters at:', fetchCSSParam.node)
@@ -201,7 +202,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
    * @param {import("../../prototypes/Shadow.js").fetchCSSParams} fetchCSSParam
    * @return {string}
    */
-  static cacheKeyGenerator ({ path, cssSelector, namespace, namespaceFallback, maxWidth }) {
-    return JSON.stringify({ path, cssSelector, namespace, namespaceFallback, maxWidth })
+  static cacheKeyGenerator ({ path, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl }) {
+    return JSON.stringify({ path, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl })
   }
 }

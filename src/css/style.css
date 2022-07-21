@@ -167,6 +167,7 @@
   left: var(--bg-padding, 0.5em);
   margin: 0;
   padding: 0.1em 0 0;
+  text-decoration-line: none;
 }
 :host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color, :host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color-hover {
   line-height: var(--bg-line-height, 1.7em);
@@ -223,17 +224,18 @@
   color: var(--a-color-hover, var(--color-hover, var(--color, green)));
   text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, underline))));
 }
-:host a > h1, :host a > h2, :host a > h3, :host a > h4, :host a > h5, :host a > h6 {
+:host a h1, :host a h2, :host a h3, :host a h4, :host a h5, :host a h6 {
   color: var(--a-color, var(--color-secondary, var(--color, pink)));
   text-decoration: var(--a-text-decoration, var(--text-decoration, underline));
   text-underline-offset: var(--a-text-underline-offset, unset);
+  transition: var(--a-transition, color 0.3s ease-out);
 }
-:host a:hover > h1, :host a:active > h1, :host a:focus > h1,
-:host a:hover > h2, :host a:active > h2, :host a:focus > h2,
-:host a:hover > h3, :host a:active > h3, :host a:focus > h3,
-:host a:hover > h4, :host a:active > h4, :host a:focus > h4,
-:host a:hover > h5, :host a:active > h5, :host a:focus > h5,
-:host a:hover > h6, :host a:active > h6, :host a:focus > h6 {
+:host a:hover h1, :host a:active h1, :host a:focus h1,
+:host a:hover h2, :host a:active h2, :host a:focus h2,
+:host a:hover h3, :host a:active h3, :host a:focus h3,
+:host a:hover h4, :host a:active h4, :host a:focus h4,
+:host a:hover h5, :host a:active h5, :host a:focus h5,
+:host a:hover h6, :host a:active h6, :host a:focus h6 {
   color: var(--a-color-hover, var(--color-hover, var(--color, green)));
   text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, underline))));
 }
@@ -304,20 +306,21 @@ img[style="float: right;"] {
 :host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
   padding-left: 1.5em !important;
 }
-:host ul.bull, :host ul.line {
-  list-style: none; /* Remove default bullets */
+/* Note: razor debugger :host ul[style="list-style-type: disc;"] / razor compiled :host ul[style="list-style-type:disc"]*/
+:host ul.bull, :host ul[style="list-style-type: disc;"], :host ul[style="list-style-type:disc"], :host ul.line {
+  list-style: none !important; /* Remove default bullets */
 }
-:host ul.bull li, :host ul.line li {
+:host ul.bull li, :host ul[style="list-style-type: disc;"] li, :host ul[style="list-style-type:disc"] li, :host ul.line li {
   position: relative;
 }
-:host ul.bull li::before, :host ul.line li::before {
+:host ul.bull li::before, :host ul[style="list-style-type: disc;"] li::before, :host ul[style="list-style-type:disc"] li::before, :host ul.line li::before {
   position: absolute;
-  top: 0.5em;
-  left: -1.5em;
+  top: var(--bull-li-before-top, 0.5em);
+  left: var(--bull-li-before-left, -1.5em);
   display: block;
-  width: 0.7em;
-  height: 0.7em;
-  border-width: 0.3em;
+  width: var(--bull-li-before-width, 0.7em);
+  height: var(--bull-li-before-height, 0.7em);
+  border-width: var(--bull-li-before-border-width, 0.3em);
   border-style: solid;
   border-color: var(--bull-color, var(--color-secondary, var(--color, green)));
   background-color: var(--bull-color, var(--color-secondary, var(--color, green)));
@@ -325,12 +328,20 @@ img[style="float: right;"] {
   content: '';
   transition: var(--bull-transition, border-color 0.3s ease-out, background-color 0.3s ease-out);
 }
-:host ul.bull li:hover::before, :host ul.line li:hover::before {
+:host ul.bull li:hover::before, :host ul[style="list-style-type: disc;"] li:hover::before, :host ul[style="list-style-type:disc"] li:hover::before, :host ul.line li:hover::before {
   border-color: var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green)))));
   background-color: var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green)))));
 }
+:host ul.line li::before {
+  top: 0.5em;
+  left: -1.5em;
+  width: 0.7em;
+  height: 0.7em;
+  border-width: 0.3em;
+}
 :host ul.line li:hover:not(:last-child)::after {
   background-color: var(--line-color-hover, var(--bull-color-hover, var(--color-hover, var(--bull-color, var(--color-secondary, var(--color, green))))));
+  transition: var(--bull-transition, background-color 0.3s ease-out);
 }
 :host ul.line li {
   margin-bottom: 1em;
