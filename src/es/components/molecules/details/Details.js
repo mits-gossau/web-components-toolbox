@@ -53,7 +53,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
 
 // @ts-ignore
 export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends ChosenHTMLElement {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['open'] } }), ...args)
 
     this.setAttribute('aria-expanded', 'false')
@@ -118,21 +118,11 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         } else if (this.hasAttribute('desktop-close') && this.details.hasAttribute('open')) {
           this.details.removeAttribute('open')
         }
-        :host details summary > div {
-          cursor: default;
-        }
-        :host details summary {
-          pointer-events: none;
-        }
-        `
-: ''}
-
-        
       }
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
@@ -143,7 +133,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.checkMedia()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     document.body.removeEventListener(this.openEventName, this.openEventListener)
     this.root.removeEventListener('click', this.clickEventListener)
@@ -151,7 +141,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     self.removeEventListener('resize', this.resizeListener)
   }
 
-  mutationCallback (mutationList, observer) {
+  mutationCallback(mutationList, observer) {
     if (this.isMobile && this.hasAttribute('mobile-open')) return null
 
     mutationList.forEach(mutation => {
@@ -256,7 +246,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -265,7 +255,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.divSummary
   }
 
@@ -274,7 +264,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */` 
       :host {
         border-bottom:var(--border-bottom, 0);
@@ -404,7 +394,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           padding: var(--summary-padding-mobile, var(--summary-padding, 0));
         }
         ${this.hasAttribute('mobile-open')
-? `
+        ? `
         :host summary .dropdown-icon {
           display: none;
         }
@@ -415,7 +405,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           pointer-events: none;
         }
         `
-: ''}
+        : ''}
 
         
       }
@@ -452,7 +442,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    *
    * @return {void}
    */
-  renderHTML () {
+  renderHTML() {
     this.divSummary = this.root.querySelector('div.summary') || document.createElement('div')
     this.divSummary.classList.add('summary')
     Array.from(this.summary.childNodes).forEach(node => this.divSummary.appendChild(node))
@@ -463,7 +453,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.html = this.style
   }
 
-  setIconFromAttribute (iconPath, node, cssClass) {
+  setIconFromAttribute(iconPath, node, cssClass) {
     const iconImg = new Image()
     iconImg.src = iconPath
     iconImg.alt = 'close detail'
@@ -472,7 +462,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     return node
   }
 
-  setIconDefault (node, cssClass) {
+  setIconDefault(node, cssClass) {
     const iconSvg = document.createElement('div')
     iconSvg.classList.add('dropdown-icon')
 
@@ -496,27 +486,27 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     return node
   }
 
-  get isMobile () {
+  get isMobile() {
     return self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
   }
 
-  get openEventName () {
+  get openEventName() {
     return this.getAttribute('open-event-name') || 'open'
   }
 
-  get summary () {
+  get summary() {
     return this.root.querySelector('summary')
   }
 
-  get details () {
+  get details() {
     return this.root.querySelector('details')
   }
 
-  get content () {
+  get content() {
     return this.details.querySelector('summary ~ *')
   }
 
-  get style () {
+  get style() {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
