@@ -118,6 +118,16 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         } else if (this.hasAttribute('desktop-close') && this.details.hasAttribute('open')) {
           this.details.removeAttribute('open')
         }
+        :host details summary > div {
+          cursor: default;
+        }
+        :host details summary {
+          pointer-events: none;
+        }
+        `
+: ''}
+
+        
       }
     }
   }
