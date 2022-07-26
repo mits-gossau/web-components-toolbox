@@ -122,6 +122,17 @@ export default class EmotionPictures extends Intersection() {
         display:var(--subline-display, initial);
         --bg-padding: var(--bg-padding-custom, 1.2em);
       }
+      :host .logo {
+        display:block;
+        height:100%;
+        top:0;
+        left:0;
+        right:0;
+        display:flex;
+        padding:1em;
+        justify-content: flex-end;
+        align-items: center;
+      }
       @media only screen and (max-width: _max-width_) {
         :host > div h2.font-size-big, :host > a h2.font-size-big {
           font-size: var(--h2-font-size-mobile);
@@ -171,6 +182,12 @@ export default class EmotionPictures extends Intersection() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-button-/with-button-.css`,
           namespace: false
         }, ...styles], false)
+      case 'emotion-pictures-with-logo-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-logo-/with-logo-.css`,
+          namespace: false
+        }, ...styles], false)
       case 'emotion-pictures-with-video-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./with-title-/with-title-.css`, // apply namespace since it is specific and no fallback
@@ -185,7 +202,7 @@ export default class EmotionPictures extends Intersection() {
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--emotion-pictures-with-title-/g, '--emotion-pictures-with-video-')
         })
       case 'emotion-pictures-default-':
-        return this.fetchCSS([{
+        return this.fetchCSS([{  
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
