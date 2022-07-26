@@ -34,7 +34,7 @@ export default class ArticlePreview extends Shadow() {
     <a class="link" href="${url.href}">
     <o-wrapper>
         <div class="image-wrapper" width="30%">
-          <a-picture picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="randomized image" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
+          <a-picture picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="${this.article.introImage.description !== '' ? this.article.introImage.description : this.article.introImage.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
         </div>
         <div class="text-wrapper">
           <p class="margin-zero">${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
