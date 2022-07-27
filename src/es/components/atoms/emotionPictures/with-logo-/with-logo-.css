@@ -10,10 +10,11 @@
    --emotion-pictures-with-logo-h2-font-size-mobile: var(--emotion-pictures-with-logo-h2-font-size-mobile-custom, min(calc(1.5em * 1.5), 7vw));
    --emotion-pictures-with-logo-h2-font-weight: normal;
    --emotion-pictures-with-logo-h2-text-transform: var(--emotion-pictures-with-logo-h2-text-transform-custom, uppercase);
-   --emotion-pictures-with-logo-img-max-width: 15vw;
    --emotion-pictures-with-logo-padding-mobile: var(--content-spacing-mobile);
    --emotion-pictures-with-logo-padding: var(--content-spacing);
    --emotion-pictures-with-logo-subline-display-mobile: none;
    --img-object-fit: cover;
    --img-width: 100%;
+   --logo-img-width-mobile: min(20vw, 100px);
+   --logo-img-width: min(10vw, 150px);
 }
