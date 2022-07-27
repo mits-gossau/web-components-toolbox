@@ -107,7 +107,7 @@ export default class EmotionPictures extends Intersection() {
       }
       :host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video) {
         position: absolute;
-        z-index:2;
+        z-index: 2;
         top: var(--text-top, 4vw);
         left: var(--text-left, 10vw);
         right: var(--text-right, 10vw);
@@ -119,19 +119,20 @@ export default class EmotionPictures extends Intersection() {
       }
       :host .subline {
         font-size: var(--subline-font-size, 1.2em);
-        display:var(--subline-display, initial);
+        display: var(--subline-display, initial);
         --bg-padding: var(--bg-padding-custom, 1.2em);
       }
       :host .logo {
-        display:block;
-        height:100%;
-        top:0;
-        left:0;
-        right:0;
-        display:flex;
-        padding:1em;
+        align-items: ${this.hasAttribute('logo-position') ? this.getAttribute('logo-position') : 'center'};
+        box-sizing: border-box;
+        display: flex;
+        height: 100%;
         justify-content: flex-end;
-        align-items: center;
+        left: 0;
+        margin: 0;
+        padding: var(--padding);
+        right: 0;
+        top: 0;
       }
       @media only screen and (max-width: _max-width_) {
         :host > div h2.font-size-big, :host > a h2.font-size-big {
@@ -149,6 +150,9 @@ export default class EmotionPictures extends Intersection() {
         }
         :host .subline {
           display:var(--subline-display-mobile, initial);
+        }
+        :host .logo {
+          padding: var(--padding-mobile);
         }
       }
     `
