@@ -103,7 +103,7 @@ export default class Article extends Shadow() {
           <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
           <h1 class="font-size-big">${introHeadline}</h1>
           <p><b class="intro">${location ? `${location} - ` : ''}${introText}</b></p>
-          ${introImage ? `<div><a-picture picture-load defaultSource="${introImage.url}?w=2160&q=80&fm=jpg" alt="${introImage.description !== "" ? introImage.description : introImage.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
+          ${introImage ? `<div><a-picture picture-load defaultSource="${introImage.url}?w=2160&q=80&fm=jpg" alt="${introImage.description !== '' ? introImage.description : introImage.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
         </div>
         <div class="content">
             ${contentOne
@@ -111,13 +111,13 @@ export default class Article extends Shadow() {
             // @ts-ignore
             .documentToHtmlString(contentOne.json)}</p>`
           : ''}
-            ${imageOne ? `<a-picture picture-load defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="${imageOne.description !== "" ? imageOne.description : imageOne.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
+            ${imageOne ? `<a-picture picture-load defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="${imageOne.description !== '' ? imageOne.description : imageOne.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
             ${contentTwo
           ? `<p>${window
             // @ts-ignore
             .documentToHtmlString(contentTwo.json)}</p>`
           : imageTwo ? '<br />' : ''} 
-            ${imageTwo ? `<a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="${imageTwo.description !== "" ? imageTwo.description : imageTwo.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
+            ${imageTwo ? `<a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="${imageTwo.description !== '' ? imageTwo.description : imageTwo.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
         </div>
         ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
         <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
