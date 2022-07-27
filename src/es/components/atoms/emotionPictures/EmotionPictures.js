@@ -206,7 +206,7 @@ export default class EmotionPictures extends Intersection() {
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--emotion-pictures-with-title-/g, '--emotion-pictures-with-video-')
         })
       case 'emotion-pictures-default-':
-        return this.fetchCSS([{  
+        return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
