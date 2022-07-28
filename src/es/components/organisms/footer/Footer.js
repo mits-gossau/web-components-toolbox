@@ -108,7 +108,8 @@ export default class Footer extends Shadow() {
         padding: 0;
       }
       :host > footer .footer-links > ul {
-        flex-direction: column;
+        flex-direction: row;
+        justify-content: start;
       }
       :host > footer .language-switcher > ul > li, :host > footer .footer-links > ul > li {
         border: 0;
@@ -116,8 +117,26 @@ export default class Footer extends Shadow() {
         width: auto;
         padding: 0 var(--content-spacing);
       }
-      :host > footer .footer-links > ul > li {
-        padding: 0;
+      :host > footer .language-switcher > ul > li:first-child, :host > footer .footer-links > ul:not(.has-copyright) > li:first-child {
+        padding-left: 0;
+      }
+      :host > footer .language-switcher > ul > li:last-child, :host > footer .footer-links > ul > li:last-child {
+        padding-right: 0;
+      }
+      /* force copyright to be at first position desktop */
+      :host > footer .footer-links > ul > li.copyright {
+        order: -1;
+        padding: 0 var(--content-spacing) 0 0;
+      }
+      /* in case copyright and language are supposed to be on the same line on desktop */
+      :host > footer > .copyright-and-language {
+        display: flex;
+        flex-direction: row;
+        gap: var(--content-spacing);
+        justify-content: space-between;
+      }
+      :host > footer > .copyright-and-language .footer-links ~ .language-switcher > ul {
+        justify-content: right;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -132,6 +151,29 @@ export default class Footer extends Shadow() {
         }
         :host > footer .language-switcher > ul > li {
           padding: 0 var(--content-spacing-mobile);
+        }
+        /* force copyright to be at first position desktop */
+        :host > footer .footer-links > ul > li.copyright {
+          order: 0;
+        }
+        /* in case copyright and language are supposed to be on the same line on desktop */
+        :host > footer > .copyright-and-language {
+          flex-direction: row;
+          gap: var(--content-spacing-mobile, var(--content-spacing));
+          justify-content: space-between;
+        }
+        :host > footer .footer-links > ul {
+          flex-direction: column;
+        }
+        :host > footer > .copyright-and-language .footer-links ~ .language-switcher > ul {
+          gap: var(--content-spacing-mobile, var(--content-spacing));
+          flex-wrap: nowrap;
+        }
+        :host > footer .footer-links > ul > li, :host > footer > .footer-links > ul > li.copyright {
+          padding: 0;
+        }
+        :host > footer > .copyright-and-language .footer-links ~ .language-switcher > ul > li {
+          padding: 0;
         }
       }
     `
@@ -167,6 +209,13 @@ export default class Footer extends Shadow() {
     Array.from(this.root.children).forEach(node => {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'FOOTER') return false
       this.footer.appendChild(node)
+    })
+    // mark the copyright list element
+    Array.from(this.footer.querySelectorAll('.footer-links > ul > li')).forEach(li => {
+     if (li.textContent.includes('©')) {
+       li.classList.add('copyright')
+       li.parentNode.classList.add('has-copyright')
+     }
     })
     this.html = this.footer
     return Promise.resolve()

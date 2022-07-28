@@ -5,9 +5,9 @@
   color: var(--h1-color, var(--color, black));
   display: var(--h1-display, block);
   font-size: var(--h1-font-size, 1.75em);
+  line-height: var(--h1-line-height, 1.286em);
   font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h1-font-weight, var(--h-font-weight, normal));
-  line-height: var(--h1-line-height, 1.286em);
   text-align: var(--h1-text-align, start);
   word-break: var(--h1-word-break, normal);
   text-transform: var(--h1-text-transform, none);
@@ -24,9 +24,9 @@
   color: var(--h2-color, var(--color, black));
   display: var(--h2-display, block);
   font-size: var(--h2-font-size, 1.5em);
+  line-height: var(--h2-line-height, 1.334em);
   font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h2-font-weight, var(--h-font-weight, normal));
-  line-height: var(--h2-line-height, 1.334em);
   text-align: var(--h2-text-align, start);
   word-break: var(--h2-word-break, normal);
   text-transform: var(--h2-text-transform, none);
@@ -43,9 +43,9 @@
   color: var(--h3-color, var(--color, black));
   display: var(--h3-display, block);
   font-size: var(--h3-font-size, 1.25em);
+  line-height: var(--h3-line-height, 1.4em);
   font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h3-font-weight, var(--h-font-weight, normal));
-  line-height: var(--h3-line-height, 1.4em);
   text-align: var(--h3-text-align, start);
   word-break: var(--h3-word-break, normal);
   text-transform: var(--h3-text-transform, none);
@@ -62,9 +62,9 @@
   color: var(--h4-color, var(--color, black));
   display: var(--h4-display, block);
   font-size: var(--h4-font-size, 1.125em);
+  line-height: var(--h4-line-height, 1.334em);
   font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h4-font-weight, var(--h-font-weight, normal));
-  line-height: var(--h4-line-height, 1.334em);
   text-align: var(--h4-text-align, start);
   word-break: var(--h4-word-break, normal);
   text-transform: var(--h4-text-transform, none);
@@ -81,9 +81,9 @@
   color: var(--h5-color, var(--color, black));
   display: var(--h5-display, block);
   font-size: var(--h5-font-size, 1em);
+  line-height: var(--h5-line-height, 1.334em);
   font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family, inherit)));
   font-weight: var(--h5-font-weight, var(--h-font-weight, normal));
-  line-height: var(--h5-line-height, 1.334em);
   text-align: var(--h5-text-align, start);
   word-break: var(--h5-word-break, normal);
   text-transform: var(--h5-text-transform, none);
@@ -139,12 +139,15 @@
 }
 :host .font-size-big {
   font-size: calc(1.5 * var(--h1-font-size, 1.75em));
+  line-height: var(--line-height, normal);
 }
 :host .font-size-h2 {
   font-size: var(--h2-font-size, 1.5em);
+  line-height: var(--line-height, normal);
 }
 :host .font-size-tiny {
   font-size: calc(0.75 * var(--p-font-size, 1em));
+  line-height: var(--line-height, normal);
 }
 :host .quote {
   text-align: var(--q-text-align, center);
@@ -154,6 +157,7 @@
 }
 :host .quote > small {
   font-size: var(--q-font-size, 0.8em);
+  line-height: var(--line-height, normal);
 }
 :host *.bg-color, :host *.bg-color-hover {
   display: inline;
@@ -198,8 +202,8 @@
 :host p {
   font-family: var(--p-font-family, var(--font-family, inherit));
   font-size: var(--p-font-size, 1em);
-  font-weight: var(--p-font-weight, var(--font-weight, normal));
   line-height: var(--p-line-height, var(--line-height, normal));
+  font-weight: var(--p-font-weight, var(--font-weight, normal));
   text-align: var(--p-text-align, start);
   text-transform: var(--p-text-transform, none);
   margin: var(--p-margin, 0 auto var(--content-spacing));
@@ -211,6 +215,7 @@
   font-weight: var(--a-font-weight, var(--font-weight, normal));
   text-align: var(--a-text-align, unset);
   font-size: var(--a-font-size, 1em);
+  line-height: var(--line-height, normal);
   text-decoration: var(--a-text-decoration, var(--text-decoration, underline));
   text-underline-offset: var(--a-text-underline-offset, unset);
   display: var(--a-display, block);
@@ -426,12 +431,15 @@ img[style="float: right;"] {
   /* text stylings */
   :host .font-size-big {
     font-size: calc(1.5 * var(--h1-font-size-mobile, var(--h1-font-size, 1.75em)));
+    line-height: var(--line-height-mobile, var(--line-height, normal));
   }
   :host .font-size-h2 {
     font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5em));
+    line-height: var(--line-height-mobile, var(--line-height, normal));
   }
   :host .font-size-tiny {
     font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
+    line-height: var(--line-height-mobile, var(--line-height, normal));
   }
   /* p-tag */
   :host p {
@@ -443,6 +451,7 @@ img[style="float: right;"] {
   /* a-tag */
   :host a {
     font-size: var(--a-font-size-mobile, var(--a-font-size, 1em));
+    line-height: var(--line-height-mobile, var(--line-height, normal));
     margin: var(--a-margin-mobile, var(--a-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
   }
   :host *:not(main) a {
