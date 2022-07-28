@@ -3,6 +3,9 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 
 ## [organize components](https://wiki.migros.net/display/OCC/Web+Components+CMS+Template)
 
+JS Rules:
+- use as little JS as possible. First think, if your problem could be solved with CSS before using JS
+
 CSS Rules:
 - no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
 - variablesCustom.css has to be kept as tiny as possible
