@@ -393,7 +393,7 @@ export default class Footer extends Shadow() {
   static injectCssIntoWrappers (wrappers) {
     wrappers.forEach(wrapper => wrapper.setCss(/*css*/`
       :host .footer-links-row {
-        --footer-default-margin: 0;
+        --footer-default-margin: 0 1em 3em 0;
         --footer-default-margin-mobile: 0;
       }
       :host .footer-links-row:not(:last-child){
