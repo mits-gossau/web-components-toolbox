@@ -273,10 +273,6 @@ export default class Footer extends Shadow() {
           const sectionChildChildren = Array.from(sectionChild.children)
           // move all children into a dedicated div
           const div = document.createElement('div')
-          sectionChildChildren.forEach((child, i) => {
-            if (child.tagName === 'UL') child.classList.add('bull')
-            div.appendChild(child)
-          })
           // create a summary/details for each sectionChild
           const detailsDiv = document.createElement('div')
           detailsDiv.innerHTML = `
