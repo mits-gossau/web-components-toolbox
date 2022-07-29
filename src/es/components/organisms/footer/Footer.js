@@ -295,18 +295,18 @@ export default class Footer extends Shadow() {
           ${hasDetailsDesktop
             ? /*css*/`
               :host > section > *.contains-details > m-details {
-                display: block;
+                display: block !important;
               }
               :host > section > *.contains-details > *:not(m-details) {
-                display: none;
+                display: none !important;
               }
             `
             :/*css*/`
               :host > section > *.contains-details > m-details {
-                display: none;
+                display: none !important;
               }
               :host > section > *.contains-details > *:not(m-details) {
-                display: block;
+                display: block !important;
               }
             `
           }
@@ -323,18 +323,18 @@ export default class Footer extends Shadow() {
                   --details-default-icon-right-border-top-custom: 0;
                 }
                 :host > section > *.contains-details > m-details {
-                  display: block;
+                  display: block !important;
                 }
                 :host > section > *.contains-details > *:not(m-details) {
-                  display: none;
+                  display: none !important;
                 }
               `
               :/*css*/`
                 :host > section > *.contains-details > m-details {
-                  display: none;
+                  display: none !important;
                 }
                 :host > section > *.contains-details > *:not(m-details) {
-                  display: block;
+                  display: block !important;
                 }
               `
             }
@@ -393,7 +393,7 @@ export default class Footer extends Shadow() {
   static injectCssIntoWrappers (wrappers) {
     wrappers.forEach(wrapper => wrapper.setCss(/*css*/`
       :host .footer-links-row {
-        --footer-default-margin: 0 1em 3em 0;
+        --footer-default-margin: 0;
         --footer-default-margin-mobile: 0;
       }
       :host .footer-links-row:not(:last-child){
