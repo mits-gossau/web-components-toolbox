@@ -40,7 +40,12 @@ export default class Footer extends Shadow() {
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => {
-        this.recalcWrapper() // make sure that the wrapper has all the variables just set and recalc
+        let wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
+        Footer.recalcWrappers(wrappers) // make sure that the wrapper has all the variables just set and recalc
+        this.loadChildComponents().then(modules => {
+          let moduleDetails
+          if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) this.autoAddDetails(wrappers, moduleDetails)
+        })
         this.hidden = false
       })
     }
@@ -221,8 +226,54 @@ export default class Footer extends Shadow() {
     return Promise.resolve()
   }
 
-  recalcWrapper () {
-    // force the wrapper to recalc its column width with the new variables set in the css above
-    Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]')).forEach(wrapper => wrapper.calcColumnWidth())
+  /**
+   * fetch children when first needed
+   *
+   * @returns {Promise<[string, CustomElementConstructor][]>}
+   */
+  loadChildComponents () {
+    return this._loadChildComponentsPromise || (this._loadChildComponentsPromise = Promise.all([
+      import('../../molecules/details/Details.js').then(
+        /**
+         * @param {any} module
+         * @returns {[string, any]}
+         */
+        module => ['m-details', module.Details()]
+      )
+    ]).then(elements => {
+      elements.forEach(element => {
+        // @ts-ignore
+        if (!customElements.get(element[0])) customElements.define(...element)
+      })
+      return elements
+    }))
+  }
+
+  /**
+   * replaces by CSS resp. clones "o-wrapper > section > *" into a "div > m-details" structure for certain view ports
+   *
+   * @param {HTMLElement[] & any} wrappers
+   * @param {[string, CustomElementConstructor]} moduleDetails
+   * @returns {HTMLElement[]}
+   */
+  autoAddDetails (wrappers, moduleDetails) {
+    const hasDetailsMobile = !this.hasAttribute('no-details-mobile') // mobile default true
+    const hasDetailsDesktop = this.hasAttribute('details-desktop') // desktop default false
+    if (hasDetailsMobile || hasDetailsDesktop) wrappers.forEach(wrapper => {
+      console.log(wrapper.section)
+    })
+    return wrappers
+  }
+
+  /**
+   * force the wrapper to recalc its column width with the new variables set in the css above
+   *
+   * @param {HTMLElement[] & any} wrappers
+   * @returns {HTMLElement[]}
+   * @static
+   */
+  static recalcWrappers (wrappers) {
+    wrappers.forEach(wrapper => wrapper.calcColumnWidth())
+    return wrappers
   }
 }
