@@ -20,7 +20,7 @@
    --emotion-pictures-with-button-text-left: var(--emotion-pictures-with-button-text-left-custom);
    --emotion-pictures-with-button-text-right-mobile: var(--emotion-pictures-with-button-text-right-mobile-custom);
    --emotion-pictures-with-button-text-right: var(--emotion-pictures-with-button-text-right-custom);
-   --emotion-pictures-with-button-text-top-mobile: var(--emotion-pictures-with-button-text-top-mobile-custom, 6em);
+   --emotion-pictures-with-button-text-top-mobile: var(--emotion-pictures-with-button-text-top-mobile-custom, min(4vw, 6em));
    --emotion-pictures-with-button-text-top: var(--emotion-pictures-with-button-text-top-custom, 8em);
    --img-object-fit: cover;
    --img-width: 100%;

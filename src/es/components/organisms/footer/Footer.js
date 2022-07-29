@@ -264,7 +264,7 @@ export default class Footer extends Shadow() {
     if ((hasDetailsMobile || hasDetailsDesktop) && !!wrappers.map(wrapper => {
       // check if section children.filter returns any element. map.length
       if (!!Array.from(wrapper.section && wrapper.section.children || [])
-        .filter(sectionChild => sectionChild.children && sectionChild.children.length > 1 && sectionChild.children[0] && sectionChild.children[0].tagName && sectionChild.children[0].tagName[0] === 'H')
+        .filter(sectionChild => sectionChild.children && sectionChild.children.length > 1 && sectionChild.children[0] && !!sectionChild.children[0].tagName)
         .map(sectionChild => {
           // html adjustments
           sectionChild.classList.add('contains-details')
