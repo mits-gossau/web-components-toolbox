@@ -298,6 +298,7 @@ img[style="float: right;"] {
   display: var(--ol-display, var(--ul-display, block));
   flex-direction: var(--ol-flex-direction, var(--ul-flex-direction, column));
   box-sizing: var(--ol-box-sizing, var(--ul-box-sizing, border-box));
+  margin: var(--ol-margin, 0 auto var(--content-spacing));
 }
 :host ul {
   box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
@@ -306,6 +307,7 @@ img[style="float: right;"] {
   list-style: var(--ul-list-style, disc);
   padding-left: 1.5em;
   text-align: var(--ul-text-align, var(--ol-text-align, start));
+  margin: var(--ul-margin, 0 auto var(--content-spacing));
 }
 /* overwrite abuse of o-wrapper with simulate-children="1" src/es/components/pages/Home.html */
 :host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
@@ -371,6 +373,7 @@ img[style="float: right;"] {
   border-spacing: var(--table-border-spacing, 0);
   max-width: var(--table-max-width, 100%);
   word-break: var(--table-word-break, normal);
+  margin: var(--table-margin, 0 auto var(--content-spacing));
 }
 /* spacer-stylings */
 .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
@@ -468,6 +471,13 @@ img[style="float: right;"] {
   img[style="float: right;"] {
     margin: var(--img-float-right-margin-mobile, var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) var(--content-spacing-mobile, var(--content-spacing))));
   }
+  /* list-tags */
+  :host ol {
+    margin: var(--ol-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+  }
+  :host ul {
+    margin: var(--ul-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+  }
   /* table-tags (scroll tables) */
   :host table {
     border-collapse: var(--table-border-collapse-mobile, var(--table-border-collapse, collapse));
@@ -477,6 +487,7 @@ img[style="float: right;"] {
     max-width: var(--table-max-width-mobile, var(--table-max-width, 100%));
     overflow: auto;
     word-break: var(--table-word-break-mobile, var(--table-word-break, normal));
+    margin: var(--table-margin-mobile, var(--table-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
   }
   /* spacer-stylings */
   .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {

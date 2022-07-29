@@ -414,6 +414,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`,
+        namespace: false
+      },
+      {
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }

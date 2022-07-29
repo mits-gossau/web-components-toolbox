@@ -42,6 +42,7 @@ export default class Footer extends Shadow() {
       Promise.all(showPromises).then(() => {
         let wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
         Footer.recalcWrappers(wrappers) // make sure that the wrapper has all the variables just set and recalc
+        Footer.injectCssIntoWrappers(wrappers)
         this.loadChildComponents().then(modules => {
           let moduleDetails
           if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) this.autoAddDetails(wrappers, moduleDetails)
@@ -272,7 +273,10 @@ export default class Footer extends Shadow() {
           const sectionChildChildren = Array.from(sectionChild.children)
           // move all children into a dedicated div
           const div = document.createElement('div')
-          sectionChildChildren.forEach((child, i) => div.appendChild(child))
+          sectionChildChildren.forEach((child, i) => {
+            if (child.tagName === 'UL') child.classList.add('bull')
+            div.appendChild(child)
+          })
           // create a summary/details for each sectionChild
           const detailsDiv = document.createElement('div')
           detailsDiv.innerHTML = `
@@ -380,6 +384,39 @@ export default class Footer extends Shadow() {
    */
   static recalcWrappers (wrappers) {
     wrappers.forEach(wrapper => wrapper.calcColumnWidth())
+    return wrappers
+  }
+
+  /**
+   * should actually be done with the template for o-wrapper namespace="footer-default-" but this has already been done within the razor template, this fix should work without any razor adjustments
+   *
+   * @param {HTMLElement[] & any} wrappers
+   * @returns {HTMLElement[]}
+   * @static
+   */
+  static injectCssIntoWrappers (wrappers) {
+    wrappers.forEach(wrapper => wrapper.setCss(/*css*/`
+      :host .footer-links-row {
+        --footer-default-margin: 0 1em 3em 0;
+        --footer-default-margin-mobile: 0;
+      }
+      :host .footer-links-row:not(:last-child){
+        border-right: 1px solid var(--m-gray-500);
+      }
+      :host .footer-links-row ul, :host .footer-links-row ul.bull {
+        list-style: none;
+        padding-left: 0;
+      }
+      :host .footer-links-row ul.bull li::before {
+        border: 0;
+        background-color: transparent;
+      }
+      @media only screen and (max-width: _max-width_) {
+          :host .footer-links-row:not(:last-child){
+            border-right: none;
+          }
+      }
+    `, undefined, false))
     return wrappers
   }
 }
