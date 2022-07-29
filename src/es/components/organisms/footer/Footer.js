@@ -40,7 +40,12 @@ export default class Footer extends Shadow() {
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => {
-        this.recalcWrapper() // make sure that the wrapper has all the variables just set and recalc
+        let wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
+        Footer.recalcWrappers(wrappers) // make sure that the wrapper has all the variables just set and recalc
+        this.loadChildComponents().then(modules => {
+          let moduleDetails
+          if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) this.autoAddDetails(wrappers, moduleDetails)
+        })
         this.hidden = false
       })
     }
@@ -221,8 +226,160 @@ export default class Footer extends Shadow() {
     return Promise.resolve()
   }
 
-  recalcWrapper () {
-    // force the wrapper to recalc its column width with the new variables set in the css above
-    Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]')).forEach(wrapper => wrapper.calcColumnWidth())
+  /**
+   * fetch children when first needed
+   *
+   * @returns {Promise<[string, CustomElementConstructor][]>}
+   */
+  loadChildComponents () {
+    return this._loadChildComponentsPromise || (this._loadChildComponentsPromise = Promise.all([
+      import('../../molecules/details/Details.js').then(
+        /**
+         * @param {any} module
+         * @returns {[string, any]}
+         */
+        module => ['m-details', module.Details()]
+      )
+    ]).then(elements => {
+      elements.forEach(element => {
+        // @ts-ignore
+        if (!customElements.get(element[0])) customElements.define(...element)
+      })
+      return elements
+    }))
+  }
+
+  /**
+   * replaces by CSS resp. clones "o-wrapper > section > *" into a "div > m-details" structure for certain view ports
+   *
+   * @param {HTMLElement[] & any} wrappers
+   * @param {[string, CustomElementConstructor]} moduleDetails
+   * @returns {HTMLElement[]}
+   */
+  autoAddDetails (wrappers, moduleDetails) {
+    if (!moduleDetails) return wrappers
+    const hasDetailsMobile = !this.hasAttribute('no-details-mobile') // mobile default true
+    const hasDetailsDesktop = this.hasAttribute('details-desktop') // desktop default false
+    // check if wrappers.map returns any true
+    if ((hasDetailsMobile || hasDetailsDesktop) && !!wrappers.map(wrapper => {
+      // check if section children.filter returns any element. map.length
+      if (!!Array.from(wrapper.section && wrapper.section.children || [])
+        .filter(sectionChild => sectionChild.children && sectionChild.children.length > 1 && sectionChild.children[0] && sectionChild.children[0].tagName && sectionChild.children[0].tagName[0] === 'H')
+        .map(sectionChild => {
+          // html adjustments
+          sectionChild.classList.add('contains-details')
+          /** @type {HTMLElement[]} */
+          const sectionChildChildren = Array.from(sectionChild.children)
+          // move all children into a dedicated div
+          const div = document.createElement('div')
+          sectionChildChildren.forEach((child, i) => div.appendChild(child))
+          // create a summary/details for each sectionChild
+          const detailsDiv = document.createElement('div')
+          detailsDiv.innerHTML = `
+            <m-details namespace="details-default-icon-right-" open-event-name="open-footer">
+              <details>
+                <summary>${sectionChildChildren.splice(0,1)[0].outerHTML}</summary>
+                <div>${sectionChildChildren.reduce((previousValue, currentValue) => previousValue + currentValue.outerHTML, '')}</div>
+              </details>
+            </m-details>
+          `
+          sectionChild.appendChild(div)
+          sectionChild.appendChild(detailsDiv.children[0])
+          return sectionChild
+        })
+      .length) {
+        // found eligible elements to make summary details
+        if (wrapper.previousElementSibling) wrapper.previousElementSibling.classList.add('next-contains-details')
+        // inject the CSS logic to display by hasDetailsMobile and hasDetailsDesktop
+        wrapper.setCss(/*css*/`
+          ${hasDetailsDesktop
+            ? /*css*/`
+              :host > section > *.contains-details > m-details {
+                display: block;
+              }
+              :host > section > *.contains-details > *:not(m-details) {
+                display: none;
+              }
+            `
+            :/*css*/`
+              :host > section > *.contains-details > m-details {
+                display: none;
+              }
+              :host > section > *.contains-details > *:not(m-details) {
+                display: block;
+              }
+            `
+          }
+          @media only screen and (max-width: _max-width_) {
+            ${hasDetailsMobile
+              ? /*css*/`
+                :host > section {
+                  gap: 0;
+                }
+                :host > section > *:not(.contains-details):not(:first-child) {
+                  margin-top: var(--${this.getAttribute('namespace')}gap-mobile-custom, var(--${this.getAttribute('namespace')}gap-custom, var(--content-spacing-mobile, var(--content-spacing)))) !important;
+                }
+                :host > section > *.contains-details:not(:first-of-type) > m-details {
+                  --details-default-icon-right-border-top-custom: 0;
+                }
+                :host > section > *.contains-details > m-details {
+                  display: block;
+                }
+                :host > section > *.contains-details > *:not(m-details) {
+                  display: none;
+                }
+              `
+              :/*css*/`
+                :host > section > *.contains-details > m-details {
+                  display: none;
+                }
+                :host > section > *.contains-details > *:not(m-details) {
+                  display: block;
+                }
+              `
+            }
+          }
+        `, undefined, false)
+        return true
+      }
+      // didn't find any elements which could be used as summary details
+      return false
+    }).includes(true)) {
+      // make the invert style useable for summary details within
+      this.setCss(/*css*/`
+        :host > footer .invert {
+          --details-default-icon-right-summary-child-color-hover-custom: var(--${this.getAttribute('namespace')}invert-color-hover);
+          --details-default-icon-right-a-color-hover: var(--${this.getAttribute('namespace')}invert-color-hover);
+          --details-default-icon-right-summary-child-color-custom: var(--${this.getAttribute('namespace')}invert-color);
+          --details-default-icon-right-a-color: var(--${this.getAttribute('namespace')}invert-color);
+          --details-default-icon-right-svg-color-custom: var(--${this.getAttribute('namespace')}invert-color);
+          --details-default-icon-right-border-color-custom: var(--${this.getAttribute('namespace')}invert-color);
+          --color: var(--${this.getAttribute('namespace')}invert-color);
+        }
+        @media only screen and (max-width: ${wrappers[0] && wrappers[0].mobileBreakpoint || '_max-width_'}) {
+          ${hasDetailsMobile
+            ? /*css*/`
+              :host > footer hr.next-contains-details {
+                display: none;
+              }
+            `
+            : ''
+          }
+        }
+      `, undefined, false)
+    }
+    return wrappers
+  }
+
+  /**
+   * force the wrapper to recalc its column width with the new variables set in the css above
+   *
+   * @param {HTMLElement[] & any} wrappers
+   * @returns {HTMLElement[]}
+   * @static
+   */
+  static recalcWrappers (wrappers) {
+    wrappers.forEach(wrapper => wrapper.calcColumnWidth())
+    return wrappers
   }
 }

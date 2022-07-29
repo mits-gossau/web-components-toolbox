@@ -424,6 +424,19 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
         }, ...styles], false)
+      case 'details-default-icon-right-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          namespace: false
+        },
+        {
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-icon-right-/default-icon-right-.css`,
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the details default-.css namespace with default-icon-right-
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--details-default-/g, '--details-default-icon-right-')
+        })
       case 'details-menu-single-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-single-/menu-single-.css`,
