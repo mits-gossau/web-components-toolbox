@@ -152,9 +152,9 @@ export default class Footer extends Shadow() {
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
         }
-        :host > footer > *, :host > footer .invert > *.contains-details {
-          margin-top: var(--wrapper-contains-details-margin-top, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-          margin-bottom: var(--wrapper-contains-details-margin-bottom, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+        :host > footer *.last-contains-details {
+          margin-top: var(--wrapper-last-contains-details-margin-top, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          margin-bottom: var(--wrapper-last-contains-details-margin-bottom, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         }
         :host > footer o-wrapper[namespace=footer-default-] {
           --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
@@ -268,9 +268,13 @@ export default class Footer extends Shadow() {
     const hasDetailsDesktop = this.hasAttribute('details-desktop') // desktop default false
     // check if wrappers.map returns any true
     if ((hasDetailsMobile || hasDetailsDesktop) && !!wrappers.map(wrapper => {
+      let lastContainsDetails = false
       // check if section children.filter returns any element. map.length
       if (!!Array.from(wrapper.section && wrapper.section.children || [])
-        .filter(sectionChild => sectionChild.children && sectionChild.children.length > 1 && sectionChild.children[0] && !!sectionChild.children[0].tagName)
+        .filter((sectionChild, i, arr) => {
+          const addDetails = lastContainsDetails = sectionChild.children && sectionChild.children.length > 1 && sectionChild.children[0] && !!sectionChild.children[0].tagName
+          return i === arr.length - 1 ? (lastContainsDetails = addDetails) : addDetails
+        })
         .map(sectionChild => {
           // html adjustments
           sectionChild.classList.add('contains-details')
@@ -297,7 +301,7 @@ export default class Footer extends Shadow() {
         // found eligible elements to make summary details
         if (wrapper.previousElementSibling) wrapper.previousElementSibling.classList.add('next-contains-details')
         // inject the CSS logic to display by hasDetailsMobile and hasDetailsDesktop
-        wrapper.classList.add('contains-details')
+        if (lastContainsDetails) wrapper.classList.add('last-contains-details')
         wrapper.setCss(/*css*/`
           ${hasDetailsDesktop
             ? /*css*/`
