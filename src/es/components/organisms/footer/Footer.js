@@ -45,7 +45,7 @@ export default class Footer extends Shadow() {
         Footer.injectCssIntoWrappers(wrappers)
         this.loadChildComponents().then(modules => {
           let moduleDetails
-          if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) this.autoAddDetails(wrappers, moduleDetails)
+          if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) Footer.injectCssIntoDetails(this.autoAddDetails(wrappers, moduleDetails).details)
         })
         this.hidden = false
       })
@@ -152,6 +152,10 @@ export default class Footer extends Shadow() {
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
         }
+        :host > footer > *, :host > footer .invert > *.contains-details {
+          margin-top: var(--wrapper-contains-details-margin-top, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          margin-bottom: var(--wrapper-contains-details-margin-bottom, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+        }
         :host > footer o-wrapper[namespace=footer-default-] {
           --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
         }
@@ -255,10 +259,11 @@ export default class Footer extends Shadow() {
    *
    * @param {HTMLElement[] & any} wrappers
    * @param {[string, CustomElementConstructor]} moduleDetails
-   * @returns {HTMLElement[]}
+   * @returns {{wrappers: HTMLElement[], details: HTMLElement[]}}
    */
   autoAddDetails (wrappers, moduleDetails) {
     if (!moduleDetails) return wrappers
+    const details = []
     const hasDetailsMobile = !this.hasAttribute('no-details-mobile') // mobile default true
     const hasDetailsDesktop = this.hasAttribute('details-desktop') // desktop default false
     // check if wrappers.map returns any true
@@ -279,11 +284,12 @@ export default class Footer extends Shadow() {
             <m-details namespace="details-default-icon-right-" open-event-name="open-footer">
               <details>
                 <summary>${sectionChildChildren.splice(0,1)[0].outerHTML}</summary>
-                <div>${sectionChildChildren.reduce((previousValue, currentValue) => previousValue + currentValue.outerHTML, '')}</div>
+                <div class=footer-links-row>${sectionChildChildren.reduce((previousValue, currentValue) => previousValue + currentValue.outerHTML, '')}</div>
               </details>
             </m-details>
           `
           sectionChild.appendChild(div)
+          details.push(detailsDiv.children[0])
           sectionChild.appendChild(detailsDiv.children[0])
           return sectionChild
         })
@@ -291,6 +297,7 @@ export default class Footer extends Shadow() {
         // found eligible elements to make summary details
         if (wrapper.previousElementSibling) wrapper.previousElementSibling.classList.add('next-contains-details')
         // inject the CSS logic to display by hasDetailsMobile and hasDetailsDesktop
+        wrapper.classList.add('contains-details')
         wrapper.setCss(/*css*/`
           ${hasDetailsDesktop
             ? /*css*/`
@@ -368,7 +375,7 @@ export default class Footer extends Shadow() {
         }
       `, undefined, false)
     }
-    return wrappers
+    return {wrappers, details}
   }
 
   /**
@@ -384,6 +391,28 @@ export default class Footer extends Shadow() {
   }
 
   /**
+   * should actually be done with the template for o-detail namespace="footer-default-" but this has already been done within the razor template, this fix should work without any razor adjustments
+   *
+   * @param {HTMLElement[] & any} details
+   * @returns {HTMLElement[]}
+   * @static
+   */
+  static injectCssIntoDetails (details) {
+    details.forEach(detail => detail.setCss(/*css*/`
+      :host .social-links {
+        display: flex;
+        flex-direction: row;
+        gap: 1.875rem;
+      }
+      :host .footer-links-row ul, :host .footer-links-row ul.bull {
+        list-style: none;
+        padding-left: 0;
+      }
+    `, undefined, false))
+    return details
+  }
+
+  /**
    * should actually be done with the template for o-wrapper namespace="footer-default-" but this has already been done within the razor template, this fix should work without any razor adjustments
    *
    * @param {HTMLElement[] & any} wrappers
@@ -392,6 +421,11 @@ export default class Footer extends Shadow() {
    */
   static injectCssIntoWrappers (wrappers) {
     wrappers.forEach(wrapper => wrapper.setCss(/*css*/`
+      :host .social-links {
+        display: flex;
+        flex-direction: row;
+        gap: 1.875rem;
+      }
       :host .footer-links-row:not(:last-child){
         border-right: 1px solid var(--m-gray-500);
       }
