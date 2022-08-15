@@ -137,6 +137,22 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           margin: var(--any-margin-last-child-mobile, var(--any-margin-last-child, var(--any-margin-mobile, var(--any-margin, 0)))) !important;
           padding: var(--any-padding-last-child-mobile, var(--any-padding-last-child, var(--any-padding-mobile, var(--any-padding, 0)))) !important;
         }
+        ${this.hasAttribute('picture-first-mobile')
+          ? /* css */`
+            :host > section > a-picture, :host > section > picture, :host > section > img {
+              order: -1;
+            }
+          `
+          : ''
+        }
+        ${this.hasAttribute('picture-last-mobile')
+          ? /* css */`
+            :host > section > :not(a-picture):not(picture):not(img) {
+              order: -1;
+            }
+          `
+          : ''
+        }
       }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */

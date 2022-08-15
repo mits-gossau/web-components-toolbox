@@ -1,0 +1,5 @@
+:host {
+    --details-default-icon-right-icon-justify-content: space-between;
+    --details-default-icon-right-icon-margin: 0 0 0 0.875em;
+    --details-default-icon-right-icon-row: row;
+}
