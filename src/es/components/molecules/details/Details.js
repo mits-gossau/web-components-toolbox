@@ -156,8 +156,12 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
             },
             { // to
               height: `${this.content.offsetHeight}px`,
-              margin: `var(--${this.namespace || ''}child-margin, 0)`,
-              padding: `var(--${this.namespace || ''}child-padding, 0)`
+              margin: this.isMobile
+                  ? `var(--${this.namespace || ''}child-margin-mobile, var(--${this.namespace || ''}child-margin, 0))`
+                  : `var(--${this.namespace || ''}child-margin, 0)`,
+              padding: this.isMobile
+                ? `var(--${this.namespace || ''}child-padding-mobile, var(--${this.namespace || ''}child-padding, 0))`
+                : `var(--${this.namespace || ''}child-padding, 0)`
             }
           ], {
             duration: this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) : 300,
@@ -176,6 +180,20 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
                 height: ${this.content.offsetHeight}px;
                 margin: var(--child-margin, 0);
                 padding: var(--child-padding, 0);
+              }
+            }
+            @media only screen and (max-width: _max-width_) {
+              @keyframes open {
+                0% {
+                  height: 0px;
+                  margin: 0px;
+                  padding: 0px;
+                }
+                100% {
+                  height: ${this.content.offsetHeight}px;
+                  margin: var(--child-margin-mobile, var(--child-margin, 0));
+                  padding: var(--child-padding-mobile, var(--child-padding, 0));
+                }
               }
             }
           `, undefined, undefined, undefined, this.style)
@@ -205,8 +223,12 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
             element.animate([
               { // from
                 height: `${this.content.offsetHeight}px`,
-                margin: `var(--${this.namespace || ''}child-margin, 0)`,
-                padding: `var(--${this.namespace || ''}child-padding, 0)`
+                margin: this.isMobile
+                  ? `var(--${this.namespace || ''}child-margin-mobile, var(--${this.namespace || ''}child-margin, 0))`
+                  : `var(--${this.namespace || ''}child-margin, 0)`,
+                padding: this.isMobile
+                  ? `var(--${this.namespace || ''}child-padding-mobile, var(--${this.namespace || ''}child-padding, 0))`
+                  : `var(--${this.namespace || ''}child-padding, 0)`
               },
               { // to
                 height: '0px',
@@ -231,6 +253,20 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
                 height: 0px;
                 margin: 0px;
                 padding: 0px
+              }
+            }
+            @media only screen and (max-width: _max-width_) {
+              @keyframes open {
+                0% {
+                  height: ${this.content.offsetHeight}px;
+                  margin: var(--child-margin-mobile, var(--child-margin, 0));
+                  padding: var(--child-padding-mobile, var(--child-padding, 0));
+                }
+                100% {
+                  height: 0px;
+                  margin: 0px;
+                  padding: 0px;
+                }
               }
             }
           `, undefined, undefined, undefined, this.style)
@@ -382,8 +418,9 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           margin: var(--child-margin-mobile, var(--child-margin, 0));
           padding: var(--child-padding-mobile, var(--child-padding, 0));
         }
-        :host details[open] summary ~ * {
-          padding: var(--child-padding-open-mobile, var(--child-padding-open, 0));
+        :host details[open] summary > div > * {
+          margin: var(--summary-child-margin-open-mobile, var(--summary-child-margin-open, 0));
+          padding: var(--summary-child-padding-open-mobile, var(--summary-child-padding-open, 0));
         }
         summary ~ * > *:not(style):not(script) {
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
