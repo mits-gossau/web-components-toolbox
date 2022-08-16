@@ -26,6 +26,7 @@ export default class Article extends Shadow() {
       sessionStorage.setItem('article-viewed', 'TRUE')
     }
     if (!this.loadArticles(window, sessionStorage).articles) {
+      // @ts-ignore
       document.body.addEventListener('listArticles', event => event.detail.fetch.then(data => {
         showPromises.push(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
       }), { once: true })
@@ -65,7 +66,7 @@ export default class Article extends Shadow() {
   loadArticles (window, sessionStorage) {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
-    const slug = urlParams.get('article')
+    const slug = urlParams.get('article') || ''
     const articles = sessionStorage.getItem('articles')
     return { slug, articles }
   }
@@ -225,6 +226,7 @@ export default class Article extends Shadow() {
       contentfulRenderer.setAttribute('type', 'text/javascript')
       contentfulRenderer.setAttribute('id', 'contentful-renderer')
       try {
+        // @ts-ignore
         contentfulRenderer.setAttribute('src', self.Environment.contentfulRenderer)
         document.body.appendChild(contentfulRenderer)
         contentfulRenderer.onload = () => resolve(this.RESOLVE_MSG)
