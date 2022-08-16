@@ -123,14 +123,14 @@ export default class Article extends Shadow() {
         ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
         <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
       </article>`
-      
-      this.setMetaTags({description:metaDescription, keywords:metaKeywords, title:metaTitle}).then(res => {
+
+      this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(res => {
         this.html = this.newsWrapper
       })
     })
   }
 
-  setMetaTags(metaTags){
+  setMetaTags (metaTags) {
     return /** @type {Promise<void>} */(new Promise((resolve) => {
       for (const [key, value] of Object.entries(metaTags)) {
         document.getElementsByTagName('meta').namedItem(key)?.setAttribute('content', value)
