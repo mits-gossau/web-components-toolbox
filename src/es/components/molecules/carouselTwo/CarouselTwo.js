@@ -102,7 +102,7 @@ export default class MacroCarousel extends Shadow() {
       .gallery__img {
         scroll-snap-align: start;
         margin-bottom: 10px;
-        min-width: 100vw;
+        min-width: 100%;
         object-fit: cover;
       
       }
@@ -141,17 +141,6 @@ export default class MacroCarousel extends Shadow() {
               min-height: 200px;
               min-width: 100%;
             }
-          }
-      
-      .lil-nav__img {
-        object-fit: cover;
-        filter: saturate(0);
-        transition: 0.3s ease all;
-      
-      }    
-      .lil-nav__img:hover {
-            transform: scale(1.05);
-            filter: saturate(1);
           }
     `
   }
