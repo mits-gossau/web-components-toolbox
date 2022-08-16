@@ -5,7 +5,7 @@
     --details-menu-single-a-text-decoration: none;
     --details-menu-single-child-padding-open-mobile: var(--content-spacing) var(--content-spacing-mobile);
     --details-menu-single-child-padding: 0 var(--padding);
-    --details-menu-single-h3-margin: 0 0 16px;
+    --details-menu-single-h3-margin: 0 0 1rem;
     --details-menu-single-icon-display: flex;
     --details-menu-single-icon-justify-content: space-between;
     --details-menu-single-icon-row: row;
@@ -22,7 +22,7 @@
     --details-menu-single-ul-list-style: none;
     --details-menu-single-ul-margin: 1rem 0;
     --padding: 1.875rem;
-    --tooltip-width: 120px;
+    --tooltip-width: 7.5rem;
     padding-bottom: var(--padding);
 }
 
@@ -51,11 +51,11 @@
 
 :host .content-box > .description {
     overflow-wrap: break-word;
-    min-height: 70px;
+    min-height: 4.375rem;
 }
 
 :host .content-box > .end {
-    margin: 0 0 16px;
+    margin: 0 0 1rem;
 }
 
 :host details summary > div:hover > *, :host details summary > div:active > *, :host details summary > div:focus > * {
@@ -63,26 +63,26 @@
 }
 
 :host .legende {
-    gap: 10px;
+    gap: 0.625rem;
     padding-left: 0;
 }
 
 :host .legende > li  {
     display: flex;
     align-items: center;
-    height: 30px;
+    height: 1.875rem;
     background-color: var(--color-secondary);
 }
 
 :host .legende > .legend-lable {
     width: auto;
-    padding: 0 10px;
-    border-radius: 12px;
+    padding: 0 0.625rem;
+    border-radius: 0.75rem;
 }
 
 :host .legende > .legend-icon {
     position: relative;
-    width: 30px;
+    width: 1.875rem;
     border-radius: 50%;
 }
 
@@ -95,7 +95,7 @@
     width: var(--tooltip-width);
     background-color: var(--color-secondary);
     text-align: center;
-    padding: 5px 0;
+    padding: 0.3rem 0;
     border-radius: 6px;
   
     /* Position the tooltip text */
@@ -115,8 +115,8 @@
     position: absolute;
     top: 100%;
     left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
+    margin-left: -0.3rem;
+    border-width: 0.3rem;
     border-style: solid;
     border-color: var(--color-secondary) transparent transparent transparent;
 }

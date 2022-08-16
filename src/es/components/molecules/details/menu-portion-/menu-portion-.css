@@ -1,6 +1,6 @@
 :host {
-    --details-menu-single-child-margin: 0 30px;
-    --details-menu-portion-summary-child-margin: 16px 20px 16px 0;
+    --details-menu-single-child-margin: 0 1.875rem;
+    --details-menu-portion-summary-child-margin: 1rem 1.25rem 1rem 0;
     --details-menu-portion-summary-child-margin-open: var(--details-menu-portion-summary-child-margin);
     --details-menu-portion-icon-justify-content: flex-start;
     --details-menu-portion-border-top: 2px dotted #ddd;
@@ -23,16 +23,16 @@
 }
 
 :host .nutrients-item{
-    margin-right: 28px;
+    margin-right: 1.875rem;
 }
 
 :host .nutrients-circle {
     display: flex;
-    width: 100px;
-    height: 100px;
+    width: 6.25rem;
+    height: 6.25rem;
     flex-direction: column;
     justify-content: center;
-    margin: 3px auto 0;
+    margin: 0.1875rem auto 0;
     background-color: var(--color-secondary);
     border-radius: 50%;
     text-align: var(--details-menu-portion-ul-text-align);
@@ -41,15 +41,15 @@
 }
 
 :host .dropdown-icon {
-    width: 24px;
-    height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     transform: rotate(0);
 }
 
 :host .dropdown-icon::before {
     top: 0;
     left: 50%;
-    width: 3px;
+    width: 0.1875rem;
     height: 100%;
     position: absolute;
     display: block;
@@ -61,7 +61,7 @@
 :host .dropdown-icon::after {
     top: 0;
     left: 50%;
-    width: 3px;
+    width: 0.1875rem;
     height: 100%;
     position: absolute;
     display: block;
