@@ -32,17 +32,17 @@
 
 :host .image-box,
 :host details[open] .image-box{
-    flex-basis: 43.56%;
-    --details-menu-single-summary-child-margin: 0 var(--content-spacing) 0 0;
     --details-menu-single-summary-child-margin-open: var(--details-menu-single-summary-child-margin);
+    --details-menu-single-summary-child-margin: 0 var(--content-spacing) 0 0;
+    flex-basis: 43.56%;
 }
 
 :host .content-box {
-    display: flex;
-    flex-direction: column;
-    flex-basis: 50%;
-    white-space: pre-line;
     color: var(--color);
+    display: flex;
+    flex-basis: 50%;
+    flex-direction: column;
+    white-space: pre-line;
 }
 
 :host .content-box > * {
@@ -50,8 +50,8 @@
 }
 
 :host .content-box > .description {
-    overflow-wrap: break-word;
     min-height: 4.375rem;
+    overflow-wrap: break-word;
 }
 
 :host .content-box > .end {
@@ -68,22 +68,22 @@
 }
 
 :host .legende > li  {
-    display: flex;
     align-items: center;
-    height: 1.875rem;
     background-color: var(--color-secondary);
+    display: flex;
+    height: 1.875rem;
 }
 
 :host .legende > .legend-lable {
-    width: auto;
-    padding: 0 0.625rem;
     border-radius: 0.75rem;
+    padding: 0 0.625rem;
+    width: auto;
 }
 
 :host .legende > .legend-icon {
+    border-radius: 50%;
     position: relative;
     width: 1.875rem;
-    border-radius: 50%;
 }
 
 :host .legende > .legend-icon > a-picture {
@@ -91,18 +91,18 @@
 }
 
 :host .legende > .legend-icon .tooltip {
+    background-color: var(--color-secondary);
+    border-radius: 6px;
+    padding: 0.3rem 0;
+    text-align: center;
     visibility: hidden;
     width: var(--tooltip-width);
-    background-color: var(--color-secondary);
-    text-align: center;
-    padding: 0.3rem 0;
-    border-radius: 6px;
   
     /* Position the tooltip text */
-    position: absolute;
     bottom: 125%;
     left: 50%;
     margin-left: calc(var(--tooltip-width) / 2 * -1);
+    position: absolute;
   
     /* Fade in tooltip */
     opacity: 0;
@@ -111,22 +111,21 @@
 
 /* Tooltip arrow */
 :host .legende > .legend-icon .tooltip::after {
+    border-color: var(--color-secondary) transparent transparent transparent;
+    border-style: solid;
+    border-width: 0.3rem;
     content: "";
-    position: absolute;
-    top: 100%;
     left: 50%;
     margin-left: -0.3rem;
-    border-width: 0.3rem;
-    border-style: solid;
-    border-color: var(--color-secondary) transparent transparent transparent;
+    position: absolute;
+    top: 100%;
 }
   
 /* Show the tooltip text when you mouse over the tooltip container */
 :host .legende > .legend-icon:hover .tooltip {
-    visibility: visible;
     opacity: 1;
+    visibility: visible;
 }
-
 
 @media screen and (max-width: _max-width_){
     :host{

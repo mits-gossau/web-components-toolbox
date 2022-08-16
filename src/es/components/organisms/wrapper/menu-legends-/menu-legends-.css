@@ -1,24 +1,21 @@
 :host section {
-    --menu-legends-justify-content: flex-start;
     --menu-legends-align-items: flex-start;
     --menu-legends-gap: 3.75rem;
+    --menu-legends-justify-content: flex-start;
 }
 
 :host section .legend{
+    align-items: center;
+    color: var(--color-secondary);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 9rem;
     text-align: center;
-    color: var(--color-secondary);
+    width: 9rem;
 }
 
 :host section .legendImage{
-    width: 5rem;
-    height: 5rem;
     background-color: var(--color-secondary);
     border-radius: 50%;
+    height: 5rem;
+    width: 5rem;
 }
-
-
-
