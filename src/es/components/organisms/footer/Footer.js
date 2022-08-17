@@ -270,39 +270,54 @@ export default class Footer extends Shadow() {
     if ((hasDetailsMobile || hasDetailsDesktop) && !!wrappers.map(wrapper => {
       let lastContainsDetails = false
       // check if section children.filter returns any element. map.length
-      if (!!Array.from(wrapper.section && wrapper.section.children || [])
+      if (!!Array.from(!wrapper.hasAttribute('no-details') && wrapper.section && wrapper.section.children || [])
+        // filter and add only details to wrapper-sections which have multiple children
         .filter((sectionChild, i, arr) => {
-          const addDetails = lastContainsDetails = sectionChild.children && sectionChild.children.length > 1 && sectionChild.children[0] && !!sectionChild.children[0].tagName
+          const addDetails = sectionChild.children && sectionChild.children.length > 1 && sectionChild.children[0] && !!sectionChild.children[0].tagName
           return i === arr.length - 1 ? (lastContainsDetails = addDetails) : addDetails
         })
-        .map(sectionChild => {
+        // append m-details to each section
+        .reduceRight((accumulator, sectionChild, i, arr) => {
           // html adjustments
           sectionChild.classList.add('contains-details')
           /** @type {HTMLElement[]} */
           const sectionChildChildren = Array.from(sectionChild.children)
-          // move all children into a dedicated div
-          const div = document.createElement('div')
-          // create a summary/details for each sectionChild
-          const detailsDiv = document.createElement('div')
-          detailsDiv.innerHTML = `
-            <m-details namespace="details-default-icon-right-" open-event-name="open-footer">
-              <details>
-                <summary>${sectionChildChildren.splice(0,1)[0].outerHTML}</summary>
-                <div class=footer-links-row>${sectionChildChildren.reduce((previousValue, currentValue) => previousValue + currentValue.outerHTML, '')}</div>
-              </details>
-            </m-details>
-          `
-          sectionChild.appendChild(div)
-          details.push(detailsDiv.children[0])
-          sectionChild.appendChild(detailsDiv.children[0])
-          return sectionChild
-        })
+          // if summary title is empty add it to the next details if possible
+          if (i > 0 && sectionChildChildren[0].outerHTML.includes('>&nbsp;<')) {
+            sectionChildChildren.splice(0,1)
+            sectionChildChildren.forEach(child => {
+              const clone = child.cloneNode(true)
+              clone.classList.add('clone')
+              arr[i-1].appendChild(clone)
+            })
+          } else {
+            // move all children into a dedicated div
+            const div = document.createElement('div')
+            // create a summary/details for each sectionChild
+            const detailsDiv = document.createElement('div')
+            detailsDiv.innerHTML = `
+              <m-details namespace="details-default-icon-right-" open-event-name="open-footer">
+                <details>
+                  <summary>${sectionChildChildren.splice(0,1)[0].outerHTML}</summary>
+                  <div class=footer-links-row>${sectionChildChildren.reduce((previousValue, currentValue) => previousValue + currentValue.outerHTML, '')}</div>
+                </details>
+              </m-details>
+            `
+            details.push(detailsDiv.children[0])
+            sectionChild.appendChild(detailsDiv.children[0])
+          }
+          accumulator.push(sectionChild)
+          return accumulator
+        }, [])
       .length) {
         // found eligible elements to make summary details
         if (wrapper.previousElementSibling) wrapper.previousElementSibling.classList.add('next-contains-details')
         // inject the CSS logic to display by hasDetailsMobile and hasDetailsDesktop
         if (lastContainsDetails) wrapper.classList.add('last-contains-details')
         wrapper.setCss(/*css*/`
+          :host > section > *.contains-details > *:not(m-details).clone {
+            display: none !important;
+          }
           ${hasDetailsDesktop
             ? /*css*/`
               :host > section > *.contains-details > m-details {
@@ -356,6 +371,7 @@ export default class Footer extends Shadow() {
       // didn't find any elements which could be used as summary details
       return false
     }).includes(true)) {
+      // found eligible wrappers
       // make the invert style useable for summary details within
       this.setCss(/*css*/`
         :host > footer .invert {
@@ -370,7 +386,7 @@ export default class Footer extends Shadow() {
         @media only screen and (max-width: ${wrappers[0] && wrappers[0].mobileBreakpoint || '_max-width_'}) {
           ${hasDetailsMobile
             ? /*css*/`
-              :host > footer hr.next-contains-details {
+              :host > footer hr.next-contains-details, :host > footer div.next-contains-details {
                 display: none;
               }
             `

@@ -123,7 +123,7 @@ export default class EmotionPictures extends Intersection() {
         --bg-padding: var(--bg-padding-custom, 1.2em);
       }
       :host .logo {
-        align-items: ${this.hasAttribute('logo-position') ? this.getAttribute('logo-position') : 'center'};
+        align-items: ${this.logoPosition};
         box-sizing: border-box;
         display: flex;
         height: 100%;
@@ -253,5 +253,9 @@ export default class EmotionPictures extends Intersection() {
 
   get aVideos () {
     return this.root.querySelectorAll('a-video')
+  }
+
+  get logoPosition (){
+    return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center' 
   }
 }
