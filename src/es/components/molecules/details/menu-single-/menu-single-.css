@@ -21,6 +21,7 @@
     --details-menu-single-ul-flex-direction: row;
     --details-menu-single-ul-list-style: none;
     --details-menu-single-ul-margin: 1rem 0;
+    --details-menu-single-ul-margin-mobile: 1rem 0;
     --padding: 1.875rem;
     --tooltip-width: 7.5rem;
     padding-bottom: var(--padding);
