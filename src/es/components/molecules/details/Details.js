@@ -151,8 +151,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           Array.from(this.root.querySelectorAll(':host details[open] summary ~ *')).forEach(element => element.animate([
             { // from
               height: '0px',
-              margin: '0px',
-              padding: '0px'
+              marginTop: '0px',
+              marginBottom: '0px',
+              paddingTop: '0px',
+              paddingBottom: '0px'
             },
             { // to
               height: `${this.content.offsetHeight}px`,
@@ -173,8 +175,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
             @keyframes open {
               0% {
                 height: 0px;
-                margin: 0px;
-                padding: 0px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                padding-top: 0px;
+                padding-bottom: 0px;
               }
               100% {
                 height: ${this.content.offsetHeight}px;
@@ -186,8 +190,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
               @keyframes open {
                 0% {
                   height: 0px;
-                  margin: 0px;
-                  padding: 0px;
+                  margin-top: 0px;
+                  margin-bottom: 0px;
+                  padding-top: 0px;
+                  padding-bottom: 0px;
                 }
                 100% {
                   height: ${this.content.offsetHeight}px;
@@ -232,8 +238,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
               },
               { // to
                 height: '0px',
-                margin: '0px',
-                padding: '0px'
+                marginTop: '0px',
+                marginBottom: '0px',
+                paddingTop: '0px',
+                paddingBottom: '0px'
               }
             ], {
               duration: this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) : 300,
@@ -251,8 +259,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
               }
               100% {
                 height: 0px;
-                margin: 0px;
-                padding: 0px
+                margin-top: 0px;
+                margin-bottom: 0px;
+                padding-top: 0px;
+                padding-bottom: 0px;
               }
             }
             @media only screen and (max-width: _max-width_) {
@@ -264,8 +274,10 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
                 }
                 100% {
                   height: 0px;
-                  margin: 0px;
-                  padding: 0px;
+                  margin-top: 0px;
+                  margin-bottom: 0px;
+                  padding-top: 0px;
+                  padding-bottom: 0px;
                 }
               }
             }
