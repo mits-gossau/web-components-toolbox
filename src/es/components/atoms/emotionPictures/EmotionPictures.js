@@ -255,7 +255,7 @@ export default class EmotionPictures extends Intersection() {
     return this.root.querySelectorAll('a-video')
   }
 
-  get logoPosition (){
-    return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center' 
+  get logoPosition () {
+    return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center'
   }
 }

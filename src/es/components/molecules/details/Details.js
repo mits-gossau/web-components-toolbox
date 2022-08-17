@@ -157,8 +157,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
             { // to
               height: `${this.content.offsetHeight}px`,
               margin: this.isMobile
-                  ? `var(--${this.namespace || ''}child-margin-mobile, var(--${this.namespace || ''}child-margin, 0))`
-                  : `var(--${this.namespace || ''}child-margin, 0)`,
+                ? `var(--${this.namespace || ''}child-margin-mobile, var(--${this.namespace || ''}child-margin, 0))`
+                : `var(--${this.namespace || ''}child-margin, 0)`,
               padding: this.isMobile
                 ? `var(--${this.namespace || ''}child-padding-mobile, var(--${this.namespace || ''}child-padding, 0))`
                 : `var(--${this.namespace || ''}child-padding, 0)`

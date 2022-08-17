@@ -1,4 +1,6 @@
 // @ts-check
+/* global customElements */
+
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
@@ -40,7 +42,7 @@ export default class Footer extends Shadow() {
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => {
-        let wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
+        const wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
         Footer.recalcWrappers(wrappers) // make sure that the wrapper has all the variables just set and recalc
         Footer.injectCssIntoWrappers(wrappers)
         this.loadChildComponents().then(modules => {
@@ -222,10 +224,10 @@ export default class Footer extends Shadow() {
     })
     // mark the copyright list element
     Array.from(this.footer.querySelectorAll('.footer-links > ul > li')).forEach(li => {
-     if (li.textContent.includes('©')) {
-       li.classList.add('copyright')
-       li.parentNode.classList.add('has-copyright')
-     }
+      if (li.textContent.includes('©')) {
+        li.classList.add('copyright')
+        li.parentNode.classList.add('has-copyright')
+      }
     })
     this.html = this.footer
     return Promise.resolve()
@@ -267,10 +269,10 @@ export default class Footer extends Shadow() {
     const hasDetailsMobile = !this.hasAttribute('no-details-mobile') // mobile default true
     const hasDetailsDesktop = this.hasAttribute('details-desktop') // desktop default false
     // check if wrappers.map returns any true
-    if ((hasDetailsMobile || hasDetailsDesktop) && !!wrappers.map(wrapper => {
+    if ((hasDetailsMobile || hasDetailsDesktop) && wrappers.map(wrapper => {
       let lastContainsDetails = false
       // check if section children.filter returns any element. map.length
-      if (!!Array.from(!wrapper.hasAttribute('no-details') && wrapper.section && wrapper.section.children || [])
+      if (Array.from((!wrapper.hasAttribute('no-details') && wrapper.section && wrapper.section.children) || [])
         // filter and add only details to wrapper-sections which have multiple children
         .filter((sectionChild, i, arr) => {
           const addDetails = sectionChild.children && sectionChild.children.length > 1 && sectionChild.children[0] && !!sectionChild.children[0].tagName
@@ -284,21 +286,20 @@ export default class Footer extends Shadow() {
           const sectionChildChildren = Array.from(sectionChild.children)
           // if summary title is empty add it to the next details if possible
           if (i > 0 && sectionChildChildren[0].outerHTML.includes('>&nbsp;<')) {
-            sectionChildChildren.splice(0,1)
+            sectionChildChildren.splice(0, 1)
             sectionChildChildren.forEach(child => {
               const clone = child.cloneNode(true)
               clone.classList.add('clone')
-              arr[i-1].appendChild(clone)
+              arr[i - 1].appendChild(clone)
             })
           } else {
             // move all children into a dedicated div
-            const div = document.createElement('div')
             // create a summary/details for each sectionChild
             const detailsDiv = document.createElement('div')
             detailsDiv.innerHTML = `
               <m-details namespace="details-default-icon-right-" open-event-name="open-footer">
                 <details>
-                  <summary>${sectionChildChildren.splice(0,1)[0].outerHTML}</summary>
+                  <summary>${sectionChildChildren.splice(0, 1)[0].outerHTML}</summary>
                   <div class=footer-links-row>${sectionChildChildren.reduce((previousValue, currentValue) => previousValue + currentValue.outerHTML, '')}</div>
                 </details>
               </m-details>
@@ -309,17 +310,17 @@ export default class Footer extends Shadow() {
           accumulator.push(sectionChild)
           return accumulator
         }, [])
-      .length) {
+        .length) {
         // found eligible elements to make summary details
         if (wrapper.previousElementSibling) wrapper.previousElementSibling.classList.add('next-contains-details')
         // inject the CSS logic to display by hasDetailsMobile and hasDetailsDesktop
         if (lastContainsDetails) wrapper.classList.add('last-contains-details')
-        wrapper.setCss(/*css*/`
+        wrapper.setCss(/* css */`
           :host > section > *.contains-details > *:not(m-details).clone {
             display: none !important;
           }
           ${hasDetailsDesktop
-            ? /*css*/`
+            ? /* css */`
               :host > section > *.contains-details > m-details {
                 display: block !important;
               }
@@ -327,7 +328,7 @@ export default class Footer extends Shadow() {
                 display: none !important;
               }
             `
-            :/*css*/`
+            : /* css */`
               :host > section > *.contains-details > m-details {
                 display: none !important;
               }
@@ -338,7 +339,7 @@ export default class Footer extends Shadow() {
           }
           @media only screen and (max-width: _max-width_) {
             ${hasDetailsMobile
-              ? /*css*/`
+              ? /* css */`
                 :host > section {
                   gap: 0;
                 }
@@ -355,7 +356,7 @@ export default class Footer extends Shadow() {
                   display: none !important;
                 }
               `
-              :/*css*/`
+              : /* css */`
                 :host > section > *.contains-details > m-details {
                   display: none !important;
                 }
@@ -373,7 +374,7 @@ export default class Footer extends Shadow() {
     }).includes(true)) {
       // found eligible wrappers
       // make the invert style useable for summary details within
-      this.setCss(/*css*/`
+      this.setCss(/* css */`
         :host > footer .invert {
           --details-default-icon-right-summary-child-color-hover-custom: var(--${this.getAttribute('namespace')}invert-color-hover);
           --details-default-icon-right-a-color-hover: var(--${this.getAttribute('namespace')}invert-color-hover);
@@ -383,9 +384,9 @@ export default class Footer extends Shadow() {
           --details-default-icon-right-border-color-custom: var(--${this.getAttribute('namespace')}invert-color);
           --color: var(--${this.getAttribute('namespace')}invert-color);
         }
-        @media only screen and (max-width: ${wrappers[0] && wrappers[0].mobileBreakpoint || '_max-width_'}) {
+        @media only screen and (max-width: ${(wrappers[0] && wrappers[0].mobileBreakpoint) || '_max-width_'}) {
           ${hasDetailsMobile
-            ? /*css*/`
+            ? /* css */`
               :host > footer hr.next-contains-details, :host > footer div.next-contains-details {
                 display: none;
               }
@@ -395,7 +396,7 @@ export default class Footer extends Shadow() {
         }
       `, undefined, false)
     }
-    return {wrappers, details}
+    return { wrappers, details }
   }
 
   /**
@@ -418,7 +419,7 @@ export default class Footer extends Shadow() {
    * @static
    */
   static injectCssIntoDetails (details) {
-    details.forEach(detail => detail.setCss(/*css*/`
+    details.forEach(detail => detail.setCss(/* css */`
       :host .social-links {
         display: flex;
         flex-direction: row;
@@ -440,7 +441,7 @@ export default class Footer extends Shadow() {
    * @static
    */
   static injectCssIntoWrappers (wrappers) {
-    wrappers.forEach(wrapper => wrapper.setCss(/*css*/`
+    wrappers.forEach(wrapper => wrapper.setCss(/* css */`
       :host .social-links {
         display: flex;
         flex-direction: row;
