@@ -161,7 +161,7 @@ export default class EmotionPictures extends Intersection() {
         ${this.hasAttribute('height') ? `--img-height: ${this.getAttribute('height')};` : ''}
         ${this.hasAttribute('height-mobile') ? `--img-height-mobile: ${this.getAttribute('height-mobile')};` : ''}
         --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
-        --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 100vh);
+        --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 75vh);
       }
     `, undefined, '', false)
 
