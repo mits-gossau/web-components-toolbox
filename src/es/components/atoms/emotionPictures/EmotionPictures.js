@@ -48,12 +48,12 @@ export default class EmotionPictures extends Intersection() {
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
-      showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => {
+      showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('picture-load', event => {
         if (!event || !event.detail || !event.detail.error) resolve()
-      }, { once: true })))
+      }, { once: true }))))
     }
     if (this.aVideo && this.aVideo.hasAttribute('video-load') && !this.aVideo.hasAttribute('loaded')) {
-      showPromises.push(new Promise(resolve => this.addEventListener('video-load', event => resolve(), { once: true })))
+      showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('video-load', event => resolve(), { once: true }))))
     }
     if (showPromises.length) {
       this.hidden = true
@@ -123,7 +123,7 @@ export default class EmotionPictures extends Intersection() {
         --bg-padding: var(--bg-padding-custom, 1.2em);
       }
       :host .logo {
-        align-items: ${this.hasAttribute('logo-position') ? this.getAttribute('logo-position') : 'center'};
+        align-items: ${this.logoPosition};
         box-sizing: border-box;
         display: flex;
         height: 100%;
@@ -161,7 +161,7 @@ export default class EmotionPictures extends Intersection() {
         ${this.hasAttribute('height') ? `--img-height: ${this.getAttribute('height')};` : ''}
         ${this.hasAttribute('height-mobile') ? `--img-height-mobile: ${this.getAttribute('height-mobile')};` : ''}
         --img-width: var(--${this.getAttribute('namespace')}img-width, 100%);
-        --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 100vh);
+        --img-max-height:var(--${this.getAttribute('namespace')}img-max-height, 75vh);
       }
     `, undefined, '', false)
 
@@ -227,8 +227,22 @@ export default class EmotionPictures extends Intersection() {
           } else if (this.root.childNodes[0]) {
             this.root.childNodes[0].classList.add('shown')
           }
+          EmotionPictures.updateLogoPosition(this.shown, '.logo', 'logo-position')
         }
       }, Number(this.getAttribute('interval')) || 8000)
+    }
+  }
+
+  /**
+   * Update Logo Position for each Element
+   * @param {{ querySelector: (arg0: any) => any; }} divNode
+   * @param {string} selector
+   * @param {string} attribute
+   */
+  static updateLogoPosition (divNode, selector, attribute) {
+    const logoElement = divNode.querySelector(selector)
+    if(logoElement){
+      logoElement.style.alignItems = logoElement.getAttribute(attribute)
     }
   }
 
@@ -253,5 +267,9 @@ export default class EmotionPictures extends Intersection() {
 
   get aVideos () {
     return this.root.querySelectorAll('a-video')
+  }
+
+  get logoPosition () {
+    return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center'
   }
 }
