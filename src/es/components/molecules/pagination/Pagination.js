@@ -53,7 +53,7 @@ export default class Pagination extends Shadow() {
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
-      pageItems += `<li class="page-item ${i === active ? 'active' : ''}" page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="#">${i + 1}</a></li>`
+      pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="page=${i+1}">${i + 1}</a></li>`
     }
 
     this.pagination.innerHTML =
