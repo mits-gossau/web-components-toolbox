@@ -61,87 +61,25 @@ export default class MacroCarousel extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-
-      img {
-        display: block;
-        max-width: 100%;
-      }
-      
-      .wrapper {
-        overflow: hidden;
-        height: 100vh;
-        display: grid;
-        grid-template-rows: 2fr 1fr;
-        grid-gap: 10px;
-      
-      }
-      @media screen and (min-width: 1200px) {
-        .wrapper {
-          grid-template-columns: 1fr 5fr;
-          grid-template-rows: auto;
-        }
-      }
-      
       .gallery {
-        overflow-x: scroll;
-        overflow-y: hidden;
+        overflow: hidden;
         scroll-snap-type: x mandatory;
         scroll-behavior: smooth;
         display: flex;
       
       }
-      @media screen and (min-width: 1200px) {
-        .gallery {
-          display: block;
-          overflow-y: scroll;
-          overflow-x: hidden;
-          scroll-snap-type: y mandatory;
-        }
-      }
-      
       .gallery__img {
-        scroll-snap-align: start;
-        margin-bottom: 10px;
         min-width: 100%;
-        object-fit: cover;
-      
       }
-      @media screen and (min-width: 1200px) {
-        .gallery__img {
-          min-width: auto;
-          min-height: 100vh;
-        }
-      }
-      
       .lil-nav {
         overflow-x: scroll;
         overflow-y: hidden;
         display: flex;
-        grid-row-start: 2;
-      
-        
-      }
-      @media screen and (min-width: 1200px) {
-        .lil-nav {
-          overflow-y: scroll;
-          overflow-x: hidden;
-          display: block;
-          grid-row-start: auto;
-        }
       }
       .lil-nav a {
         display: flex;
-        min-width: 45vw;
         margin-right: 10px;
-        
       }
-          @media screen and (min-width: 1200px) {
-            .lil-nav a {
-              margin-bottom: 10px;
-              min-height: 200px;
-              min-width: 100%;
-            }
-          }
     `
   }
 
