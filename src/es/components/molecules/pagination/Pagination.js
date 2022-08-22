@@ -6,7 +6,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
 
     this.pagination = this.root.querySelector('div') || document.createElement('div')
@@ -23,6 +23,25 @@ export default class Pagination extends Shadow() {
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
+
+      const url1 = window.location.href
+      console.log("url1", url1);
+      // const urlSplit = url.split("?");
+      // console.log("urlSplit", urlSplit);
+      // const stateObj = { Title: "New title", Url: urlSplit[0] + "?param1=5" };
+      // console.log("stateObj", stateObj);
+      // history.pushState(stateObj, stateObj.Title, stateObj.Url);
+
+      // Create the properties
+      //let state = window.history.state;
+      let title = document.title;
+      //let url = window.location.origin + window.location.pathname + '?page='+event.target.textContent;
+      let url = url1 + '?page=' + event.target.textContent
+      console.log(title, url);
+      history.pushState(event.target.textContent, title, url);
+
+
+
       this.dispatchEvent(new CustomEvent('requestListArticles', {
         detail: {
           skip: event.target.textContent - 1
@@ -34,26 +53,43 @@ export default class Pagination extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener('listArticles', this.listArticlesListener)
     this.pagination.addEventListener('click', this.clickListener)
+    window.addEventListener('popstate', this.changePopState)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listArticles', this.listArticlesListener)
+    window.removeEventListener('popstate', this.changePopState)
   }
 
-  shouldComponentRenderCSS () {
+
+  changePopState = (event) => {
+    console.log("pop", event.state);
+    this.dispatchEvent(new CustomEvent('requestListArticles', {
+      detail: {
+        skip: event.state - 1
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
+  };
+
+
+
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML (pages, limit, skip) {
+  renderHTML(pages, limit, skip) {
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
-      pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="page=${i+1}">${i + 1}</a></li>`
+      pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="?page=${i + 1}">${i + 1}</a></li>`
     }
 
     this.pagination.innerHTML =
@@ -66,7 +102,7 @@ export default class Pagination extends Shadow() {
     this.html = this.pagination
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host {
       background-color:var(--background-color, black);
@@ -145,5 +181,12 @@ export default class Pagination extends Shadow() {
       default:
         return this.fetchCSS(styles)
     }
+  }
+
+  changeQueryString(searchString, documentTitle) {
+    documentTitle = typeof documentTitle !== 'undefined' ? documentTitle : document.title;
+    var urlSplit = (window.location.href).split("?");
+    var obj = { Title: documentTitle, Url: urlSplit[0] + searchString };
+    history.pushState(obj, obj.Title, obj.Url);
   }
 }
