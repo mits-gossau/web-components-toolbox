@@ -209,7 +209,7 @@ export default class FormZadb extends Form {
   async getCities (zip) {
     try {
       // @ts-ignore
-      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/ZadbApi/GetCityByZip?zip=${zip}`)
+      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/GetCityByZip?zip=${zip}`)
       const cities = await response.json()
       console.log('...', cities)
       return cities
@@ -225,7 +225,7 @@ export default class FormZadb extends Form {
       // this.streetFetchController = new AbortController();
       // const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`, { signal: this.streetFetchController.signal })
       // @ts-ignore
-      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`)
+      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/GetStreetsByZip?zip=${zip}`)
       const streets = await response.json()
       console.log('...', streets)
       return streets
