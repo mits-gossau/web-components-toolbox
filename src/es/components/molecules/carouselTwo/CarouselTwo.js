@@ -64,7 +64,7 @@ export default class CarouselTwo extends Shadow() {
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     Array.from(this.section.children).forEach(node => {
-     if (node.hasAttribute('picture-load') && !node.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+      if (node.hasAttribute('picture-load') && !node.hasAttribute('loaded')) showPromises.push(new Promise(resolve => node.addEventListener('picture-load', event => resolve(), { once: true })))
     })
     if (showPromises.length) {
       this.hidden = true
@@ -106,6 +106,13 @@ export default class CarouselTwo extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+      :host {
+        display: grid !important;
+      }
+      :host > section, :host > nav {
+        grid-column: 1;
+        grid-row: 1;
+      }
       :host > section {
         display: flex;
         overflow: hidden;
@@ -114,6 +121,7 @@ export default class CarouselTwo extends Shadow() {
       }
       :host > section > * {
         min-width: 100%;
+        outline: none;
         scroll-snap-align: start;
       }
       :host > section:not(.scrolling) > *:not(.active) {
@@ -121,12 +129,17 @@ export default class CarouselTwo extends Shadow() {
       }
       :host > nav {
         display: flex;
-        overflow-x: scroll;
-        overflow-y: hidden;
+        gap: var(--nav-gap);
+        margin: var(--nav-margin);
+        overflow: hidden;
       }
       @media only screen and (max-width: _max-width_) {
         :host > section {
           overflow-x: scroll;
+        }
+        :host > nav {
+          gap: var(--nav-gap-mobile, var(--nav-gap));
+          margin: var(--nav-margin-mobile, var(--nav-margin));
         }
       }
     `
@@ -160,9 +173,11 @@ export default class CarouselTwo extends Shadow() {
   renderHTML () {
     this.section = this.root.querySelector('section') || document.createElement('section')
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
-    if (this.section.children.length !== this.nav.children.length) Array.from(this.section.children).forEach(node => {
+    if (this.section.children.length !== this.nav.children.length) {
+      Array.from(this.section.children).forEach(node => {
       // generate nav if missing
-    })
+      })
+    }
     if (this.section.children[0]) this.section.children[0].classList.add('active')
     if (this.nav.children[0]) this.nav.children[0].classList.add('active')
     return Promise.resolve()
@@ -179,6 +194,7 @@ export default class CarouselTwo extends Shadow() {
   scrollIntoView (node) {
     node.scrollIntoView()
     this.scrollListener()
+    node.focus() // important that default keyboard works
     return node
   }
 
