@@ -1,10 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
-/* global customElements */
-/* global CustomEvent */
-
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
  *
@@ -184,11 +180,11 @@ export default class CarouselTwo extends Shadow() {
   }
 
   previous () {
-    return this.scrollIntoView(this.activeSlide && this.activeSlide.previousElementSibling || Array.from(this.section.children)[this.section.children.length - 1])
+    return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1])
   }
 
   next () {
-    return this.scrollIntoView(this.activeSlide && this.activeSlide.nextElementSibling || Array.from(this.section.children)[0])
+    return this.scrollIntoView((this.activeSlide && this.activeSlide.nextElementSibling) || Array.from(this.section.children)[0])
   }
 
   scrollIntoView (node) {
