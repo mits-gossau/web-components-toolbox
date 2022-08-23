@@ -142,7 +142,7 @@ export default class CarouselTwo extends Shadow() {
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'carousel-default-':
+      case 'carousel-two-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
