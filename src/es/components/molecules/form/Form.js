@@ -203,14 +203,14 @@ export default class Form extends Shadow() {
         position: relative; 
         border: 1px solid var(--m-gray-400);
         border-top: none;
-        width: 350px;
+        width: 100%;
         max-height: 10em;
         overflow-y: auto;
       }
       
       option {
         background-color: var(--background-color);
-        padding: 4px;
+        padding: 0.3em var(--content-spacing-mobile, 0.3em) 0.3em var(--content-spacing-mobile, 0.3em) ;
         cursor: pointer;
       }
       option:hover, .active{

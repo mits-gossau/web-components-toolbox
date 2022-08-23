@@ -160,7 +160,7 @@ export default class FormZadb extends Form {
   streetChangeListener (e) {
     console.log('STREET selected', e.target.value)
   }
-
+  
   setCityValue (cityField, zipList, zipValue) {
     if (!zipList.length) return
     cityField.value = zipList.find(city => city.zip === zipValue).name
@@ -171,7 +171,10 @@ export default class FormZadb extends Form {
   }
 
   async searchCities (str) {
-    console.log('SEARCH CITY:', str)
+    if (str.length > 4){
+      return
+    }
+    console.log('SEARCH CITY:', str.length)
     const allCities = await this.getCities(str)
     if (!allCities) return
     return allCities.cities.filter(city => city.zip.startsWith(str))
