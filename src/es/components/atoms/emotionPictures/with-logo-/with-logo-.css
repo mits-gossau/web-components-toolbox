@@ -15,6 +15,6 @@
    --emotion-pictures-with-logo-subline-display-mobile: none;
    --img-object-fit: cover;
    --img-width: 100%;
-   --logo-img-width-mobile: min(20vw, 100px);
+   --logo-img-width-mobile: min(25vw, 100px);
    --logo-img-width: min(10vw, 150px);
 }

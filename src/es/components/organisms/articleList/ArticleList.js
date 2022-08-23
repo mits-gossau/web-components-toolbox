@@ -100,6 +100,7 @@ export default class NewsList extends Shadow() {
     :host > div {
       display: var(--display, flex);
       flex-direction: var(--flex-direction, column);
+      width: var(--width, 100%);
     }
     @media only screen and (max-width: _max-width_) {}
     `

@@ -41,7 +41,7 @@ export default class FormZadb extends Form {
     let city
     if ((city = this.root.querySelector('#city'))) city.setAttribute('disabled', true)
     try {
-      const response = await fetch('https://www.betriebsrestaurants-migros.ch/umbraco/api/BetriebsrestaurantZadbApi/GetAllCities')
+      const response = await fetch('https://www.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi/GetAllCities')
       const cities = await response.json()
       console.log(cities)
     } catch (error) {
