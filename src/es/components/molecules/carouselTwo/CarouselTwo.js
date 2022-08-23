@@ -63,6 +63,9 @@ export default class CarouselTwo extends Shadow() {
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    Array.from(this.section.children).forEach(node => {
+     if (node.hasAttribute('picture-load') && !node.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+    })
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => (this.hidden = false))
@@ -93,13 +96,13 @@ export default class CarouselTwo extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return false
+    return !this.section
   }
 
   /**
    * renders the css
    *
-   * @return {Promise<void>|void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -121,16 +124,32 @@ export default class CarouselTwo extends Shadow() {
         overflow-x: scroll;
         overflow-y: hidden;
       }
-      :host > nav > a {
-        display: flex;
-        margin-right: 10px;
-      }
       @media only screen and (max-width: _max-width_) {
         :host > section {
           overflow-x: scroll;
         }
       }
     `
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
+    switch (this.getAttribute('namespace')) {
+      case 'carousel-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      default:
+        return this.fetchCSS(styles, false)
+    }
   }
 
   /**
@@ -139,11 +158,13 @@ export default class CarouselTwo extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    // below do those later and remove this.section getter
-    //shouldComponentRenderHTML () {
-    //return !this.section
-    //
-    //this.section = this.root.querySelector('section') || document.createElement('section')
+    this.section = this.root.querySelector('section') || document.createElement('section')
+    this.nav = this.root.querySelector('nav') || document.createElement('nav')
+    if (this.section.children.length !== this.nav.children.length) Array.from(this.section.children).forEach(node => {
+      // generate nav if missing
+    })
+    if (this.section.children[0]) this.section.children[0].classList.add('active')
+    if (this.nav.children[0]) this.nav.children[0].classList.add('active')
     return Promise.resolve()
   }
 
@@ -163,9 +184,5 @@ export default class CarouselTwo extends Shadow() {
 
   get activeSlide () {
     return this.section.querySelector('.active')
-  }
-
-  get section () {
-    return this.root.querySelector('section')
   }
 }
