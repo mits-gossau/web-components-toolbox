@@ -209,7 +209,7 @@ export default class FormZadb extends Form {
   async getCities (zip) {
     try {
       // @ts-ignore
-      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/ZadbApi/GetCitiesByZip?zip=${zip}`)
+      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/ZadbApi/GetCityByZip?zip=${zip}`)
       const cities = await response.json()
       console.log('...', cities)
       return cities
