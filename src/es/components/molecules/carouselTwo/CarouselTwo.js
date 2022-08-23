@@ -14,7 +14,7 @@ export default class CarouselTwo extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    // on click scroll to the image with the matching id
+    // on click anchor scroll to the image with the matching id or previous/next
     this.clickListener = event => {
       let target
       if ((target = event.composedPath().find(node => typeof node.getAttribute === 'function' && node.getAttribute('href')))) {
@@ -128,6 +128,9 @@ export default class CarouselTwo extends Shadow() {
         gap: var(--nav-gap);
         margin: var(--nav-margin);
         overflow: hidden;
+      }
+      :host > nav > * {
+        height: fit-content;
       }
       @media only screen and (max-width: _max-width_) {
         :host > section {
