@@ -8,8 +8,12 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Pagination extends Shadow() {
   constructor(...args) {
     super(...args)
-
+    
+    const locationURL = window.location.href
+    const title = document.title;
+    
     this.pagination = this.root.querySelector('div') || document.createElement('div')
+    
     this.listArticlesListener = event => {
       event.detail.fetch.then(() => {
         const articles = sessionStorage.getItem('articles') || ''
@@ -23,33 +27,8 @@ export default class Pagination extends Shadow() {
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
-
-      const url1 = window.location.href
-      console.log("url1", url1);
-      // const urlSplit = url.split("?");
-      // console.log("urlSplit", urlSplit);
-      // const stateObj = { Title: "New title", Url: urlSplit[0] + "?param1=5" };
-      // console.log("stateObj", stateObj);
-      // history.pushState(stateObj, stateObj.Title, stateObj.Url);
-
-      // Create the properties
-      //let state = window.history.state;
-      let title = document.title;
-      //let url = window.location.origin + window.location.pathname + '?page='+event.target.textContent;
-      let url = url1 + '?page=' + event.target.textContent
-      console.log(title, url);
-      history.pushState(event.target.textContent, title, url);
-
-
-
-      this.dispatchEvent(new CustomEvent('requestListArticles', {
-        detail: {
-          skip: event.target.textContent - 1
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      }))
+      history.pushState(event.target.textContent, title, `${locationURL}?page=${event.target.textContent}`);
+      this.dispatchRequestArticlesEvent(event.target.textContent - 1)
     }
   }
 
@@ -57,29 +36,29 @@ export default class Pagination extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener('listArticles', this.listArticlesListener)
     this.pagination.addEventListener('click', this.clickListener)
-    window.addEventListener('popstate', this.changePopState)
+    window.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback() {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listArticles', this.listArticlesListener)
-    window.removeEventListener('popstate', this.changePopState)
+    window.removeEventListener('popstate', this.updatePopState)
   }
 
+  updatePopState = (event) => {
+    this.dispatchRequestArticlesEvent(event.state - 1)
+  };
 
-  changePopState = (event) => {
-    console.log("pop", event.state);
+  dispatchRequestArticlesEvent(page) {
     this.dispatchEvent(new CustomEvent('requestListArticles', {
       detail: {
-        skip: event.state - 1
+        skip: page
       },
       bubbles: true,
       cancelable: true,
       composed: true
     }))
-  };
-
-
+  }
 
   shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
