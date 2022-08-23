@@ -14,7 +14,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  * @type {CustomElementConstructor}
  */
-export default class MacroCarousel extends Shadow() {
+export default class CarouselTwo extends Shadow() {
   constructor (...args) {
     super(...args)
 
@@ -22,22 +22,27 @@ export default class MacroCarousel extends Shadow() {
     this.clickListener = event => {
       let target
       if ((target = event.composedPath().find(node => typeof node.getAttribute === 'function' && node.getAttribute('href')))) {
-        this.root.querySelector(target.getAttribute('href')).scrollIntoView()
+        let sectionChild
+        if ((sectionChild = this.section.querySelector(target.getAttribute('href')))) {
+          this.scrollIntoView(sectionChild)
+        } else if (target.getAttribute('href') === '#previous') {
+          this.previous()
+        } else if (target.getAttribute('href') === '#next') {
+          this.next()
+        }
         this.scrollListener()
       }
     }
     // on focus scroll to the right element
     this.focusListener = event => {
       let target
-      if ((target = event.target) && Array.from(this.section.children).includes(target)) {
-        target.scrollIntoView()
-        this.scrollListener()
-      }
+      if ((target = event.target) && Array.from(this.section.children).includes(target)) this.scrollIntoView(target)
     }
     // on scroll calculate which image is shown and set its and all of its referencing href nodes the class to active
     let scrollTimeoutId = null
     const scrollTolerance = 5
     this.scrollListener = event => {
+      this.section.classList.add('scrolling')
       clearTimeout(scrollTimeoutId)
       scrollTimeoutId = setTimeout(() => {
         let hostLeft, activeChild
@@ -48,6 +53,7 @@ export default class MacroCarousel extends Shadow() {
           Array.from(this.root.querySelectorAll('.active')).forEach(node => node.classList.remove('active'))
           activeChild.classList.add('active')
           Array.from(this.root.querySelectorAll(`[href="#${activeChild.getAttribute('id')}"]`)).forEach(node => node.classList.add('active'))
+          this.section.classList.remove('scrolling')
         }
       }, 50)
     }
@@ -98,27 +104,31 @@ export default class MacroCarousel extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host > section {
-        overflow: hidden;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
         display: flex;
-      
+        overflow: hidden;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
       }
       :host > section > * {
         min-width: 100%;
         scroll-snap-align: start;
       }
-      :host > section > *:not(.active) {
-        visibility: hidden;
+      :host > section:not(.scrolling) > *:not(.active) {
+        opacity: 0;
       }
       :host > nav {
+        display: flex;
         overflow-x: scroll;
         overflow-y: hidden;
-        display: flex;
       }
       :host > nav > a {
         display: flex;
         margin-right: 10px;
+      }
+      @media only screen and (max-width: _max-width_) {
+        :host > section {
+          overflow-x: scroll;
+        }
       }
     `
   }
@@ -135,6 +145,24 @@ export default class MacroCarousel extends Shadow() {
     //
     //this.section = this.root.querySelector('section') || document.createElement('section')
     return Promise.resolve()
+  }
+
+  previous () {
+    return this.scrollIntoView(this.activeSlide && this.activeSlide.previousElementSibling || Array.from(this.section.children)[this.section.children.length - 1])
+  }
+
+  next () {
+    return this.scrollIntoView(this.activeSlide && this.activeSlide.nextElementSibling || Array.from(this.section.children)[0])
+  }
+
+  scrollIntoView (node) {
+    node.scrollIntoView()
+    this.scrollListener()
+    return node
+  }
+
+  get activeSlide () {
+    return this.section.querySelector('.active')
   }
 
   get section () {
