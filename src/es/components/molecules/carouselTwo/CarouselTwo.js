@@ -126,11 +126,9 @@ export default class CarouselTwo extends Shadow() {
       :host > nav {
         display: flex;
         gap: var(--nav-gap);
+        height: fit-content;
         margin: var(--nav-margin);
         overflow: hidden;
-      }
-      :host > nav > * {
-        height: fit-content;
       }
       @media only screen and (max-width: _max-width_) {
         :host > section {
