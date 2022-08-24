@@ -1,7 +1,18 @@
-<m-carousel-two namespace=carousel-two-default->
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<m-carousel-two namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-align-self="start">
   <section>
     <a-picture picture-load id="image-1" defaultSource="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite"></a-picture>
-    <a-picture picture-load id="image-2" defaultSource="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/anastasia-dulgier-NCFTGtjY3EQ-unsplash.jpg" alt="Houses"></a-picture>
+    <div id="image-2">
+      <style>
+        :host #image-2 {
+          --carousel-two-default-section-child-justify-content: space-between;
+        }
+      </style>
+      <a-picture picture-load defaultSource="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/anastasia-dulgier-NCFTGtjY3EQ-unsplash.jpg" alt="Houses"></a-picture>
+      <h1>Houses</h1>
+      <p>more Houses</p>
+      <div class=spacer></div>
+    </div>
     <a-picture picture-load id="image-3" defaultSource="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/arnaud-mariat-IPXcUYHeErc-unsplash.jpg" alt="Galaxies"></a-picture>
     <a-picture picture-load id="image-4" defaultSource="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/matthew-smith-9CV6WrxxdrM-unsplash.jpg" alt="Motel"></a-picture>
     <a-picture picture-load id="image-5" defaultSource="https://s3-us-west-2.amazonaws.com/s.cdpn.io/14179/vladimir-kondriianenko-bxwzcFy9YwM-unsplash.jpg" alt="Minimalist nightmare"></a-picture>
@@ -41,6 +52,7 @@
   </nav>
   <a-arrow href="#previous" direction=left></a-arrow><a-arrow href="#next"></a-arrow>
 </m-carousel-two>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./default-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>

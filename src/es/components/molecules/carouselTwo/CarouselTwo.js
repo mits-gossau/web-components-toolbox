@@ -3,6 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
+ * TODO: .active styling, bubbles, nav generator, arrows, aria-stuff, interval
  *
  * @attribute {
  * }
@@ -103,6 +104,7 @@ export default class CarouselTwo extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host {
+        background-color: var(--background-color, transparent);
         display: grid !important;
       }
       :host > section, :host > nav {
@@ -116,6 +118,10 @@ export default class CarouselTwo extends Shadow() {
         scroll-snap-type: x mandatory;
       }
       :host > section > * {
+        align-items: var(--section-child-align-items, center);
+        display: flex;
+        flex-direction: column;
+        justify-content: var(--section-child-justify-content, center);;
         min-width: 100%;
         outline: none;
         scroll-snap-align: start;
@@ -124,11 +130,22 @@ export default class CarouselTwo extends Shadow() {
         opacity: 0;
       }
       :host > nav {
+        align-items: center;
+        align-self: ${this.hasAttribute('nav-align-self')
+          ? this.getAttribute('nav-align-self')
+          : 'var(--nav-align-self, end)'};
         display: flex;
         gap: var(--nav-gap);
         height: fit-content;
         margin: var(--nav-margin);
+        max-height: 20%;
         overflow: hidden;
+        justify-content: center;
+      }
+      :host > nav > * {
+        --a-margin: 0;
+        padding: 0;
+        margin: 0;
       }
       @media only screen and (max-width: _max-width_) {
         :host > section {
@@ -140,6 +157,11 @@ export default class CarouselTwo extends Shadow() {
         }
       }
     `
+    if (this.hasAttribute('background-color')) this.setCss(/* css */`
+      :host {
+        background-color: ${this.getAttribute('background-color')};
+      }
+    `, undefined, false)
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
