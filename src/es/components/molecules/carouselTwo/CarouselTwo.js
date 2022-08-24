@@ -3,7 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
- * TODO: .active styling, bubbles, nav generator, arrows, aria-stuff, interval
+ * TODO: .active styling, bubbles, nav generator, arrows, aria-stuff, interval only when in intersecting (otherwise y-axis scroll)
  *
  * @attribute {
  * }
@@ -27,7 +27,6 @@ export default class CarouselTwo extends Shadow() {
         } else if (target.getAttribute('href') === '#next') {
           this.next()
         }
-        this.scrollListener()
       }
     }
     // on focus scroll to the right element
@@ -211,9 +210,11 @@ export default class CarouselTwo extends Shadow() {
   }
 
   scrollIntoView (node) {
-    node.scrollIntoView()
-    this.scrollListener()
-    node.focus() // important that default keyboard works
+    if (!node.classList.contains('active')) {
+      node.scrollIntoView()
+      this.scrollListener()
+      node.focus() // important that default keyboard works
+    }
     return node
   }
 
