@@ -105,9 +105,13 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
       }, 200)
     }
 
+    let currentMedia = null
     this.checkMedia = () => {
-      if (this.isMobile) {
-        if (this.hasAttribute('mobile-open') && !this.details.hasAttribute('open')) {
+      if (this.isMobile != currentMedia){
+        currentMedia = this.isMobile
+        this.mutationObserveStop()
+        if (this.isMobile) {
+          if (this.hasAttribute('mobile-open') && !this.details.hasAttribute('open')) {
           this.details.setAttribute('open', '')
         } else if (this.hasAttribute('mobile-close') && this.details.hasAttribute('open')) {
           this.details.removeAttribute('open')
@@ -117,7 +121,9 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           this.details.setAttribute('open', '')
         } else if (this.hasAttribute('desktop-close') && this.details.hasAttribute('open')) {
           this.details.removeAttribute('open')
+          }
         }
+        this.mutationObserveStart()
       }
     }
   }
