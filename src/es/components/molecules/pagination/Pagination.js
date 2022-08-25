@@ -6,10 +6,14 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
-
+    
+    const locationURL = window.location.href
+    const title = document.title;
+    
     this.pagination = this.root.querySelector('div') || document.createElement('div')
+    
     this.listArticlesListener = event => {
       event.detail.fetch.then(() => {
         const articles = sessionStorage.getItem('articles') || ''
@@ -23,37 +27,48 @@ export default class Pagination extends Shadow() {
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
-      this.dispatchEvent(new CustomEvent('requestListArticles', {
-        detail: {
-          skip: event.target.textContent - 1
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      }))
+      history.pushState(event.target.textContent, title, `${locationURL}?page=${event.target.textContent}`);
+      this.dispatchRequestArticlesEvent(event.target.textContent - 1)
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener('listArticles', this.listArticlesListener)
     this.pagination.addEventListener('click', this.clickListener)
+    self.addEventListener('popstate', this.updatePopState)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listArticles', this.listArticlesListener)
+    self.removeEventListener('popstate', this.updatePopState)
   }
 
-  shouldComponentRenderCSS () {
+  updatePopState = (event) => {
+    this.dispatchRequestArticlesEvent(event.state - 1)
+  };
+
+  dispatchRequestArticlesEvent(page) {
+    this.dispatchEvent(new CustomEvent('requestListArticles', {
+      detail: {
+        skip: page
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
+  }
+
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML (pages, limit, skip) {
+  renderHTML(pages, limit, skip) {
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
-      pageItems += `<li class="page-item ${i === active ? 'active' : ''}" page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="#">${i + 1}</a></li>`
+      pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="?page=${i + 1}">${i + 1}</a></li>`
     }
 
     this.pagination.innerHTML =
@@ -66,7 +81,7 @@ export default class Pagination extends Shadow() {
     this.html = this.pagination
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host {
       background-color:var(--background-color, black);
@@ -145,5 +160,12 @@ export default class Pagination extends Shadow() {
       default:
         return this.fetchCSS(styles)
     }
+  }
+
+  changeQueryString(searchString, documentTitle) {
+    documentTitle = typeof documentTitle !== 'undefined' ? documentTitle : document.title;
+    var urlSplit = (window.location.href).split("?");
+    var obj = { Title: documentTitle, Url: urlSplit[0] + searchString };
+    history.pushState(obj, obj.Title, obj.Url);
   }
 }
