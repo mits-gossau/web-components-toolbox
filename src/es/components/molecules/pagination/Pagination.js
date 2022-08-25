@@ -36,13 +36,13 @@ export default class Pagination extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener('listArticles', this.listArticlesListener)
     this.pagination.addEventListener('click', this.clickListener)
-    window.addEventListener('popstate', this.updatePopState)
+    self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback() {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listArticles', this.listArticlesListener)
-    window.removeEventListener('popstate', this.updatePopState)
+    self.removeEventListener('popstate', this.updatePopState)
   }
 
   updatePopState = (event) => {
