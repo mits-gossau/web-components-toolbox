@@ -3,7 +3,7 @@
    --emotion-pictures-with-logo-a-text-decoration: none;
    --emotion-pictures-with-logo-bg-background-color: var(--emotion-pictures-with-logo-bg-background-color-custom, var(--m-white));
    --emotion-pictures-with-logo-bg-color: var(--emotion-pictures-with-logo-bg-color-custom, var(--m-black));
-   --emotion-pictures-with-logo-bg-transition: opacity 0.5s ease-out, var(--a-transition, color 0.3s ease-out);
+   --emotion-pictures-with-logo-bg-transition: opacity 0.5s ease-out, var(--a-transition, all 0.3s ease-out);
    --emotion-pictures-with-logo-div-margin-mobile: var(--emotion-pictures-with-logo-div-margin-mobile-custom, var(--content-spacing-mobile));
    --emotion-pictures-with-logo-h1-text-transform: var(--emotion-pictures-with-logo-h2-text-transform);
    --emotion-pictures-with-logo-h2-font-family-secondary: var(--emotion-pictures-with-logo-h2-font-family-secondary-custom, var(--font-family-bold));

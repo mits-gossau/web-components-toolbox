@@ -186,6 +186,12 @@
   clear: both;
   content: '';
 }
+:host a:hover h1.bg-color, :host a:active h1.bg-color, :host a:focus h1.bg-color,
+:host a:hover h2.bg-color, :host a:active h2.bg-color, :host a:focus h2.bg-color,
+:host a:hover h3.bg-color, :host a:active h3.bg-color, :host a:focus h3.bg-color,
+:host a:hover h4.bg-color, :host a:active h4.bg-color, :host a:focus h4.bg-color,
+:host a:hover h5.bg-color, :host a:active h5.bg-color, :host a:focus h5.bg-color,
+:host a:hover h6.bg-color, :host a:active h6.bg-color, :host a:focus h6.bg-color,
 :host *.bg-color-hover {
   color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
   --color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
