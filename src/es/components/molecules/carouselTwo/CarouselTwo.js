@@ -211,7 +211,11 @@ export default class CarouselTwo extends Shadow() {
 
   scrollIntoView (node) {
     if (!node.classList.contains('active')) {
-      node.scrollIntoView()
+      //node.scrollIntoView() // scrolls x and y
+      this.section.scrollTo({
+        left: this.section.scrollLeft + node.getBoundingClientRect().x - this.section.getBoundingClientRect().x,
+        behavior: 'smooth'
+      })
       this.scrollListener()
       node.focus() // important that default keyboard works
     }
