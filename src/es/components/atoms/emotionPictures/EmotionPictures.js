@@ -96,6 +96,8 @@ export default class EmotionPictures extends Intersection() {
         grid-row: 1;
         opacity: 0;
         transition: var(--transition, opacity 2s ease-out);
+        margin: 0;
+        padding: 0;
       }
       :host > *.shown {
         opacity: 1;
