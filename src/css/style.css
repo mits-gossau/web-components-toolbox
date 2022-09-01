@@ -166,7 +166,7 @@
   background-color: var(--bg-background-color, var(--color-secondary, green));
   box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color, var(--color-secondary, green)), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color, var(--color-secondary, green));
   box-decoration-break: clone;
-  transition: var(--bg-transition, background-color 0.3s ease-out, box-shadow 0.3s ease-out);
+  transition: var(--bg-transition, background-color 0.3s ease-out, box-shadow 0.3s ease-out, opacity 0.3s ease-out);
   position: relative;
   left: var(--bg-padding, 0.5em);
   margin: 0;

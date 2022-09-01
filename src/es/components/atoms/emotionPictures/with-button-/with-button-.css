@@ -3,7 +3,6 @@
    --emotion-pictures-with-button-a-text-decoration:none;
    --emotion-pictures-with-button-bg-background-color: var(--emotion-pictures-with-button-bg-background-color-custom, var(--m-white));
    --emotion-pictures-with-button-bg-color: var(--emotion-pictures-with-button-bg-color-custom, var(--m-black));
-   --emotion-pictures-with-button-bg-transition: opacity 0.5s ease-out, var(--a-transition, all 0.3s ease-out);
    --emotion-pictures-with-button-div-margin-mobile: var(--emotion-pictures-with-button-div-margin-mobile-custom, var(--content-spacing-mobile));
    --emotion-pictures-with-button-h1-font-size-mobile: var(--emotion-pictures-with-button-h1-font-size-mobile-custom, min(calc(1.75em * 1.75), 7vw));
    --emotion-pictures-with-button-h1-font-weight: var(--emotion-pictures-with-button-h2-font-weight);

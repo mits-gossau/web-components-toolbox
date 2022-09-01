@@ -9,7 +9,7 @@ export default class Pagination extends Shadow() {
   constructor(...args) {
     super(...args)
     
-    const locationURL = window.location.href
+    const locationURL = self.location.href
     const title = document.title;
     
     this.pagination = this.root.querySelector('div') || document.createElement('div')
@@ -27,7 +27,9 @@ export default class Pagination extends Shadow() {
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
-      history.pushState(event.target.textContent, title, `${locationURL}?page=${event.target.textContent}`);
+      const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+      url.searchParams.set('page', event.target.textContent)
+      history.pushState(event.target.textContent, title, url.href);
       this.dispatchRequestArticlesEvent(event.target.textContent - 1)
     }
   }
@@ -164,7 +166,7 @@ export default class Pagination extends Shadow() {
 
   changeQueryString(searchString, documentTitle) {
     documentTitle = typeof documentTitle !== 'undefined' ? documentTitle : document.title;
-    var urlSplit = (window.location.href).split("?");
+    var urlSplit = (self.location.href).split("?");
     var obj = { Title: documentTitle, Url: urlSplit[0] + searchString };
     history.pushState(obj, obj.Title, obj.Url);
   }
