@@ -59,9 +59,11 @@ export default class CarouselTwo extends Shadow() {
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
-    Array.from(this.section.children).forEach(node => {
-      if (node.hasAttribute('picture-load') && !node.hasAttribute('loaded')) showPromises.push(new Promise(resolve => node.addEventListener('picture-load', event => resolve(), { once: true })))
+    Array.from(this.section.children).concat(Array.from(this.nav.children)).forEach(node => {
+      const picture = node.tagName === 'A-PICTURE' ? node : node.querySelector('a-picture')
+      if (picture && picture.hasAttribute('picture-load') && !picture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => picture.addEventListener('picture-load', event => resolve(), { once: true })))
     })
+    // TODO: find out why not all appears nicely at once but picture still pop in
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => (this.hidden = false))
