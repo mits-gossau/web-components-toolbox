@@ -96,7 +96,7 @@ export default class CarouselTwo extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.section
+    return !this.section || !this.nav
   }
 
   /**
@@ -240,6 +240,7 @@ export default class CarouselTwo extends Shadow() {
     })
     if (this.section.children[0]) this.section.children[0].classList.add('active')
     if (this.nav.children[0]) this.nav.children[0].classList.add('active')
+    this.html = [this.section, this.nav]
     return Promise.resolve()
   }
 
