@@ -60,7 +60,9 @@ export default class CarouselTwo extends Shadow() {
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     Array.from(this.section.children).concat(Array.from(this.nav.children)).forEach(node => {
-      const picture = node.tagName === 'A-PICTURE' ? node : node.querySelector('a-picture')
+      const picture = node.tagName === 'A-PICTURE'
+        ? node
+        : node.querySelector('a-picture')
       if (picture && picture.hasAttribute('picture-load') && !picture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => picture.addEventListener('picture-load', event => resolve(), { once: true })))
     })
     // Carousel still pops instead of appear nicely. With slow network connection it works though.
@@ -148,6 +150,11 @@ export default class CarouselTwo extends Shadow() {
         padding: 0;
         margin: 0;
       }
+      :host(.has-default-nav) > nav > * {
+        background-color: pink;
+        height: 20px;
+        width: 20px;
+      }
       @media only screen and (max-width: _max-width_) {
         :host > section {
           overflow-x: scroll;
@@ -193,18 +200,44 @@ export default class CarouselTwo extends Shadow() {
   renderHTML () {
     this.section = this.root.querySelector('section') || document.createElement('section')
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
-    // add attribute tabindex to each slide
-    Array.from(this.section.children).forEach(node => node.setAttribute('tabindex', '0'))
-    if (this.section.children.length !== this.nav.children.length) {
+    // check item correlation between slides and navigation
+    if (this.section.children.length !== this.nav.children.length || this.classList.contains('has-default-nav')) {
+      this.classList.add('has-default-nav')
+      // clear nav on discrepancy
       if (this.nav.childNodes.length) {
         console.warn('CarouselTwo.js has just cleared your incomplete navigation. Make sure that the nav container (navChildNodes) contains a link for each slide (sectionChildren).', {navChildNodes: this.nav.cloneNode(true).childNodes, sectionChildren: this.section.children, carousel: this})
         this.nav.innerHTML = ''
       }
       // generate default nav
       Array.from(this.section.children).forEach(node => {
-        
+        const a = document.createElement('a')
+        this.nav.appendChild(a)
       })
     }
+    Array.from(this.section.children).forEach((node, i) => {
+      // add attribute tabindex to each slide
+      node.setAttribute('tabindex', '0')
+      // make sure the ids match between section and navigation nodes
+      const id = `${this.id}-${i}`
+      node.setAttribute('id', id)
+      // set the id on the nav child
+      if (this.nav.children[i]) {
+        let navNode = this.nav.children[i].tagName === 'A'
+          ? this.nav.children[i]
+          : this.nav.children[i].querySelector('a')
+          ? this.nav.children[i].querySelector('a')
+          : null
+        if (!navNode) {
+          navNode = document.createElement('a')
+          const navNodeChild = this.nav.children[i]
+          navNodeChild.replaceWith(navNode)
+          navNode.appendChild(navNodeChild)
+        }
+        navNode.setAttribute('href', `#${id}`)
+      } else {
+        console.warn('CarouselTwo.js expected a nav node (navChildNode) corresponding with the slide (sectionChildNode).', {navChildNode: this.nav.children[i], sectionChildNode: node, carousel: this})
+      }
+    })
     if (this.section.children[0]) this.section.children[0].classList.add('active')
     if (this.nav.children[0]) this.nav.children[0].classList.add('active')
     return Promise.resolve()
@@ -230,8 +263,29 @@ export default class CarouselTwo extends Shadow() {
     }
     return node
   }
+  
+  getRandomString() {
+    if (self.crypto && self.crypto.getRandomValues && navigator.userAgent.indexOf('Safari') === -1) {
+      const a = self.crypto.getRandomValues(new Uint32Array(3))
+      let token = ''
+      for (let i = 0, l = a.length; i < l; i++) {
+        token += a[i].toString(36)
+      }
+      return token
+    } else {
+      return (Math.random() * new Date().getTime()).toString(36).replace(/\./g, '')
+    }
+  }
 
   get activeSlide () {
     return this.section.querySelector('.active')
+  }
+
+  get id () {
+    return this._id
+      ? this._id
+      : this.getAttribute('id')
+      ? (this._id = this.getAttribute('id'))
+      : (this._id = `img-${this.getRandomString()}`)
   }
 }
