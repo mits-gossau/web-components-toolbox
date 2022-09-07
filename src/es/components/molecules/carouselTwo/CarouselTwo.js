@@ -63,7 +63,7 @@ export default class CarouselTwo extends Shadow() {
       const picture = node.tagName === 'A-PICTURE' ? node : node.querySelector('a-picture')
       if (picture && picture.hasAttribute('picture-load') && !picture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => picture.addEventListener('picture-load', event => resolve(), { once: true })))
     })
-    // TODO: find out why not all appears nicely at once but picture still pop in
+    // Carousel still pops instead of appear nicely. With slow network connection it works though.
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => (this.hidden = false))
@@ -193,6 +193,8 @@ export default class CarouselTwo extends Shadow() {
   renderHTML () {
     this.section = this.root.querySelector('section') || document.createElement('section')
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
+    // add attribute tabindex to each slide
+    Array.from(this.section.children).forEach(node => node.setAttribute('tabindex', '0'))
     if (this.section.children.length !== this.nav.children.length) {
       Array.from(this.section.children).forEach(node => {
       // generate nav if missing
