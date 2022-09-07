@@ -196,8 +196,13 @@ export default class CarouselTwo extends Shadow() {
     // add attribute tabindex to each slide
     Array.from(this.section.children).forEach(node => node.setAttribute('tabindex', '0'))
     if (this.section.children.length !== this.nav.children.length) {
+      if (this.nav.childNodes.length) {
+        console.warn('CarouselTwo.js has just cleared your incomplete navigation. Make sure that the nav container (navChildNodes) contains a link for each slide (sectionChildren).', {navChildNodes: this.nav.cloneNode(true).childNodes, sectionChildren: this.section.children, carousel: this})
+        this.nav.innerHTML = ''
+      }
+      // generate default nav
       Array.from(this.section.children).forEach(node => {
-      // generate nav if missing
+        
       })
     }
     if (this.section.children[0]) this.section.children[0].classList.add('active')
