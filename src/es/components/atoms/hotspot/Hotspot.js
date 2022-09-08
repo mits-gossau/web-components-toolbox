@@ -75,9 +75,11 @@ export default class Hotspot extends Shadow() {
         position: absolute;
         top: ${this.getAttribute('top')}%;
         left: ${this.getAttribute('left')}%;
-        z-index:1;
         width: 0;
         height: 0;
+      }
+      :host(.active){
+        z-index:1;
       }
 
       :host .btn-close{
@@ -87,8 +89,8 @@ export default class Hotspot extends Shadow() {
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 49px;
-        height: 49px;
+        width: 3.1rem;
+        height: 3.1rem;
         padding: 0;
         border: 0;
         background-color: transparent;
@@ -111,8 +113,8 @@ export default class Hotspot extends Shadow() {
         cursor: pointer;
       }
       :host .btn-open:before{
-        width: 49px;
-        height: 49px;
+        width: 3.1rem;
+        height: 3.1rem;
         background-color: rgba(255,255,255,.5);
         content: '';
         transform: translate(-50%,-50%);
@@ -148,8 +150,8 @@ export default class Hotspot extends Shadow() {
         background-position: 50% 50%;
         background-repeat: no-repeat;
         transform: translate(-50%,-50%) rotate(-45deg);
-        width: 35px;
-        height: 35px;
+        width: 2.2rem;
+        height: 2.2rem;
         box-shadow: 0 0 0 0 transparent;
         content: '';
         transition: transform .2s ease-out,
@@ -180,12 +182,12 @@ export default class Hotspot extends Shadow() {
         :host .content{
           position: absolute;
           background: white;
-          padding: 20px;
+          padding: 1.25rem;
           transform: scale(0) translate(-50%,-50%);
           transition: transform 250ms cubic-bezier(.755,.05,.855,.06);
           top: 50%;
           left: 50%;
-          width: 350px;
+          width: 22rem;
         }
         :host(.active) .content{
           visibility: visible;
@@ -197,8 +199,8 @@ export default class Hotspot extends Shadow() {
           width: 0;
           height: 0;
           border: solid #fff;
-          border-width: 12px;
-          margin-left: -12px;
+          border-width: 0.75rem;
+          margin-left: -0.75rem;
           box-shadow: 5px 5px 15px -6px transparent;
           content: ' ';
           pointer-events: none;
@@ -225,11 +227,11 @@ export default class Hotspot extends Shadow() {
           right: 0;
           bottom: 0;
           left: 0;
-          padding: 0 18px 18px;
+          padding: 0 1.25rem 1.25rem;
           backface-visibility: hidden;
           background-color: #fff;
           border-radius: 10px 10px 0 0;
-          box-shadow: 0 0 10px 0 rgb(83 83 83 / 20%);
+          box-shadow: 0 0 0.625rem 0 rgb(83 83 83 / 20%);
           outline: 0;
           transition: height .3s, animation .3s ease-in-out, visibility 1s ease;
           visibility: hidden;
@@ -260,9 +262,9 @@ export default class Hotspot extends Shadow() {
         }
         :host .content:before{
           position: absolute;
-          top: 10px;
+          top: 0.625rem;
           left: 50%;
-          width: 40px;
+          width: 2.5rem;
           height: 4px;
           background-color: #ff6600;
           border-radius: 4px;
@@ -271,15 +273,15 @@ export default class Hotspot extends Shadow() {
         }
         :host .content-title{
           position: relative;
-          min-height: 40px;
-          padding: 10px 0 12px;
-          margin-bottom: 12px;
+          min-height: 2.5rem;
+          padding: 10px 0 0.75rem;
+          margin-bottom: 0.75rem;
           font-size: 1.8rem;
         }
         :host .content-title:after{
           position: absolute;
           bottom: 0;
-          left: -18px;
+          left: -1rem;
           width: calc(100% + 36px);
           height: 2px;
           background-color: #f3f2f0;
@@ -296,10 +298,10 @@ export default class Hotspot extends Shadow() {
         :host .btn-close{
           display:block;
           position: absolute;
-          top: 20px;
-          right: 20px;
-          width: 16px;
-          height: 16px;
+          top: 1.25rem;
+          right: 1.25rem;
+          width: 1rem;
+          height: 1rem;
           padding: 0;
           border: 0;
           background-color: transparent;

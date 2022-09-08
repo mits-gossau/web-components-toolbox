@@ -1,10 +1,10 @@
 @media screen and (min-width: _max-width_){
     :host .content{
         transform-origin: top left;
-        transform: scale(0) translate(48px,-50%);
+        transform: scale(0) translate(3rem,-50%);
     }
     :host(.active) .content{
-        transform: scale(1) translate(48px,-50%);
+        transform: scale(1) translate(3rem,-50%);
     }
     :host .content:after{
         transform: translate(0,-50%) rotate(-45deg) scale(1);

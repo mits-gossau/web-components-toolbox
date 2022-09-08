@@ -71,7 +71,7 @@ export default class ImageHotspot extends Shadow() {
         border: 0;
       }
 
-      @media screen and (max-width: 767px){
+      @media screen and (max-width: _max-width_){
         :host .wrapper{
           white-space: nowrap;
           overflow-x: scroll;
@@ -79,7 +79,7 @@ export default class ImageHotspot extends Shadow() {
         }
         :host .picture,
         :host .hotspots-container {
-          width: 768px;
+          width: var(--content-width, 55%);
           height: 100%;
           overflow-x: auto;
           overflow-y: hidden;
