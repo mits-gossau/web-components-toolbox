@@ -3,7 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
- * TODO: .active styling, bubbles, nav generator, arrows, aria-stuff, interval only when in intersecting (otherwise y-axis scroll)
+ * TODO: slides-per-view
  *
  * @attribute {
  * }
@@ -46,13 +46,25 @@ export default class CarouselTwo extends Shadow() {
           const nodeLeft = Math.round(node.getBoundingClientRect().left)
           return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
         }))) {
-          Array.from(this.root.querySelectorAll('.active')).forEach(node => node.classList.remove('active'))
+          Array.from(this.root.querySelectorAll('.active')).forEach(node => {
+            node.classList.remove('active')
+            node.setAttribute('aria-hidden', 'true')
+          })
           activeChild.classList.add('active')
-          Array.from(this.root.querySelectorAll(`[href="#${activeChild.getAttribute('id')}"]`)).forEach(node => node.classList.add('active'))
+          activeChild.setAttribute('aria-hidden', 'false')
+          Array.from(this.root.querySelectorAll(`[href="#${activeChild.getAttribute('id')}"]`)).forEach(node => {
+            if (Array.from(this.nav.children).includes(node.parentNode)) node.parentNode.classList.add('active')
+            node.classList.add('active')
+          })
           this.section.classList.remove('scrolling')
         }
       }, 50)
     }
+    // interval stuff
+    this.interval = null
+    // stop interval when clicking outside window eg. iframe, etc.
+    this.blurEventListener = event => this.setInterval()
+    this.focusEventListener = event => this.clearInterval()
   }
 
   connectedCallback () {
@@ -68,17 +80,29 @@ export default class CarouselTwo extends Shadow() {
     // Carousel still pops instead of appear nicely. With slow network connection it works though.
     if (showPromises.length) {
       this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+        this.scrollIntoView(this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0], false)
+        if (this.getAttribute('interval')) this.setInterval()
+      })
     }
     this.addEventListener('click', this.clickListener)
     this.section.addEventListener('scroll', this.scrollListener)
     Array.from(this.section.children).forEach(node => node.addEventListener('focus', this.focusListener))
+    if (this.getAttribute('interval')) {
+      this.addEventListener('blur', this.blurEventListener)
+      this.addEventListener('focus', this.focusEventListener)
+    }
   }
 
   disconnectedCallback () {
     this.removeEventListener('click', this.clickListener)
     this.section.removeEventListener('scroll', this.scrollListener)
     Array.from(this.section.children).forEach(node => node.removeEventListener('focus', this.focusListener))
+    if (this.getAttribute('interval')) {
+      this.removeEventListener('blur', this.blurEventListener)
+      this.removeEventListener('focus', this.focusEventListener)
+    }
   }
 
   /**
@@ -96,7 +120,7 @@ export default class CarouselTwo extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.section || !this.nav
+    return !this.section || !this.nav || !this.arrowNav
   }
 
   /**
@@ -110,7 +134,7 @@ export default class CarouselTwo extends Shadow() {
         background-color: var(--background-color, transparent);
         display: grid !important;
       }
-      :host > section, :host > nav {
+      :host > section, :host > nav, :host > *.arrow-nav {
         grid-column: 1;
         grid-row: 1;
       }
@@ -142,8 +166,8 @@ export default class CarouselTwo extends Shadow() {
         height: fit-content;
         margin: var(--nav-margin);
         max-height: 20%;
-        overflow: hidden;
         justify-content: center;
+        z-index: 101;
       }
       :host > nav > * {
         --a-margin: 0;
@@ -151,9 +175,55 @@ export default class CarouselTwo extends Shadow() {
         margin: 0;
       }
       :host(.has-default-nav) > nav > * {
-        background-color: pink;
-        height: 20px;
-        width: 20px;
+        background-color: var(--nav-background-color, pink);
+        border-radius: var(--nav-border-radius, 50%);
+        height: var(--nav-height, 1em);
+        width: var(--nav-width, 1em);
+        opacity: var(--nav-opacity, 0.5);
+      }
+      :host(.has-default-nav) > nav > *, :host > nav > * {
+        transition: all .3s ease-out !important;
+      }
+      :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active {
+        background-color: var(--nav-background-color-active, coral);
+        opacity: var(--arrow-nav-opacity-active, 1);
+      }
+      :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active, :host > section:not(.scrolling) ~ nav > *.active {
+        transform: var(--nav-transform-active, scale(1.3));
+      }
+      :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover {
+        background-color: var(--nav-background-color-hover, white);
+        opacity: var(--arrow-nav-opacity-hover, var(--arrow-nav-opacity-active, 1));
+      }
+      :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover {
+        transform: var(--nav-transform-hover, scale(1.6));
+      }
+      :host(.has-default-arrow-nav) > *.arrow-nav {
+        align-items: center;
+        display: flex;
+        margin: 0;
+        justify-content: space-between;
+        z-index: 100;
+        font-size: 5em;
+      }
+      :host(.has-default-arrow-nav) > *.arrow-nav > * {
+        align-items: center;
+        display: flex;
+        margin: var(--arrow-nav-margin, 0);
+        justify-content: center;
+        height: 100%;
+        width: 50%;
+        opacity: var(--arrow-nav-opacity, 0.5);
+        transition: all .3s ease-out;
+      }
+      :host(.has-default-arrow-nav) > *.arrow-nav > *:hover {
+        opacity: var(--arrow-nav-opacity-hover, 1);
+      }
+      :host(.has-default-arrow-nav) > *.arrow-nav > *:first-of-type {
+        justify-content: start;
+      }
+      :host(.has-default-arrow-nav) > *.arrow-nav > *:last-of-type {
+        justify-content: end;
       }
       @media only screen and (max-width: _max-width_) {
         :host > section {
@@ -163,13 +233,44 @@ export default class CarouselTwo extends Shadow() {
           gap: var(--nav-gap-mobile, var(--nav-gap));
           margin: var(--nav-margin-mobile, var(--nav-margin));
         }
+        :host > *.arrow-nav {
+          display: none;
+        }
       }
     `
-    if (this.hasAttribute('background-color')) this.setCss(/* css */`
-      :host {
-        background-color: ${this.getAttribute('background-color')};
-      }
-    `, undefined, false)
+    // attribute controlled styles
+    const setAttributeStyles = () => {
+      if (this.hasAttribute('background-color')) this.setCss(/* css */`
+        :host {
+          background-color: ${this.getAttribute('background-color')};
+        }
+      `, undefined, false)
+      if (this.hasAttribute('nav-background-color')) this.setCss(/* css */`
+        :host(.has-default-nav) > nav > * {
+          background-color: ${this.getAttribute('nav-background-color')};
+        }
+      `, undefined, false)
+      if (this.hasAttribute('nav-background-color-active')) this.setCss(/* css */`
+        :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active {
+          background-color: ${this.getAttribute('nav-background-color-active')};
+        }
+      `, undefined, false)
+      if (this.hasAttribute('nav-background-color-hover')) this.setCss(/* css */`
+        :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover {
+          background-color: ${this.getAttribute('nav-background-color-hover')}
+        }
+      `, undefined, false)
+      if (this.hasAttribute('arrow-nav-color')) this.setCss(/* css */`
+        :host > *.arrow-nav > * {
+          --color: ${this.getAttribute('arrow-nav-color')}
+        }
+      `)
+      if (this.hasAttribute('arrow-nav-color-hover')) this.setCss(/* css */`
+        :host > *.arrow-nav > *:hover {
+          --color: ${this.getAttribute('arrow-nav-color-hover')}
+        }
+      `)
+    }
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -186,9 +287,9 @@ export default class CarouselTwo extends Shadow() {
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false)
+        }, ...styles], false).then(() => setAttributeStyles())
       default:
-        return this.fetchCSS(styles, false)
+        return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }
   }
 
@@ -200,59 +301,78 @@ export default class CarouselTwo extends Shadow() {
   renderHTML () {
     this.section = this.root.querySelector('section') || document.createElement('section')
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
-    // check item correlation between slides and navigation
-    if (this.section.children.length !== this.nav.children.length || this.classList.contains('has-default-nav')) {
-      this.classList.add('has-default-nav')
-      // clear nav on discrepancy
-      if (this.nav.childNodes.length) {
-        console.warn('CarouselTwo.js has just cleared your incomplete navigation. Make sure that the nav container (navChildNodes) contains a link for each slide (sectionChildren).', {navChildNodes: this.nav.cloneNode(true).childNodes, sectionChildren: this.section.children, carousel: this})
-        this.nav.innerHTML = ''
-      }
-      // generate default nav
-      Array.from(this.section.children).forEach(node => {
-        const a = document.createElement('a')
-        this.nav.appendChild(a)
-      })
-    }
-    Array.from(this.section.children).forEach((node, i) => {
-      // add attribute tabindex to each slide
-      node.setAttribute('tabindex', '0')
-      // make sure the ids match between section and navigation nodes
-      const id = `${this.id}-${i}`
-      node.setAttribute('id', id)
-      // set the id on the nav child
-      if (this.nav.children[i]) {
-        let navNode = this.nav.children[i].tagName === 'A'
-          ? this.nav.children[i]
-          : this.nav.children[i].querySelector('a')
-          ? this.nav.children[i].querySelector('a')
-          : null
-        if (!navNode) {
-          navNode = document.createElement('a')
-          const navNodeChild = this.nav.children[i]
-          navNodeChild.replaceWith(navNode)
-          navNode.appendChild(navNodeChild)
+    this.arrowNav = this.root.querySelector('.arrow-nav') || document.createElement('span')
+    this.arrowNav.classList.add('arrow-nav')
+    return this.loadChildComponents().then(children => {
+      // check item correlation between slides and navigation
+      if (this.section.children.length !== this.nav.children.length || this.classList.contains('has-default-nav')) {
+        this.classList.add('has-default-nav')
+        // clear nav on discrepancy
+        if (this.nav.childNodes.length) {
+          console.warn('CarouselTwo.js has just cleared your incomplete navigation. Make sure that the nav container (navChildNodes) contains a link for each slide (sectionChildren).', {navChildNodes: this.nav.cloneNode(true).childNodes, sectionChildren: this.section.children, carousel: this})
+          this.nav.innerHTML = ''
         }
-        navNode.setAttribute('href', `#${id}`)
-      } else {
-        console.warn('CarouselTwo.js expected a nav node (navChildNode) corresponding with the slide (sectionChildNode).', {navChildNode: this.nav.children[i], sectionChildNode: node, carousel: this})
+        // generate default nav
+        Array.from(this.section.children).forEach(node => {
+          const a = document.createElement('a')
+          this.nav.appendChild(a)
+        })
       }
+      // generate default arrows
+      if (this.arrowNav.children.length < 2 || this.classList.contains('has-default-arrow-nav')) {
+        this.classList.add('has-default-arrow-nav')
+        // clear arrowNav on discrepancy
+        if (this.arrowNav.childNodes.length) {
+          console.warn('CarouselTwo.js has just cleared your incomplete arrow navigation. Make sure that the arrow nav container (arrowNavChildNodes) contains at least two children.', {arrowNavChildNodes: this.arrowNav.cloneNode(true).childNodes, carousel: this})
+          this.arrowNav.innerHTML = ''
+        }
+        for (let i = 0; i < 2; i++) {
+          const a = document.createElement('a')
+          a.setAttribute('href', i === 0 ? '#previous' : '#next')
+          const arrow = new children[0][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+          arrow.setAttribute('direction', i === 0 ? 'left' : 'right')
+          a.appendChild(arrow)
+          this.arrowNav.appendChild(a)
+        }
+      }
+      Array.from(this.section.children).forEach((node, i) => {
+        // add attribute tabindex to each slide
+        node.setAttribute('tabindex', '0')
+        // make sure the ids match between section and navigation nodes
+        const id = `${this.id}-${i}`
+        node.setAttribute('id', id)
+        node.setAttribute('aria-hidden', 'true')
+        // set the id on the nav child
+        if (this.nav.children[i]) {
+          let navNode = this.nav.children[i].tagName === 'A'
+            ? this.nav.children[i]
+            : this.nav.children[i].querySelector('a')
+            ? this.nav.children[i].querySelector('a')
+            : null
+          if (!navNode) {
+            navNode = document.createElement('a')
+            const navNodeChild = this.nav.children[i]
+            navNodeChild.replaceWith(navNode)
+            navNode.appendChild(navNodeChild)
+          }
+          navNode.setAttribute('href', `#${id}`)
+        } else {
+          console.warn('CarouselTwo.js expected a nav node (navChildNode) corresponding with the slide (sectionChildNode).', {navChildNode: this.nav.children[i], sectionChildNode: node, carousel: this})
+        }
+      })
+      this.html = [this.section, this.nav, this.arrowNav]
     })
-    if (this.section.children[0]) this.section.children[0].classList.add('active')
-    if (this.nav.children[0]) this.nav.children[0].classList.add('active')
-    this.html = [this.section, this.nav]
-    return Promise.resolve()
   }
 
-  previous () {
-    return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1])
+  previous (focus) {
+    return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1], focus)
   }
 
-  next () {
-    return this.scrollIntoView((this.activeSlide && this.activeSlide.nextElementSibling) || Array.from(this.section.children)[0])
+  next (focus) {
+    return this.scrollIntoView((this.activeSlide && this.activeSlide.nextElementSibling) || Array.from(this.section.children)[0], focus)
   }
 
-  scrollIntoView (node) {
+  scrollIntoView (node, focus = true) {
     if (!node.classList.contains('active')) {
       //node.scrollIntoView() // scrolls x and y
       this.section.scrollTo({
@@ -260,9 +380,48 @@ export default class CarouselTwo extends Shadow() {
         behavior: 'smooth'
       })
       this.scrollListener()
-      node.focus() // important that default keyboard works
+      if (focus) node.focus() // important that default keyboard works
     }
     return node
+  }
+
+  setInterval () {
+    clearInterval(this.interval)
+    this.interval = setInterval(() => this.next(false), Number(this.getAttribute('interval')))
+  }
+
+  clearInterval () {
+    clearInterval(this.interval)
+  }
+
+  /**
+   * fetch children when first needed
+   *
+   * @param {Promise<[string, CustomElementConstructor]>[]} [promises=[]]
+   * @returns {Promise<[string, CustomElementConstructor][]>}
+   */
+  loadChildComponents (promises = []) {
+    if (this.childComponentsPromise) return this.childComponentsPromise
+    let arrowPromise
+    try {
+      arrowPromise = Promise.resolve({ default: Arrow })
+    } catch (error) {
+      arrowPromise = import('../../atoms/arrow/Arrow.js')
+    }
+    return (this.childComponentsPromise = Promise.all([
+      arrowPromise.then(
+        /** @returns {[string, CustomElementConstructor]} */
+        module => ['a-arrow', module.default]
+      ),
+      ...promises
+    ]).then(elements => {
+      elements.forEach(element => {
+        // don't define already existing customElements
+        // @ts-ignore
+        if (!customElements.get(element[0])) customElements.define(...element)
+      })
+      return elements
+    }))
   }
   
   getRandomString() {
