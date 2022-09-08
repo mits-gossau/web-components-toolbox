@@ -1,6 +1,10 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global Arrow */
+/* global customElements */
+/* global self */
+
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
  * TODO: slides-per-view
@@ -240,36 +244,48 @@ export default class CarouselTwo extends Shadow() {
     `
     // attribute controlled styles
     const setAttributeStyles = () => {
-      if (this.hasAttribute('background-color')) this.setCss(/* css */`
+      if (this.hasAttribute('background-color')) {
+        this.setCss(/* css */`
         :host {
           background-color: ${this.getAttribute('background-color')};
         }
       `, undefined, false)
-      if (this.hasAttribute('nav-background-color')) this.setCss(/* css */`
+      }
+      if (this.hasAttribute('nav-background-color')) {
+        this.setCss(/* css */`
         :host(.has-default-nav) > nav > * {
           background-color: ${this.getAttribute('nav-background-color')};
         }
       `, undefined, false)
-      if (this.hasAttribute('nav-background-color-active')) this.setCss(/* css */`
+      }
+      if (this.hasAttribute('nav-background-color-active')) {
+        this.setCss(/* css */`
         :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active {
           background-color: ${this.getAttribute('nav-background-color-active')};
         }
       `, undefined, false)
-      if (this.hasAttribute('nav-background-color-hover')) this.setCss(/* css */`
+      }
+      if (this.hasAttribute('nav-background-color-hover')) {
+        this.setCss(/* css */`
         :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover {
           background-color: ${this.getAttribute('nav-background-color-hover')}
         }
       `, undefined, false)
-      if (this.hasAttribute('arrow-nav-color')) this.setCss(/* css */`
+      }
+      if (this.hasAttribute('arrow-nav-color')) {
+        this.setCss(/* css */`
         :host > *.arrow-nav > * {
           --color: ${this.getAttribute('arrow-nav-color')}
         }
       `)
-      if (this.hasAttribute('arrow-nav-color-hover')) this.setCss(/* css */`
+      }
+      if (this.hasAttribute('arrow-nav-color-hover')) {
+        this.setCss(/* css */`
         :host > *.arrow-nav > *:hover {
           --color: ${this.getAttribute('arrow-nav-color-hover')}
         }
       `)
+      }
     }
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
@@ -309,7 +325,7 @@ export default class CarouselTwo extends Shadow() {
         this.classList.add('has-default-nav')
         // clear nav on discrepancy
         if (this.nav.childNodes.length) {
-          console.warn('CarouselTwo.js has just cleared your incomplete navigation. Make sure that the nav container (navChildNodes) contains a link for each slide (sectionChildren).', {navChildNodes: this.nav.cloneNode(true).childNodes, sectionChildren: this.section.children, carousel: this})
+          console.warn('CarouselTwo.js has just cleared your incomplete navigation. Make sure that the nav container (navChildNodes) contains a link for each slide (sectionChildren).', { navChildNodes: this.nav.cloneNode(true).childNodes, sectionChildren: this.section.children, carousel: this })
           this.nav.innerHTML = ''
         }
         // generate default nav
@@ -323,7 +339,7 @@ export default class CarouselTwo extends Shadow() {
         this.classList.add('has-default-arrow-nav')
         // clear arrowNav on discrepancy
         if (this.arrowNav.childNodes.length) {
-          console.warn('CarouselTwo.js has just cleared your incomplete arrow navigation. Make sure that the arrow nav container (arrowNavChildNodes) contains at least two children.', {arrowNavChildNodes: this.arrowNav.cloneNode(true).childNodes, carousel: this})
+          console.warn('CarouselTwo.js has just cleared your incomplete arrow navigation. Make sure that the arrow nav container (arrowNavChildNodes) contains at least two children.', { arrowNavChildNodes: this.arrowNav.cloneNode(true).childNodes, carousel: this })
           this.arrowNav.innerHTML = ''
         }
         for (let i = 0; i < 2; i++) {
@@ -347,8 +363,8 @@ export default class CarouselTwo extends Shadow() {
           let navNode = this.nav.children[i].tagName === 'A'
             ? this.nav.children[i]
             : this.nav.children[i].querySelector('a')
-            ? this.nav.children[i].querySelector('a')
-            : null
+              ? this.nav.children[i].querySelector('a')
+              : null
           if (!navNode) {
             navNode = document.createElement('a')
             const navNodeChild = this.nav.children[i]
@@ -357,7 +373,7 @@ export default class CarouselTwo extends Shadow() {
           }
           navNode.setAttribute('href', `#${id}`)
         } else {
-          console.warn('CarouselTwo.js expected a nav node (navChildNode) corresponding with the slide (sectionChildNode).', {navChildNode: this.nav.children[i], sectionChildNode: node, carousel: this})
+          console.warn('CarouselTwo.js expected a nav node (navChildNode) corresponding with the slide (sectionChildNode).', { navChildNode: this.nav.children[i], sectionChildNode: node, carousel: this })
         }
       })
       this.html = [this.section, this.nav, this.arrowNav]
@@ -374,7 +390,7 @@ export default class CarouselTwo extends Shadow() {
 
   scrollIntoView (node, focus = true) {
     if (!node.classList.contains('active')) {
-      //node.scrollIntoView() // scrolls x and y
+      // node.scrollIntoView() // scrolls x and y
       this.section.scrollTo({
         left: this.section.scrollLeft + node.getBoundingClientRect().x - this.section.getBoundingClientRect().x,
         behavior: 'smooth'
@@ -423,8 +439,8 @@ export default class CarouselTwo extends Shadow() {
       return elements
     }))
   }
-  
-  getRandomString() {
+
+  getRandomString () {
     if (self.crypto && self.crypto.getRandomValues && navigator.userAgent.indexOf('Safari') === -1) {
       const a = self.crypto.getRandomValues(new Uint32Array(3))
       let token = ''
@@ -445,7 +461,7 @@ export default class CarouselTwo extends Shadow() {
     return this._id
       ? this._id
       : this.getAttribute('id')
-      ? (this._id = this.getAttribute('id'))
-      : (this._id = `img-${this.getRandomString()}`)
+        ? (this._id = this.getAttribute('id'))
+        : (this._id = `img-${this.getRandomString()}`)
   }
 }
