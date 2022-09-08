@@ -56,8 +56,17 @@ export default class ImageHotspot extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+      :host{
+        --content-width: 100vw;
+        width: var(--content-width);
+      }
+
       :host .wrapper {
         position: relative;
+      }
+      :host .picture{
+        --hotspot-picture-img-max-height: var(--content-width);
+        --hotspot-picture-img-width: var(--content-width);
       }
 
       :host .sr-only {
@@ -79,7 +88,7 @@ export default class ImageHotspot extends Shadow() {
         }
         :host .picture,
         :host .hotspots-container {
-          width: var(--content-width, 55%);
+          width: 100%;
           height: 100%;
           overflow-x: auto;
           overflow-y: hidden;

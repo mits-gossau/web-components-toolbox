@@ -10,6 +10,7 @@
 .classpath
 *.launch
 .settings/
+.vs/
 
 
 #System Files
