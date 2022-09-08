@@ -36,7 +36,7 @@ export default class CarouselTwo extends Shadow() {
     // on focus scroll to the right element
     this.focusListener = event => {
       let target
-      if ((target = event.target) && Array.from(this.section.children).includes(target)) this.scrollIntoView(target)
+      if ((target = event.target) && Array.from(this.section.children).includes(target)) this.scrollIntoView(target, false)
     }
     // on scroll calculate which image is shown and set its and all of its referencing href nodes the class to active
     let scrollTimeoutId = null
@@ -237,7 +237,7 @@ export default class CarouselTwo extends Shadow() {
           gap: var(--nav-gap-mobile, var(--nav-gap));
           margin: var(--nav-margin-mobile, var(--nav-margin));
         }
-        :host > *.arrow-nav {
+        :host > *.arrow-nav, :host(.has-default-arrow-nav) > *.arrow-nav {
           display: none;
         }
       }
@@ -390,13 +390,13 @@ export default class CarouselTwo extends Shadow() {
 
   scrollIntoView (node, focus = true) {
     if (!node.classList.contains('active')) {
-      // node.scrollIntoView() // scrolls x and y
+      if (focus) return node.focus() // important that default keyboard works
+      //node.scrollIntoView() // scrolls x and y
       this.section.scrollTo({
         left: this.section.scrollLeft + node.getBoundingClientRect().x - this.section.getBoundingClientRect().x,
         behavior: 'smooth'
       })
       this.scrollListener()
-      if (focus) node.focus() // important that default keyboard works
     }
     return node
   }
