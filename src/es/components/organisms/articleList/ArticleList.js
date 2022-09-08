@@ -128,7 +128,7 @@ export default class NewsList extends Shadow() {
   }
 
   renderHTML (articleFetch, namespace) {
-    this.html = ''
+    // here a loading animation could be added
     Promise.all([articleFetch, this.loadChildComponents()]).then(([articles, child]) => {
       const { items } = articles.data.newsEntryCollection
       const wrapper = document.createElement('div')
@@ -141,6 +141,7 @@ export default class NewsList extends Shadow() {
         }
         wrapper.appendChild(articleEle)
       })
+      this.html = ''
       this.html = wrapper
     }).catch(e => {
       this.html = 'Error'

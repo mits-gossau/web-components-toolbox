@@ -1,13 +1,13 @@
 const shell = require('shelljs')
 
 // CHANGE THIS
-const GIT_REPO = 'https://github.com/mits-gossau/web-components-toolbox-maker-space.git'
+const GIT_REPO = 'https://github.com/mits-gossau/web-components-toolbox-alnatura.git'
 const NEW_PROJECT_DIR = ''
-const NEW_PROJECT_NAME = 'web-components-toolbox-maker-space'
+const NEW_PROJECT_NAME = 'web-components-toolbox-alnatura'
 
 // LEAVE THIS AS IT IS!
-const REF_REPO = 'https://github.com/mits-gossau/web-components-toolbox-techday.git'
-const REF_DIR = 'web-components-toolbox-techday'
+const REF_REPO = 'https://github.com/mits-gossau/web-components-toolbox-hitzberger'
+const REF_DIR = 'web-components-toolbox-hitzberger'
 
 function init () {
   shell.cd(NEW_PROJECT_DIR)
