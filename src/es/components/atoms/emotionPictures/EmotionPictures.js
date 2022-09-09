@@ -241,7 +241,7 @@ export default class EmotionPictures extends Intersection() {
    */
   static updateLogoPosition (divNode, selector, attribute) {
     const logoElement = divNode.querySelector(selector)
-    if(logoElement){
+    if (logoElement) {
       logoElement.style.alignItems = logoElement.getAttribute(attribute)
     }
   }

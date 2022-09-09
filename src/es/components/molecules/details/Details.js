@@ -107,20 +107,20 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
     let currentMedia = null
     this.checkMedia = () => {
-      if (this.isMobile != currentMedia){
+      if (this.isMobile !== currentMedia) {
         currentMedia = this.isMobile
         this.mutationObserveStop()
         if (this.isMobile) {
           if (this.hasAttribute('mobile-open') && !this.details.hasAttribute('open')) {
-          this.details.setAttribute('open', '')
-        } else if (this.hasAttribute('mobile-close') && this.details.hasAttribute('open')) {
-          this.details.removeAttribute('open')
-        }
-      } else {
-        if (this.hasAttribute('desktop-open') && !this.details.hasAttribute('open')) {
-          this.details.setAttribute('open', '')
-        } else if (this.hasAttribute('desktop-close') && this.details.hasAttribute('open')) {
-          this.details.removeAttribute('open')
+            this.details.setAttribute('open', '')
+          } else if (this.hasAttribute('mobile-close') && this.details.hasAttribute('open')) {
+            this.details.removeAttribute('open')
+          }
+        } else {
+          if (this.hasAttribute('desktop-open') && !this.details.hasAttribute('open')) {
+            this.details.setAttribute('open', '')
+          } else if (this.hasAttribute('desktop-close') && this.details.hasAttribute('open')) {
+            this.details.removeAttribute('open')
           }
         }
         this.mutationObserveStart()

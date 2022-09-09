@@ -1,8 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global CustomEvent */
-/* global self */
 
 /**
  *
@@ -379,5 +377,4 @@ export default class Hotspot extends Shadow() {
   get span () {
     return this.root.querySelectorAll('span.sr-only')
   }
-
 }
