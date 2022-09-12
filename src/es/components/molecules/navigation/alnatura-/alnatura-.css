@@ -9,21 +9,24 @@
   --navigation-alnatura-section-ul-background-color: var(--background-color);
 }
 :host > nav > ul li.open > o-nav-wrapper > section {
+  --navigation-alnatura-color-mobile: var(--navigation-alnatura-background-color-open);
   --navigation-alnatura-color: var(--navigation-alnatura-background-color-open);
 }
 :host > nav > ul li.open > o-nav-wrapper > section > ul {
   --padding: var(--content-spacing);
   --padding-mobile: var(--content-spacing-mobile);
+  --padding-mobile-custom: var(--content-spacing-mobile);
+  --padding-mobile-first-child-custom: var(--content-spacing-mobile);
   background-color: var(--background-color);
   border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.5em));
 }
 :host > nav > ul li.open > o-nav-wrapper > section > ul:first-child {
   --margin: 0 0 var(--content-spacing) 0;
-  --margin-mobile: 0 0 var(--content-spacing-mobile) 0;
+  --margin-mobile: 0 0 var(--content-spacing-mobile);
 }
-:host > nav > ul li.open > o-nav-wrapper > section > ul:nth-child(2) {
+:host > nav > ul li.open > o-nav-wrapper > section > ul {
   --margin: 0 var(--content-spacing) 0 0;
-  --margin-mobile: 0 var(--content-spacing-mobile) 0 0;
+  --margin-mobile: 0 0 var(--content-spacing-mobile);
 }
 :host > nav > ul li.open > o-nav-wrapper > section > ul:last-child {
   --margin: 0;
@@ -32,4 +35,21 @@
 :host > nav > ul li.open > o-nav-wrapper > section > ul, :host > nav > ul li.open > o-nav-wrapper > section > ul a-link {
   --navigation-alnatura-background-color: var(--background-color);
   --navigation-alnatura-font-size: 1em;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul > li, :host > nav > ul li.open > o-nav-wrapper > section > ul > li:last-child {
+  border-bottom: 2px dotted var(--navigation-alnatura-background-color-open);
+  padding: 0.5em 0 !important;
+  --any-padding: 0.5em 0;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul:not([style]):first-child > li {
+  border: 0;
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --navigation-alnatura-background-color: var(--navigation-alnatura-background-color-open);
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section {
+    width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)) !important;
+    left: var(--content-spacing-mobile, var(--content-spacing)) !important;
+  }
 }

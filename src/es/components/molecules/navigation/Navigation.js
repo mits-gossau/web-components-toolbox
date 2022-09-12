@@ -533,13 +533,13 @@ export default class Navigation extends Mutation() {
           left: 0;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul {
-          --padding-mobile: 0 0 0.8571rem;
+          --padding-mobile: var(--padding-mobile-custom, 0 0 0.8571rem);
           --padding-first-child-mobile: var(--padding-mobile);
           --padding-last-child-mobile: var(--padding-mobile);
           border-bottom: var(--header-default-border-bottom);
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul:first-child {
-          --padding-mobile: 0.8571rem 0;
+          --padding-mobile: var(--padding-mobile-first-child-custom, 0.8571rem 0);
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul:last-child {
           margin-bottom: 100px !important; /* must be up, otherwise the iphone hides it behind the footer bar */
