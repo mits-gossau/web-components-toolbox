@@ -1,3 +1,35 @@
 :host {
+  --gap-custom: 0;
+  --navigation-alnatura-background-color-open: var(--color-tertiary, var(--color-hover, green));
+  --navigation-alnatura-border-color: var(--navigation-alnatura-background-color-open);
   --navigation-alnatura-content-width: var(--navigation-alnatura-content-width-custom, var(--header-default-content-width));
+  --navigation-alnatura-section-background-color-open: var(--background-color);
+  --navigation-alnatura-section-background-color: var(--navigation-alnatura-background-color-open);
+  --navigation-alnatura-section-color-open: var(--color);
+  --navigation-alnatura-section-ul-background-color: var(--background-color);
+}
+:host > nav > ul li.open > o-nav-wrapper > section {
+  --navigation-alnatura-color: var(--navigation-alnatura-background-color-open);
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul {
+  --padding: var(--content-spacing);
+  --padding-mobile: var(--content-spacing-mobile);
+  background-color: var(--background-color);
+  border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.5em));
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul:first-child {
+  --margin: 0 0 var(--content-spacing) 0;
+  --margin-mobile: 0 0 var(--content-spacing-mobile) 0;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul:nth-child(2) {
+  --margin: 0 var(--content-spacing) 0 0;
+  --margin-mobile: 0 var(--content-spacing-mobile) 0 0;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul:last-child {
+  --margin: 0;
+  --margin-mobile: 0;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul, :host > nav > ul li.open > o-nav-wrapper > section > ul a-link {
+  --navigation-alnatura-background-color: var(--background-color);
+  --navigation-alnatura-font-size: 1em;
 }

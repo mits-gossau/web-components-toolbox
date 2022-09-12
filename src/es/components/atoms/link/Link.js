@@ -113,6 +113,7 @@ export default class Link extends Shadow() {
       :host > a, :host > ${this.hitAreaTagName} {
         box-sizing: border-box;
         color: var(--color, red);
+        background-color: var(--background-color, transparent);
         display: var(--display, block);
         font-size: var(--font-size, 1em);
         line-height: var(--line-height, normal);
@@ -159,6 +160,20 @@ export default class Link extends Shadow() {
         color: var(--icon-span-color);
         font-family:var(--icon-span-font-family);
         padding:var(--icon-span-padding);
+      }
+      :host > a > h1, :host > a > h2, :host > a > h3, :host > a > h4, :host > a > h5, :host > a > h6 {
+        padding: 0;
+        margin: 0;
+      }
+      :host > a > h2 {
+        display: var(--h2-display, var(--h-display, block));
+        font-size: var(--h2-font-size, 1.5em);
+        line-height: var(--h2-line-height, 1.334em);
+        font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family, inherit)));
+        font-weight: var(--h2-font-weight, var(--h-font-weight, normal));
+        text-align: var(--h2-text-align, start);
+        word-break: var(--h2-word-break, normal);
+        text-transform: var(--h2-text-transform, none);
       }
       ${this.getAttribute('namespace') === 'underline-'
         ? /* CSS */`

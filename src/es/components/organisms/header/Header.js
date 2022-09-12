@@ -211,9 +211,8 @@ export default class Header extends Shadow() {
         padding: var(--padding, 0);
         margin: var(--margin, 0);
         width: var(--width, 100%);
-        position: var(--header-position, static);
+        position: var(--header-position, relative);
         transition: var(--transition, all 0.2s ease);
-        position: relative;
       }
       :host > header.open {
         background-color: var(--background-color-open, var(--background-color, black));

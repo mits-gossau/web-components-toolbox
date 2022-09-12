@@ -284,7 +284,12 @@ export default class Navigation extends Mutation() {
         border-top: var(--border-top, 1px solid) var(--hr-color, var(--color, white));
       }
       :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
-        --color: var(--color-open);
+        --color: var(--color-open), var(--color));
+        --background-color: var(--background-color-open);
+      }
+      :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section a-link, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section a-arrow {
+        --color: var(--section-color-open, var(--color-open), var(--color)));
+        --background-color: var(--section-background-color-open, var(--background-color-open));
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -355,7 +360,8 @@ export default class Navigation extends Mutation() {
           margin-bottom: var(--li-ul-margin-bottom-mobile, 0);
         }
         :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
-          --color: var(--color-open-mobile, var(--color-open));
+          --color: var(--color-open-mobile, var(--color-open, var(--color)));
+          --background-color: var(--background-color-open);
         }
       }
     `
@@ -374,10 +380,10 @@ export default class Navigation extends Mutation() {
         transition: all 0.1s ease;
       }
       :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
-        border-bottom: 2px solid var(--color);
+        border-bottom: 2px solid var(--border-color, var(--color));
       }
       :host > nav > ul li:not(:hover).open {
-        border-bottom: 2px solid var(--color);
+        border-bottom: 2px solid var(--border-color, var(--color));
       }
       :host > nav > ul > li > div.background {
         cursor: auto;
@@ -400,7 +406,7 @@ export default class Navigation extends Mutation() {
         --a-link-font-weight: normal;
         --justify-content: left;
         --align-items: normal;
-        background-color: var(--background-color, white);
+        background-color: var(--section-background-color, var(--background-color, white));
         cursor: auto;
         display: none !important;
         position: absolute;
@@ -656,6 +662,8 @@ export default class Navigation extends Mutation() {
                 this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
                 event.target.classList.add('open')
                 event.target.setAttribute('aria-expanded', 'true')
+                let wrapper
+                if (event.target && event.target.parentNode && (wrapper = event.target.parentNode.querySelector('o-nav-wrapper'))) wrapper.calcColumnWidth()
               } else if (a.getAttribute('href').includes('#')) {
                 this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
                   detail: {
@@ -693,7 +701,7 @@ export default class Navigation extends Mutation() {
           if (sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
-        if (i === 0) section.parentNode.prepend(this.getBackground())
+        section.parentNode.prepend(this.getBackground())
         section.replaceWith(wrapper)
       })
       this.root.querySelectorAll('a-link').forEach(link => link.addEventListener('click', this.clickListener))
@@ -853,7 +861,7 @@ export default class Navigation extends Mutation() {
       this.css = /* css */`
         @media only screen and (min-width: ${this.mobileBreakpoint}) {
           :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-            margin-top: ${this.root.querySelector('nav > ul').offsetHeight + 1}px;
+            margin-top: ${this.root.querySelector('nav > ul').offsetHeight + Number(this.getAttribute('margin-top') || 1)}px;
           }
         }
       `

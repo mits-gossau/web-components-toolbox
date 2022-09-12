@@ -285,7 +285,9 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       for (let i = 1; i < childNodesLength + 1; i++) {
         this.setCss(/* CSS */`
           :host > section > *:nth-child(${i}) {
-            width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodesLengthNotWidthHundredPercent}${unit || 'px'});
+            width: calc(var(--any-${i}-width, ${freeWidth}%) - ${(!childNodes[i - 1].hasAttribute('width') || !childNodes[i - 1].getAttribute('width').includes('100')
+              ? margin
+              : 0) / childNodesLengthNotWidthHundredPercent}${unit || 'px'});
           }
         `, undefined, undefined, undefined, this.style)
       }
@@ -320,7 +322,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
    */
   cleanPropertyMarginValue (value) {
     if (!value) return [false, false]
-    let values = value.trimStart().split(' ')
+    let values = value.trimStart().split(' ').filter(value => value.length)
     if (values.length === 0) return [false, false]
     if (values.length === 1) values = Array(4).fill(values[0])
     if (values.length === 2) values = [values[0], values[1], values[0], values[1]]
