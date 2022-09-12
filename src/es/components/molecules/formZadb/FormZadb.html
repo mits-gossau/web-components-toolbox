@@ -78,13 +78,16 @@
           <div class=" umbraco-forms-field plz shortanswer mandatory alternating">
             <label for="7fc7c299-4737-48e7-bdd1-17cbe13682f5" class="umbraco-forms-label">
               PLZ <span class="umbraco-forms-indicator">*</span>
-              <i class="loader"></i>
+              
             </label>
             <div class="umbraco-forms-field-wrapper">
-              <input id="zip" type="number" name="7fc7c299-4737-48e7-bdd1-17cbe13682f5" id="7fc7c299-4737-48e7-bdd1-17cbe13682f5"
+              <input list="zip-list" id="zip" type="number" name="7fc7c299-4737-48e7-bdd1-17cbe13682f5" id="7fc7c299-4737-48e7-bdd1-17cbe13682f5"
                 data-umb="7fc7c299-4737-48e7-bdd1-17cbe13682f5" class="text " value="" maxlength="4" data-val="true"
                 data-val-required="Bitte geben Sie eine PLZ an" data-val-regex="Bitte geben Sie eine PLZ an"
-                data-val-regex-pattern="^[0-9]*$" />
+                data-val-regex-pattern="^[0-9]*$" autocomplete="off" max="4"/>
+                <div class="icon-container">
+                  <i class="loader" id="zip-loader"></i>
+                </div>
               <span class="field-validation-valid" data-valmsg-for="7fc7c299-4737-48e7-bdd1-17cbe13682f5"
                 data-valmsg-replace="true"></span>
             </div>
@@ -94,7 +97,7 @@
               Ort <span class="umbraco-forms-indicator">*</span>
             </label>
             <div class="umbraco-forms-field-wrapper">
-              <input id="city" type="text" name="06d3b412-de66-4e8d-c240-7d470e395fb8" id="06d3b412-de66-4e8d-c240-7d470e395fb8"
+              <input autocomplete="off" id="city" type="text" name="06d3b412-de66-4e8d-c240-7d470e395fb8" id="06d3b412-de66-4e8d-c240-7d470e395fb8"
                 data-umb="06d3b412-de66-4e8d-c240-7d470e395fb8" class="text " value="" maxlength="255" data-val="true"
                 data-val-required="Bitte geben Sie einen Ort an" />
               <span class="field-validation-valid" data-valmsg-for="06d3b412-de66-4e8d-c240-7d470e395fb8"
@@ -106,9 +109,12 @@
               Strasse <span class="umbraco-forms-indicator">*</span>
             </label>
             <div class="umbraco-forms-field-wrapper">
-              <input id="street" type="text" name="3a7bc378-f85a-4f2a-9927-43bdb5ea5818" id="3a7bc378-f85a-4f2a-9927-43bdb5ea5818"
+              <input autocomplete="off" list="street-list" id="street" type="text" name="3a7bc378-f85a-4f2a-9927-43bdb5ea5818" id="3a7bc378-f85a-4f2a-9927-43bdb5ea5818"
                 data-umb="3a7bc378-f85a-4f2a-9927-43bdb5ea5818" class="text " value="" maxlength="255" data-val="true"
                 data-val-required="Bitte geben Sie eine Strasse an" />
+                <div class="icon-container">
+                  <i class="loader" id="street-loader"></i>
+                </div>
               <span class="field-validation-valid" data-valmsg-for="3a7bc378-f85a-4f2a-9927-43bdb5ea5818"
                 data-valmsg-replace="true"></span>
             </div>
