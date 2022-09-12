@@ -282,11 +282,12 @@
 }
 /* hr-tag */
 :host hr {
-  border: var(--hr-border, 0);
-  border-bottom: var(--hr-border-bottom, 1px dotted var(--color));
   background: var(--hr-background, 0);
-  opacity: var(--hr-opacity, 0.5);
+  border-bottom: var(--hr-border-bottom, 1px dotted var(--color));
+  border-width: var(--hr-border-width, 0 0 1px);
+  border: var(--hr-border, 0);
   margin: var(--hr-margin, var(--content-spacing) auto);
+  opacity: var(--hr-opacity, 0.5);
 }
 /* img-tag */
 :host img {
