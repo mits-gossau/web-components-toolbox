@@ -1,0 +1,3 @@
+:host {
+  --navigation-alnatura-content-width: var(--navigation-alnatura-content-width-custom, var(--header-default-content-width));
+}
