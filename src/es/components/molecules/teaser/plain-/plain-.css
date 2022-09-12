@@ -19,6 +19,7 @@
   --teaser-plain-figcaption-justify-content: flex-end;
   --teaser-plain-figcaption-padding: 0.625em;
   --teaser-plain-figcaption-transition: background-color 0.3s ease-out;
+  --teaser-plain-h-color: var(--teaser-plain-color);
   --teaser-plain-h2-margin: var(--teaser-plain-h2-margin-custom);
   --teaser-plain-h5-margin: 0 0 0.5em;
   --teaser-plain-intersecting-figcaption-any-opacity: 1;

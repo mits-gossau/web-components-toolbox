@@ -39,14 +39,16 @@ export default class Teaser extends Intersection() {
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => {
-        self.requestAnimationFrame(timeStamp => {
-          let figcaption, figcaptionBackgroundColor
-          if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
-            this.setAttribute('figcaption-bg-color-equal', true)
-          } else {
-            this.removeAttribute('figcaption-bg-color-equal')
-          }
-        })
+        if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
+          self.requestAnimationFrame(timeStamp => {
+            let figcaption, figcaptionBackgroundColor
+            if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
+              this.setAttribute('figcaption-bg-color-equal', true)
+            } else {
+              this.removeAttribute('figcaption-bg-color-equal')
+            }
+          })
+        }
         this.hidden = false
       })
     }
@@ -122,9 +124,11 @@ export default class Teaser extends Intersection() {
             padding-top: 0;
           }
           :host(:hover) figure figcaption * {
-            color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
             background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
             box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green)))), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
+          }
+          :host(:hover) figure * {
+            color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
           }
         `
         : ''}
@@ -167,10 +171,10 @@ export default class Teaser extends Intersection() {
       :host(:hover) figure figcaption {
         transform: var(--figcaption-transform-hover, none);
       }
-      :host figure figcaption * {
+      :host figure * {
         color: var(--figcaption-color, var(--color, unset));
       }
-      :host(:hover) figure figcaption * {
+      :host(:hover) figure * {
         color: var(--figcaption-color-hover, var(--figcaption-color, var(--color, unset)));
       }
       :host figure figcaption > * {
@@ -232,6 +236,17 @@ export default class Teaser extends Intersection() {
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the tile-.css namespace with teaser-tile-text-center-
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--teaser-tile-/g, '--teaser-tile-text-center-')
+        })
+      case 'teaser-tile-rounded-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-rounded-/tile-rounded-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the tile-.css namespace with teaser-tile-rounded-
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--teaser-tile-/g, '--teaser-tile-rounded-')
         })
       case 'teaser-overlay-':
         return this.fetchCSS([{
