@@ -38,11 +38,11 @@ export default class FormZadb extends Form {
         this.addListIdAttribute(inputField, this.inputFields.zip.listId)
 
         if (inputField?.value.length >= 2) {
+          this.removeListIdAttribute(inputField)
           this.showLoader(this.zipLoader)
           this.zipResults = await this.searchCities(inputField.value)
           this.hideLoader(this.zipLoader)
           this.showDataList(this.zipResults, this.inputFields.zip.listId, 'zip', inputField)
-          this.removeListIdAttribute(inputField)
         } else {
           this.zipResults = []
           this.cleanDialogList(this.inputFields.zip.listId)
@@ -59,12 +59,12 @@ export default class FormZadb extends Form {
           this.showLoader(this.streetLoader)
           this.streetResults = await this.searchStreets(inputField.value, this.zip.value)
           this.hideLoader(this.streetLoader)
+          this.removeListIdAttribute(inputField)
           if (this.streetResults.length) {
             this.showDataList(this.streetResults, this.inputFields.street.listId, 'name', inputField)
           } else {
             this.cleanDialogList(this.inputFields.street.listId)
           }
-          this.removeListIdAttribute(inputField)
         } else {
           this.streetResults = []
           this.cleanDialogList(this.inputFields.street.listId)
@@ -76,12 +76,18 @@ export default class FormZadb extends Form {
       this.cleanDialogList(this.inputFields.zip.listId)
       this.cleanDialogList(this.inputFields.street.listId)
     }
+
+    this.zipSelectedListener = (event) => {
+      this.zip.value = event.detail.value
+      this.zipChangeListener(event)
+    }
   }
 
   connectedCallback () {
     super.connectedCallback()
     document.addEventListener('keyup', this.keydownListener)
     document.addEventListener('click', this.clickOutsideListener)
+    this.addEventListener(this.inputFields.zip.listId, this.zipSelectedListener)
     this.initForm()
   }
 
@@ -89,6 +95,7 @@ export default class FormZadb extends Form {
     super.disconnectedCallback()
     document.removeEventListener('keyup', this.keydownListener)
     document.removeEventListener('click', this.clickOutsideListener)
+    this.removeEventListener(this.inputFields.zip.listId, this.zipSelectedListener)
   }
 
   initForm () {
@@ -133,10 +140,8 @@ export default class FormZadb extends Form {
     switch (listAttributeName) {
       case this.inputFields.zip.listId:
         field.onchange = (e) => this.zipChangeListener(e)
-        return
       case this.inputFields.street.listId:
         field.onchange = (e) => this.streetChangeListener(e)
-        return
       default:
         console.log('No field with list attribute found')
     }
@@ -153,14 +158,12 @@ export default class FormZadb extends Form {
     this.streetsByZip = {}
     if (!this.zipResults.length) return
     this.enableFields([this.street, this.city])
-    this.setCityValue(this.city, this.zipResults, e.target.value)
+    this.setCityValue(this.city, this.zipResults, e.detail.value)
   }
 
   // TODO: Remove?
-  streetChangeListener (e) {
-    console.log('STREET selected', e.target.value)
-  }
-  
+  streetChangeListener (e) {}
+
   setCityValue (cityField, zipList, zipValue) {
     if (!zipList.length) return
     cityField.value = zipList.find(city => city.zip === zipValue).name
@@ -171,10 +174,9 @@ export default class FormZadb extends Form {
   }
 
   async searchCities (str) {
-    if (str.length > 4){
+    if (str.length > 4) {
       return
     }
-    console.log('SEARCH CITY:', str.length)
     const allCities = await this.getCities(str)
     if (!allCities) return
     return allCities.cities.filter(city => city.zip.startsWith(str))
@@ -198,6 +200,11 @@ export default class FormZadb extends Form {
         inputField.value = element[value]
         container.style.display = 'none'
         container.innerHTML = ''
+        this.dispatchEvent(new CustomEvent(listName, {
+          detail: {
+            value: element[value]
+          }
+        }))
       }
       container.appendChild(option)
     })
@@ -212,12 +219,11 @@ export default class FormZadb extends Form {
   async getCities (zip) {
     try {
       // @ts-ignore
-      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/GetCityByZip?zip=${zip}`)
+      const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/GetCitiesByZip?zip=${zip}`)
       const cities = await response.json()
-      console.log('...', cities)
       return cities
     } catch (error) {
-      console.log('There was a problem: ', error)
+      console.error('There was a problem: ', error)
       this.abortAll()
     }
   }
@@ -230,10 +236,9 @@ export default class FormZadb extends Form {
       // @ts-ignore
       const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/GetStreetsByZip?zip=${zip}`)
       const streets = await response.json()
-      console.log('...', streets)
       return streets
     } catch (error) {
-      console.log('There was a problem: ', error)
+      console.error('There was a problem: ', error)
       this.abortAll()
     }
   }
