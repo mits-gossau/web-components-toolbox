@@ -671,7 +671,7 @@ export default class Navigation extends Mutation() {
           if (sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
-        section.parentNode.prepend(this.getBackground())
+        if (i === 0) section.parentNode.prepend(this.getBackground())
         section.replaceWith(wrapper)
       })
       this.root.querySelectorAll('a-link').forEach(link => link.addEventListener('click', this.clickListener))

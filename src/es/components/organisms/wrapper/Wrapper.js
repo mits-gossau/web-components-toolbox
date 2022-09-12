@@ -223,6 +223,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       // set width attributes as css vars
       let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE')
       const childNodesLength = Number(this.getAttribute('simulate-children')) || childNodes.length
+      let childNodesLengthNotWidthHundredPercent = childNodesLength
       if (childNodes.length < childNodesLength) {
         childNodes = childNodes.concat(Array(childNodesLength - childNodes.length).fill(childNodes[0]))
       } else if (childNodes.length > childNodesLength) {
@@ -243,6 +244,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         let width = this.cleanPropertyWidthValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}any-${i + 1}-width`))
         // width without namespace
         if (!width && this.hasAttribute('namespace-fallback')) width = this.cleanPropertyWidthValue(self.getComputedStyle(node).getPropertyValue(`--any-${i + 1}-width`))
+        // incase any has 100% reset it and don't count to continue on next row
+        if (width >= 100) {
+          width = 0
+          childNodesLengthNotWidthHundredPercent--
+        }
         /** @type {false | number} */
         let margin = false
         /** @type {false | string} */
@@ -272,14 +278,14 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         }
         return [acc[0] + width, width ? acc[1] + 1 : acc[1], unit ? acc[2] + margin : acc[2], unit || acc[3]]
       }, [0, 0, 0, ''])
-      let freeWidth = ((100 - bookedWidth) / (childNodesLength - bookedCount))
+      let freeWidth = ((100 - bookedWidth) / (childNodesLengthNotWidthHundredPercent - bookedCount))
       // @ts-ignore
       if (freeWidth === Infinity) freeWidth = 0
       this.style.textContent = ''
       for (let i = 1; i < childNodesLength + 1; i++) {
         this.setCss(/* CSS */`
           :host > section > *:nth-child(${i}) {
-            width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodesLength}${unit || 'px'});
+            width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodesLengthNotWidthHundredPercent}${unit || 'px'});
           }
         `, undefined, undefined, undefined, this.style)
       }
