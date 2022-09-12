@@ -34,11 +34,31 @@ export default class Link extends Shadow() {
     this.setAttribute('role', 'link')
     this.removeAttribute('tabindex')
     this.a.setAttribute('tabindex', '0')
+
+    this.mouseoverListener = event => {
+      this.a.classList.add('hover')
+    }
+    this.mouseoutListener = event => {
+      this.a.classList.remove('hover')
+    }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.mouseEventElement) {
+      this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
+      this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
+    }
+  }
+
+  disconnectedCallback () {
+    super.disconnectedCallback()
+    if (this.mouseEventElement) {
+      this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
+      this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
+      this.parentNodeShadowRootHost = null
+    }
   }
 
   /**
@@ -81,7 +101,7 @@ export default class Link extends Shadow() {
             grid-column: 1;
             grid-row: 1;
           }
-          :host > a:hover ~ ${this.hitAreaTagName} {
+          :host > a:hover ~ ${this.hitAreaTagName}, :host > a.hover ~ ${this.hitAreaTagName} {
             color: var(--color-hover, var(--color, yellow));
             text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
           }
@@ -115,7 +135,7 @@ export default class Link extends Shadow() {
         text-decoration: var(--text-decoration-active, var(--text-decoration-hover, var(--text-decoration, none)));
         font-family: var(--font-family-active, var(--font-family-hover, var(--font-family, inherit)));
       }
-      :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName} {
+      :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName}, :host > a.hover, :host > a.hover ~ ${this.hitAreaTagName} {
         box-shadow: var(--box-shadow-hover, none);
         color: var(--color-hover, var(--color, yellow));
         text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
@@ -160,7 +180,7 @@ export default class Link extends Shadow() {
             transform: translateY(1em);
             transition: opacity .3s ease 0s,transform .3s ease 0s;
           }
-          :host > a:hover::after, :host > ${this.hitAreaTagName}:hover::after {
+          :host > a:hover::after, :host > ${this.hitAreaTagName}:hover::after, :host > a.hover::after, :host > ${this.hitAreaTagName}.hover::after {
             opacity: 1;
             transform: translateY(0);
           }
@@ -223,5 +243,19 @@ export default class Link extends Shadow() {
 
   get iconPath () {
     return this.getAttribute('icon-path') || `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../molecules/teaser/download-/img/download.svg`
+  }
+
+  get parentNodeShadowRootHost () {
+    if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
+    const searchShadowRoot = node => node.root || node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
+    return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
+  }
+
+  set parentNodeShadowRootHost (node) {
+    this._parentNodeShadowRootHost = node
+  }
+
+  get mouseEventElement () {
+    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
   }
 }

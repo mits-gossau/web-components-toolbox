@@ -124,11 +124,9 @@ export default class Teaser extends Intersection() {
             padding-top: 0;
           }
           :host(:hover) figure figcaption * {
+            color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
             background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
             box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green)))), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
-          }
-          :host(:hover) figure * {
-            color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
           }
         `
         : ''}
@@ -171,11 +169,17 @@ export default class Teaser extends Intersection() {
       :host(:hover) figure figcaption {
         transform: var(--figcaption-transform-hover, none);
       }
-      :host figure * {
+      :host figure figcaption * {
         color: var(--figcaption-color, var(--color, unset));
       }
-      :host(:hover) figure * {
+      :host figure figcaption h6 {
+        color: var(--h6-figcaption-color, var(--figcaption-color, var(--color, unset)));
+      }
+      :host(:hover) figure figcaption * {
         color: var(--figcaption-color-hover, var(--figcaption-color, var(--color, unset)));
+      }
+      :host(:hover) figure figcaption h6 {
+        color: var(--h6-figcaption-color-hover, var(--figcaption-color-hover, var(--h6-figcaption-color, var(--figcaption-color, var(--color, unset)))));
       }
       :host figure figcaption > * {
         transition: var(--figcaption-any-transition, none);
