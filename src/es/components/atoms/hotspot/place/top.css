@@ -1,0 +1,22 @@
+@media screen and (min-width: _max-width_){
+    :host .content{
+        top: auto;
+        bottom: 0;
+        transform-origin: bottom left;
+        transform: scale(0) translate(-50%,-3rem);
+    }
+    :host(.active) .content{
+        transform: scale(1) translate(-50%,-3rem);
+        transition: transform .4s 250ms cubic-bezier(.23,1,.32,1),
+          background-color .4s 250ms cubic-bezier(.23,1,.32,1),
+          visibility .4s 250ms cubic-bezier(.23,1,.32,1);
+    }
+    :host .content:after{
+        transform: translate(0,-50%) rotate(45deg) scale(1);
+        box-shadow: 5px 5px 15px -6px rgba(0,0,0,.3);
+        transition: box-shadow .1s 250ms cubic-bezier(.23,1,.32,1),
+          transform .3s .4s cubic-bezier(.23,1,.32,1);
+        top: 100%;
+        left: 50%;
+    }
+}

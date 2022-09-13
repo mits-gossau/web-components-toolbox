@@ -1,0 +1,16 @@
+@media screen and (min-width: _max-width_){
+    :host .content{
+        right: 0;
+        left: auto;
+        transform-origin: top right;
+        transform: scale(0) translate(-3rem,-50%);
+    }
+    :host(.active) .content{
+        transform: scale(1) translate(-3rem,-50%);
+    }
+    :host .content:after{
+        transform: translate(0,-50%) rotate(-45deg) scale(1);
+        top: 50%;
+        left: 100%;
+    }
+}
