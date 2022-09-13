@@ -10,7 +10,6 @@ import Button from '../../atoms/button/Button.js'
  * Umbraco Forms Styling
  * Figma Example: https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=1904%3A17142
  *
- *
  * @export
  * @class Wrapper
  * @type {CustomElementConstructor}
@@ -103,7 +102,8 @@ export default class Form extends Shadow() {
         resize: none;
       }
       input[type]:disabled{
-        background-color:red;
+        background-color:#E0E0E0;
+        border: 1px solid #E0E0E0;
       }
       ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
         font-family: var(--font-family, inherit);
@@ -198,15 +198,39 @@ export default class Form extends Shadow() {
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
       }
-      /* loader */
-      .loader {
+
+      datalist {
+        position: relative; 
+        border: 1px solid var(--m-gray-400);
+        border-top: none;
+        width: 100%;
+        max-height: 10em;
+        overflow-y: auto;
+      }
+      
+      option {
+        background-color: var(--background-color);
+        padding: 0.3em var(--content-spacing-mobile, 0.3em) 0.3em var(--content-spacing-mobile, 0.3em) ;
+        cursor: pointer;
+      }
+      option:hover, .active{
+        background-color: var(--color-secondary);
+        color: var(--background-color);
+      }
+      /* loading icon for form fields */
+      .icon-container {
         position: relative;
+        right: 0px;
+        bottom: 30px;
+      }
+      .loader {
+        position: absolute;
+        right:10px;
         height: 20px;
         width: 20px;
         display: inline-block;
         animation: around 5.4s infinite;
       }
-      
       @keyframes around {
         0% {
           transform: rotate(0deg)
@@ -215,7 +239,6 @@ export default class Form extends Shadow() {
           transform: rotate(360deg)
         }
       }
-      
       .loader::after, .loader::before {
         content: "";
         background: white;
@@ -232,11 +255,12 @@ export default class Form extends Shadow() {
         left: 0;
         animation: around 0.7s ease-in-out infinite;
       }
-      
       .loader::after {
         animation: around 0.7s ease-in-out 0.1s infinite;
         background: transparent;
       }
+    
+       
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [

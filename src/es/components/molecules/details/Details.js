@@ -107,7 +107,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
     let currentMedia = null
     this.checkMedia = () => {
-      if (this.isMobile !== currentMedia) {
+      if (this.isMobile != currentMedia) {
         currentMedia = this.isMobile
         this.mutationObserveStop()
         if (this.isMobile) {
@@ -449,7 +449,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           padding: var(--summary-padding-mobile, var(--summary-padding, 0));
         }
         ${this.hasAttribute('mobile-open')
-? `
+        ? `
         :host summary .dropdown-icon {
           display: none;
         }
@@ -460,7 +460,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           pointer-events: none;
         }
         `
-: ''}
+        : ''}
 
         
       }

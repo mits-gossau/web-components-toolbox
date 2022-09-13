@@ -33,6 +33,12 @@ export default class Button extends Shadow() {
       this.setAttribute('role', 'link')
     }
     if (this.textContent.length) this.labelText = this.textContent // allow its initial textContent to become the label if there are no nodes but only text
+    this.mouseoverListener = event => {
+      this.button.classList.add('hover')
+    }
+    this.mouseoutListener = event => {
+      this.button.classList.remove('hover')
+    }
   }
 
   connectedCallback () {
@@ -40,10 +46,19 @@ export default class Button extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     this.button.addEventListener('click', this.clickListener)
     this.attributeChangedCallback('disabled')
+    if (this.mouseEventElement) {
+      this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
+      this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
+    }
   }
 
   disconnectedCallback () {
     this.button.removeEventListener('click', this.clickListener)
+    if (this.mouseEventElement) {
+      this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
+      this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
+      this.parentNodeShadowRootHost = null
+    }
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -107,7 +122,7 @@ export default class Button extends Shadow() {
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
       }
-      button:hover {
+      button:hover, button.hover {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
@@ -125,7 +140,7 @@ export default class Button extends Shadow() {
         opacity: var(--opacity-disabled, var(--opacity, 1));
         transition: opacity 0.3s ease-out;
       }
-      :host button[disabled]:hover {
+      :host button[disabled]:hover, :host button[disabled].hover {
         opacity: var(--opacity-disabled-hover, var(--opacity-disabled, var(--opacity, 1)));
       }
       #label {
@@ -209,5 +224,19 @@ export default class Button extends Shadow() {
 
   get label () {
     return this.root.querySelector('#label')
+  }
+
+  get parentNodeShadowRootHost () {
+    if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
+    const searchShadowRoot = node => node.root || node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
+    return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
+  }
+
+  set parentNodeShadowRootHost (node) {
+    this._parentNodeShadowRootHost = node
+  }
+
+  get mouseEventElement () {
+    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
   }
 }

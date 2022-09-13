@@ -1,7 +1,9 @@
 /* global self */
+/* global location */
 
 // @ts-ignore
 self.Environment = {
+  isLocalhost: location.hostname === 'localhost',
   contentfulEndpoint: 'https://graphql.contentful.com/content/v1/spaces/',
   contentfulRenderer: '//cdn.jsdelivr.net/npm/@contentful/rich-text-html-renderer@15.13.1/dist/rich-text-html-renderer.es5.min.js',
   /**
@@ -19,6 +21,14 @@ self.Environment = {
         return '1200px'
       default:
         return '767px'
+    }
+  },
+  getApiBaseUrl: function (type) {
+    switch (type) {
+      case 'zadb':
+        return this.isLocalhost ? 'https://testadmin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi' : ''
+      default:
+        return ''
     }
   }
 }
