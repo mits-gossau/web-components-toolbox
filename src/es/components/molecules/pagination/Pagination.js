@@ -73,14 +73,46 @@ export default class Pagination extends Shadow() {
       pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="?page=${i + 1}">${i + 1}</a></li>`
     }
 
+    const withRelAttributeOnLinks = this.setRel(pageItems)
+    
     this.pagination.innerHTML =
       `<nav>
         <ul class="pagination">
-          ${pageItems}
+          ${withRelAttributeOnLinks}
         </ul>
       </nav>
     `
     this.html = this.pagination
+  }
+
+  /**
+   * Set "rel" attribute to previous and next link
+   * @param {string} items
+   * @return {string} 
+   */
+  setRel(items) {
+    const nodes =  new DOMParser().parseFromString(items, 'text/html').body.childNodes
+    const updateNodes =  Array.from(nodes).reduce((acc, cur, index, nodes) => {
+      // @ts-ignore
+      if (cur.classList.contains("active")) {
+        if (index === 0) {
+          // @ts-ignore
+          acc[index + 1].firstChild.setAttribute("rel", "next")
+        } else if (index + 1 === nodes.length) {
+          // @ts-ignore
+          acc[index - 1].firstChild.setAttribute("rel", "prev")
+        } else {
+          // @ts-ignore
+          acc[index + 1].firstChild.setAttribute("rel", "next")
+          // @ts-ignore
+          acc[index - 1].firstChild.setAttribute("rel", "prev")
+        }
+      }
+      return acc
+    }, nodes)
+    
+    // @ts-ignore
+    return Array.from(updateNodes).map(item => item.outerHTML).join("")
   }
 
   renderCSS() {
