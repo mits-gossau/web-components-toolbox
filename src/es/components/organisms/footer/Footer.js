@@ -346,10 +346,8 @@ export default class Footer extends Shadow() {
                 :host > section > *:not(.contains-details):not(:first-child) {
                   margin-top: var(--${this.getAttribute('namespace')}gap-mobile-custom, var(--${this.getAttribute('namespace')}gap-custom, var(--content-spacing-mobile, var(--content-spacing)))) !important;
                 }
-                :host > section > *.contains-details:not(:first-of-type) > m-details {
-                  --details-default-icon-right-border-top-custom: 0;
-                }
                 :host > section > *.contains-details > m-details {
+                  --details-default-icon-right-border-top-custom: 0;
                   display: block !important;
                 }
                 :host > section > *.contains-details > *:not(m-details) {
