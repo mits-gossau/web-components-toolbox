@@ -12,7 +12,7 @@ CSS Rules:
 - use templates instead of namespace-fallback
 - each template must have a local preview
 - use _\_max-width_\_ for "@media only screen and (max-width:" selector
-- use _\_import-meta-url_\_ for all urls (!important, pass option "importMetaUrl: import.meta.url" to Shadow.js in the constructor to have the viewpoint of the Class inheriting Shadow.js)
+- use _\_import-meta-url_\_ for all urls (!important, pass option "importMetaUrl: import.meta.url" to Shadow.js in the constructor to have the viewpoint of the Class inheriting Shadow.js) / Example [ArticlePreview.js](https://github.com/mits-gossau/web-components-toolbox/blob/master/src/es/components/molecules/articlePreview/ArticlePreview.js#L7)
 - sort css properties and variables alphabetically
 - variables naming rule: --{selector aka component aka namespace}-{css property}-{pseudo class or media query name} eg. --p-background-color-hover
 - within the component don't use any name spacing eg. component header don't use --header-default-color just use --color the namespace can be added by the Shadow as an html attribute

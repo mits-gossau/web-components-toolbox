@@ -36,7 +36,7 @@
   --navigation-alnatura-background-color: var(--background-color);
   --navigation-alnatura-font-size: 1em;
 }
-:host > nav > ul li.open > o-nav-wrapper > section > ul > li, :host > nav > ul li.open > o-nav-wrapper > section > ul > li:last-child {
+:host > nav > ul li.open > o-nav-wrapper > section > ul:not(:first-child) > li, :host > nav > ul li.open > o-nav-wrapper > section > ul:not(:first-child) > li:last-child {
   border-bottom: 2px dotted var(--navigation-alnatura-background-color-open);
   padding: 0.5em 0 !important;
   --any-padding: 0.5em 0;

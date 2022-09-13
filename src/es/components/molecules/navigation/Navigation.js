@@ -461,6 +461,7 @@ export default class Navigation extends Mutation() {
           --li-padding: 0;
           --margin: 0;
           --min-height-mobile: 0;
+          background-color: var(--background-color, black) !important;
           scrollbar-color: var(--color-secondary) var(--background-color);
         }
         :host > nav {
@@ -635,6 +636,7 @@ export default class Navigation extends Mutation() {
         li.setAttribute('aria-expanded', 'false')
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
         const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+        aLink.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
         aLink.setAttribute('hit-area', this.getAttribute('hit-area') || 'true')
         aLink.setAttribute('aria-expanded', 'false')
         if (this.hasAttribute('set-active')) aLink.setAttribute('set-active', this.getAttribute('set-active'))
@@ -643,6 +645,7 @@ export default class Navigation extends Mutation() {
           li.classList.add('active')
         }
         const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+        arrow.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
         arrow.setAttribute('direction', arrowDirections[1])
         const arrowClickListener = event => {
           if (this.hasAttribute('focus-lost-close-mobile')) this.adjustArrowDirections(event, arrowDirections)
@@ -695,6 +698,7 @@ export default class Navigation extends Mutation() {
       })
       Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
         const wrapper = new children[2][1]({ mode: 'false' })
+        wrapper.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node, i) => {

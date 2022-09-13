@@ -135,6 +135,7 @@ export default class NewsList extends Shadow() {
       items.forEach(article => {
         // @ts-ignore
         const articleEle = new child[0][1](article, { namespace })
+        articleEle.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
         articleEle.setAttribute('article-url', this.getAttribute('article-url'))
         if (this.getAttribute('is-on-home') !== null) {
           articleEle.setAttribute('is-on-home', this.getAttribute('is-on-home'))
