@@ -341,7 +341,7 @@ export default class Navigation extends Mutation() {
         :host > nav > ul ul > li > a-arrow {
           display: none;
         }
-        :host > nav > ul > li a-link:hover ~ a-arrow, :host > nav > ul > li.open a-link:hover ~ a-arrow {
+        :host > nav > ul > li a-link:hover ~ a-arrow, :host > nav > ul > li.open a-link:hover ~ a-arrow, :host > nav > ul > li a-link ~ a-arrow:hover, :host > nav > ul > li.open a-link ~ a-arrow:hover {
           --color: var(--color-hover);
         }
         :host > nav > ul > li.open a-arrow {
@@ -653,16 +653,16 @@ export default class Navigation extends Mutation() {
           li.setAttribute('aria-expanded', li.classList.contains('open') ? 'true' : 'false')
           arrow.setAttribute('direction', li.classList.contains('open') ? arrowDirections[0] : arrowDirections[1])
         }
-        arrow.addEventListener('click', arrowClickListener)
-        aLink.addEventListener('click', event => {
+        const aLinkClickListener = event => {
           if (event.target) {
             arrowClickListener()
             let a = null
-            if (event.target.root && (a = event.target.root.querySelector('a'))) {
+            if (event.target.root && (a = event.target.root.querySelector('a')) || !event.target.classList.contains('open') && event.target.previousElementSibling && event.target.previousElementSibling.root && (a = event.target.previousElementSibling.root.querySelector('a'))) {
               if (!a.getAttribute('href') || a.getAttribute('href') === '#') {
                 event.preventDefault()
                 if (this.focusLostClose) event.stopPropagation()
                 this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
+                if (event.target && event.target.parentNode && event.target.parentNode.parentNode && event.target.parentNode.parentNode.tagName === 'UL') event.target.parentNode.parentNode.classList.add('open')
                 event.target.classList.add('open')
                 event.target.setAttribute('aria-expanded', 'true')
                 let wrapper
@@ -679,7 +679,9 @@ export default class Navigation extends Mutation() {
               }
             }
           }
-        })
+        }
+        arrow.addEventListener('click', aLinkClickListener)
+        aLink.addEventListener('click', aLinkClickListener)
         self.addEventListener('click', event => {
           if (this.focusLostClose) {
             if (this.hasAttribute('focus-lost-close-mobile')) {
