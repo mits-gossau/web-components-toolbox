@@ -526,7 +526,7 @@ export default class Navigation extends Mutation() {
           z-index: 100;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem calc(2rem + min(30vw, 50px));
+          --a-link-content-spacing-no-scroll: var(--a-link-content-spacing-no-scroll-custom, 0.5rem 0.5rem 0.5rem calc(2rem + min(30vw, 50px)));
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: 1.1429rem;
           --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
@@ -546,8 +546,8 @@ export default class Navigation extends Mutation() {
           margin-bottom: 100px !important; /* must be up, otherwise the iphone hides it behind the footer bar */
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li:first-child, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
-          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem min(30vw, 50px);
-          --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
+          --a-link-content-spacing-no-scroll: var(--a-link-content-spacing-no-scroll-custom, 0.5rem 0.5rem 0.5rem min(30vw, 50px));
+          --a-link-content-spacing: var(--a-link-content-spacing-custom, var(--a-link-content-spacing-no-scroll));
           --a-link-font-size-mobile: 1.2857rem;
           --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
           padding-bottom: 0;
