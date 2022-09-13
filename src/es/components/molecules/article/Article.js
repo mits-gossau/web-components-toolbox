@@ -124,7 +124,8 @@ export default class Article extends Shadow() {
         <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
       </article>`
 
-      this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {
+      this.setMetaTags({ description: metaDescription, keywords: metaKeywords}).then(() => {
+        document.title = metaTitle || 'News'
         this.html = this.newsWrapper
       })
     })
