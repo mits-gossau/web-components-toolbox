@@ -58,7 +58,7 @@
   :host {
     --navigation-alnatura-background-color: var(--menu-color);
     --navigation-alnatura-a-link-content-spacing-no-scroll-custom: var(--navigation-alnatura-a-link-content-spacing-custom);
-    --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 calc(2rem + min(10vw, 50px));
+    --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 calc(var(--content-spacing-mobile) * 2 + min(10vw, var(--content-spacing-mobile)));
     --navigation-alnatura-color: var(--menu-color);
     --navigation-alnatura-color-mobile: var(--menu-color);
     --navigation-alnatura-search-li-padding-mobile: var(--content-spacing-mobile) 0 0;
@@ -89,7 +89,7 @@
   }
   :host > nav > ul li.open > o-nav-wrapper > section > ul > li:first-child, :host > nav > ul li.open > o-nav-wrapper > section > ul > li.bold {
     --navigation-alnatura-a-link-content-spacing-no-scroll-custom: var(--navigation-alnatura-a-link-content-spacing-custom);
-    --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 min(10vw, 50px);
+    --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 min(10vw, var(--content-spacing-mobile));
   }
   :host > nav > ul:not(.language-switcher):not(.open), :host(:not(.no-scroll)) > nav > ul:not(.language-switcher):not(.open) {
     margin: var(--navigation-alnatura-margin-no-scroll, var(--navigation-alnatura-padding-no-scroll));
