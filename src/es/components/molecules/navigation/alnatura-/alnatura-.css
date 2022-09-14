@@ -1,6 +1,6 @@
 :host {
   --gap-custom: 0;
-  --menu-color: var(--color-tertiary, var(--color-hover, green));
+  --menu-color: var(--color-tertiary);
   --menu-background-color: var(--background-color);
   --navigation-alnatura-background-color-open: var(--menu-color);
   --navigation-alnatura-border-color: var(--menu-color);
@@ -10,6 +10,7 @@
   --navigation-alnatura-section-color-open: var(--color);
   --navigation-alnatura-section-ul-background-color: var(--menu-background-color);
   --navigation-alnatura-padding-no-scroll: var(--content-spacing-mobile);
+  --color-secondary: var(--menu-color);
 }
 :host > nav > ul.open {
   --navigation-alnatura-padding-no-scroll: 0;
