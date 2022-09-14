@@ -27,3 +27,9 @@
   --navigation-default-white-space: normal;
   --navigation-default-word-break: break-word;
 }
+@media only screen and (max-width: _max-width_) {
+  :host > nav > ul > li.search > * {
+    margin-left: var(--content-spacing-mobile);
+    margin-right: var(--content-spacing-mobile);
+  }
+}

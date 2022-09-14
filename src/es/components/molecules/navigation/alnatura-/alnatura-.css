@@ -1,13 +1,14 @@
 :host {
   --gap-custom: 0;
-  --navigation-alnatura-background-color-open: var(--color-tertiary, var(--color-hover, green));
-  --navigation-alnatura-border-color: var(--navigation-alnatura-background-color-open);
+  --menu-color: var(--color-tertiary, var(--color-hover, green));
+  --menu-background-color: var(--background-color);
+  --navigation-alnatura-background-color-open: var(--menu-color);
+  --navigation-alnatura-border-color: var(--menu-color);
   --navigation-alnatura-content-width: var(--navigation-alnatura-content-width-custom, var(--header-default-content-width));
-  --navigation-alnatura-section-background-color-open: var(--background-color);
-  --navigation-alnatura-section-background-color: var(--navigation-alnatura-background-color-open);
+  --navigation-alnatura-section-background-color-open: var(--menu-background-color);
+  --navigation-alnatura-section-background-color: var(--menu-color);
   --navigation-alnatura-section-color-open: var(--color);
-  --navigation-alnatura-section-ul-background-color: var(--background-color);
-  --navigation-alnatura-search-li-padding-mobile: var(--content-spacing-mobile);
+  --navigation-alnatura-section-ul-background-color: var(--menu-background-color);
   --navigation-alnatura-padding-no-scroll: var(--content-spacing-mobile);
 }
 :host > nav > ul.open {
@@ -15,65 +16,85 @@
   --navigation-alnatura-padding: 0;
 }
 :host > nav > ul li.open > o-nav-wrapper > section {
-  --navigation-alnatura-color: var(--navigation-alnatura-background-color-open);
+  --navigation-alnatura-color: var(--menu-color);
 }
 :host > nav > ul li.open > o-nav-wrapper > section > ul {
   --padding: var(--content-spacing);
   --padding-mobile: var(--content-spacing-mobile);
   --padding-mobile-custom: var(--content-spacing-mobile);
   --padding-mobile-first-child-custom: var(--content-spacing-mobile);
-  background-color: var(--background-color);
+  background-color: var(--menu-background-color);
   border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.5em));
 }
-:host > nav > ul li.open > o-nav-wrapper > section > ul:first-child {
+:host > nav > ul li.open > o-nav-wrapper > section > *[width="100%"] {
   --margin: 0 0 var(--content-spacing) 0;
   --margin-mobile: 0 0 var(--content-spacing-mobile);
 }
-:host > nav > ul li.open > o-nav-wrapper > section > ul {
+:host > nav > ul li.open > o-nav-wrapper > section > * {
   --margin: 0 var(--content-spacing) 0 0;
   --margin-mobile: 0 0 var(--content-spacing-mobile);
 }
-:host > nav > ul li.open > o-nav-wrapper > section > ul:last-child {
+:host > nav > ul li.open > o-nav-wrapper > section > *:last-child {
   --margin: 0;
   --margin-mobile: 0;
 }
 :host > nav > ul li.open > o-nav-wrapper > section > ul, :host > nav > ul li.open > o-nav-wrapper > section > ul a-link {
-  --navigation-alnatura-background-color: var(--background-color);
+  --navigation-alnatura-background-color: var(--menu-background-color);
   --navigation-alnatura-font-size: 1em;
 }
-:host > nav > ul li.open > o-nav-wrapper > section > ul:not(:first-child) > li, :host > nav > ul li.open > o-nav-wrapper > section > ul:not(:first-child) > li:last-child {
-  border-bottom: 2px dotted var(--navigation-alnatura-background-color-open);
+:host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) > li, :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) > li:last-child {
+  border-bottom: 2px dotted var(--menu-color);
   padding: 0.5em 0 !important;
   --any-padding: 0.5em 0;
 }
-:host > nav > ul li.open > o-nav-wrapper > section > ul:not(:first-child) > li:last-child {
+:host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) > li:last-child {
   border-bottom: 0;
 }
-:host > nav > ul li.open > o-nav-wrapper > section > ul:not([style]):first-child > li {
+:host > nav > ul li.open > o-nav-wrapper > section > ul:not([style])[width="100%"] > li {
   border: 0;
 }
 @media only screen and (max-width: _max-width_) {
   :host {
-    --navigation-alnatura-background-color: var(--navigation-alnatura-background-color-open);
+    --navigation-alnatura-background-color: var(--menu-color);
     --navigation-alnatura-a-link-content-spacing-no-scroll-custom: var(--navigation-alnatura-a-link-content-spacing-custom);
     --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 calc(2rem + min(10vw, 50px));
-    --navigation-alnatura-color: var(--navigation-alnatura-background-color-open);
-    --navigation-alnatura-color-mobile: var(--navigation-alnatura-background-color-open);
+    --navigation-alnatura-color: var(--menu-color);
+    --navigation-alnatura-color-mobile: var(--menu-color);
+    --navigation-alnatura-search-li-padding-mobile: var(--content-spacing-mobile) 0 0;
+    --icon-color: var(--menu-color);
   }
   :host > nav > ul > li > a-link, :host(.no-scroll) > nav > ul > li > a-link {
     --navigation-alnatura-padding: var(--content-spacing-mobile);
   }
   :host > nav > ul:not(.open) > li, :host(.no-scroll) > nav > ul:not(.open) > li {
-    --navigation-alnatura-background-color: var(--background-color);
-    background-color: var(--background-color);
-    padding: var(--content-spacing-mobile);
+    --navigation-alnatura-background-color: var(--menu-background-color);
+  }
+  :host > nav > ul:not(.open) > li, :host(.no-scroll) > nav > ul:not(.open) > li, :host > nav > ul.open > li, :host(.no-scroll) > nav > ul.open > li {
+    background-color: transparent;
+    --navigation-alnatura-background-color: transparent;
+    --navigation-alnatura-background-color-open: transparent;
+  }
+  :host > nav > ul:not(.open):not(.language-switcher) > li:not(.search), :host(.no-scroll) > nav > ul:not(.open):not(.language-switcher) > li:not(.search) {
+    border-bottom: 2px dotted var(--menu-color);
+  }
+  :host > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child, :host(.no-scroll) > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child {
+    border-bottom: 0;
   }
   :host > nav > ul li.open > o-nav-wrapper > section > ul > li:first-child, :host > nav > ul li.open > o-nav-wrapper > section > ul > li.bold {
     --navigation-alnatura-a-link-content-spacing-no-scroll-custom: var(--navigation-alnatura-a-link-content-spacing-custom);
     --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 min(10vw, 50px);
   }
-  :host(:not(.no-scroll)) > nav > ul {
-    /*padding: var(--navigation-alnatura-padding-no-scroll);*/
+  :host > nav > ul:not(.language-switcher):not(.open), :host(:not(.no-scroll)) > nav > ul:not(.language-switcher):not(.open) {
+    margin: var(--navigation-alnatura-margin-no-scroll, var(--navigation-alnatura-padding-no-scroll));
+    padding: var(--navigation-alnatura-padding-no-scroll);
+    background-color: var(--menu-background-color);
+    border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em));
+  }
+  :host > nav > ul.language-switcher li, :host(:not(.no-scroll)) > nav > ul.language-switcher li, :host > nav > ul:not(.open).language-switcher li, :host(:not(.no-scroll)) > nav > ul:not(.open).language-switcher li {
+    --navigation-alnatura-color-mobile: var(--menu-background-color);
+  }
+  :host > nav > ul li:first-child {
+    --navigation-alnatura-search-li-padding-mobile: 0;
   }
   :host > nav > ul li.open > o-nav-wrapper > section {
     width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)) !important;
