@@ -81,6 +81,36 @@ export default class Login extends Shadow() {
    * @return {Promise<void>}
    */
   render () {
+    this.css = /* css */`
+      :host {
+        display: flex;
+        align-items: baseline;
+        justify-content: end;
+        gap: calc(var(--content-spacing, 1em) * 2);
+        margin: calc(var(--content-spacing, unset) / 2) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+        width: max(calc(_max-width_ - var(--content-spacing) * 2), 55%); /* Environment.js mobileBreakpoint must correspond to the calc 1200px */
+      }
+      :host .font-size-tiny {
+        font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
+        line-height: var(--line-height-mobile, var(--line-height, normal));
+      }
+      :host > a {
+        color: var(--color);
+        text-decoration: none;
+        font-weight: var(--font-weight-strong, bold);
+      }
+      @media only screen and (max-width: _max-width_) {
+        :host {
+          gap: calc(var(--content-spacing-mobile, var(--content-spacing, 1em)) * 2);
+          margin: calc(var(--content-spacing-mobile, var(--content-spacing, unset)) / 2) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
+        }
+        :host .font-size-tiny {
+          font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
+          line-height: var(--line-height-mobile, var(--line-height, normal));
+        }
+      }
+    `
     return this.loadDependency().then(async msrc => {
       this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
       // Setup OIDC login configuration

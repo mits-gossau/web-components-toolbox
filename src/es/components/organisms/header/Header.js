@@ -210,6 +210,10 @@ export default class Header extends Shadow() {
         justify-content: var(--justify-content , space-between);
         padding: var(--padding, 0);
         margin: var(--margin, 0);
+        ${this.previousElementSibling.tagName === 'MSRC-LOGIN'
+          ? 'margin-top: 0;'
+          : ''
+        }
         width: var(--width, 100%);
         position: var(--header-position, relative);
         transition: var(--transition, all 0.2s ease);
@@ -302,6 +306,10 @@ export default class Header extends Shadow() {
         :host > header {
           flex-wrap: nowrap;
           margin: var(--margin-mobile, var(--margin, 0));
+          ${this.previousElementSibling.tagName === 'MSRC-LOGIN'
+            ? 'margin-top: 0;'
+            : ''
+          }
         }
         :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
           animation: close .4s ease-in;
