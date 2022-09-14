@@ -78,6 +78,9 @@
     --navigation-alnatura-background-color: transparent;
     --navigation-alnatura-background-color-open: transparent;
   }
+  :host > nav > ul.language-switcher {
+    padding: var(--navigation-alnatura-padding-no-scroll,var(--padding-no-scroll, calc(var(--navigation-alnatura-content-spacing,var(--content-spacing, 40px))) / 2) 0)
+  }
   :host > nav > ul:not(.open):not(.language-switcher) > li:not(.search), :host(.no-scroll) > nav > ul:not(.open):not(.language-switcher) > li:not(.search) {
     border-bottom: 2px dotted var(--menu-color);
   }
