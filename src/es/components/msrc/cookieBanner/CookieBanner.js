@@ -152,7 +152,7 @@ export default class CookieBanner extends Shadow() {
         const vendorsMainScript = document.createElement('script')
         vendorsMainScript.setAttribute('type', 'text/javascript')
         vendorsMainScript.setAttribute('async', '')
-        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20201012123840/vendors~main.js')
+        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211217102607/vendors~main.js')
         vendorsMainScript.onload = () => {
           scriptCount++
           if ('msrc' in self === true && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
@@ -160,7 +160,7 @@ export default class CookieBanner extends Shadow() {
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20201012123840/main.js')
+        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
         mainScript.onload = () => {
           scriptCount++
           if ('msrc' in self === true && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line

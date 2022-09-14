@@ -35,7 +35,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *    "fitnesspark"|
  *    "mgb"|
  *    "migusto"} [theme="alnatura"]
- *  {"large"|"medium"|"small"} [size="medium"]
+ *  {"large"|"medium"|"small"} [size="small"]
  *  {string} [loginReturnTo="self.location"]
  *  {string} [logoutReturnTo="self.location"]
  *  {string|Partial<{
@@ -51,30 +51,19 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *    responseType: string,
  *  }>} [config="{'en': 'local'}"]
  * }
- * @css {
- * --color, black
- * --font-size, 0.73em
- * --line-height, normal
- * --font-weight, normal
- * --background-color, white
- * --box-shadow-color, white
- * --button-background-color, --color-secondary, orange
- * --button-border-color, --color-secondary, orange
- * --button-color, --background-color, white
- * --color-a, --color-secondary, white
- * }
  */
 export default class Login extends Shadow() {
-  constructor (...args) {
-    super({ mode: 'false' }, ...args) // disabling shadow-DOM to have msrc styles flow into the node
-  }
-
   connectedCallback () {
+    const showPromises = []
     if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
       setTimeout(() => {
-        if (this.shouldComponentRenderHTML()) this.render()
+        if (this.shouldComponentRenderHTML()) showPromises.push(this.render())
       }, Number(this.getAttribute('timeout')))
-    } else if (this.shouldComponentRenderHTML()) this.render()
+    } else if (this.shouldComponentRenderHTML()) showPromises.push(this.render())
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => (this.hidden = false))
+    }
   }
 
   /**
@@ -83,40 +72,34 @@ export default class Login extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.msrcLoginButton
+    return !this.msrcLoginButtonWrapper
   }
 
   /**
    * renders the html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   render () {
-    this.css = /* css */`
-      :host > button {
-        background: 0;
-        border: 0;
-        margin: 0;
-        padding: 0;
-      }
-    `
-    this.msrcLoginButton = this.root.querySelector('button') || document.createElement('button')
-    this.loadDependency().then(async msrc => {
+    return this.loadDependency().then(async msrc => {
+      this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
       // Setup OIDC login configuration
       await msrc.utilities.login.setup({/* ... */})
       // Trigger autologin
       await msrc.utilities.login.autologin()
       // Initialize the login button
-      await msrc.components.login.button(this.msrcLoginButton, {
+      await msrc.components.login.button(this.msrcLoginButtonWrapper, {
         language: this.getAttribute('language') || 'de',
         theme: this.getAttribute('theme') || 'alnatura',
-        size: this.getAttribute('size') || 'medium',
+        size: this.getAttribute('size') || 'small',
         loginReturnTo: this.getAttribute('loginReturnTo') || '',
         logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
         config: this.constructor.parseAttribute(this.getAttribute('config') || '{"env": "local"}'),
       })
+      // wait for the styled-component to update the header stylesheet before raping it with getStyles
+      await new Promise(resolve => setTimeout(() => resolve(), 50))
+      this.html = [this.msrcLoginButtonWrapper, this.getStyles(document.createElement('style'))]
     })
-    this.html = this.msrcLoginButton
   }
 
   /**
@@ -136,7 +119,7 @@ export default class Login extends Shadow() {
         const vendorsMainScript = document.createElement('script')
         vendorsMainScript.setAttribute('type', 'text/javascript')
         vendorsMainScript.setAttribute('async', '')
-        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20201012123840/vendors~main.js')
+        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211217102607/vendors~main.js')
         vendorsMainScript.onload = () => {
           scriptCount++
           if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
@@ -144,7 +127,7 @@ export default class Login extends Shadow() {
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20201012123840/main.js')
+        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
         mainScript.onload = () => {
           scriptCount++
           if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
@@ -152,6 +135,33 @@ export default class Login extends Shadow() {
         this.html = [vendorsMainScript, mainScript]
       }
     }))
+  }
+
+  /**
+   * grab the msrc styles from the head style node with the attribute data-styled
+   *
+   * @param {HTMLStyleElement} [style=null]
+   * @return {string | HTMLStyleElement | false}
+   */
+  getStyles (style = null) {
+    let cssText = ''
+    /** @type {HTMLStyleElement[]} */
+    let componentStyles
+    if ((componentStyles = Array.from(document.querySelectorAll('style[data-styled]'))).length) {
+      componentStyles.forEach(componentStyle => {
+        if (componentStyle.sheet && componentStyle.sheet.rules && componentStyle.sheet.rules.length ) Array.from(componentStyle.sheet.rules).forEach(rule => {
+          cssText += rule.cssText
+        })
+      })
+      if (style) {
+        style.textContent = cssText
+        style.setAttribute('_css-msrc', '')
+        style.setAttribute('protected', 'true') // this will avoid deletion by html=''
+        return style
+      }
+      return cssText
+    }
+    return false
   }
 
   get scripts () {
