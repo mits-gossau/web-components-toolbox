@@ -64,6 +64,9 @@
     --navigation-alnatura-search-li-padding-mobile: var(--content-spacing-mobile) 0 0;
     --icon-color: var(--menu-color);
   }
+  :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
+    border-bottom: 2px dotted var(--menu-color) !important;
+  }
   :host > nav > ul > li > a-link, :host(.no-scroll) > nav > ul > li > a-link {
     --navigation-alnatura-padding: var(--content-spacing-mobile);
   }
