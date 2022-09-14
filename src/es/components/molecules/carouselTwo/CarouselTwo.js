@@ -61,6 +61,15 @@ export default class CarouselTwo extends Shadow() {
             node.classList.add('active')
           })
           this.section.classList.remove('scrolling')
+          // adjust the history
+          if (!self.location.hash.includes(activeChild.getAttribute('id'))) {
+            const url = `${self.location.href.split('#')[0]}#${activeChild.getAttribute('id')}`
+            if (self.location.hash.includes('next') || self.location.hash.includes('previous')) {
+              self.history.replaceState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
+            } else {
+              self.history.pushState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
+            }
+          }
         }
       }, 50)
     }
@@ -69,6 +78,15 @@ export default class CarouselTwo extends Shadow() {
     // stop interval when clicking outside window eg. iframe, etc.
     this.blurEventListener = event => this.setInterval()
     this.focusEventListener = event => this.clearInterval()
+    // browser prev/next navigation
+    this.clickAnchorEventListener = event => {
+      let element = null
+      if ((element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash))) {
+        this.clearInterval()
+        this.scrollIntoView(element, false)
+        this.setInterval()
+      }
+    }
   }
 
   connectedCallback () {
@@ -97,6 +115,7 @@ export default class CarouselTwo extends Shadow() {
       this.addEventListener('blur', this.blurEventListener)
       this.addEventListener('focus', this.focusEventListener)
     }
+    if (!this.hasAttribute('no-history')) self.addEventListener('hashchange', this.clickAnchorEventListener)
   }
 
   disconnectedCallback () {
@@ -107,6 +126,7 @@ export default class CarouselTwo extends Shadow() {
       this.removeEventListener('blur', this.blurEventListener)
       this.removeEventListener('focus', this.focusEventListener)
     }
+    if (!this.hasAttribute('no-history')) self.removeEventListener('hashchange', this.clickAnchorEventListener)
   }
 
   /**
@@ -171,7 +191,7 @@ export default class CarouselTwo extends Shadow() {
         margin: var(--nav-margin);
         max-height: 20%;
         justify-content: center;
-        z-index: 101;
+        z-index: 2;
       }
       :host > nav > * {
         --a-margin: 0;
@@ -207,7 +227,7 @@ export default class CarouselTwo extends Shadow() {
         display: flex;
         margin: 0;
         justify-content: space-between;
-        z-index: 100;
+        z-index: 1;
         font-size: 5em;
       }
       :host(.has-default-arrow-nav) > *.arrow-nav > * {
