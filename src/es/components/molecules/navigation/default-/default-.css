@@ -32,4 +32,7 @@
     margin-left: var(--content-spacing-mobile);
     margin-right: var(--content-spacing-mobile);
   }
+  :host > nav > ul > li > o-nav-wrapper > section > *:not(ul) {
+    --margin-mobile: 0 var(--content-spacing-mobile);
+  }
 }
