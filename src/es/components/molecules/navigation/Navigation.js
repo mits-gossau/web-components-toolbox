@@ -522,7 +522,7 @@ export default class Navigation extends Mutation() {
           top: auto;
           margin-top: calc(3rem + 1px);
           max-height: unset;
-          padding: 0 0 2.5rem 0;
+          padding: 0 0 4rem 0;
           z-index: 100;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
