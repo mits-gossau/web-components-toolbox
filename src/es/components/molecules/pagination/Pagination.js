@@ -38,9 +38,16 @@ export default class Pagination extends Shadow() {
       history.pushState(event.target.textContent, title, url.href)
       this.dispatchRequestArticlesEvent(event.target.textContent - 1)
     }
+
+    this.initialLoadListener = (event) => {
+      const params = new URLSearchParams(window.location.search)
+      const page = Number(params.get('page')) - 1
+      this.dispatchRequestArticlesEvent(page)
+    }
   }
 
   connectedCallback() {
+    window.addEventListener('load', this.initialLoadListener)
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener('listArticles', this.listArticlesListener)
     this.pagination.addEventListener('click', this.clickListener)
@@ -48,6 +55,7 @@ export default class Pagination extends Shadow() {
   }
 
   disconnectedCallback() {
+    window.removeEventListener('load', this.initialLoadListener)
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listArticles', this.listArticlesListener)
     self.removeEventListener('popstate', this.updatePopState)
