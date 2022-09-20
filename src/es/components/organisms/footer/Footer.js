@@ -125,6 +125,9 @@ export default class Footer extends Shadow() {
         width: auto;
         padding: 0 var(--content-spacing);
       }
+      :host > footer .seperator > ul > li:not(:last-child){
+        border-right: 1px solid var(--a-color, black);
+      }
       :host > footer .language-switcher > ul > li:first-child, :host > footer .footer-links > ul:not(.has-copyright) > li:first-child {
         padding-left: 0;
       }
@@ -137,13 +140,14 @@ export default class Footer extends Shadow() {
         padding: 0 var(--content-spacing) 0 0;
       }
       /* in case copyright and language are supposed to be on the same line on desktop */
-      :host > footer > .copyright-and-language {
+      :host > footer .copyright-and-language {
+        align-items: center;
         display: flex;
         flex-direction: row;
         gap: var(--content-spacing);
         justify-content: space-between;
       }
-      :host > footer > .copyright-and-language .footer-links ~ .language-switcher > ul {
+      :host > footer .copyright-and-language .footer-links ~ .language-switcher > ul {
         justify-content: right;
       }
       @media only screen and (max-width: _max-width_) {
