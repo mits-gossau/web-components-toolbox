@@ -107,7 +107,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
     let currentMedia = null
     this.checkMedia = () => {
-      if (this.isMobile != currentMedia) {
+      if (this.isMobile !== currentMedia) {
         currentMedia = this.isMobile
         this.mutationObserveStop()
         if (this.isMobile) {

@@ -2,18 +2,21 @@
 /* global self */
 /* global CustomEvent */
 /* global sessionStorage */
+/* global location */
+/* global history */
+/* global DOMParser */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
   constructor(...args) {
     super(...args)
-    
+
     const locationURL = self.location.href
-    const title = document.title;
-    
+    const title = document.title
+
     this.pagination = this.root.querySelector('div') || document.createElement('div')
-    
+
     this.listArticlesListener = event => {
       event.detail.fetch.then(() => {
         const articles = sessionStorage.getItem('articles') || ''
@@ -29,12 +32,22 @@ export default class Pagination extends Shadow() {
       event.preventDefault()
       const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', event.target.textContent)
-      history.pushState(event.target.textContent, title, url.href);
+      if (url.searchParams.get('page') === '1') {
+        url.searchParams.delete('page')
+      }
+      history.pushState(event.target.textContent, title, url.href)
       this.dispatchRequestArticlesEvent(event.target.textContent - 1)
+    }
+
+    this.initialLoadListener = (event) => {
+      const params = new URLSearchParams(window.location.search)
+      const page = Number(params.get('page')) - 1
+      this.dispatchRequestArticlesEvent(page)
     }
   }
 
   connectedCallback() {
+    window.addEventListener('load', this.initialLoadListener)
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener('listArticles', this.listArticlesListener)
     this.pagination.addEventListener('click', this.clickListener)
@@ -42,6 +55,7 @@ export default class Pagination extends Shadow() {
   }
 
   disconnectedCallback() {
+    window.removeEventListener('load', this.initialLoadListener)
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listArticles', this.listArticlesListener)
     self.removeEventListener('popstate', this.updatePopState)
@@ -49,7 +63,7 @@ export default class Pagination extends Shadow() {
 
   updatePopState = (event) => {
     this.dispatchRequestArticlesEvent(event.state - 1)
-  };
+  }
 
   dispatchRequestArticlesEvent(page) {
     this.dispatchEvent(new CustomEvent('requestListArticles', {
@@ -70,17 +84,59 @@ export default class Pagination extends Shadow() {
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
-      pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}" href="?page=${i + 1}">${i + 1}</a></li>`
+      pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
     }
+
+    const withRelAttributeOnLinks = this.setRel(pageItems)
 
     this.pagination.innerHTML =
       `<nav>
         <ul class="pagination">
-          ${pageItems}
+          ${withRelAttributeOnLinks}
         </ul>
       </nav>
     `
     this.html = this.pagination
+  }
+
+  /**
+   * Set "rel" attribute to previous and next link
+   * @param {string} items
+   * @return {string}
+   */
+  setRel(items) {
+    const nodes = new DOMParser().parseFromString(items, 'text/html').body.childNodes
+    const url = location.href;
+    const pageParam = url.substring(url.lastIndexOf('page='));
+    const updateNodes = Array.from(nodes).reduce((acc, cur, index, nodes) => {
+      // @ts-ignore
+      if (cur.classList.contains('active')) {
+        if (index === 0) {
+          // @ts-ignore
+          acc[index + 1].firstChild.setAttribute('rel', 'next')
+          acc[index + 1].firstChild.setAttribute('href', `${location.href}?page=${acc[index + 1].getAttribute('page')}`)
+        } else if (index + 1 === nodes.length) {
+          // @ts-ignore
+          const rep = location.href.replace(pageParam, `page=${acc[index - 1].getAttribute('page')}`)
+          acc[index - 1].firstChild.setAttribute('rel', 'prev')
+          acc[index - 1].firstChild.setAttribute('href', rep)
+        } else {
+          // @ts-ignore
+          const repNext = location.href.replace(pageParam, `page=${acc[index + 1].getAttribute('page')}`)
+          acc[index + 1].firstChild.setAttribute('rel', 'next')
+          acc[index + 1].firstChild.setAttribute('href', repNext)
+          
+          // @ts-ignore
+          const repPrev = location.href.replace(pageParam, `page=${acc[index - 1].getAttribute('page')}`)
+          acc[index - 1].firstChild.setAttribute('rel', 'prev')
+          acc[index - 1].firstChild.setAttribute('href', repPrev)
+        }
+      }
+      return acc
+    }, nodes)
+
+    // @ts-ignore
+    return Array.from(updateNodes).map(item => item.outerHTML).join('')
   }
 
   renderCSS() {
@@ -165,9 +221,9 @@ export default class Pagination extends Shadow() {
   }
 
   changeQueryString(searchString, documentTitle) {
-    documentTitle = typeof documentTitle !== 'undefined' ? documentTitle : document.title;
-    var urlSplit = (self.location.href).split("?");
-    var obj = { Title: documentTitle, Url: urlSplit[0] + searchString };
-    history.pushState(obj, obj.Title, obj.Url);
+    documentTitle = typeof documentTitle !== 'undefined' ? documentTitle : document.title
+    const urlSplit = (self.location.href).split('?')
+    const obj = { Title: documentTitle, Url: urlSplit[0] + searchString }
+    history.pushState(obj, obj.Title, obj.Url)
   }
 }

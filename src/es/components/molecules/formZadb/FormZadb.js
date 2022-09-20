@@ -3,6 +3,7 @@ import Form from '../form/Form.js'
 
 /* global self */
 /* global fetch */
+/* global CustomEvent */
 
 /**
  * @return {CustomElementConstructor | *}
@@ -140,8 +141,10 @@ export default class FormZadb extends Form {
     switch (listAttributeName) {
       case this.inputFields.zip.listId:
         field.onchange = (e) => this.zipChangeListener(e)
+        break
       case this.inputFields.street.listId:
         field.onchange = (e) => this.streetChangeListener(e)
+        break
       default:
         console.log('No field with list attribute found')
     }

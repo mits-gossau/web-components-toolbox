@@ -97,6 +97,11 @@ export default class Article extends Shadow() {
   renderHTML (data) {
     return Promise.all([this.loadChildComponents(), this.loadScriptDependency(), this.loadDependency()]).then(() => {
       const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection, metaDescription, metaKeywords, metaTitle } = this.getArticle(undefined, data)
+      const linkRenderOptions = {
+        renderNode: {
+          hyperlink: (node) => `<a href=${node.data.uri} target=${node.data.uri.startsWith(self.location.origin) ? '_self' : '_blank'} rel=${node.data.uri.startsWith(self.location.origin) ? '' : 'noopener noreferrer'}>${node.content[0].value}</a>`
+        }
+      }
       this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
       this.newsWrapper = `
       <article>
@@ -110,13 +115,13 @@ export default class Article extends Shadow() {
             ${contentOne
           ? `<p>${window
             // @ts-ignore
-            .documentToHtmlString(contentOne.json)}</p>`
+            .documentToHtmlString(contentOne.json, linkRenderOptions)}</p>`
           : ''}
             ${imageOne ? `<a-picture picture-load defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="${imageOne.description !== '' ? imageOne.description : imageOne.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
             ${contentTwo
           ? `<p>${window
             // @ts-ignore
-            .documentToHtmlString(contentTwo.json)}</p>`
+            .documentToHtmlString(contentTwo.json, linkRenderOptions)}</p>`
           : imageTwo ? '<br />' : ''} 
             ${imageTwo ? `<a-picture picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="${imageTwo.description !== '' ? imageTwo.description : imageTwo.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
         </div>
@@ -124,8 +129,7 @@ export default class Article extends Shadow() {
         <div class="back-btn-wrapper"><a-button class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
       </article>`
 
-      this.setMetaTags({ description: metaDescription, keywords: metaKeywords}).then(() => {
-        document.title = metaTitle || 'News'
+      this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {
         this.html = this.newsWrapper
       })
     })
