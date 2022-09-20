@@ -226,6 +226,7 @@ export default class CarouselTwo extends Shadow() {
       }
       :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover {
         transform: var(--nav-transform-hover, scale(1.6));
+        z-index: 3;
       }
       :host(.has-default-arrow-nav) > *.arrow-nav {
         align-items: center;
