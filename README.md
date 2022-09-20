@@ -17,6 +17,9 @@ CSS Rules:
 - variables naming rule: --{selector aka component aka namespace}-{css property}-{pseudo class or media query name} eg. --p-background-color-hover
 - within the component don't use any name spacing eg. component header don't use --header-default-color just use --color the namespace can be added by the Shadow as an html attribute
 
+HTML/CSS Tooling:
+- vscode extensions: es6-string-html & es6-string-css
+
 TODO:
 - [ ] redo header and navigation /\drem/, then eliminate all rem values
 - [ ] Template.html api call to fetch page content for previews
