@@ -21,7 +21,12 @@ export default class Pagination extends Shadow() {
       event.detail.fetch.then(() => {
         const articles = sessionStorage.getItem('articles') || ''
         const articlesData = JSON.parse(articles)
-        const { total, limit, skip } = articlesData?.data.newsEntryCollection
+        let { total, limit, skip } = articlesData?.data.newsEntryCollection
+        const pageParams = Number(location.search.split('page=')[1]) || 1
+        const calcSkipPage = (pageParams - 1) * 5
+        if (calcSkipPage !== skip) {
+          skip = calcSkipPage
+        }
         const pages = Math.ceil(total / limit)
         this.renderHTML(pages, limit, skip)
       })
@@ -40,15 +45,15 @@ export default class Pagination extends Shadow() {
     }
 
     this.initialLoadListener = (event) => {
-      const params = new URLSearchParams(window.location.search)
-      const page = Number(params.get('page')) - 1
+      const params = location.search.split('page=')[1] || 1
+      const page = Number(params) - 1
       this.dispatchRequestArticlesEvent(page)
     }
   }
 
   connectedCallback() {
-    window.addEventListener('load', this.initialLoadListener)
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    window.addEventListener('load', this.initialLoadListener)
     self.addEventListener('listArticles', this.listArticlesListener)
     this.pagination.addEventListener('click', this.clickListener)
     self.addEventListener('popstate', this.updatePopState)
@@ -84,7 +89,7 @@ export default class Pagination extends Shadow() {
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
-      pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
+      pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
     }
 
     const withRelAttributeOnLinks = this.setRel(pageItems)
@@ -122,12 +127,14 @@ export default class Pagination extends Shadow() {
           acc[index - 1].firstChild.setAttribute('href', rep)
         } else {
           // @ts-ignore
-          const repNext = location.href.replace(pageParam, `page=${acc[index + 1].getAttribute('page')}`)
+          const curPageNext = location.href;
+          const repNext = curPageNext.replace(pageParam, `page=${acc[index + 1].getAttribute('page')}`)
           acc[index + 1].firstChild.setAttribute('rel', 'next')
           acc[index + 1].firstChild.setAttribute('href', repNext)
           
           // @ts-ignore
-          const repPrev = location.href.replace(pageParam, `page=${acc[index - 1].getAttribute('page')}`)
+          const curPagePrev = location.href;
+          const repPrev = curPagePrev.replace(pageParam, `page=${acc[index - 1].getAttribute('page')}`)
           acc[index - 1].firstChild.setAttribute('rel', 'prev')
           acc[index - 1].firstChild.setAttribute('href', repPrev)
         }
