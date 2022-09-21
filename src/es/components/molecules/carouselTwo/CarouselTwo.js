@@ -109,7 +109,8 @@ export default class CarouselTwo extends Shadow() {
       this.hidden = true
       Promise.all(showPromises).then(() => {
         this.hidden = false
-        this.scrollIntoView(this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0], false)
+        const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
+        this.scrollIntoView(activeChild ? activeChild : this.section.children[0], false)
         this.setInterval()
       })
     }
@@ -416,6 +417,7 @@ export default class CarouselTwo extends Shadow() {
   }
 
   scrollIntoView (node, focus = true) {
+    if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
     if (!node.classList.contains('active')) {
       if (focus) return node.focus() // important that default keyboard works
       //node.scrollIntoView() // scrolls x and y
