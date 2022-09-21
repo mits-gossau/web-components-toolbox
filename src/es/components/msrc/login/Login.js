@@ -84,7 +84,7 @@ export default class Login extends Shadow() {
     this.css = /* css */`
       :host {
         display: flex;
-        align-items: baseline;
+        align-items: end;
         justify-content: end;
         gap: calc(var(--content-spacing, 1em) * 2);
         margin: calc(var(--content-spacing, unset) / 2) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */

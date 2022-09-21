@@ -704,7 +704,7 @@ export default class Navigation extends Mutation() {
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node, i) => {
-          if (sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
+          if (this.namespace === 'navigation-default-' && sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
         section.parentNode.prepend(this.getBackground())
