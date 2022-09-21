@@ -44,23 +44,17 @@ export default class Pagination extends Shadow() {
       this.dispatchRequestArticlesEvent(event.target.textContent - 1)
     }
 
-    this.initialLoadListener = (event) => {
-      const params = location.search.split('page=')[1] || 1
-      const page = Number(params) - 1
-      this.dispatchRequestArticlesEvent(page)
-    }
+    
   }
 
   connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    window.addEventListener('load', this.initialLoadListener)
     self.addEventListener('listArticles', this.listArticlesListener)
     this.pagination.addEventListener('click', this.clickListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback() {
-    window.removeEventListener('load', this.initialLoadListener)
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listArticles', this.listArticlesListener)
     self.removeEventListener('popstate', this.updatePopState)

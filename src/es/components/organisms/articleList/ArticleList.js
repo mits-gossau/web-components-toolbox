@@ -30,9 +30,13 @@ export default class NewsList extends Shadow() {
     document.body.addEventListener('listArticles', this.listArticlesListener)
     this.hidden = true
     const articleViewed = sessionStorage.getItem('article-viewed')?.toLowerCase() === 'true'
-    const currentPageSkip = articleViewed ? this.getCurrentPageSkip(sessionStorage.getItem('articles') || '') : 0
+    let currentPageSkip = articleViewed ? this.getCurrentPageSkip(sessionStorage.getItem('articles') || '') : 0
     sessionStorage.removeItem('article-viewed')
-
+    const params = location.search.split('page=')[1] || 1
+    const paramsPage = Number(params) - 1
+    if(currentPageSkip !== paramsPage){
+      currentPageSkip = paramsPage
+    }
     this.dispatchEvent(new CustomEvent('requestListArticles', {
       detail: {
         skip: currentPageSkip
