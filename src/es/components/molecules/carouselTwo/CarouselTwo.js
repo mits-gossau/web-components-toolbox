@@ -43,6 +43,7 @@ export default class CarouselTwo extends Shadow() {
     const scrollTolerance = 5
     this.scrollListener = event => {
       this.section.classList.add('scrolling')
+      this.clearInterval()
       clearTimeout(scrollTimeoutId)
       scrollTimeoutId = setTimeout(() => {
         let hostLeft, activeChild
@@ -61,14 +62,36 @@ export default class CarouselTwo extends Shadow() {
             node.classList.add('active')
           })
           this.section.classList.remove('scrolling')
+          this.setInterval()
+          // adjust the history
+          if (!self.location.hash.includes(activeChild.getAttribute('id'))) {
+            const url = `${self.location.href.split('#')[0]}#${activeChild.getAttribute('id')}`
+            if (self.location.hash.includes('next') || self.location.hash.includes('previous')) {
+              self.history.replaceState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
+            } else {
+              self.history.pushState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
+            }
+          }
         }
       }, 50)
     }
     // interval stuff
     this.interval = null
     // stop interval when clicking outside window eg. iframe, etc.
-    this.blurEventListener = event => this.setInterval()
-    this.focusEventListener = event => this.clearInterval()
+    this.isFocused = false
+    this.blurEventListener = event => {
+      this.isFocused = false
+      this.setInterval()
+    }
+    this.focusEventListener = event => {
+      this.isFocused = true
+      this.clearInterval()
+    }
+    // browser prev/next navigation
+    this.hashchangeEventListener = event => {
+      let element = null
+      if ((element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash))) this.scrollIntoView(element, false)
+    }
   }
 
   connectedCallback () {
@@ -86,27 +109,30 @@ export default class CarouselTwo extends Shadow() {
       this.hidden = true
       Promise.all(showPromises).then(() => {
         this.hidden = false
-        this.scrollIntoView(this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0], false)
-        if (this.getAttribute('interval')) this.setInterval()
+        const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
+        this.scrollIntoView(activeChild ? activeChild : this.section.children[0], false)
+        this.setInterval()
       })
     }
     this.addEventListener('click', this.clickListener)
     this.section.addEventListener('scroll', this.scrollListener)
     Array.from(this.section.children).forEach(node => node.addEventListener('focus', this.focusListener))
-    if (this.getAttribute('interval')) {
+    if (this.hasAttribute('interval')) {
       this.addEventListener('blur', this.blurEventListener)
       this.addEventListener('focus', this.focusEventListener)
     }
+    if (!this.hasAttribute('no-history')) self.addEventListener('hashchange', this.hashchangeEventListener)
   }
 
   disconnectedCallback () {
     this.removeEventListener('click', this.clickListener)
     this.section.removeEventListener('scroll', this.scrollListener)
     Array.from(this.section.children).forEach(node => node.removeEventListener('focus', this.focusListener))
-    if (this.getAttribute('interval')) {
+    if (this.hasAttribute('interval')) {
       this.removeEventListener('blur', this.blurEventListener)
       this.removeEventListener('focus', this.focusEventListener)
     }
+    if (!this.hasAttribute('no-history')) self.removeEventListener('hashchange', this.hashchangeEventListener)
   }
 
   /**
@@ -171,7 +197,7 @@ export default class CarouselTwo extends Shadow() {
         margin: var(--nav-margin);
         max-height: 20%;
         justify-content: center;
-        z-index: 101;
+        z-index: 2;
       }
       :host > nav > * {
         --a-margin: 0;
@@ -201,13 +227,14 @@ export default class CarouselTwo extends Shadow() {
       }
       :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover {
         transform: var(--nav-transform-hover, scale(1.6));
+        z-index: 3;
       }
       :host(.has-default-arrow-nav) > *.arrow-nav {
         align-items: center;
         display: flex;
         margin: 0;
         justify-content: space-between;
-        z-index: 100;
+        z-index: 1;
         font-size: 5em;
       }
       :host(.has-default-arrow-nav) > *.arrow-nav > * {
@@ -346,6 +373,7 @@ export default class CarouselTwo extends Shadow() {
           const a = document.createElement('a')
           a.setAttribute('href', i === 0 ? '#previous' : '#next')
           const arrow = new children[0][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+          arrow.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
           arrow.setAttribute('direction', i === 0 ? 'left' : 'right')
           a.appendChild(arrow)
           this.arrowNav.appendChild(a)
@@ -389,6 +417,7 @@ export default class CarouselTwo extends Shadow() {
   }
 
   scrollIntoView (node, focus = true) {
+    if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
     if (!node.classList.contains('active')) {
       if (focus) return node.focus() // important that default keyboard works
       // node.scrollIntoView() // scrolls x and y
@@ -402,12 +431,14 @@ export default class CarouselTwo extends Shadow() {
   }
 
   setInterval () {
-    clearInterval(this.interval)
-    this.interval = setInterval(() => this.next(false), Number(this.getAttribute('interval')))
+    if (this.hasAttribute('interval') && !this.isFocused) {
+      clearInterval(this.interval)
+      this.interval = setInterval(() => this.next(false), Number(this.getAttribute('interval')))
+    }
   }
 
   clearInterval () {
-    clearInterval(this.interval)
+    if (this.hasAttribute('interval')) clearInterval(this.interval)
   }
 
   /**

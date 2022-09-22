@@ -301,7 +301,7 @@ export default class Footer extends Shadow() {
             // create a summary/details for each sectionChild
             const detailsDiv = document.createElement('div')
             detailsDiv.innerHTML = `
-              <m-details namespace="details-default-icon-right-" open-event-name="open-footer">
+              <m-details mobile-breakpoint="${this.mobileBreakpoint}" namespace="details-default-icon-right-" open-event-name="open-footer">
                 <details>
                   <summary>${sectionChildChildren.splice(0, 1)[0].outerHTML}</summary>
                   <div class=footer-links-row>${sectionChildChildren.reduce((previousValue, currentValue) => previousValue + currentValue.outerHTML, '')}</div>
@@ -350,10 +350,8 @@ export default class Footer extends Shadow() {
                 :host > section > *:not(.contains-details):not(:first-child) {
                   margin-top: var(--${this.getAttribute('namespace')}gap-mobile-custom, var(--${this.getAttribute('namespace')}gap-custom, var(--content-spacing-mobile, var(--content-spacing)))) !important;
                 }
-                :host > section > *.contains-details:not(:first-of-type) > m-details {
-                  --details-default-icon-right-border-top-custom: 0;
-                }
                 :host > section > *.contains-details > m-details {
+                  --details-default-icon-right-border-top-custom: 0;
                   display: block !important;
                 }
                 :host > section > *.contains-details > *:not(m-details) {

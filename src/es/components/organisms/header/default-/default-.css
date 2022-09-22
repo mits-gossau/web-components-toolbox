@@ -49,7 +49,7 @@
   --header-default-position-open-mobile: fixed;
   --header-default-position: static;
   --header-default-sticky-border-bottom: var(--header-default-sticky-border-bottom-custom, 1px solid var(--m-gray-300));
-  --header-default-top-open-mobile: 0;
+  --header-default-top-open-mobile: auto;
   --header-default-width-open-mobile: 100%;
   --logo-default-height-mobile: var(--logo-default-height);
   --logo-default-height: auto;

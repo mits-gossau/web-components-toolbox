@@ -39,14 +39,16 @@ export default class Teaser extends Intersection() {
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => {
-        self.requestAnimationFrame(timeStamp => {
-          let figcaption, figcaptionBackgroundColor
-          if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
-            this.setAttribute('figcaption-bg-color-equal', true)
-          } else {
-            this.removeAttribute('figcaption-bg-color-equal')
-          }
-        })
+        if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
+          self.requestAnimationFrame(timeStamp => {
+            let figcaption, figcaptionBackgroundColor
+            if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
+              this.setAttribute('figcaption-bg-color-equal', true)
+            } else {
+              this.removeAttribute('figcaption-bg-color-equal')
+            }
+          })
+        }
         this.hidden = false
       })
     }
@@ -170,8 +172,14 @@ export default class Teaser extends Intersection() {
       :host figure figcaption * {
         color: var(--figcaption-color, var(--color, unset));
       }
+      :host figure figcaption h6 {
+        color: var(--h6-figcaption-color, var(--figcaption-color, var(--color, unset)));
+      }
       :host(:hover) figure figcaption * {
         color: var(--figcaption-color-hover, var(--figcaption-color, var(--color, unset)));
+      }
+      :host(:hover) figure figcaption h6 {
+        color: var(--h6-figcaption-color-hover, var(--figcaption-color-hover, var(--h6-figcaption-color, var(--figcaption-color, var(--color, unset)))));
       }
       :host figure figcaption > * {
         transition: var(--figcaption-any-transition, none);
@@ -232,6 +240,17 @@ export default class Teaser extends Intersection() {
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the tile-.css namespace with teaser-tile-text-center-
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--teaser-tile-/g, '--teaser-tile-text-center-')
+        })
+      case 'teaser-tile-rounded-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-rounded-/tile-rounded-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the tile-.css namespace with teaser-tile-rounded-
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--teaser-tile-/g, '--teaser-tile-rounded-')
         })
       case 'teaser-overlay-':
         return this.fetchCSS([{

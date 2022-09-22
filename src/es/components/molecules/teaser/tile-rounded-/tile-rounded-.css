@@ -1,0 +1,12 @@
+:host {
+  --teaser-tile-rounded-a-link-opacity: 1;
+  --teaser-tile-rounded-a-link-top: 0;
+  --teaser-tile-rounded-a-link-transform-hover: none;
+  --teaser-tile-rounded-a-link-transform: none;
+  --teaser-tile-rounded-border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.5em));
+  --teaser-tile-rounded-figcaption-padding: var(--teaser-tile-rounded-figcaption-padding-custom, 0.625em);
+  --teaser-tile-rounded-figcaption-transform-hover: none;
+  --teaser-tile-rounded-figcaption-transform: none;
+  --teaser-tile-rounded-h6-figcaption-color: var(--color-secondary);
+  --teaser-tile-rounded-h6-figcaption-color-hover: var(--color-hover);
+}

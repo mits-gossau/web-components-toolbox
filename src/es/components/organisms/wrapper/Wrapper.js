@@ -223,6 +223,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       // set width attributes as css vars
       let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE')
       const childNodesLength = Number(this.getAttribute('simulate-children')) || childNodes.length
+      let childNodesLengthNotWidthHundredPercent = childNodesLength
       if (childNodes.length < childNodesLength) {
         childNodes = childNodes.concat(Array(childNodesLength - childNodes.length).fill(childNodes[0]))
       } else if (childNodes.length > childNodesLength) {
@@ -232,7 +233,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         if (this.hasAttribute(`any-${i + 1}-width`) || (childNodes[i] && childNodes[i].hasAttribute('width'))) {
           this.css = /* css */`
             :host {
-              --any-${i + 1}-width: ${this.getAttribute(`any-${i + 1}-width`) || childNodes[i].getAttribute('width')};
+              --any-${i + 1}-width: ${childNodes[i].getAttribute('width') || this.getAttribute(`any-${i + 1}-width`)};
             }
           `
         }
@@ -243,6 +244,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         let width = this.cleanPropertyWidthValue(self.getComputedStyle(node).getPropertyValue(`--${this.namespace || ''}any-${i + 1}-width`))
         // width without namespace
         if (!width && this.hasAttribute('namespace-fallback')) width = this.cleanPropertyWidthValue(self.getComputedStyle(node).getPropertyValue(`--any-${i + 1}-width`))
+        // incase any has 100% reset it and don't count to continue on next row
+        if (width >= 100) {
+          width = 0
+          childNodesLengthNotWidthHundredPercent--
+        }
         /** @type {false | number} */
         let margin = false
         /** @type {false | string} */
@@ -272,14 +278,16 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         }
         return [acc[0] + width, width ? acc[1] + 1 : acc[1], unit ? acc[2] + margin : acc[2], unit || acc[3]]
       }, [0, 0, 0, ''])
-      let freeWidth = ((100 - bookedWidth) / (childNodesLength - bookedCount))
+      let freeWidth = ((100 - bookedWidth) / (childNodesLengthNotWidthHundredPercent - bookedCount))
       // @ts-ignore
       if (freeWidth === Infinity) freeWidth = 0
       this.style.textContent = ''
       for (let i = 1; i < childNodesLength + 1; i++) {
         this.setCss(/* CSS */`
           :host > section > *:nth-child(${i}) {
-            width: calc(var(--any-${i}-width, ${freeWidth}%) - ${margin / childNodesLength}${unit || 'px'});
+            width: calc(var(--any-${i}-width, ${freeWidth}%) - ${(!childNodes[i - 1].hasAttribute('width') || !childNodes[i - 1].getAttribute('width').includes('100')
+              ? margin
+              : 0) / childNodesLengthNotWidthHundredPercent}${unit || 'px'});
           }
         `, undefined, undefined, undefined, this.style)
       }
@@ -314,7 +322,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
    */
   cleanPropertyMarginValue (value) {
     if (!value) return [false, false]
-    let values = value.trimStart().split(' ')
+    let values = value.trimStart().split(' ').filter(value => value.length)
     if (values.length === 0) return [false, false]
     if (values.length === 1) values = Array(4).fill(values[0])
     if (values.length === 2) values = [values[0], values[1], values[0], values[1]]

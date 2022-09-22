@@ -2,8 +2,8 @@
 /* h-tags */
 /* IMPORTANT: This file will often be processed by namespace-fallback regex function src/es/components/web-components-toolbox/src/es/components/prototypes/Shadow.js:L244, which has trouble to detect proper closings with calc() functions. Be careful to use any factors before variables within calc! */
 :host h1, :host h6 {
-  color: var(--h1-color, var(--color, black));
-  display: var(--h1-display, block);
+  color: var(--h1-color, var(--h-color, var(--color, black)));
+  display: var(--h1-display, var(--h-display, block));
   font-size: var(--h1-font-size, 1.75em);
   line-height: var(--h1-line-height, 1.286em);
   font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family, inherit)));
@@ -21,8 +21,8 @@
   font-family: var(--h1-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h2 {
-  color: var(--h2-color, var(--color, black));
-  display: var(--h2-display, block);
+  color: var(--h2-color, var(--h-color, var(--color, black)));
+  display: var(--h2-display, var(--h-display, block));
   font-size: var(--h2-font-size, 1.5em);
   line-height: var(--h2-line-height, 1.334em);
   font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family, inherit)));
@@ -40,8 +40,8 @@
   font-family: var(--h2-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h3 {
-  color: var(--h3-color, var(--color, black));
-  display: var(--h3-display, block);
+  color: var(--h3-color, var(--h-color, var(--color, black)));
+  display: var(--h3-display, var(--h-display, block));
   font-size: var(--h3-font-size, 1.25em);
   line-height: var(--h3-line-height, 1.4em);
   font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family, inherit)));
@@ -59,8 +59,8 @@
   font-family: var(--h3-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h4 {
-  color: var(--h4-color, var(--color, black));
-  display: var(--h4-display, block);
+  color: var(--h4-color, var(--h-color, var(--color, black)));
+  display: var(--h4-display, var(--h-display, block));
   font-size: var(--h4-font-size, 1.125em);
   line-height: var(--h4-line-height, 1.334em);
   font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family, inherit)));
@@ -78,8 +78,8 @@
   font-family: var(--h4-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit))));
 }
 :host h5 {
-  color: var(--h5-color, var(--color, black));
-  display: var(--h5-display, block);
+  color: var(--h5-color, var(--h-color, var(--color, black)));
+  display: var(--h5-display, var(--h-display, block));
   font-size: var(--h5-font-size, 1em);
   line-height: var(--h5-line-height, 1.334em);
   font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family, inherit)));
@@ -134,7 +134,7 @@
   height: 0.25em;
   background-color: var(--color-secondary);
   content: '';
-  display: block;
+  display: var(--title-border-display, block);
   margin-bottom: 0.3em;
 }
 :host .font-size-big {
@@ -282,10 +282,10 @@
 }
 /* hr-tag */
 :host hr {
+  border: var(--hr-border, 0);
   background: var(--hr-background, 0);
   border-bottom: var(--hr-border-bottom, 1px dotted var(--color));
   border-width: var(--hr-border-width, 0 0 1px);
-  border: var(--hr-border, 0);
   margin: var(--hr-margin, var(--content-spacing) auto);
   opacity: var(--hr-opacity, 0.5);
 }

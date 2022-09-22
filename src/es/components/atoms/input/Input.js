@@ -248,7 +248,7 @@ export default class Input extends Shadow() {
       @media only screen and (max-width: _max-width_) {
         :host([search]) input {
           padding: var(--search-input-padding-mobile, var(--search-input-padding, 0.75em var(--content-spacing-mobile)));
-          border-radius: var(--border-radius, 0);
+          border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
         :host([search]) button {
           right: var(--content-spacing-mobile);

@@ -210,10 +210,13 @@ export default class Header extends Shadow() {
         justify-content: var(--justify-content , space-between);
         padding: var(--padding, 0);
         margin: var(--margin, 0);
+        ${this.previousElementSibling.tagName === 'MSRC-LOGIN'
+          ? 'margin-top: 0;'
+          : ''
+        }
         width: var(--width, 100%);
-        position: var(--header-position, static);
+        position: var(--header-position, relative);
         transition: var(--transition, all 0.2s ease);
-        position: relative;
       }
       :host > header.open {
         background-color: var(--background-color-open, var(--background-color, black));
@@ -303,6 +306,10 @@ export default class Header extends Shadow() {
         :host > header {
           flex-wrap: nowrap;
           margin: var(--margin-mobile, var(--margin, 0));
+          ${this.previousElementSibling.tagName === 'MSRC-LOGIN'
+            ? 'margin-top: 0;'
+            : ''
+          }
         }
         :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
           animation: close .4s ease-in;
@@ -417,6 +424,7 @@ export default class Header extends Shadow() {
     return this.getAttribute('menu-icon')
       ? this.loadChildComponents().then(children => {
           this.MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+          this.MenuIcon.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
           this.MenuIcon.addEventListener('click', event => {
             this.header.classList.toggle('open')
             const prop = this.header.classList.contains('open') ? 'add' : 'remove'

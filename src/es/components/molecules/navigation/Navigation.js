@@ -284,7 +284,12 @@ export default class Navigation extends Mutation() {
         border-top: var(--border-top, 1px solid) var(--hr-color, var(--color, white));
       }
       :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
-        --color: var(--color-open);
+        --color: var(--color-open), var(--color));
+        --background-color: var(--background-color-open);
+      }
+      :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section a-link, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section a-arrow {
+        --color: var(--section-color-open, var(--color-open), var(--color)));
+        --background-color: var(--section-background-color-open, var(--background-color-open));
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -336,7 +341,7 @@ export default class Navigation extends Mutation() {
         :host > nav > ul ul > li > a-arrow {
           display: none;
         }
-        :host > nav > ul > li a-link:hover ~ a-arrow, :host > nav > ul > li.open a-link:hover ~ a-arrow {
+        :host > nav > ul > li a-link:hover ~ a-arrow, :host > nav > ul > li.open a-link:hover ~ a-arrow, :host > nav > ul > li a-link ~ a-arrow:hover, :host > nav > ul > li.open a-link ~ a-arrow:hover {
           --color: var(--color-hover);
         }
         :host > nav > ul > li.open a-arrow {
@@ -355,7 +360,8 @@ export default class Navigation extends Mutation() {
           margin-bottom: var(--li-ul-margin-bottom-mobile, 0);
         }
         :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
-          --color: var(--color-open-mobile, var(--color-open));
+          --color: var(--color-open-mobile, var(--color-open, var(--color)));
+          --background-color: var(--background-color-open);
         }
       }
     `
@@ -374,10 +380,10 @@ export default class Navigation extends Mutation() {
         transition: all 0.1s ease;
       }
       :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
-        border-bottom: 2px solid var(--color);
+        border-bottom: 2px solid var(--border-color, var(--color));
       }
       :host > nav > ul li:not(:hover).open {
-        border-bottom: 2px solid var(--color);
+        border-bottom: 2px solid var(--border-color, var(--color));
       }
       :host > nav > ul > li > div.background {
         cursor: auto;
@@ -400,7 +406,7 @@ export default class Navigation extends Mutation() {
         --a-link-font-weight: normal;
         --justify-content: left;
         --align-items: normal;
-        background-color: var(--background-color, white);
+        background-color: var(--section-background-color, var(--background-color, white));
         cursor: auto;
         display: none !important;
         position: absolute;
@@ -455,6 +461,7 @@ export default class Navigation extends Mutation() {
           --li-padding: 0;
           --margin: 0;
           --min-height-mobile: 0;
+          background-color: var(--background-color, black) !important;
           scrollbar-color: var(--color-secondary) var(--background-color);
         }
         :host > nav {
@@ -515,11 +522,11 @@ export default class Navigation extends Mutation() {
           top: auto;
           margin-top: calc(3rem + 1px);
           max-height: unset;
-          padding: 0 0 2.5rem 0;
+          padding: 0 0 4rem 0;
           z-index: 100;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem calc(2rem + min(30vw, 50px));
+          --a-link-content-spacing-no-scroll: var(--a-link-content-spacing-no-scroll-custom, 0.5rem 0.5rem 0.5rem calc(2rem + min(30vw, 50px)));
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: 1.1429rem;
           --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
@@ -527,20 +534,20 @@ export default class Navigation extends Mutation() {
           left: 0;
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul {
-          --padding-mobile: 0 0 0.8571rem;
+          --padding-mobile: var(--padding-mobile-custom, 0 0 0.8571rem);
           --padding-first-child-mobile: var(--padding-mobile);
           --padding-last-child-mobile: var(--padding-mobile);
           border-bottom: var(--header-default-border-bottom);
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul:first-child {
-          --padding-mobile: 0.8571rem 0;
+          --padding-mobile: var(--padding-mobile-first-child-custom, 0.8571rem 0);
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul:last-child {
           margin-bottom: 100px !important; /* must be up, otherwise the iphone hides it behind the footer bar */
         }
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li:first-child, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
-          --a-link-content-spacing-no-scroll: 0.5rem 0.5rem 0.5rem min(30vw, 50px);
-          --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
+          --a-link-content-spacing-no-scroll: var(--a-link-content-spacing-no-scroll-custom, 0.5rem 0.5rem 0.5rem min(30vw, 50px));
+          --a-link-content-spacing: var(--a-link-content-spacing-custom, var(--a-link-content-spacing-no-scroll));
           --a-link-font-size-mobile: 1.2857rem;
           --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
           padding-bottom: 0;
@@ -577,12 +584,34 @@ export default class Navigation extends Mutation() {
         100% {left: 0}
       }
     `
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
     switch (this.getAttribute('namespace')) {
       case 'navigation-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }], false)
+      case 'navigation-alnatura-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the default-.css namespace with navigation-alnatura-
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--navigation-default-/g, '--navigation-alnatura-')
+        })
       default:
         return Promise.resolve()
     }
@@ -607,6 +636,7 @@ export default class Navigation extends Mutation() {
         li.setAttribute('aria-expanded', 'false')
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
         const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+        aLink.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
         aLink.setAttribute('hit-area', this.getAttribute('hit-area') || 'true')
         aLink.setAttribute('aria-expanded', 'false')
         if (this.hasAttribute('set-active')) aLink.setAttribute('set-active', this.getAttribute('set-active'))
@@ -615,6 +645,7 @@ export default class Navigation extends Mutation() {
           li.classList.add('active')
         }
         const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
+        arrow.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
         arrow.setAttribute('direction', arrowDirections[1])
         const arrowClickListener = event => {
           if (this.hasAttribute('focus-lost-close-mobile')) this.adjustArrowDirections(event, arrowDirections)
@@ -622,18 +653,20 @@ export default class Navigation extends Mutation() {
           li.setAttribute('aria-expanded', li.classList.contains('open') ? 'true' : 'false')
           arrow.setAttribute('direction', li.classList.contains('open') ? arrowDirections[0] : arrowDirections[1])
         }
-        arrow.addEventListener('click', arrowClickListener)
-        aLink.addEventListener('click', event => {
+        const aLinkClickListener = event => {
           if (event.target) {
-            arrowClickListener()
             let a = null
-            if (event.target.root && (a = event.target.root.querySelector('a'))) {
+            if (event.target.root && (a = event.target.root.querySelector('a')) || event.target.getAttribute('direction') === 'right' && event.target.previousElementSibling && event.target.previousElementSibling.root && (a = event.target.previousElementSibling.root.querySelector('a'))) {
+              arrowClickListener()
               if (!a.getAttribute('href') || a.getAttribute('href') === '#') {
                 event.preventDefault()
                 if (this.focusLostClose) event.stopPropagation()
                 this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
+                if (event.target && event.target.parentNode && event.target.parentNode.parentNode && event.target.parentNode.parentNode.tagName === 'UL') event.target.parentNode.parentNode.classList.add('open')
                 event.target.classList.add('open')
                 event.target.setAttribute('aria-expanded', 'true')
+                let wrapper
+                if (event.target && event.target.parentNode && (wrapper = event.target.parentNode.querySelector('o-nav-wrapper'))) wrapper.calcColumnWidth()
               } else if (a.getAttribute('href').includes('#')) {
                 this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
                   detail: {
@@ -646,7 +679,9 @@ export default class Navigation extends Mutation() {
               }
             }
           }
-        })
+        }
+        arrow.addEventListener('click', aLinkClickListener)
+        aLink.addEventListener('click', aLinkClickListener)
         self.addEventListener('click', event => {
           if (this.focusLostClose) {
             if (this.hasAttribute('focus-lost-close-mobile')) {
@@ -665,10 +700,11 @@ export default class Navigation extends Mutation() {
       })
       Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
         const wrapper = new children[2][1]({ mode: 'false' })
+        wrapper.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node, i) => {
-          if (sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
+          if (this.namespace === 'navigation-default-' && sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
         section.parentNode.prepend(this.getBackground())
@@ -831,7 +867,7 @@ export default class Navigation extends Mutation() {
       this.css = /* css */`
         @media only screen and (min-width: ${this.mobileBreakpoint}) {
           :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-            margin-top: ${this.root.querySelector('nav > ul').offsetHeight + 1}px;
+            margin-top: ${this.root.querySelector('nav > ul').offsetHeight + Number(this.getAttribute('margin-top') || 1)}px;
           }
         }
       `
