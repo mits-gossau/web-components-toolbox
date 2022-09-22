@@ -5,6 +5,7 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 
 JS Rules:
 - use as little JS as possible. First think, if your problem could be solved with CSS before using JS
+- Component should share its breakpoint with children
 
 CSS Rules:
 - no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
@@ -16,6 +17,7 @@ CSS Rules:
 - sort css properties and variables alphabetically
 - variables naming rule: --{selector aka component aka namespace}-{css property}-{pseudo class or media query name} eg. --p-background-color-hover
 - within the component don't use any name spacing eg. component header don't use --header-default-color just use --color the namespace can be added by the Shadow as an html attribute
+- avoid overly use of reassigning / overwrite variables
 
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css

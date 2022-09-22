@@ -57,9 +57,9 @@ export default class Login extends Shadow() {
     const showPromises = []
     if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
       setTimeout(() => {
-        if (this.shouldComponentRenderHTML()) showPromises.push(this.render())
+        if (this.shouldComponentRender()) showPromises.push(this.render())
       }, Number(this.getAttribute('timeout')))
-    } else if (this.shouldComponentRenderHTML()) showPromises.push(this.render())
+    } else if (this.shouldComponentRender()) showPromises.push(this.render())
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => (this.hidden = false))
@@ -71,7 +71,7 @@ export default class Login extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldComponentRender () {
     return !this.msrcLoginButtonWrapper
   }
 
