@@ -9,16 +9,16 @@ self.Environment = {
   /**
    *
    *
-   * @param {{constructor: string, tagName: string}} organism
+   * @param {{constructor?: string, tagName?: string}} organism
    * @return {string}
    */
   mobileBreakpoint: ({ constructor, tagName }) => {
     switch (true) {
-      case constructor.includes('Header'):
-      case constructor.includes('Navigation'):
-      case tagName.includes('O-NAV-WRAPPER'):
-      case constructor.includes('Footer'):
-      case constructor.includes('Login'):
+      case constructor && typeof constructor.includes === 'function' && constructor.includes('Header'):
+      case constructor && typeof constructor.includes === 'function' && constructor.includes('Navigation'):
+      case tagName && typeof tagName.includes === 'function' && tagName.includes('O-NAV-WRAPPER'):
+      case constructor && typeof constructor.includes === 'function' && constructor.includes('Footer'):
+      case constructor && typeof constructor.includes === 'function' && constructor.includes('Login'):
         return '1200px'
       default:
         return '767px'

@@ -177,6 +177,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
       /** @type {HTMLStyleElement} */
       fetchCSSParam.styleNode = document.createElement('style')
       fetchCSSParam.styleNode.setAttribute('_css', fetchCSSParam.path)
+      fetchCSSParam.styleNode.setAttribute('mobile-breakpoint', fetchCSSParam.maxWidth)
       fetchCSSParam.styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
       if (fetchCSSParam.node.root.querySelector(`[_css="${fetchCSSParam.path}"]`)) console.warn(`${fetchCSSParam.path} got imported more than once!!!`, fetchCSSParam.node)
     }

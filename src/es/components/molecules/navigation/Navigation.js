@@ -863,11 +863,10 @@ export default class Navigation extends Mutation() {
     self.requestAnimationFrame(timeStamp => {
       if (this._checkIfWrappedCounter < 30 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 1000)
       this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
-      // TODO: should be this.mobileBreakpoint + 1px
       this.css = /* css */`
-        @media only screen and (min-width: ${this.mobileBreakpoint}) {
+        @media only screen and (min-width: calc(${this.mobileBreakpoint} + 1px)) {
           :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-            margin-top: ${this.root.querySelector('nav > ul').offsetHeight + Number(this.getAttribute('margin-top') || 1)}px;
+            margin-top: calc(${this.root.querySelector('nav > ul').offsetHeight}px + var(--section-margin-top-desktop, ${Number(this.getAttribute('margin-top') || 1)}px));
           }
         }
       `

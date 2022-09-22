@@ -141,6 +141,10 @@
   font-size: calc(1.5 * var(--h1-font-size, 1.75em));
   line-height: var(--line-height, normal);
 }
+:host .font-size-h1 {
+  font-size: var(--h1-font-size, 1.75em);
+  line-height: var(--line-height, normal);
+}
 :host .font-size-h2 {
   font-size: var(--h2-font-size, 1.5em);
   line-height: var(--line-height, normal);
@@ -401,6 +405,25 @@ img[style="float: right;"] {
 .spacer-four {
   height: var(--spacer-four-height, calc(4 * var(--content-spacing)));
 }
+@media only screen and (min-width: calc(_max-width_ + 1px)) {
+  /* text stylings */
+  :host .font-size-big-desktop {
+    font-size: calc(1.5 * var(--h1-font-size, 1.75em));
+    line-height: var(--line-height, normal);
+  }
+  :host .font-size-h1-desktop {
+    font-size: var(--h1-font-size, 1.75em);
+    line-height: var(--line-height, normal);
+  }
+  :host .font-size-h2-desktop {
+    font-size: var(--h2-font-size, 1.5em);
+    line-height: var(--line-height, normal);
+  }
+  :host .font-size-tiny-desktop {
+    font-size: calc(0.75 * var(--p-font-size, 1em));
+    line-height: var(--line-height, normal);
+  }
+}
 @media only screen and (max-width: _max-width_) {
   /* h-tags */
   :host h1, :host h6 {
@@ -439,15 +462,19 @@ img[style="float: right;"] {
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto 1.143em));
   }
   /* text stylings */
-  :host .font-size-big {
+  :host .font-size-big, :host .font-size-big-mobile {
     font-size: calc(1.5 * var(--h1-font-size-mobile, var(--h1-font-size, 1.75em)));
     line-height: var(--line-height-mobile, var(--line-height, normal));
   }
-  :host .font-size-h2 {
+  :host .font-size-h1, :host .font-size-h1-mobile {
+    font-size: var(--h1-font-size-mobile, var(--h1-font-size, 1.75em));
+    line-height: var(--line-height-mobile, var(--line-height, normal));
+  }
+  :host .font-size-h2, :host .font-size-h2-mobile {
     font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5em));
     line-height: var(--line-height-mobile, var(--line-height, normal));
   }
-  :host .font-size-tiny {
+  :host .font-size-tiny, :host .font-size-tiny-mobile {
     font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
     line-height: var(--line-height-mobile, var(--line-height, normal));
   }

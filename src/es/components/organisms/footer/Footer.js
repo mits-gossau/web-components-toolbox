@@ -197,11 +197,13 @@ export default class Footer extends Shadow() {
     const styles = [
       {
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
-        namespace: false
+        namespace: false,
+        maxWidth: this.getMobileBreakpoint({})
       },
       {
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
-        namespaceFallback: true
+        namespaceFallback: true,
+        maxWidth: this.getMobileBreakpoint({})
       }
     ]
     switch (this.getAttribute('namespace')) {
@@ -301,7 +303,7 @@ export default class Footer extends Shadow() {
             // create a summary/details for each sectionChild
             const detailsDiv = document.createElement('div')
             detailsDiv.innerHTML = `
-              <m-details mobile-breakpoint="${this.mobileBreakpoint}" namespace="details-default-icon-right-" open-event-name="open-footer">
+              <m-details mobile-breakpoint="${this.getMobileBreakpoint({})}" namespace="details-default-icon-right-" open-event-name="open-footer">
                 <details>
                   <summary>${sectionChildChildren.splice(0, 1)[0].outerHTML}</summary>
                   <div class=footer-links-row>${sectionChildChildren.reduce((previousValue, currentValue) => previousValue + currentValue.outerHTML, '')}</div>

@@ -454,7 +454,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
              * @param {fetchCSSParams} path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error
              * @return {fetchCSSParams}
              */
-            ({ path, cssSelector, namespace, namespaceFallback, styleNode, style, appendStyleNode = true, error, maxWidth, node = this }, i) => {
+            ({ path, cssSelector, namespace, namespaceFallback, styleNode, style, appendStyleNode = true, error, maxWidth = this.mobileBreakpoint, node = this }, i) => {
               if (error) return fetchCSSParams[i]
               // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/controllers/fetchCss/FetchCss.js
               // create a new style node if none is supplied
@@ -462,6 +462,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
                 /** @type {HTMLStyleElement} */
                 styleNode = document.createElement('style')
                 styleNode.setAttribute('_css', path)
+                styleNode.setAttribute('mobile-breakpoint', maxWidth)
                 styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
                 if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, node)
               }
@@ -550,21 +551,31 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   }
 
   /**
-   * the most common way to figure out the sites break point
+   * the getter to getMobileBreakpoint
    *
    * @readonly
    * @return {string}
    */
   get mobileBreakpoint () {
-    // @ts-ignore ignoring self.Environment error
+    return this.getMobileBreakpoint()
+  }
+
+  /**
+   * the most common way to figure out the sites break point
+   *
+   * @param {{constructor: string, tagName: string}} [organism = { constructor: this.constructor.name, tagName: this.tagName }]
+   * @return {string}
+   */
+  getMobileBreakpoint (organism = { constructor: this.constructor.name, tagName: this.tagName }) {
     return this.hasAttribute('mobile-breakpoint')
-      ? this.getAttribute('mobile-breakpoint')
+    ? this.getAttribute('mobile-breakpoint')
+      // @ts-ignore ignoring self.Environment error
       : self.Environment && typeof self.Environment.mobileBreakpoint === 'function'
-        ? self.Environment.mobileBreakpoint({
-            constructor: this.constructor.name,
-            tagName: this.tagName
-          })
+        // @ts-ignore ignoring self.Environment error
+        ? self.Environment.mobileBreakpoint(organism)
+        // @ts-ignore ignoring self.Environment error
         : self.Environment && !!self.Environment.mobileBreakpoint
+          // @ts-ignore ignoring self.Environment error
           ? self.Environment.mobileBreakpoint
           : '767px'
   }
