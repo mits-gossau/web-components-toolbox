@@ -166,8 +166,15 @@ export default class CarouselTwo extends Shadow() {
       }
       :host > section, :host > nav, :host > *.arrow-nav {
         grid-column: 1;
-        grid-row: 1;
       }
+      :host > section,:host > *.arrow-nav {
+        grid-row: ${this.getAttribute('nav-align-self') === "end" ? 1 : 2};
+      }
+      :host > nav {
+        grid-row: ${this.getAttribute('nav-align-self') === "end" ? 2 : 1};
+      }
+
+
       :host > section {
         display: flex;
         overflow: hidden;
@@ -188,9 +195,7 @@ export default class CarouselTwo extends Shadow() {
       }
       :host > nav {
         align-items: center;
-        align-self: ${this.hasAttribute('nav-align-self')
-          ? this.getAttribute('nav-align-self')
-          : 'var(--nav-align-self, end)'};
+        align-self: var(--nav-align-self, center);
         display: flex;
         gap: var(--nav-gap);
         height: fit-content;
