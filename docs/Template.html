@@ -126,7 +126,7 @@
     script.setAttribute('src', location.href.replace(/((src)|(docs))\/.*/, 'wc-config.js?triggerImmediately=true'))
     document.head.appendChild(script)
   }
-  const loadHTML = (path, selector, append = false, rootFolder) => {
+  const loadHTML = (path, selector, append = false, rootFolder, setChild = 'appendChild') => {
     if (!path) return null
     if (!rootFolder) rootFolder = 'docs'
     path = location.href.replace(new RegExp(`${rootFolder}\/.*`), path)
@@ -137,7 +137,7 @@
         const div = document.createElement('div')
         div.innerHTML = innerHTML
         Array.from(div.childNodes).forEach(node => {
-          if (node) document.querySelector(selector).appendChild(node)
+          if (node) document.querySelector(selector)[setChild](node)
         })
       } else {
         document.querySelector(selector).innerHTML = innerHTML
@@ -164,7 +164,7 @@
   const url = new URL(location.href)
   Promise.all([
     loadCSS(url.searchParams.get('css'), url.searchParams.get('rootFolder')),
-    loadHTML(url.searchParams.get('login'), 'p-general', true, url.searchParams.get('rootFolder')),
+    loadHTML(url.searchParams.get('login'), 'p-general', true, url.searchParams.get('rootFolder'), 'prepend'),
     loadHTML(url.searchParams.get('logo'), 'o-header', true, url.searchParams.get('rootFolder')),
     loadHTML(url.searchParams.get('nav'), 'o-header', true, url.searchParams.get('rootFolder')),
     loadHTML(url.searchParams.get('content'), 'o-body', undefined, url.searchParams.get('rootFolder')),
