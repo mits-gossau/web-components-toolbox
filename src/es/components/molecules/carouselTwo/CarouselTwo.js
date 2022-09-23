@@ -166,15 +166,33 @@ export default class CarouselTwo extends Shadow() {
       }
       :host > section, :host > nav, :host > *.arrow-nav {
         grid-column: 1;
+        grid-row: 1;
       }
-      :host > section,:host > *.arrow-nav {
-        grid-row: ${this.getAttribute('nav-align-self') === "end" ? 1 : 2};
+      /* START - GRID Settings */
+      ${this.hasAttribute('nav-separate')
+        ? /* css */`
+          ${this.getAttribute('nav-align-self') === 'start'
+            ? /* css */`
+              :host > section {
+                grid-row: 2;
+              }
+              :host > *.arrow-nav {
+                grid-area: 1 / 1 / span 2 / span 1
+              }
+            `
+            : /* css */`
+              :host > nav {
+                grid-row: 2;
+              }
+              :host > *.arrow-nav {
+                grid-area: 1 / 1 / span 2 / span 1
+              }
+            `
+          }
+        `
+        : ''
       }
-      :host > nav {
-        grid-row: ${this.getAttribute('nav-align-self') === "end" ? 2 : 1};
-      }
-
-
+      /* END - GRID Settings */
       :host > section {
         display: flex;
         overflow: hidden;
@@ -195,40 +213,53 @@ export default class CarouselTwo extends Shadow() {
       }
       :host > nav {
         align-items: center;
-        align-self: var(--nav-align-self, center);
+        align-self: ${this.hasAttribute('nav-separate')
+          ? 'center'
+          : this.hasAttribute('nav-align-self')
+          ? this.getAttribute('nav-align-self')
+          : 'var(--nav-align-self, end)'};
         display: flex;
         gap: var(--nav-gap);
         height: fit-content;
         margin: var(--nav-margin);
-        max-height: 20%;
         justify-content: center;
-        z-index: 2;
+        ${this.hasAttribute('nav-flex-wrap')
+          ? 'flex-wrap: wrap;'
+          : 'max-height: 20%;'
+        }
       }
       :host > nav > * {
         --a-margin: 0;
         padding: 0;
         margin: 0;
+        z-index: 2;
+      }
+      :host > nav > * {
+        opacity: var(--nav-opacity, 0.5);
+      }
+      :host > section:not(.scrolling) ~ nav > *.active {
+        opacity: var(--nav-opacity-active, 1);
+      }
+      :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover {
+        opacity: var(--nav-opacity-hover, var(--nav-opacity-active, 1));
       }
       :host(.has-default-nav) > nav > * {
         background-color: var(--nav-background-color, pink);
         border-radius: var(--nav-border-radius, 50%);
         height: var(--nav-height, 1em);
         width: var(--nav-width, 1em);
-        opacity: var(--nav-opacity, 0.5);
       }
       :host(.has-default-nav) > nav > *, :host > nav > * {
         transition: all .3s ease-out !important;
       }
       :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active {
         background-color: var(--nav-background-color-active, coral);
-        opacity: var(--arrow-nav-opacity-active, 1);
       }
       :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active, :host > section:not(.scrolling) ~ nav > *.active {
         transform: var(--nav-transform-active, scale(1.3));
       }
       :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover {
         background-color: var(--nav-background-color-hover, white);
-        opacity: var(--arrow-nav-opacity-hover, var(--arrow-nav-opacity-active, 1));
       }
       :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover {
         transform: var(--nav-transform-hover, scale(1.6));
@@ -336,6 +367,18 @@ export default class CarouselTwo extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => setAttributeStyles())
+      case 'carousel-two-thumbnail-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./thumbnail-/thumbnail-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the default-.css namespace with carousel-two-thumbnail-
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-thumbnail-')
+          setAttributeStyles()
+        })
       default:
         return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }

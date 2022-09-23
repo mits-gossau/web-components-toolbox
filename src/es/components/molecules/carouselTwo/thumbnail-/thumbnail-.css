@@ -1,0 +1,9 @@
+:host > nav {
+  --img-max-height: 3em;
+  --img-min-height: 50px;
+  --carousel-two-thumbnail-nav-transform-hover: scale(1.2);
+  --carousel-two-thumbnail-nav-transform-active: scale(1.1);
+}
+:host([nav-separate]) {
+  --carousel-two-thumbnail-nav-opacity: 1;
+}
