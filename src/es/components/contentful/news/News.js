@@ -7,14 +7,14 @@
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
-export default class Article extends Shadow() {
+export default class News extends Shadow() {
   constructor (...args) {
     super(...args)
     this.RESOLVE_MSG = 'LOADED'
-    this.ERROR_MSG = 'Error. Article could not be displayed.'
+    this.ERROR_MSG = 'Error. News could not be displayed.'
     this.clickListener = event => {
       const windowOpenTarget = event.target.tagName === 'A-BUTTON' ? '_self' : '_blank'
-      window.open(this.articleListUrl, windowOpenTarget)
+      self.open(this.newsListUrl, windowOpenTarget)
     }
   }
 
@@ -23,14 +23,14 @@ export default class Article extends Shadow() {
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     const renderedHTML = () => {
       this.backBtn.addEventListener('click', this.clickListener)
-      sessionStorage.setItem('article-viewed', 'TRUE')
+      sessionStorage.setItem('news-viewed', 'TRUE')
     }
-    if (!this.loadArticles(window, sessionStorage).articles) {
+    if (!this.loadNews(self, sessionStorage).news) {
       // @ts-ignore
-      document.body.addEventListener('listArticles', event => event.detail.fetch.then(data => {
+      document.body.addEventListener('listNews', event => event.detail.fetch.then(data => {
         showPromises.push(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
       }), { once: true })
-      this.dispatchEvent(new CustomEvent('requestListArticles', {
+      this.dispatchEvent(new CustomEvent('requestListNews', {
         detail: { limit: 0 },
         bubbles: true,
         cancelable: true,
@@ -58,36 +58,36 @@ export default class Article extends Shadow() {
   /**
    *
    *
-   * @param {*} window
+   * @param {*} self
    * @param {*} sessionStorage
-   * @return {{slug: string, articles: string}}
-   * @memberof Article
+   * @return {{slug: string, news: string}}
+   * @memberof News
    */
-  loadArticles (window, sessionStorage) {
-    const queryString = window.location.search
+  loadNews (self, sessionStorage) {
+    const queryString = self.location.search
     const urlParams = new URLSearchParams(queryString)
-    const slug = urlParams.get('article') || ''
-    const articles = sessionStorage.getItem('articles')
-    return { slug, articles }
+    const slug = urlParams.get('news') || ''
+    const news = sessionStorage.getItem('news')
+    return { slug, news }
   }
 
   /**
    *
    * @param {string | undefined} [slug=undefined]
-   * @param {string | undefined} [articles=undefined]
+   * @param {string | undefined} [news=undefined]
    * @return {any | false}
    */
-  getArticle (slug, articles) {
-    if (!articles || !slug) {
-      const data = this.loadArticles(window, sessionStorage)
+  getNews (slug, news) {
+    if (!news || !slug) {
+      const data = this.loadNews(self, sessionStorage)
       if (!slug) slug = data.slug
-      if (!articles) articles = data.articles
+      if (!news) news = data.news
     }
-    if (!articles) return false
-    const articlesData = typeof articles === 'string' ? JSON.parse(articles) : articles
-    const { items } = articlesData.data.newsEntryCollection
-    const article = items.find(item => item.slug === slug)
-    return article
+    if (!news) return false
+    const newsData = typeof news === 'string' ? JSON.parse(news) : news
+    const { items } = newsData.data.newsEntryCollection
+    news = items.find(item => item.slug === slug)
+    return news
   }
 
   /**
@@ -96,7 +96,7 @@ export default class Article extends Shadow() {
    */
   renderHTML (data) {
     return Promise.all([this.loadChildComponents(), this.loadScriptDependency(), this.loadDependency()]).then(() => {
-      const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection, metaDescription, metaKeywords, metaTitle } = this.getArticle(undefined, data)
+      const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection, metaDescription, metaKeywords, metaTitle } = this.getNews(undefined, data)
       const linkRenderOptions = {
         renderNode: {
           hyperlink: (node) => `<a href=${node.data.uri} target=${node.data.uri.startsWith(self.location.origin) ? '_self' : '_blank'} rel=${node.data.uri.startsWith(self.location.origin) ? '' : 'noopener noreferrer'}>${node.content[0].value}</a>`
@@ -104,7 +104,7 @@ export default class Article extends Shadow() {
       }
       this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
       this.newsWrapper = `
-      <article>
+      <news>
         <div class="intro">
           <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
           <h1 class="font-size-big">${introHeadline}</h1>
@@ -113,13 +113,13 @@ export default class Article extends Shadow() {
         </div>
         <div class="content">
             ${contentOne
-          ? `<p>${window
+          ? `<p>${self
             // @ts-ignore
             .documentToHtmlString(contentOne.json, linkRenderOptions)}</p>`
           : ''}
             ${imageOne ? `<a-picture mobile-breakpoint="${this.mobileBreakpoint}" picture-load defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="${imageOne.description !== '' ? imageOne.description : imageOne.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
             ${contentTwo
-          ? `<p>${window
+          ? `<p>${self
             // @ts-ignore
             .documentToHtmlString(contentTwo.json, linkRenderOptions)}</p>`
           : imageTwo ? '<br />' : ''} 
@@ -127,7 +127,7 @@ export default class Article extends Shadow() {
         </div>
         ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
         <div class="back-btn-wrapper"><a-button mobile-breakpoint="${this.mobileBreakpoint}" class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
-      </article>`
+      </news>`
 
       this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {
         this.html = this.newsWrapper
@@ -160,7 +160,7 @@ export default class Article extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-    :host > article  {
+    :host > news  {
       display:var(--display, flex);
       flex-direction:var(--flex-direction,  column);
       align-items:var(--align-items, flex-start);
@@ -209,7 +209,7 @@ export default class Article extends Shadow() {
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'article-default-':
+      case 'news-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
@@ -270,7 +270,7 @@ export default class Article extends Shadow() {
     }))
   }
 
-  get articleListUrl () {
+  get newsListUrl () {
     return this.getAttribute('news-list-url') || ''
   }
 

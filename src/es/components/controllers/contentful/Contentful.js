@@ -24,7 +24,7 @@ export default class Contentful extends Shadow() {
     const skip = this.getAttribute('skip') || 0
     this.abortController = null
 
-    this.requestListArticlesListener = async event => {
+    this.requestListNewsListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
       const variables = { limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit), skip: event.detail && event.detail.skip !== undefined ? Number(event.detail.skip) * skip : 0 }
@@ -47,12 +47,12 @@ export default class Contentful extends Shadow() {
         signal: this.abortController.signal
       }
 
-      this.dispatchEvent(new CustomEvent('listArticles', {
+      this.dispatchEvent(new CustomEvent('listNews', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
             if (response.status >= 200 && response.status <= 299) {
               const data = await response.json()
-              sessionStorage.setItem('articles', JSON.stringify(data))
+              sessionStorage.setItem('news', JSON.stringify(data))
               return data
             }
             throw new Error(response.statusText)
@@ -66,10 +66,10 @@ export default class Contentful extends Shadow() {
   }
 
   connectedCallback () {
-    this.addEventListener('requestListArticles', this.requestListArticlesListener)
+    this.addEventListener('requestListNews', this.requestListNewsListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener('requestListArticles', this.requestListArticlesListener)
+    this.removeEventListener('requestListNews', this.requestListNewsListener)
   }
 }

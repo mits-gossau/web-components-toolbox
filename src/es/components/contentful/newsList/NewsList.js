@@ -10,14 +10,14 @@ export default class NewsList extends Shadow() {
   constructor (...args) {
     super(...args)
     this.RESOLVE_STATE = 'LOADED'
-    this.listArticlesListener = event => {
+    this.listNewsListener = event => {
       this.hidden = false
-      const articlePreviewNamespace = this.getAttribute('article-preview-namespace') || 'preview-default-'
+      const newsPreviewNamespace = this.getAttribute('news-preview-namespace') || 'preview-default-'
       this.loadScriptDependency().then(script => {
         if (script === this.RESOLVE_STATE) {
           this.loadDependency().then(dependency => {
             if (dependency === this.RESOLVE_STATE) {
-              this.renderHTML(event.detail.fetch, articlePreviewNamespace)
+              this.renderHTML(event.detail.fetch, newsPreviewNamespace)
             }
           })
         }
@@ -27,17 +27,17 @@ export default class NewsList extends Shadow() {
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    document.body.addEventListener('listArticles', this.listArticlesListener)
+    document.body.addEventListener('listNews', this.listNewsListener)
     this.hidden = true
-    const articleViewed = sessionStorage.getItem('article-viewed')?.toLowerCase() === 'true'
-    let currentPageSkip = articleViewed ? this.getCurrentPageSkip(sessionStorage.getItem('articles') || '') : 0
-    sessionStorage.removeItem('article-viewed')
+    const newsViewed = sessionStorage.getItem('news-viewed')?.toLowerCase() === 'true'
+    let currentPageSkip = newsViewed ? this.getCurrentPageSkip(sessionStorage.getItem('news') || '') : 0
+    sessionStorage.removeItem('news-viewed')
     const params = location.search.split('page=')[1] || 1
     const paramsPage = Number(params) - 1
     if(currentPageSkip !== paramsPage){
       currentPageSkip = paramsPage
     }
-    this.dispatchEvent(new CustomEvent('requestListArticles', {
+    this.dispatchEvent(new CustomEvent('requestListNews', {
       detail: {
         skip: currentPageSkip
       },
@@ -48,13 +48,13 @@ export default class NewsList extends Shadow() {
   }
 
   disconnectedCallback () {
-    document.body.removeEventListener('listArticles', this.listArticlesListener)
+    document.body.removeEventListener('listNews', this.listNewsListener)
   }
 
   getCurrentPageSkip (sessionData) {
     if (sessionData === '') return 0
-    const articlesData = JSON.parse(sessionData)
-    const { skip, limit } = articlesData.data.newsEntryCollection
+    const newsData = JSON.parse(sessionData)
+    const { skip, limit } = newsData.data.newsEntryCollection
     return skip / limit
   }
 
@@ -121,7 +121,7 @@ export default class NewsList extends Shadow() {
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'article-list-default-':
+      case 'news-list-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
@@ -131,20 +131,20 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  renderHTML (articleFetch, namespace) {
+  renderHTML (newsFetch, namespace) {
     // here a loading animation could be added
-    Promise.all([articleFetch, this.loadChildComponents()]).then(([articles, child]) => {
-      const { items } = articles.data.newsEntryCollection
+    Promise.all([newsFetch, this.loadChildComponents()]).then(([news, child]) => {
+      const { items } = news.data.newsEntryCollection
       const wrapper = document.createElement('div')
-      items.forEach(article => {
+      items.forEach(news => {
         // @ts-ignore
-        const articleEle = new child[0][1](article, { namespace })
-        articleEle.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
-        articleEle.setAttribute('article-url', this.getAttribute('article-url'))
+        const newsEle = new child[0][1](news, { namespace })
+        newsEle.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
+        newsEle.setAttribute('news-url', this.getAttribute('news-url'))
         if (this.getAttribute('is-on-home') !== null) {
-          articleEle.setAttribute('is-on-home', this.getAttribute('is-on-home'))
+          newsEle.setAttribute('is-on-home', this.getAttribute('is-on-home'))
         }
-        wrapper.appendChild(articleEle)
+        wrapper.appendChild(newsEle)
       })
       this.html = ''
       this.html = wrapper
@@ -155,8 +155,8 @@ export default class NewsList extends Shadow() {
 
   loadChildComponents () {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
-      import('../../molecules/articlePreview/ArticlePreview.js').then(
-        module => ['m-article-preview', module.default]
+      import('../../contentful/newsPreview/NewsPreview.js').then(
+        module => ['m-news-preview', module.default]
       ),
       import('../../atoms/picture/Picture.js').then(
         module => ['a-picture', module.default]

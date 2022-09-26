@@ -17,11 +17,11 @@ export default class Pagination extends Shadow() {
 
     this.pagination = this.root.querySelector('div') || document.createElement('div')
 
-    this.listArticlesListener = event => {
+    this.listNewsListener = event => {
       event.detail.fetch.then(() => {
-        const articles = sessionStorage.getItem('articles') || ''
-        const articlesData = JSON.parse(articles)
-        let { total, limit, skip } = articlesData?.data.newsEntryCollection
+        const news = sessionStorage.getItem('news') || ''
+        const newsData = JSON.parse(news)
+        let { total, limit, skip } = newsData?.data.newsEntryCollection
         const pageParams = Number(location.search.split('page=')[1]) || 1
         const calcSkipPage = (pageParams - 1) * 5
         if (calcSkipPage !== skip) {
@@ -41,7 +41,7 @@ export default class Pagination extends Shadow() {
         url.searchParams.delete('page')
       }
       history.pushState(event.target.textContent, title, url.href)
-      this.dispatchRequestArticlesEvent(event.target.textContent - 1)
+      this.dispatchRequestNewsEvent(event.target.textContent - 1)
     }
 
     
@@ -49,23 +49,23 @@ export default class Pagination extends Shadow() {
 
   connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    self.addEventListener('listArticles', this.listArticlesListener)
+    self.addEventListener('listNews', this.listNewsListener)
     this.pagination.addEventListener('click', this.clickListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback() {
     this.pagination.removeEventListener('click', this.clickListener)
-    self.removeEventListener('listArticles', this.listArticlesListener)
+    self.removeEventListener('listNews', this.listNewsListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
   updatePopState = (event) => {
-    this.dispatchRequestArticlesEvent(event.state - 1)
+    this.dispatchRequestNewsEvent(event.state - 1)
   }
 
-  dispatchRequestArticlesEvent(page) {
-    this.dispatchEvent(new CustomEvent('requestListArticles', {
+  dispatchRequestNewsEvent(page) {
+    this.dispatchEvent(new CustomEvent('requestListNews', {
       detail: {
         skip: page
       },

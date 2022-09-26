@@ -190,6 +190,11 @@
       separateFolder: true
     },
     {
+      selector: 'contentful-',
+      url: 'web-components-toolbox/src/es/components/contentful/',
+      separateFolder: true
+    },
+    {
       selector: 'o-',
       url: 'organisms/',
       separateFolder: true
