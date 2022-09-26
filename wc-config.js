@@ -191,7 +191,7 @@
     },
     {
       selector: 'contentful-',
-      url: 'web-components-toolbox/src/es/components/contentful/',
+      url: 'contentful/',
       separateFolder: true
     },
     {
