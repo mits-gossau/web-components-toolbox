@@ -124,7 +124,7 @@ export default class Login extends Shadow() {
         size: this.getAttribute('size') || 'small',
         loginReturnTo: this.getAttribute('loginReturnTo') || '',
         logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
-        config: this.constructor.parseAttribute(this.getAttribute('config') || '{"env": "local"}'),
+        config: this.constructor.parseAttribute(this.getAttribute('config') || '{"env": "local"}')
       })
       // wait for the styled-component to update the header stylesheet before raping it with getStyles
       await new Promise(resolve => setTimeout(() => resolve(), 50))
@@ -179,9 +179,11 @@ export default class Login extends Shadow() {
     let componentStyles
     if ((componentStyles = Array.from(document.querySelectorAll('style[data-styled]'))).length) {
       componentStyles.forEach(componentStyle => {
-        if (componentStyle.sheet && componentStyle.sheet.rules && componentStyle.sheet.rules.length ) Array.from(componentStyle.sheet.rules).forEach(rule => {
-          cssText += rule.cssText
-        })
+        if (componentStyle.sheet && componentStyle.sheet.rules && componentStyle.sheet.rules.length) {
+          Array.from(componentStyle.sheet.rules).forEach(rule => {
+            cssText += rule.cssText
+          })
+        }
       })
       if (style) {
         style.textContent = cssText

@@ -1,5 +1,6 @@
 // @ts-check
 /* global location */
+/* global customElements */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 export default class NewsPreview extends Shadow() {

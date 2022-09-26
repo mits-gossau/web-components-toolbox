@@ -4,6 +4,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global Arrow */
 /* global customElements */
 /* global self */
+/* global location */
 
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
@@ -110,7 +111,7 @@ export default class CarouselTwo extends Shadow() {
       Promise.all(showPromises).then(() => {
         this.hidden = false
         const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
-        this.scrollIntoView(activeChild ? activeChild : this.section.children[0], false)
+        this.scrollIntoView(activeChild || this.section.children[0], false)
         this.setInterval()
       })
     }

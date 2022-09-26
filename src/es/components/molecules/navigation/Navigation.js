@@ -656,7 +656,7 @@ export default class Navigation extends Mutation() {
         const aLinkClickListener = event => {
           if (event.target) {
             let a = null
-            if (event.target.root && (a = event.target.root.querySelector('a')) || event.target.getAttribute('direction') === 'right' && event.target.previousElementSibling && event.target.previousElementSibling.root && (a = event.target.previousElementSibling.root.querySelector('a'))) {
+            if (event.target.root && ((a = event.target.root.querySelector('a')) || (event.target.getAttribute('direction') === 'right' && event.target.previousElementSibling && event.target.previousElementSibling.root && (a = event.target.previousElementSibling.root.querySelector('a'))))) {
               arrowClickListener()
               if (!a.getAttribute('href') || a.getAttribute('href') === '#') {
                 event.preventDefault()

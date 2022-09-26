@@ -3,6 +3,7 @@
 /* global customElements */
 /* global self */
 /* global sessionStorage */
+/* global location */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -34,7 +35,7 @@ export default class NewsList extends Shadow() {
     sessionStorage.removeItem('news-viewed')
     const params = location.search.split('page=')[1] || 1
     const paramsPage = Number(params) - 1
-    if(currentPageSkip !== paramsPage){
+    if (currentPageSkip !== paramsPage) {
       currentPageSkip = paramsPage
     }
     this.dispatchEvent(new CustomEvent('requestListNews', {
