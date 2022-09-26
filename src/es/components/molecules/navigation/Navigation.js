@@ -677,7 +677,6 @@ export default class Navigation extends Mutation() {
                   composed: true
                 }))
               } else if (a.getAttribute('href')) {
-                console.log('aLinkClickListener', event);
                 event.preventDefault()
                 self.open(a.getAttribute('href'), a.getAttribute('target') || '_self')
               }
