@@ -53,6 +53,7 @@ export default class Navigation extends Mutation() {
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
     this.clickListener = event => {
+      console.log('clickListener', event);
       this.checkIfWrapped(true)
       this.setFocusLostClickBehavior()
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
@@ -79,6 +80,7 @@ export default class Navigation extends Mutation() {
     // on resize or click keep ul open in sync
     // remove open class
     this.liClickListener = event => {
+      console.log('liClickListener', event);
       if (event && event.target) {
         this.root.querySelector('nav > ul:not(.language-switcher)').classList[event.target.parentNode && event.target.parentNode.classList.contains('open') ? 'add' : 'remove']('open')
         if (this.checkMedia('mobile')) {
@@ -96,6 +98,7 @@ export default class Navigation extends Mutation() {
     }
     // correct the arrow direction when closing the menu on global or parent event
     this.selfClickListener = event => {
+      console.log('selfClickListener', event);
       this.openClose(false)
       Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher) > li > a-link')).forEach(aLink => {
         const arrow = aLink.parentNode.querySelector('a-arrow')
@@ -654,6 +657,7 @@ export default class Navigation extends Mutation() {
           arrow.setAttribute('direction', li.classList.contains('open') ? arrowDirections[0] : arrowDirections[1])
         }
         const aLinkClickListener = event => {
+          console.log('aLinkClickListener', event);
           if (event.target) {
             let a = null
             if (event.target.root && (a = event.target.root.querySelector('a')) || event.target.getAttribute('direction') === 'right' && event.target.previousElementSibling && event.target.previousElementSibling.root && (a = event.target.previousElementSibling.root.querySelector('a'))) {
@@ -683,6 +687,7 @@ export default class Navigation extends Mutation() {
         arrow.addEventListener('click', aLinkClickListener)
         aLink.addEventListener('click', aLinkClickListener)
         self.addEventListener('click', event => {
+          console.log('selfClick', event);
           if (this.focusLostClose) {
             if (this.hasAttribute('focus-lost-close-mobile')) {
               this.adjustArrowDirections(event, arrowDirections)
