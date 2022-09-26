@@ -27,7 +27,7 @@ self.Environment = {
   getApiBaseUrl: function (type) {
     switch (type) {
       case 'zadb':
-        return this.isLocalhost ? 'https://testadmin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi' : ''
+        return this.isLocalhost ? 'https://testadmin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi' : 'https://admin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi'
       default:
         return ''
     }
