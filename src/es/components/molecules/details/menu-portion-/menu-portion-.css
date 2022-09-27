@@ -10,7 +10,7 @@
     --details-menu-portion-ul-list-style: none;
     --details-menu-portion-ul-text-align: center;
     --details-menu-single-child-margin: 0 1.875rem;
-    border-image: url(../assets/img/border-dotted-grey2.png) 2 0 0 0 repeat;
+    border-image: url(_import-meta-url_./menu-portion-/img/border-dotted-grey2.png) 2 0 0 0 repeat;
 }
 
 :host .nutrients-div {

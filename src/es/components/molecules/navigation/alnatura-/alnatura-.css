@@ -57,7 +57,7 @@
 @media only screen and (max-width: _max-width_) {
   :host {
     --icon-color: var(--menu-color);
-    --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 calc(var(--content-spacing-mobile) * 2 + min(10vw, var(--content-spacing-mobile)));
+    --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 1em;
     --navigation-alnatura-a-link-content-spacing-no-scroll-custom: var(--navigation-alnatura-a-link-content-spacing-custom);
     --navigation-alnatura-background-color: var(--menu-color);
     --navigation-alnatura-color-mobile: var(--menu-color);
@@ -86,6 +86,17 @@
   }
   :host > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child, :host(.no-scroll) > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child {
     border-bottom: 0;
+  }
+  /* allow two uls to be merged into one block */
+  @supports(selector(:has(+ ul))) {
+    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]):has(+ ul) {
+      border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) 0 0;
+    }
+    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) + ul {
+      --margin-mobile: calc(var(--content-spacing-mobile) * -1) 0 var(--content-spacing-mobile);
+      --margin-last-child-mobile: calc(var(--content-spacing-mobile) * -1) 0 var(--content-spacing-mobile);
+      border-radius: 0 0 var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em));
+    }
   }
   :host > nav > ul li.open > o-nav-wrapper > section > ul > li:first-child, :host > nav > ul li.open > o-nav-wrapper > section > ul > li.bold {
     --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 min(10vw, var(--content-spacing-mobile));
