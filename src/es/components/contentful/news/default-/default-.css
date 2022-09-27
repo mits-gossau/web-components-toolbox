@@ -1,0 +1,16 @@
+:host {
+    --news-default-h1-color: var(--news-default-h1-color-custom, var(--color-secondary, var(--color)));
+    --news-default-h1-margin: var(--content-spacing) 0;
+    --news-default-intro-font-size: var(--news-default-intro-font-size-custom, inherit);
+    --news-default-li-before-background-color: var(--news-default-li-before-background-color-custom, var(--color));
+    --news-default-link-collection-padding: var(--news-default-link-collection-padding-custom, var(--content-spacing));
+    --news-default-p-white-space: var(--news-default-p-white-space-custom, pre-line);
+    --news-default-ul-list-style: var(--news-default-ul-list-style-custom, none);
+    --aspect-ratio: 1.75/1;
+    --img-object-fit: cover;
+}
+
+:host ul>li>p {
+    /* remove margin from contentful content p-tags */
+    margin: 0;
+}

@@ -190,6 +190,11 @@
       separateFolder: true
     },
     {
+      selector: 'contentful-',
+      url: 'contentful/',
+      separateFolder: true
+    },
+    {
       selector: 'o-',
       url: 'organisms/',
       separateFolder: true

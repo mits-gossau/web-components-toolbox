@@ -1,12 +1,13 @@
 // @ts-check
 /* global location */
+/* global customElements */
 
 import { Shadow } from '../../prototypes/Shadow.js'
-export default class ArticlePreview extends Shadow() {
-  constructor (article, options = {}, ...args) {
+export default class NewsPreview extends Shadow() {
+  constructor (news, options = {}, ...args) {
     super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)
-    this.article = article || null
-    this.ERROR_MSG = 'Error. Article could not be displayed.'
+    this.news = news || null
+    this.ERROR_MSG = 'Error. News could not be displayed.'
   }
 
   connectedCallback () {
@@ -23,23 +24,24 @@ export default class ArticlePreview extends Shadow() {
   }
 
   renderHTML () {
-    if (!this.article) {
+    if (!this.news) {
       this.html = this.ERROR_MSG
       return
     }
+    this.loadChildComponents()
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
-    const url = new URL(this.articleUrl, this.articleUrl.charAt(0) === '/' ? location.origin : this.articleUrl.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-    url.searchParams.set('article', this.article.slug)
+    const url = new URL(this.newsUrl, this.newsUrl.charAt(0) === '/' ? location.origin : this.newsUrl.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    url.searchParams.set('news', this.news.slug)
     this.newsWrapper.innerHTML = /* html */ `
     <a class="link" href="${url.href}">
     <o-wrapper>
         <div class="image-wrapper" width="30%">
-          <a-picture picture-load defaultSource="${this.article.introImage.url}?w=500&q=80&fm=jpg" alt="${this.article.introImage.description !== '' ? this.article.introImage.description : this.article.introImage.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
+          <a-picture picture-load defaultSource="${this.news.introImage.url}?w=500&q=80&fm=jpg" alt="${this.news.introImage.description !== '' ? this.news.introImage.description : this.news.introImage.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>
         </div>
         <div class="text-wrapper">
-          <p class="margin-zero">${new Date(this.article.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
-          <h3 class="title">${this.article.introHeadline}</h3>
-          <p class="margin-zero">${this.article.introText}</p>
+          <p class="margin-zero">${new Date(this.news.date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
+          <h3 class="title">${this.news.introHeadline}</h3>
+          <p class="margin-zero">${this.news.introText}</p>
         </div> 
       </o-wrapper>
     </a>
@@ -97,7 +99,24 @@ export default class ArticlePreview extends Shadow() {
     }
   }
 
-  get articleUrl () {
-    return this.getAttribute('article-url') || null
+  loadChildComponents () {
+    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
+      import('../../organisms/wrapper/Wrapper.js').then(
+        module => ['o-wrapper', module.Wrapper()]
+      ),
+      import('../../atoms/picture/Picture.js').then(
+        module => ['a-picture', module.default]
+      )
+    ]).then(elements => {
+      elements.forEach(element => {
+        // @ts-ignore
+        if (!customElements.get(element[0])) customElements.define(...element)
+      })
+      return elements
+    }))
+  }
+
+  get newsUrl () {
+    return this.getAttribute('news-url') || null
   }
 }
