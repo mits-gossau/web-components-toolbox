@@ -3,6 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global Arrow */
 /* global customElements */
+/* global CustomEvent */
 /* global self */
 /* global location */
 
@@ -226,7 +227,7 @@ export default class CarouselTwo extends Shadow() {
         align-items: var(--section-child-align-items, center);
         display: flex;
         flex-direction: column;
-        justify-content: var(--section-child-justify-content, center);;
+        justify-content: var(--section-child-justify-content, center);
         min-width: 100%;
         outline: none;
         scroll-snap-align: start;

@@ -376,7 +376,7 @@ img[style="float: right;"] {
 }
 :host ul.icons {
   list-style: var(--ul-icon-list-style, none);
-  padding: var(--ul-icon-padding, 0);;
+  padding: var(--ul-icon-padding, 0);
 }
 /* table-tags */
 :host table {

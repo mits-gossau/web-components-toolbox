@@ -1,6 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global self */
+
 /**
  * MenuIcon is the mobile hamburger menu icon
  * Example at: /src/es/components/pages/Home.html

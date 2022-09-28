@@ -329,7 +329,7 @@ export default class Header extends Shadow() {
           width: var(--content-width, 90%);
         }
         :host > header {
-          box-sizing: var(--box-sizing-open-mobile, var(--box-sizing-open, var(--box-sizing, content-box)));;
+          box-sizing: var(--box-sizing-open-mobile, var(--box-sizing-open, var(--box-sizing, content-box)));
           height: var(--height-mobile, 50px);
           flex-direction: var(--flex-direction-mobile, row-reverse);
           justify-content: var(--justify-content-mobile, space-between);
