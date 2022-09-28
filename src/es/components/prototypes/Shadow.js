@@ -37,6 +37,7 @@
     mode,
     namespace,
     namespaceFallback,
+    mobileBreakpoint,
     importMetaUrl,
     hasShadowRoot,
     root,
@@ -62,10 +63,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   /**
    * Creates an instance of Shadow. The constructor will be called for every custom element using this class when initially created.
    *
-   * @param {{mode?: mode | undefined, namespace?: string | undefined, namespaceFallback?: boolean | undefined, importMetaUrl?: string | undefined}} [options = {mode: undefined, namespace: undefined, namespaceFallback: undefined, importMetaUrl: undefined}]
+   * @param {{mode?: mode | undefined, namespace?: string | undefined, namespaceFallback?: boolean | undefined, mobileBreakpoint?: string, importMetaUrl?: string | undefined}} [options = {mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined}]
    * @param {*} args
    */
-  constructor (options = { mode: undefined, namespace: undefined, namespaceFallback: undefined, importMetaUrl: undefined }, ...args) {
+  constructor (options = { mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined }, ...args) {
     // @ts-ignore
     super(...args)
 
@@ -91,6 +92,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (options.namespaceFallback) this.setAttribute('namespace-fallback', '')
     /** @type {boolean} */
     this.namespaceFallback = this.hasAttribute('namespace-fallback')
+    if (typeof options.mobileBreakpoint === 'string') this.setAttribute('mobile-breakpoint', options.mobileBreakpoint)
     /** @type {string} */
     this.importMetaUrl = (options.importMetaUrl || import.meta.url).replace(/(.*\/)(.*)$/, '$1')
   }

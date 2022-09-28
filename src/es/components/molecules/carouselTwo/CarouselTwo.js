@@ -488,8 +488,7 @@ export default class CarouselTwo extends Shadow() {
         for (let i = 0; i < 2; i++) {
           const a = document.createElement('a')
           a.setAttribute('href', i === 0 ? '#previous' : '#next')
-          const arrow = new children[0][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
-          arrow.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
+          const arrow = new children[0][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
           arrow.setAttribute('direction', i === 0 ? 'left' : 'right')
           a.appendChild(arrow)
           this.arrowNav.appendChild(a)

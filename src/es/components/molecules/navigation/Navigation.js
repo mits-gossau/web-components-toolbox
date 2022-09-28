@@ -627,16 +627,14 @@ export default class Navigation extends Mutation() {
         const li = a.parentElement
         if (!!li.querySelector('section')) li.setAttribute('aria-expanded', 'false')
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
-        const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
-        aLink.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
+        const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
         aLink.setAttribute('hit-area', this.getAttribute('hit-area') || 'true')
         if (this.hasAttribute('set-active')) aLink.setAttribute('set-active', this.getAttribute('set-active'))
         if (a.classList.contains('active')) {
           aLink.classList.add('active')
           li.classList.add('active')
         }
-        const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
-        arrow.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
+        const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
         arrow.setAttribute('direction', arrowDirections[1])
         const arrowClickListener = event => {
           if (this.hasAttribute('focus-lost-close-mobile')) this.adjustArrowDirections(event, arrowDirections)
@@ -697,8 +695,7 @@ export default class Navigation extends Mutation() {
         li.prepend(aLink)
       })
       Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
-        const wrapper = new children[2][1]({ mode: 'false' })
-        wrapper.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
+        const wrapper = new children[2][1]({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node, i) => {
