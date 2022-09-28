@@ -625,7 +625,7 @@ export default class Navigation extends Mutation() {
     return this.loadChildComponents().then(children => {
       Array.from(this.root.querySelectorAll('a')).forEach(a => {
         const li = a.parentElement
-        if (!!li.querySelector('section')) li.setAttribute('aria-expanded', 'false')
+        if (li.querySelector('section')) li.setAttribute('aria-expanded', 'false')
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
         const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
         aLink.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
