@@ -44,7 +44,6 @@ export default class Picture extends Intersection() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
 
-    this.setAttribute('role', 'img')
     this.clickListener = event => {
       if (!this.hasAttribute('open')) event.stopPropagation()
       this.dispatchEvent(new CustomEvent(this.getAttribute('open-modal') || 'open-modal', {

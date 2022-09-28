@@ -5,7 +5,7 @@
   --teaser-tile-a-link-transform-hover: translateY(0);
   --teaser-tile-a-link-transform: translateY(2.5em);
   --teaser-tile-a-link-transition: transform .35s ease .1s, opacity 0.3s ease-out;
-  --teaser-tile-background-color: var(--teaser-tile-background-color-custom, var(--m-white));
+  --teaser-tile-background-color: var(--teaser-tile-background-color-custom, var(--background-color, var(--m-white)));
   --teaser-tile-figcaption-background-color: var(--teaser-tile-figcaption-background-color-custom, var(--teaser-tile-background-color));
   --teaser-tile-figcaption-bg-color-equal-padding: var(--teaser-tile-figcaption-bg-color-equal-padding-custom, 0.625em 0 0);
   --teaser-tile-figcaption-padding: var(--teaser-tile-figcaption-padding-custom, 0.625em 0.625em 0);

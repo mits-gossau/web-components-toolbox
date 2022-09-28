@@ -28,6 +28,7 @@ export default class MenuIcon extends Shadow() {
     this.setAttribute('id', 'hamburger')
     this.setAttribute('aria-label', 'show navigation menu')
     this.setAttribute('aria-expanded', 'false')
+    if (this.getMedia() === 'desktop') this.setAttribute('aria-hidden', 'true')
     this.openClass = this.getAttribute('openClass') ? this.getAttribute('openClass') : 'open'
     this.barClass = this.getAttribute('barClass') ? this.getAttribute('barClass') : 'bar'
 
@@ -124,5 +125,9 @@ export default class MenuIcon extends Shadow() {
   toggleAnimationClass (command = 'toggle') {
     this.classList[command](this.openClass)
     this.setAttribute('aria-expanded', this.classList.contains(this.openClass) ? 'true' : 'false')
+  }
+
+  getMedia () {
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 }

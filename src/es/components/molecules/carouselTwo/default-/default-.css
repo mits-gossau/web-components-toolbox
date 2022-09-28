@@ -1,4 +1,7 @@
 :host {
+  --carousel-two-default-close-btn-background-color: var(--color-secondary);
+  --carousel-two-default-close-btn-bottom: var(--content-spacing);
+  --carousel-two-default-close-btn-right: var(--content-spacing);
   --carousel-two-default-nav-background-color-active: var(--carousel-two-default-nav-background-color-active-custom, var(--color-hover));
   --carousel-two-default-nav-background-color-hover: var(--carousel-two-default-nav-background-color-hover-custom, var(--color-hover));
   --carousel-two-default-nav-background-color: var(--carousel-two-default-nav-background-color-custom, var(--color-secondary));
@@ -6,6 +9,8 @@
   --carousel-two-default-nav-gap: var(--content-spacing);
   --carousel-two-default-nav-margin-mobile: var(--content-spacing-mobile);
   --carousel-two-default-nav-margin: var(--content-spacing);
+  --carousel-two-default-section-nav-separate-margin-mobile: var(--content-spacing-mobile);
+  --carousel-two-default-section-nav-separate-margin: var(--content-spacing);
 }
 :host > *.arrow-nav {
   --carousel-two-default-color: var(--m-white);

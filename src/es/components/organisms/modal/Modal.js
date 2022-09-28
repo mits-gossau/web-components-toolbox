@@ -97,6 +97,7 @@ export default class Modal extends Shadow() {
           child.setAttribute('open', '')
           this.setAttribute('aria-expanded', 'true')
         }
+        if (this.eventDetail && typeof this.eventDetail.openFunc === 'function') this.eventDetail.openFunc()
       }
     }
     // close
@@ -129,6 +130,7 @@ export default class Modal extends Shadow() {
           }
           this.clone = null
           this.container.innerHTML = ''
+          if (typeof this.eventDetail.closeFunc === 'function') this.eventDetail.closeFunc()
         }
       }
     }

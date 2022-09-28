@@ -46,10 +46,6 @@ export default class Navigation extends Mutation() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] } }), ...args)
 
-    this.setAttribute('role', 'navigation')
-    this.setAttribute('aria-label', 'Menu')
-    this.setAttribute('aria-labelledby', 'hamburger')
-    this.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
     this.clickListener = event => {
@@ -59,7 +55,7 @@ export default class Navigation extends Mutation() {
       // console.log('changed', this.isDesktop === (this.isDesktop = this.checkMedia('desktop')));
       if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((!this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) {
         document.documentElement.classList.add(this.getAttribute('no-scroll') || 'no-scroll')
-        if (this.getMedia() !== 'desktop') this.setAttribute('aria-expanded', 'true')
+        if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'true')
       }
       self.requestAnimationFrame(timeStamp => this.backgroundAdjust())
       this.liClickListener(event)
@@ -68,7 +64,7 @@ export default class Navigation extends Mutation() {
     this.resizeListener = event => {
       if (this.hasAttribute('no-scroll')) {
         this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
-        this.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
+        this.nav.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
       }
       this.clickListener(event)
       this.adjustArrowDirections(event)
@@ -148,7 +144,7 @@ export default class Navigation extends Mutation() {
     // TODO: It takes too long to find out why certain behaviors happen, for this reason we patch it with this mutation observer
     mutationList.forEach(mutation => {
       if (!mutation.target) return
-      if (this.getAttribute('aria-expanded') === 'false') {
+      if (this.nav.getAttribute('aria-expanded') === 'false') {
         Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
           link.classList.remove('open')
           link.setAttribute('aria-expanded', 'false')
@@ -159,16 +155,9 @@ export default class Navigation extends Mutation() {
         })
         Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
           aLink.classList.remove('open')
-          aLink.setAttribute('aria-expanded', 'false')
-          if (aLink.parentElement) {
-            aLink.parentElement.classList.remove('open')
-            aLink.parentElement.setAttribute('aria-expanded', 'false')
-          }
+          if (aLink.parentElement) aLink.parentElement.classList.remove('open')
         })
         Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => ul.classList.remove('open'))
-        Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher)')).forEach(ul => ul.setAttribute('aria-expanded', 'false'))
-      } else if (this.getAttribute('aria-expanded') === 'true') {
-        Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher)')).forEach(ul => ul.setAttribute('aria-expanded', 'true'))
       }
     })
   }
@@ -334,6 +323,7 @@ export default class Navigation extends Mutation() {
           min-width: var(--min-width-mobile, 50px);
           text-align: right;
           padding-right: var(--content-spacing-mobile);
+          padding-top: 3px;
         }
         :host > nav > ul > li a-link.active ~ a-arrow {
           --color: var(--a-arrow-color-active);
@@ -625,6 +615,8 @@ export default class Navigation extends Mutation() {
    */
   renderHTML (arrowDirections = ['left', 'right']) {
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
+    this.nav.setAttribute('aria-labelledby', 'hamburger')
+    this.nav.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
     Array.from(this.root.children).forEach(node => {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'NAV') return false
       this.nav.appendChild(node)
@@ -633,12 +625,11 @@ export default class Navigation extends Mutation() {
     return this.loadChildComponents().then(children => {
       Array.from(this.root.querySelectorAll('a')).forEach(a => {
         const li = a.parentElement
-        li.setAttribute('aria-expanded', 'false')
+        if (!!li.querySelector('section')) li.setAttribute('aria-expanded', 'false')
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
         const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback') })
         aLink.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
         aLink.setAttribute('hit-area', this.getAttribute('hit-area') || 'true')
-        aLink.setAttribute('aria-expanded', 'false')
         if (this.hasAttribute('set-active')) aLink.setAttribute('set-active', this.getAttribute('set-active'))
         if (a.classList.contains('active')) {
           aLink.classList.add('active')
@@ -659,12 +650,15 @@ export default class Navigation extends Mutation() {
             if (event.target.root && ((a = event.target.root.querySelector('a')) || (event.target.getAttribute('direction') === 'right' && event.target.previousElementSibling && event.target.previousElementSibling.root && (a = event.target.previousElementSibling.root.querySelector('a'))))) {
               arrowClickListener()
               if (!a.getAttribute('href') || a.getAttribute('href') === '#') {
+                const isOpen = event.target.classList.contains('open')
                 event.preventDefault()
-                if (this.focusLostClose) event.stopPropagation()
+                if (this.focusLostClose) {
+                  event.stopPropagation()
+                  if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) document.documentElement.classList[isOpen ? 'remove' : 'add'](this.getAttribute('no-scroll') || 'no-scroll')
+                }
                 this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
-                if (event.target && event.target.parentNode && event.target.parentNode.parentNode && event.target.parentNode.parentNode.tagName === 'UL') event.target.parentNode.parentNode.classList.add('open')
-                event.target.classList.add('open')
-                event.target.setAttribute('aria-expanded', 'true')
+                if (event.target && event.target.parentNode && event.target.parentNode.parentNode && event.target.parentNode.parentNode.tagName === 'UL') event.target.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+                event.target.classList[isOpen ? 'remove' : 'add']('open')
                 let wrapper
                 if (event.target && event.target.parentNode && (wrapper = event.target.parentNode.querySelector('o-nav-wrapper'))) wrapper.calcColumnWidth()
               } else if (a.getAttribute('href').includes('#')) {
@@ -691,8 +685,9 @@ export default class Navigation extends Mutation() {
               this.adjustArrowDirections(event, arrowDirections)
               if (this.hasAttribute('no-scroll')) {
                 document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
-                if (this.getMedia() !== 'desktop') this.setAttribute('aria-expanded', 'false')
+                if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'false')
               }
+              this.openClose(false)
             }
             this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
           }
@@ -811,9 +806,7 @@ export default class Navigation extends Mutation() {
   }
 
   openClose (open = true) {
-    if (open) {
-      Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher)')).forEach(ul => ul.setAttribute('aria-expanded', 'true'))
-    } else if (this.getAttribute('aria-expanded') === 'true') {
+    if (!open && this.nav.getAttribute('aria-expanded') === 'true') {
       Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
         link.classList.remove('open')
         link.setAttribute('aria-expanded', 'false')
@@ -824,14 +817,9 @@ export default class Navigation extends Mutation() {
       })
       Array.from(this.root.querySelectorAll('a-link.open')).forEach(aLink => {
         aLink.classList.remove('open')
-        aLink.setAttribute('aria-expanded', 'false')
-        if (aLink.parentElement) {
-          aLink.parentElement.classList.remove('open')
-          aLink.parentElement.setAttribute('aria-expanded', 'false')
-        }
+        if (aLink.parentElement) aLink.parentElement.classList.remove('open')
       })
       Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => ul.classList.remove('open'))
-      Array.from(this.root.querySelectorAll('nav > ul:not(.language-switcher)')).forEach(ul => ul.setAttribute('aria-expanded', 'false'))
     }
   }
 

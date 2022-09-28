@@ -25,7 +25,6 @@ export default class Body extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    this.setAttribute('aria-label', 'Main')
     this.timeout = null
     this.clickAnchorEventListener = event => {
       let element = null
@@ -157,7 +156,6 @@ export default class Body extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.setAttribute('role', 'main')
     this.main = this.root.querySelector('main') || document.createElement('main')
     Array.from(this.root.children).forEach(node => {
       if (node === this.main || node.getAttribute('slot') || node.nodeName === 'STYLE') return false

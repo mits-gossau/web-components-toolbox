@@ -19,7 +19,6 @@ export default class Button extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    this.setAttribute('role', 'button')
     this.clickListener = event => {
       this.button.classList.add('active')
       if (this.hasAttribute('href')) {

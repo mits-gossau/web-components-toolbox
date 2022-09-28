@@ -20,6 +20,7 @@ export default class CarouselTwo extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    if (this.hasAttribute('open-modal')) this.setAttribute('aria-haspopup', 'true')
     // on click anchor scroll to the image with the matching id or previous/next
     this.clickListener = event => {
       let target
@@ -32,6 +33,21 @@ export default class CarouselTwo extends Shadow() {
         } else if (target.getAttribute('href') === '#next') {
           this.next()
         }
+      }
+      if (this.hasAttribute('open-modal')) {
+        if (!this.hasAttribute('open')) event.stopPropagation()
+        this.dispatchEvent(new CustomEvent(this.getAttribute('open-modal') || 'open-modal', {
+          detail: {
+            origEvent: event,
+            child: this,
+            btnCloseOnly: true,
+            openFunc: () => this.scrollIntoView(this.section.querySelector('.active'), false, true),
+            closeFunc: () => this.scrollIntoView(this.section.querySelector('.active'), false, true)
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
       }
     }
     // on focus scroll to the right element
@@ -165,6 +181,12 @@ export default class CarouselTwo extends Shadow() {
         background-color: var(--background-color, transparent);
         display: grid !important;
       }
+      :host([nav-separate][nav-align-self="start"]) > section {
+        margin-bottom: var(--section-nav-separate-margin);
+      }
+      :host([nav-separate]:not([nav-align-self="start"])) > section {
+        margin-top: var(--section-nav-separate-margin);
+      }
       :host > section, :host > nav, :host > *.arrow-nav {
         grid-column: 1;
         grid-row: 1;
@@ -293,9 +315,44 @@ export default class CarouselTwo extends Shadow() {
       :host(.has-default-arrow-nav) > *.arrow-nav > *:last-of-type {
         justify-content: end;
       }
+      :host([open-modal]) {
+        position: relative;
+      }
+      :host([open]) > .close-btn {
+        opacity: 0;
+      }
+      :host(:not([open])) > .close-btn {
+        opacity: 1;
+      }
+      :host([open-modal]) > .close-btn {
+        background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
+        border-radius: 50%;
+        border: 0;
+        box-sizing: border-box;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 7px;
+        padding: 0.75em;
+        width: 7px;
+        position: absolute;
+        right: calc(var(--close-btn-right, var(--content-spacing)) / 2);
+        bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
+      }
+      :host([open-modal]) > .close-btn > span {
+        height: 22px;
+        width: 22px;
+      }
       @media only screen and (max-width: _max-width_) {
         :host > section {
           overflow-x: scroll;
+        }
+        :host([nav-separate][nav-align-self="start"]) > section {
+          margin-bottom: var(--section-nav-separate-margin-mobile, var(--section-nav-separate-margin));
+        }
+        :host([nav-separate]:not([nav-align-self="start"])) > section {
+          margin-top: var(--section-nav-separate-margin-mobile, var(--section-nav-separate-margin));
         }
         :host > nav {
           gap: var(--nav-gap-mobile, var(--nav-gap));
@@ -303,6 +360,16 @@ export default class CarouselTwo extends Shadow() {
         }
         :host > *.arrow-nav, :host(.has-default-arrow-nav) > *.arrow-nav {
           display: none;
+        }
+        :host(:not([open-modal-mobile])) {
+          position: static;
+        }
+        :host(:not([open-modal-mobile])) > .close-btn {
+          display: none;
+        }
+        :host([open-modal-mobile]) > .close-btn {
+          right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
+          bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
         }
       }
     `
@@ -454,6 +521,23 @@ export default class CarouselTwo extends Shadow() {
         }
       })
       this.html = [this.section, this.nav, this.arrowNav]
+      // modal stuff
+      if (this.hasAttribute('open-modal')) {
+        this.closeBtn = document.createElement('button')
+        this.closeBtn.innerHTML = `
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
+              <g>
+                <path id="Ellipse" d="M 1 11 C 1 5.4771 5.4771 1 11 1 C 16.5229 1 21 5.4771 21 11 C 21 16.5229 16.5229 21 11 21 C 5.4771 21 1 16.5229 1 11 Z" fill="#FF6600"/>
+                <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>
+                <path d="M 12 15 L 10 15 L 10 7 L 12 7 L 12 15 Z" fill="#ffffff"/>
+              </g>
+            </svg>
+          </span>
+        `
+        this.closeBtn.classList.add('close-btn')
+        this.html = this.closeBtn
+      }
     })
   }
 
@@ -465,14 +549,14 @@ export default class CarouselTwo extends Shadow() {
     return this.scrollIntoView((this.activeSlide && this.activeSlide.nextElementSibling) || Array.from(this.section.children)[0], focus)
   }
 
-  scrollIntoView (node, focus = true) {
+  scrollIntoView (node, focus = true, force = false) {
     if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
-    if (!node.classList.contains('active')) {
+    if (force || !node.classList.contains('active')) {
       if (focus) return node.focus() // important that default keyboard works
       // node.scrollIntoView() // scrolls x and y
       this.section.scrollTo({
         left: this.section.scrollLeft + node.getBoundingClientRect().x - this.section.getBoundingClientRect().x,
-        behavior: 'smooth'
+        behavior: force ? 'instant' : 'smooth'
       })
       this.scrollListener()
     }

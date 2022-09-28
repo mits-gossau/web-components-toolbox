@@ -16,6 +16,13 @@
   --navigation-alnatura-padding-no-scroll: 0;
   --navigation-alnatura-padding: 0;
 }
+:host > nav > ul > li > a-link {
+  --navigation-alnatura-color-active: var(--menu-background-color);
+}
+:host > nav > ul > li:not(.open) > a-link {
+  --navigation-alnatura-color-active: var(--color-tertiary);
+  --navigation-alnatura-color-hover: var(--color-tertiary);
+}
 :host > nav > ul li.open > o-nav-wrapper > section {
   --navigation-alnatura-color: var(--menu-color);
 }
@@ -64,6 +71,13 @@
     --navigation-alnatura-color: var(--menu-color);
     --navigation-alnatura-search-li-padding-mobile: var(--content-spacing-mobile) 0 0;
   }
+  :host > nav > ul > li.open > a-link, :host > nav > ul > li:not(.open) > a-link, :host > nav > ul > li:not(.open) > a-arrow {
+    --navigation-alnatura-color-active: var(--color-active);
+    --navigation-alnatura-color-open-mobile: var(--color-hover);
+  }
+  :host > nav > ul > li:not(.open) > a-link {
+    --navigation-alnatura-color-hover: var(--color-hover);
+  }
   :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
     border-bottom: 2px dotted var(--menu-color) !important;
   }
@@ -87,17 +101,6 @@
   :host > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child, :host(.no-scroll) > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child {
     border-bottom: 0;
   }
-  /* allow two uls to be merged into one block */
-  @supports(selector(:has(+ ul))) {
-    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]):has(+ ul) {
-      border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) 0 0;
-    }
-    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) + ul {
-      --margin-mobile: calc(var(--content-spacing-mobile) * -1) 0 var(--content-spacing-mobile);
-      --margin-last-child-mobile: calc(var(--content-spacing-mobile) * -1) 0 var(--content-spacing-mobile);
-      border-radius: 0 0 var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em));
-    }
-  }
   :host > nav > ul li.open > o-nav-wrapper > section > ul > li:first-child, :host > nav > ul li.open > o-nav-wrapper > section > ul > li.bold {
     --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 min(10vw, var(--content-spacing-mobile));
     --navigation-alnatura-a-link-content-spacing-no-scroll-custom: var(--navigation-alnatura-a-link-content-spacing-custom);
@@ -117,5 +120,21 @@
   :host > nav > ul li.open > o-nav-wrapper > section {
     left: var(--content-spacing-mobile, var(--content-spacing)) !important;
     width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)) !important;
+  }
+  /* allow two uls to be merged into one block */
+  @supports(selector(:has(+ ul))) {
+    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]):has(+ ul) {
+      border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) 0 0;
+    }
+    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) + ul {
+      --margin-mobile: calc(var(--content-spacing-mobile) * -2) 0 var(--content-spacing-mobile);
+      --margin-last-child-mobile: calc(var(--content-spacing-mobile) * -2) 0 var(--content-spacing-mobile);
+      --padding-mobile: 0 1em 1em;
+      --padding-last-child-mobile: 0 1em 1em;
+      border-radius: 0 0 var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em));
+    }
+    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) + ul > li:first-child {
+      border-top: 2px dotted var(--menu-color);
+    }
   }
 }
