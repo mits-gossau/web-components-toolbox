@@ -158,10 +158,12 @@ export default class FormZadb extends Form {
   }
 
   zipChangeListener (e) {
+    if (e instanceof CustomEvent){
     this.streetsByZip = {}
     if (!this.zipResults.length) return
     this.enableFields([this.street, this.city])
     this.setCityValue(this.city, this.zipResults, e.detail.value)
+    }
   }
 
   // TODO: Remove?
