@@ -37,7 +37,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
  *  --close-cursor, pointer
  *  --close-display, block
  *  --close-text-decoration, underline
- *  --close-text-transform, uppercase
+ *  --close-text-transform, none
  * }
  * @attribute {
  *  {boolean} [open=false] opens the details
@@ -404,7 +404,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         display: var(--close-display, block);
         text-decoration: var(--close-text-decoration, var(--a-text-decoration, var(--text-decoration, none)));
         text-underline-offset: var(--a-text-underline-offset, unset);
-        text-transform: var(--close-text-transform, uppercase);
+        text-transform: var(--close-text-transform, none);
       }
       :host details .close:hover, :host details .close:active, :host details .close:focus {
         text-decoration: var(--close-text-decoration-hover, var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none)))));

@@ -4,7 +4,7 @@
   --carousel-emotion-div-margin-mobile:var(--content-spacing-mobile);
   --carousel-emotion-h1-font-size-mobile: var(--carousel-emotion-h1-font-size-mobile-custom, min(calc(1.75em * 1.75), 7vw));
   --carousel-emotion-h1-font-weight: normal;
-  --carousel-emotion-h1-text-transform: uppercase;
+  --carousel-emotion-h1-text-transform: none;
   --carousel-emotion-pagination-bottom-mobile: var(--content-spacing-mobile, var(--content-spacing, 2.5%));
   --carousel-emotion-pagination-bottom: var(--content-spacing, 2.5%);
   --carousel-emotion-pagination-top-mobile: unset;

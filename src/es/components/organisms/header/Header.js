@@ -239,7 +239,7 @@ export default class Header extends Shadow() {
         order: var(--order, 1);
         text-decoration: var(--a-text-decoration, var(--text-decoration, none));
         text-underline-offset: var(--a-text-underline-offset, unset);
-        text-transform: var(--a-text-transform, uppercase);
+        text-transform: var(--a-text-transform, none);
         transition: var(--a-transition, all 0.2s ease);
         white-space: var(--a-white-space, normal);
       }
