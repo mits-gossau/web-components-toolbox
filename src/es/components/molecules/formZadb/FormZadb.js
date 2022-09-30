@@ -43,7 +43,7 @@ export default class FormZadb extends Form {
           this.showLoader(this.zipLoader)
           this.zipResults = await this.searchCities(inputField.value)
           this.hideLoader(this.zipLoader)
-          this.showDataList(this.zipResults, this.inputFields.zip.listId, 'zip', inputField)
+          this.showDataList(this.zipResults, this.inputFields.zip.listId, ['zip', 'name_long'], inputField)
         } else {
           this.zipResults = []
           this.cleanDialogList(this.inputFields.zip.listId)
@@ -62,7 +62,7 @@ export default class FormZadb extends Form {
           this.hideLoader(this.streetLoader)
           this.removeListIdAttribute(inputField)
           if (this.streetResults.length) {
-            this.showDataList(this.streetResults, this.inputFields.street.listId, 'name', inputField)
+            this.showDataList(this.streetResults, this.inputFields.street.listId, ['name'], inputField)
           } else {
             this.cleanDialogList(this.inputFields.street.listId)
           }
@@ -199,15 +199,15 @@ export default class FormZadb extends Form {
     container.style.display = 'block'
     results.forEach(element => {
       const option = document.createElement('option')
-      option.value = element[value]
-      option.text = element[value]
+      option.value = element[value[0]]
+      option.text = `${value.map(v => element[v]).join(' ')}`
       option.onclick = (e) => {
         inputField.value = element[value]
         container.style.display = 'none'
         container.innerHTML = ''
         this.dispatchEvent(new CustomEvent(listName, {
           detail: {
-            value: element[value]
+            value: element[value[0]]
           }
         }))
       }
