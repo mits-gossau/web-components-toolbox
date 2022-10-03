@@ -16,7 +16,8 @@ export default class FormZadb extends Form {
     this.inputFields = {
       zip: {
         id: 'zip',
-        listId: 'zip-list'
+        listId: 'zip-list',
+        customErrorElement: '#plz-field-validation-error'
       },
       street: {
         id: 'street',
@@ -158,11 +159,11 @@ export default class FormZadb extends Form {
   }
 
   zipChangeListener (e) {
-    if (e instanceof CustomEvent){
-    this.streetsByZip = {}
-    if (!this.zipResults.length) return
-    this.enableFields([this.street, this.city])
-    this.setCityValue(this.city, this.zipResults, e.detail.value)
+    if (e instanceof CustomEvent) {
+      this.streetsByZip = {}
+      if (!this.zipResults.length) return
+      this.enableFields([this.street, this.city])
+      this.setCityValue(this.city, this.zipResults, e.detail.value)
     }
   }
 
@@ -179,11 +180,12 @@ export default class FormZadb extends Form {
   }
 
   async searchCities (str) {
-    if (str.length > 4) {
-      return
-    }
+    this.triggerCustomZipError(false)
+    if (str.length > 4) return
     const allCities = await this.getCities(str)
-    if (!allCities) return
+    if (!allCities.cities.length && str.length === 4) {
+      this.triggerCustomZipError(true)
+    }
     return allCities.cities.filter(city => city.zip.startsWith(str))
   }
 
@@ -280,6 +282,10 @@ export default class FormZadb extends Form {
     return this.root.querySelectorAll('input[list]') || []
   }
 
+  get getCustomZipErrorElement () {
+    return this.root.querySelector(this.inputFields.zip.customErrorElement)
+  }
+
   hideLoader (loader) {
     if (!loader) return
     loader.style.visibility = 'hidden'
@@ -288,5 +294,10 @@ export default class FormZadb extends Form {
   showLoader (loader) {
     if (!loader) return
     loader.style.visibility = 'visible'
+  }
+
+  triggerCustomZipError (displayElement) {
+    const customError = this.getCustomZipErrorElement
+    customError.style.display = displayElement ? 'block' : 'none'
   }
 }
