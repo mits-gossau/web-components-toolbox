@@ -18,8 +18,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Hotspot extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)
     this.hasRendered = false
 
     this.buttonClickListener = e => {
@@ -142,7 +142,7 @@ export default class Hotspot extends Shadow() {
       }
 
       :host .btn-open:after{
-        background-image: url(../assets/img/close-white.svg);
+        background-image: url(_import-meta-url_./close-white.svg);
         background-color: #ff6600;
         background-position: 50% 50%;
         background-repeat: no-repeat;
@@ -302,7 +302,7 @@ export default class Hotspot extends Shadow() {
           padding: 0;
           border: 0;
           background-color: transparent;
-          background-image: url(../assets/img/close-orange-large.svg);
+          background-image: url(_import-meta-url_./close-orange-large.svg);
           background-repeat: no-repeat;
           background-size: contain;
           border-radius: 50%;
