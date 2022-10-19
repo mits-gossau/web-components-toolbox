@@ -143,7 +143,7 @@ export default class Hotspot extends Shadow() {
 
       :host .btn-open:after{
         background-image: url(_import-meta-url_./close-white.svg);
-        background-color: #ff6600;
+        background-color: var(--color-secondary, #ff6600);
         background-position: 50% 50%;
         background-repeat: no-repeat;
         transform: translate(-50%,-50%) rotate(-45deg);
@@ -156,11 +156,11 @@ export default class Hotspot extends Shadow() {
           background-color .2s ease-out;
       }
       :host .btn-open:hover:after{
-        background-color: #AACF80;
+        background-color: var(--color-hover, #AACF80);
         box-shadow: 0 0 6px 0 rgba(0,0,0,.6);
       }
       :host(.active) .btn-open:after{
-        background-color: #AACF80;
+        background-color: var(--color-hover, #AACF80);
         transform: translate(-50%,-50%) rotate(0);
       }
 
@@ -263,7 +263,7 @@ export default class Hotspot extends Shadow() {
           left: 50%;
           width: 2.5rem;
           height: 4px;
-          background-color: #ff6600;
+          background-color: var(--color-secondary, #ff6600);
           border-radius: 4px;
           content: '';
           transform: translateX(-50%);
@@ -284,8 +284,6 @@ export default class Hotspot extends Shadow() {
           background-color: #f3f2f0;
           content: '';
         }
-        
-        
         :host .btn-open {
           box-shadow: none;
         }
