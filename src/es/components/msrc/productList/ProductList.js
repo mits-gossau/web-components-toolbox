@@ -51,9 +51,8 @@ export default class ProductList extends Shadow() {
     `
     return this.loadDependency().then(async msrc => {
       this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
-      
       await msrc.components.articles.productList(this.msrcProductListWrapper, {
-        environment: 'local',
+        environment: 'production',
         language: 'de',
         webAPIKey: '',
         articlesPerPage: 6
