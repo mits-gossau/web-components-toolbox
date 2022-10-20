@@ -55,10 +55,32 @@ export default class ProductList extends Shadow() {
         environment: 'production',
         language: 'de',
         webAPIKey: '',
-        articlesPerPage: 6
+        colCount: ['2', '2', '2', '4', '4'],
+        filterOptions: {
+          additionalQueryParams: {
+            limit: 999,
+            view: 'browseallretailers'
+          },
+          category: ['BeSS_97'],
+          fo: {
+            anchor_target: '_blank',
+            link_target: '/de/produkte/{productSlug}.html',
+            target: 'alnatura'
+          },
+          region: 'gmzh'
+        },
+        paginationOptions:{
+          disabled:false
+        },
+        hideRating: false,
+        order: 'asc',
+        sort: 'updated_at',
+        theme: 'alnatura'
+      
+        
       })
       // wait for the styled-component to update the header stylesheet before raping it with getStyles
-      await /** @type {Promise<void>} */(new Promise(resolve => setTimeout(() => resolve(), 50)))
+      await /** @type {Promise<void>} */(new Promise(resolve => setTimeout(() => resolve(), 150)))
       this.html = [this.msrcProductListWrapper, this.getStyles(document.createElement('style'))]
     })
   }
@@ -93,7 +115,12 @@ export default class ProductList extends Shadow() {
           scriptCount++
           if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
         }
-        this.html = [vendorsMainScript, mainScript]
+        const styles = document.createElement('link');
+        styles.rel = 'stylesheet';
+        styles.type = 'text/css';
+        styles.href = '//cdn.migros.ch/ch.migros/v1/resources/css/basics.css';
+
+        this.html = [vendorsMainScript, mainScript, styles]
       }
     }))
   }
