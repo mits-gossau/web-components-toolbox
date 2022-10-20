@@ -202,6 +202,12 @@ export default class Button extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./quaternary-/quaternary-.css`,
           namespace: false
         }])
+      case 'button-download-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`,
+          namespace: false
+        }])
     }
   }
 
@@ -211,6 +217,10 @@ export default class Button extends Shadow() {
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </button>
     `
+    if (this.getAttribute('namespace') === "button-download-") {
+      this.button.prepend(this.downloadIcon)
+    }
+
     let iconLeft
     if ((iconLeft = this.root.querySelector('.icon-left'))) this.button.prepend(iconLeft)
     let iconRight
@@ -237,5 +247,27 @@ export default class Button extends Shadow() {
 
   get mouseEventElement () {
     return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
+  }
+
+  get downloadIcon () {
+    let iconImg
+    iconImg = document.createElement('div')
+    iconImg.innerHTML = /* html */ `
+      <svg class="icon-left" width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+        <title>Button Download</title>
+        <desc>Created with Sketch.</desc>
+        <g id="Button-Download" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="Group-2">
+                <circle id="Oval" fill="var(--button-download-background-color)" cx="30" cy="30" r="30"></circle>
+                <g id="Group" transform="translate(19.000000, 14.000000)" stroke="var(--button-download-icon-color)" stroke-width="3">
+                    <line x1="0" y1="30.5" x2="23" y2="30.5" id="Line-3" stroke-linecap="square"></line>
+                    <line x1="11.5" y1="22" x2="11.5" y2="-6.10622664e-16" id="Line-3-Copy" stroke-linecap="square"></line>
+                    <polyline id="Path-2" points="0 12.5 11.5 24.5 23 12.5"></polyline>
+                </g>
+            </g>
+        </g>
+      </svg>`
+    return iconImg = iconImg.children[0] 
   }
 }
