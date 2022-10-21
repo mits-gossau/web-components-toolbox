@@ -15,16 +15,23 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @attribute {}
  */
 export default class ProductList extends Shadow() {
-  connectedCallback () {
+  connectedCallback() {
     const showPromises = []
     if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
       setTimeout(() => {
+
         if (this.shouldComponentRender()) showPromises.push(this.render())
       }, Number(this.getAttribute('timeout')))
-    } else if (this.shouldComponentRender()) showPromises.push(this.render())
+    } else if (this.shouldComponentRender()) {
+      showPromises.push(this.render())
+    }
     if (showPromises.length) {
+      //debugger
       this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
+      Promise.all(showPromises).then(_ => {
+        console.log("show")
+        this.hidden = false
+      })
     }
   }
 
@@ -33,7 +40,7 @@ export default class ProductList extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRender () {
+  shouldComponentRender() {
     return !this.msrcProductListWrapper
   }
 
@@ -42,7 +49,7 @@ export default class ProductList extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  render () {
+  render() {
     this.css = /* css */`
       :host {}
       @media only screen and (max-width: _max-width_) {
@@ -55,7 +62,8 @@ export default class ProductList extends Shadow() {
         environment: 'production',
         language: 'de',
         webAPIKey: '',
-        colCount: ['2', '2', '2', '4', '4'],
+        //colCount: ['2', '2', '2', '4', '4'],
+        colCount: ['3'],
         filterOptions: {
           additionalQueryParams: {
             limit: 999,
@@ -69,18 +77,18 @@ export default class ProductList extends Shadow() {
           },
           region: 'gmzh'
         },
-        paginationOptions:{
-          disabled:false
+        paginationOptions: {
+          disabled: true
         },
         hideRating: false,
         order: 'asc',
         sort: 'updated_at',
         theme: 'alnatura'
-      
-        
+
+
       })
       // wait for the styled-component to update the header stylesheet before raping it with getStyles
-      await /** @type {Promise<void>} */(new Promise(resolve => setTimeout(() => resolve(), 150)))
+      await /** @type {Promise<void>} */(new Promise(resolve => setTimeout(() => resolve(), 50)))
       this.html = [this.msrcProductListWrapper, this.getStyles(document.createElement('style'))]
     })
   }
@@ -90,7 +98,7 @@ export default class ProductList extends Shadow() {
    *
    * @returns {Promise<{components: any}>}
    */
-  loadDependency () {
+  loadDependency() {
     return this.dependencyPromise || (this.dependencyPromise = new Promise(resolve => {
       const isMsrcLoaded = () => 'msrc' in self === true && 'utilities' in self.msrc === true && 'login' in self.msrc.utilities === true
       // needs markdown
@@ -115,17 +123,45 @@ export default class ProductList extends Shadow() {
           scriptCount++
           if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
         }
+
+
         // const styles = document.createElement('link');
         // styles.rel = 'stylesheet';
         // styles.type = 'text/css';
         // styles.href = '//cdn.migros.ch/ch.migros/v1/resources/css/basics.css';
-        // styles.media = "print" 
-        // styles.onload = () => { 
-        //   styles.media = 'all';
-        //   console.log("css loaded")
-        // };
-        // this.html = [vendorsMainScript, mainScript, styles]
-        this.html = [vendorsMainScript, mainScript]
+        //   styles.media = "print"
+        //   styles.onload = () => {
+        //     styles.media = 'all';
+        //     console.log("css loaded")
+        //   };
+
+        const styles4 = document.createElement('link');
+        styles4.rel = 'stylesheet';
+        styles4.type = 'text/css';
+        styles4.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css'
+
+        const styles1 = document.createElement('link');
+        styles1.rel = 'stylesheet';
+        styles1.type = 'text/css';
+        styles1.href = 'https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/styles.template.css'
+
+        const styles2 = document.createElement('link');
+        styles2.rel = 'stylesheet';
+        styles2.type = 'text/css';
+        styles2.href = 'https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/components.template.css'
+
+        const styles3 = document.createElement('link');
+        styles3.rel = 'stylesheet';
+        styles3.type = 'text/css';
+        styles3.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/global/globalTheming.css'
+
+        // const styles5 = document.createElement('link');
+        // styles5.rel = 'stylesheet';
+        // styles5.type = 'text/css';
+        // styles5.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css'
+
+        //this.html = [vendorsMainScript, mainScript, styles, styles1, styles2, styles3, styles4]
+        this.html = [vendorsMainScript, mainScript, styles4, styles1, styles2, styles3]
 
       }
     }))
@@ -137,7 +173,7 @@ export default class ProductList extends Shadow() {
    * @param {HTMLStyleElement} [style=null]
    * @return {string | HTMLStyleElement | false}
    */
-  getStyles (style = null) {
+  getStyles(style = null) {
     let cssText = ''
     /** @type {HTMLStyleElement[]} */
     let componentStyles
@@ -145,6 +181,7 @@ export default class ProductList extends Shadow() {
       componentStyles.forEach(componentStyle => {
         if (componentStyle.sheet && componentStyle.sheet.rules && componentStyle.sheet.rules.length) {
           Array.from(componentStyle.sheet.rules).forEach(rule => {
+            console.log(rule.cssText)
             cssText += rule.cssText
           })
         }
@@ -160,7 +197,4 @@ export default class ProductList extends Shadow() {
     return false
   }
 
-  get scripts () {
-    return this.root.querySelectorAll('script')
-  }
 }
