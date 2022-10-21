@@ -115,12 +115,18 @@ export default class ProductList extends Shadow() {
           scriptCount++
           if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
         }
-        const styles = document.createElement('link');
-        styles.rel = 'stylesheet';
-        styles.type = 'text/css';
-        styles.href = '//cdn.migros.ch/ch.migros/v1/resources/css/basics.css';
+        // const styles = document.createElement('link');
+        // styles.rel = 'stylesheet';
+        // styles.type = 'text/css';
+        // styles.href = '//cdn.migros.ch/ch.migros/v1/resources/css/basics.css';
+        // styles.media = "print" 
+        // styles.onload = () => { 
+        //   styles.media = 'all';
+        //   console.log("css loaded")
+        // };
+        // this.html = [vendorsMainScript, mainScript, styles]
+        this.html = [vendorsMainScript, mainScript]
 
-        this.html = [vendorsMainScript, mainScript, styles]
       }
     }))
   }
