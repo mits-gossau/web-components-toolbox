@@ -33,6 +33,7 @@ export default class Hotspot extends Shadow() {
 
     this.clickListener = e => {
       console.log(e.target, this)
+      
       if (this.classList.contains('active')) {
         this.classList.remove('active')
         document.body.removeEventListener('click', this.clickListener);
