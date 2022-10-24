@@ -296,6 +296,9 @@ export default class MacroCarousel extends Shadow() {
         :host > macro-carousel > div > .text p {
           padding:var(--text-padding-mobile, 0); 
         }
+        :host .macro-carousel-previous, :host .macro-carousel-next{
+          display: none;
+        }
         :host .title > h1.font-size-big {
           font-size: var(--h1-font-size-mobile);
         }
