@@ -25,8 +25,17 @@ export default class Hotspot extends Shadow() {
     this.buttonClickListener = e => {
       if (this.classList.contains('active')) {
         this.classList.remove('active')
+        document.body.removeEventListener('click', this.clickListener);
       } else {
         this.classList.add('active')
+        document.body.addEventListener('click', this.clickListener);
+      }
+    }
+
+    this.clickListener = e => {
+      if (e.composedPath()[0] !== this.buttonOpen) {
+        this.classList.remove('active')
+        document.body.removeEventListener('click', this.clickListener);
       }
     }
   }
@@ -75,9 +84,6 @@ export default class Hotspot extends Shadow() {
         width: 0;
         height: 0;
       }
-      :host(.active){
-        z-index:1;
-      }
 
       :host .btn-close{
         display: none;
@@ -99,6 +105,7 @@ export default class Hotspot extends Shadow() {
           box-shadow .2s ease-out,
           background-color .2s ease-out;
         will-change: transform;
+        z-index: 0;
       }
 
       :host .btn-open:before,
@@ -175,10 +182,15 @@ export default class Hotspot extends Shadow() {
         border: 0;
       }
 
+      :host .content{
+        outline:0;
+        z-index: 1;
+        background-color: #fff;
+      }
+
       @media screen and (min-width: _max-width_){
         :host .content{
           position: absolute;
-          background: white;
           padding: 1.25rem;
           transform: scale(0) translate(-50%,-50%);
           transition: transform 250ms cubic-bezier(.755,.05,.855,.06);
@@ -226,10 +238,8 @@ export default class Hotspot extends Shadow() {
           left: 0;
           padding: 0 1.25rem 1.25rem;
           backface-visibility: hidden;
-          background-color: #fff;
           border-radius: 10px 10px 0 0;
           box-shadow: 0 0 0.625rem 0 rgb(83 83 83 / 20%);
-          outline: 0;
           transition: height .3s, animation .3s ease-in-out, visibility 1s ease;
           visibility: hidden;
           overflow-x: hidden;
