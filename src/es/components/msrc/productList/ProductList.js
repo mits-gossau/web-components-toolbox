@@ -51,19 +51,59 @@ export default class ProductList extends Shadow() {
    */
   render() {
     this.css = /* css */`
-      :host {}
-      @media only screen and (max-width: _max-width_) {
-        :host {}
-      }
-    `
+    #msrc-widget article {
+      padding: 16px;
+      border: 1px solid transparent;
+      background-color: rgb(255, 255, 255);
+      position: relative;
+      padding: 10px;
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all 150ms ease 0s;
+    }
+    #msrc-widget article h2 {
+      color: black;
+      font-size: 16px;
+      line-height: 1.25;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      font-weight: 800;
+    }
+    
+    :host {
+      font-family: "Helvetica Now Text", "Helvetica Now Text XBold", Helvetica, arial, sans-serif;
+    }
+    
+    :host [data-testid="msrc-articles--article-price"] {
+      color: rgb(51, 51, 51);
+      font-size: 20px;
+      line-height: 1.25;  
+      font-weight: 800;
+    }
+
+    :host [data-testid="msrc-articles--article-description"] {
+      color: rgb(118, 118, 118);
+      font-size: 12px;
+      line-height: 1.25;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;  
+      font-weight: 400;
+    }
+  }`
+
     return this.loadDependency().then(async msrc => {
       this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
+      this.msrcProductListWrapper.id = 'msrc-widget'
       await msrc.components.articles.productList(this.msrcProductListWrapper, {
         environment: 'production',
         language: 'de',
         webAPIKey: '',
-        //colCount: ['2', '2', '2', '4', '4'],
-        colCount: ['3'],
+        colCount: ['2', '2', '2', '4', '4'],
+        //colCount: ['3'],
+        articlesPerPage:10,
         filterOptions: {
           additionalQueryParams: {
             limit: 999,
@@ -88,8 +128,8 @@ export default class ProductList extends Shadow() {
 
       })
       // wait for the styled-component to update the header stylesheet before raping it with getStyles
-      await /** @type {Promise<void>} */(new Promise(resolve => setTimeout(() => resolve(), 50)))
-      this.html = [this.msrcProductListWrapper, this.getStyles(document.createElement('style'))]
+      await new Promise(resolve => setTimeout(() => resolve(), 150))
+      this.html  = [this.msrcProductListWrapper, this.getStyles(document.createElement('style'))]
     })
   }
 
@@ -105,12 +145,11 @@ export default class ProductList extends Shadow() {
       if (isMsrcLoaded()) {
         resolve(self.msrc) // eslint-disable-line
       } else {
-        // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
         let scriptCount = 0
         const vendorsMainScript = document.createElement('script')
         vendorsMainScript.setAttribute('type', 'text/javascript')
         vendorsMainScript.setAttribute('async', '')
-        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211217102607/vendors~main.js')
+        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211202125214/vendors~main.js')
         vendorsMainScript.onload = () => {
           scriptCount++
           if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
@@ -118,27 +157,45 @@ export default class ProductList extends Shadow() {
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
+        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211202125214/main.js')
         mainScript.onload = () => {
           scriptCount++
           if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
         }
 
+        // const mainScript1 = document.createElement('script')
+        // mainScript1.setAttribute('type', 'text/javascript')
+        // mainScript1.setAttribute('async', '')
+        // mainScript1.setAttribute('src', 'https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/js/main.min.js')
+        // //document.body.appendChild(mainScript1)
+        // mainScript1.onload = () => {
+        //   scriptCount++
+        //   if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
+        // }
 
-        // const styles = document.createElement('link');
-        // styles.rel = 'stylesheet';
-        // styles.type = 'text/css';
-        // styles.href = '//cdn.migros.ch/ch.migros/v1/resources/css/basics.css';
-        //   styles.media = "print"
-        //   styles.onload = () => {
-        //     styles.media = 'all';
-        //     console.log("css loaded")
-        //   };
+        // const mainScript2 = document.createElement('script')
+        // mainScript2.setAttribute('type', 'text/javascript')
+        // mainScript2.setAttribute('async', '')
+        // //mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
+        // mainScript2.setAttribute('src', 'https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/js/vendor.min.js')
+        // //document.body.appendChild(mainScript2)
+        // mainScript2.onload = () => {
+        //   scriptCount++
+        //   if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
+        // }
 
-        const styles4 = document.createElement('link');
-        styles4.rel = 'stylesheet';
-        styles4.type = 'text/css';
-        styles4.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css'
+
+        // const mainScript3 = document.createElement('script')
+        // mainScript3.setAttribute('type', 'text/javascript')
+        // mainScript3.setAttribute('async', '')
+        // //mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
+        // mainScript3.setAttribute('src', 'https://cdn.migros.ch/msrc/20211202125214/widget-loader.js')
+        // //document.body.appendChild(mainScript2)
+        // mainScript3.onload = () => {
+        //   scriptCount++
+        //   if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
+        // }
+
 
         const styles1 = document.createElement('link');
         styles1.rel = 'stylesheet';
@@ -155,13 +212,15 @@ export default class ProductList extends Shadow() {
         styles3.type = 'text/css';
         styles3.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/global/globalTheming.css'
 
-        // const styles5 = document.createElement('link');
-        // styles5.rel = 'stylesheet';
-        // styles5.type = 'text/css';
-        // styles5.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css'
+        const styles4 = document.createElement('link');
+        styles4.rel = 'stylesheet';
+        styles4.type = 'text/css';
+        styles4.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css'
+
 
         //this.html = [vendorsMainScript, mainScript, styles, styles1, styles2, styles3, styles4]
-        this.html = [vendorsMainScript, mainScript, styles4, styles1, styles2, styles3]
+        //this.html = [vendorsMainScript, mainScript, styles1, styles2, styles3, styles4]
+        this.html = [vendorsMainScript, mainScript, styles1]
 
       }
     }))
@@ -179,6 +238,7 @@ export default class ProductList extends Shadow() {
     let componentStyles
     if ((componentStyles = Array.from(document.querySelectorAll('style[data-styled]'))).length) {
       componentStyles.forEach(componentStyle => {
+        console.log(componentStyle.sheet)
         if (componentStyle.sheet && componentStyle.sheet.rules && componentStyle.sheet.rules.length) {
           Array.from(componentStyle.sheet.rules).forEach(rule => {
             console.log(rule.cssText)
