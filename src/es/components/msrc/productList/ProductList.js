@@ -106,7 +106,7 @@ export default class ProductList extends Shadow() {
         articlesPerPage:10,
         filterOptions: {
           additionalQueryParams: {
-            limit: 999,
+            limit: 949,
             view: 'browseallretailers'
           },
           category: ['BeSS_97'],
