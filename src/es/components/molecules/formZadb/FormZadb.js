@@ -163,16 +163,16 @@ export default class FormZadb extends Form {
       this.streetsByZip = {}
       if (!this.zipResults.length) return
       this.enableFields([this.street, this.city])
-      this.setCityValue(this.city, this.zipResults, e.detail.value)
+      this.setCityValue(this.city, this.zipResults, e.detail.value, e.detail.name)
     }
   }
 
   // TODO: Remove?
   streetChangeListener (e) {}
 
-  setCityValue (cityField, zipList, zipValue) {
+  setCityValue (cityField, zipList, zipValue, cityName) {
     if (!zipList.length) return
-    cityField.value = zipList.find(city => city.zip === zipValue).name
+    cityField.value = zipList.find(city => city.zip === zipValue && city.name === cityName).name
   }
 
   enableFields (fields) {
@@ -209,7 +209,8 @@ export default class FormZadb extends Form {
         container.innerHTML = ''
         this.dispatchEvent(new CustomEvent(listName, {
           detail: {
-            value: element[value[0]]
+            value: element[value[0]],
+            name: element[value[1]]
           }
         }))
       }
