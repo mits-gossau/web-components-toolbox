@@ -311,6 +311,9 @@ img[style="float: right;"] {
   box-sizing: var(--ol-box-sizing, var(--ul-box-sizing, border-box));
   margin: var(--ol-margin, 0 auto var(--content-spacing));
 }
+:host ol li::marker {
+  color: var(--ol-color, var(--color, green))
+}
 :host ul {
   box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
   display: var(--ul-display, var(--ol-display, block));
