@@ -1,0 +1,141 @@
+:host {
+  --gap-custom: 0;
+  --menu-background-color: var(--background-color);
+  --menu-color: var(--color-secondary);
+  --navigation-yearbooks-background-color-open: var(--background-color);
+  --navigation-yearbooks-border-color: var(--menu-color);
+  --navigation-yearbooks-content-width: var(--navigation-yearbooks-content-width-custom, var(--header-default-content-width));
+  --navigation-yearbooks-padding-no-scroll: var(--content-spacing-mobile);
+  --navigation-yearbooks-section-background-color-open: var(--menu-background-color);
+  --navigation-yearbooks-section-background-color: var(--menu-color);
+  --navigation-yearbooks-section-color-open: var(--color);
+  --navigation-yearbooks-section-ul-background-color: var(--menu-background-color);
+  
+}
+:host > nav > ul.open {
+  --navigation-yearbooks-padding-no-scroll: 0;
+  --navigation-yearbooks-padding: 0;
+}
+:host > nav > ul > li > a-link {
+  --navigation-yearbooks-color-active: var(--menu-background-color);
+  --navigation-yearbooks-color: var(--color-secondary);
+}
+:host > nav > ul > li:not(.open) > a-link {
+  --navigation-yearbooks-color-active: var(--color-secondary);
+  --navigation-yearbooks-color-hover: var(--color-secondary);
+}
+:host > nav > ul li.open > o-nav-wrapper > section {
+  --navigation-yearbooks-color: var(--color-secondary);
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul {
+  --padding-mobile-custom: var(--content-spacing-mobile);
+  --padding-mobile-first-child-custom: var(--content-spacing-mobile);
+  --padding-mobile: var(--content-spacing-mobile);
+  --padding: var(--content-spacing);
+  background-color: var(--menu-background-color);
+  border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.5em));
+}
+:host > nav > ul li.open > o-nav-wrapper > section > *[width="100%"] {
+  --margin-mobile: 0 0 var(--content-spacing-mobile);
+  --margin: 0 0 var(--content-spacing) 0;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > * {
+  --margin-mobile: 0 0 var(--content-spacing-mobile);
+  --margin: 0 var(--content-spacing) 0 0;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > *:last-child {
+  --margin-mobile: 0;
+  --margin: 0;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul, :host > nav > ul li.open > o-nav-wrapper > section > ul a-link {
+  --navigation-yearbooks-background-color: var(--menu-background-color);
+  --navigation-yearbooks-font-size: 1em;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) > li, :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) > li:last-child {
+  --any-padding: 0.5em 0;
+  border-bottom: 2px dotted var(--menu-color);
+  padding: 0.5em 0 !important;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) > li:last-child {
+  border-bottom: 0;
+}
+:host > nav > ul li.open > o-nav-wrapper > section > ul:not([style])[width="100%"] > li {
+  border: 0;
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --icon-color: var(--menu-color);
+    --navigation-yearbooks-a-link-content-spacing-custom: 0 0 0 1em;
+    --navigation-yearbooks-a-link-content-spacing-no-scroll-custom: var(--navigation-yearbooks-a-link-content-spacing-custom);
+    --navigation-yearbooks-background-color: var(--menu-color);
+    --navigation-yearbooks-color-mobile: var(--menu-color);
+    --navigation-yearbooks-color: var(--menu-color);
+    --navigation-yearbooks-search-li-padding-mobile: var(--content-spacing-mobile) 0 0;
+  }
+  :host > nav > ul > li.open > a-link, :host > nav > ul > li:not(.open) > a-link, :host > nav > ul > li:not(.open) > a-arrow {
+    --navigation-yearbooks-color-active: var(--color-secondary);
+    --navigation-yearbooks-color-open-mobile: var(--color-secondary);
+  }
+  :host > nav > ul > li:not(.open) > a-link {
+    --navigation-yearbooks-color-hover: var(--color-secondary);
+  }
+  :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
+    border-bottom: 2px dotted var(--menu-color) !important;
+  }
+  :host > nav > ul > li > a-link, :host(.no-scroll) > nav > ul > li > a-link {
+    --navigation-yearbooks-padding: var(--content-spacing-mobile);
+  }
+  :host > nav > ul:not(.open) > li, :host(.no-scroll) > nav > ul:not(.open) > li {
+    --navigation-yearbooks-background-color: var(--menu-background-color);
+  }
+  :host > nav > ul:not(.open) > li, :host(.no-scroll) > nav > ul:not(.open) > li, :host > nav > ul.open > li, :host(.no-scroll) > nav > ul.open > li {
+    --navigation-yearbooks-background-color-open: transparent;
+    --navigation-yearbooks-background-color: transparent;
+    background-color: transparent;
+  }
+  :host > nav > ul.language-switcher {
+    padding: var(--navigation-yearbooks-padding-no-scroll,var(--padding-no-scroll, calc(var(--navigation-yearbooks-content-spacing,var(--content-spacing, 40px))) / 2) 0)
+  }
+  :host > nav > ul:not(.open):not(.language-switcher) > li:not(.search), :host(.no-scroll) > nav > ul:not(.open):not(.language-switcher) > li:not(.search) {
+    border-bottom: 2px dotted var(--menu-color);
+  }
+  :host > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child, :host(.no-scroll) > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child {
+    border-bottom: 0;
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > ul > li:first-child, :host > nav > ul li.open > o-nav-wrapper > section > ul > li.bold {
+    --navigation-yearbooks-a-link-content-spacing-custom: 0 0 0 min(10vw, var(--content-spacing-mobile));
+    --navigation-yearbooks-a-link-content-spacing-no-scroll-custom: var(--navigation-yearbooks-a-link-content-spacing-custom);
+  }
+  :host > nav > ul:not(.language-switcher):not(.open), :host(:not(.no-scroll)) > nav > ul:not(.language-switcher):not(.open) {
+    background-color: var(--menu-background-color);
+    border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em));
+    margin: var(--navigation-yearbooks-margin-no-scroll, var(--navigation-yearbooks-padding-no-scroll));
+    padding: var(--navigation-yearbooks-padding-no-scroll);
+  }
+  :host > nav > ul.language-switcher li, :host(:not(.no-scroll)) > nav > ul.language-switcher li, :host > nav > ul:not(.open).language-switcher li, :host(:not(.no-scroll)) > nav > ul:not(.open).language-switcher li {
+    --navigation-yearbooks-color-mobile: var(--menu-background-color);
+  }
+  :host > nav > ul li:first-child {
+    --navigation-alnatura-search-li-padding-mobile: 0;
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section {
+    left: var(--content-spacing-mobile, var(--content-spacing)) !important;
+    width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)) !important;
+  }
+  /* allow two uls to be merged into one block */
+  @supports(selector(:has(+ ul))) {
+    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]):has(+ ul) {
+      border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) 0 0;
+    }
+    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) + ul {
+      --margin-mobile: calc(var(--content-spacing-mobile) * -2) 0 var(--content-spacing-mobile);
+      --margin-last-child-mobile: calc(var(--content-spacing-mobile) * -2) 0 var(--content-spacing-mobile);
+      --padding-mobile: 0 1em 1em;
+      --padding-last-child-mobile: 0 1em 1em;
+      border-radius: 0 0 var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em));
+    }
+    :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) + ul > li:first-child {
+      border-top: 2px dotted var(--menu-color);
+    }
+  }
+}
