@@ -19,6 +19,7 @@
 :host > nav > ul > li > a-link {
   --navigation-yearbooks-color-active: var(--color-secondary);
   --navigation-yearbooks-color: var(--color-secondary);
+  --navigation-yearbooks-color-hover: var(--color-secondary);
 }
 :host > nav > ul > li:not(.open) > a-link {
   --navigation-yearbooks-color-active: var(--color-secondary);
