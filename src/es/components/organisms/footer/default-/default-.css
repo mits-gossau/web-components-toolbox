@@ -5,6 +5,10 @@
   --footer-default-invert-a-color-hover: var(--footer-default-invert-a-color-hover-custom, var(--color-hover));
   --footer-default-invert-background-color: var(--footer-default-invert-background-color-custom, var(--color-secondary));
   --footer-default-invert-color: var(--footer-default-invert-color-custom, var(--background-color));
+  --footer-default-invert-orange-a-color-hover: var(--footer-default-invert-orange-a-color-hover-custom, var(--color-hover));
+  --footer-default-invert-svg-color-hover: var(--footer-default-invert-svg-color-hover-custom, var(--color-hover));
+  --footer-default-invert-svg-color: var(--footer-default-invert-background-color);
+  --footer-default-invert-svg-color: var(--footer-default-invert-svg-color-custom, var(--color-secondary));
   --footer-default-wrapper-last-contains-details-margin-bottom: 0;
   --picture-footer-logo-img-width: min(35px, 10vw);
   --picture-store-logo-img-margin-mobile: var(--picture-store-logo-img-margin);
