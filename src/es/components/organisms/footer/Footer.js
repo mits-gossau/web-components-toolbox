@@ -218,7 +218,7 @@ export default class Footer extends Shadow() {
   }
 
   /**
-   * renders the a-link html
+   * renders the html
    *
    * @return {Promise<void>}
    */

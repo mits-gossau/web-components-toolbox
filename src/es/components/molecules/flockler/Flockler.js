@@ -87,7 +87,7 @@ export default class Flockler extends Shadow() {
   }
 
   /**
-   * renders the a-link html
+   * renders the html
    *
    * @return {void}
    */

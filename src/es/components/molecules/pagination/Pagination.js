@@ -43,6 +43,11 @@ export default class Pagination extends Shadow() {
       history.pushState(event.target.textContent, title, url.href)
       this.dispatchRequestNewsEvent(event.target.textContent - 1)
     }
+
+    this.updatePopState = event => {
+      if (!event.state) return
+      this.dispatchRequestNewsEvent(event.state - 1)
+    }
   }
 
   connectedCallback () {
@@ -56,10 +61,6 @@ export default class Pagination extends Shadow() {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listNews', this.listNewsListener)
     self.removeEventListener('popstate', this.updatePopState)
-  }
-
-  updatePopState (event) {
-    this.dispatchRequestNewsEvent(event.state - 1)
   }
 
   dispatchRequestNewsEvent (page) {
