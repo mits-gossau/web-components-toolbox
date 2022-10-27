@@ -182,11 +182,13 @@ export default class CarouselTwo extends Shadow() {
         background-color: var(--background-color, transparent);
         display: grid !important;
       }
-      :host([nav-separate][nav-align-self="start"]) > section {
-        margin-bottom: var(--section-nav-separate-margin);
-      }
-      :host([nav-separate]:not([nav-align-self="start"])) > section {
+      :host([nav-separate][nav-align-self="start"]) > section,
+      :host([nav-separate][nav-align-self="start"]) > .arrow-nav {
         margin-top: var(--section-nav-separate-margin);
+      }
+      :host([nav-separate]:not([nav-align-self="start"])) > section,
+      :host([nav-separate]:not([nav-align-self="start"])) > .arrow-nav {
+        margin-bottom: var(--section-nav-separate-margin);
       }
       :host > section, :host > nav, :host > *.arrow-nav {
         grid-column: 1;
@@ -201,7 +203,7 @@ export default class CarouselTwo extends Shadow() {
                 grid-row: 2;
               }
               :host > *.arrow-nav {
-                grid-area: 1 / 1 / span 2 / span 1
+                grid-area: 2 / 1
               }
             `
             : /* css */`
@@ -209,7 +211,7 @@ export default class CarouselTwo extends Shadow() {
                 grid-row: 2;
               }
               :host > *.arrow-nav {
-                grid-area: 1 / 1 / span 2 / span 1
+                grid-area: 1 / 1
               }
             `
           }
