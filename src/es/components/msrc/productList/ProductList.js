@@ -51,47 +51,47 @@ export default class ProductList extends Shadow() {
    */
   render() {
     this.css = /* css */`
-    #msrc-widget article {
-      padding: 16px;
-      border: 1px solid transparent;
-      background-color: rgb(255, 255, 255);
-      position: relative;
-      padding: 10px;
-      border-radius: 4px;
-      overflow: hidden;
-      transition: all 150ms ease 0s;
-    }
-    #msrc-widget article h2 {
-      color: black;
-      font-size: 16px;
-      line-height: 1.25;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      font-weight: 800;
-    }
+    // #msrc-widget article {
+    //   padding: 16px;
+    //   border: 1px solid transparent;
+    //   background-color: rgb(255, 255, 255);
+    //   position: relative;
+    //   padding: 10px;
+    //   border-radius: 4px;
+    //   overflow: hidden;
+    //   transition: all 150ms ease 0s;
+    // }
+    // #msrc-widget article h2 {
+    //   color: black;
+    //   font-size: 16px;
+    //   line-height: 1.25;
+    //   display: -webkit-box;
+    //   -webkit-line-clamp: 3;
+    //   -webkit-box-orient: vertical;
+    //   overflow: hidden;
+    //   font-weight: 800;
+    // }
     
-    :host {
-      font-family: "Helvetica Now Text", "Helvetica Now Text XBold", Helvetica, arial, sans-serif;
-    }
+    // :host {
+    //   font-family: "Helvetica Now Text", "Helvetica Now Text XBold", Helvetica, arial, sans-serif;
+    // }
     
-    :host [data-testid="msrc-articles--article-price"] {
-      color: rgb(51, 51, 51);
-      font-size: 20px;
-      line-height: 1.25;  
-      font-weight: 800;
-    }
+    // :host [data-testid="msrc-articles--article-price"] {
+    //   color: rgb(51, 51, 51);
+    //   font-size: 20px;
+    //   line-height: 1.25;  
+    //   font-weight: 800;
+    // }
 
-    :host [data-testid="msrc-articles--article-description"] {
-      color: rgb(118, 118, 118);
-      font-size: 12px;
-      line-height: 1.25;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;  
-      font-weight: 400;
-    }
+    // :host [data-testid="msrc-articles--article-description"] {
+    //   color: rgb(118, 118, 118);
+    //   font-size: 12px;
+    //   line-height: 1.25;
+    //   overflow: hidden;
+    //   white-space: nowrap;
+    //   text-overflow: ellipsis;  
+    //   font-weight: 400;
+    // }
   }`
 
     return this.loadDependency().then(async msrc => {
@@ -128,8 +128,12 @@ export default class ProductList extends Shadow() {
 
       })
       // wait for the styled-component to update the header stylesheet before raping it with getStyles
-      await new Promise(resolve => setTimeout(() => resolve(), 150))
-      this.html  = [this.msrcProductListWrapper, this.getStyles(document.createElement('style'))]
+      //await new Promise(resolve => setTimeout(() => resolve(), 50))
+      //this.html  = [this.msrcProductListWrapper, this.getStyles(document.createElement('style'))]
+      this.html = this.msrcProductListWrapper
+      setTimeout(()=>{
+        this.html = this.getStyles(document.createElement('style'))
+      },5000)
     })
   }
 
@@ -218,9 +222,9 @@ export default class ProductList extends Shadow() {
         styles4.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css'
 
 
-        //this.html = [vendorsMainScript, mainScript, styles, styles1, styles2, styles3, styles4]
         //this.html = [vendorsMainScript, mainScript, styles1, styles2, styles3, styles4]
-        this.html = [vendorsMainScript, mainScript, styles1]
+        //this.html = [vendorsMainScript, mainScript, styles1, styles2, styles3, styles4]
+        this.html = [vendorsMainScript, mainScript]
 
       }
     }))
