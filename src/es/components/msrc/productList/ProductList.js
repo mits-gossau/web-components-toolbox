@@ -15,24 +15,90 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @attribute {}
  */
 export default class ProductList extends Shadow() {
-  connectedCallback() {
-    const showPromises = []
-    if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
-      setTimeout(() => {
 
-        if (this.shouldComponentRender()) showPromises.push(this.render())
-      }, Number(this.getAttribute('timeout')))
-    } else if (this.shouldComponentRender()) {
-      showPromises.push(this.render())
+  #config = {
+    environment: 'production',
+    language: 'de',
+    webAPIKey: 'ZDsjzNwaw9AxGQWhzqMCsnjwYzwpQ7dzigdKXeuuiXeR97ao4phWLRwe2WrZRoPe',
+    colCount: ['2', '2', '2', '4', '4'],
+    //colCount: ['3'],
+    articlesPerPage: 10,
+    filterOptions: {
+      additionalQueryParams: {
+        limit: 999,
+        view: 'browseallretailers'
+      },
+      category: ['BeSS_97'],
+      fo: {
+        anchor_target: '_blank',
+        link_target: '/de/produkte/{productSlug}.html',
+        target: 'alnatura'
+      },
+      region: 'gmzh'
+    },
+    paginationOptions: {
+      disabled: true
+    },
+    hideRating: false,
+    order: 'asc',
+    sort: 'updated_at',
+    theme: 'alnatura'
+  }
+
+  #wStyles = null
+  #wWrapper = null
+
+  async connectedCallback() {
+    // const showPromises = []
+    // if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
+    //   setTimeout(() => {
+    //     if (this.shouldComponentRender()) showPromises.push(this.render())
+    //   }, Number(this.getAttribute('timeout')))
+    // } else if (this.shouldComponentRender()) {
+    //   showPromises.push(this.render())
+    // }
+    // if (showPromises.length) {
+    //   //debugger
+    //   this.hidden = true
+    //   Promise.all(showPromises).then((data) => {
+    //     console.log("show",data)
+    //     this.hidden = false
+    //   })
+    // }
+
+
+    // const showPromises = []
+    // if (this.shouldComponentRender()) {
+    //   showPromises.push(this.render())
+    //   //showPromises.push(this.getCSSStyles())
+    //   //this.render()
+    //   // setTimeout(() => {
+    //   //   showPromises.push(this.getCSSStyles())
+    //   // }, 5000)
+    // }
+    // Promise.all(showPromises).then((data) => {
+    //   console.log("data", data)
+    //   const as = this.getCSSStyles()
+    //   as?.then(x => {
+    //     console.log("as", x)
+    //     this.html = x
+    //     this.html = data
+    //   })
+    // })
+    
+    const r = await this.render()
+    console.log(r)
+    if(r){
+      const as = await this.getCSSStyles()
+      console.log("as", as)
+      
+      if(as){
+        this.css = as.textContent
+        this.html = r
+        
+      }
     }
-    if (showPromises.length) {
-      //debugger
-      this.hidden = true
-      Promise.all(showPromises).then(_ => {
-        console.log("show")
-        this.hidden = false
-      })
-    }
+
   }
 
   /**
@@ -44,221 +110,137 @@ export default class ProductList extends Shadow() {
     return !this.msrcProductListWrapper
   }
 
-  /**
-   * renders the html
-   *
-   * @return {Promise<void>}
-   */
-  render() {
-    this.css = /* css */`
-    // #msrc-widget article {
-    //   padding: 16px;
-    //   border: 1px solid transparent;
-    //   background-color: rgb(255, 255, 255);
-    //   position: relative;
-    //   padding: 10px;
-    //   border-radius: 4px;
-    //   overflow: hidden;
-    //   transition: all 150ms ease 0s;
-    // }
-    // #msrc-widget article h2 {
-    //   color: black;
-    //   font-size: 16px;
-    //   line-height: 1.25;
-    //   display: -webkit-box;
-    //   -webkit-line-clamp: 3;
-    //   -webkit-box-orient: vertical;
-    //   overflow: hidden;
-    //   font-weight: 800;
-    // }
-    
-    // :host {
-    //   font-family: "Helvetica Now Text", "Helvetica Now Text XBold", Helvetica, arial, sans-serif;
-    // }
-    
-    // :host [data-testid="msrc-articles--article-price"] {
-    //   color: rgb(51, 51, 51);
-    //   font-size: 20px;
-    //   line-height: 1.25;  
-    //   font-weight: 800;
-    // }
 
-    // :host [data-testid="msrc-articles--article-description"] {
-    //   color: rgb(118, 118, 118);
-    //   font-size: 12px;
-    //   line-height: 1.25;
-    //   overflow: hidden;
-    //   white-space: nowrap;
-    //   text-overflow: ellipsis;  
-    //   font-weight: 400;
-    // }
-  }`
+  render() {
+    this.css = /* css */`{:host {}}`
 
     return this.loadDependency().then(async msrc => {
+      console.log("widged wrapper", msrc)
+
       this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
       this.msrcProductListWrapper.id = 'msrc-widget'
-      await msrc.components.articles.productList(this.msrcProductListWrapper, {
-        environment: 'production',
-        language: 'de',
-        webAPIKey: '',
-        colCount: ['2', '2', '2', '4', '4'],
-        //colCount: ['3'],
-        articlesPerPage:10,
-        filterOptions: {
-          additionalQueryParams: {
-            limit: 999,
-            view: 'browseallretailers'
-          },
-          category: ['BeSS_97'],
-          fo: {
-            anchor_target: '_blank',
-            link_target: '/de/produkte/{productSlug}.html',
-            target: 'alnatura'
-          },
-          region: 'gmzh'
-        },
-        paginationOptions: {
-          disabled: true
-        },
-        hideRating: false,
-        order: 'asc',
-        sort: 'updated_at',
-        theme: 'alnatura'
+      await msrc.components.articles.productList(this.msrcProductListWrapper, this.#config)
 
+      //await new Promise(resolve => setTimeout(() => resolve(), 50))
+      //new Promise(resolve => setTimeout(() => resolve(), 50))
+      //this.html = [this.msrcProductListWrapper, this.getStyles(document.createElement('style'))]
+      //this.html = this.msrcProductListWrapper
 
-      })
       // wait for the styled-component to update the header stylesheet before raping it with getStyles
       //await new Promise(resolve => setTimeout(() => resolve(), 50))
       //this.html  = [this.msrcProductListWrapper, this.getStyles(document.createElement('style'))]
-      this.html = this.msrcProductListWrapper
-      setTimeout(()=>{
-        this.html = this.getStyles(document.createElement('style'))
-      },5000)
+
+      // setTimeout(()=>{
+      //   this.html = this.getStyles(document.createElement('style'))
+      //   this.hidden=false
+      // },5000)
+
+      return this.msrcProductListWrapper
     })
   }
 
-  /**
-   * fetch dependency
-   *
-   * @returns {Promise<{components: any}>}
-   */
+  isMsrcLoaded() {
+    return 'msrc' in self === true && 'utilities' in self.msrc === true && 'login' in self.msrc.utilities === true
+  }
+
+
+
   loadDependency() {
     return this.dependencyPromise || (this.dependencyPromise = new Promise(resolve => {
-      const isMsrcLoaded = () => 'msrc' in self === true && 'utilities' in self.msrc === true && 'login' in self.msrc.utilities === true
-      // needs markdown
-      if (isMsrcLoaded()) {
+      if (this.isMsrcLoaded()) {
         resolve(self.msrc) // eslint-disable-line
       } else {
+
         let scriptCount = 0
+
         const vendorsMainScript = document.createElement('script')
         vendorsMainScript.setAttribute('type', 'text/javascript')
         vendorsMainScript.setAttribute('async', '')
         vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211202125214/vendors~main.js')
         vendorsMainScript.onload = () => {
           scriptCount++
-          if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
+          if (scriptCount >= 2) {
+            resolve(self.msrc) // eslint-disable-line
+          }
         }
+
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
         mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211202125214/main.js')
         mainScript.onload = () => {
           scriptCount++
-          if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
+          if (scriptCount >= 2) {
+            resolve(self.msrc) // eslint-disable-line
+          }
         }
 
-        // const mainScript1 = document.createElement('script')
-        // mainScript1.setAttribute('type', 'text/javascript')
-        // mainScript1.setAttribute('async', '')
-        // mainScript1.setAttribute('src', 'https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/js/main.min.js')
-        // //document.body.appendChild(mainScript1)
-        // mainScript1.onload = () => {
-        //   scriptCount++
-        //   if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
-        // }
-
-        // const mainScript2 = document.createElement('script')
-        // mainScript2.setAttribute('type', 'text/javascript')
-        // mainScript2.setAttribute('async', '')
-        // //mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
-        // mainScript2.setAttribute('src', 'https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/js/vendor.min.js')
-        // //document.body.appendChild(mainScript2)
-        // mainScript2.onload = () => {
-        //   scriptCount++
-        //   if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
-        // }
-
-
-        // const mainScript3 = document.createElement('script')
-        // mainScript3.setAttribute('type', 'text/javascript')
-        // mainScript3.setAttribute('async', '')
-        // //mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
-        // mainScript3.setAttribute('src', 'https://cdn.migros.ch/msrc/20211202125214/widget-loader.js')
-        // //document.body.appendChild(mainScript2)
-        // mainScript3.onload = () => {
-        //   scriptCount++
-        //   if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
-        // }
-
-
-        const styles1 = document.createElement('link');
-        styles1.rel = 'stylesheet';
-        styles1.type = 'text/css';
-        styles1.href = 'https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/styles.template.css'
-
-        const styles2 = document.createElement('link');
-        styles2.rel = 'stylesheet';
-        styles2.type = 'text/css';
-        styles2.href = 'https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/components.template.css'
-
-        const styles3 = document.createElement('link');
-        styles3.rel = 'stylesheet';
-        styles3.type = 'text/css';
-        styles3.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/global/globalTheming.css'
-
-        const styles4 = document.createElement('link');
-        styles4.rel = 'stylesheet';
-        styles4.type = 'text/css';
-        styles4.href = 'https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css'
-
-
-        //this.html = [vendorsMainScript, mainScript, styles1, styles2, styles3, styles4]
-        //this.html = [vendorsMainScript, mainScript, styles1, styles2, styles3, styles4]
         this.html = [vendorsMainScript, mainScript]
+
 
       }
     }))
   }
 
-  /**
-   * grab the msrc styles from the head style node with the attribute data-styled
-   *
-   * @param {HTMLStyleElement} [style=null]
-   * @return {string | HTMLStyleElement | false}
-   */
-  getStyles(style = null) {
+
+  getStyles(style) {
+    console.log("getStyle fn()", style)
     let cssText = ''
-    /** @type {HTMLStyleElement[]} */
-    let componentStyles
-    if ((componentStyles = Array.from(document.querySelectorAll('style[data-styled]'))).length) {
+    const componentStyles = Array.from(document.querySelectorAll('style[data-styled]'))
+    if (componentStyles.length) {
+      console.log("cccc", componentStyles)
       componentStyles.forEach(componentStyle => {
-        console.log(componentStyle.sheet)
+        console.log(componentStyle.sheet.rules.length)
         if (componentStyle.sheet && componentStyle.sheet.rules && componentStyle.sheet.rules.length) {
           Array.from(componentStyle.sheet.rules).forEach(rule => {
-            console.log(rule.cssText)
+            //console.log(rule.cssText)
             cssText += rule.cssText
           })
         }
       })
+
       if (style) {
         style.textContent = cssText
         style.setAttribute('_css-msrc', '')
         style.setAttribute('protected', 'true') // this will avoid deletion by html=''
+        console.log("in", cssText)
         return style
       }
+      console.log("out", style)
       return cssText
     }
     return false
+  }
+
+
+  getCSSStyles() {
+    //setTimeout(() => {
+
+    //let count = 0;
+    //const s = this.getStyles()
+    // const ref = window.setInterval(_ => {
+    //   console.log("tick, tack", this.getStyles())
+    // }, 5000);
+    // setTimeout(() => {
+    //   return this.getStyles()
+    // }, 5000)
+    return new Promise((resolve, reject) => {
+      if (Array.from(document.querySelectorAll('style[data-styled]')).length) {
+        console.log("style", document.querySelectorAll('style[data-styled]'))
+        console.log("ready to load")
+        setTimeout(() => {
+          resolve(this.getStyles(document.createElement('style')));
+        }, 5000);
+      }
+    });
+
+    //}, 50)
+
+  }
+
+  setupWidget() {
+    console.log("setup")
+
   }
 
 }
