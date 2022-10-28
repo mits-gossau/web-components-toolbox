@@ -1,6 +1,9 @@
 /* https://www.figma.com/file/qrlDSGcoLRt6NDU3p7O0T3/Typography?node-id=3194%3A213 */
 /* h-tags */
 /* IMPORTANT: This file will often be processed by namespace-fallback regex function src/es/components/web-components-toolbox/src/es/components/prototypes/Shadow.js:L244, which has trouble to detect proper closings with calc() functions. Be careful to use any factors before variables within calc! */
+:host h1, :host h2, :host h3, :host h4, :host h5, :host h6 {
+  transition: var(--h-transition, color 0.3s ease-out);
+}  
 :host h1, :host h6 {
   color: var(--h1-color, var(--h-color, var(--color, black)));
   display: var(--h1-display, var(--h-display, block));
