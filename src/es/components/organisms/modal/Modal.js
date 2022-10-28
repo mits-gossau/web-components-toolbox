@@ -278,7 +278,7 @@ export default class Modal extends Shadow() {
   }
 
   /**
-   * renders the a-link html
+   * renders the html
    *
    * @return {void}
    */

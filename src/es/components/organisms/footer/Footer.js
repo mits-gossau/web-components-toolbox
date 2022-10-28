@@ -44,7 +44,7 @@ export default class Footer extends Shadow() {
       Promise.all(showPromises).then(() => {
         const wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
         Footer.recalcWrappers(wrappers) // make sure that the wrapper has all the variables just set and recalc
-        Footer.injectCssIntoWrappers(wrappers)
+        this.injectCssIntoWrappers(wrappers)
         this.loadChildComponents().then(modules => {
           let moduleDetails
           if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) Footer.injectCssIntoDetails(this.autoAddDetails(wrappers, moduleDetails).details)
@@ -98,6 +98,9 @@ export default class Footer extends Shadow() {
         --a-color: var(--invert-color);
         --color: var(--invert-color);
         background-color: var(--invert-background-color);
+      }
+      :host > footer .invert.orange {
+        --a-color-hover: var(--invert-orange-a-color-hover, var(--invert-a-color-hover));
       }
       :host > footer o-wrapper[namespace=footer-default-] {
         --align-items: normal;
@@ -155,12 +158,12 @@ export default class Footer extends Shadow() {
           margin-top: var(--content-spacing-mobile);
         }
         :host > footer > *, :host > footer .invert > * {
-          margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto var(--content-spacing-mobile, var(--content-spacing, unset)); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
         }
         :host > footer *.last-contains-details {
-          margin-top: var(--wrapper-last-contains-details-margin-top, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-          margin-bottom: var(--wrapper-last-contains-details-margin-bottom, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          margin-top: var(--wrapper-last-contains-details-margin-top, var(--content-spacing-mobile, var(--content-spacing, unset))); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          margin-bottom: var(--wrapper-last-contains-details-margin-bottom, var(--content-spacing-mobile, var(--content-spacing, unset))); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         }
         :host > footer o-wrapper[namespace=footer-default-] {
           --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
@@ -218,7 +221,7 @@ export default class Footer extends Shadow() {
   }
 
   /**
-   * renders the a-link html
+   * renders the html
    *
    * @return {Promise<void>}
    */
@@ -442,9 +445,8 @@ export default class Footer extends Shadow() {
    *
    * @param {HTMLElement[] & any} wrappers
    * @returns {HTMLElement[]}
-   * @static
    */
-  static injectCssIntoWrappers (wrappers) {
+  injectCssIntoWrappers (wrappers) {
     wrappers.forEach(wrapper => wrapper.setCss(/* css */`
       :host .social-links {
         display: flex;
@@ -461,6 +463,13 @@ export default class Footer extends Shadow() {
       :host .footer-links-row ul.bull li::before {
         border: 0;
         background-color: transparent;
+      }
+      :host ul li a svg {
+        color: var(--${this.getAttribute('namespace')}invert-svg-color, var(--${this.getAttribute('namespace')}invert-a-color));
+        transition: var(--invert-svg-transition, color 0.3s ease-out);
+      }
+      :host ul li a:hover svg {
+        color: var(--${this.getAttribute('namespace')}invert-svg-color-hover, var(--${this.getAttribute('namespace')}invert-a-color-hover));
       }
       @media only screen and (max-width: _max-width_) {
           :host .footer-links-row:not(:last-child){
