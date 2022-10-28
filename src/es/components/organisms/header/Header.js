@@ -408,7 +408,7 @@ export default class Header extends Shadow() {
   }
 
   /**
-   * renders the a-link html
+   * renders the html
    *
    * @return {Promise<void>}
    */

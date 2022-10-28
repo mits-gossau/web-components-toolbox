@@ -76,7 +76,8 @@ export default class Link extends Shadow() {
    * @return {boolean}
    */
   shouldComponentRenderHTML () {
-    return !this.root.querySelector('a')
+    if (!this._hasRendered) return (this._hasRendered = true)
+    return false
   }
 
   /**
@@ -148,18 +149,24 @@ export default class Link extends Shadow() {
       :host > span {
         display: var(--span-display, inline);
       }
-      :host a[href$='.pdf'] {
-        background: transparent url(${this.iconPath}) center left no-repeat;
-        background-position: left bottom;
-        padding:var(--icon-padding);
-        display:inline;
-        vertical-align:middle;
+      :host([namespace='download-']) > a {
+        padding: var(--icon-padding, 0.2em 0);
+        display: inline;
         transition: box-shadow .25s ease-out;
       }
-      :host a[href$='.pdf'] span {
+      :host([namespace='download-']) > a span {
         color: var(--icon-span-color);
         font-family:var(--icon-span-font-family);
         padding:var(--icon-span-padding);
+      }
+      :host([namespace='download-']) > a svg {
+        box-shadow: var(--box-shadow-hover, none);
+        color: var(--icon-color);
+        height: var(--icon-height, 1.5em);
+        transform: translateY(0.6em);
+      }
+      :host([namespace='download-']) > a:hover svg {
+        box-shadow: none;
       }
       :host > a > h1, :host > a > h2, :host > a > h3, :host > a > h4, :host > a > h5, :host > a > h6 {
         padding: 0;
@@ -232,7 +239,24 @@ export default class Link extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.html = this.a
+    // download icon must be added directly as svg that currentColor works
+    if (this.getAttribute('namespace') === 'download-') {
+      const div = document.createElement('div')
+      div.innerHTML = /* html */`
+        <svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="14.78px" height="20px" viewBox="0 0 14.78 20" enable-background="new 0 0 14.78 20" xml:space="preserve">
+          <g>
+            <g>
+              <polygon fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" points="14.78,9.03 13.36,7.61 7.39,13.58 1.42,7.61 0,9.03
+                7.39,16.42 		"/>
+              <rect x="6.39" fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" width="2" height="15"/>
+            </g>
+          </g>
+        </svg>
+      `
+      this.a.innerHTML = `&nbsp;${this.a.innerHTML}`
+      this.a.prepend(Array.from(div.children)[0])
+    }
+    if (!Array.from(this.root.childNodes).includes(this.a)) this.html = this.a
     if (this.hitArea) {
       this.hitArea.innerHTML = this.a.innerHTML
       this.hitArea.setAttribute('data-href', this.a.getAttribute('href'))

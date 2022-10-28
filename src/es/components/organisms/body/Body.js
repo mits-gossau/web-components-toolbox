@@ -151,7 +151,7 @@ export default class Body extends Shadow() {
   }
 
   /**
-   * renders the a-link html
+   * renders the html
    *
    * @return {void}
    */

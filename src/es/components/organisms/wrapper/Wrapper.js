@@ -295,7 +295,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
   }
 
   /**
-   * renders the a-link html
+   * renders the html
    *
    * @return {Promise<void>}
    */
