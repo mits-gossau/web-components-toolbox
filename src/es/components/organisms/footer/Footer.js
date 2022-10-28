@@ -158,12 +158,12 @@ export default class Footer extends Shadow() {
           margin-top: var(--content-spacing-mobile);
         }
         :host > footer > *, :host > footer .invert > * {
-          margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto var(--content-spacing-mobile, var(--content-spacing, unset)); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
         }
         :host > footer *.last-contains-details {
-          margin-top: var(--wrapper-last-contains-details-margin-top, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-          margin-bottom: var(--wrapper-last-contains-details-margin-bottom, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          margin-top: var(--wrapper-last-contains-details-margin-top, var(--content-spacing-mobile, var(--content-spacing, unset))); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          margin-bottom: var(--wrapper-last-contains-details-margin-bottom, var(--content-spacing-mobile, var(--content-spacing, unset))); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         }
         :host > footer o-wrapper[namespace=footer-default-] {
           --gap: var(--gap-mobile-custom, var(--gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
