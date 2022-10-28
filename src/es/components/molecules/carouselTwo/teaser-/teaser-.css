@@ -1,3 +1,29 @@
 :host {
-  --carousel-two-teaser-section-gap: normal;
+  --carousel-two-teaser-scroll-snap-type: none;
+  --carousel-two-teaser-section-child-min-width: 45%;
+  --carousel-two-teaser-section-child-max-width: 45%;
+  --carousel-two-teaser-section-child-opacity-not-active: 1;
+}
+:host > section {
+  grid-column: 2 / 3;
+  grid-row: 1 / 1;
+}
+:host > *.arrow-nav, :host(.has-default-arrow-nav) > *.arrow-nav {
+  display: contents;
+}
+:host > *.arrow-nav > *, :host(.has-default-arrow-nav) > *.arrow-nav > * {
+  width: auto;
+}
+:host > *.arrow-nav > *:first-child, :host(.has-default-arrow-nav) > *.arrow-nav > *:first-child {
+  grid-column: 1 / 1;
+  grid-row: 1 / 1;
+}
+:host > *.arrow-nav > *:last-child, :host(.has-default-arrow-nav) > *.arrow-nav > *:last-child {
+  grid-column: 3 / 4;
+  grid-row: 1 / 1;
+}
+@media only screen and (max-width: _max-width_) {
+  :host > *.arrow-nav, :host(.has-default-arrow-nav) > *.arrow-nav {
+    display: none;
+  }
 }
