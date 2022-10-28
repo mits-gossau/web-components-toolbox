@@ -74,20 +74,20 @@ export default class IntersectionScrollEffect extends Intersection() {
         if (this.requestAnimationFrameId) self.cancelAnimationFrame(this.requestAnimationFrameId)
       */
       this.requestAnimationFrameId = self.requestAnimationFrame(timeStamp => {
-        const offset = self.innerHeight / 100 * Number(this.checkMedia('mobile') ? this.getAttribute('offset-mobile') || this.getAttribute('offset') : this.getAttribute('offset'))
+        const offset = self[this.direction(0)] / 100 * Number(this.checkMedia('mobile') ? this.getAttribute('offset-mobile') || this.getAttribute('offset') : this.getAttribute('offset'))
         const boundingRect = this.getBoundingClientRect()
-        const recalculate = this.elementHeight !== boundingRect.height
+        const recalculate = this.elementHeight !== boundingRect[this.direction(1)]
 
         // saving measurements in variables to avoid redundant calculations
-        if (!this.elementHeight || recalculate) this.elementHeight = this.round(boundingRect.height, 2)
-        if (!this.center || recalculate) this.center = this.round(self.innerHeight / 2 - this.elementHeight / 2, 2)
-        if (!this.maxDistanceFromCenter || recalculate) this.maxDistanceFromCenter = self.innerHeight - offset - this.center
+        if (!this.elementHeight || recalculate) this.elementHeight = this.round(boundingRect[this.direction(1)], 2)
+        if (!this.center || recalculate) this.center = this.round(self[this.direction(0)] / 2 - this.elementHeight / 2, 2)
+        if (!this.maxDistanceFromCenter || recalculate) this.maxDistanceFromCenter = self[this.direction(0)] - offset - this.center
 
         // TODO wrong boundingRect.height onload
         // TODO add optional min-value? max(minValue, outputValue * maxValue)
 
         // get distance from center (abs)
-        const difference = this.round(this.center > boundingRect.top ? this.center - boundingRect.top : boundingRect.top - this.center, 2)
+        const difference = this.round(this.center > boundingRect[this.direction(2)] ? this.center - boundingRect[this.direction(2)] : boundingRect[this.direction(2)] - this.center, 2)
         // get output [0..1]
         let outputValue = this.round(difference / this.maxDistanceFromCenter, this.digits)
         // clamp value to avoid inaccuracies from scrolling too fast
@@ -113,7 +113,7 @@ export default class IntersectionScrollEffect extends Intersection() {
           this.intersectionObserveStart()
         } else {
           this.intersectionObserveStop()
-          self.removeEventListener('scroll', this.scrollListener)
+          this[this.direction(3)].removeEventListener('scroll', this.scrollListener)
           this.css = '' // resets css
         }
       }
@@ -151,7 +151,7 @@ export default class IntersectionScrollEffect extends Intersection() {
     if (this.hasRequiredAttributes) {
       if (this.checkMedia()) {
         super.disconnectedCallback() // this.intersectionObserveStop()
-        self.removeEventListener('scroll', this.scrollListener)
+        this[this.direction(3)].removeEventListener('scroll', this.scrollListener)
         this.css = '' // resets css
       }
       self.removeEventListener('resize', this.resizeListener)
@@ -186,10 +186,20 @@ export default class IntersectionScrollEffect extends Intersection() {
     if (entries && entries[0]) {
       this.scrollListener()
       if (entries[0].isIntersecting) {
-        self.addEventListener('scroll', this.scrollListener)
+        this[this.direction(3)].addEventListener('scroll', this.scrollListener)
       } else {
-        self.removeEventListener('scroll', this.scrollListener)
+        this[this.direction(3)].removeEventListener('scroll', this.scrollListener)
       }
     }
+  }
+
+  direction (i) {
+    return this.hasAttribute('horizontal')
+      ? ['innerWidth', 'width', 'left', 'parentElement'][i]
+      : ['innerHeight', 'height', 'top', 'self'][i]
+  }
+
+  get self () {
+    return self
   }
 }

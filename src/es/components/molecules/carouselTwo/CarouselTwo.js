@@ -184,11 +184,11 @@ export default class CarouselTwo extends Shadow() {
       }
       :host([nav-separate][nav-align-self="start"]) > section,
       :host([nav-separate][nav-align-self="start"]) > .arrow-nav {
-        margin-top: var(--section-nav-separate-margin);
+        margin-bottom: var(--section-nav-separate-margin);
       }
       :host([nav-separate]:not([nav-align-self="start"])) > section,
       :host([nav-separate]:not([nav-align-self="start"])) > .arrow-nav {
-        margin-bottom: var(--section-nav-separate-margin);
+        margin-top: var(--section-nav-separate-margin);
       }
       :host > section, :host > nav, :host > *.arrow-nav {
         grid-column: 1;
@@ -221,6 +221,7 @@ export default class CarouselTwo extends Shadow() {
       /* END - GRID Settings */
       :host > section {
         display: flex;
+        gap: var(--section-gap, normal);
         overflow: hidden;
         scroll-behavior: smooth;
         scroll-snap-type: x mandatory;
@@ -351,10 +352,12 @@ export default class CarouselTwo extends Shadow() {
         :host > section {
           overflow-x: scroll;
         }
-        :host([nav-separate][nav-align-self="start"]) > section {
+        :host([nav-separate][nav-align-self="start"]) > section,
+        :host([nav-separate][nav-align-self="start"]) > .arrow-nav {
           margin-bottom: var(--section-nav-separate-margin-mobile, var(--section-nav-separate-margin));
         }
-        :host([nav-separate]:not([nav-align-self="start"])) > section {
+        :host([nav-separate]:not([nav-align-self="start"])) > section,
+        :host([nav-separate]:not([nav-align-self="start"])) > .arrow-nav {
           margin-top: var(--section-nav-separate-margin-mobile, var(--section-nav-separate-margin));
         }
         :host > nav {
@@ -448,6 +451,18 @@ export default class CarouselTwo extends Shadow() {
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the default-.css namespace with carousel-two-thumbnail-
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-thumbnail-')
+          setAttributeStyles()
+        })
+      case 'carousel-two-teaser-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the default-.css namespace with carousel-two-teaser-
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-teaser-')
           setAttributeStyles()
         })
       default:
