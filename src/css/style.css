@@ -211,6 +211,20 @@
 :host *.bg-color.font-family-tertiary, :host *.bg-color-hover.font-family-tertiary {
   line-height: var(--bg-line-height-tertiary, var(--bg-line-height, 1.6em));
 }
+/* sometimes the box-shadow with certain fonts can have a 1px gap glitch, then use this as alternative */
+:host *.bg-color-no-box-shadow {
+  box-shadow: none !important;
+  padding: 0 var(--bg-padding, 0.5em);
+  position: static;
+  display: block;
+  width: fit-content;
+}
+:host *.bg-color-no-box-shadow + *.bg-color-no-box-shadow {
+  transform: translateY(-1px);
+}
+:host *.bg-color-no-box-shadow > a-arrow {
+  margin-bottom: 0;
+}
 /* p-tag */
 :host p {
   font-family: var(--p-font-family, var(--font-family, inherit));
