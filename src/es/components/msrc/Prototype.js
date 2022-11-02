@@ -55,7 +55,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
    * grab the msrc styles from the head style node with the attribute data-styled
    *
    * @param {HTMLStyleElement} [style=document.createElement('style')]
-   * @return {[HTMLStyleElement, Promise<HTMLStyleElement>]}
+   * @return {[HTMLStyleElement, Promise<string>]}
    */
   getStyles (style = document.createElement('style'), repeats = 25, ms = 200) {
     style.setAttribute('_css-msrc', '')
