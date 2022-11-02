@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Prototype } from '../Prototype.js'
 
 /* global self */
 
@@ -34,7 +34,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * --color-a, --color-secondary, white
  * }
  */
-export default class CookieBanner extends Shadow() {
+export default class CookieBanner extends Prototype() {
   constructor (...args) {
     super({ mode: 'false' }, ...args) // disabling shadow-DOM to have msrc styles flow into the node
 
@@ -94,7 +94,7 @@ export default class CookieBanner extends Shadow() {
         border-color: var(--button-border-color, var(--color-secondary, var(--color, orange))) !important;
         color: var(--button-color, var(--background-color, white)) !important;
         font-family: var(--font-family-bold) !important;
-        text-transform: var(--text-transform, uppercase) !important;
+        text-transform: var(--text-transform, none) !important;
         border-radius: var(--button-border-radius, 4px) !important;
         padding: var(--button-padding, 0.5em 1.2em) !important;
       }
@@ -134,40 +134,6 @@ export default class CookieBanner extends Shadow() {
     const msrcCookieBanner = document.createElement('div')
     this.loadDependency().then(msrc => msrc.components.privacy.cookieBanner(msrcCookieBanner, this.constructor.parseAttribute(this.getAttribute('props'))))
     this.html = msrcCookieBanner
-  }
-
-  /**
-   * fetch dependency
-   *
-   * @returns {Promise<{components: any}>}
-   */
-  loadDependency () {
-    return this.dependencyPromise || (this.dependencyPromise = new Promise(resolve => {
-      // needs markdown
-      if ('msrc' in self === true) {
-        resolve(self.msrc) // eslint-disable-line
-      } else {
-        // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
-        let scriptCount = 0
-        const vendorsMainScript = document.createElement('script')
-        vendorsMainScript.setAttribute('type', 'text/javascript')
-        vendorsMainScript.setAttribute('async', '')
-        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211217102607/vendors~main.js')
-        vendorsMainScript.onload = () => {
-          scriptCount++
-          if ('msrc' in self === true && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
-        }
-        const mainScript = document.createElement('script')
-        mainScript.setAttribute('type', 'text/javascript')
-        mainScript.setAttribute('async', '')
-        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
-        mainScript.onload = () => {
-          scriptCount++
-          if ('msrc' in self === true && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
-        }
-        this.html = [vendorsMainScript, mainScript]
-      }
-    }))
   }
 
   get scripts () {
