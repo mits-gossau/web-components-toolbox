@@ -1,8 +1,6 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
-/* global self */
-
 /**
  * Login https://react-components.migros.ch/?path=/story/msrc-login-03-widgets-login-button--button-large
  * Example at: alnatura Home.html

@@ -67,13 +67,13 @@ export default class CarouselTwo extends Shadow() {
         let hostLeft, activeChild
         if (this.getAttribute('namespace') === 'carousel-two-teaser-'
           ? (hostLeft = Math.round(this.section.getBoundingClientRect().right)) && (activeChild = Array.from(this.section.children).find(node => {
-            const nodeLeft = Math.round(node.getBoundingClientRect().right)
-            return hostLeft + scrollTolerance > nodeLeft && hostLeft - (scrollTolerance + Math.round(node.getBoundingClientRect().width) / 2) < nodeLeft
-          }))
+              const nodeLeft = Math.round(node.getBoundingClientRect().right)
+              return hostLeft + scrollTolerance > nodeLeft && hostLeft - (scrollTolerance + Math.round(node.getBoundingClientRect().width) / 2) < nodeLeft
+            }))
           : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) && (activeChild = Array.from(this.section.children).find(node => {
-            const nodeLeft = Math.round(node.getBoundingClientRect().left)
-            return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
-          }))) {
+              const nodeLeft = Math.round(node.getBoundingClientRect().left)
+              return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
+            }))) {
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
             node.classList.remove('active')
             node.setAttribute('aria-hidden', 'true')

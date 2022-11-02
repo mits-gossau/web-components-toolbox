@@ -1,6 +1,9 @@
 // @ts-check
 import { Shadow } from '../prototypes/Shadow.js'
 
+/* global self */
+/* global HTMLElement */
+
 /**
  * Prototype is a helper with a few functions for msrc
  *
@@ -69,14 +72,16 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
             }
           })
         }
-        if (counter < repeats || lastCssText !== cssText) return setTimeout(() => {
-          if (lastCssText === cssText) {
-            counter++
-          } else {
-            style.textContent = cssText
-          }
-          resolve(grabStyles(cssText, counter))
-        }, ms)
+        if (counter < repeats || lastCssText !== cssText) {
+          return setTimeout(() => {
+            if (lastCssText === cssText) {
+              counter++
+            } else {
+              style.textContent = cssText
+            }
+            resolve(grabStyles(cssText, counter))
+          }, ms)
+        }
         return resolve(style.textContent = cssText)
       })
     }

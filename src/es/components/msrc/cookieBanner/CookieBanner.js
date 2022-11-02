@@ -1,8 +1,6 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
-/* global self */
-
 /**
  * CookieBanner https://react-components.migros.ch/?path=/docs/msrc-privacy-00-readme--page
  * https://wiki.migros.net/display/SHAREDCOMP/CookieBanner+Einbindungs-Anleitung+React+SC
