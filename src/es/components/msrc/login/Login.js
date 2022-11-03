@@ -1,6 +1,8 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
+/* global self */
+
 /**
  * Login https://react-components.migros.ch/?path=/story/msrc-login-03-widgets-login-button--button-large
  * Example at: alnatura Home.html
@@ -53,11 +55,7 @@ import { Prototype } from '../Prototype.js'
 export default class Login extends Prototype() {
   connectedCallback () {
     const showPromises = []
-    if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
-      setTimeout(() => {
-        if (this.shouldComponentRender()) showPromises.push(this.render())
-      }, Number(this.getAttribute('timeout')))
-    } else if (this.shouldComponentRender()) showPromises.push(this.render())
+    if (this.shouldComponentRender()) showPromises.push(this.render())
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => (this.hidden = false))
@@ -118,14 +116,16 @@ export default class Login extends Prototype() {
       await msrc.utilities.login.autologin()
       // Initialize the login button
       await msrc.components.login.button(this.msrcLoginButtonWrapper, {
-        language: this.getAttribute('language') || 'de',
+        language: this.getAttribute('language') || self.Environment.language,
         theme: this.getAttribute('theme') || 'alnatura',
         size: this.getAttribute('size') || 'small',
         loginReturnTo: this.getAttribute('loginReturnTo') || '',
         logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
         config: this.constructor.parseAttribute(this.getAttribute('config') || '{"env": "local"}')
       })
-      this.html = [this.msrcLoginButtonWrapper, this.getStyles(document.createElement('style'))[0]]
+      const getStylesReturn = this.getStyles(document.createElement('style'))
+      this.html = [this.msrcLoginButtonWrapper, getStylesReturn[0]]
+      // return getStylesReturn[1] // use this line if css build up should be avoided
     })
   }
 

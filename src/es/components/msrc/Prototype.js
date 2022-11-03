@@ -77,6 +77,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
             if (lastCssText === cssText) {
               counter++
             } else {
+              counter = 0
               style.textContent = cssText
             }
             resolve(grabStyles(cssText, counter))

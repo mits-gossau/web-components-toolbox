@@ -28,3 +28,20 @@ each website must add the tracking import as shown below in their variablesCusto
 	font-style: normal;
 	font-display: swap;
 }
+
+/* msrc needs the name to have a space. not "HelveticaNowText" but "Helvetica Now Text" */
+@font-face{
+	font-family:"Helvetica Now Text";
+	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Regular.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Regular.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+ 
+@font-face{
+	font-family:"Helvetica Now Text Bold";
+	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Bold.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Bold.woff") format("woff");
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
