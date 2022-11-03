@@ -1,6 +1,8 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
+/* global self */
+
 /**
  * Login https://react-components.migros.ch/?path=/story/msrc-login-03-widgets-login-button--button-large
  * Example at: alnatura Home.html
@@ -121,8 +123,8 @@ export default class Login extends Prototype() {
         config: this.constructor.parseAttribute(this.getAttribute('config') || '{"env": "local"}')
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
-      this.html = [this.msrcLoginButtonWrapper,getStylesReturn[0]]
-      //return getStylesReturn[1] // use this line if css build up should be avoided
+      this.html = [this.msrcLoginButtonWrapper, getStylesReturn[0]]
+      // return getStylesReturn[1] // use this line if css build up should be avoided
     })
   }
 

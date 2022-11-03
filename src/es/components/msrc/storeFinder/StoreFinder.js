@@ -1,6 +1,8 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
+/* global self */
+
 /**
  * StoreFinder https://react-components.migros.ch/?path=/docs/msrc-stores-05-widgets--storefinder
  * Example at: alnatura Home.html
@@ -117,18 +119,18 @@ export default class StoreFinder extends Prototype() {
           clientName: 'mgb',
           map: {
             api: {
-              key: ""
-            },
+              key: ''
+            }
           },
           routing: {
             enabled: true,
-            historyRoot: self.location.pathname,
+            historyRoot: self.location.pathname
           }
         }, this.constructor.parseAttribute(this.getAttribute('config') || '{}'))
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       this.html = [this.msrcStoreFinderWrapper, getStylesReturn[0]]
-      //return getStylesReturn[1] // use this line if css build up should be avoided
+      // return getStylesReturn[1] // use this line if css build up should be avoided
     })
   }
 }
