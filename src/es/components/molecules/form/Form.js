@@ -88,6 +88,45 @@ export default class Form extends Shadow() {
     button.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
     this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
     button.remove()
+    const buttonSecondary = new Button({ namespace: 'button-secondary-' })
+    buttonSecondary.hidden = true
+    this.html = buttonSecondary
+    buttonSecondary.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
+    // make browser default file button look nicer
+    buttonSecondary.css = /* css */ `
+      @supports(selector(:has(> input[type=file]))) {
+        *:has(> input[type=file]) {
+          display: inline-grid;
+          padding: 0;
+        }
+        *:has(> input[type=file]) > * {
+          grid-column: 1;
+          grid-row: 1;
+          padding: var(--padding, calc(0.75em - var(--border-width, 0px)) calc(1.5em - var(--border-width, 0px)));
+        }
+        *:has(> input[type=file]) > *:has(+ input[type=file]) {
+          display: flex;
+          pointer-events: none;
+          justify-content: center;
+        }
+        input[type=file] {
+          cursor: pointer;
+          opacity: 0 !important;
+          height: 100%;
+          width: 100%;
+        }
+      }
+      
+    `
+    // use the below without namespacing
+    this.css = /* css */`
+      *:has(> input[type=file]) {
+        --color: var(--button-secondary-color);
+        --color-hover: var(--button-secondary-color-hover);
+      }
+    `
+    this.css = buttonSecondary.css.replace(/\sbutton/g, ' *:has(> input[type=file])').replace(/\s#label/g, ' *:has(> input[type=file])')
+    buttonSecondary.remove()
     this.css = /* css */`
       :host {
         width:100%;
