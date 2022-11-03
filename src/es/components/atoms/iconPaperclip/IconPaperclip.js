@@ -119,7 +119,6 @@ export default class IconPaperclip extends Shadow() {
   }
 
   get mouseEventElement () {
-    console.log('changed', this.parentNode);
     return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : 'svg']
   }
 }
