@@ -112,6 +112,7 @@ export default class Login extends Shadow() {
       }
     `
     return this.loadDependency().then(async msrc => {
+     
       this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
       // Setup OIDC login configuration
       await msrc.utilities.login.setup({/* ... */})

@@ -4,88 +4,32 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ProductList extends Shadow() {
 
+  constructor(...args) {
+    super(...args)
 
-  _config = {
-    environment: 'production',
-    language: 'de',
-    webAPIKey: 'ZDsjzNwaw9AxGQWhzqMCsnjwYzwpQ7dzigdKXeuuiXeR97ao4phWLRwe2WrZRoPe',
-    colCount: ['2', '2', '2', '4', '4'],
-    //colCount: ['3'],
-    articlesPerPage: 10,
-    filterOptions: {
-      additionalQueryParams: {
-        limit: 999,
-        view: 'browseallretailers'
-      },
-      category: ['BeSS_97'],
-      fo: {
-        anchor_target: '_blank',
-        link_target: '/de/produkte/{productSlug}.html',
-        target: 'alnatura'
-      },
-      region: 'gmzh'
-    },
-    paginationOptions: {
-      disabled: true
-    },
-    hideRating: false,
-    order: 'asc',
-    sort: 'updated_at',
-    theme: 'mgb'
   }
-
-
-  // constructor(...args) {
-  //   super(...args)
-  //   // window.addEventListener('DOMContentLoaded', function () {
-  //   //   debugger
-  //   // })
-
-  // }
-
- 
 
   async connectedCallback() {
 
 
-    setInterval(() => {
-      console.log("interval")
-      let componentStyles
-      let i = 0
-      if ((componentStyles = Array.from(document.querySelectorAll('style[data-styled]'))).length) {
-        componentStyles.forEach(componentStyle => {
-          if (componentStyle.sheet && componentStyle.sheet.rules && componentStyle.sheet.rules.length) {
-            Array.from(componentStyle.sheet.rules).forEach(rule => {
-              i++
-              //console.log(i, rule.cssText)
-              console.log(i)
-            })
-          }
-        })
-      }
-    }, 10000)
-    //this.css = this.getStyles()
-    
     this.render()
     const styles = await this.loadStyles()
-    console.log("styles", styles)
     this.html = styles
+
     this.loadDependency().then(async msrc => {
-      
+      console.log("ms", msrc)
+      console.log("styles", styles, this.msrcWrapper)
+
       const setup = JSON.parse(this.msrcWrapper.dataset.setup)
       setup.webAPIKey = 'ZDsjzNwaw9AxGQWhzqMCsnjwYzwpQ7dzigdKXeuuiXeR97ao4phWLRwe2WrZRoPe'
       setup.environment = 'production'
       setup.mode = 'default'
-      
-      await msrc.components.articles.productList(this.widget, this._config)
-      await new Promise(resolve => setTimeout(() => resolve(), 5000))
-      this.html = this.getStyles(document.createElement('style'))
+      await msrc.components.articles.productList(this.msrcWrapper, setup)
+
+      this.html = [styles[0], styles[1], this.msrcWrapper]
+      //this.css = this.getStyles()
 
     })
-
-
-
-
 
     // this.loadStyles().then(styles=>{
     //   console.log(styles)
@@ -191,18 +135,12 @@ export default class ProductList extends Shadow() {
     styles3.setAttribute('protected', 'true') // this will avoid deletion by html=''
     //this.html = styles3
 
-    const styles6 = await document.createElement('style')
-    styles6.textContent = '@import "https://fonts.googleapis.com/css?family=PT+Sans:700"'
-    styles6.setAttribute('_css-msrc', '')
-    styles6.setAttribute('protected', 'true') // this will avoid deletion by html=''
-    //this.html = styles6
-
     const styles4 = await document.createElement('style')
     styles4.textContent = '@import "https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css"'
     styles4.setAttribute('_css-msrc', '')
     styles4.setAttribute('protected', 'true') // this will avoid deletion by html=''
     //this.html = styles4
-    return [styles3, styles6, styles4]
+    return [styles3, styles4]
 
   }
 
@@ -211,27 +149,19 @@ export default class ProductList extends Shadow() {
   // }
 
   render() {
-    // this.css = /* css */`
-    //   :host {
-    //     display:block;
-    //   }
 
-
-    //   }
-    // `
     console.log("render start")
-    this.msrcWrapper = document.createElement('div')
+    this.msrcWrapper = this.root.querySelector('div') || document.createElement('div')
     this.msrcWrapper.className = "ui-js-product-list"
     this.msrcWrapper.setAttribute('id', "msrc-options")
     this.msrcWrapper.setAttribute('data-setup', '{"colCount":["2","2","2","4","4"],"fallbackEmptyComponent":"Es wurde kein Produkt gefunden. Bitte versuchen Sie es später noch einmal.","filterOptions":{"additionalQueryParams":{"limit":999,"view":"browseallretailers"},"category":["BeSS_97"],"fo":{"anchor_target":"_blank","link_target":"/de/produkte/{productSlug}.html","target":"alnatura"},"region":"gmzh"},"hideAddToShoppingList":true,"hideRating":false,"order":"asc","sort":"updated_at","theme":"mgb"}')
 
-    this.widget = document.createElement('div')
+    this.widget = this.root.querySelector('div') || document.createElement('div')
     this.widget.setAttribute("id", "msrc-widget")
 
-    this.msrcWrapper.append(this.widget)
+    this.msrcWrapper.appendChild(this.widget)
 
-    this.html = this.msrcWrapper
-
+    //this.html = this.msrcWrapper
 
   }
 

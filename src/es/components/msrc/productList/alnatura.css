@@ -1,0 +1,124 @@
+/* Can be used to overwrite style settings. 
+ Check site configuration! 
+ in order to get it working*/
+
+.ui-t332__wrapper .teaser-highlight__text-box.is-white .teaser-highlight__category,
+.ui-t332__wrapper .teaser-highlight__text-box.is-white .teaser-highlight__headline {
+    color: #8b254c;
+}
+
+
+.ui-c209-08-contenttitle.is-inverted .ui-header-headline {
+    color: #8b254c;
+}
+
+/* Highlight Teaser Inverted */
+
+#highlight .ui-bk-brand-teasers a h3 {
+    color: #FFFFFF;
+}
+
+#highlight .ui-bk-brand-teasers a p {
+    color: #FFFFFF;
+}
+
+#highlight .ui-bk-brand-teasers a div button {
+    background-color: transparent;
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+#highlight .ui-bk-brand-teasers a div button:hover,
+#highlight .ui-bk-brand-teasers a div button:focus,
+#highlight .ui-bk-brand-teasers a div button:active:hover {
+    background-color: transparent;
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+
+/* Highlight Teaser Inverted /w diff. Button-Style */
+
+#highlight2 .ui-bk-brand-teasers a h3 {
+    color: #FFFFFF;
+}
+
+#highlight2 .ui-bk-brand-teasers a p {
+    color: #FFFFFF;
+}
+
+#highlight2 .ui-bk-brand-teasers a div button {
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    color: #8B254C;
+}
+
+#highlight2 .ui-bk-brand-teasers a div button:hover,
+#highlight2 .ui-bk-brand-teasers a div button:focus,
+#highlight2 .ui-bk-brand-teasers a div button:active:hover {
+    background-color: transparent;
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+
+
+.product-badge-item {
+    border: 8px solid #FFFFFF;
+    border-radius: 8px;
+    background: #FFFFFF;
+}
+
+/* Permanent Fix: Receipt Table Background */
+.table-responsive {
+    background: #8b254c;
+    color: #fff;
+}
+
+/* TEMP FIX for <p> in Tables */
+.table-responsive table td p {
+    color: #FFFFFF;
+}
+
+.table-responsive table td li {
+    color: #FFFFFF;
+
+}
+
+.table-responsive table td ul {
+    margin: 0px;
+
+}
+
+/* FIX: Product Detail Tabs | Active Tab Color */
+
+.ui-l528-12-content-tabs .nav-tabs>li.active>a {
+    border-top-color: #8B254C;
+    border-bottom-color: #FFFFFF;
+    background-color: #FFFFFF;
+}
+
+/* FIX: Normal Case Headline in C201*/
+
+.ui-c201-12-introstandard .headline-outer .ui-header-headline {
+    text-transform: none;
+}
+
+
+/* PERMANENT FIXES */
+
+/* Padding for Table-Panels */
+.alna-panel {
+    padding: 20px;
+    padding-bottom: 0px;
+}
+
+/* MarketWeb Font in richtext H3 */
+.richtext h3 {
+    font-family: Marketweb;
+}
+
+
+.row .ui-c208-12-stagehome .xs-addition .js-xs-addition {
+    height: 100% !important;
+}
