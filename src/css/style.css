@@ -1,6 +1,9 @@
 /* https://www.figma.com/file/qrlDSGcoLRt6NDU3p7O0T3/Typography?node-id=3194%3A213 */
 /* h-tags */
 /* IMPORTANT: This file will often be processed by namespace-fallback regex function src/es/components/web-components-toolbox/src/es/components/prototypes/Shadow.js:L244, which has trouble to detect proper closings with calc() functions. Be careful to use any factors before variables within calc! */
+:host h1, :host h2, :host h3, :host h4, :host h5, :host h6 {
+  transition: var(--h-transition, color 0.3s ease-out);
+}  
 :host h1, :host h6 {
   color: var(--h1-color, var(--h-color, var(--color, black)));
   display: var(--h1-display, var(--h-display, block));
@@ -207,6 +210,20 @@
 }
 :host *.bg-color.font-family-tertiary, :host *.bg-color-hover.font-family-tertiary {
   line-height: var(--bg-line-height-tertiary, var(--bg-line-height, 1.6em));
+}
+/* sometimes the box-shadow with certain fonts can have a 1px gap glitch, then use this as alternative */
+:host *.bg-color-no-box-shadow {
+  box-shadow: none !important;
+  padding: 0 var(--bg-padding, 0.5em);
+  position: static;
+  display: block;
+  width: fit-content;
+}
+:host *.bg-color-no-box-shadow + *.bg-color-no-box-shadow {
+  transform: translateY(-1px);
+}
+:host *.bg-color-no-box-shadow > a-arrow {
+  margin-bottom: 0;
 }
 /* p-tag */
 :host p {

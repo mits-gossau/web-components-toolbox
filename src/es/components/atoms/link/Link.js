@@ -247,7 +247,7 @@ export default class Link extends Shadow() {
           <g>
             <g>
               <polygon fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" points="14.78,9.03 13.36,7.61 7.39,13.58 1.42,7.61 0,9.03
-                7.39,16.42 		"/>
+                7.39,16.42"/>
               <rect x="6.39" fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" width="2" height="15"/>
             </g>
           </g>

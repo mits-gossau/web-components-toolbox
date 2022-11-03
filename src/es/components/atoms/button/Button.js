@@ -217,7 +217,7 @@ export default class Button extends Shadow() {
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </button>
     `
-    if (this.getAttribute('namespace') === "button-download-") {
+    if (this.getAttribute('namespace') === 'button-download-') {
       this.button.prepend(this.downloadIcon)
     }
 
@@ -268,6 +268,6 @@ export default class Button extends Shadow() {
             </g>
         </g>
       </svg>`
-    return iconImg = iconImg.children[0] 
+    return (iconImg = iconImg.children[0])
   }
 }

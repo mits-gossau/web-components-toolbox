@@ -1,7 +1,7 @@
 :host {
   --color: var(--teaser-plain-color);
   --teaser-plain-a-picture-figcaption-background-color-hover: var(--teaser-plain-a-picture-figcaption-background-color-hover-custom,var(--teaser-plain-background-color-hover-custom, var(--teaser-plain-background-color)));
-  --teaser-plain-a-picture-margin: 0.5em;
+  --teaser-plain-a-picture-margin: 0.6em;
   --teaser-plain-a-picture-width: calc(100% - var(--teaser-plain-a-picture-margin) * 2);
   --teaser-plain-background-color: var(--teaser-plain-background-color-custom, var(--color-secondary, var(--background-color, var(--m-white))));
   --teaser-plain-border-radius-mobile: var(--teaser-plain-border-radius-mobile-custom, 0.571em);

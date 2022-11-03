@@ -18,6 +18,7 @@ CSS Rules:
 - variables naming rule: --{selector aka component aka namespace}-{css property}-{pseudo class or media query name} eg. --p-background-color-hover
 - within the component don't use any name spacing eg. component header don't use --header-default-color just use --color the namespace can be added by the Shadow as an html attribute
 - avoid overly use of reassigning / overwrite variables
+- the default transition is: 0.3s ease-out
 
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css

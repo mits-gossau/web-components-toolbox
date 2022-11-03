@@ -1,7 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
-
-/* global self */
+import { Prototype } from '../Prototype.js'
 
 /**
  * Login https://react-components.migros.ch/?path=/story/msrc-login-03-widgets-login-button--button-large
@@ -52,7 +50,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  }>} [config="{'en': 'local'}"]
  * }
  */
-export default class Login extends Shadow() {
+export default class Login extends Prototype() {
   connectedCallback () {
     const showPromises = []
     if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
@@ -127,74 +125,8 @@ export default class Login extends Shadow() {
         logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
         config: this.constructor.parseAttribute(this.getAttribute('config') || '{"env": "local"}')
       })
-      // wait for the styled-component to update the header stylesheet before raping it with getStyles
-      await new Promise(resolve => setTimeout(() => resolve(), 50))
-      this.html = [this.msrcLoginButtonWrapper, this.getStyles(document.createElement('style'))]
+      this.html = [this.msrcLoginButtonWrapper, this.getStyles(document.createElement('style'))[0]]
     })
-  }
-
-  /**
-   * fetch dependency
-   *
-   * @returns {Promise<{components: any}>}
-   */
-  loadDependency () {
-    return this.dependencyPromise || (this.dependencyPromise = new Promise(resolve => {
-      const isMsrcLoaded = () => 'msrc' in self === true && 'utilities' in self.msrc === true && 'login' in self.msrc.utilities === true
-      // needs markdown
-      if (isMsrcLoaded()) {
-        resolve(self.msrc) // eslint-disable-line
-      } else {
-        // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
-        let scriptCount = 0
-        const vendorsMainScript = document.createElement('script')
-        vendorsMainScript.setAttribute('type', 'text/javascript')
-        vendorsMainScript.setAttribute('async', '')
-        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211217102607/vendors~main.js')
-        vendorsMainScript.onload = () => {
-          scriptCount++
-          if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
-        }
-        const mainScript = document.createElement('script')
-        mainScript.setAttribute('type', 'text/javascript')
-        mainScript.setAttribute('async', '')
-        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
-        mainScript.onload = () => {
-          scriptCount++
-          if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
-        }
-        this.html = [vendorsMainScript, mainScript]
-      }
-    }))
-  }
-
-  /**
-   * grab the msrc styles from the head style node with the attribute data-styled
-   *
-   * @param {HTMLStyleElement} [style=null]
-   * @return {string | HTMLStyleElement | false}
-   */
-  getStyles (style = null) {
-    let cssText = ''
-    /** @type {HTMLStyleElement[]} */
-    let componentStyles
-    if ((componentStyles = Array.from(document.querySelectorAll('style[data-styled]'))).length) {
-      componentStyles.forEach(componentStyle => {
-        if (componentStyle.sheet && componentStyle.sheet.rules && componentStyle.sheet.rules.length) {
-          Array.from(componentStyle.sheet.rules).forEach(rule => {
-            cssText += rule.cssText
-          })
-        }
-      })
-      if (style) {
-        style.textContent = cssText
-        style.setAttribute('_css-msrc', '')
-        style.setAttribute('protected', 'true') // this will avoid deletion by html=''
-        return style
-      }
-      return cssText
-    }
-    return false
   }
 
   get scripts () {

@@ -65,10 +65,15 @@ export default class CarouselTwo extends Shadow() {
       clearTimeout(scrollTimeoutId)
       scrollTimeoutId = setTimeout(() => {
         let hostLeft, activeChild
-        if ((hostLeft = Math.round(this.getBoundingClientRect().left)) && (activeChild = Array.from(this.section.children).find(node => {
-          const nodeLeft = Math.round(node.getBoundingClientRect().left)
-          return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
-        }))) {
+        if (this.getAttribute('namespace') === 'carousel-two-teaser-'
+          ? (hostLeft = Math.round(this.section.getBoundingClientRect().right)) && (activeChild = Array.from(this.section.children).find(node => {
+              const nodeLeft = Math.round(node.getBoundingClientRect().right)
+              return hostLeft + scrollTolerance > nodeLeft && hostLeft - (scrollTolerance + Math.round(node.getBoundingClientRect().width) / 2) < nodeLeft
+            }))
+          : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) && (activeChild = Array.from(this.section.children).find(node => {
+              const nodeLeft = Math.round(node.getBoundingClientRect().left)
+              return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
+            }))) {
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
             node.classList.remove('active')
             node.setAttribute('aria-hidden', 'true')
@@ -182,13 +187,13 @@ export default class CarouselTwo extends Shadow() {
         background-color: var(--background-color, transparent);
         display: grid !important;
       }
-      :host([nav-separate][nav-align-self="start"]) > section,
-      :host([nav-separate][nav-align-self="start"]) > .arrow-nav {
-        margin-top: var(--section-nav-separate-margin);
-      }
-      :host([nav-separate]:not([nav-align-self="start"])) > section,
-      :host([nav-separate]:not([nav-align-self="start"])) > .arrow-nav {
+      :host([nav-separate][nav-align-self="start"]:not([no-default-nav])) > section,
+      :host([nav-separate][nav-align-self="start"]:not([no-default-nav])) > .arrow-nav {
         margin-bottom: var(--section-nav-separate-margin);
+      }
+      :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > section,
+      :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > .arrow-nav {
+        margin-top: var(--section-nav-separate-margin);
       }
       :host > section, :host > nav, :host > *.arrow-nav {
         grid-column: 1;
@@ -221,21 +226,24 @@ export default class CarouselTwo extends Shadow() {
       /* END - GRID Settings */
       :host > section {
         display: flex;
+        gap: var(--section-gap, normal);
         overflow: hidden;
         scroll-behavior: smooth;
-        scroll-snap-type: x mandatory;
+        scroll-snap-type: var(--scroll-snap-type, x mandatory);
       }
       :host > section > * {
         align-items: var(--section-child-align-items, center);
         display: flex;
         flex-direction: column;
         justify-content: var(--section-child-justify-content, center);
-        min-width: 100%;
+        min-width: var(--section-child-min-width, 100%);
+        max-width: var(--section-child-max-width, 100%);
         outline: none;
         scroll-snap-align: start;
+        user-select: none;
       }
       :host > section:not(.scrolling) > *:not(.active) {
-        opacity: 0;
+        opacity: var(--section-child-opacity-not-active, 0);
       }
       :host > nav {
         align-items: center;
@@ -244,7 +252,7 @@ export default class CarouselTwo extends Shadow() {
           : this.hasAttribute('nav-align-self')
           ? this.getAttribute('nav-align-self')
           : 'var(--nav-align-self, end)'};
-        display: flex;
+        display: ${this.hasAttribute('no-default-nav') ? 'none' : 'flex'};
         gap: var(--nav-gap);
         height: fit-content;
         margin: var(--nav-margin);
@@ -351,10 +359,12 @@ export default class CarouselTwo extends Shadow() {
         :host > section {
           overflow-x: scroll;
         }
-        :host([nav-separate][nav-align-self="start"]) > section {
+        :host([nav-separate][nav-align-self="start"]:not([no-default-nav])) > section,
+        :host([nav-separate][nav-align-self="start"]:not([no-default-nav])) > .arrow-nav {
           margin-bottom: var(--section-nav-separate-margin-mobile, var(--section-nav-separate-margin));
         }
-        :host([nav-separate]:not([nav-align-self="start"])) > section {
+        :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > section,
+        :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > .arrow-nav {
           margin-top: var(--section-nav-separate-margin-mobile, var(--section-nav-separate-margin));
         }
         :host > nav {
@@ -450,6 +460,18 @@ export default class CarouselTwo extends Shadow() {
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-thumbnail-')
           setAttributeStyles()
         })
+      case 'carousel-two-teaser-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the default-.css namespace with carousel-two-teaser-
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-teaser-')
+          setAttributeStyles()
+        })
       default:
         return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }
@@ -467,7 +489,7 @@ export default class CarouselTwo extends Shadow() {
     this.arrowNav.classList.add('arrow-nav')
     return this.loadChildComponents().then(children => {
       // check item correlation between slides and navigation
-      if (this.section.children.length !== this.nav.children.length || this.classList.contains('has-default-nav')) {
+      if (!this.hasAttribute('no-default-nav') && (this.section.children.length !== this.nav.children.length || this.classList.contains('has-default-nav'))) {
         this.classList.add('has-default-nav')
         // clear nav on discrepancy
         if (this.nav.childNodes.length) {
@@ -481,7 +503,7 @@ export default class CarouselTwo extends Shadow() {
         })
       }
       // generate default arrows
-      if (this.arrowNav.children.length < 2 || this.classList.contains('has-default-arrow-nav')) {
+      if (!this.hasAttribute('no-default-arrow-nav') && (this.arrowNav.children.length < 2 || this.classList.contains('has-default-arrow-nav'))) {
         this.classList.add('has-default-arrow-nav')
         // clear arrowNav on discrepancy
         if (this.arrowNav.childNodes.length) {
@@ -518,7 +540,7 @@ export default class CarouselTwo extends Shadow() {
             navNode.appendChild(navNodeChild)
           }
           navNode.setAttribute('href', `#${id}`)
-        } else {
+        } else if (!this.hasAttribute('no-default-nav')) {
           console.warn('CarouselTwo.js expected a nav node (navChildNode) corresponding with the slide (sectionChildNode).', { navChildNode: this.nav.children[i], sectionChildNode: node, carousel: this })
         }
       })
@@ -544,6 +566,7 @@ export default class CarouselTwo extends Shadow() {
   }
 
   previous (focus) {
+    if (this.getAttribute('namespace') === 'carousel-two-teaser-') return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1], focus)
     return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1], focus)
   }
 

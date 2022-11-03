@@ -24,7 +24,7 @@
   --navigation-alnatura-color-hover: var(--color-tertiary);
 }
 :host > nav > ul li.open > o-nav-wrapper > section {
-  --navigation-alnatura-color: var(--menu-color);
+  --navigation-alnatura-color: var(--navigation-alnatura-color-second-level-custom, var(--navigation-alnatura-color-custom, var(--menu-color)));
 }
 :host > nav > ul li.open > o-nav-wrapper > section > ul {
   --padding-mobile-custom: var(--content-spacing-mobile);
@@ -67,7 +67,7 @@
     --navigation-alnatura-a-link-content-spacing-custom: 0 0 0 1em;
     --navigation-alnatura-a-link-content-spacing-no-scroll-custom: var(--navigation-alnatura-a-link-content-spacing-custom);
     --navigation-alnatura-background-color: var(--menu-color);
-    --navigation-alnatura-color-mobile: var(--menu-color);
+    --navigation-alnatura-color-mobile: var(--navigation-alnatura-color-mobile-custom, var(--menu-color));
     --navigation-alnatura-color: var(--menu-color);
     --navigation-alnatura-search-li-padding-mobile: var(--content-spacing-mobile) 0 0;
   }

@@ -118,7 +118,6 @@ export default class Input extends Shadow() {
         font-size: var(--font-size);
         font-weight: 700;
         letter-spacing: 0.03em;
-        text-transform: uppercase;
         line-height: 1;
         color: var(--color);
         display: block;
