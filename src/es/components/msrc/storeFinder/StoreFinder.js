@@ -62,7 +62,7 @@ import { Prototype } from '../Prototype.js'
  *    'clientName': 'mgb',
  *    'map': {
  *      'api': {
- *        'key': 'test'
+ *        'key': ''
  *      },
  *    },
  *    'routing': {
@@ -99,10 +99,11 @@ export default class StoreFinder extends Prototype() {
   render () {
     this.css = /* css */`
       :host {
-        
+        display:var(--display, block);
+        width: var(--width, 100%) !important;
       }
-      @media only screen and (max-width: _max-width_) {
-        
+      :host main > div {
+        max-height: var(--max-height, 75vh);
       }
     `
     return this.loadDependency().then(async msrc => {
@@ -112,12 +113,11 @@ export default class StoreFinder extends Prototype() {
         language: this.getAttribute('language') || self.Environment.language,
         theme: this.getAttribute('theme') || 'alnatura',
         env: this.getAttribute('env') || 'local',
-        placesConsumer: this.getAttribute('places-consumer') || 'mgb_msc_storefinder',
         config: Object.assign({
           clientName: 'mgb',
           map: {
             api: {
-              key: "test"
+              key: ""
             },
           },
           routing: {
@@ -127,12 +127,8 @@ export default class StoreFinder extends Prototype() {
         }, this.constructor.parseAttribute(this.getAttribute('config') || '{}'))
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
-      this.html = [this.msrcStoreFinderWrapper,getStylesReturn[0]]
+      this.html = [this.msrcStoreFinderWrapper, getStylesReturn[0]]
       //return getStylesReturn[1] // use this line if css build up should be avoided
     })
-  }
-
-  get scripts () {
-    return this.root.querySelectorAll('script')
   }
 }
