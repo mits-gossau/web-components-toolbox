@@ -37,7 +37,6 @@ import { Prototype } from '../Prototype.js'
  *    "mgb"|
  *    "migusto"} [theme="mgb"]
  *  {"local"|"test"|"production"} [env="local"]
- *  {string} [places-consumer='mgb_msc_storefinder'],
  *  {string|Partial<{
  *    clientName: string,
  *    localization: {
@@ -67,6 +66,7 @@ import { Prototype } from '../Prototype.js'
  *        'key': ''
  *      },
  *    },
+ *    'placesConsumer': 'mgb_msc_storefinder',
  *    'routing': {
  *      'enabled': 'true',
  *      'historyRoot': self.location.pathname
@@ -122,6 +122,7 @@ export default class StoreFinder extends Prototype() {
               key: ''
             }
           },
+          placesConsumer: 'mgb_msc_storefinder',
           routing: {
             enabled: true,
             historyRoot: self.location.pathname
