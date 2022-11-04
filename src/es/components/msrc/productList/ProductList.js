@@ -4,6 +4,10 @@ import { Prototype } from '../Prototype.js'
 
 export default class ProductList extends Prototype() {
 
+  // constructor(...args) {
+  //   super({ mode: 'false' }, ...args)
+  // }
+
   options = {
     "environment": 'production',
     "webAPIKey": 'ZDsjzNwaw9AxGQWhzqMCsnjwYzwpQ7dzigdKXeuuiXeR97ao4phWLRwe2WrZRoPe',
@@ -71,6 +75,8 @@ export default class ProductList extends Prototype() {
 
   render() {
     this.css = /* css */`
+    @import url("https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/styles.template.css");
+    @import url("https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css");
       :host { 
       }
       // :host [data-testid="msrc-articles--article-list"]{
