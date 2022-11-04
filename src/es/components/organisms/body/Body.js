@@ -114,7 +114,7 @@ export default class Body extends Shadow() {
       :host(.content-max-width-two) > main > *:not(.ignore-max-width), :host > main > *.content-max-width-two {
         max-width: var(--content-max-width-two, none);
       }
-      :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child {
+      :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child, :host > main > msrc-store-finder:first-child {
         margin-top: var(--a-emotion-pictures-margin-top-first-child, calc(-1 * var(--content-spacing, unset)));
       }
       :host > main > a-google-maps:first-child {
@@ -134,7 +134,7 @@ export default class Body extends Shadow() {
         :host(.content-max-width-two) > main > *:not(.ignore-max-width), :host > main > *.content-max-width-two {
           max-width: var(--content-max-width-two-mobile, none);
         }
-        :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child {
+        :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child, :host > main > msrc-store-finder:first-child {
           margin-top: var(--a-emotion-pictures-margin-top-first-child-mobile, calc(-1 * var(--content-spacing-mobile, unset)));
         }
       }
