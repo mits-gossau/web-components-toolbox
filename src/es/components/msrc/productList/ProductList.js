@@ -75,11 +75,10 @@ export default class ProductList extends Prototype() {
 
   render() {
     this.css = /* css */`
-    @import url("https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/styles.template.css");
-    @import url("https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css");
-      :host { 
-      }
-      // :host [data-testid="msrc-articles--article-list"]{
+    // @import url("https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/styles.template.css");
+    // @import url("https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css");
+    :host { }
+    // :host [data-testid="msrc-articles--article-list"]{
       //   display:flex !important;
       //   box-sizing: border-box;
       //   list-style: none;
@@ -87,8 +86,7 @@ export default class ProductList extends Prototype() {
       //   margin: 0px;
       //   flex-wrap: wrap;
       // }
-      @media only screen and (max-width: _max-width_) {   
-      }
+      @media only screen and (max-width: _max-width_) {}
     `
     return this.loadDependency().then(async msrc => {
       this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
