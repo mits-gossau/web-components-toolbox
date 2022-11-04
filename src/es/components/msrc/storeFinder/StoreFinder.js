@@ -75,6 +75,11 @@ import { Prototype } from '../Prototype.js'
  * }
  */
 export default class StoreFinder extends Prototype() {
+  // !IMPORTANT: Must be in the LIGHT DOM for styles to get through
+  constructor (...args) {
+    super({ mode: 'false' }, ...args)
+  }
+
   connectedCallback () {
     const showPromises = []
     if (this.shouldComponentRender()) showPromises.push(this.render())
@@ -104,9 +109,6 @@ export default class StoreFinder extends Prototype() {
         display:var(--display, block);
         width: var(--width, 100%) !important;
       }
-      :host main > div {
-        max-height: var(--max-height, 75vh);
-      }
     `
     return this.loadDependency().then(async msrc => {
       this.msrcStoreFinderWrapper = this.root.querySelector('div') || document.createElement('div')
@@ -129,9 +131,7 @@ export default class StoreFinder extends Prototype() {
           }
         }, this.constructor.parseAttribute(this.getAttribute('config') || '{}'))
       })
-      const getStylesReturn = this.getStyles(document.createElement('style'))
-      this.html = [this.msrcStoreFinderWrapper, getStylesReturn[0]]
-      // return getStylesReturn[1] // use this line if css build up should be avoided
+      this.html = this.msrcStoreFinderWrapper
     })
   }
 }
