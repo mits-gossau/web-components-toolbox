@@ -75,13 +75,13 @@ export default class General extends Shadow() {
         font-family: var(--font-family, "FuturaT", Arial, sans-serif);
         font-weight: var(--font-weight, normal);
       }
-      :root a {
+      a {
         color: var(--a-color, var(--color-secondary, var(--color, blue)));
         font-family: var(--font-family, "FuturaT", Arial, sans-serif);
         font-weight: var(--font-weight, normal);
         text-decoration: var(--a-text-decoration, var(--text-decoration, none));
       }
-      :root a:hover {
+      a:hover {
         color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, blue))));
         text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
       }

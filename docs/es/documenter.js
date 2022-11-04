@@ -11,7 +11,7 @@ if (componentName) {
       const fetchHtmlExamples = document.URL
 
       // class path
-      const fetchCodeFile = location.href.replace(/\/(?:.(?!src\/))+$/g, importEl[3].replace('./', '/'))
+      const fetchCodeFile = location.href.replace(/\/(?:.(?!\/src\/))+$/g, importEl[3].replace('./', '/'))
 
       // css path
       const fetchPathCss = getCSSPath(location)
