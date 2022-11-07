@@ -1,34 +1,40 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
-
 export default class ProductList extends Prototype() {
-
-  // constructor(...args) {
-  //   super({ mode: 'false' }, ...args)
-  // }
+  constructor(...args) {
+    //super({ mode: 'false' }, ...args)
+    super(...args)
+    this.abortController = null
+    this.requestArticleCategory = event => { 
+      if (this.abortController) this.abortController.abort()
+      this.abortController = new AbortController()
+      console.log("category:", event)
+    }
+  }
 
   options = {
-    "environment": 'production',
-    "webAPIKey": 'ZDsjzNwaw9AxGQWhzqMCsnjwYzwpQ7dzigdKXeuuiXeR97ao4phWLRwe2WrZRoPe',
-    "colCount": ["2", "2", "2", "4", "4"],
-    "fallbackEmptyComponent": "Es wurde kein Produkt gefunden. Bitte versuchen Sie es später noch einmal.",
-    "filterOptions": {
-      "additionalQueryParams": {
-        "limit": 999, "view": "browseallretailers"
+    environment: 'production',
+    webAPIKey: 'ZDsjzNwaw9AxGQWhzqMCsnjwYzwpQ7dzigdKXeuuiXeR97ao4phWLRwe2WrZRoPe',
+    colCount: ['2', '2', '2', '4', '4'],
+    fallbackEmptyComponent: 'Es wurde kein Produkt gefunden. Bitte versuchen Sie es später noch einmal.',
+    filterOptions: {
+      additionalQueryParams: {
+        limit: 999, view: 'browseallretailers'
       },
-      "category": ["BeSS_97"],
-      "fo": {
-        "anchor_target": "_blank",
-        "link_target": "/de/produkte/{productSlug}.html", "target": "alnatura"
+      category: ['BeSS_97'],
+      fo: {
+        anchor_target: '_blank',
+        link_target: '/de/produkte/{productSlug}.html',
+        target: 'alnatura'
       },
-      "region": "gmzh"
+      region: 'gmzh'
     },
-    "hideAddToShoppingList": true,
-    "hideRating": false,
-    "order": "asc",
-    "sort": "updated_at",
-    "theme": "mgb"
+    hideAddToShoppingList: true,
+    hideRating: false,
+    order: 'asc',
+    sort: 'updated_at',
+    theme: 'mgb'
   }
 
   _config = {
@@ -36,7 +42,7 @@ export default class ProductList extends Prototype() {
     environment: 'production',
     language: 'de',
     webAPIKey: 'ZDsjzNwaw9AxGQWhzqMCsnjwYzwpQ7dzigdKXeuuiXeR97ao4phWLRwe2WrZRoPe',
-    colCount:["2","2","2","4","4"],
+    colCount: ['2', '2', '2', '4', '4'],
     articlesPerPage: 10,
     filterOptions: {
       additionalQueryParams: {
@@ -60,7 +66,8 @@ export default class ProductList extends Prototype() {
     theme: 'mgb'
   }
 
-  connectedCallback() {
+  connectedCallback () {
+    document.body.addEventListener('requestArticleCategory', this.requestArticleCategory)
     const showPromises = []
     if (this.shouldComponentRender()) showPromises.push(this.render())
     if (showPromises.length) {
@@ -68,12 +75,15 @@ export default class ProductList extends Prototype() {
       Promise.all(showPromises).then(() => (this.hidden = false))
     }
   }
+  disconnectedCallback() {
+    document.body.removeEventListener('requestArticleCategory', this.requestArticleCategory)
+  }
 
-  shouldComponentRender() {
+  shouldComponentRender () {
     return !this.msrcProductListWrapper
   }
 
-  render() {
+  render () {
     this.css = /* css */`
     // @import url("https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/styles.template.css");
     // @import url("https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css");
@@ -117,7 +127,4 @@ export default class ProductList extends Prototype() {
   //   this.html = styles4
   //   //return [styles3, styles6, styles4]
   // }
-
-
-
 }
