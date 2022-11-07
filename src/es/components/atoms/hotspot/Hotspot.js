@@ -25,17 +25,17 @@ export default class Hotspot extends Shadow() {
     this.buttonClickListener = e => {
       if (this.classList.contains('active')) {
         this.classList.remove('active')
-        document.body.removeEventListener('click', this.clickListener);
+        document.body.removeEventListener('click', this.clickListener)
       } else {
         this.classList.add('active')
-        document.body.addEventListener('click', this.clickListener);
+        document.body.addEventListener('click', this.clickListener)
       }
     }
 
     this.clickListener = e => {
       if (e.composedPath()[0] !== this.buttonOpen) {
         this.classList.remove('active')
-        document.body.removeEventListener('click', this.clickListener);
+        document.body.removeEventListener('click', this.clickListener)
       }
     }
   }
@@ -78,38 +78,39 @@ export default class Hotspot extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host{
-        ${this.getAttribute('top') != null ? `position: absolute; 
+        ${this.getAttribute('top') != null ? `
+        position: absolute; 
           top: ${this.getAttribute('top')}%;         
           left: ${this.getAttribute('left')}%;
         ` : 'position: relative;'}
       }
 
       :host .btn-close{
-        display:block;
-        position: absolute;
-        top: 1.25rem;
-        right: 1.25rem;
-        width: 1rem;
-        height: 1rem;
-        padding: 0;
-        border: 0;
         background-color: transparent;
         background-image: url(_import-meta-url_./icons/close-orange-large.svg);
         background-repeat: no-repeat;
         background-size: contain;
         border-radius: 50%;
+        border: 0;
+        display:block;
+        height: 1rem;
+        padding: 0;
+        position: absolute;
+        right: 1.25rem;
+        top: 1.25rem;
+        width: 1rem;
       }
 
       :host .btn-open {
-        padding: 0;
-        border: 0;
         background-color: transparent;
+        border: 0;
+        padding: 0;
       }
 
       :host .btn-open:after {
-        position: absolute;
         border-radius: 50%;
         cursor: pointer;
+        position: absolute;
       }
 
       :host .btn-open:after{
@@ -123,49 +124,49 @@ export default class Hotspot extends Shadow() {
       }
 
       :host .sr-only {
-        position: absolute;
-        width: 1px;
+        border: 0;
+        clip: rect(0,0,0,0);
         height: 1px;
         margin: -1px;
-        padding: 0;
         overflow: hidden;
-        clip: rect(0,0,0,0);
-        border: 0;
+        padding: 0;
+        position: absolute;
+        width: 1px;
       }
 
       :host .content{
+        background-color: var(--hotspot-content-background-color, #fff);
         outline:0;
         z-index: 100;
-        background-color: var(--hotspot-content-background-color, #fff);
       }
 
       @media screen and (min-width: _max-width_){
         :host .content{
-          position: absolute;
+          left: 50%;
           padding: 1.25rem;
+          position: absolute;
+          top: 50%;
           transform: scale(0) translate(-50%,-50%);
           transition: transform 250ms cubic-bezier(.755,.05,.855,.06);
-          top: 50%;
-          left: 50%;
           width: 22rem;
         }
         :host(.active) .content{
-          visibility: visible;
           transition: transform .4s 250ms cubic-bezier(.755,.05,.855,.06);
+          visibility: visible;
         }
         :host .content:after{
-          position: absolute;
-          z-index: -1;
-          width: 0;
-          height: 0;
-          border: solid #fff;
           border-width: 0.75rem;
-          margin-left: -0.75rem;
+          border: solid #fff;
           box-shadow: 5px 5px 15px -6px transparent;
           content: ' ';
+          height: 0;
+          margin-left: -0.75rem;
           pointer-events: none;
+          position: absolute;
           transition: box-shadow .1s cubic-bezier(.755,.05,.855,.06),
             transform .1s cubic-bezier(.755,.05,.855,.06);
+          width: 0;
+          z-index: -1;
         }
         :host(.active) .content > *{
           opacity: 1;
@@ -179,21 +180,21 @@ export default class Hotspot extends Shadow() {
 
       @media screen and (max-width: _max-width_){
         :host .content{
-          position: fixed;
-          top: auto;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          padding: 0 1.25rem 1.25rem;
+          animation: fadeOutBottom 1s ease;
           backface-visibility: hidden;
           border-radius: 10px 10px 0 0;
+          bottom: 0;
           box-shadow: 0 0 0.625rem 0 rgb(83 83 83 / 20%);
-          transition: height .3s, animation .3s ease-in-out, visibility 1s ease;
-          visibility: hidden;
+          left: 0;
           overflow-x: hidden;
           overflow-y: scroll;
+          padding: 0 1.25rem 1.25rem;
+          position: fixed;
+          right: 0;
+          top: auto;
+          transition: height .3s, animation .3s ease-in-out, visibility 1s ease;
+          visibility: hidden;
           white-space: normal;
-          animation: fadeOutBottom 1s ease;
         }
         @keyframes fadeOutBottom{
           0% {
@@ -216,31 +217,31 @@ export default class Hotspot extends Shadow() {
           }
         }
         :host .content:before{
-          position: absolute;
-          top: 0.625rem;
-          left: 50%;
-          width: 2.5rem;
-          height: 4px;
           background-color: var(--hotspot-button-background-color, var(--color-secondary, #ff6600));
           border-radius: 4px;
           content: '';
+          height: 4px;
+          left: 50%;
+          position: absolute;
+          top: 0.625rem;
           transform: translateX(-50%);
+          width: 2.5rem;
         }
         :host .content-title{
-          position: relative;
+          font-size: 1.8rem;
+          margin-bottom: 0.75rem;
           min-height: 2.5rem;
           padding: 10px 0 0.75rem;
-          margin-bottom: 0.75rem;
-          font-size: 1.8rem;
+          position: relative;
         }
         :host .content-title:after{
-          position: absolute;
-          bottom: 0;
-          left: -1rem;
-          width: calc(100% + 36px);
-          height: 2px;
           background-color: #f3f2f0;
+          bottom: 0;
           content: '';
+          height: 2px;
+          left: -1rem;
+          position: absolute;
+          width: calc(100% + 36px);
         }
         :host .btn-open {
           box-shadow: none;
@@ -248,7 +249,7 @@ export default class Hotspot extends Shadow() {
       }
     `
 
-    var styles = [{
+    const styles = [{
       // @ts-ignore
       path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
       namespaceFallback: true
@@ -314,7 +315,7 @@ export default class Hotspot extends Shadow() {
       if (node.classList.contains('sr-close')) this.buttonClose.appendChild(node.cloneNode())
     })
 
-    if (this.content.querySelector('h3') != null){
+    if (this.content.querySelector('h3') != null) {
       this.divTitle.classList.add('content-title')
       this.divTitle.appendChild(this.content.querySelector('h3'))
       this.content.prepend(this.divTitle)
