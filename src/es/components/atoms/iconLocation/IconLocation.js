@@ -23,7 +23,7 @@ export default class IconLocation extends Shadow() {
       this.classList.remove('hover')
     }
   }
-  
+
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()

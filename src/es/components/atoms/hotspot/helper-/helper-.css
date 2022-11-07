@@ -1,0 +1,24 @@
+:host .btn-open {
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
+:host .btn-open:after {
+    background-color: var(--hotspot-helper-button-background-color, var(--color-secondary, #ff6600));
+    background-image: url(_import-meta-url_./icons/icon-question.svg);
+    height: 1.5rem;
+    transform: translate(-50%, -75%);
+    transition: background-image 0.2s ease-in-out;
+    width: 1.5rem;
+}
+
+:host .btn-open:hover:after {
+    background-color: var(--hotspot-helper-button-background-color-hover, var(--color-hover, #AACF80));
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, .6);
+}
+
+:host(.active) .btn-open:after {
+    background-color: var(--hotspot-helper-button-background-color-hover, var(--color-hover, #AACF80));
+    background-image: url(_import-meta-url_./icons/close-white.svg);
+    transform: translate(-50%, -75%);
+}
