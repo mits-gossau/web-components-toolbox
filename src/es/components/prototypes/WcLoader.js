@@ -1,65 +1,37 @@
 // @ts-check
-/** @typedef {ShadowRootMode | 'false'} mode */
 /** @typedef {{
-  path: string,
-  cssSelector?: string,
-  namespace?: string|false,
-  namespaceFallback?: boolean,
-  styleNode?: HTMLStyleElement,
-  style?: string,
-  appendStyleNode?: boolean,
-  error?: string,
-  maxWidth?: string,
-  importMetaUrl?: string,
-  node?: HTMLElement & Shadow & *
-}} fetchCSSParams */
+ selector: string, // finds first most specific/longest selector (selector.length) matching the node.tagName
+ url: string, // url pointing to the javascript file or to a directory which contains javascript files (for directories the selector should end with a trailing hyphen)
+ separateFolder?: boolean, // expects the component to be in a separate folder. Example: Button.js would be expected inside atoms/buttons/Button.js,
+ separateFolderPlural?: boolean,
+ fileEnding?: string
+}} Directory */
 
 /* global HTMLElement */
-/* global document */
 /* global self */
 /* global fetch */
 /* global CustomEvent */
 
 /**
- * Shadow is a helper with a few functions for every web component which possibly allows a shadowRoot (atom, organism and molecule)
- *
+ * WcLoader is a loader script which finds all not defined nodes / web components, takes their node.tagNames and tries to resolve them by the directory given or url attribute directly set on the web components node
  * @export
- * @function Shadow
- * @param {CustomElementConstructor} [ChosenHTMLElement = HTMLElement]
+ * @function WcLoader
+ * @param {CustomElementConstructor} ChosenHTMLElement
+ * @param {string} [baseUrl = './src/es/components/']
+ * @param {Directory[]} [directories = './src/es/components/']
  * @attribute {mode} [mode='open'] decide which ShadowRootMode it shall be + 'false' if no shadow is desired
  * @attribute {namespace} namespace all css vars by the string passed here
  * @attribute {namespace-fallback} if the node has this attribute it will make a fallback to the css vars without namespace
  * @property {
-    connectedCallback,
-    disconnectedCallback,
-    Shadow.parseAttribute,
-    Shadow.getMode,
-    mode,
-    namespace,
-    namespaceFallback,
-    mobileBreakpoint,
-    importMetaUrl,
-    hasShadowRoot,
-    root,
-    cssSelector,
-    css,
-    _css,
-    _cssHidden,
-    setCss,
-    Shadow.cssHostFallback,
-    Shadow.cssNamespaceToVarFunc,
-    Shadow.cssNamespaceToVarDec,
-    Shadow.cssNamespaceToVar,
-    cssMaxWidth,
-    cssImportMetaUrl,
-    fetchCSS,
-    Shadow.cssTextDecorationShortHandFix,
-    html,
-    Shadow.isMac
+    baseUrl,
+    directories
+    load,
+    resolve,
+    loadListener
   }
  * @return {CustomElementConstructor | *}
  */
-export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends ChosenHTMLElement {
+export const Shadow = (ChosenHTMLElement = HTMLElement, baseUrl = './src/es/components/', directories) => class WcLoader extends ChosenHTMLElement {
   /**
    * Creates an instance of Shadow. The constructor will be called for every custom element using this class when initially created.
    *
