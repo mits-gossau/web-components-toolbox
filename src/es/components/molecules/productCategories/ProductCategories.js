@@ -50,7 +50,7 @@ export default class ProductCategories extends Shadow() {
     this.categoriesNavigation.innerHTML = `
         <ul>
             <li>
-                <a-link namespace="category-link-">
+                <a-link namespace="category-link-" category="BeSS_97">
                     <a-picture namespace="category-icon-" picture-load defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
                     </a-picture> <a> Alle Produkte </a>
                 </a-link>
@@ -63,7 +63,7 @@ export default class ProductCategories extends Shadow() {
                 </a-link>
             </li>
             <li>
-                <a-link namespace="category-link-">
+                <a-link namespace="category-link-" category="ALNA_CAT_ZuckerundSuessungsmittel_Backen">
                     <a-picture namespace="category-icon-" picture-load defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
                     </a-picture>
                     <a>Backen </a>
