@@ -78,145 +78,96 @@ export default class Hotspot extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host{
-        position: absolute;
-        top: ${this.getAttribute('top')}%;
-        left: ${this.getAttribute('left')}%;
-        width: 0;
-        height: 0;
+        ${this.getAttribute('top') != null ? `
+        position: absolute; 
+          top: ${this.getAttribute('top')}%;         
+          left: ${this.getAttribute('left')}%;
+        ` : 'position: relative;'}
       }
 
       :host .btn-close{
-        display: none;
-      }
-      :host .btn-open {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 3.1rem;
-        height: 3.1rem;
-        padding: 0;
-        border: 0;
         background-color: transparent;
+        background-image: url(_import-meta-url_./icons/close-orange-large.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
         border-radius: 50%;
-        box-shadow: 1px 1px 15px -2px rgba(0,0,0,.1);
-        outline: 0;
-        transform: translate(-50%,-50%);
-        transition: transform .2s ease-out,
-          box-shadow .2s ease-out,
-          background-color .2s ease-out;
-        will-change: transform;
-        z-index: 0;
+        border: 0;
+        display:block;
+        height: 1rem;
+        padding: 0;
+        position: absolute;
+        right: 1.25rem;
+        top: 1.25rem;
+        width: 1rem;
       }
 
-      :host .btn-open:before,
+      :host .btn-open {
+        background-color: transparent;
+        border: 0;
+        padding: 0;
+      }
+
       :host .btn-open:after {
-        position: absolute;
-        top: 50%;
-        left: 50%;
         border-radius: 50%;
         cursor: pointer;
-      }
-      :host .btn-open:before{
-        width: 3.1rem;
-        height: 3.1rem;
-        background-color: rgba(255,255,255,.5);
-        content: '';
-        transform: translate(-50%,-50%);
-        transition: background-color .2s ease-out;
-      }
-
-
-      :host(:nth-child(1n)) .btn-open:before{
-        animation: button-pulse 1s ease;
-      }      
-      :host(:nth-child(2n)) .btn-open:before{
-        animation: button-pulse 1s 250ms ease;
-      }      
-      :host(:nth-child(3n)) .btn-open:before{
-        animation: button-pulse 1s .5s ease;
-      }
-
-      @keyframes button-pulse {
-        0% {
-        transform:translate(-50%,-50%) scale(1)
-        }
-        30% {
-        transform:translate(-50%,-50%) scale(1.5)
-        }
-        100% {
-        transform:translate(-50%,-50%) scale(1)
-        }
+        position: absolute;
       }
 
       :host .btn-open:after{
-        background-image: url(_import-meta-url_./close-white.svg);
-        background-color: var(--hotspot-button-background-color, var(--color-secondary, #ff6600));
         background-position: 50% 50%;
         background-repeat: no-repeat;
-        transform: translate(-50%,-50%) rotate(-45deg);
-        width: 2.2rem;
-        height: 2.2rem;
         box-shadow: 0 0 0 0 transparent;
         content: '';
         transition: transform .2s ease-out,
           box-shadow .2s ease-out,
           background-color .2s ease-out;
       }
-      :host .btn-open:hover:after{
-        background-color: var(--hotspot-button-background-color-hover, var(--color-hover, #AACF80));
-        box-shadow: 0 0 6px 0 rgba(0,0,0,.6);
-      }
-      :host(.active) .btn-open:after{
-        background-color: var(--hotspot-button-background-color-hover, var(--color-hover, #AACF80));
-        transform: translate(-50%,-50%) rotate(0);
-      }
 
       :host .sr-only {
-        position: absolute;
-        width: 1px;
+        border: 0;
+        clip: rect(0,0,0,0);
         height: 1px;
         margin: -1px;
-        padding: 0;
         overflow: hidden;
-        clip: rect(0,0,0,0);
-        border: 0;
+        padding: 0;
+        position: absolute;
+        width: 1px;
       }
 
       :host .content{
+        background-color: var(--hotspot-content-background-color, #fff);
         outline:0;
-        z-index: 1;
-        background-color: #fff;
+        z-index: 100;
       }
 
       @media screen and (min-width: _max-width_){
         :host .content{
-          position: absolute;
+          left: 50%;
           padding: 1.25rem;
+          position: absolute;
+          top: 50%;
           transform: scale(0) translate(-50%,-50%);
           transition: transform 250ms cubic-bezier(.755,.05,.855,.06);
-          top: 50%;
-          left: 50%;
           width: 22rem;
         }
         :host(.active) .content{
-          visibility: visible;
           transition: transform .4s 250ms cubic-bezier(.755,.05,.855,.06);
+          visibility: visible;
         }
         :host .content:after{
-          position: absolute;
-          z-index: -1;
-          width: 0;
-          height: 0;
-          border: solid #fff;
           border-width: 0.75rem;
-          margin-left: -0.75rem;
+          border: solid #fff;
           box-shadow: 5px 5px 15px -6px transparent;
           content: ' ';
+          height: 0;
+          margin-left: -0.75rem;
           pointer-events: none;
+          position: absolute;
           transition: box-shadow .1s cubic-bezier(.755,.05,.855,.06),
             transform .1s cubic-bezier(.755,.05,.855,.06);
+          width: 0;
+          z-index: -1;
         }
-        
         :host(.active) .content > *{
           opacity: 1;
           transition: opacity 250ms .4s ease-out;
@@ -225,27 +176,25 @@ export default class Hotspot extends Shadow() {
           opacity: 0;
           transition: opacity 75ms ease-in;
         }
-
       }
 
-      
       @media screen and (max-width: _max-width_){
         :host .content{
-          position: fixed;
-          top: auto;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          padding: 0 1.25rem 1.25rem;
+          animation: fadeOutBottom 1s ease;
           backface-visibility: hidden;
           border-radius: 10px 10px 0 0;
+          bottom: 0;
           box-shadow: 0 0 0.625rem 0 rgb(83 83 83 / 20%);
-          transition: height .3s, animation .3s ease-in-out, visibility 1s ease;
-          visibility: hidden;
+          left: 0;
           overflow-x: hidden;
           overflow-y: scroll;
+          padding: 0 1.25rem 1.25rem;
+          position: fixed;
+          right: 0;
+          top: auto;
+          transition: height .3s, animation .3s ease-in-out, visibility 1s ease;
+          visibility: hidden;
           white-space: normal;
-          animation: fadeOutBottom 1s ease;
         }
         @keyframes fadeOutBottom{
           0% {
@@ -268,77 +217,86 @@ export default class Hotspot extends Shadow() {
           }
         }
         :host .content:before{
-          position: absolute;
-          top: 0.625rem;
-          left: 50%;
-          width: 2.5rem;
-          height: 4px;
           background-color: var(--hotspot-button-background-color, var(--color-secondary, #ff6600));
           border-radius: 4px;
           content: '';
+          height: 4px;
+          left: 50%;
+          position: absolute;
+          top: 0.625rem;
           transform: translateX(-50%);
+          width: 2.5rem;
         }
         :host .content-title{
-          position: relative;
+          font-size: 1.8rem;
+          margin-bottom: 0.75rem;
           min-height: 2.5rem;
           padding: 10px 0 0.75rem;
-          margin-bottom: 0.75rem;
-          font-size: 1.8rem;
+          position: relative;
         }
         :host .content-title:after{
-          position: absolute;
-          bottom: 0;
-          left: -1rem;
-          width: calc(100% + 36px);
-          height: 2px;
           background-color: #f3f2f0;
+          bottom: 0;
           content: '';
+          height: 2px;
+          left: -1rem;
+          position: absolute;
+          width: calc(100% + 36px);
         }
         :host .btn-open {
           box-shadow: none;
-        }
-        :host .btn-open:before{
-          background-color: transparent;
-        }
-        :host .btn-close{
-          display:block;
-          position: absolute;
-          top: 1.25rem;
-          right: 1.25rem;
-          width: 1rem;
-          height: 1rem;
-          padding: 0;
-          border: 0;
-          background-color: transparent;
-          background-image: url(_import-meta-url_./close-orange-large.svg);
-          background-repeat: no-repeat;
-          background-size: contain;
-          border-radius: 50%;
-        }
+        }        
       }
     `
+
+    const styles = [{
+      // @ts-ignore
+      path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+      namespaceFallback: true
+    }]
+
     switch (this.getAttribute('place')) {
       case 'left':
-        return this.fetchCSS([{
+        styles.push({
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./place/left.css`,
-          namespace: false
-        }])
+          namespaceFallback: true
+        })
+        break
       case 'right':
-        return this.fetchCSS([{
+        styles.push({
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./place/right.css`,
-          namespace: false
-        }])
+          namespaceFallback: true
+        })
+        break
       case 'top':
-        return this.fetchCSS([{
+        styles.push({
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./place/top.css`,
-          namespace: false
-        }])
+          namespaceFallback: true
+        })
+        break
       case 'bottom':
       default:
-        return this.fetchCSS([{
+        styles.push({
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./place/bottom.css`,
+          namespaceFallback: true
+        })
+        break
+    }
+
+    switch (this.getAttribute('namespace')) {
+      case 'hotspot-helper-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./helper-/helper-.css`,
           namespace: false
-        }])
+        }, ...styles], false)
+      case 'hotspot-default-':
+      default:
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          namespace: false
+        }, ...styles], false)
     }
   }
 
@@ -357,9 +315,11 @@ export default class Hotspot extends Shadow() {
       if (node.classList.contains('sr-close')) this.buttonClose.appendChild(node.cloneNode())
     })
 
-    this.divTitle.classList.add('content-title')
-    this.divTitle.appendChild(this.content.querySelector('h3'))
-    this.content.prepend(this.divTitle)
+    if (this.content.querySelector('h3') != null) {
+      this.divTitle.classList.add('content-title')
+      this.divTitle.appendChild(this.content.querySelector('h3'))
+      this.content.prepend(this.divTitle)
+    }
     this.content.appendChild(this.buttonClose)
 
     this.html = this.buttonOpen
