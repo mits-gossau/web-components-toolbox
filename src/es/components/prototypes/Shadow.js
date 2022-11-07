@@ -565,10 +565,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   /**
    * the most common way to figure out the sites break point
    *
-   * @param {{constructor: string, tagName: string}} [organism = { constructor: this.constructor.name, tagName: this.tagName }]
+   * @param {{constructor: string, tagName: string, namespace: string}} [organism = { constructor: this.constructor.name, tagName: this.tagName }]
    * @return {string}
    */
-  getMobileBreakpoint (organism = { constructor: this.constructor.name, tagName: this.tagName }) {
+  getMobileBreakpoint (organism = { constructor: this.constructor.name, tagName: this.tagName, namespace: this.namespace }) {
     return this.hasAttribute('mobile-breakpoint')
       ? this.getAttribute('mobile-breakpoint')
       // @ts-ignore ignoring self.Environment error

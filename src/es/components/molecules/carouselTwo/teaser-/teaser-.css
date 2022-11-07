@@ -26,6 +26,10 @@
   grid-row: 1 / 1;
 }
 @media only screen and (max-width: _max-width_) {
+  :host {
+    --carousel-two-teaser-section-child-min-width: 90%;
+    --carousel-two-teaser-section-child-max-width: 90%;
+  }
   :host > *.arrow-nav, :host(.has-default-arrow-nav) > *.arrow-nav {
     display: none;
   }

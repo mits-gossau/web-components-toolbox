@@ -105,6 +105,7 @@ export default class Teaser extends Intersection() {
         width: var(--width, 100%);
         overflow: var(--overflow, visible);
         position: var(--position, static);
+        overflow: hidden;
       }
       ${this.getAttribute('namespace') === 'teaser-overlay-'
       ? /* css */`
