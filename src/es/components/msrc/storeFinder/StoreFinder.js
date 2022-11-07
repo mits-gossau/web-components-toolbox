@@ -109,6 +109,9 @@ export default class StoreFinder extends Prototype() {
         display:var(--display, block);
         width: var(--width, 100%) !important;
       }
+      :host ul > li > meta + a {
+        margin: 0;
+      }
     `
     return this.loadDependency().then(async msrc => {
       this.msrcStoreFinderWrapper = this.root.querySelector('div') || document.createElement('div')
