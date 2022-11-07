@@ -20,3 +20,9 @@
   --teaser-tile-position: relative;
   --underline-font-size: var(--teaser-tile-p-font-size);
 }
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --teaser-tile-p-font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));
+    --teaser-tile-p-line-height: var(--p-line-height-mobile, var(--p-line-height, var(--line-height, normal)));
+  }
+}

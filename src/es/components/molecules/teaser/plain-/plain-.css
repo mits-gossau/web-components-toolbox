@@ -28,3 +28,9 @@
   --teaser-plain-p-line-height: 1.14em;
   --teaser-plain-p-margin: 0 0 0.625em;
 }
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --teaser-plain-p-font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));
+    --teaser-plain-p-line-height: var(--p-line-height-mobile, var(--p-line-height, var(--line-height, normal)));
+  }
+}

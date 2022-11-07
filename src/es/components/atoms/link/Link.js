@@ -160,7 +160,7 @@ export default class Link extends Shadow() {
         padding:var(--icon-span-padding);
       }
       :host([namespace='download-']) > a svg {
-        box-shadow: var(--box-shadow-hover, none);
+        box-shadow: var(--box-shadow, none);
         color: var(--icon-color);
         height: var(--icon-height, 1.5em);
         transform: translateY(0.6em);

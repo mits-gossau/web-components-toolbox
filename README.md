@@ -8,6 +8,7 @@ JS Rules:
 - Component should share its breakpoint with children
 
 CSS Rules:
+- mobile font-size should not be smaller than 1rem
 - no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
 - variablesCustom.css has to be kept as tiny as possible
 - use templates instead of namespace-fallback
@@ -33,4 +34,3 @@ TODO:
 TODO in this branch:
 - [ ] wc-config fetch on event with string or dom element
 - [ ] hover on parent prototype
-- [ ] carousel teaser mobile different width

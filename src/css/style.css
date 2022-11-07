@@ -331,6 +331,27 @@ img[style="float: right;"] {
 :host ol li::marker {
   color: var(--ol-color, var(--color, green))
 }
+:host ol.big {
+  padding-left: var(--ol-margin, 1.5em);
+  counter-reset: item;
+  list-style: none;
+}
+:host ol.big li {
+  position: relative;
+  margin-bottom: 1em;
+}
+:host ol.big li::before {
+  font-size: var(--big-li-before-font-size, 2em);
+  position: absolute;
+  top: var(--big-li-before-top, 0);
+  left: calc(-1 * var(--big-li-before-left, var(--ol-margin, 2em)));
+  display: block;
+  width: var(--big-li-before-width, var(--ol-margin, 2em));
+  color: var(--color-secondary, var(--color));
+  content: counters(item, ".") ".";
+  counter-increment: item;
+  text-align: center;
+}
 :host ul {
   box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
   display: var(--ul-display, var(--ol-display, block));
