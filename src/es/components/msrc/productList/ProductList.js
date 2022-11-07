@@ -36,7 +36,7 @@ export default class ProductList extends Prototype() {
     environment: 'production',
     language: 'de',
     webAPIKey: 'ZDsjzNwaw9AxGQWhzqMCsnjwYzwpQ7dzigdKXeuuiXeR97ao4phWLRwe2WrZRoPe',
-    colCount: ['2', '2', '2', '4', '4'],
+    colCount:["2","2","2","4","4"],
     articlesPerPage: 10,
     filterOptions: {
       additionalQueryParams: {
