@@ -2,14 +2,13 @@
 import { Prototype } from '../Prototype.js'
 
 export default class ProductList extends Prototype() {
-  constructor(...args) {
-    //super({ mode: 'false' }, ...args)
+  constructor (...args) {
     super(...args)
     this.abortController = null
-    this.requestArticleCategory = event => { 
+    this.requestArticleCategory = event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-      console.log("category:", event)
+      console.log('category:', event)
     }
   }
 
@@ -75,7 +74,8 @@ export default class ProductList extends Prototype() {
       Promise.all(showPromises).then(() => (this.hidden = false))
     }
   }
-  disconnectedCallback() {
+
+  disconnectedCallback () {
     document.body.removeEventListener('requestArticleCategory', this.requestArticleCategory)
   }
 
@@ -85,18 +85,8 @@ export default class ProductList extends Prototype() {
 
   render () {
     this.css = /* css */`
-    // @import url("https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/styles.template.css");
-    // @import url("https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css");
     :host { }
-    // :host [data-testid="msrc-articles--article-list"]{
-      //   display:flex !important;
-      //   box-sizing: border-box;
-      //   list-style: none;
-      //   padding: 0px;
-      //   margin: 0px;
-      //   flex-wrap: wrap;
-      // }
-      @media only screen and (max-width: _max-width_) {}
+    @media only screen and (max-width: _max-width_) {}
     `
     return this.loadDependency().then(async msrc => {
       this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
@@ -106,25 +96,23 @@ export default class ProductList extends Prototype() {
     })
   }
 
-  // loadCustomStyles() {
-  //   const styles3 = document.createElement('style')
-  //   styles3.textContent = '@import "https://www.alnatura.ch/.resources/m5-bk-brand-theme/2.4.2-r84b41_64/css/styles.template.css"'
-  //   styles3.setAttribute('_css-msrc', '')
-  //   styles3.setAttribute('protected', 'true') // this will avoid deletion by html=''
-  //   this.html = styles3
+  renderCSS () {
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/fonts.css`, // no variables for this reason no namespace
+        namespace: false
+      }
 
-  //   const styles6 = document.createElement('style')
-  //   styles6.textContent = '@import "https://fonts.googleapis.com/css?family=PT+Sans:700"'
-  //   styles6.setAttribute('_css-msrc', '')
-  //   styles6.setAttribute('protected', 'true') // this will avoid deletion by html=''
-  //   this.html = styles6
-
-  //   const styles4 = document.createElement('style')
-  //   styles4.textContent = '@import "https://www.alnatura.ch/resources/templating-kit/themes/m5-bk-brand/sites/alnatura.css"'
-  //   styles4.setAttribute('_css-msrc', '')
-  //   styles4.setAttribute('protected', 'true') // this will avoid deletion by html=''
-  //   console.log(styles4)
-  //   this.html = styles4
-  //   //return [styles3, styles6, styles4]
-  // }
+    ]
+    switch (this.getAttribute('namespace')) {
+      case 'product-list-default-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
+      default:
+        return this.fetchCSS(styles)
+    }
+  }
 }
