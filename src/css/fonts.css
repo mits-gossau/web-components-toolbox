@@ -39,7 +39,7 @@ each website must add the tracking import as shown below in their variablesCusto
 }
  
 @font-face{
-	font-family:"Helvetica Now Text Bold";
+	font-family:"Helvetica Now Text XBold";
 	src:url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Bold.woff2") format("woff2"),url("https://cdn.migros.ch/ch.migros/static/fonts/helvetica-now/HelveticaNowTextW05-Bold.woff") format("woff");
 	font-weight: normal;
 	font-style: normal;

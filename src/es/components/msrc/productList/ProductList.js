@@ -48,7 +48,10 @@ export default class ProductList extends Prototype() {
     if (this.shouldComponentRender()) showPromises.push(this.render())
     if (showPromises.length) {
       this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+        this.renderCSS()
+      })
     }
   }
 
@@ -71,7 +74,14 @@ export default class ProductList extends Prototype() {
 
   renderCSS () {
     this.css = /* css */`
-    :host {}
+    :host h2 {
+      font-family: "Helvetica Now Text XBold";
+      font-size:10px;
+    }
+  //  :host[data-testid="msrc-articles--article-price"] {
+  //     font-family: "Helvetica Now Text XBold";
+  //     font-size:130px !important;
+  //   }
     @media only screen and (max-width: _max-width_) {}
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
