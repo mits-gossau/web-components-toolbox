@@ -110,7 +110,7 @@ export default class Login extends Prototype() {
     return this.loadDependency().then(async msrc => {
       this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
       // Setup OIDC login configuration
-      await msrc.utilities.login.setup({/* ... */})
+      await msrc.utilities.login.setup(this.constructor.parseAttribute(this.getAttribute('setup') || '{}'))
       // Trigger autologin
       await msrc.utilities.login.autologin()
       // Initialize the login button
