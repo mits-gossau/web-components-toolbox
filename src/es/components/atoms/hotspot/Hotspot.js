@@ -78,11 +78,13 @@ export default class Hotspot extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host{
-        ${this.getAttribute('top') != null ? `
+        ${this.getAttribute('top') != null
+? `
         position: absolute; 
           top: ${this.getAttribute('top')}%;         
           left: ${this.getAttribute('left')}%;
-        ` : 'position: relative;'}
+        `
+: 'position: relative;'}
       }
 
       :host .btn-close{

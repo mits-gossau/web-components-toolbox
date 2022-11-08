@@ -33,7 +33,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
         const vendorsMainScript = document.createElement('script')
         vendorsMainScript.setAttribute('type', 'text/javascript')
         vendorsMainScript.setAttribute('async', '')
-        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211217102607/vendors~main.js')
+        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211202125214/vendors~main.js')
         vendorsMainScript.onload = () => {
           scriptCount++
           if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
@@ -41,7 +41,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20220914135223/main.js')
+        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20211202125214/main.js')
         mainScript.onload = () => {
           scriptCount++
           if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
