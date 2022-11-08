@@ -49,7 +49,7 @@ export default class ProductList extends Prototype() {
     if (showPromises.length) {
       this.hidden = true
       Promise.all(showPromises).then(() => {
-        //this.renderCSS()
+        this.renderCSS()
         this.hidden = false
       })
     }
@@ -74,9 +74,9 @@ export default class ProductList extends Prototype() {
 
   renderCSS () {
     this.css = /* css */`
-    
-    @media only screen and (max-width: _max-width_) {}
-    `
+    :host h2 {
+      font-family: "Helvetica Now Text XBold";
+    }`
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {

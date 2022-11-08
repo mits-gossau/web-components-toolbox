@@ -28,7 +28,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
       if (isMsrcLoaded()) {
         resolve(self.msrc) // eslint-disable-line
       } else {
-        // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity 
+        // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')

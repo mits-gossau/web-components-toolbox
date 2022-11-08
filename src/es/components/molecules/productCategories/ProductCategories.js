@@ -24,7 +24,7 @@ export default class ProductCategories extends Shadow() {
     this.categoriesNavigation.removeEventListener('click', this.clickListener)
   }
 
-  dispatchRequestCategoriesEvent (category){ 
+  dispatchRequestCategoriesEvent (category) {
     this.dispatchEvent(new CustomEvent('requestArticleCategory', {
       detail: {
         category
