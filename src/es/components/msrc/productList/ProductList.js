@@ -8,7 +8,6 @@ export default class ProductList extends Prototype() {
     this.requestArticleCategory = event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-      console.log('category:', event.detail.category)
       this.config.filterOptions.category = [event.detail.category]
       msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
     }

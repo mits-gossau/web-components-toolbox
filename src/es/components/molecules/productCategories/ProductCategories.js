@@ -8,7 +8,6 @@ export default class ProductCategories extends Shadow() {
     super(...args)
 
     this.clickListener = event => {
-      console.log(event.target)
       if (!event.target || event.target.tagName !== 'A-LINK') return false
       event.preventDefault()
       this.dispatchRequestCategoriesEvent(event.target.getAttribute('category'))
@@ -25,8 +24,7 @@ export default class ProductCategories extends Shadow() {
     this.categoriesNavigation.removeEventListener('click', this.clickListener)
   }
 
-  dispatchRequestCategoriesEvent (category) {
-    console.log('dispatch event for category: ', category)
+  dispatchRequestCategoriesEvent (category){ 
     this.dispatchEvent(new CustomEvent('requestArticleCategory', {
       detail: {
         category
