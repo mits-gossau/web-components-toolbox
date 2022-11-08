@@ -28,25 +28,15 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
       if (isMsrcLoaded()) {
         resolve(self.msrc) // eslint-disable-line
       } else {
-        // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
-        let scriptCount = 0
-        const vendorsMainScript = document.createElement('script')
-        vendorsMainScript.setAttribute('type', 'text/javascript')
-        vendorsMainScript.setAttribute('async', '')
-        vendorsMainScript.setAttribute('src', '//cdn.migros.ch/msrc/20221108103958/vendors~main.js')
-        vendorsMainScript.onload = () => {
-          scriptCount++
-          if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
-        }
+        // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity 
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
         mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20221108103958/main.js')
         mainScript.onload = () => {
-          scriptCount++
-          if (isMsrcLoaded() && scriptCount >= 2) resolve(self.msrc) // eslint-disable-line
+          if (isMsrcLoaded()) resolve(self.msrc) // eslint-disable-line
         }
-        this.html = [vendorsMainScript, mainScript]
+        this.html = [mainScript, mainScript]
       }
     }))
   }
