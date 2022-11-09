@@ -1,12 +1,16 @@
 :host {
+    --pagination-default-a-color-hover: var(--pagination-default-a-color-hover-custom, var(--a-color-hover, var(--background-color, white)));
+    --pagination-default-a-color: var(--pagination-default-a-color-custom, var(--background-color, white));
+    --pagination-default-a-text-decoration-hover: var(--pagination-default-a-text-decoration-hover-custom, var(--a-text-decoration-hover, none));
+    --pagination-default-background-color: var(--pagination-default-background-color-custom, var(--color-secondary, black));
     --pagination-default-height: 3.9em;
-    --pagination-default-li-a-active: black;
+    --pagination-default-li-a-active: var(--color-active);
     --pagination-default-li-a-align-items: center;
-    --pagination-default-li-a-border-top: 6px solid black;
+    --pagination-default-li-a-border-top-hover: 6px solid var(--color-tertiary, var(--color-secondary));
+    --pagination-default-li-a-border-top: 6px solid var(--color-secondary);
     --pagination-default-li-a-display: flex;
     --pagination-default-li-a-flex-direction: row;
     --pagination-default-li-a-height: 100%;
-    --pagination-default-li-a-border-top-hover: 6px solid var(--color-secondary);
     --pagination-default-li-a-justify-content: center;
     --pagination-default-li-a-text-decoration: none;
     --pagination-default-li-active-background: var(--m-white);
