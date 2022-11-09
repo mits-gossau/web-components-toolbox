@@ -4,10 +4,7 @@ import { Prototype } from '../Prototype.js'
 export default class ProductList extends Prototype() {
   constructor (...args) {
     super(...args)
-    this.abortController = null
     this.requestArticleCategory = event => {
-      if (this.abortController) this.abortController.abort()
-      this.abortController = new AbortController()
       this.config.filterOptions.category = [event.detail.category]
       msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
     }
@@ -47,9 +44,9 @@ export default class ProductList extends Prototype() {
     const showPromises = []
     if (this.shouldComponentRender()) showPromises.push(this.render())
     if (showPromises.length) {
+      this.renderCSS()
       this.hidden = true
       Promise.all(showPromises).then(() => {
-        this.renderCSS()
         this.hidden = false
       })
     }
@@ -75,24 +72,7 @@ export default class ProductList extends Prototype() {
   renderCSS () {
     this.css = /* css */`
     :host h2 {
-      font-family: "Helvetica Now Text XBold";
+      font-family:"Helvetica Now Text XBold", var(--font-family-bold, var(--font-family, inherit));
     }`
-    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
-    const styles = [
-      {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/fonts.css`, // no variables for this reason no namespace
-        namespace: false
-      }
-
-    ]
-    switch (this.getAttribute('namespace')) {
-      case 'product-list-default-':
-        return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles])
-      default:
-        return this.fetchCSS(styles)
-    }
   }
 }
