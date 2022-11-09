@@ -73,6 +73,10 @@ export default class ImageHotspot extends Shadow() {
       }
 
       @media screen and (max-width: _max-width_){
+        :host{
+          width: var(--width-mobile, var(--width, 100vw)) !important;
+        }
+
         :host .wrapper{
           white-space: nowrap;
           overflow-x: scroll;
