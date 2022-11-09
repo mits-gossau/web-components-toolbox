@@ -9,3 +9,9 @@
   --teaser-download-p-margin: 0 0 0.625em;
   --teaser-download-a-link-opacity:1;
 }
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --teaser-download-p-font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));
+    --teaser-download-p-line-height: var(--p-line-height-mobile, var(--p-line-height, var(--line-height, normal)));
+  }
+}

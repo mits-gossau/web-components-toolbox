@@ -22,7 +22,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class TagManager extends Shadow() {
   constructor (...args) {
-    super(...args) // disabling shadow-DOM to have msrc styles flow into the node
+    super({ mode: 'false' }, ...args) // disabling shadow-DOM to have msrc styles flow into the node
 
     this.wcConfigLoadListener = event => {
       if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {

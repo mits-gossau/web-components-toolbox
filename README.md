@@ -8,6 +8,7 @@ JS Rules:
 - Component should share its breakpoint with children
 
 CSS Rules:
+- mobile font-size should not be smaller than 1rem
 - no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
 - variablesCustom.css has to be kept as tiny as possible
 - use templates instead of namespace-fallback
@@ -29,3 +30,7 @@ TODO:
 - [ ] Template.html api call to fetch page content for previews
 - [ ] new flex-box wrapper: flex-grow (flex: 1) wrapper with empty children to simulate instead of o-wrapper width approach
 - [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src
+
+TODO in this branch:
+- [ ] wc-config fetch on event with string or dom element
+- [ ] hover on parent prototype
