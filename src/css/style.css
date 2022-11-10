@@ -348,7 +348,7 @@ img[style="float: right;"] {
   margin: var(--ol-margin, 0 auto var(--content-spacing));
 }
 :host ol li::marker {
-  color: var(--ol-color, var(--color, green))
+  color: var(--ol-color, var(--color, green));
 }
 :host ol.big {
   padding-left: var(--ol-margin, 1.5em);
