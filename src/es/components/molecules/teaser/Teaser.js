@@ -173,14 +173,14 @@ export default class Teaser extends Intersection() {
       :host figure figcaption * {
         color: var(--figcaption-color, var(--color, unset));
       }
-      :host figure figcaption h6 {
-        color: var(--h6-figcaption-color, var(--figcaption-color, var(--color, unset)));
+      :host figure figcaption h2, :host figure figcaption h6 {
+        color: var(--h2-figcaption-color, var(--h6-figcaption-color, var(--figcaption-color, var(--color, unset))));
       }
       :host(:hover) figure figcaption * {
         color: var(--figcaption-color-hover, var(--figcaption-color, var(--color, unset)));
       }
-      :host(:hover) figure figcaption h6 {
-        color: var(--h6-figcaption-color-hover, var(--figcaption-color-hover, var(--h6-figcaption-color, var(--figcaption-color, var(--color, unset)))));
+      :host(:hover) figure figcaption h2, :host(:hover) figure figcaption h6 {
+        color: var(--h2-figcaption-color-hover, var(--h6-figcaption-color-hover, var(--figcaption-color-hover, var(--h2-figcaption-color, var(--h6-figcaption-color, var(--figcaption-color, var(--color, unset)))))));
       }
       :host figure figcaption > * {
         transition: var(--figcaption-any-transition, none);

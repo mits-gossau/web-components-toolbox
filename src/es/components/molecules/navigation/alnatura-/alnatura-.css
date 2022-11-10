@@ -1,5 +1,4 @@
 :host {
-  --color-secondary: var(--menu-color);
   --gap-custom: 0;
   --menu-background-color: var(--background-color);
   --menu-color: var(--color-tertiary);
