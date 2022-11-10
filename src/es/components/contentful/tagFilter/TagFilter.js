@@ -8,28 +8,37 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class TagFilter extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
+    this.clickListener = event => {
+      if (!event.target || event.target.tagName !== 'A') return false
+      event.preventDefault()
+      console.log("event", event.target.text);
+
+    }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     const tagList = this.constructor.parseAttribute(this.getAttribute('tags') || [])
+    console.log(this.getAttribute('tags'))
     if (this.shouldComponentRenderHTML()) this.renderHTML(tagList)
-    console.log(tagList)
+    this.tagFilterWrapper.addEventListener('click', this.clickListener)
   }
 
-  disconnectedCallback () { }
+  disconnectedCallback() {
+    this.tagFilterWrapper.removeEventListener('click', this.clickListener)
+  }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.tagFilterWrapper
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host ul {
       justify-content: space-between;
@@ -58,13 +67,13 @@ export default class TagFilter extends Shadow() {
     }
   }
 
-  renderHTML (tagList) {
+  renderHTML(tagList) {
     if (!tagList.length) return
     this.tagFilterWrapper = this.root.querySelector('div') || document.createElement('div')
     const ul = document.createElement('ul')
     tagList.forEach(tag => {
       const li = document.createElement('li')
-      li.innerHTML = `<a href="#">${tag}</a>`
+      li.innerHTML = `<a href="#" tag=${tag['tag']}>${tag['name']}</a>`
       ul.appendChild(li)
     })
     this.tagFilterWrapper.appendChild(ul)
