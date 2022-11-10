@@ -1,42 +1,16 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
+/* global msrc */
+
 export default class ProductList extends Prototype() {
   constructor (...args) {
     super(...args)
+    this.config = this.configSetup()
     this.requestArticleCategory = event => {
       this.config.filterOptions.category = [event.detail.category]
-      msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
+      this.widgetRenderSetup(this.msrcProductListWrapper, this.config)
     }
-  }
-
-  config = {
-    mode: 'default',
-    environment: 'production',
-    language: 'de',
-    webAPIKey: 'ZDsjzNwaw9AxGQWhzqMCsnjwYzwpQ7dzigdKXeuuiXeR97ao4phWLRwe2WrZRoPe',
-    colCount: ['2', '2', '2', '4', '4'],
-    articlesPerPage: 10,
-    filterOptions: {
-      additionalQueryParams: {
-        limit: 999,
-        view: 'browseallretailers'
-      },
-      category: ['BeSS_97'],
-      fo: {
-        anchor_target: '_blank',
-        link_target: '/de/produkte/{productSlug}.html',
-        target: 'alnatura'
-      },
-      region: 'gmzh'
-    },
-    paginationOptions: {
-      disabled: true
-    },
-    hideRating: false,
-    order: 'asc',
-    sort: 'updated_at',
-    theme: 'mgb'
   }
 
   connectedCallback () {
@@ -44,10 +18,10 @@ export default class ProductList extends Prototype() {
     const showPromises = []
     if (this.shouldComponentRender()) showPromises.push(this.render())
     if (showPromises.length) {
-      this.renderCSS()
       this.hidden = true
       Promise.all(showPromises).then(() => {
         this.hidden = false
+        this.renderCSS()
       })
     }
   }
@@ -56,23 +30,41 @@ export default class ProductList extends Prototype() {
     document.body.removeEventListener('requestArticleCategory', this.requestArticleCategory)
   }
 
+  configSetup () {
+    const setup = JSON.parse(this.getAttribute('config') || '{}')
+    if (Object.keys(setup).length === 0) return
+    setup.webAPIKey = this.getAttribute('web-api-key') || ''
+    setup.mode = this.getAttribute('mode') || 'default'
+    setup.environment = this.getAttribute('env') || 'local'
+    setup.language = this.getAttribute('language') || 'de'
+    setup.sort = this.getAttribute('sort') || 'updated_at'
+    setup.paginationOptions.disabled = (this.getAttribute('pagination-disabled') === 'true')
+    setup.filterOptions.category = [this.getAttribute('category') || '']
+    return setup
+  }
+
+  widgetRenderSetup (node, config) {
+    // @ts-ignore
+    window.msrc.components.articles.productList(node, config)
+  }
+
   shouldComponentRender () {
     return !this.msrcProductListWrapper
   }
 
   render () {
-    return this.loadDependency().then(async msrc => {
+    return this.loadDependency().then(() => {
       this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
-      msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
+      this.widgetRenderSetup(this.msrcProductListWrapper, this.config)
       const getStylesReturn = this.getStyles(document.createElement('style'))
       this.html = [this.msrcProductListWrapper, getStylesReturn[0]]
     })
   }
 
   renderCSS () {
-    this.css = /* css */`
+    this.css = /* css */ `
     :host h2 {
-      font-family:"Helvetica Now Text XBold", var(--font-family-bold, var(--font-family, inherit));
+      font-family: "Helvetica Now Text XBold", var(--font-family-bold, var(--font-family, inherit));
     }`
   }
 }
