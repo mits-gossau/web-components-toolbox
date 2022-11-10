@@ -13,7 +13,7 @@ export default class TagFilter extends Shadow() {
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
-      console.log("event", event.target.text);
+      console.log("event", event.target.getAttribute('tag'));
 
     }
   }
@@ -42,6 +42,7 @@ export default class TagFilter extends Shadow() {
     this.css = /* css */ `
     :host ul {
       justify-content: space-between;
+      flex-wrap: wrap;
     }
     @media only screen and (max-width: _max-width_) {}
     `
