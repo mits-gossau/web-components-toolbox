@@ -67,6 +67,7 @@ export default class General extends Shadow() {
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
         word-break: var(--word-break, normal);
+        height: -webkit-fill-available;
       }
       /* to counteract initial.css */
       /* hide component stuff before it is rendered to avoid the blitz (flashing white) also set the --background-color in the variables...css */
