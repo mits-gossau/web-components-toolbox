@@ -58,6 +58,7 @@ export default class CarouselTwo extends Shadow() {
     }
     // on scroll calculate which image is shown and set its and all of its referencing href nodes the class to active
     let scrollTimeoutId = null
+    let lastActiveChild = null
     const scrollTolerance = 5
     this.scrollListener = event => {
       this.section.classList.add('scrolling')
@@ -73,7 +74,10 @@ export default class CarouselTwo extends Shadow() {
           : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) && (activeChild = Array.from(this.section.children).find(node => {
               const nodeLeft = Math.round(node.getBoundingClientRect().left)
               return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
-            }))) {
+            })))
+        {
+          if (lastActiveChild === activeChild) return
+          lastActiveChild = activeChild
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
             node.classList.remove('active')
             node.setAttribute('aria-hidden', 'true')
@@ -144,7 +148,7 @@ export default class CarouselTwo extends Shadow() {
       this.addEventListener('blur', this.blurEventListener)
       this.addEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history')) self.addEventListener('hashchange', this.hashchangeEventListener)
+    if (!this.hasAttribute('no-history') && !this.hasAttribute('interval')) self.addEventListener('hashchange', this.hashchangeEventListener)
   }
 
   disconnectedCallback () {
@@ -155,7 +159,7 @@ export default class CarouselTwo extends Shadow() {
       this.removeEventListener('blur', this.blurEventListener)
       this.removeEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history')) self.removeEventListener('hashchange', this.hashchangeEventListener)
+    if (!this.hasAttribute('no-history') && !this.hasAttribute('interval')) self.removeEventListener('hashchange', this.hashchangeEventListener)
   }
 
   /**
@@ -594,7 +598,10 @@ export default class CarouselTwo extends Shadow() {
   scrollIntoView (node, focus = true, force = false) {
     if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
     if (force || !node.classList.contains('active')) {
-      if (focus) return node.focus() // important that default keyboard works
+      if (focus) return node.focus({
+        preventScroll: true,
+        focusVisible: false
+      }) // important that default keyboard works
       // node.scrollIntoView() // scrolls x and y
       this.section.scrollTo({
         left: this.section.scrollLeft + node.getBoundingClientRect().x - this.section.getBoundingClientRect().x,

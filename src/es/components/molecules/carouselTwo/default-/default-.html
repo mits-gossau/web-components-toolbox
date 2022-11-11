@@ -1,5 +1,5 @@
-<h2>Navigation overlay(ed)</h2>
-<m-carousel-two active=11 interval=2000 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-align-self="end">
+<h2>Navigation overlay(ed) / use with history (no interval and no "no-history" attribute) when it is the only carousel within the page</h2>
+<m-carousel-two active=11 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-align-self="end">
   <section>
     <a-picture picture-load defaultSource="./img/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite"></a-picture>
     <div>
@@ -20,8 +20,8 @@
   </section>
 </m-carousel-two>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<h2>Navigation overlay(ed) with effect</h2>
-<m-carousel-two active=11 interval=2000 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-align-self="end">
+<h2>Navigation overlay(ed) with effect /  no-history</h2>
+<m-carousel-two no-history active=11 interval=2000 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-align-self="end">
   <section>
     <o-intersection-scroll-effect invert=true horizontal css-property=transform effect=scale max-value=1>
       <a-picture picture-load defaultSource="./img/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite"></a-picture>
@@ -63,7 +63,7 @@
   </section>
 </m-carousel-two>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<h2>Navigation outside</h2>
+<h2>Navigation outside /  no-history</h2>
 <m-carousel-two no-history active=11 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-separate nav-align-self="start">
   <section>
     <a-picture picture-load defaultSource="./img/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite"></a-picture>
@@ -84,9 +84,16 @@
   </section>
 </m-carousel-two>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<h2>Navigation outside with text</h2>
+<h2>Navigation outside with text /  no-history</h2>
 <m-carousel-two no-history active=11 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-separate nav-align-self="start">
   <section>
+    <div>
+      <a-picture picture-load defaultSource="./img/a3ac1ed5abaedffd9947face7901e14c.jpg" alt="Stuff"></a-picture>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sunt amet architecto eveniet voluptate debitis sapiente explicabo, officiis, enim qui sed laborum hic vero, repellendus vel doloribus quisquam quae mollitia consequatur? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Hic adipisci deserunt eos vero quod impedit facere veniam temporibus doloremque? Iure aspernatur placeat labore, voluptatibus numquam ipsum tenetur culpa. Totam, voluptate.</p>
+      </div>
+    </div>
     <div>
       <a-picture picture-load defaultSource="./img/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite"></a-picture>
       <div class=text-align-center>
@@ -141,13 +148,6 @@
       <div>
         <h1>Houses</h1>
         <p>more Houses</p>
-      </div>
-    </div>
-    <div>
-      <a-picture picture-load defaultSource="./img/a3ac1ed5abaedffd9947face7901e14c.jpg" alt="Stuff"></a-picture>
-      <div>
-        <h1>Houses</h1>
-        <p>more Houses Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sunt amet architecto eveniet voluptate debitis sapiente explicabo, officiis, enim qui sed laborum hic vero, repellendus vel doloribus quisquam quae mollitia consequatur? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Hic adipisci deserunt eos vero quod impedit facere veniam temporibus doloremque? Iure aspernatur placeat labore, voluptatibus numquam ipsum tenetur culpa. Totam, voluptate.</p>
       </div>
     </div>
     <div>
