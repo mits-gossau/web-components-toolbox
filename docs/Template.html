@@ -163,7 +163,7 @@
   }
   const url = new URL(location.href)
   // allow body to use no shadow dom / mode=false
-  document.querySelector('o-body').setAttribute('mode', url.searchParams.get('body-mode') || '')
+  document.querySelector('o-body').setAttribute('mode', url.searchParams.get('body-mode') || document.querySelector('o-body').getAttribute('mode') || '')
   Promise.all([
     loadCSS(url.searchParams.get('css'), url.searchParams.get('rootFolder')),
     loadHTML(url.searchParams.get('login'), 'p-general', true, url.searchParams.get('rootFolder'), 'prepend'),

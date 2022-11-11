@@ -154,9 +154,6 @@ export default class Footer extends Shadow() {
         justify-content: right;
       }
       @media only screen and (max-width: _max-width_) {
-        :host {
-          margin-top: var(--content-spacing-mobile);
-        }
         :host > footer > *, :host > footer .invert > * {
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto var(--content-spacing-mobile, var(--content-spacing, unset)); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));

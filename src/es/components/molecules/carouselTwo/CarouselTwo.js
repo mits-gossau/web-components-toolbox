@@ -58,6 +58,7 @@ export default class CarouselTwo extends Shadow() {
     }
     // on scroll calculate which image is shown and set its and all of its referencing href nodes the class to active
     let scrollTimeoutId = null
+    let lastActiveChild = null
     const scrollTolerance = 5
     this.scrollListener = event => {
       this.section.classList.add('scrolling')
@@ -73,7 +74,10 @@ export default class CarouselTwo extends Shadow() {
           : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) && (activeChild = Array.from(this.section.children).find(node => {
               const nodeLeft = Math.round(node.getBoundingClientRect().left)
               return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
-            }))) {
+            })))
+        {
+          if (lastActiveChild === activeChild) return
+          lastActiveChild = activeChild
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
             node.classList.remove('active')
             node.setAttribute('aria-hidden', 'true')
@@ -144,7 +148,7 @@ export default class CarouselTwo extends Shadow() {
       this.addEventListener('blur', this.blurEventListener)
       this.addEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history')) self.addEventListener('hashchange', this.hashchangeEventListener)
+    if (!this.hasAttribute('no-history') && !this.hasAttribute('interval')) self.addEventListener('hashchange', this.hashchangeEventListener)
   }
 
   disconnectedCallback () {
@@ -155,7 +159,7 @@ export default class CarouselTwo extends Shadow() {
       this.removeEventListener('blur', this.blurEventListener)
       this.removeEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history')) self.removeEventListener('hashchange', this.hashchangeEventListener)
+    if (!this.hasAttribute('no-history') && !this.hasAttribute('interval')) self.removeEventListener('hashchange', this.hashchangeEventListener)
   }
 
   /**
@@ -241,6 +245,20 @@ export default class CarouselTwo extends Shadow() {
         outline: none;
         scroll-snap-align: start;
         user-select: none;
+      }
+      :host > section > div {
+        align-items: var(--section-div-align-items, var(--section-child-align-items, center));
+        justify-content: var(--section-div-justify-content, var(--section-child-justify-content, space-between));
+      }
+      :host > section > div > div {
+        padding: var(--section-div-padding, var(--nav-margin));
+        width: 100%;
+      }
+      :host > section > div > div * {
+        text-align: var(--section-div-child-text-align, left);
+      }
+      :host > section > div.text-align-center > div *, :host > section > div > div.text-align-center * {
+        text-align: var(--section-div-child-text-align, center);
       }
       :host > section:not(.scrolling) > *:not(.active) {
         opacity: var(--section-child-opacity-not-active, 0);
@@ -366,6 +384,9 @@ export default class CarouselTwo extends Shadow() {
         :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > section,
         :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > .arrow-nav {
           margin-top: var(--section-nav-separate-margin-mobile, var(--section-nav-separate-margin));
+        }
+        :host > section > div > div {
+          padding: var(--section-div-padding-mobile, var(--section-div-padding, var(--nav-margin-mobile, var(--nav-margin))));
         }
         :host > nav {
           gap: var(--nav-gap-mobile, var(--nav-gap));
@@ -577,7 +598,10 @@ export default class CarouselTwo extends Shadow() {
   scrollIntoView (node, focus = true, force = false) {
     if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
     if (force || !node.classList.contains('active')) {
-      if (focus) return node.focus() // important that default keyboard works
+      if (focus) return node.focus({
+        preventScroll: true,
+        focusVisible: false
+      }) // important that default keyboard works
       // node.scrollIntoView() // scrolls x and y
       this.section.scrollTo({
         left: this.section.scrollLeft + node.getBoundingClientRect().x - this.section.getBoundingClientRect().x,

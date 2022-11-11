@@ -114,8 +114,14 @@ export default class Body extends Shadow() {
       :host(.content-max-width-two) > main > *:not(.ignore-max-width), :host > main > *.content-max-width-two {
         max-width: var(--content-max-width-two, none);
       }
-      :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child, :host > main > msrc-store-finder:first-child {
+      :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child {
         margin-top: var(--a-emotion-pictures-margin-top-first-child, calc(-1 * var(--content-spacing, unset)));
+      }
+      :host > main > msrc-store-finder:first-child {
+        margin-top: var(--msrc-store-finder-margin-top-first-child, calc(-1 * var(--content-spacing, unset)));
+      }
+      :host > main > msrc-store-finder:last-child {
+        margin-bottom: var(--msrc-store-finder-margin-bottom-last-child, 0);
       }
       :host > main > a-google-maps:first-child {
         margin-top: var(--a-google-maps-margin-top-first-child, calc(-1 * var(--content-spacing, unset)));
@@ -134,12 +140,18 @@ export default class Body extends Shadow() {
         :host(.content-max-width-two) > main > *:not(.ignore-max-width), :host > main > *.content-max-width-two {
           max-width: var(--content-max-width-two-mobile, none);
         }
-        :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child, :host > main > msrc-store-finder:first-child {
+        :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child {
           margin-top: var(--a-emotion-pictures-margin-top-first-child-mobile, calc(-1 * var(--content-spacing-mobile, unset)));
+        }
+        :host > main > msrc-store-finder:first-child {
+          margin-top: var(--msrc-store-finder-margin-top-first-child-mobile, calc(-1 * var(--content-spacing-mobile, unset)));
+        }
+        :host > main > msrc-store-finder:last-child {
+          margin-bottom: var(--msrc-store-finder-margin-bottom-last-child-mobile, 0);
         }
       }
     `
-    this.fetchCSS([
+    if (!this.hasAttribute('no-style-css')) this.fetchCSS([
       {
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`,
         namespace: false
