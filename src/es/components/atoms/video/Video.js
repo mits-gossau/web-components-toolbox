@@ -113,11 +113,6 @@ export default class Video extends Shadow() {
       }
     }
     `
-    this.setCss(/* css */`
-      :host video, :host iframe {
-        max-height: var(--max-height, calc(var(--vh, 1vh) * 75));
-      }
-    `, undefined, '', false)
     switch (this.getAttribute('namespace')) {
       case 'video-crop-':
         return this.fetchCSS([{
