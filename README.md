@@ -8,6 +8,7 @@ JS Rules:
 - Component should share its breakpoint with children
 
 CSS Rules:
+- never use vh as mobile calculates these dynamically, due to url-bar show and hide effect but calc(var(--vh, 1vh) * 100) comes from General.js https://stackoverflow.com/questions/37112218/css3-100vh-not-constant-in-mobile-browser
 - mobile font-size should not be smaller than 1rem
 - no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
 - variablesCustom.css has to be kept as tiny as possible
@@ -31,5 +32,5 @@ TODO:
 - [ ] new flex-box wrapper: flex-grow (flex: 1) wrapper with empty children to simulate instead of o-wrapper width approach
 - [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src
 
-TODO in this branch:
+TODO asap:
 - [ ] hover on parent prototype

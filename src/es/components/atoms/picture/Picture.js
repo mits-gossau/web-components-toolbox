@@ -234,6 +234,11 @@ export default class Picture extends Intersection() {
         100%{opacity: 1}
       }
     `
+    this.setCss(/* css */`
+      :host picture img {
+        max-height: var(--img-max-height, calc(var(--vh, 1vh) * 75));
+      }
+    `, undefined, '', false)
     switch (this.getAttribute('namespace')) {
       case 'picture-overflow-':
         return this.fetchCSS([{
