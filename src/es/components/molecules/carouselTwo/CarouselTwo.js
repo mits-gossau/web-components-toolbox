@@ -148,7 +148,7 @@ export default class CarouselTwo extends Shadow() {
       this.addEventListener('blur', this.blurEventListener)
       this.addEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history') && !this.hasAttribute('interval')) self.addEventListener('hashchange', this.hashchangeEventListener)
+    if (this.hasAttribute('history') && !this.hasAttribute('interval')) self.addEventListener('hashchange', this.hashchangeEventListener)
   }
 
   disconnectedCallback () {
@@ -159,7 +159,7 @@ export default class CarouselTwo extends Shadow() {
       this.removeEventListener('blur', this.blurEventListener)
       this.removeEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history') && !this.hasAttribute('interval')) self.removeEventListener('hashchange', this.hashchangeEventListener)
+    if (this.hasAttribute('history') && !this.hasAttribute('interval')) self.removeEventListener('hashchange', this.hashchangeEventListener)
   }
 
   /**
