@@ -242,6 +242,20 @@ export default class CarouselTwo extends Shadow() {
         scroll-snap-align: start;
         user-select: none;
       }
+      :host > section > div {
+        align-items: var(--section-div-align-items, var(--section-child-align-items, center));
+        justify-content: var(--section-div-justify-content, var(--section-child-justify-content, space-between));
+      }
+      :host > section > div > div {
+        padding: var(--section-div-padding, var(--nav-margin));
+        width: 100%;
+      }
+      :host > section > div > div * {
+        text-align: var(--section-div-child-text-align, left);
+      }
+      :host > section > div.text-align-center > div *, :host > section > div > div.text-align-center * {
+        text-align: var(--section-div-child-text-align, center);
+      }
       :host > section:not(.scrolling) > *:not(.active) {
         opacity: var(--section-child-opacity-not-active, 0);
       }
@@ -366,6 +380,9 @@ export default class CarouselTwo extends Shadow() {
         :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > section,
         :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > .arrow-nav {
           margin-top: var(--section-nav-separate-margin-mobile, var(--section-nav-separate-margin));
+        }
+        :host > section > div > div {
+          padding: var(--section-div-padding-mobile, var(--section-div-padding, var(--nav-margin-mobile, var(--nav-margin))));
         }
         :host > nav {
           gap: var(--nav-gap-mobile, var(--nav-gap));

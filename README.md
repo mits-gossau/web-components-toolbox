@@ -32,5 +32,4 @@ TODO:
 - [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src
 
 TODO in this branch:
-- [ ] wc-config fetch on event with string or dom element
 - [ ] hover on parent prototype
