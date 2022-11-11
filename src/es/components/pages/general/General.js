@@ -29,6 +29,7 @@ export default class General extends Shadow() {
 
     if (this.detectIOS()) document.documentElement.classList.add('ios')
 
+    // calculate a stable vh by a fix value, which does not change with address bars etc. as it has been an issue on ios v.15
     let timeout = null
     this.resizeListener = event => {
       clearTimeout(timeout)
