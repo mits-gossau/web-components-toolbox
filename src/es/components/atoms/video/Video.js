@@ -116,7 +116,7 @@ export default class Video extends Shadow() {
     /* ios mobile vh bug */
     this.setCss(/* css */`
       :host video, :host iframe {
-        max-height: var(--max-height, calc(var(--vh, 1vh) * 75));
+        max-height: var(--${this.getAttribute('namespace') || ''}max-height, calc(var(--vh, 1vh) * 75));
       }
     `, undefined, '', false)
     switch (this.getAttribute('namespace')) {

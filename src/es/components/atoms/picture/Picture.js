@@ -237,7 +237,7 @@ export default class Picture extends Intersection() {
     /* ios mobile vh bug */
     this.setCss(/* css */`
       :host picture img {
-        max-height: var(--img-max-height, calc(var(--vh, 1vh) * 75));
+        max-height: var(--${this.getAttribute('namespace') || ''}img-max-height, calc(var(--vh, 1vh) * 75));
       }
     `, undefined, '', false)
     switch (this.getAttribute('namespace')) {
