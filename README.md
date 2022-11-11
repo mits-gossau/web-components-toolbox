@@ -8,6 +8,7 @@ JS Rules:
 - Component should share its breakpoint with children
 
 CSS Rules:
+- ios mobile vh bug... never use vh as mobile calculates these dynamically, due to url-bar show and hide effect... https://stackoverflow.com/questions/37112218/css3-100vh-not-constant-in-mobile-browser
 - mobile font-size should not be smaller than 1rem
 - no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
 - variablesCustom.css has to be kept as tiny as possible
@@ -20,9 +21,6 @@ CSS Rules:
 - within the component don't use any name spacing eg. component header don't use --header-default-color just use --color the namespace can be added by the Shadow as an html attribute
 - avoid overly use of reassigning / overwrite variables
 - the default transition is: 0.3s ease-out
-
-CSS Good To Know:
-- https://allthingssmitty.com/2020/05/11/css-fix-for-100vh-in-mobile-webkit/
 
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css

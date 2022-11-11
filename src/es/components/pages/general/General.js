@@ -28,10 +28,22 @@ export default class General extends Shadow() {
     super({ mode: 'false' }, ...args) // disabling shadow-DOM to control root font-size on :root-tag
 
     if (this.detectIOS()) document.documentElement.classList.add('ios')
+
+    let timeout = null
+    this.resizeListener = event => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => document.documentElement.style.setProperty('--vh', self.outerHeight * 0.01 + 'px'), 50)
+    }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    self.addEventListener('resize', this.resizeListener)
+    this.resizeListener()
+  }
+
+  disconnectedCallback () {
+    self.removeEventListener('resize', this.resizeListener)
   }
 
   /**
@@ -58,7 +70,7 @@ export default class General extends Shadow() {
                              "footer";
         grid-template-columns: 100%;
         grid-template-rows: auto minmax(var(--header-height , 50px), auto) 1fr minmax(var(--footer-min-height, 50px), auto);
-        min-height: 100vh;
+        min-height: var(--min-height, calc(var(--vh, 1vh) * 100)); /* ios mobile vh bug */
       }
       /* global css set by page */
       :root {
@@ -67,7 +79,6 @@ export default class General extends Shadow() {
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
         word-break: var(--word-break, normal);
-        height: -webkit-fill-available;
       }
       /* to counteract initial.css */
       /* hide component stuff before it is rendered to avoid the blitz (flashing white) also set the --background-color in the variables...css */
@@ -89,8 +100,7 @@ export default class General extends Shadow() {
       /* sticky footer */
       body {
         margin: 0;
-        min-height: 100vh;
-        min-height: -webkit-fill-available;
+        min-height: var(--min-height, calc(var(--vh, 1vh) * 100)); /* ios mobile vh bug */
         overflow-x: hidden;
       }
       /* navigation open */
