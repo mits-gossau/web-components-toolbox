@@ -59,7 +59,7 @@ export default class CarouselTwo extends Shadow() {
     // on scroll calculate which image is shown and set its and all of its referencing href nodes the class to active
     let scrollTimeoutId = null
     let lastActiveChild = null
-    const scrollTolerance = 5
+    const scrollTolerance = 10
     this.scrollListener = event => {
       this.section.classList.add('scrolling')
       this.clearInterval()
