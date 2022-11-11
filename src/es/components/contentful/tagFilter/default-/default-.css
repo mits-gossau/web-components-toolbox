@@ -5,5 +5,4 @@
 --tag-filter-default-ul-margin:0;
 --tag-filter-default-a-color:var(--tag-filter-default-a-color-custom, var(--a-color, var(--color-secondary, var(--color, pink))));
 --tag-filter-default-a-color-hover:var(--tag-filter-default-a-color-hover-custom, var(--a-color-hover, var(--color-hover, var(--color, green))));
---tag-filter-default-line-height:var(--content-spacing, 2rem);
 }

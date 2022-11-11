@@ -1,8 +1,6 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
-/* global msrc */
-
 export default class ProductList extends Prototype() {
   constructor (...args) {
     super(...args)

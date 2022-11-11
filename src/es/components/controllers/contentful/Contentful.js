@@ -22,12 +22,17 @@ export default class Contentful extends Shadow() {
     const endpoint = self.Environment.contentfulEndpoint + spaceId
     const limit = this.getAttribute('limit')
     const skip = this.getAttribute('skip') || 0
+    const tag = this.getAttribute('tag') || ''
     this.abortController = null
 
     this.requestListNewsListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-      const variables = { limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit), skip: event.detail && event.detail.skip !== undefined ? Number(event.detail.skip) * skip : 0 }
+      const variables = {
+        tags: event.detail && event.detail.tag !== undefined ? [tag, ...event.detail.tag] : [tag],
+        limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit),
+        skip: event.detail && event.detail.skip !== undefined ? Number(event.detail.skip) * skip : 0
+      }
       let query = null
       try {
         // @ts-ignore
@@ -51,7 +56,8 @@ export default class Contentful extends Shadow() {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
             if (response.status >= 200 && response.status <= 299) {
-              const data = await response.json()
+              let data = await response.json()
+              data = this.injectData(data, 'tag', variables.tags)
               sessionStorage.setItem('news', JSON.stringify(data))
               return data
             }
@@ -71,5 +77,25 @@ export default class Contentful extends Shadow() {
 
   disconnectedCallback () {
     this.removeEventListener('requestListNews', this.requestListNewsListener)
+  }
+
+  /**
+   * Inject additional data into newsEntryCollection
+   * @param {*} data
+   * @param {*} additionalDataKey
+   * @param {*} additionalData
+   * @returns
+   */
+  injectData (data, additionalDataKey, additionalData) {
+    return {
+      ...data,
+      data: {
+        ...data.newsEntryCollection,
+        newsEntryCollection: {
+          ...data.data.newsEntryCollection,
+          [additionalDataKey]: [...additionalData]
+        }
+      }
+    }
   }
 }

@@ -1,48 +1,52 @@
 // @ts-check
 /* global CustomEvent */
-/* global customElements */
-/* global self */
-/* global sessionStorage */
-/* global location */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class TagFilter extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
-      console.log("event", event.target.getAttribute('tag'));
-
+      this.dispatchEvent(new CustomEvent('requestListNews', {
+        detail: {
+          tag: event.target.getAttribute('tag') ? event.target.getAttribute('tag').split(',') : []
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    const tagList = this.constructor.parseAttribute(this.getAttribute('tags') || [])
-    console.log(this.getAttribute('tags'))
+    const tagList = this.constructor.parseAttribute(this.getAttribute('tag') || [])
     if (this.shouldComponentRenderHTML()) this.renderHTML(tagList)
     this.tagFilterWrapper.addEventListener('click', this.clickListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.tagFilterWrapper.removeEventListener('click', this.clickListener)
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.tagFilterWrapper
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */ `
     :host ul {
-      justify-content: space-between;
+      justify-content: flex-start;
       flex-wrap: wrap;
+    }
+    :host li {
+      padding:0 2rem 1rem 0;
     }
     @media only screen and (max-width: _max-width_) {}
     `
@@ -68,13 +72,13 @@ export default class TagFilter extends Shadow() {
     }
   }
 
-  renderHTML(tagList) {
+  renderHTML (tagList) {
     if (!tagList.length) return
     this.tagFilterWrapper = this.root.querySelector('div') || document.createElement('div')
     const ul = document.createElement('ul')
-    tagList.forEach(tag => {
+    tagList.forEach(tagItem => {
       const li = document.createElement('li')
-      li.innerHTML = `<a href="#" tag=${tag['tag']}>${tag['name']}</a>`
+      li.innerHTML = `<a href="#" tag=${tagItem.tag}>${tagItem.name}</a>`
       ul.appendChild(li)
     })
     this.tagFilterWrapper.appendChild(ul)

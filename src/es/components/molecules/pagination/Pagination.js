@@ -20,9 +20,9 @@ export default class Pagination extends Shadow() {
     this.listNewsListener = event => {
       event.detail.fetch.then(() => {
         const news = sessionStorage.getItem('news') || ''
-        const newsData = JSON.parse(news)
-        let { total, limit, skip } = newsData?.data.newsEntryCollection
+        this.newsData = JSON.parse(news)
         const pageParams = Number(location.search.split('page=')[1]) || 1
+        let { total, limit, skip } = this.newsData?.data.newsEntryCollection
         const calcSkipPage = (pageParams - 1) * 5
         if (calcSkipPage !== skip) {
           skip = calcSkipPage
@@ -66,7 +66,8 @@ export default class Pagination extends Shadow() {
   dispatchRequestNewsEvent (page) {
     this.dispatchEvent(new CustomEvent('requestListNews', {
       detail: {
-        skip: page
+        skip: page,
+        tag: this.newsData.data.newsEntryCollection.tag
       },
       bubbles: true,
       cancelable: true,
@@ -79,6 +80,7 @@ export default class Pagination extends Shadow() {
   }
 
   renderHTML (pages, limit, skip) {
+    this.html = ''
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
@@ -104,6 +106,10 @@ export default class Pagination extends Shadow() {
    */
   setRel (items) {
     const nodes = new DOMParser().parseFromString(items, 'text/html').body.childNodes
+    if (nodes.length === 1) {
+      // @ts-ignore
+      return nodes[0].outerHTML
+    }
     const url = location.href
     const pageParam = url.substring(url.lastIndexOf('page='))
     const updateNodes = Array.from(nodes).reduce((acc, cur, index, nodes) => {
@@ -112,23 +118,31 @@ export default class Pagination extends Shadow() {
         if (index === 0) {
           // @ts-ignore
           acc[index + 1].firstChild.setAttribute('rel', 'next')
+          // @ts-ignore
           acc[index + 1].firstChild.setAttribute('href', `${location.href}?page=${acc[index + 1].getAttribute('page')}`)
         } else if (index + 1 === nodes.length) {
           // @ts-ignore
           const rep = location.href.replace(pageParam, `page=${acc[index - 1].getAttribute('page')}`)
+          // @ts-ignore
           acc[index - 1].firstChild.setAttribute('rel', 'prev')
+          // @ts-ignore
           acc[index - 1].firstChild.setAttribute('href', rep)
         } else {
           // @ts-ignore
           const curPageNext = location.href
+          // @ts-ignore
           const repNext = curPageNext.replace(pageParam, `page=${acc[index + 1].getAttribute('page')}`)
+          // @ts-ignore
           acc[index + 1].firstChild.setAttribute('rel', 'next')
+          // @ts-ignore
           acc[index + 1].firstChild.setAttribute('href', repNext)
-
           // @ts-ignore
           const curPagePrev = location.href
+          // @ts-ignore
           const repPrev = curPagePrev.replace(pageParam, `page=${acc[index - 1].getAttribute('page')}`)
+          // @ts-ignore
           acc[index - 1].firstChild.setAttribute('rel', 'prev')
+          // @ts-ignore
           acc[index - 1].firstChild.setAttribute('href', repPrev)
         }
       }
