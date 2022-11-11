@@ -32,7 +32,7 @@ export default class General extends Shadow() {
     let timeout = null
     this.resizeListener = event => {
       clearTimeout(timeout)
-      timeout = setTimeout(() => document.documentElement.style.setProperty('--vh', self.outerHeight * 0.01 + 'px'), 50)
+      timeout = setTimeout(() => document.documentElement.style.setProperty('--vh', document.documentElement.clientHeight * 0.01 + 'px'), 50)
     }
   }
 
