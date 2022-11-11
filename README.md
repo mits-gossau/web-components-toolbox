@@ -8,7 +8,6 @@ JS Rules:
 - Component should share its breakpoint with children
 
 CSS Rules:
-- ios mobile vh bug... never use vh as mobile calculates these dynamically, due to url-bar show and hide effect... https://stackoverflow.com/questions/37112218/css3-100vh-not-constant-in-mobile-browser
 - mobile font-size should not be smaller than 1rem
 - no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
 - variablesCustom.css has to be kept as tiny as possible

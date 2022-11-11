@@ -86,7 +86,7 @@ export default class Video extends Shadow() {
       display: var(--display, block);
       filter: var(--filter, none);
       margin: var(--margin, 0 auto);
-      max-height: var(--max-height, 75vh); /* ios mobile vh bug */
+      max-height: var(--max-height, 75vh);
       max-width: var(--max-width, 100%);
       min-height: var(--min-height);
       min-width: var(--min-width);
@@ -113,12 +113,6 @@ export default class Video extends Shadow() {
       }
     }
     `
-    /* ios mobile vh bug */
-    this.setCss(/* css */`
-      :host video, :host iframe {
-        max-height: var(--${this.getAttribute('namespace') || ''}max-height, calc(var(--vh, 1vh) * 75));
-      }
-    `, undefined, '', false)
     switch (this.getAttribute('namespace')) {
       case 'video-crop-':
         return this.fetchCSS([{

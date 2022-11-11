@@ -148,7 +148,7 @@ export default class Picture extends Intersection() {
         filter: var(--filter, none);
         height: var(--img-height, auto);
         margin: var(--img-margin, auto);
-        max-height: var(--img-max-height, 75vh); /* ios mobile vh bug */
+        max-height: var(--img-max-height, 75vh);
         max-width: var(--img-max-width, 100%); /* max-content would have been nice to not scale up the image, but in general make the editor use big enough images and this must stay at 100% default value, otherwise there are several side effects */
         min-height: var(--img-min-height, unset);
         min-width: var(--img-min-width, unset);
@@ -234,12 +234,6 @@ export default class Picture extends Intersection() {
         100%{opacity: 1}
       }
     `
-    /* ios mobile vh bug */
-    this.setCss(/* css */`
-      :host picture img {
-        max-height: var(--${this.getAttribute('namespace') || ''}img-max-height, calc(var(--vh, 1vh) * 75));
-      }
-    `, undefined, '', false)
     switch (this.getAttribute('namespace')) {
       case 'picture-overflow-':
         return this.fetchCSS([{
