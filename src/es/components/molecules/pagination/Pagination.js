@@ -234,11 +234,4 @@ export default class Pagination extends Shadow() {
         return this.fetchCSS(styles)
     }
   }
-
-  changeQueryString (searchString, documentTitle) {
-    documentTitle = typeof documentTitle !== 'undefined' ? documentTitle : document.title
-    const urlSplit = (self.location.href).split('?')
-    const obj = { Title: documentTitle, Url: urlSplit[0] + searchString }
-    history.pushState(obj, obj.Title, obj.Url)
-  }
 }
