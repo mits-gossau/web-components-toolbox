@@ -151,15 +151,17 @@ export default class Body extends Shadow() {
         }
       }
     `
-    if (!this.hasAttribute('no-style-css')) this.fetchCSS([
-      {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`,
-        namespace: false
-      },
-      {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`
-      }
-    ])
+    if (!this.hasAttribute('no-style-css')) {
+      this.fetchCSS([
+        {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`,
+          namespace: false
+        },
+        {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`
+        }
+      ])
+    }
   }
 
   /**

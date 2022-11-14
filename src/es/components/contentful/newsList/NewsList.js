@@ -38,9 +38,11 @@ export default class NewsList extends Shadow() {
     if (currentPageSkip !== paramsPage) {
       currentPageSkip = paramsPage
     }
+
     this.dispatchEvent(new CustomEvent('requestListNews', {
       detail: {
-        skip: currentPageSkip
+        skip: currentPageSkip,
+        tag: this.getTag(sessionStorage.getItem('news') || '{}')
       },
       bubbles: true,
       cancelable: true,
@@ -168,5 +170,15 @@ export default class NewsList extends Shadow() {
       })
       return elements
     }))
+  }
+
+  /**
+   * Get tag from store
+   * @param {string} store
+   * @returns Array
+   */
+  getTag (store) {
+    const newsData = JSON.parse(store)
+    return newsData?.data?.newsEntryCollection?.tag || []
   }
 }
