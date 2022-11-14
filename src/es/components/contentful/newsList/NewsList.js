@@ -174,10 +174,10 @@ export default class NewsList extends Shadow() {
 
   /**
    * Get tag from store
-   * @param {string} store 
+   * @param {string} store
    * @returns Array
    */
-  getTag(store){
+  getTag (store) {
     const newsData = JSON.parse(store)
     return newsData?.data?.newsEntryCollection?.tag || []
   }
