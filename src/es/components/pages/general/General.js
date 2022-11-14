@@ -58,7 +58,7 @@ export default class General extends Shadow() {
                              "footer";
         grid-template-columns: 100%;
         grid-template-rows: auto minmax(var(--header-height , 50px), auto) 1fr minmax(var(--footer-min-height, 50px), auto);
-        min-height: 100vh;
+        min-height: var(--min-height, 100vh);
       }
       /* global css set by page */
       :root {
@@ -88,7 +88,7 @@ export default class General extends Shadow() {
       /* sticky footer */
       body {
         margin: 0;
-        min-height: 100vh;
+        min-height: var(--min-height, 100vh);
         overflow-x: hidden;
       }
       /* navigation open */

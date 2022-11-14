@@ -59,7 +59,7 @@ export default class CarouselTwo extends Shadow() {
     // on scroll calculate which image is shown and set its and all of its referencing href nodes the class to active
     let scrollTimeoutId = null
     let lastActiveChild = null
-    const scrollTolerance = 5
+    const scrollTolerance = 10
     this.scrollListener = event => {
       this.section.classList.add('scrolling')
       this.clearInterval()
@@ -148,7 +148,7 @@ export default class CarouselTwo extends Shadow() {
       this.addEventListener('blur', this.blurEventListener)
       this.addEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history') && !this.hasAttribute('interval')) self.addEventListener('hashchange', this.hashchangeEventListener)
+    if (this.hasAttribute('history') && !this.hasAttribute('interval')) self.addEventListener('hashchange', this.hashchangeEventListener)
   }
 
   disconnectedCallback () {
@@ -159,7 +159,7 @@ export default class CarouselTwo extends Shadow() {
       this.removeEventListener('blur', this.blurEventListener)
       this.removeEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history') && !this.hasAttribute('interval')) self.removeEventListener('hashchange', this.hashchangeEventListener)
+    if (this.hasAttribute('history') && !this.hasAttribute('interval')) self.removeEventListener('hashchange', this.hashchangeEventListener)
   }
 
   /**

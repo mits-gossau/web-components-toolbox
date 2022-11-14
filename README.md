@@ -31,5 +31,5 @@ TODO:
 - [ ] new flex-box wrapper: flex-grow (flex: 1) wrapper with empty children to simulate instead of o-wrapper width approach
 - [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src
 
-TODO in this branch:
+TODO asap:
 - [ ] hover on parent prototype

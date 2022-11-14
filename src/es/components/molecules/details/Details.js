@@ -60,7 +60,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.setAttribute('aria-label', 'Details')
     this.svgWidth = '1.5em'
     this.svgHeight = '1.5em'
-    this.svgColor = `var(--${this.getAttribute('namespace')}svg-color, var(--color))`
+    this.svgColor = `var(--${this.getAttribute('namespace') || ''}svg-color, var(--color))`
 
     // overwrite default Mutation observer parent function created at super
     this.mutationObserveStart = () => {
