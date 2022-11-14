@@ -6,12 +6,18 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class TagFilter extends Shadow() {
   constructor (...args) {
     super(...args)
+   
+    
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
+      const locationURL = self.location.href
+      const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+      url.searchParams.set('page', '1')
+      debugger
       this.dispatchEvent(new CustomEvent('requestListNews', {
         detail: {
-          tag: event.target.getAttribute('tag') ? event.target.getAttribute('tag').split(',') : []
+          tag: event.target.hasAttribute('tag') ? event.target.getAttribute('tag').split(',') : []
         },
         bubbles: true,
         cancelable: true,
