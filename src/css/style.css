@@ -363,7 +363,7 @@ img[style="float: right;"] {
   font-size: var(--big-li-before-font-size, 2em);
   position: absolute;
   top: var(--big-li-before-top, 0);
-  left: calc(-1 * var(--big-li-before-left, var(--ol-margin, 2em)));
+  left: calc(-1 * var(--big-li-before-left, var(--ol-margin, 1.5em)));
   display: block;
   width: var(--big-li-before-width, var(--ol-margin, 2em));
   color: var(--color-secondary, var(--color));
