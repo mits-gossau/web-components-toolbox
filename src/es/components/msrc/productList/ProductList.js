@@ -31,7 +31,7 @@ export default class ProductList extends Prototype() {
   }
 
   configSetup () {
-    const setup = JSON.parse(this.getAttribute('config') || '{}')
+    const setup = this.constructor.parseAttribute(this.getAttribute('config') || '{}')
     if (Object.keys(setup).length === 0) return
     setup.webAPIKey = this.getAttribute('web-api-key') || ''
     setup.mode = this.getAttribute('mode') || 'default'
