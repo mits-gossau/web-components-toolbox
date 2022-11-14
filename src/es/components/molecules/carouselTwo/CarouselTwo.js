@@ -74,8 +74,7 @@ export default class CarouselTwo extends Shadow() {
           : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) && (activeChild = Array.from(this.section.children).find(node => {
               const nodeLeft = Math.round(node.getBoundingClientRect().left)
               return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
-            })))
-        {
+            }))) {
           if (lastActiveChild === activeChild) return
           lastActiveChild = activeChild
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
@@ -598,10 +597,12 @@ export default class CarouselTwo extends Shadow() {
   scrollIntoView (node, focus = true, force = false) {
     if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
     if (force || !node.classList.contains('active')) {
-      if (focus) return node.focus({
-        preventScroll: true,
-        focusVisible: false
-      }) // important that default keyboard works
+      if (focus) {
+        return node.focus({
+          preventScroll: true,
+          focusVisible: false
+        })
+      } // important that default keyboard works
       // node.scrollIntoView() // scrolls x and y
       this.section.scrollTo({
         left: this.section.scrollLeft + node.getBoundingClientRect().x - this.section.getBoundingClientRect().x,

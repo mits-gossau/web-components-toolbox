@@ -21,7 +21,6 @@ export default class Pagination extends Shadow() {
       event.detail.fetch.then(() => {
         const news = sessionStorage.getItem('news') || ''
         this.newsData = JSON.parse(news)
-        debugger
         const pageParams = Number(location.search.split('page=')[1]) || 1
         let { total, limit, skip } = this.newsData?.data.newsEntryCollection
         const calcSkipPage = (pageParams - 1) * 5
@@ -83,6 +82,7 @@ export default class Pagination extends Shadow() {
   renderHTML (pages, limit, skip) {
     this.html = ''
     let pageItems = ''
+
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
       pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
