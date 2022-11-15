@@ -95,6 +95,9 @@ export default class Login extends Prototype() {
         text-decoration: none;
         font-weight: var(--font-weight-strong, bold);
       }
+      :host > div > button {
+        max-width: 50vw;
+      }
       @media only screen and (max-width: _max-width_) {
         :host {
           gap: calc(var(--content-spacing-mobile, var(--content-spacing, 1em)) * 2);
@@ -123,6 +126,10 @@ export default class Login extends Prototype() {
         config: this.constructor.parseAttribute(this.getAttribute('config') || '{"env": "local"}')
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
+      getStylesReturn[1].then(() => {
+        let button
+        if ((button = this.msrcLoginButtonWrapper.querySelector('button'))) button.classList.add('font-size-tiny')
+      })
       this.html = [this.msrcLoginButtonWrapper, getStylesReturn[0]]
       // return getStylesReturn[1] // use this line if css build up should be avoided
     })
