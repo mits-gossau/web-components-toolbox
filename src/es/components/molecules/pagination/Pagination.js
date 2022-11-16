@@ -9,7 +9,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
 
     const locationURL = self.location.href
@@ -19,11 +19,14 @@ export default class Pagination extends Shadow() {
 
     this.listNewsListener = event => {
       event.detail.fetch.then(() => {
+        debugger
         const news = sessionStorage.getItem('news') || ''
         this.newsData = JSON.parse(news)
         let { total, limit, skip } = this.newsData?.data.newsEntryCollection
-        const pageParams = Number(location.search.split('page=')[1]) || 1
-        const calcSkipPage = (pageParams - 1) * 5
+        const urlParams = new URLSearchParams(location.search)
+        const pageParam = urlParams.get('page') || 1
+        const page = Number(pageParam)
+        const calcSkipPage = (page - 1) * 5
         if (calcSkipPage !== skip) {
           skip = calcSkipPage
         }
@@ -37,33 +40,36 @@ export default class Pagination extends Shadow() {
       event.preventDefault()
       const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', event.target.textContent)
+      history.pushState({ ...history.state, 'page': event.target.textContent }, title, url.href)
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
-      history.pushState(event.target.textContent, title, url.href)
+      debugger
       this.dispatchRequestNewsEvent(event.target.textContent - 1)
     }
 
     this.updatePopState = event => {
-      if (!event.state) return
-      this.dispatchRequestNewsEvent(event.state - 1)
+      debugger
+      if (!event.state.page) return
+      this.dispatchRequestNewsEvent(event.state.page - 1)
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener('listNews', this.listNewsListener)
     this.pagination.addEventListener('click', this.clickListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener('listNews', this.listNewsListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
-  dispatchRequestNewsEvent (page) {
+  dispatchRequestNewsEvent(page) {
+    debugger
     this.dispatchEvent(new CustomEvent('requestListNews', {
       detail: {
         skip: page,
@@ -75,11 +81,11 @@ export default class Pagination extends Shadow() {
     }))
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML (pages, limit, skip) {
+  renderHTML(pages, limit, skip) {
     this.html = ''
     let pageItems = ''
 
@@ -105,7 +111,7 @@ export default class Pagination extends Shadow() {
    * @param {string} items
    * @return {string}
    */
-  setRel (items) {
+  setRel(items) {
     const nodes = new DOMParser().parseFromString(items, 'text/html').body.childNodes
     if (nodes.length === 1) {
       // @ts-ignore
@@ -154,7 +160,7 @@ export default class Pagination extends Shadow() {
     return Array.from(updateNodes).map(item => item.outerHTML).join('')
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host {
       background-color:var(--background-color, black);

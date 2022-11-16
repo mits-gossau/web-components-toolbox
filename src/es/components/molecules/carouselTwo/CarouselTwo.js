@@ -90,14 +90,16 @@ export default class CarouselTwo extends Shadow() {
           this.section.classList.remove('scrolling')
           this.setInterval()
           // adjust the history
-          if (!self.location.hash.includes(activeChild.getAttribute('id'))) {
-            const url = `${self.location.href.split('#')[0]}#${activeChild.getAttribute('id')}`
-            if (self.location.hash.includes('next') || self.location.hash.includes('previous')) {
-              self.history.replaceState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
-            } else {
-              self.history.pushState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
-            }
-          }
+          // if (!self.location.hash.includes(activeChild.getAttribute('id'))) {
+          //   const url = `${self.location.href.split('#')[0]}#${activeChild.getAttribute('id')}`
+          //   if (self.location.hash.includes('next') || self.location.hash.includes('previous')) {
+          //     debugger
+          //     self.history.replaceState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
+          //   } else {
+          //     debugger
+          //     self.history.pushState({...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
+          //   }
+          // }
         }
       }, 50)
     }

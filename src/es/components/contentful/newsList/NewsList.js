@@ -33,10 +33,12 @@ export default class NewsList extends Shadow() {
     const newsViewed = sessionStorage.getItem('news-viewed')?.toLowerCase() === 'true'
     let currentPageSkip = newsViewed ? this.getCurrentPageSkip(sessionStorage.getItem('news') || '') : 0
     sessionStorage.removeItem('news-viewed')
-    const params = location.search.split('page=')[1] || 1
-    const paramsPage = Number(params) - 1
-    if (currentPageSkip !== paramsPage) {
-      currentPageSkip = paramsPage
+    const urlParams = new URLSearchParams(location.search)
+    const pageParam = urlParams.get('page') || 1
+    debugger
+    const page = Number(pageParam) - 1
+    if (currentPageSkip !== page) {
+      currentPageSkip = page
     }
 
     this.dispatchEvent(new CustomEvent('requestListNews', {
