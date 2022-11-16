@@ -566,11 +566,10 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     margin: var(--hr-margin-mobile, var(--hr-margin, var(--content-spacing-mobile) auto));
   }
   /* img-tag */
-  img[style="float: left;"], img[style="float:left;"], img[style="float: left"], img[style="float:left"] {
-    margin: var(--img-float-left-margin-mobile, var(--img-float-left-margin, 0 var(--content-spacing-mobile, var(--content-spacing)) calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) 0));
-  }
-  img[style="float: right;"], img[style="float:right;"], img[style="float: right"], img[style="float:right"] {
-    margin: var(--img-float-right-margin-mobile, var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) var(--content-spacing-mobile, var(--content-spacing))));
+  img[style="float: left;"], img[style="float:left;"], img[style="float: left"], img[style="float:left"], img[style="float: right;"], img[style="float:right;"], img[style="float: right"], img[style="float:right"] {
+    display: block;
+    float: none !important;
+    margin: 0 auto var(--img-float-bottom-margin-mobile, var(--content-spacing-mobile, var(--content-spacing)));
   }
   /* list-tags */
   :host ol {
