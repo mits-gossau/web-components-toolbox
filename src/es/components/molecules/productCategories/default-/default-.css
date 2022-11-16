@@ -1,9 +1,10 @@
 :host {
     --categories-default-background-color: var(--background-color, transparent);
     --categories-default-color-secondary:var(--color-secondary);
-    --category-link-color:var(--color-secondary);
-    --category-link-color-hover: #fefce5;
-    --category-icon-img-width: 2rem;
+    --categories-default-ul-list-style:var(--categories-default-ul-list-style-custom, none);
     --category-icon-img-margin: 0 1.5em 0 0.75em;
+    --category-icon-img-width: 2rem;
+    --category-link-color-hover: #fefce5;
+    --category-link-color:var(--color-secondary);
     --category-link-padding: 19px 10px;
 }
