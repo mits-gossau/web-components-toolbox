@@ -99,7 +99,7 @@ export default class CarouselTwo extends Shadow() {
             }
           }
         }
-      }, 50)
+      }, 200)
     }
     // interval stuff
     this.interval = null
