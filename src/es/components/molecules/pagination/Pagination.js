@@ -40,7 +40,7 @@ export default class Pagination extends Shadow() {
       event.preventDefault()
       const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', event.target.textContent)
-      history.pushState({ ...history.state, 'page': event.target.textContent }, title, url.href)
+      history.pushState(event.target.textContent, title, url.href)
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
@@ -50,8 +50,8 @@ export default class Pagination extends Shadow() {
 
     this.updatePopState = event => {
       debugger
-      if (!event.state.page) return
-      this.dispatchRequestNewsEvent(event.state.page - 1)
+      if (!event.state) return
+      this.dispatchRequestNewsEvent(event.state - 1)
     }
   }
 
@@ -119,6 +119,7 @@ export default class Pagination extends Shadow() {
     }
     const url = location.href
     const pageParam = url.substring(url.lastIndexOf('page='))
+    debugger
     const updateNodes = Array.from(nodes).reduce((acc, cur, index, nodes) => {
       // @ts-ignore
       if (cur.classList.contains('active')) {

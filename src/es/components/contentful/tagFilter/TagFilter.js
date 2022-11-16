@@ -33,9 +33,7 @@ export default class TagFilter extends Shadow() {
       }))
     }
 
-    this.updatePopState = event => {
-      debugger
-    }
+    
   }
 
   connectedCallback () {
@@ -44,12 +42,10 @@ export default class TagFilter extends Shadow() {
     const tagList = this.constructor.parseAttribute(this.getAttribute('tag') || [])
     if (this.shouldComponentRenderHTML()) this.renderHTML(tagList)
     this.tagFilterWrapper.addEventListener('click', this.clickListener)
-    self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.tagFilterWrapper.removeEventListener('click', this.clickListener)
-    self.removeEventListener('popstate', this.updatePopState)
   }
 
   
