@@ -44,38 +44,7 @@ export default class ProductCategories extends Shadow() {
   }
 
   renderHTML () {
-    this.categoriesNavigation = this.root.querySelector('div') || document.createElement('div')
-    this.categoriesNavigation.innerHTML = `
-        <ul>
-            <li>
-                <a-link namespace="category-link-" category="BeSS_97">
-                    <a-picture namespace="category-icon-" picture-load defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
-                    </a-picture> <a> Alle Produkte </a>
-                </a-link>
-            </li>
-            <li>
-                <a-link namespace="category-link-" category="ALNA_CAT_Beilagen_BeilagenundZutaten">
-                    <a-picture namespace="category-icon-" picture-load  defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
-                    </a-picture>
-                    <a>Beilagen und Zutaten </a>
-                </a-link>
-            </li>
-            <li>
-                <a-link namespace="category-link-" category="ALNA_CAT_ZuckerundSuessungsmittel_Backen">
-                    <a-picture namespace="category-icon-" picture-load defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
-                    </a-picture>
-                    <a>Backen </a>
-                </a-link>
-            </li>
-            <li>
-                <a-link namespace="category-link-">
-                    <a-picture namespace="category-icon-" picture-load defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
-                    </a-picture>
-                    <a>Brotaufstrich und Muse </a>
-                </a-link>
-            </li>
-        </ul>`
-
+    this.categoriesNavigation = this.root.querySelector('ul')
     this.html = this.categoriesNavigation
   }
 
