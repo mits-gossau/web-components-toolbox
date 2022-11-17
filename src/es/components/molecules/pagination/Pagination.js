@@ -25,6 +25,9 @@ export default class Pagination extends Shadow() {
         let { total, limit, skip } = this.newsData?.data.newsEntryCollection
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
+        if(pageParam === 1){
+          history.pushState({ "page": 1 }, document.title, locationURL)
+        }
         const page = Number(pageParam)
         const calcSkipPage = (page - 1) * 5
         if (calcSkipPage !== skip) {
@@ -40,18 +43,19 @@ export default class Pagination extends Shadow() {
       event.preventDefault()
       const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', event.target.textContent)
-      history.pushState(event.target.textContent, title, url.href)
+      url.searchParams.set('tag', history.state.tag || "")
+      history.pushState({ ...history.state, 'page': event.target.textContent }, title, url.href)
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
       debugger
-      this.dispatchRequestNewsEvent(event.target.textContent - 1)
+      this.dispatchRequestNewsEvent(event.target.textContent - 1, history.state.tag || "")
     }
 
     this.updatePopState = event => {
       debugger
-      if (!event.state) return
-      this.dispatchRequestNewsEvent(event.state - 1)
+      if (!event.state.page) return
+      this.dispatchRequestNewsEvent(event.state.page - 1, history.state.tag || "")
     }
   }
 
@@ -68,12 +72,12 @@ export default class Pagination extends Shadow() {
     self.removeEventListener('popstate', this.updatePopState)
   }
 
-  dispatchRequestNewsEvent(page) {
+  dispatchRequestNewsEvent(page, tag) {
     debugger
     this.dispatchEvent(new CustomEvent('requestListNews', {
       detail: {
         skip: page,
-        tag: this.newsData.data.newsEntryCollection.tag
+        tag: [tag]
       },
       bubbles: true,
       cancelable: true,
@@ -119,16 +123,17 @@ export default class Pagination extends Shadow() {
     }
     const url = location.href
     const pageParam = url.substring(url.lastIndexOf('page='))
-    debugger
     const updateNodes = Array.from(nodes).reduce((acc, cur, index, nodes) => {
       // @ts-ignore
       if (cur.classList.contains('active')) {
         if (index === 0) {
+          debugger
           // @ts-ignore
           acc[index + 1].firstChild.setAttribute('rel', 'next')
           // @ts-ignore
           acc[index + 1].firstChild.setAttribute('href', `${location.href}?page=${acc[index + 1].getAttribute('page')}`)
         } else if (index + 1 === nodes.length) {
+          debugger
           // @ts-ignore
           const rep = location.href.replace(pageParam, `page=${acc[index - 1].getAttribute('page')}`)
           // @ts-ignore
@@ -136,6 +141,7 @@ export default class Pagination extends Shadow() {
           // @ts-ignore
           acc[index - 1].firstChild.setAttribute('href', rep)
         } else {
+          debugger
           // @ts-ignore
           const curPageNext = location.href
           // @ts-ignore

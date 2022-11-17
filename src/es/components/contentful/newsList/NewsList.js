@@ -35,16 +35,24 @@ export default class NewsList extends Shadow() {
     sessionStorage.removeItem('news-viewed')
     const urlParams = new URLSearchParams(location.search)
     const pageParam = urlParams.get('page') || 1
-    debugger
     const page = Number(pageParam) - 1
     if (currentPageSkip !== page) {
       currentPageSkip = page
     }
 
+    
+    
+    let tagValue = [urlParams.get('tag')]
+    debugger
+    if (tagValue[0] === null || tagValue[0] === ""){
+      tagValue = this.getTag(sessionStorage.getItem('news') || '{}')
+    } 
+
+    
     this.dispatchEvent(new CustomEvent('requestListNews', {
       detail: {
         skip: currentPageSkip,
-        tag: this.getTag(sessionStorage.getItem('news') || '{}')
+        tag: tagValue
       },
       bubbles: true,
       cancelable: true,

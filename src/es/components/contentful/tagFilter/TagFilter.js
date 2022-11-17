@@ -33,7 +33,14 @@ export default class TagFilter extends Shadow() {
       }))
     }
 
-    
+    this.listNewsListener = event => {
+      debugger
+      const urlParams = new URLSearchParams(location.search)
+      const tagParam = urlParams.get('tag') || ""
+      debugger
+      this.setActiveItem(tagParam, this.root.querySelector('ul'))
+    }
+
   }
 
   connectedCallback () {
@@ -42,10 +49,12 @@ export default class TagFilter extends Shadow() {
     const tagList = this.constructor.parseAttribute(this.getAttribute('tag') || [])
     if (this.shouldComponentRenderHTML()) this.renderHTML(tagList)
     this.tagFilterWrapper.addEventListener('click', this.clickListener)
+    document.body.addEventListener('listNews', this.listNewsListener)
   }
 
   disconnectedCallback () {
     this.tagFilterWrapper.removeEventListener('click', this.clickListener)
+    document.body.removeEventListener('listNews', this.listNewsListener)
   }
 
   
@@ -109,13 +118,14 @@ export default class TagFilter extends Shadow() {
    * @param {string} locationURL
    */
   resetURLPageParam (locationURL = self.location.href) {
+    debugger
     const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set('page', '1')
-    history.pushState({ "page": 1 }, document.title, url.href)
-    //history.replaceState({ "page": 1 }, document.title, url.href)
+    history.pushState({ ...history.state,  "page": 1 } , document.title, url.href)
   }
 
   setActiveItem (activeItem, elements) {
+    debugger
     Array.from(elements.querySelectorAll('a-link')).forEach(element => {
       if (element.getAttribute('tag') === activeItem) {
         console.log('active', element)
