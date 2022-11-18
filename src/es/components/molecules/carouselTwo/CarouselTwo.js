@@ -95,7 +95,7 @@ export default class CarouselTwo extends Shadow() {
             if (self.location.hash.includes('next') || self.location.hash.includes('previous')) {
               self.history.replaceState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
             } else {
-              self.history.pushState({...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
+              self.history.pushState({ ...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
             }
           }
         }

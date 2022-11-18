@@ -11,17 +11,11 @@ export default class TagFilter extends Shadow() {
     super(...args)
 
     this.clickListener = event => {
-      console.log(event.target)
       if (!event.target || event.target.tagName !== 'A-LINK') return false
       event.preventDefault()
-      this.resetURLPageParam()
-      const locationURL = self.location.href
-      const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+      this.resetURLPageParam(location.href)
       const tag = event.target.hasAttribute('tag') ? event.target.getAttribute('tag') : ''
-      url.searchParams.set('tag', tag)
-      console.log(tag)
-      debugger
-      history.pushState({ ...history.state, tag }, document.title, url.href)
+      this.updateURLSettings(location.href,tag)
       this.setActiveItem(tag, this.root.querySelector('ul'))
       this.dispatchEvent(new CustomEvent('requestListNews', {
         detail: {
@@ -34,13 +28,12 @@ export default class TagFilter extends Shadow() {
     }
 
     this.listNewsListener = event => {
-      debugger
       const urlParams = new URLSearchParams(location.search)
-      const tagParam = urlParams.get('tag') || ""
+      const tagParam = urlParams.get('tag') || ''
       debugger
       this.setActiveItem(tagParam, this.root.querySelector('ul'))
+      //this.updateURLSettings(location.href, tagParam)
     }
-
   }
 
   connectedCallback () {
@@ -56,8 +49,6 @@ export default class TagFilter extends Shadow() {
     this.tagFilterWrapper.removeEventListener('click', this.clickListener)
     document.body.removeEventListener('listNews', this.listNewsListener)
   }
-
-  
 
   shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
@@ -113,22 +104,29 @@ export default class TagFilter extends Shadow() {
     this.html = this.tagFilterWrapper
   }
 
+  updateURLSettings(locationHref,tag){
+    if(tag === "") return
+    const url = new URL(locationHref, locationHref.charAt(0) === '/' ? location.origin : locationHref.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    url.searchParams.set('tag', tag)
+    console.log("updatetag",tag)
+    debugger
+    history.pushState({ ...history.state, tag }, document.title, url.href)
+  }
+
   /**
    * Reset url param 'page=' to default value 'page=1'
    * @param {string} locationURL
    */
-  resetURLPageParam (locationURL = self.location.href) {
+  resetURLPageParam (locationURL) {
     debugger
     const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-    url.searchParams.set('page', '1')
-    history.pushState({ ...history.state,  "page": 1 } , document.title, url.href)
+    url.searchParams.set('page', 1)
+    history.pushState({ ...history.state, page: 1 }, document.title, url.href)
   }
 
   setActiveItem (activeItem, elements) {
-    debugger
     Array.from(elements.querySelectorAll('a-link')).forEach(element => {
       if (element.getAttribute('tag') === activeItem) {
-        console.log('active', element)
         element.classList.add('active')
       } else {
         element.classList.remove('active')

@@ -40,15 +40,12 @@ export default class NewsList extends Shadow() {
       currentPageSkip = page
     }
 
-    
-    
     let tagValue = [urlParams.get('tag')]
     debugger
-    if (tagValue[0] === null || tagValue[0] === ""){
+    if (tagValue[0] === null || tagValue[0] === '') {
       tagValue = this.getTag(sessionStorage.getItem('news') || '{}')
-    } 
+    }
 
-    
     this.dispatchEvent(new CustomEvent('requestListNews', {
       detail: {
         skip: currentPageSkip,
