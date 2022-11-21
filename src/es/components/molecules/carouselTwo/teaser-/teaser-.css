@@ -1,7 +1,6 @@
 :host {
-  --carousel-two-teaser-scroll-snap-type: none;
-  --carousel-two-teaser-section-child-min-width: 45%;
-  --carousel-two-teaser-section-child-max-width: 45%;
+  --carousel-two-teaser-section-child-min-width: calc(50% - var(--carousel-two-teaser-section-gap));
+  --carousel-two-teaser-section-child-max-width: calc(50% - var(--carousel-two-teaser-section-gap));
   --carousel-two-teaser-section-child-opacity-not-active: 1;
 }
 :host > *.arrow-nav {
@@ -27,8 +26,8 @@
 }
 @media only screen and (max-width: _max-width_) {
   :host {
-    --carousel-two-teaser-section-child-min-width: 90%;
-    --carousel-two-teaser-section-child-max-width: 90%;
+    --carousel-two-teaser-section-child-min-width: 80%;
+    --carousel-two-teaser-section-child-max-width: 80%;
   }
   :host > *.arrow-nav, :host(.has-default-arrow-nav) > *.arrow-nav {
     display: none;
