@@ -1,6 +1,6 @@
 :host {
-  --carousel-two-teaser-section-child-min-width: calc(50% - var(--carousel-two-teaser-section-gap));
-  --carousel-two-teaser-section-child-max-width: calc(50% - var(--carousel-two-teaser-section-gap));
+  --carousel-two-teaser-section-child-min-width: calc(50% - var(--carousel-two-teaser-section-gap) / 2);
+  --carousel-two-teaser-section-child-max-width: calc(50% - var(--carousel-two-teaser-section-gap) / 2);
   --carousel-two-teaser-section-child-opacity-not-active: 1;
 }
 :host > *.arrow-nav {
