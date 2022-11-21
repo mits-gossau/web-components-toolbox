@@ -12,25 +12,25 @@ export default class Pagination extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    const locationURL = location.href
+    //const locationURL = location.href
     const title = document.title
 
     this.pagination = this.root.querySelector('div') || document.createElement('div')
 
-    const urlParams = new URLSearchParams(location.search)
-    const tagParam = urlParams.get('tag') || ''
-
+    
     this.listNewsListener = event => {
       event.detail.fetch.then(() => {
         debugger
         const news = sessionStorage.getItem('news') || ''
-        this.newsData = JSON.parse(news)
-        let { total, limit, skip } = this.newsData?.data.newsEntryCollection
+        const newsData = JSON.parse(news)
+        let { total, limit, skip } = newsData?.data.newsEntryCollection
+
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
-        // if (pageParam === 1) {
-        //   history.pushState({ page: 1 }, document.title, locationURL)
-        // }
+        if (pageParam === 1) {
+          history.pushState({ page: 1 }, document.title, location.href)
+        }
+
         const page = Number(pageParam)
         const calcSkipPage = (page - 1) * 5
         if (calcSkipPage !== skip) {
@@ -40,29 +40,31 @@ export default class Pagination extends Shadow() {
         this.renderHTML(pages, limit, skip)
       })
     }
-
+    
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
-      const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+      const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', event.target.textContent)
-      history.pushState({ ...history.state, page: event.target.textContent }, title, url.href)
-
-
-    
-      url.searchParams.set('tag', tagParam)
-      history.pushState({ ...history.state, tag: tagParam }, title, url.href)
       debugger
+      //history.pushState({ ...history.state, page: event.target.textContent }, title, url.href)
+      const urlParams = new URLSearchParams(location.search)
+      const tagParam = urlParams.get('tag')
+      debugger
+      url.searchParams.set('tag', tagParam ? tagParam : history.state?.tag || "")
+      history.pushState({ ...history.state, tag: tagParam, page: event.target.textContent }, title, url.href)
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
       debugger
-      this.dispatchRequestNewsEvent(event.target.textContent - 1, tagParam)
+      this.dispatchRequestNewsEvent(event.target.textContent - 1, tagParam ? tagParam : history.state?.tag || "")
     }
 
     this.updatePopState = event => {
       debugger
       if (!event.state.page) return
+      const urlParams = new URLSearchParams(location.search)
+      const tagParam = urlParams.get('tag') || ''
       this.dispatchRequestNewsEvent(event.state.page - 1, tagParam)
     }
   }

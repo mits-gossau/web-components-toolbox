@@ -41,7 +41,6 @@ export default class NewsList extends Shadow() {
     }
 
     let tagValue = [urlParams.get('tag')]
-    debugger
     if (tagValue[0] === null || tagValue[0] === '') {
       tagValue = this.getTag(sessionStorage.getItem('news') || '{}')
     }

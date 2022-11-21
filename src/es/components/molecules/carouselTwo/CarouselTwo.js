@@ -93,8 +93,10 @@ export default class CarouselTwo extends Shadow() {
           if (!self.location.hash.includes(activeChild.getAttribute('id'))) {
             const url = `${self.location.href.split('#')[0]}#${activeChild.getAttribute('id')}`
             if (self.location.hash.includes('next') || self.location.hash.includes('previous')) {
+              debugger
               self.history.replaceState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
             } else {
+              debugger
               self.history.pushState({ ...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
             }
           }

@@ -7,17 +7,16 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class TagFilter extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
 
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A-LINK') return false
       event.preventDefault()
+      let locationHref = location.href
+      this.resetURLPageParam(locationHref)
       const tag = event.target.hasAttribute('tag') ? event.target.getAttribute('tag') : ''
-      const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-      this.setURLSearchParam('page', "1", url)
-      this.setURLSearchParam('tag', tag, url)
-      this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
+      this.updateURLSettings(locationHref,tag)
       this.setActiveItem(tag, this.root.querySelector('ul'))
       this.dispatchEvent(new CustomEvent('requestListNews', {
         detail: {
@@ -32,11 +31,13 @@ export default class TagFilter extends Shadow() {
     this.listNewsListener = event => {
       const urlParams = new URLSearchParams(location.search)
       const tagParam = urlParams.get('tag') || ''
+      debugger
       this.setActiveItem(tagParam, this.root.querySelector('ul'))
+      //this.updateURLSettings(location.href, tagParam)
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     // @ts-ignore
     const tagList = this.constructor.parseAttribute(this.getAttribute('tag') || [])
@@ -45,20 +46,20 @@ export default class TagFilter extends Shadow() {
     document.body.addEventListener('listNews', this.listNewsListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.tagFilterWrapper.removeEventListener('click', this.clickListener)
     document.body.removeEventListener('listNews', this.listNewsListener)
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.tagFilterWrapper
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */ `
     :host ul {
       justify-content: flex-start;
@@ -91,7 +92,7 @@ export default class TagFilter extends Shadow() {
     }
   }
 
-  renderHTML(tagList) {
+  renderHTML (tagList) {
     if (!tagList.length) return
     this.tagFilterWrapper = this.root.querySelector('div') || document.createElement('div')
     const ul = document.createElement('ul')
@@ -104,7 +105,28 @@ export default class TagFilter extends Shadow() {
     this.html = this.tagFilterWrapper
   }
 
-  setActiveItem(activeItem, elements) {
+  updateURLSettings(locationHref,tag){
+    if(tag === "") return
+    const url = new URL(locationHref, locationHref.charAt(0) === '/' ? location.origin : locationHref.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    debugger
+    url.searchParams.set('tag', tag)
+    console.log("updatetag",tag)
+    history.pushState({ ...history.state, tag }, document.title, url.href)
+  }
+
+  /**
+   * Reset url param 'page=' to default value 'page=1'
+   * @param {string} locationURL
+   */
+  resetURLPageParam (locationURL) {
+    debugger
+    const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    url.searchParams.set('page', "1")
+    history.pushState({ ...history.state, page: 1 }, document.title, url.href)
+    //url.searchParams.delete('page')
+  }
+
+  setActiveItem (activeItem, elements) {
     Array.from(elements.querySelectorAll('a-link')).forEach(element => {
       if (element.getAttribute('tag') === activeItem) {
         element.classList.add('active')
@@ -112,13 +134,5 @@ export default class TagFilter extends Shadow() {
         element.classList.remove('active')
       }
     })
-  }
-
-  setURLSearchParam(param, value, url) {
-    url.searchParams.set(param, value)
-  }
-
-  historyPushState(history, stateData, documentTitle, href) {
-    history.pushState(stateData, documentTitle, href)
   }
 }
