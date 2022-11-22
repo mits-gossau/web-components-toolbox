@@ -6,8 +6,10 @@
 --tag-filter-color:var(--tag-filter-color-custom, var(--color-secondary, red));
 --tag-filter-default-a-color-hover:var(--tag-filter-default-a-color-hover-custom, var(--a-color-hover, var(--color-hover, var(--color, green))));
 --tag-filter-default-a-color:var(--tag-filter-default-a-color-custom, var(--a-color, var(--color-secondary, var(--color, pink))));
---tag-filter-default-ul-display:flex;
---tag-filter-default-ul-flex-direction:row;
---tag-filter-default-ul-list-style:none;
---tag-filter-default-ul-margin:0;
+--tag-filter-default-ul-display:var(--tag-filter-default-ul-display-custom, flex);
+--tag-filter-default-ul-flex-direction:var(--tag-filter-default-ul-flex-direction-custom, row);
+--tag-filter-default-ul-list-style:var(--tag-filter-default-ul-list-style-custom, none);
+--tag-filter-default-ul-margin:var(--tag-filter-default-ul-margin-custom, 0);
+--tag-filter-default-flex-wrap: var(--tag-filter-default-flex-wrap-custom, wrap);
+--tag-filter-default-content-spacing:var(--tag-filter-default-content-spacing-custom, var(--content-spacing, 0));
 }

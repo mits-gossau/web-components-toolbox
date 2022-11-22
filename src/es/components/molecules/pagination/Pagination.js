@@ -11,16 +11,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Pagination extends Shadow() {
   constructor (...args) {
     super(...args)
-
-    //const locationURL = location.href
-    const title = document.title
-
     this.pagination = this.root.querySelector('div') || document.createElement('div')
-
-    
     this.listNewsListener = event => {
       event.detail.fetch.then(() => {
-        debugger
         const news = sessionStorage.getItem('news') || ''
         const newsData = JSON.parse(news)
         let { total, limit, skip } = newsData?.data.newsEntryCollection
@@ -46,22 +39,17 @@ export default class Pagination extends Shadow() {
       event.preventDefault()
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', event.target.textContent)
-      debugger
-      //history.pushState({ ...history.state, page: event.target.textContent }, title, url.href)
       const urlParams = new URLSearchParams(location.search)
       const tagParam = urlParams.get('tag')
-      debugger
       url.searchParams.set('tag', tagParam ? tagParam : history.state?.tag || "")
-      history.pushState({ ...history.state, tag: tagParam, page: event.target.textContent }, title, url.href)
+      history.pushState({ ...history.state, tag: tagParam, page: event.target.textContent }, document.title, url.href)
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
-      debugger
       this.dispatchRequestNewsEvent(event.target.textContent - 1, tagParam ? tagParam : history.state?.tag || "")
     }
 
     this.updatePopState = event => {
-      debugger
       if (!event.state.page) return
       const urlParams = new URLSearchParams(location.search)
       const tagParam = urlParams.get('tag') || ''
@@ -83,7 +71,6 @@ export default class Pagination extends Shadow() {
   }
 
   dispatchRequestNewsEvent (page, tag) {
-    debugger
     this.dispatchEvent(new CustomEvent('requestListNews', {
       detail: {
         skip: page,
@@ -102,14 +89,11 @@ export default class Pagination extends Shadow() {
   renderHTML (pages, limit, skip) {
     this.html = ''
     let pageItems = ''
-
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
       pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
     }
-
     const withRelAttributeOnLinks = this.setRel(pageItems)
-
     this.pagination.innerHTML =
       `<nav>
         <ul class="pagination">
@@ -136,6 +120,7 @@ export default class Pagination extends Shadow() {
     const updateNodes = Array.from(nodes).reduce((acc, cur, index, nodes) => {
       // @ts-ignore
       if (cur.classList.contains('active')) {
+        debugger
         if (index === 0) {
           // @ts-ignore
           acc[index + 1].firstChild.setAttribute('rel', 'next')

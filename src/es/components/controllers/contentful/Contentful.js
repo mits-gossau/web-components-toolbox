@@ -29,7 +29,7 @@ export default class Contentful extends Shadow() {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
       const variables = {
-        tags: event.detail && event.detail.tag !== undefined ? [tag, ...event.detail.tag] : [tag],
+        tags: event.detail && event.detail.tag !== undefined ? [tag, ...new Set(event.detail.tag)] : [tag],
         limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit),
         skip: event.detail && event.detail.skip !== undefined ? Number(event.detail.skip) * skip : 0
       }

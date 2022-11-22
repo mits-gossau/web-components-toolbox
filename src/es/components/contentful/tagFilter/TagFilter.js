@@ -61,11 +61,10 @@ export default class TagFilter extends Shadow() {
   renderCSS() {
     this.css = /* css */ `
     :host ul {
-      justify-content: flex-start;
-      flex-wrap: wrap;
+      flex-wrap:var(--flex-wrap, wrap);
     }
     :host li {
-      padding:0 2rem 1rem 0;
+      padding:0 var(--content-spacing) var(--content-spacing) 0;
     }
     @media only screen and (max-width: _max-width_) {}
     `
@@ -91,6 +90,11 @@ export default class TagFilter extends Shadow() {
     }
   }
 
+  /**
+   * Render HTML
+   * @param {Array<object>} tagList 
+   * @returns void
+   */
   renderHTML(tagList) {
     if (!tagList.length) return
     this.tagFilterWrapper = this.root.querySelector('div') || document.createElement('div')
@@ -104,8 +108,13 @@ export default class TagFilter extends Shadow() {
     this.html = this.tagFilterWrapper
   }
 
-  setActiveItem(activeItem, elements) {
-    Array.from(elements.querySelectorAll('a-link')).forEach(element => {
+  /**
+   * Set css class for active tag item
+   * @param {string} activeItem 
+   * @param { Element } element
+   */
+  setActiveItem(activeItem, element) {
+    Array.from(element.querySelectorAll('a-link')).forEach(element => {
       if (element.getAttribute('tag') === activeItem) {
         element.classList.add('active')
       } else {
@@ -114,10 +123,23 @@ export default class TagFilter extends Shadow() {
     })
   }
 
+  /**
+   * Set URL search param
+   * @param {string} param 
+   * @param {string} value 
+   * @param {object} url 
+   */
   setURLSearchParam(param, value, url) {
     url.searchParams.set(param, value)
   }
 
+  /**
+   * Push data to history
+   * @param {History} history 
+   * @param {object} stateData 
+   * @param {string} documentTitle 
+   * @param {string} href 
+   */
   historyPushState(history, stateData, documentTitle, href) {
     history.pushState(stateData, documentTitle, href)
   }
