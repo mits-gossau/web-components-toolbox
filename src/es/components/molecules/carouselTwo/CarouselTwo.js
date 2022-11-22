@@ -472,6 +472,18 @@ export default class CarouselTwo extends Shadow() {
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-teaser-')
           setAttributeStyles()
         })
+      case 'carousel-two-seperate-nav-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./seperate-nav-/seperate-nav-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // harmonize the default-.css namespace with carousel-two-seperate-nav-
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-seperate-nav-')
+          setAttributeStyles()
+        })        
       default:
         return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }
@@ -485,8 +497,10 @@ export default class CarouselTwo extends Shadow() {
   renderHTML () {
     this.section = this.root.querySelector('section') || document.createElement('section')
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
-    this.arrowNav = this.root.querySelector('.arrow-nav') || document.createElement('span')
-    this.arrowNav.classList.add('arrow-nav')
+    if (!this.hasAttribute('no-default-arrow-nav')){
+      this.arrowNav = this.root.querySelector('.arrow-nav') || document.createElement('span')
+      this.arrowNav.classList.add('arrow-nav')
+    }
     return this.loadChildComponents().then(children => {
       // check item correlation between slides and navigation
       if (!this.hasAttribute('no-default-nav') && (this.section.children.length !== this.nav.children.length || this.classList.contains('has-default-nav'))) {
@@ -545,6 +559,7 @@ export default class CarouselTwo extends Shadow() {
         }
       })
       this.html = [this.section, this.nav, this.arrowNav]
+
       // modal stuff
       if (this.hasAttribute('open-modal')) {
         this.closeBtn = document.createElement('button')
@@ -579,6 +594,13 @@ export default class CarouselTwo extends Shadow() {
     if (force || !node.classList.contains('active')) {
       if (focus) return node.focus() // important that default keyboard works
       // node.scrollIntoView() // scrolls x and y
+      this.dispatchEvent(new CustomEvent(this.getAttribute('carousel-changed') || 'carousel-changed', {
+        detail: node,
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+
       this.section.scrollTo({
         left: this.section.scrollLeft + node.getBoundingClientRect().x - this.section.getBoundingClientRect().x,
         behavior: force ? 'instant' : 'smooth'
