@@ -75,19 +75,19 @@ export default class CookieBanner extends Prototype() {
    */
   render () {
     this.css = /* css */`
-      #msrc-widget div, #msrc-widget a, #msrc-widget button {
+      :host #msrc-widget div, :host #msrc-widget a, :host #msrc-widget button {
         color: var(--color, black) !important;
         font-size: var(--font-size, 0.73em) !important;
         font-family: var(--font-family) !important;
         line-height: var(--line-height, normal) !important;
         font-weight: var(--font-weight, normal) !important;
       }
-      #msrc-widget > div {
+      :host #msrc-widget > div {
         background-color: var(--background-color, white) !important;
         box-shadow: var(--box-shadow-color, var(--color) 0px -1px 3px) !important;
         border-top: var(--border-top, 1px solid var(--color)) !important;
       }
-      #msrc-widget button {
+      :host #msrc-widget button {
         background-color: var(--button-background-color, var(--color-secondary, var(--color, orange))) !important;
         border-color: var(--button-border-color, var(--color-secondary, var(--color, orange))) !important;
         color: var(--button-color, var(--background-color, white)) !important;
@@ -96,35 +96,35 @@ export default class CookieBanner extends Prototype() {
         border-radius: var(--button-border-radius, 4px) !important;
         padding: var(--button-padding, 0.5em 1.2em) !important;
       }
-      #msrc-widget button:hover {
+      :host #msrc-widget button:hover {
         background-color: var(--button-background-color-hover, var(--button-background-color, var(--color-secondary, var(--color, orange)))) !important;
         font-family: var(--button-font-family-hover, var(--font-family-bold)) !important;
       }
-      #msrc-widget a {
+      :host #msrc-widget a {
         color: var(--a-color, var(--color-secondary, var(--color, white))) !important;
         text-decoration: var(--a-text-decoration, var(--text-decoration, underline)) !important;
         text-underline-offset: var(--a-text-underline-offset, 0.2em) !important;
       }
-      #msrc-widget a:hover {
+      :host #msrc-widget a:hover {
         color: var(--a-color-hover, var(--color-secondary-hover, var(--color-hover))) !important;
         text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover)) !important;
         font-family: var(--a-font-family-hover, var(--font-family)) !important;
       }
       @media only screen and (max-width: _max-width_) {
-        #msrc-widget div, #msrc-widget a, #msrc-widget button {
+        :host #msrc-widget div, :host #msrc-widget a, :host #msrc-widget button {
           font-size: var(--font-size-mobile, var(--font-size, 0.73em)) !important;
           line-height: var(--line-height-mobile, var(--line-height, normal)) !important;
           font-weight: var(--font-weight-mobile, var(--font-weight, normal)) !important;
           white-space: var(--white-space, normal) !important;
         }
-        #msrc-widget > div {
+        :host #msrc-widget > div {
           flex-direction: column !important;
           align-items: stretch !important;
         }
       }
       @media only screen and (max-width: 250px) {
         /* the cookie banner has never been adjusted for tiny sizes and looks shit, so better to hide it completely for smart watches, etc. */
-        #msrc-widget {
+        :host #msrc-widget {
           display: none;
         }
       }
