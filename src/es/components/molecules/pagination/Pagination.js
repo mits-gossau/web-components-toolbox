@@ -12,7 +12,7 @@ export default class Pagination extends Shadow() {
   constructor (...args) {
     super(...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
-    this.listNewsListener = event => {
+    this.answerEventNameListener = event => {
       event.detail.fetch.then(() => {
         const news = sessionStorage.getItem('news') || ''
         const newsData = JSON.parse(news)
@@ -20,7 +20,7 @@ export default class Pagination extends Shadow() {
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
         if (pageParam === 1) {
-          history.pushState({ page: 1 }, document.title, location.href)
+          history.pushState({...history.state, page: 1 }, document.title, location.href)
         }
         const page = Number(pageParam)
         const calcSkipPage = (page - 1) * 5
@@ -57,19 +57,19 @@ export default class Pagination extends Shadow() {
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    self.addEventListener('listNews', this.listNewsListener)
+    self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.pagination.removeEventListener('click', this.clickListener)
-    self.removeEventListener('listNews', this.listNewsListener)
+    self.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
   dispatchRequestNewsEvent (page, tag) {
-    this.dispatchEvent(new CustomEvent('requestListNews', {
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         skip: page,
         tag: tag ? [tag] : []

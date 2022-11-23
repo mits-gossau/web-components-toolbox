@@ -1,0 +1,9 @@
+:host {
+    --tag-filter-background-color-active:var(--tag-filter-background-color-active-custom, var(--color-secondary, transparent));
+    --tag-filter-background-color-hover: var(--tag-filter-background-color-hover-custom, var(--color-secondary, transparent));
+    --tag-filter-background-color:var(--tag-filter-background-color-custom, var(--background-color, transparent));
+    --tag-filter-color-hover:var(--tag-filter-color-hover-custom, var(--background-color, red));
+    --tag-filter-color:var(--tag-filter-color-custom, var(--color-secondary, red));
+    --tag-filter-default-a-color-hover:var(--tag-filter-default-a-color-hover-custom, var(--a-color-hover, var(--color-hover, var(--color, green))));
+    --tag-filter-default-a-color:var(--tag-filter-default-a-color-custom, var(--a-color, var(--color-secondary, var(--color, pink))));
+}

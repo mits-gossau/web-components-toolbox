@@ -52,7 +52,7 @@ export default class Contentful extends Shadow() {
         signal: this.abortController.signal
       }
 
-      this.dispatchEvent(new CustomEvent('listNews', {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('list-news') || 'list-news', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
             if (response.status >= 200 && response.status <= 299) {
@@ -72,11 +72,11 @@ export default class Contentful extends Shadow() {
   }
 
   connectedCallback () {
-    this.addEventListener('requestListNews', this.requestListNewsListener)
+    this.addEventListener(this.getAttribute('request-list-news') || 'request-list-news', this.requestListNewsListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener('requestListNews', this.requestListNewsListener)
+    this.removeEventListener(this.getAttribute('request-list-news') || 'request-list-news', this.requestListNewsListener)
   }
 
   /**

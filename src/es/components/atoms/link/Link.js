@@ -232,6 +232,11 @@ export default class Link extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
+      case 'tag-filter-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tag-filter-/tag-filter-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
     }
   }
 

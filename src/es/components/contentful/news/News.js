@@ -27,10 +27,10 @@ export default class News extends Shadow() {
     }
     if (!this.loadNews(self, sessionStorage).news) {
       // @ts-ignore
-      document.body.addEventListener('listNews', event => event.detail.fetch.then(data => {
+      document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', event => event.detail.fetch.then(data => {
         showPromises.push(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
       }), { once: true })
-      this.dispatchEvent(new CustomEvent('requestListNews', {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
         detail: { limit: 0 },
         bubbles: true,
         cancelable: true,

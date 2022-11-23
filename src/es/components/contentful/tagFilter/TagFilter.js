@@ -19,7 +19,7 @@ export default class TagFilter extends Shadow() {
       this.setURLSearchParam('tag', tag, url)
       this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
       this.setActiveItem(tag, this.root.querySelector('ul'))
-      this.dispatchEvent(new CustomEvent('requestListNews', {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
         detail: {
           tag: tag !== '' ? tag.split(',') : []
         },
@@ -29,7 +29,7 @@ export default class TagFilter extends Shadow() {
       }))
     }
 
-    this.listNewsListener = event => {
+    this.answerEventNameListener = event => {
       const urlParams = new URLSearchParams(location.search)
       const tagParam = urlParams.get('tag') || ''
       this.setActiveItem(tagParam, this.root.querySelector('ul'))
@@ -42,12 +42,12 @@ export default class TagFilter extends Shadow() {
     const tagList = this.constructor.parseAttribute(this.getAttribute('tag') || [])
     if (this.shouldComponentRenderHTML()) this.renderHTML(tagList)
     this.tagFilterWrapper.addEventListener('click', this.clickListener)
-    document.body.addEventListener('listNews', this.listNewsListener)
+    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
   disconnectedCallback() {
     this.tagFilterWrapper.removeEventListener('click', this.clickListener)
-    document.body.removeEventListener('listNews', this.listNewsListener)
+    document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
   shouldComponentRenderCSS() {

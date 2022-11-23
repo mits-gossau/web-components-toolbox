@@ -11,7 +11,7 @@ export default class NewsList extends Shadow() {
   constructor (...args) {
     super(...args)
     this.RESOLVE_STATE = 'LOADED'
-    this.listNewsListener = event => {
+    this.answerEventNameListener = event => {
       this.hidden = false
       const newsPreviewNamespace = this.getAttribute('news-preview-namespace') || 'preview-default-'
       this.loadScriptDependency().then(script => {
@@ -28,7 +28,7 @@ export default class NewsList extends Shadow() {
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    document.body.addEventListener('listNews', this.listNewsListener)
+    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.hidden = true
     const newsViewed = sessionStorage.getItem('news-viewed')?.toLowerCase() === 'true'
     let currentPageSkip = newsViewed ? this.getCurrentPageSkip(sessionStorage.getItem('news') || '') : 0
@@ -45,7 +45,7 @@ export default class NewsList extends Shadow() {
       tagValue = this.getTag(sessionStorage.getItem('news') || '{}')
     }
 
-    this.dispatchEvent(new CustomEvent('requestListNews', {
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         skip: currentPageSkip,
         tag: tagValue
@@ -57,7 +57,7 @@ export default class NewsList extends Shadow() {
   }
 
   disconnectedCallback () {
-    document.body.removeEventListener('listNews', this.listNewsListener)
+    document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
   getCurrentPageSkip (sessionData) {
