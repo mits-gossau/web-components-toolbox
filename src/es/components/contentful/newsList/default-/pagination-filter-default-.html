@@ -1,4 +1,8 @@
-<contentful-tag-filter namespace="tag-filter-default-" tag="[
+<m-tag-filter
+    answer-event-name="list-news"
+    request-event-name="request-list-news"
+    namespace="tag-filter-default-"
+    tag="[
     {
         'name':'Alle News',
         'tag':[]
@@ -24,11 +28,18 @@
         'tag':['interviews-kolumne']
     }
     ]">
-</contentful-tag-filter>
-<m-pagination namespace="pagination-default-"></m-pagination>
-<contentful-news-list namespace="news-list-default-"
-  news-url="/docs/Template.html?logo=/src/es/components/atoms/logo/default-/default-.html&nav=/src/es/components/molecules/navigation/default-/default-.html&footer=/src/es/components/organisms/footer/default-/default-.html&content=/src/es/components/molecules/news/default-/default-.html"
-  news-preview-namespace="">
+</m-tag-filter>
+<m-pagination
+    answer-event-name="list-news"
+    request-event-name="request-list-news"
+    namespace="pagination-default-"
+></m-pagination>
+<contentful-news-list
+    answer-event-name="list-news"
+    request-event-name="request-list-news"
+    namespace="news-list-default-"
+    news-url="/docs/Template.html?logo=/src/es/components/atoms/logo/default-/default-.html&nav=/src/es/components/molecules/navigation/default-/default-.html&footer=/src/es/components/organisms/footer/default-/default-.html&content=/src/es/components/molecules/news/default-/default-.html"
+    news-preview-namespace="">
 </contentful-news-list>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./default-.js"></script>

@@ -11,19 +11,19 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Pagination extends Shadow() {
   constructor (...args) {
     super(...args)
-
-    const locationURL = self.location.href
-    const title = document.title
-
     this.pagination = this.root.querySelector('div') || document.createElement('div')
-
-    this.listNewsListener = event => {
+    this.answerEventNameListener = event => {
       event.detail.fetch.then(() => {
         const news = sessionStorage.getItem('news') || ''
-        this.newsData = JSON.parse(news)
-        let { total, limit, skip } = this.newsData?.data.newsEntryCollection
-        const pageParams = Number(location.search.split('page=')[1]) || 1
-        const calcSkipPage = (pageParams - 1) * 5
+        const newsData = JSON.parse(news)
+        let { total, limit, skip } = newsData?.data.newsEntryCollection
+        const urlParams = new URLSearchParams(location.search)
+        const pageParam = urlParams.get('page') || 1
+        if (pageParam === 1) {
+          history.pushState({...history.state, page: 1 }, document.title, location.href)
+        }
+        const page = Number(pageParam)
+        const calcSkipPage = (page - 1) * 5
         if (calcSkipPage !== skip) {
           skip = calcSkipPage
         }
@@ -31,43 +31,48 @@ export default class Pagination extends Shadow() {
         this.renderHTML(pages, limit, skip)
       })
     }
-
+    
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
-      const url = new URL(locationURL, locationURL.charAt(0) === '/' ? location.origin : locationURL.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+      const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', event.target.textContent)
+      const urlParams = new URLSearchParams(location.search)
+      const tagParam = urlParams.get('tag')
+      url.searchParams.set('tag', tagParam ? tagParam : history.state?.tag || "")
+      history.pushState({ ...history.state, tag: tagParam, page: event.target.textContent }, document.title, url.href)
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
-      history.pushState(event.target.textContent, title, url.href)
-      this.dispatchRequestNewsEvent(event.target.textContent - 1)
+      this.dispatchRequestNewsEvent(event.target.textContent - 1, tagParam ? tagParam : history.state?.tag || "")
     }
 
     this.updatePopState = event => {
-      if (!event.state) return
-      this.dispatchRequestNewsEvent(event.state - 1)
+      if (!event.state.page) return
+      const urlParams = new URLSearchParams(location.search)
+      const tagParam = urlParams.get('tag') || ''
+      this.dispatchRequestNewsEvent(event.state.page - 1, tagParam)
     }
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    self.addEventListener('listNews', this.listNewsListener)
+    self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.pagination.removeEventListener('click', this.clickListener)
-    self.removeEventListener('listNews', this.listNewsListener)
+    self.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
-  dispatchRequestNewsEvent (page) {
-    this.dispatchEvent(new CustomEvent('requestListNews', {
+  dispatchRequestNewsEvent (page, tag) {
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         skip: page,
-        tag: this.newsData.data.newsEntryCollection.tag
+        tag: tag ? [tag] : []
       },
       bubbles: true,
       cancelable: true,
@@ -82,14 +87,11 @@ export default class Pagination extends Shadow() {
   renderHTML (pages, limit, skip) {
     this.html = ''
     let pageItems = ''
-
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
       pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
     }
-
     const withRelAttributeOnLinks = this.setRel(pageItems)
-
     this.pagination.innerHTML =
       `<nav>
         <ul class="pagination">
