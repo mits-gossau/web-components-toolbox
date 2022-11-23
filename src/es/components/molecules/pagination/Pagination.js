@@ -17,13 +17,11 @@ export default class Pagination extends Shadow() {
         const news = sessionStorage.getItem('news') || ''
         const newsData = JSON.parse(news)
         let { total, limit, skip } = newsData?.data.newsEntryCollection
-
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
         if (pageParam === 1) {
           history.pushState({ page: 1 }, document.title, location.href)
         }
-
         const page = Number(pageParam)
         const calcSkipPage = (page - 1) * 5
         if (calcSkipPage !== skip) {
@@ -120,7 +118,6 @@ export default class Pagination extends Shadow() {
     const updateNodes = Array.from(nodes).reduce((acc, cur, index, nodes) => {
       // @ts-ignore
       if (cur.classList.contains('active')) {
-        debugger
         if (index === 0) {
           // @ts-ignore
           acc[index + 1].firstChild.setAttribute('rel', 'next')
