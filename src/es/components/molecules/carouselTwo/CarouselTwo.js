@@ -6,6 +6,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global CustomEvent */
 /* global self */
 /* global location */
+/* global history */
 
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
@@ -206,7 +207,7 @@ export default class CarouselTwo extends Shadow() {
       ${this.hasAttribute('nav-separate')
         ? /* css */`
           ${this.getAttribute('nav-align-self') === 'start'
-            ? /* css */`
+          ? /* css */`
               :host > section {
                 grid-row: 2;
               }
@@ -214,7 +215,7 @@ export default class CarouselTwo extends Shadow() {
                 grid-area: 2 / 1
               }
             `
-            : /* css */`
+          : /* css */`
               :host > nav {
                 grid-row: 2;
               }
@@ -222,7 +223,7 @@ export default class CarouselTwo extends Shadow() {
                 grid-area: 1 / 1
               }
             `
-          }
+        }
         `
         : ''
       }
@@ -265,8 +266,8 @@ export default class CarouselTwo extends Shadow() {
       :host > nav {
         align-items: center;
         align-self: ${this.hasAttribute('nav-separate')
-          ? 'center'
-          : this.hasAttribute('nav-align-self')
+        ? 'center'
+        : this.hasAttribute('nav-align-self')
           ? this.getAttribute('nav-align-self')
           : 'var(--nav-align-self, end)'};
         display: ${this.hasAttribute('no-default-nav') ? 'none' : 'flex'};
@@ -275,9 +276,9 @@ export default class CarouselTwo extends Shadow() {
         margin: var(--nav-margin);
         justify-content: center;
         ${this.hasAttribute('nav-flex-wrap')
-          ? 'flex-wrap: wrap;'
-          : 'max-height: 20%;'
-        }
+        ? 'flex-wrap: wrap;'
+        : 'max-height: 20%;'
+      }
       }
       :host > nav > * {
         --a-margin: 0;

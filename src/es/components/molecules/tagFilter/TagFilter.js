@@ -1,6 +1,5 @@
 // @ts-check
 /* global CustomEvent */
-/* global self */
 /* global location */
 /* global history */
 
