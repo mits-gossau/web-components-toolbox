@@ -7,7 +7,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class TagFilter extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
 
     this.clickListener = event => {
@@ -15,7 +15,7 @@ export default class TagFilter extends Shadow() {
       event.preventDefault()
       const tag = event.target.hasAttribute('tag') ? event.target.getAttribute('tag') : ''
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-      this.setURLSearchParam('page', "1", url)
+      this.setURLSearchParam('page', '1', url)
       this.setURLSearchParam('tag', tag, url)
       this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
       this.setActiveItem(tag, this.root.querySelector('ul'))
@@ -36,7 +36,7 @@ export default class TagFilter extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     // @ts-ignore
     const tagList = this.constructor.parseAttribute(this.getAttribute('tag') || [])
@@ -45,20 +45,20 @@ export default class TagFilter extends Shadow() {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.tagFilterWrapper.removeEventListener('click', this.clickListener)
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.tagFilterWrapper
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */ `
     :host ul {
       flex-wrap:var(--flex-wrap, wrap);
@@ -92,10 +92,10 @@ export default class TagFilter extends Shadow() {
 
   /**
    * Render HTML
-   * @param {Array<object>} tagList 
+   * @param {Array<object>} tagList
    * @returns void
    */
-  renderHTML(tagList) {
+  renderHTML (tagList) {
     if (!tagList.length) return
     this.tagFilterWrapper = this.root.querySelector('div') || document.createElement('div')
     const ul = document.createElement('ul')
@@ -110,10 +110,10 @@ export default class TagFilter extends Shadow() {
 
   /**
    * Set css class for active tag item
-   * @param {string} activeItem 
+   * @param {string} activeItem
    * @param { Element } element
    */
-  setActiveItem(activeItem, element) {
+  setActiveItem (activeItem, element) {
     Array.from(element.querySelectorAll('a-link')).forEach(element => {
       if (element.getAttribute('tag') === activeItem) {
         element.classList.add('active')
@@ -125,22 +125,22 @@ export default class TagFilter extends Shadow() {
 
   /**
    * Set URL search param
-   * @param {string} param 
-   * @param {string} value 
-   * @param {object} url 
+   * @param {string} param
+   * @param {string} value
+   * @param {object} url
    */
-  setURLSearchParam(param, value, url) {
+  setURLSearchParam (param, value, url) {
     url.searchParams.set(param, value)
   }
 
   /**
    * Push data to history
-   * @param {History} history 
-   * @param {object} stateData 
-   * @param {string} documentTitle 
-   * @param {string} href 
+   * @param {History} history
+   * @param {object} stateData
+   * @param {string} documentTitle
+   * @param {string} href
    */
-  historyPushState(history, stateData, documentTitle, href) {
+  historyPushState (history, stateData, documentTitle, href) {
     history.pushState(stateData, documentTitle, href)
   }
 }

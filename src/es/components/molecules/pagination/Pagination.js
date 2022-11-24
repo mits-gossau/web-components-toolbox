@@ -20,7 +20,7 @@ export default class Pagination extends Shadow() {
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
         if (pageParam === 1) {
-          history.pushState({...history.state, page: 1 }, document.title, location.href)
+          history.pushState({ ...history.state, page: 1 }, document.title, location.href)
         }
         const page = Number(pageParam)
         const calcSkipPage = (page - 1) * 5
@@ -31,7 +31,7 @@ export default class Pagination extends Shadow() {
         this.renderHTML(pages, limit, skip)
       })
     }
-    
+
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
@@ -39,12 +39,12 @@ export default class Pagination extends Shadow() {
       url.searchParams.set('page', event.target.textContent)
       const urlParams = new URLSearchParams(location.search)
       const tagParam = urlParams.get('tag')
-      url.searchParams.set('tag', tagParam ? tagParam : history.state?.tag || "")
+      url.searchParams.set('tag', tagParam || history.state?.tag || '')
       history.pushState({ ...history.state, tag: tagParam, page: event.target.textContent }, document.title, url.href)
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
-      this.dispatchRequestNewsEvent(event.target.textContent - 1, tagParam ? tagParam : history.state?.tag || "")
+      this.dispatchRequestNewsEvent(event.target.textContent - 1, tagParam || history.state?.tag || '')
     }
 
     this.updatePopState = event => {
