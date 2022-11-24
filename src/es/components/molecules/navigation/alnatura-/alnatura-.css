@@ -83,6 +83,9 @@
     --navigation-alnatura-background-color-hover: transparent;
     --navigation-alnatura-color-open-mobile: var(--color-hover);
   }
+  :host > nav > ul > li:not(.open) > a-link, :host > nav > ul > li:not(.open) > a-arrow {
+    --navigation-alnatura-color-active: var(--color-active);
+  }
   :host > nav > ul > li:not(.open) > a-link {
     --navigation-alnatura-color-hover: var(--color-hover);
   }
