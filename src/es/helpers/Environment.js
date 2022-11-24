@@ -16,6 +16,7 @@ self.Environment = {
   mobileBreakpoint: ({ constructor, tagName, namespace }) => {
     switch (true) {
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Header'):
+      case constructor && typeof constructor.includes === 'function' && constructor.includes('Logo'):
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Navigation'):
       case tagName && typeof tagName.includes === 'function' && tagName.includes('O-NAV-WRAPPER'):
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Footer'):

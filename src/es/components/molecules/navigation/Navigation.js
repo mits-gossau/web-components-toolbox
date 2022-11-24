@@ -607,11 +607,15 @@ export default class Navigation extends Mutation() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, {
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./yearbooks-/yearbooks-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the default-.css namespace with navigation-alnatura-
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--navigation-default-/g, '--navigation-yearbooks-')
+          fetchCSSParams[1].styleNode.textContent = fetchCSSParams[1].styleNode.textContent.replace(/--navigation-alnatura-/g, '--navigation-yearbooks-')
         })
       default:
         return Promise.resolve()
