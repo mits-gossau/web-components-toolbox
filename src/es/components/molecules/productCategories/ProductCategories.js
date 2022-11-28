@@ -25,7 +25,7 @@ export default class ProductCategories extends Shadow() {
   }
 
   dispatchRequestCategoriesEvent (category) {
-    this.dispatchEvent(new CustomEvent(this.getAttribute('requestArticleCategory') || 'requestArticleCategory', {
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         category
       },
