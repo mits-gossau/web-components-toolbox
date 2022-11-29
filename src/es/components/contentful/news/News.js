@@ -103,14 +103,14 @@ export default class News extends Shadow() {
         './default-/defabaaaaault-.html',
         import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html'
       ]).then(html => {
-        console.log('html', eval('`' + html[0] + '`'))
+        console.log('html', eval('`' + html[0] + '`')) // eslint-disable-line no-eval
       })
       console.log('request')
       this.fetchHTML([
         './default-/defdxxxxxxault-.html',
         import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html'
       ]).then(html => {
-        console.log('html', eval('`' + html[1] + '`'))
+        console.log('html', eval('`' + html[1] + '`')) // eslint-disable-line no-eval
       })
       // finish test code ***************************************
       const linkRenderOptions = {
