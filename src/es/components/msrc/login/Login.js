@@ -38,18 +38,6 @@ import { Prototype } from '../Prototype.js'
  *  {"large"|"medium"|"small"} [size="small"]
  *  {string} [loginReturnTo="self.location"]
  *  {string} [logoutReturnTo="self.location"]
- *  {string|Partial<{
- *    env: 'local|test|production',
- *    oidcClientId: string,
- *    oidcClientSecret: string,
- *    oidcRedirectURI: string,
- *    oidcSilentRedirectURI: string,
- *    oidcScope: string,
- *    oidcLoginUrl: string,
- *    oidcClaims: OIDCClaims,
- *    language: string,
- *    responseType: string,
- *  }>} [config="{'en': 'local'}"]
  * }
  */
 export default class Login extends Prototype() {
@@ -110,20 +98,17 @@ export default class Login extends Prototype() {
         }
       }
     `
+    this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
     return this.loadDependency().then(async msrc => {
-      this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
       // Setup OIDC login configuration
       await msrc.utilities.login.setup(this.constructor.parseAttribute(this.getAttribute('setup') || '{}'))
-      // Trigger autologin
-      await msrc.utilities.login.autologin()
       // Initialize the login button
       await msrc.components.login.button(this.msrcLoginButtonWrapper, {
         language: this.getAttribute('language') || self.Environment.language,
         theme: this.getAttribute('theme') || 'alnatura',
         size: this.getAttribute('size') || 'small',
         loginReturnTo: this.getAttribute('loginReturnTo') || '',
-        logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
-        config: this.constructor.parseAttribute(this.getAttribute('config') || '{"env": "local"}')
+        logoutReturnTo: this.getAttribute('logoutReturnTo') || ''
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       getStylesReturn[1].then(() => {
