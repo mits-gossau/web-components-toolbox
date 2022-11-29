@@ -1,0 +1,29 @@
+:host {
+    --news-alnatura-h1-color: var(--news-default-h1-color-custom, var(--color-secondary, var(--color)));
+    --news-alnatura-h1-margin: var(--content-spacing) 0;
+    --news-alnatura-intro-font-size: var(--news-default-intro-font-size-custom, inherit);
+    --news-alnatura-li-before-background-color: var(--news-default-li-before-background-color-custom, var(--color));
+    --news-alnatura-link-collection-padding: var(--news-default-link-collection-padding-custom, var(--content-spacing));
+    --news-alnatura-p-white-space: var(--news-default-p-white-space-custom, pre-line);
+    --news-alnatura-ul-list-style: var(--news-default-ul-list-style-custom, none);
+}
+
+:host ul>li>p {
+    /* remove margin from contentful content p-tags */
+    margin: 0;
+}
+
+:host .date {
+    color: var(--color);
+}
+
+:host .intro-text {
+    color: var(--color-secondary);
+}
+
+:host .content-one-picture-wrapper, .content-two-picture-wrapper {
+    clear: both;
+    float: right;
+    margin:var(--content-spacing, 0) 0 var(--content-spacing, 0) var(--content-spacing, 0) ;
+    max-width:17vw;
+}
