@@ -4,7 +4,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global CustomEvent */
 
 export default class ProductCategories extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
 
     this.clickListener = event => {
@@ -14,17 +14,17 @@ export default class ProductCategories extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     this.categoriesNavigation.addEventListener('click', this.clickListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.categoriesNavigation.removeEventListener('click', this.clickListener)
   }
 
-  dispatchRequestCategoriesEvent (category) {
+  dispatchRequestCategoriesEvent(category) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         category
@@ -35,46 +35,39 @@ export default class ProductCategories extends Shadow() {
     }))
   }
 
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.categoriesNavigation
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML () {
+  renderHTML() {
     this.categoriesNavigation = this.root.querySelector('ul')
     this.html = this.categoriesNavigation
   }
 
-  renderCSS () {
-    this.css = /* css */ `
-        :host ul {
-            padding:0;
-            list-style:none;
-        }
-        :host a-link {
-            align-items: center;
-            display: flex;
-            flex-direction: row;
-            height: 3.5em;
-            justify-content: flex-start;
-            width: 100%;
-        }
-        :host li {
-            background-color: #fefce5;
-            border-bottom: 4px solid var(--background-color);
-            height: 3.5em;
-            width: 100%;
-        }
-        :host li:hover {
-            color: #fefce5;
-            background-color: var(--color-secondary);
-        }
-        @media only screen and(max-width:_max-width_) {
-            :host li {}
-        }`
+  renderCSS() {
+    this.css = /*css*/ `
+      :host li {
+        background-color:var(--li-background-color, red);
+        border-bottom: var(--li-border-bottom, 0) solid var(--background-color);
+        height:var(--li-height, 100%);
+        width:var(--li-width, 100%);
+      }
+      :host li:hover {
+        background-color:var(--li-background-color-hover, red);
+      }
+      :host a-link {
+        align-items:var(--a-link-align-items,center);
+        display:var(--a-link-display, flex);
+        flex-direction:var(--a-link-flex-direction,row);
+        height:var(--a-link-height,100%);
+        justify-content:var(--a-link-justify-content, flex-start);
+        width:var(--a-link-width,100%);
+      }
+      @media only screen and (max-width: _max-width_) {}`
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [

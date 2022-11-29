@@ -577,6 +577,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   }
   :host ul {
     margin: var(--ul-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+    padding-left: var(--ul-margin-mobile, var(--content-spacing-mobile, var(--content-spacing)));
   }
   /* table-tags (scroll tables) */
   :host table {
