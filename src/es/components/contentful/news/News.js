@@ -27,9 +27,9 @@ export default class News extends Shadow() {
     }
     if (!this.loadNews(self, sessionStorage).news) {
       // @ts-ignore
-      document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', event => event.detail.fetch.then(data => {
-        showPromises.push(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
-      }), { once: true })
+      showPromises.push(new Promise(resolve => document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', event => event.detail.fetch.then(data => {
+        resolve(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
+      }), { once: true })))
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
         detail: { limit: 0 },
         bubbles: true,
@@ -97,6 +97,22 @@ export default class News extends Shadow() {
   renderHTML (data) {
     return Promise.all([this.loadChildComponents(), this.loadScriptDependency(), this.loadDependency()]).then(() => {
       const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection, metaDescription, metaKeywords, metaTitle } = this.getNews(undefined, data)
+      // test code **********************************************
+      console.log('request');
+      this.fetchHTML([
+        './default-/defabaaaaault-.html',
+        import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html'
+      ]).then(html => {
+        console.log('html', eval('`' + html[0] + '`'))
+      })
+      console.log('request');
+      this.fetchHTML([
+        './default-/defdxxxxxxault-.html',
+        import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html'
+      ]).then(html => {
+        console.log('html', eval('`' + html[1] + '`'))
+      })
+      // finish test code ***************************************
       const linkRenderOptions = {
         renderNode: {
           hyperlink: (node) => `<a href=${node.data.uri} target=${node.data.uri.startsWith(self.location.origin) ? '_self' : '_blank'} rel=${node.data.uri.startsWith(self.location.origin) ? '' : 'noopener noreferrer'}>${node.content[0].value}</a>`

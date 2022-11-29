@@ -53,6 +53,7 @@
     cssMaxWidth,
     cssImportMetaUrl,
     fetchCSS,
+    fetchHTML,
     Shadow.cssTextDecorationShortHandFix,
     html,
     Shadow.isMac
@@ -359,7 +360,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   }
 
   /**
-   * renders the o-highlight-list css
+   * fetches any css and applies namespace, etc.
    *
    * @param {fetchCSSParams[]} fetchCSSParams
    * @param {boolean} [hide = true]
@@ -470,6 +471,109 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
               }
               if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
               return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
+            }
+          )
+        }
+      ).catch(error => error)
+    }
+  }
+
+  /**
+   * fetches the html
+   * at consumer do "eval('`' + html[0] + '`')" to set the variables in the literal string
+   *
+   * @param {string[]} paths
+   * @param {boolean} [hide = true]
+   * @param {boolean} [useController = true]
+   * @return {Promise<string[]>}
+   */
+  fetchHTML (paths, hide = true, useController = true) {
+    if (hide) this.hidden = true
+    if (!Array.isArray(paths)) paths = [paths]
+    if (useController && document.body.hasAttribute(this.getAttribute('fetch-html') || 'fetch-html')) {
+      // use: /src/es/components/controllers/fetchHtml/FetchHtml.js instead of fetching here, to use the cache from within the controller
+      return new Promise(
+        /**
+         * setup Promise function
+         *
+         * @param {any} resolve
+         * @return {boolean}
+         */
+        resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('fetch-html') || 'fetch-html', {
+          /** @type {import("../controllers/fetchHtml/FetchHtml.js").fetchHtmlEventDetail} */
+          detail: {
+            paths,
+            resolve,
+            node: this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      ).then(
+        /**
+         * the controller resolving fetch-html will return with its fetchHtml results
+         *
+         * @param {string[]} funcs
+         * @return {string[]}
+         */
+        funcs => {
+          if (hide) this.hidden = false
+          return funcs
+        }
+      )
+    } else {
+      return Promise.all(paths.map(
+        /**
+         * fetch each fetchHTMLParam.paths and return the promise
+         *
+         * @param {string} path
+         * @return {Promise<string | {path, error}>}
+         */
+        path => (fetch(path).then(
+          /**
+           * return the paths with the response.text or an Error
+           *
+           * @param {Response} response
+           * @return {Promise<string>}
+           */
+          response => {
+            if (response.status >= 200 && response.status <= 299) return response.text()
+            throw new Error(response.statusText)
+          }
+        )).catch(
+          /**
+           * Return the paths with the attached error
+           *
+           * @param {string} error
+           * @return {{path, error}}
+           */
+          error => {
+            if (hide) this.hidden = false
+            error = `${path} ${error}!!!`
+            // @ts-ignore
+            return { path, error: (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`) }
+          }
+        )
+      )).then(
+        /**
+         * Process each paths, make a styleNode if needed and return them with the result of setStyle
+         *
+         * @param {string[] | {path, error}[]} htmls
+         * @return {string[]}
+         */
+        htmls => {
+          if (hide) this.hidden = false
+          // @ts-ignore
+          return htmls.map(
+            /**
+             * @param {string} html
+             * @return {string}
+             */
+            html => {
+              // @ts-ignore
+              if (html.error) return html.error
+              return html
             }
           )
         }

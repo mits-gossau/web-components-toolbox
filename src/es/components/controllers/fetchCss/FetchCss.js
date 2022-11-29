@@ -63,7 +63,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
           if (this.fetchStyleCache.has(fetchCSSParamWithDefaultValues.path)) {
             fetchStyle = this.fetchStyleCache.get(fetchCSSParamWithDefaultValues.path)
           } else {
-            this.fetchStyleCache.set(fetchCSSParamWithDefaultValues.path, (fetchStyle = FetchCss.fetchStyle(fetchCSSParamWithDefaultValues.path)))
+            this.fetchStyleCache.set(fetchCSSParamWithDefaultValues.path, (fetchStyle = FetchCss.fetchStyle(fetchCSSParamWithDefaultValues.path, event.detail.node)))
           }
           fetchStyle.catch(
             error => {
@@ -106,9 +106,10 @@ export default class FetchCss extends Shadow(WebWorker()) {
    * fetch the style
    *
    * @param {string} path
+   * @param {HTMLElement} node
    * @return {Promise<string>}
    */
-  static fetchStyle (path) {
+  static fetchStyle (path, node) {
     return fetch(path).then(
       /**
        * return the fetchCSSParam with the response.text or an Error
@@ -130,7 +131,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
       error => {
         error = `${path} ${error}!!!`
         // @ts-ignore
-        return Promise.reject(console.error(error) || `<code style="color: red;">${error}</code>`)
+        return Promise.reject(node.html = console.error(error, node) || `<code style="color: red;">${error}</code>`)
       }
     )
   }
