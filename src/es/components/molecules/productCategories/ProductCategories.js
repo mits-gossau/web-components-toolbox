@@ -4,7 +4,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global CustomEvent */
 
 export default class ProductCategories extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
 
     this.clickListener = event => {
@@ -14,17 +14,17 @@ export default class ProductCategories extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     this.categoriesNavigation.addEventListener('click', this.clickListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.categoriesNavigation.removeEventListener('click', this.clickListener)
   }
 
-  dispatchRequestCategoriesEvent(category) {
+  dispatchRequestCategoriesEvent (category) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         category
@@ -35,21 +35,21 @@ export default class ProductCategories extends Shadow() {
     }))
   }
 
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.categoriesNavigation
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML() {
+  renderHTML () {
     this.categoriesNavigation = this.root.querySelector('ul')
     this.html = this.categoriesNavigation
   }
 
-  renderCSS() {
-    this.css = /*css*/ `
+  renderCSS () {
+    this.css = /* css */ `
       :host li {
         background-color:var(--li-background-color, red);
         border-bottom: var(--li-border-bottom, 0) solid var(--background-color);

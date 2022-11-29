@@ -98,14 +98,14 @@ export default class News extends Shadow() {
     return Promise.all([this.loadChildComponents(), this.loadScriptDependency(), this.loadDependency()]).then(() => {
       const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection, metaDescription, metaKeywords, metaTitle } = this.getNews(undefined, data)
       // test code **********************************************
-      console.log('request');
+      console.log('request')
       this.fetchHTML([
         './default-/defabaaaaault-.html',
         import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html'
       ]).then(html => {
         console.log('html', eval('`' + html[0] + '`'))
       })
-      console.log('request');
+      console.log('request')
       this.fetchHTML([
         './default-/defdxxxxxxault-.html',
         import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html'
