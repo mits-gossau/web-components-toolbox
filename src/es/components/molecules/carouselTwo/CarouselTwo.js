@@ -595,7 +595,7 @@ export default class CarouselTwo extends Shadow() {
       if (focus) return node.focus() // important that default keyboard works
       // node.scrollIntoView() // scrolls x and y
       this.dispatchEvent(new CustomEvent(this.getAttribute('carousel-changed') || 'carousel-changed', {
-        detail: node,
+        detail: {node: node},
         bubbles: true,
         cancelable: true,
         composed: true

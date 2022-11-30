@@ -22,7 +22,7 @@ export default class SliderButton extends Shadow() {
     this.hasRendered = false
 
     this.carouselChanged = event => {
-      const id = Number(event.detail.getAttribute('id').replace(/.*-(.*?)/,'$1'))
+      const id = Number(event.detail.node.getAttribute('id').replace(/.*-(.*?)/,'$1'))
       const index = id + 1
       const value = index * 100 - 50
 
