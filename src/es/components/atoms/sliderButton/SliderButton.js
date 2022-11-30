@@ -27,7 +27,7 @@ export default class SliderButton extends Shadow() {
       const value = index * 100 - 50
 
       this.milestoneMobile.innerHTML = this.milestones[id].getAttribute('data-slider-target')
-      this.carouselChange(value, this.slider)
+      this.changeCarousel(value, this.slider)
     }
 
     this.sliderChange = e => {
@@ -56,7 +56,7 @@ export default class SliderButton extends Shadow() {
      * @param {number} [startTime=Date.now()]
      * @return {void}
      */
-    this.carouselChange = (targetValue, slider, steps, duration = 330, startTime = Date.now()) => {
+    this.changeCarousel = (targetValue, slider, steps, duration = 330, startTime = Date.now()) => {
       let currentValue = Number(slider.value)
       if (currentValue === targetValue) return // target reached
       if (!steps) {
@@ -67,7 +67,7 @@ export default class SliderButton extends Shadow() {
       }
       // find the step in the steps array by passed milliseconds... if that is exceeded take the targetValue instead
       slider.value = String(currentValue = steps[Date.now() - startTime] || targetValue)
-      if (currentValue !== targetValue) requestAnimationFrameID = self.requestAnimationFrame(timeStamp => this.carouselChange(targetValue, slider, steps, duration, startTime))
+      if (currentValue !== targetValue) requestAnimationFrameID = self.requestAnimationFrame(timeStamp => this.changeCarousel(targetValue, slider, steps, duration, startTime))
     }
   }
 
