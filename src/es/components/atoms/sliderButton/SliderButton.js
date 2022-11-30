@@ -292,12 +292,6 @@ export default class SliderButton extends Shadow() {
    */
   renderHTML () {
     this.hasRendered = true
-
-    let slide
-    const paramString = window.location.search.split('?')[1]
-    const queryString = new URLSearchParams(paramString)
-    if (queryString.has('slide')) { slide = queryString.get('slide') }
-
     this.sliderDiv.classList.add('progress-bar')
 
     this.slider.type = 'range'
@@ -340,10 +334,6 @@ export default class SliderButton extends Shadow() {
       milestoneDiv.appendChild(milestoneHead)
 
       this.milestoneWrapper.appendChild(milestoneDiv)
-
-      if (index === slide) {
-        setTimeout(() => milestoneDiv.click(), 1000)
-      }
     })
 
     this.milestoneMobile.classList.add('milestone-mobile')
@@ -353,7 +343,6 @@ export default class SliderButton extends Shadow() {
     this.tabSlider.classList.add('tab-slider')
 
     this.html = this.tabSlider
-
   }
 
   get milestones () {
