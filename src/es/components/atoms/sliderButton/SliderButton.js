@@ -45,14 +45,29 @@ export default class SliderButton extends Shadow() {
       Array.from(this.parentNode.host.nav.children)[e.target.getAttribute('data-index')].click()
     }
 
-    this.carouselChange = (value, slider) => {
-      if (Number(slider.value) < value) {
-        slider.value = (Number(slider.value) + 1).toString()
-        setTimeout(this.carouselChange, 2, value, slider)
-      } else if (Number(slider.value) > value) {
-        slider.value = (Number(slider.value) - 1).toString()
-        setTimeout(this.carouselChange, 2, value, slider)
+    let requestAnimationFrameID = null
+    /**
+     *
+     *
+     * @param {number} targetValue The position to which the slider should move
+     * @param {HTMLInputElement} slider
+     * @param {number[]} steps the generated steps by duration. Duration 330 equals 330 steps, one each per millisecond
+     * @param {number} [duration=330]
+     * @param {number} [startTime=Date.now()]
+     * @return {void}
+     */
+    this.carouselChange = (targetValue, slider, steps, duration = 330, startTime = Date.now()) => {
+      let currentValue = Number(slider.value)
+      if (currentValue === targetValue) return // target reached
+      if (!steps) {
+        self.cancelAnimationFrame(requestAnimationFrameID) // cancel other loops on a new request
+        const step = Math.abs(currentValue - targetValue) / duration // the amount of one step
+        const func = targetValue > currentValue ? (curr, i) => Math.ceil(currentValue + step * i) : (curr, i) => Math.floor(currentValue - step * i)
+        steps = Array.from(Array(duration)).map(func)
       }
+      // find the step in the steps array by passed milliseconds... if that is exceeded take the targetValue instead
+      slider.value = String(currentValue = steps[Date.now() - startTime] || targetValue)
+      if (currentValue !== targetValue) requestAnimationFrameID = self.requestAnimationFrame(timeStamp => this.carouselChange(targetValue, slider, steps, duration, startTime))
     }
   }
 
