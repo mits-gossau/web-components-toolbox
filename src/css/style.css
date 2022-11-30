@@ -439,12 +439,15 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   padding: var(--ul-icon-padding, 0);
 }
 /* table-tags */
-:host table {
+:host table, :host table tbody {
   border-collapse: var(--table-border-collapse, collapse);
   border-spacing: var(--table-border-spacing, 0);
+  display: table;
   max-width: var(--table-max-width, 100%);
   word-break: var(--table-word-break, normal);
   margin: var(--table-margin, 0 auto var(--content-spacing));
+  text-align: var(--table-text-align, left);
+  width: var(--table-width, 100%);
 }
 /* spacer-stylings */
 .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
