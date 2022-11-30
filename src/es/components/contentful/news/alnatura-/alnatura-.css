@@ -6,6 +6,7 @@
     --news-alnatura-link-collection-padding: var(--news-default-link-collection-padding-custom, var(--content-spacing));
     --news-alnatura-p-white-space: var(--news-default-p-white-space-custom, pre-line);
     --news-alnatura-ul-list-style: var(--news-default-ul-list-style-custom, none);
+    --news-alnatura-table-margin:0;
 }
 
 :host ul>li>p {

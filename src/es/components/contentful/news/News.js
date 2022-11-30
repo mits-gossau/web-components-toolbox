@@ -94,7 +94,14 @@ export default class News extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML (data) {
-    return Promise.all([this.loadChildComponents(), this.loadScriptDependency(), this.loadDependency()]).then(() => {
+    return Promise.all([
+      this.getAttribute('namespace') === 'news-alnatura'
+        ? this.fetchHTML([import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './alnatura-/alnatura-.html'])
+        : this.fetchHTML([import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html']),
+      this.loadChildComponents(),
+      this.loadScriptDependency(),
+      this.loadDependency()
+    ]).then((htmls) => {
       /* eslint-disable  no-unused-vars */
       const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection, metaDescription, metaKeywords, metaTitle } = this.getNews(undefined, data)
       /* eslint-disable  no-unused-vars */
@@ -104,23 +111,7 @@ export default class News extends Shadow() {
         }
       }
       this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
-      switch (this.getAttribute('namespace')) {
-        case 'news-alnatura-':
-          this.fetchHTML([
-            '../src/es/components/contentful/news/alnatura-/alnatura-.html',
-            import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './alnatura-/alnatura-.html'
-          ]).then(html => {
-            this.newsWrapper.innerHTML = eval('`' + html[0] + '`')// eslint-disable-line no-eval
-          })
-          break
-        default:
-          this.fetchHTML([
-            '../src/es/components/contentful/news/default-/default-.html',
-            import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html'
-          ]).then(html => {
-            this.newsWrapper.innerHTML = eval('`' + html[0] + '`') // eslint-disable-line no-eval
-          })
-      }
+      this.newsWrapper.innerHTML = eval('`' + htmls[0] + '`')// eslint-disable-line no-eval
 
       this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {
         this.html = this.newsWrapper
