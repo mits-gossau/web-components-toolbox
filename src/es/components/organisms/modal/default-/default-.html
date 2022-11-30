@@ -25,19 +25,19 @@
 <hr>
 <m-carousel open-modal navigation pagination loop height="auto" namespace="carousel-default-" interval="200000">
   <div class="container">
-    <a-picture picture-load  defaultSource="./img/jcr_content2.jpeg" alt="Migros"></a-picture>
+    <a-picture picture-load defaultSource="./img/jcr_content2.jpeg" alt="Migros"></a-picture>
     <div class="text">
       <p>Sushi-Herstellung vor Ort.</p>
     </div>
   </div>
   <div class="container">
-    <a-picture picture-load  defaultSource="./img/jcr_content3.jpeg" alt="Migros"></a-picture>
+    <a-picture picture-load defaultSource="./img/jcr_content3.jpeg" alt="Migros"></a-picture>
     <div class="text">
       <p>Sandwicheria: für jeden Geschmack das Richtige.</p>
     </div>
   </div>
   <div class="container">
-    <a-picture picture-load  defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
+    <a-picture picture-load defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
     <div class="text">
       <p>Gefüllte Sandwiches</p>
     </div>
@@ -62,9 +62,9 @@
 <h2>CarouselTwo</h2>
 <m-carousel-two open-modal namespace="carousel-two-default-" interval="200000">
   <section>
-    <a-picture picture-load  defaultSource="./img/jcr_content2.jpeg" alt="Migros"></a-picture>
-    <a-picture picture-load  defaultSource="./img/jcr_content3.jpeg" alt="Migros"></a-picture>
-    <a-picture picture-load  defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
+    <a-picture picture-load defaultSource="./img/jcr_content2.jpeg" alt="Migros"></a-picture>
+    <a-picture picture-load defaultSource="./img/jcr_content3.jpeg" alt="Migros"></a-picture>
+    <a-picture picture-load defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
   </section>
 </m-carousel-two>
 <hr>
@@ -100,6 +100,46 @@
   <a-picture open-modal defaultSource="./img/jcr_content2.jpeg" alt="Migros"></a-picture>
   <a-picture open-modal defaultSource="./img/jcr_content3.jpeg" alt="Migros"></a-picture>
   <a-picture open-modal defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
+</o-wrapper>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h2>Modal grabbing the hidden carousel</h2>
+<o-wrapper namespace=wrapper-text-center->
+  <a-picture width=25% open-modal open-modal-target='div[hidden]' defaultSource="./img/jcr_content2.jpeg" alt="Migros1"></a-picture>
+  <a-picture width=25% open-modal open-modal-target='div[hidden]' defaultSource="./img/jcr_content3.jpeg" alt="Migros2"></a-picture>
+  <a-picture width=25% open-modal open-modal-target='div[hidden]' defaultSource="./img/dummy_2.jpeg" alt="Migros3"></a-picture>
+  <a-picture width=25% open-modal open-modal-target='div[hidden]' defaultSource="./img/jcr_content5_2.jpeg"></a-picture>
+  <a-picture width=25% open-modal open-modal-target='div[hidden]' defaultSource="./img/dummy_2.jpeg" alt="Migros4"></a-picture>
+  <div hidden>
+    <m-carousel-two history namespace="carousel-two-default-">
+      <section>
+        <a-picture picture-load defaultSource="./img/jcr_content2.jpeg" alt="Migros1"></a-picture>
+        <a-picture picture-load defaultSource="./img/jcr_content3.jpeg" alt="Migros2"></a-picture>
+        <a-picture picture-load defaultSource="./img/jcr_content5_2.jpeg" alt="Migros3"></a-picture>
+        <a-picture picture-load defaultSource="./img/dummy_2.jpeg" alt="Migros4"></a-picture>
+      </section>
+    </m-carousel-two>
+  </div>
 </o-wrapper>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./default-.js"></script>

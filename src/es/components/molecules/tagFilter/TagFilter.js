@@ -96,6 +96,7 @@ export default class TagFilter extends Shadow() {
    */
   renderHTML (tagList) {
     if (!tagList.length) return
+    this.loadChildComponents()
     this.tagFilterWrapper = this.root.querySelector('div') || document.createElement('div')
     const ul = document.createElement('ul')
     tagList.forEach(tagItem => {
@@ -105,6 +106,20 @@ export default class TagFilter extends Shadow() {
     })
     this.tagFilterWrapper.appendChild(ul)
     this.html = this.tagFilterWrapper
+  }
+
+  loadChildComponents () {
+    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
+      import('../../atoms/link/Link.js').then(
+        module => ['a-link', module.default]
+      )
+    ]).then(elements => {
+      elements.forEach(element => {
+        // @ts-ignore
+        if (!customElements.get(element[0])) customElements.define(...element)
+      })
+      return elements
+    }))
   }
 
   /**

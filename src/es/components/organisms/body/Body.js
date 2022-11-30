@@ -28,7 +28,7 @@ export default class Body extends Shadow() {
     this.timeout = null
     this.clickAnchorEventListener = event => {
       let element = null
-      if ((element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash))) {
+      if ((element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash || null))) {
         this.dispatchEvent(new CustomEvent(this.getAttribute('scroll-to-anchor') || 'scroll-to-anchor', {
           bubbles: true,
           cancelable: true,
@@ -170,7 +170,7 @@ export default class Body extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.main = this.root.querySelector('main') || document.createElement('main')
+    this.main = this.root.querySelector(this.cssSelector + ' > main') || document.createElement('main')
     Array.from(this.root.children).forEach(node => {
       if (node === this.main || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
       this.main.appendChild(node)

@@ -413,7 +413,7 @@ export default class Header extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    this.header = this.root.querySelector('header') || document.createElement('header')
+    this.header = this.root.querySelector(this.cssSelector + ' > header') || document.createElement('header')
     Array.from(this.root.children).forEach(node => {
       if (node === this.header || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
       this.header.appendChild(node)

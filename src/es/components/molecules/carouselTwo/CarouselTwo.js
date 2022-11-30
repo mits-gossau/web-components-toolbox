@@ -60,7 +60,7 @@ export default class CarouselTwo extends Shadow() {
     // on scroll calculate which image is shown and set its and all of its referencing href nodes the class to active
     let scrollTimeoutId = null
     let lastActiveChild = null
-    const scrollTolerance = 10
+    const scrollTolerance = 50
     this.scrollListener = event => {
       this.section.classList.add('scrolling')
       this.clearInterval()
@@ -76,7 +76,6 @@ export default class CarouselTwo extends Shadow() {
               const nodeLeft = Math.round(node.getBoundingClientRect().left)
               return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
             }))) {
-          if (lastActiveChild === activeChild) return
           lastActiveChild = activeChild
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
             node.classList.remove('active')
@@ -91,16 +90,16 @@ export default class CarouselTwo extends Shadow() {
           this.section.classList.remove('scrolling')
           this.setInterval()
           // adjust the history
-          if (!self.location.hash.includes(activeChild.getAttribute('id'))) {
+          if (this.hasAttribute('history') && !this.hasAttribute('interval') && !self.location.hash.includes(activeChild.getAttribute('id'))) {
             const url = `${self.location.href.split('#')[0]}#${activeChild.getAttribute('id')}`
             if (self.location.hash.includes('next') || self.location.hash.includes('previous')) {
-              self.history.replaceState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
+              self.history.replaceState({ ...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
             } else {
               self.history.pushState({ ...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
             }
           }
         }
-      }, 200)
+      }, 50)
     }
     // interval stuff
     this.interval = null
@@ -504,9 +503,9 @@ export default class CarouselTwo extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    this.section = this.root.querySelector('section') || document.createElement('section')
-    this.nav = this.root.querySelector('nav') || document.createElement('nav')
-    this.arrowNav = this.root.querySelector('.arrow-nav') || document.createElement('span')
+    this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
+    this.nav = this.root.querySelector(this.cssSelector + ' > nav') || document.createElement('nav')
+    this.arrowNav = this.root.querySelector(this.cssSelector + ' > .arrow-nav') || document.createElement('span')
     this.arrowNav.classList.add('arrow-nav')
     return this.loadChildComponents().then(children => {
       // check item correlation between slides and navigation
@@ -596,6 +595,7 @@ export default class CarouselTwo extends Shadow() {
   }
 
   scrollIntoView (node, focus = true, force = false) {
+    if (typeof node === 'string') node = this.section.querySelector(node) || this.section.children[0]
     if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
     if (force || !node.classList.contains('active')) {
       if (focus) {

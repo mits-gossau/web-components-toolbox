@@ -223,7 +223,7 @@ export default class Footer extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    this.footer = this.root.querySelector('footer') || document.createElement('footer')
+    this.footer = this.root.querySelector(this.cssSelector + ' > footer') || document.createElement('footer')
     Array.from(this.root.children).forEach(node => {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'FOOTER') return false
       this.footer.appendChild(node)

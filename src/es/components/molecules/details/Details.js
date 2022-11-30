@@ -515,7 +515,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
    * @return {void}
    */
   renderHTML () {
-    this.divSummary = this.root.querySelector('div.summary') || document.createElement('div')
+    this.divSummary = this.root.querySelector(this.cssSelector + ' > div.summary') || document.createElement('div')
     this.divSummary.classList.add('summary')
     Array.from(this.summary.childNodes).forEach(node => this.divSummary.appendChild(node))
     this.divSummary = this.getAttribute('icon-image')

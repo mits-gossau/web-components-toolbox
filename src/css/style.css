@@ -196,7 +196,7 @@
   position: relative;
   left: var(--bg-padding, 0.5em);
   margin: 0;
-  padding: var(--bg-padding-top, 0.1em) 0 0;
+  padding: var(--bg-padding-top, 0.1em) 0 var(--bg-padding-bottom, 0);
   text-decoration-line: none;
 }
 :host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color, :host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color-hover {
