@@ -6,7 +6,6 @@
     --news-alnatura-link-collection-padding: var(--news-default-link-collection-padding-custom, var(--content-spacing));
     --news-alnatura-p-white-space: var(--news-default-p-white-space-custom, pre-line);
     --news-alnatura-ul-list-style: var(--news-default-ul-list-style-custom, none);
-    --news-alnatura-table-margin:0;
 }
 
 :host ul>li>p {
@@ -22,9 +21,32 @@
     color: var(--color-secondary);
 }
 
-:host .content-one-picture-wrapper, .content-two-picture-wrapper {
+:host .content-one-picture-wrapper,
+.content-two-picture-wrapper {
     clear: both;
     float: right;
-    margin:var(--content-spacing, 0) 0 var(--content-spacing, 0) var(--content-spacing, 0) ;
-    max-width:17vw;
+    margin: var(--content-spacing, 0) 0 var(--content-spacing, 0) var(--content-spacing, 0);
+    max-width: 17vw;
+}
+
+:host table,
+th,
+td {
+    padding: 0.5em 0;
+}
+
+:host table {
+    border-collapse: collapse;
+}
+
+:host td>p {
+    line-height: 100%;
+    margin: 0;
+}
+
+:host thead tr th:first-child,
+tbody tr td:first-child {
+    width: 30%;
+    min-width: 30%;
+    max-width: 30%;
 }

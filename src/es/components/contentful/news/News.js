@@ -95,7 +95,7 @@ export default class News extends Shadow() {
    */
   renderHTML (data) {
     return Promise.all([
-      this.getAttribute('namespace') === 'news-alnatura'
+      this.getAttribute('namespace') === 'news-alnatura-'
         ? this.fetchHTML([import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './alnatura-/alnatura-.html'])
         : this.fetchHTML([import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html']),
       this.loadChildComponents(),
