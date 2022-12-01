@@ -180,7 +180,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
       fetchCSSParam.styleNode.setAttribute('_css', fetchCSSParam.path)
       fetchCSSParam.styleNode.setAttribute('mobile-breakpoint', fetchCSSParam.maxWidth)
       fetchCSSParam.styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-      if (fetchCSSParam.node.root.querySelector(`[_css="${fetchCSSParam.path}"]`)) console.warn(`${fetchCSSParam.path} got imported more than once!!!`, fetchCSSParam.node)
+      if (fetchCSSParam.node.root.querySelector(fetchCSSParam.node.cssSelector + ` > [_css="${fetchCSSParam.path}"]`)) console.warn(`${fetchCSSParam.path} got imported more than once!!!`, fetchCSSParam.node)
     }
     if (fetchCSSParam.appendStyleNode) fetchCSSParam.node.root.appendChild(fetchCSSParam.styleNode) // append the style tag in order to which promise.all resolves
     return fetchCSSParam

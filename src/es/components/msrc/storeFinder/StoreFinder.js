@@ -113,7 +113,7 @@ export default class StoreFinder extends Prototype() {
         margin: 0;
       }
     `
-    return this.loadDependency().then(async msrc => {
+    return this.loadDependency().then(msrc => {
       this.msrcStoreFinderWrapper = this.root.querySelector('div') || document.createElement('div')
       msrc.components.stores(this.msrcStoreFinderWrapper, {
         webAPIKey: this.getAttribute('web-api-key') || 'test',

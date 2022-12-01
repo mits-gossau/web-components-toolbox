@@ -467,7 +467,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
                 styleNode.setAttribute('_css', path)
                 styleNode.setAttribute('mobile-breakpoint', maxWidth)
                 styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-                if (this.root.querySelector(`[_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, node)
+                if (this.root.querySelector(this.cssSelector + ` > [_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, node)
               }
               if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
               return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }

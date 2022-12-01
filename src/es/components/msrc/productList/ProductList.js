@@ -41,9 +41,8 @@ export default class ProductList extends Prototype() {
     return setup
   }
 
-  widgetRenderSetup (node, config) {
-    // @ts-ignore
-    window.msrc.components.articles.productList(node, config)
+  widgetRenderSetup (node, config, msrc = this.msrc) {
+    msrc.components.articles.productList(node, config)
   }
 
   shouldComponentRender () {
@@ -51,9 +50,10 @@ export default class ProductList extends Prototype() {
   }
 
   render () {
-    return this.loadDependency().then(() => {
+    return this.loadDependency().then(msrc => {
+      this.msrc = msrc
       this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
-      this.widgetRenderSetup(this.msrcProductListWrapper, this.config)
+      this.widgetRenderSetup(this.msrcProductListWrapper, this.config, msrc)
       const getStylesReturn = this.getStyles(document.createElement('style'))
       this.html = [this.msrcProductListWrapper, getStylesReturn[0]]
     })
