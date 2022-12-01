@@ -15,7 +15,7 @@ a[href^="mailto:"] {
 }
 :where(:root) {
   cursor: default;
-  line-height: var(--line-height, 1.5);
+  line-height: var(--line-height, normal);
   overflow-wrap: break-word;
   -moz-tab-size: 4;
   tab-size: 4;

@@ -57,11 +57,30 @@ export default class Modal extends Shadow() {
     // open
     this.openModalListener = event => {
       if (!this.open && (!this.hasAttribute('no-mobile') || this.checkMedia('desktop'))) {
+        let actionAtLast = () => {}
         this.open = true
         this.eventDetail = event.detail
         if (event && typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation()
         let child
         if (!this.clone && event && event.detail && (child = event.detail.child) && child instanceof HTMLElement) {
+          // if there is to be shown an other target, expl. an image is clicked but a gallery has to be shown
+          let parentChild
+          if (child.hasAttribute('open-modal-target') && child.parentNode && (parentChild = child.parentNode.querySelector(child.getAttribute('open-modal-target')))) {
+            if (parentChild.hasAttribute('hidden')) {
+              parentChild.removeAttribute('hidden')
+              parentChild.setAttribute('was-hidden', 'true')
+            }
+            const carouselTwo = parentChild.tagName === 'M-CAROUSEL-TWO'
+              ? parentChild
+              : parentChild.querySelector('m-carousel-two')
+            if (carouselTwo) {
+              this.eventDetail.btnCloseOnly = true
+              const selector = `[alt="${child.getAttribute('alt')}"], [defaultSource*="${(child.getAttribute('defaultSource') || '').replace(/.*\/(.*)/, '$1')}"]`
+              // @ts-ignore
+              actionAtLast = () => carouselTwo.scrollIntoView(selector, false, true)
+            }
+            child = parentChild
+          }
           let closeBtn
           if (event.detail.child.root && (closeBtn = event.detail.child.root.querySelector('.close-btn'))) {
             this.style.textContent = ''
@@ -81,6 +100,7 @@ export default class Modal extends Shadow() {
             this.container.appendChild(child)
             this.clone.style.height = `${height}px`
             this.clone.style.visibility = 'hidden'
+            if (child.hasAttribute('was-hidden')) this.clone.style.display = 'none'
             // below correct certain template settings of Pictures to display fullscreen without any side effects
             this.container.querySelectorAll('a-picture').forEach(aPicture => {
               if (aPicture.root && aPicture.img) aPicture.img.setAttribute('style', 'transform: none; height: auto; width: max-content;')
@@ -98,6 +118,7 @@ export default class Modal extends Shadow() {
           this.setAttribute('aria-expanded', 'true')
         }
         if (this.eventDetail && typeof this.eventDetail.openFunc === 'function') this.eventDetail.openFunc()
+        actionAtLast()
       }
     }
     // close
@@ -121,6 +142,10 @@ export default class Modal extends Shadow() {
               child.img.removeAttribute('style')
             }
           }
+          if (child.hasAttribute('was-hidden')) {
+            child.removeAttribute('was-hidden')
+            child.setAttribute('hidden', 'true')
+          }
           if (this.hasAttribute('open')) {
             this.removeAttribute('open')
             this.clone.removeAttribute('open')
@@ -138,6 +163,9 @@ export default class Modal extends Shadow() {
     this.resizeListener = event => {
       if (this.hasAttribute('no-mobile') && this.checkMedia('mobile')) this.closeModalListener()
     }
+    this.keyupListener = event => {
+      if (event.key === 'Escape') this.closeModalListener()
+    }
   }
 
   connectedCallback () {
@@ -148,6 +176,7 @@ export default class Modal extends Shadow() {
     this.addEventListener('click', this.anyCloseModalListener)
     if (this.closeBtn) this.closeBtn.addEventListener('click', this.closeModalListener)
     self.addEventListener('resize', this.resizeListener)
+    document.addEventListener('keyup', this.keyupListener)
   }
 
   disconnectedCallback () {
@@ -156,6 +185,7 @@ export default class Modal extends Shadow() {
     this.removeEventListener('click', this.anyCloseModalListener)
     if (this.closeBtn) this.closeBtn.removeEventListener('click', this.closeModalListener)
     self.removeEventListener('resize', this.resizeListener)
+    document.removeEventListener('keyup', this.keyupListener)
   }
 
   attributeChangedCallback (name, oldValue, newValue) {

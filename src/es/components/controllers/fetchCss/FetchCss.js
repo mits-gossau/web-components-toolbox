@@ -63,7 +63,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
           if (this.fetchStyleCache.has(fetchCSSParamWithDefaultValues.path)) {
             fetchStyle = this.fetchStyleCache.get(fetchCSSParamWithDefaultValues.path)
           } else {
-            this.fetchStyleCache.set(fetchCSSParamWithDefaultValues.path, (fetchStyle = FetchCss.fetchStyle(fetchCSSParamWithDefaultValues.path)))
+            this.fetchStyleCache.set(fetchCSSParamWithDefaultValues.path, (fetchStyle = FetchCss.fetchStyle(fetchCSSParamWithDefaultValues.path, event.detail.node)))
           }
           fetchStyle.catch(
             error => {
@@ -106,9 +106,10 @@ export default class FetchCss extends Shadow(WebWorker()) {
    * fetch the style
    *
    * @param {string} path
+   * @param {HTMLElement} node
    * @return {Promise<string>}
    */
-  static fetchStyle (path) {
+  static fetchStyle (path, node) {
     return fetch(path).then(
       /**
        * return the fetchCSSParam with the response.text or an Error
@@ -130,7 +131,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
       error => {
         error = `${path} ${error}!!!`
         // @ts-ignore
-        return Promise.reject(console.error(error) || `<code style="color: red;">${error}</code>`)
+        return Promise.reject(node.html = console.error(error, node) || `<code style="color: red;">${error}</code>`)
       }
     )
   }
@@ -179,7 +180,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
       fetchCSSParam.styleNode.setAttribute('_css', fetchCSSParam.path)
       fetchCSSParam.styleNode.setAttribute('mobile-breakpoint', fetchCSSParam.maxWidth)
       fetchCSSParam.styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-      if (fetchCSSParam.node.root.querySelector(`[_css="${fetchCSSParam.path}"]`)) console.warn(`${fetchCSSParam.path} got imported more than once!!!`, fetchCSSParam.node)
+      if (fetchCSSParam.node.root.querySelector(fetchCSSParam.node.cssSelector + ` > [_css="${fetchCSSParam.path}"]`)) console.warn(`${fetchCSSParam.path} got imported more than once!!!`, fetchCSSParam.node)
     }
     if (fetchCSSParam.appendStyleNode) fetchCSSParam.node.root.appendChild(fetchCSSParam.styleNode) // append the style tag in order to which promise.all resolves
     return fetchCSSParam

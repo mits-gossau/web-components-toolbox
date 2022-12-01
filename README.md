@@ -13,6 +13,7 @@ CSS Rules:
 - variablesCustom.css has to be kept as tiny as possible
 - use templates instead of namespace-fallback
 - each template must have a local preview
+- ONE breakpoint strategy!
 - use _\_max-width_\_ for "@media only screen and (max-width:" selector
 - use _\_import-meta-url_\_ for all urls (!important, pass option "importMetaUrl: import.meta.url" to Shadow.js in the constructor to have the viewpoint of the Class inheriting Shadow.js) / Example [NewsPreview.js](https://github.com/mits-gossau/web-components-toolbox/blob/master/src/es/components/contentful/newsPreview/NewsPreview.js#L7)
 - sort css properties and variables alphabetically
@@ -31,6 +32,5 @@ TODO:
 - [ ] new flex-box wrapper: flex-grow (flex: 1) wrapper with empty children to simulate instead of o-wrapper width approach
 - [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src
 
-TODO in this branch:
-- [ ] wc-config fetch on event with string or dom element
+TODO asap:
 - [ ] hover on parent prototype

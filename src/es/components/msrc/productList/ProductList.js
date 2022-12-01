@@ -1,20 +1,18 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
-/* global msrc */
-
 export default class ProductList extends Prototype() {
   constructor (...args) {
     super(...args)
     this.config = this.configSetup()
     this.requestArticleCategory = event => {
-      this.config.filterOptions.category = [event.detail.category]
+      this.config.filterOptions.category = [event.detail.tag]
       this.widgetRenderSetup(this.msrcProductListWrapper, this.config)
     }
   }
 
   connectedCallback () {
-    document.body.addEventListener('requestArticleCategory', this.requestArticleCategory)
+    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.requestArticleCategory)
     const showPromises = []
     if (this.shouldComponentRender()) showPromises.push(this.render())
     if (showPromises.length) {
@@ -27,11 +25,11 @@ export default class ProductList extends Prototype() {
   }
 
   disconnectedCallback () {
-    document.body.removeEventListener('requestArticleCategory', this.requestArticleCategory)
+    document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.requestArticleCategory)
   }
 
   configSetup () {
-    const setup = JSON.parse(this.getAttribute('config') || '{}')
+    const setup = this.constructor.parseAttribute(this.getAttribute('config') || '{}')
     if (Object.keys(setup).length === 0) return
     setup.webAPIKey = this.getAttribute('web-api-key') || ''
     setup.mode = this.getAttribute('mode') || 'default'
@@ -43,9 +41,8 @@ export default class ProductList extends Prototype() {
     return setup
   }
 
-  widgetRenderSetup (node, config) {
-    // @ts-ignore
-    window.msrc.components.articles.productList(node, config)
+  widgetRenderSetup (node, config, msrc = this.msrc) {
+    msrc.components.articles.productList(node, config)
   }
 
   shouldComponentRender () {
@@ -53,9 +50,10 @@ export default class ProductList extends Prototype() {
   }
 
   render () {
-    return this.loadDependency().then(() => {
+    return this.loadDependency().then(msrc => {
+      this.msrc = msrc
       this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
-      this.widgetRenderSetup(this.msrcProductListWrapper, this.config)
+      this.widgetRenderSetup(this.msrcProductListWrapper, this.config, msrc)
       const getStylesReturn = this.getStyles(document.createElement('style'))
       this.html = [this.msrcProductListWrapper, getStylesReturn[0]]
     })
@@ -63,6 +61,9 @@ export default class ProductList extends Prototype() {
 
   renderCSS () {
     this.css = /* css */ `
+    a {
+      color: var(--color);
+    }
     :host h2 {
       font-family: "Helvetica Now Text XBold", var(--font-family-bold, var(--font-family, inherit));
     }`

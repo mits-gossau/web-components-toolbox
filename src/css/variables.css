@@ -21,7 +21,7 @@
   --font-weight: 400;
   --footer-default-content-width: var(--header-default-content-width);
   --header-default-content-width: max(calc(1200px - var(--content-spacing) * 2), 55%); /* Environment.js mobileBreakpoint must correspond to the calc 1200px */
-  --line-height: 1.5em;
+  --line-height: 1.5;
   --navigation-default-content-width: var(--header-default-content-width);
 }
 /*

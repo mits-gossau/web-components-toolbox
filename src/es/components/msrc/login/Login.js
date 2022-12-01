@@ -11,7 +11,7 @@ import { Prototype } from '../Prototype.js'
  * @class Login
  * @type {CustomElementConstructor}
  * @attribute {
- *  {"de"|"fr"|"it"|"en"} [language="de"]
+ *  {"de"|"fr"|"it"|"en"} [language=document.documentElement.getAttribute('lang') || 'de']
  *  {string|DeepPartial<ThemeInterface>|
  *    "melectronics"|
  *    "bikeworld"|
@@ -39,6 +39,15 @@ import { Prototype } from '../Prototype.js'
  *  {string} [loginReturnTo="self.location"]
  *  {string} [logoutReturnTo="self.location"]
  *  {string|Partial<{
+ *    authority: string,
+ *    language: string,
+ *    clientId: string,
+ *    clientSecret: string,
+ *    redirectURI: string,
+ *    scope: string,
+ *    claims: { userinfo: { given_name: null, family_name: null, email: null } }
+ *  }>} [setup="{}"] (not used!)
+ *  {string|Partial<{
  *    env: 'local|test|production',
  *    oidcClientId: string,
  *    oidcClientSecret: string,
@@ -49,7 +58,7 @@ import { Prototype } from '../Prototype.js'
  *    oidcClaims: OIDCClaims,
  *    language: string,
  *    responseType: string,
- *  }>} [config="{'en': 'local'}"]
+ *  }>} [config="{}"] (not used!)
  * }
  */
 export default class Login extends Prototype() {
@@ -95,6 +104,9 @@ export default class Login extends Prototype() {
         text-decoration: none;
         font-weight: var(--font-weight-strong, bold);
       }
+      :host > div > button {
+        max-width: 50vw;
+      }
       @media only screen and (max-width: _max-width_) {
         :host {
           gap: calc(var(--content-spacing-mobile, var(--content-spacing, 1em)) * 2);
@@ -107,12 +119,10 @@ export default class Login extends Prototype() {
         }
       }
     `
+    this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
     return this.loadDependency().then(async msrc => {
-      this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
       // Setup OIDC login configuration
       await msrc.utilities.login.setup(this.constructor.parseAttribute(this.getAttribute('setup') || '{}'))
-      // Trigger autologin
-      await msrc.utilities.login.autologin()
       // Initialize the login button
       await msrc.components.login.button(this.msrcLoginButtonWrapper, {
         language: this.getAttribute('language') || self.Environment.language,
@@ -120,15 +130,15 @@ export default class Login extends Prototype() {
         size: this.getAttribute('size') || 'small',
         loginReturnTo: this.getAttribute('loginReturnTo') || '',
         logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
-        config: this.constructor.parseAttribute(this.getAttribute('config') || '{"env": "local"}')
+        config: this.constructor.parseAttribute(this.getAttribute('config') || '{}')
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
+      getStylesReturn[1].then(() => {
+        let button
+        if ((button = this.msrcLoginButtonWrapper.querySelector('button'))) button.classList.add('font-size-tiny')
+      })
       this.html = [this.msrcLoginButtonWrapper, getStylesReturn[0]]
       // return getStylesReturn[1] // use this line if css build up should be avoided
     })
-  }
-
-  get scripts () {
-    return this.root.querySelectorAll('script')
   }
 }

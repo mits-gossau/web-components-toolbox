@@ -27,10 +27,10 @@ export default class News extends Shadow() {
     }
     if (!this.loadNews(self, sessionStorage).news) {
       // @ts-ignore
-      document.body.addEventListener('listNews', event => event.detail.fetch.then(data => {
-        showPromises.push(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
-      }), { once: true })
-      this.dispatchEvent(new CustomEvent('requestListNews', {
+      showPromises.push(new Promise(resolve => document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', event => event.detail.fetch.then(data => {
+        resolve(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
+      }), { once: true })))
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
         detail: { limit: 0 },
         bubbles: true,
         cancelable: true,
@@ -56,8 +56,7 @@ export default class News extends Shadow() {
   }
 
   /**
-   *
-   *
+   * Load news from session storage
    * @param {*} self
    * @param {*} sessionStorage
    * @return {{slug: string, news: string}}
@@ -72,7 +71,7 @@ export default class News extends Shadow() {
   }
 
   /**
-   *
+   * Get current news data based on slug name
    * @param {string | undefined} [slug=undefined]
    * @param {string | undefined} [news=undefined]
    * @return {any | false}
@@ -95,39 +94,24 @@ export default class News extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML (data) {
-    return Promise.all([this.loadChildComponents(), this.loadScriptDependency(), this.loadDependency()]).then(() => {
+    return Promise.all([
+      this.getAttribute('namespace') === 'news-alnatura-'
+        ? this.fetchHTML([import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './alnatura-/alnatura-.html'])
+        : this.fetchHTML([import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html']),
+      this.loadChildComponents(),
+      this.loadScriptDependency(),
+      this.loadDependency()
+    ]).then((htmls) => {
+      /* eslint-disable  no-unused-vars */
       const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection, metaDescription, metaKeywords, metaTitle } = this.getNews(undefined, data)
+      /* eslint-disable  no-unused-vars */
       const linkRenderOptions = {
         renderNode: {
           hyperlink: (node) => `<a href=${node.data.uri} target=${node.data.uri.startsWith(self.location.origin) ? '_self' : '_blank'} rel=${node.data.uri.startsWith(self.location.origin) ? '' : 'noopener noreferrer'}>${node.content[0].value}</a>`
         }
       }
       this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
-      this.newsWrapper = `
-      <news>
-        <div class="intro">
-          <p>${new Date(date).toLocaleDateString('de-DE', { year: 'numeric', month: '2-digit', day: '2-digit' })} - ${tags[1]}</p>
-          <h1 class="font-size-big">${introHeadline}</h1>
-          <p><b class="intro">${location ? `${location} - ` : ''}${introText}</b></p>
-          ${introImage ? `<div><a-picture mobile-breakpoint="${this.mobileBreakpoint}" picture-load defaultSource="${introImage.url}?w=2160&q=80&fm=jpg" alt="${introImage.description !== '' ? introImage.description : introImage.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
-        </div>
-        <div class="content">
-            ${contentOne
-          ? `<p>${self
-            // @ts-ignore
-            .documentToHtmlString(contentOne.json, linkRenderOptions)}</p>`
-          : ''}
-            ${imageOne ? `<a-picture mobile-breakpoint="${this.mobileBreakpoint}" picture-load defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="${imageOne.description !== '' ? imageOne.description : imageOne.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
-            ${contentTwo
-          ? `<p>${self
-            // @ts-ignore
-            .documentToHtmlString(contentTwo.json, linkRenderOptions)}</p>`
-          : imageTwo ? '<br />' : ''} 
-            ${imageTwo ? `<a-picture mobile-breakpoint="${this.mobileBreakpoint}" picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg" alt="${imageTwo.description !== '' ? imageTwo.description : imageTwo.title}" query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''} 
-        </div>
-        ${linkListCollection.items.length ? `<div class="link-collection">${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
-        <div class="back-btn-wrapper"><a-button mobile-breakpoint="${this.mobileBreakpoint}" class="back-btn" namespace=button-primary->${this.backBtnLabel}</a-button></div>
-      </news>`
+      this.newsWrapper.innerHTML = eval('`' + htmls[0] + '`')// eslint-disable-line no-eval
 
       this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {
         this.html = this.newsWrapper
@@ -160,7 +144,7 @@ export default class News extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-    :host > news  {
+    :host news  {
       display:var(--display, flex);
       flex-direction:var(--flex-direction,  column);
       align-items:var(--align-items, flex-start);
@@ -212,6 +196,11 @@ export default class News extends Shadow() {
       case 'news-default-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      case 'news-alnatura-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       default:

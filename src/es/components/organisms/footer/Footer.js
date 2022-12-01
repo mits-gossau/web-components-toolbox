@@ -223,7 +223,7 @@ export default class Footer extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    this.footer = this.root.querySelector('footer') || document.createElement('footer')
+    this.footer = this.root.querySelector(this.cssSelector + ' > footer') || document.createElement('footer')
     Array.from(this.root.children).forEach(node => {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'FOOTER') return false
       this.footer.appendChild(node)
@@ -350,7 +350,7 @@ export default class Footer extends Shadow() {
                   gap: 0;
                 }
                 :host > section > *:not(.contains-details):not(:first-child) {
-                  margin-top: var(--${this.getAttribute('namespace')}gap-mobile-custom, var(--${this.getAttribute('namespace')}gap-custom, var(--content-spacing-mobile, var(--content-spacing)))) !important;
+                  margin-top: var(--${this.getAttribute('namespace') || ''}gap-mobile-custom, var(--${this.getAttribute('namespace') || ''}gap-custom, var(--content-spacing-mobile, var(--content-spacing)))) !important;
                 }
                 :host > section > *.contains-details > m-details {
                   --details-default-icon-right-border-top-custom: 0;
@@ -380,13 +380,13 @@ export default class Footer extends Shadow() {
       // make the invert style useable for summary details within
       this.setCss(/* css */`
         :host > footer .invert {
-          --details-default-icon-right-summary-child-color-hover-custom: var(--${this.getAttribute('namespace')}invert-color-hover);
-          --details-default-icon-right-a-color-hover: var(--${this.getAttribute('namespace')}invert-color-hover);
-          --details-default-icon-right-summary-child-color-custom: var(--${this.getAttribute('namespace')}invert-color);
-          --details-default-icon-right-a-color: var(--${this.getAttribute('namespace')}invert-color);
-          --details-default-icon-right-svg-color-custom: var(--${this.getAttribute('namespace')}invert-color);
-          --details-default-icon-right-border-color-custom: var(--${this.getAttribute('namespace')}invert-color);
-          --color: var(--${this.getAttribute('namespace')}invert-color);
+          --details-default-icon-right-summary-child-color-hover-custom: var(--${this.getAttribute('namespace') || ''}invert-color-hover);
+          --details-default-icon-right-a-color-hover: var(--${this.getAttribute('namespace') || ''}invert-color-hover);
+          --details-default-icon-right-summary-child-color-custom: var(--${this.getAttribute('namespace') || ''}invert-color);
+          --details-default-icon-right-a-color: var(--${this.getAttribute('namespace') || ''}invert-color);
+          --details-default-icon-right-svg-color-custom: var(--${this.getAttribute('namespace') || ''}invert-color);
+          --details-default-icon-right-border-color-custom: var(--${this.getAttribute('namespace') || ''}invert-color);
+          --color: var(--${this.getAttribute('namespace') || ''}invert-color);
         }
         @media only screen and (max-width: ${(wrappers[0] && wrappers[0].mobileBreakpoint) || '_max-width_'}) {
           ${hasDetailsMobile
@@ -462,11 +462,11 @@ export default class Footer extends Shadow() {
         background-color: transparent;
       }
       :host ul li a svg {
-        color: var(--${this.getAttribute('namespace')}invert-svg-color, var(--${this.getAttribute('namespace')}invert-a-color));
+        color: var(--${this.getAttribute('namespace') || ''}invert-svg-color, var(--${this.getAttribute('namespace') || ''}invert-a-color));
         transition: var(--invert-svg-transition, color 0.3s ease-out);
       }
       :host ul li a:hover svg {
-        color: var(--${this.getAttribute('namespace')}invert-svg-color-hover, var(--${this.getAttribute('namespace')}invert-a-color-hover));
+        color: var(--${this.getAttribute('namespace') || ''}invert-svg-color-hover, var(--${this.getAttribute('namespace') || ''}invert-a-color-hover));
       }
       @media only screen and (max-width: _max-width_) {
           :host .footer-links-row:not(:last-child){

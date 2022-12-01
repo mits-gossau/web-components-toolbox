@@ -12,7 +12,7 @@ import { Prototype } from '../Prototype.js'
  * @type {CustomElementConstructor}
  * @attribute {
  *  {string} [web-api-key="test"]
- *  {"de"|"fr"|"it"|"en"} [language="de"]
+ *  {"de"|"fr"|"it"|"en"} [language=document.documentElement.getAttribute('lang') || 'de']
  *  {string|DeepPartial<ThemeInterface>|
  *    "melectronics"|
  *    "bikeworld"|
@@ -113,7 +113,7 @@ export default class StoreFinder extends Prototype() {
         margin: 0;
       }
     `
-    return this.loadDependency().then(async msrc => {
+    return this.loadDependency().then(msrc => {
       this.msrcStoreFinderWrapper = this.root.querySelector('div') || document.createElement('div')
       msrc.components.stores(this.msrcStoreFinderWrapper, {
         webAPIKey: this.getAttribute('web-api-key') || 'test',

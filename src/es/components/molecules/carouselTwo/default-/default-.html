@@ -1,17 +1,13 @@
-<h2>Navigation overlay(ed)</h2>
-<m-carousel-two active=11 interval=2000 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-align-self="end">
+<h2>Navigation overlay(ed) / use with history (no interval and "history" attribute) when it is the only carousel within the page</h2>
+<m-carousel-two history active=11 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-align-self="end">
   <section>
     <a-picture picture-load defaultSource="./img/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite"></a-picture>
     <div>
-      <style>
-        :host #image-2 {
-          --carousel-two-default-section-child-justify-content: space-between;
-        }
-      </style>
       <a-picture picture-load defaultSource="./img/anastasia-dulgier-NCFTGtjY3EQ-unsplash.jpg" alt="Houses"></a-picture>
-      <h1>Houses</h1>
-      <p>more Houses</p>
-      <div class=spacer></div>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses</p>
+      </div>
     </div>
     <a-picture picture-load defaultSource="./img/arnaud-mariat-IPXcUYHeErc-unsplash.jpg" alt="Galaxies"></a-picture>
     <a-picture picture-load defaultSource="./img/matthew-smith-9CV6WrxxdrM-unsplash.jpg" alt="Motel"></a-picture>
@@ -24,7 +20,7 @@
   </section>
 </m-carousel-two>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<h2>Navigation overlay(ed) with effect</h2>
+<h2>Navigation overlay(ed) with effect /  no-history</h2>
 <m-carousel-two active=11 interval=2000 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-align-self="end">
   <section>
     <o-intersection-scroll-effect invert=true horizontal css-property=transform effect=scale max-value=1>
@@ -32,15 +28,12 @@
     </o-intersection-scroll-effect>
     <o-intersection-scroll-effect invert=true horizontal css-property=transform effect=scale max-value=1>
     <div>
-      <style>
-        :host #image-2 {
-          --carousel-two-default-section-child-justify-content: space-between;
-        }
-      </style>
         <a-picture picture-load defaultSource="./img/anastasia-dulgier-NCFTGtjY3EQ-unsplash.jpg" alt="Houses"></a-picture>
-        <h1>Houses</h1>
-        <p>more Houses</p>
-        <div class=spacer></div>
+        <div>
+          <h1>Houses</h1>
+          <p>more Houses</p>
+        </div>
+
       </div>
     </o-intersection-scroll-effect>
     <o-intersection-scroll-effect invert=true horizontal css-property=transform effect=scale max-value=1>
@@ -70,20 +63,16 @@
   </section>
 </m-carousel-two>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<h2>Navigation outside</h2>
-<m-carousel-two no-history active=11 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-separate nav-align-self="start">
+<h2>Navigation outside /  no-history</h2>
+<m-carousel-two active=11 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-separate nav-align-self="start">
   <section>
     <a-picture picture-load defaultSource="./img/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite"></a-picture>
     <!--<div>
-      <style>
-        :host #image-2 {
-          --carousel-two-default-section-child-justify-content: space-between;
-        }
-      </style>
       <a-picture picture-load defaultSource="./img/anastasia-dulgier-NCFTGtjY3EQ-unsplash.jpg" alt="Houses"></a-picture>
-      <h1>Houses</h1>
-      <p>more Houses</p>
-      <div class=spacer></div>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses</p>
+      </div>
     </div>-->
     <a-picture picture-load defaultSource="./img/arnaud-mariat-IPXcUYHeErc-unsplash.jpg" alt="Galaxies"></a-picture>
     <a-picture picture-load defaultSource="./img/matthew-smith-9CV6WrxxdrM-unsplash.jpg" alt="Motel"></a-picture>
@@ -92,6 +81,82 @@
     <a-picture picture-load defaultSource="./img/tim-bogdanov-4uojMEdcwI8-unsplash.jpg" alt="Gentleman"></a-picture>
     <a-picture picture-load defaultSource="./img/weston-mackinnon-caUtk0DTiR0-unsplash.jpg" alt="Stuff"></a-picture>
     <a-picture picture-load defaultSource="./img/a3ac1ed5abaedffd9947face7901e14c.jpg" alt="Stuff"></a-picture>
+  </section>
+</m-carousel-two>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<h2>Navigation outside with text /  no-history</h2>
+<m-carousel-two no-history active=11 namespace=carousel-two-default- background-color="var(--m-gray-300)" nav-separate nav-align-self="start">
+  <section>
+    <div>
+      <a-picture picture-load defaultSource="./img/a3ac1ed5abaedffd9947face7901e14c.jpg" alt="Stuff"></a-picture>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sunt amet architecto eveniet voluptate debitis sapiente explicabo, officiis, enim qui sed laborum hic vero, repellendus vel doloribus quisquam quae mollitia consequatur? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Hic adipisci deserunt eos vero quod impedit facere veniam temporibus doloremque? Iure aspernatur placeat labore, voluptatibus numquam ipsum tenetur culpa. Totam, voluptate.</p>
+      </div>
+    </div>
+    <div>
+      <a-picture picture-load defaultSource="./img/kenan-sulayman-FV3M7igu8Fs-unsplash.jpg" alt="Yosemite"></a-picture>
+      <div class=text-align-center>
+        <h1>Centered Houses</h1>
+        <p>more Houses</p>
+      </div>
+    </div>
+    <div>
+      <a-picture picture-load defaultSource="./img/anastasia-dulgier-NCFTGtjY3EQ-unsplash.jpg" alt="Houses"></a-picture>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses Lorem ipsum dolor sit amet consectetur, adipisicing elit. A quas saepe ab nostrum facilis aperiam, cupiditate nobis nemo sequi voluptatum totam modi quis fugit, ipsum sunt quam, similique officiis eaque.</p>
+      </div>
+    </div>
+    <div>
+      <a-picture picture-load defaultSource="./img/arnaud-mariat-IPXcUYHeErc-unsplash.jpg" alt="Galaxies"></a-picture>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses</p>
+      </div>
+    </div>
+    <div>
+      <a-picture picture-load defaultSource="./img/matthew-smith-9CV6WrxxdrM-unsplash.jpg" alt="Motel"></a-picture>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses Lorem ipsum dolor sit, amet consectetur adipisicing elit. Consequuntur illo voluptate similique quibusdam debitis, hic a consectetur temporibus, doloremque explicabo facilis aspernatur ullam nulla eligendi voluptatum quos ut vero. Incidunt.</p>
+      </div>
+    </div>
+    <div>
+      <a-picture picture-load defaultSource="./img/vladimir-kondriianenko-bxwzcFy9YwM-unsplash.jpg" alt="Minimalist nightmare"></a-picture>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses</p>
+      </div>
+    </div>
+    <div>
+      <a-picture picture-load defaultSource="./img/jakob-owens-EkxOtUljwhs-unsplash.jpg" alt="Hoops"></a-picture>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses</p>
+      </div>
+    </div>
+    <div>
+      <a-picture picture-load defaultSource="./img/tim-bogdanov-4uojMEdcwI8-unsplash.jpg" alt="Gentleman"></a-picture>
+      <div class=text-align-center>
+        <h1>Centered Houses</h1>
+        <p>more Houses</p>
+      </div>
+    </div>
+    <div>
+      <a-picture picture-load defaultSource="./img/weston-mackinnon-caUtk0DTiR0-unsplash.jpg" alt="Stuff"></a-picture>
+      <div>
+        <h1>Houses</h1>
+        <p>more Houses</p>
+      </div>
+    </div>
+    <div>
+      <a-picture picture-load defaultSource="./img/weston-mackinnon-caUtk0DTiR0-unsplash.jpg" alt="Stuff"></a-picture>
+      <div class=text-align-center>
+        <h1>Centered Houses</h1>
+        <p>more Houses Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse, deserunt dolorem. Hic error atque in doloremque ex. Saepe, magni quam autem iusto explicabo molestiae aspernatur, corrupti quasi earum qui dicta?</p>
+      </div>
+    </div>
   </section>
 </m-carousel-two>
 <!-- load web components for Demo Purposes Only -->

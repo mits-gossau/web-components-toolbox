@@ -196,7 +196,7 @@
   position: relative;
   left: var(--bg-padding, 0.5em);
   margin: 0;
-  padding: var(--bg-padding-top, 0.1em) 0 0;
+  padding: var(--bg-padding-top, 0.1em) 0 var(--bg-padding-bottom, 0);
   text-decoration-line: none;
 }
 :host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color, :host *:not(.font-family-secondary):not(.font-family-tertiary).bg-color-hover {
@@ -243,6 +243,12 @@
 }
 :host *.bg-color-no-box-shadow > a-arrow {
   margin-bottom: 0;
+}
+:host *.bg-price {
+  color: var(--bg-price, var(--m-black, black));
+  cursor: auto;
+  font-family: HelveticaNowTextBold, Helvetica, Arial, sans-serif;
+  font-size: 1.75em;
 }
 /* p-tag */
 :host p {
@@ -333,10 +339,10 @@
 :host img {
   max-width: 100%;
 }
-img[style="float: left;"] {
+img[style="float: left;"], img[style="float:left;"], img[style="float: left"], img[style="float:left"] {
   margin: var(--img-float-left-margin, 0 var(--content-spacing) calc(0.5 * var(--content-spacing)) 0);
 }
-img[style="float: right;"] {
+img[style="float: right;"], img[style="float:right;"], img[style="float: right"], img[style="float:right"] {
   margin: var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing)) var(--content-spacing));
 }
 /* list-tags */
@@ -362,8 +368,8 @@ img[style="float: right;"] {
 :host ol.big li::before {
   font-size: var(--big-li-before-font-size, 2em);
   position: absolute;
-  top: var(--big-li-before-top, 0);
-  left: calc(-1 * var(--big-li-before-left, var(--ol-margin, 2em)));
+  top: var(--big-li-before-top, -0.4em);
+  left: calc(-1 * var(--big-li-before-left, var(--ol-margin, 1.75em)));
   display: block;
   width: var(--big-li-before-width, var(--ol-margin, 2em));
   color: var(--color-secondary, var(--color));
@@ -439,12 +445,15 @@ img[style="float: right;"] {
   padding: var(--ul-icon-padding, 0);
 }
 /* table-tags */
-:host table {
+:host table, :host table tbody {
   border-collapse: var(--table-border-collapse, collapse);
   border-spacing: var(--table-border-spacing, 0);
+  display: table;
   max-width: var(--table-max-width, 100%);
   word-break: var(--table-word-break, normal);
   margin: var(--table-margin, 0 auto var(--content-spacing));
+  text-align: var(--table-text-align, left);
+  width: var(--table-width, 100%);
 }
 /* spacer-stylings */
 .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
@@ -566,11 +575,10 @@ img[style="float: right;"] {
     margin: var(--hr-margin-mobile, var(--hr-margin, var(--content-spacing-mobile) auto));
   }
   /* img-tag */
-  img[style="float: left;"] {
-    margin: var(--img-float-left-margin-mobile, var(--img-float-left-margin, 0 var(--content-spacing-mobile, var(--content-spacing)) calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) 0));
-  }
-  img[style="float: right;"] {
-    margin: var(--img-float-right-margin-mobile, var(--img-float-right-margin, 0 0 calc(0.5 * var(--content-spacing-mobile, var(--content-spacing))) var(--content-spacing-mobile, var(--content-spacing))));
+  img[style="float: left;"], img[style="float:left;"], img[style="float: left"], img[style="float:left"], img[style="float: right;"], img[style="float:right;"], img[style="float: right"], img[style="float:right"] {
+    display: block;
+    float: none !important;
+    margin: 0 auto var(--img-float-bottom-margin-mobile, var(--content-spacing-mobile, var(--content-spacing)));
   }
   /* list-tags */
   :host ol {
@@ -578,6 +586,7 @@ img[style="float: right;"] {
   }
   :host ul {
     margin: var(--ul-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+    padding-left: var(--ul-margin-mobile, var(--content-spacing-mobile, var(--content-spacing)));
   }
   /* table-tags (scroll tables) */
   :host table {

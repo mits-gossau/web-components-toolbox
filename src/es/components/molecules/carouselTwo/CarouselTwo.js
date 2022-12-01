@@ -6,6 +6,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global CustomEvent */
 /* global self */
 /* global location */
+/* global history */
 
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
@@ -58,7 +59,7 @@ export default class CarouselTwo extends Shadow() {
     }
     // on scroll calculate which image is shown and set its and all of its referencing href nodes the class to active
     let scrollTimeoutId = null
-    const scrollTolerance = 5
+    const scrollTolerance = 50
     this.scrollListener = event => {
       this.section.classList.add('scrolling')
       this.clearInterval()
@@ -93,12 +94,12 @@ export default class CarouselTwo extends Shadow() {
           this.section.classList.remove('scrolling')
           this.setInterval()
           // adjust the history
-          if (!self.location.hash.includes(activeChild.getAttribute('id'))) {
+          if (this.hasAttribute('history') && !this.hasAttribute('interval') && !self.location.hash.includes(activeChild.getAttribute('id'))) {
             const url = `${self.location.href.split('#')[0]}#${activeChild.getAttribute('id')}`
             if (self.location.hash.includes('next') || self.location.hash.includes('previous')) {
-              self.history.replaceState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
+              self.history.replaceState({ ...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
             } else {
-              self.history.pushState({ picture: activeChild.getAttribute('id'), url }, undefined, url)
+              self.history.pushState({ ...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
             }
           }
         }
@@ -150,7 +151,7 @@ export default class CarouselTwo extends Shadow() {
       this.addEventListener('blur', this.blurEventListener)
       this.addEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history')) self.addEventListener('hashchange', this.hashchangeEventListener)
+    if (this.hasAttribute('history') && !this.hasAttribute('interval')) self.addEventListener('hashchange', this.hashchangeEventListener)
   }
 
   disconnectedCallback () {
@@ -161,7 +162,7 @@ export default class CarouselTwo extends Shadow() {
       this.removeEventListener('blur', this.blurEventListener)
       this.removeEventListener('focus', this.focusEventListener)
     }
-    if (!this.hasAttribute('no-history')) self.removeEventListener('hashchange', this.hashchangeEventListener)
+    if (this.hasAttribute('history') && !this.hasAttribute('interval')) self.removeEventListener('hashchange', this.hashchangeEventListener)
   }
 
   /**
@@ -209,7 +210,7 @@ export default class CarouselTwo extends Shadow() {
       ${this.hasAttribute('nav-separate')
         ? /* css */`
           ${this.getAttribute('nav-align-self') === 'start'
-            ? /* css */`
+          ? /* css */`
               :host > section {
                 grid-row: 2;
               }
@@ -217,7 +218,7 @@ export default class CarouselTwo extends Shadow() {
                 grid-area: 2 / 1
               }
             `
-            : /* css */`
+          : /* css */`
               :host > nav {
                 grid-row: 2;
               }
@@ -225,7 +226,7 @@ export default class CarouselTwo extends Shadow() {
                 grid-area: 1 / 1
               }
             `
-          }
+        }
         `
         : ''
       }
@@ -248,14 +249,28 @@ export default class CarouselTwo extends Shadow() {
         scroll-snap-align: start;
         user-select: none;
       }
+      :host > section > div {
+        align-items: var(--section-div-align-items, var(--section-child-align-items, center));
+        justify-content: var(--section-div-justify-content, var(--section-child-justify-content, space-between));
+      }
+      :host > section > div > div {
+        padding: var(--section-div-padding, var(--nav-margin));
+        width: 100%;
+      }
+      :host > section > div > div * {
+        text-align: var(--section-div-child-text-align, left);
+      }
+      :host > section > div.text-align-center > div *, :host > section > div > div.text-align-center * {
+        text-align: var(--section-div-child-text-align, center);
+      }
       :host > section:not(.scrolling) > *:not(.active) {
         opacity: var(--section-child-opacity-not-active, 0);
       }
       :host > nav {
         align-items: center;
         align-self: ${this.hasAttribute('nav-separate')
-          ? 'center'
-          : this.hasAttribute('nav-align-self')
+        ? 'center'
+        : this.hasAttribute('nav-align-self')
           ? this.getAttribute('nav-align-self')
           : 'var(--nav-align-self, end)'};
         display: ${this.hasAttribute('no-default-nav') ? 'none' : 'flex'};
@@ -264,9 +279,9 @@ export default class CarouselTwo extends Shadow() {
         margin: var(--nav-margin);
         justify-content: center;
         ${this.hasAttribute('nav-flex-wrap')
-          ? 'flex-wrap: wrap;'
-          : 'max-height: 20%;'
-        }
+        ? 'flex-wrap: wrap;'
+        : 'max-height: 20%;'
+      }
       }
       :host > nav > * {
         --a-margin: 0;
@@ -372,6 +387,9 @@ export default class CarouselTwo extends Shadow() {
         :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > section,
         :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > .arrow-nav {
           margin-top: var(--section-nav-separate-margin-mobile, var(--section-nav-separate-margin));
+        }
+        :host > section > div > div {
+          padding: var(--section-div-padding-mobile, var(--section-div-padding, var(--nav-margin-mobile, var(--nav-margin))));
         }
         :host > nav {
           gap: var(--nav-gap-mobile, var(--nav-gap));
@@ -501,10 +519,10 @@ export default class CarouselTwo extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    this.section = this.root.querySelector('section') || document.createElement('section')
-    this.nav = this.root.querySelector('nav') || document.createElement('nav')
+    this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
+    this.nav = this.root.querySelector(this.cssSelector + ' > nav') || document.createElement('nav')
     if (!this.hasAttribute('no-default-arrow-nav')){
-      this.arrowNav = this.root.querySelector('.arrow-nav') || document.createElement('span')
+      this.arrowNav = this.root.querySelector(this.cssSelector + ' > .arrow-nav') || document.createElement('span')
       this.arrowNav.classList.add('arrow-nav')
     }
     return this.loadChildComponents().then(children => {
@@ -596,9 +614,15 @@ export default class CarouselTwo extends Shadow() {
   }
 
   scrollIntoView (node, focus = true, force = false) {
+    if (typeof node === 'string') node = this.section.querySelector(node) || this.section.children[0]
     if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
     if (force || !node.classList.contains('active')) {
-      if (focus) return node.focus() // important that default keyboard works
+      if (focus) {
+        return node.focus({
+          preventScroll: true,
+          focusVisible: false
+        })
+      } // important that default keyboard works
       // node.scrollIntoView() // scrolls x and y
       this.dispatchEvent(new CustomEvent(this.getAttribute('carousel-changed') || 'carousel-changed', {
         detail: {node: node},

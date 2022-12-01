@@ -93,7 +93,9 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       :host > section {
         display: flex;
         flex-wrap: wrap;
-        align-items: var(--align-items, center);
+        align-items: ${this.hasAttribute('align-items')
+          ? this.getAttribute('align-items')
+          : 'var(--align-items, center)'};
         justify-content: var(--justify-content, center);
         flex-direction: var(--flex-direction, row);
         width: 100%;
@@ -221,7 +223,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
     if (this.hasAttribute('no-calc-column-width')) return
     self.requestAnimationFrame(timeStamp => {
       // set width attributes as css vars
-      let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE')
+      let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE' && !node.hasAttribute('hidden'))
       const childNodesLength = Number(this.getAttribute('simulate-children')) || childNodes.length
       let childNodesLengthNotWidthHundredPercent = childNodesLength
       if (childNodes.length < childNodesLength) {
@@ -300,7 +302,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
    * @return {Promise<void>}
    */
   renderHTML () {
-    this.section = this.root.querySelector('section') || document.createElement('section')
+    this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
     Array.from(this.root.children).forEach(node => {
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })

@@ -10,6 +10,7 @@
   --navigation-alnatura-section-background-color: var(--menu-color);
   --navigation-alnatura-section-color-open: var(--color);
   --navigation-alnatura-section-ul-background-color: var(--menu-background-color);
+  --navigation-alnatura-path-color: var(--color);
 }
 :host > nav > ul.open {
   --navigation-alnatura-padding-no-scroll: 0;
@@ -18,9 +19,16 @@
 :host > nav > ul > li > a-link {
   --navigation-alnatura-color-active: var(--menu-background-color);
 }
+:host > nav > ul > li.open > a-link {
+  --navigation-alnatura-background-color-hover: var(--menu-color);
+  --navigation-alnatura-background-color-active: var(--menu-color);
+}
 :host > nav > ul > li:not(.open) > a-link {
   --navigation-alnatura-color-active: var(--color-tertiary);
   --navigation-alnatura-color-hover: var(--color-tertiary);
+}
+:host > nav > ul li.open, :host > nav > ul li:hover, :host > nav > ul li.active {
+  --navigation-alnatura-path-color: var(--color-hover);
 }
 :host > nav > ul li.open > o-nav-wrapper > section {
   --navigation-alnatura-color: var(--navigation-alnatura-color-second-level-custom, var(--navigation-alnatura-color-custom, var(--menu-color)));
@@ -71,8 +79,12 @@
     --navigation-alnatura-search-li-padding-mobile: var(--content-spacing-mobile) 0 0;
   }
   :host > nav > ul > li.open > a-link, :host > nav > ul > li:not(.open) > a-link, :host > nav > ul > li:not(.open) > a-arrow {
-    --navigation-alnatura-color-active: var(--color-active);
+    --navigation-alnatura-color-active: var(--color-hover);
+    --navigation-alnatura-background-color-hover: transparent;
     --navigation-alnatura-color-open-mobile: var(--color-hover);
+  }
+  :host > nav > ul > li:not(.open) > a-link, :host > nav > ul > li:not(.open) > a-arrow {
+    --navigation-alnatura-color-active: var(--color-active);
   }
   :host > nav > ul > li:not(.open) > a-link {
     --navigation-alnatura-color-hover: var(--color-hover);
@@ -84,10 +96,11 @@
     --navigation-alnatura-padding: var(--content-spacing-mobile);
   }
   :host > nav > ul:not(.open) > li, :host(.no-scroll) > nav > ul:not(.open) > li {
-    --navigation-alnatura-background-color: var(--menu-background-color);
+    --navigation-alnatura-background-color: transparent;
   }
   :host > nav > ul:not(.open) > li, :host(.no-scroll) > nav > ul:not(.open) > li, :host > nav > ul.open > li, :host(.no-scroll) > nav > ul.open > li {
     --navigation-alnatura-background-color-open: transparent;
+    --navigation-alnatura-background-color-active: transparent;
     --navigation-alnatura-background-color: transparent;
     background-color: transparent;
   }

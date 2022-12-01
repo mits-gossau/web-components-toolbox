@@ -25,7 +25,7 @@ export default class ProductCategories extends Shadow() {
   }
 
   dispatchRequestCategoriesEvent (category) {
-    this.dispatchEvent(new CustomEvent('requestArticleCategory', {
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         category
       },
@@ -44,68 +44,30 @@ export default class ProductCategories extends Shadow() {
   }
 
   renderHTML () {
-    this.categoriesNavigation = this.root.querySelector('div') || document.createElement('div')
-    this.categoriesNavigation.innerHTML = `
-        <ul>
-            <li>
-                <a-link namespace="category-link-" category="BeSS_97">
-                    <a-picture namespace="category-icon-" picture-load defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
-                    </a-picture> <a> Alle Produkte </a>
-                </a-link>
-            </li>
-            <li>
-                <a-link namespace="category-link-" category="ALNA_CAT_Beilagen_BeilagenundZutaten">
-                    <a-picture namespace="category-icon-" picture-load  defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
-                    </a-picture>
-                    <a>Beilagen und Zutaten </a>
-                </a-link>
-            </li>
-            <li>
-                <a-link namespace="category-link-" category="ALNA_CAT_ZuckerundSuessungsmittel_Backen">
-                    <a-picture namespace="category-icon-" picture-load defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
-                    </a-picture>
-                    <a>Backen </a>
-                </a-link>
-            </li>
-            <li>
-                <a-link namespace="category-link-">
-                    <a-picture namespace="category-icon-" picture-load defaultSource="../../../../img/products/prod_cat_backen.svg" alt="Galaxies">
-                    </a-picture>
-                    <a>Brotaufstrich und Muse </a>
-                </a-link>
-            </li>
-        </ul>`
-
+    this.categoriesNavigation = this.root.querySelector('ul')
     this.html = this.categoriesNavigation
   }
 
   renderCSS () {
     this.css = /* css */ `
-        :host ul {
-            padding:0;
-            list-style:none;
-        }
-        :host a-link {
-            align-items: center;
-            display: flex;
-            flex-direction: row;
-            height: 3.5em;
-            justify-content: flex-start;
-            width: 100%;
-        }
-        :host li {
-            background-color: #fefce5;
-            border-bottom: 4px solid var(--background-color);
-            height: 3.5em;
-            width: 100%;
-        }
-        :host li:hover {
-            color: #fefce5;
-            background-color: var(--color-secondary);
-        }
-        @media only screen and(max-width:_max-width_) {
-            :host li {}
-        }`
+      :host li {
+        background-color:var(--li-background-color, red);
+        border-bottom: var(--li-border-bottom, 0) solid var(--background-color);
+        height:var(--li-height, 100%);
+        width:var(--li-width, 100%);
+      }
+      :host li:hover {
+        background-color:var(--li-background-color-hover, red);
+      }
+      :host a-link {
+        align-items:var(--a-link-align-items,center);
+        display:var(--a-link-display, flex);
+        flex-direction:var(--a-link-flex-direction,row);
+        height:var(--a-link-height,100%);
+        justify-content:var(--a-link-justify-content, flex-start);
+        width:var(--a-link-width,100%);
+      }
+      @media only screen and (max-width: _max-width_) {}`
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [

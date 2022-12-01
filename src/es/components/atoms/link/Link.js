@@ -133,15 +133,17 @@ export default class Link extends Shadow() {
         word-break: var(--word-break, normal);
       }
       :host(.active) > a, :host(.active) > a ~ ${this.hitAreaTagName} {
+        background-color:var(--background-color-active, transparent);
         color: var(--color-active, var(--color-hover, var(--color, yellow)));
-        text-decoration: var(--text-decoration-active, var(--text-decoration-hover, var(--text-decoration, none)));
         font-family: var(--font-family-active, var(--font-family-hover, var(--font-family, inherit)));
+        text-decoration: var(--text-decoration-active, var(--text-decoration-hover, var(--text-decoration, none)));
       }
       :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName}, :host > a.hover, :host > a.hover ~ ${this.hitAreaTagName} {
+        background-color:var(--background-color-hover, transparent);
         box-shadow: var(--box-shadow-hover, none);
         color: var(--color-hover, var(--color, yellow));
-        text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
         font-family: var(--font-family-hover, var(--font-family, inherit));
+        text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
       }
       :host > a:focus {
         text-decoration: var(--text-decoration-focus, unset);
@@ -228,6 +230,11 @@ export default class Link extends Shadow() {
       case 'download-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+      case 'tag-filter-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tag-filter-/tag-filter-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
     }
