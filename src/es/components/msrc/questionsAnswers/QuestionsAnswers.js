@@ -45,7 +45,7 @@ import { Prototype } from '../Prototype.js'
  *    "fitnesspark"|
  *    "mgb"|
  *    "migusto"} [theme="alnatura"]
- *  {"de"|"fr"|"it"|"en"} [language="de"]
+ *  {"de"|"fr"|"it"|"en"} [language=document.documentElement.getAttribute('lang') || 'de']
  *  {number} [initial-limit="2"]
  *  {boolean} [form-collapsible=false]
  *  {boolean} [show-target-mentions=false]

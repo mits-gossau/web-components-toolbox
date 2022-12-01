@@ -19,7 +19,7 @@ import { Prototype } from '../Prototype.js'
  *  {"AUTHENTICATION_STARTED" | "AUTHENTICATION_FINISHED"} [authentication-status=""]
  *  {string} [target-identifier=""] (required)
  *  {"BOARD" | "CHAT" | "CROWDSOURCING" | "MANIA_CAMPAIGN" | "MANIA_ITEM" | "MIGROS_ENGAGEMENT_ARTICLE" | "MIGROS_SERVICE_PRODUCT" | "MIGUSTO_ARTICLE" | "MIGUSTO_RECIPE" | "PRODUCT" | "VOTING" | "VOTING_OPTION"} [target-type="PRODUCT"]
- *  {"de"|"fr"|"it"|"en"} [language="de"]
+ *  {"de"|"fr"|"it"|"en"} [language=document.documentElement.getAttribute('lang') || 'de']
  *  {string|DeepPartial<ThemeInterface>|
  *    "melectronics"|
  *    "bikeworld"|

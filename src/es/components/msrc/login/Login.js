@@ -11,7 +11,7 @@ import { Prototype } from '../Prototype.js'
  * @class Login
  * @type {CustomElementConstructor}
  * @attribute {
- *  {"de"|"fr"|"it"|"en"} [language="de"]
+ *  {"de"|"fr"|"it"|"en"} [language=document.documentElement.getAttribute('lang') || 'de']
  *  {string|DeepPartial<ThemeInterface>|
  *    "melectronics"|
  *    "bikeworld"|

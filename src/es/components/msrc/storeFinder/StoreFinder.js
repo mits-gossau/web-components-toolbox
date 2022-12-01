@@ -12,7 +12,7 @@ import { Prototype } from '../Prototype.js'
  * @type {CustomElementConstructor}
  * @attribute {
  *  {string} [web-api-key="test"]
- *  {"de"|"fr"|"it"|"en"} [language="de"]
+ *  {"de"|"fr"|"it"|"en"} [language=document.documentElement.getAttribute('lang') || 'de']
  *  {string|DeepPartial<ThemeInterface>|
  *    "melectronics"|
  *    "bikeworld"|
