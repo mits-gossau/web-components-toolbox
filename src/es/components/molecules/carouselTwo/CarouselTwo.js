@@ -80,6 +80,12 @@ export default class CarouselTwo extends Shadow() {
           })
           activeChild.classList.add('active')
           activeChild.setAttribute('aria-hidden', 'false')
+          this.dispatchEvent(new CustomEvent(this.getAttribute('carousel-changed') || 'carousel-changed', {
+            detail: {node: activeChild},
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
           Array.from(this.root.querySelectorAll(`[href="#${activeChild.getAttribute('id')}"]`)).forEach(node => {
             if (Array.from(this.nav.children).includes(node.parentNode)) node.parentNode.classList.add('active')
             node.classList.add('active')
