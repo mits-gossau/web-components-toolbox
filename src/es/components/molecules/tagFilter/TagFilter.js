@@ -2,6 +2,7 @@
 /* global CustomEvent */
 /* global location */
 /* global history */
+/* global customElements */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
