@@ -245,13 +245,10 @@
   margin-bottom: 0;
 }
 :host *.bg-price {
-  color: var(--bg-color, var(--m-black, black));
+  color: var(--bg-price, var(--m-black, black));
   cursor: auto;
-  display: inline-block;
-  font-size: 2.25em;
-  line-height: 1em;
-  margin-top: -4px;
-  margin-bottom: 8px;
+  font-family: HelveticaNowTextBold, Helvetica, Arial, sans-serif;
+  font-size: 1.75em;
 }
 /* p-tag */
 :host p {
@@ -371,8 +368,8 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 :host ol.big li::before {
   font-size: var(--big-li-before-font-size, 2em);
   position: absolute;
-  top: var(--big-li-before-top, 0);
-  left: calc(-1 * var(--big-li-before-left, var(--ol-margin, 1.5em)));
+  top: var(--big-li-before-top, -0.4em);
+  left: calc(-1 * var(--big-li-before-left, var(--ol-margin, 1.75em)));
   display: block;
   width: var(--big-li-before-width, var(--ol-margin, 2em));
   color: var(--color-secondary, var(--color));
