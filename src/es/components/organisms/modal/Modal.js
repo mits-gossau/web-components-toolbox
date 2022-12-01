@@ -100,7 +100,7 @@ export default class Modal extends Shadow() {
             this.container.appendChild(child)
             this.clone.style.height = `${height}px`
             this.clone.style.visibility = 'hidden'
-            if(child.hasAttribute('was-hidden')) this.clone.style.display = 'none'
+            if (child.hasAttribute('was-hidden')) this.clone.style.display = 'none'
             // below correct certain template settings of Pictures to display fullscreen without any side effects
             this.container.querySelectorAll('a-picture').forEach(aPicture => {
               if (aPicture.root && aPicture.img) aPicture.img.setAttribute('style', 'transform: none; height: auto; width: max-content;')
