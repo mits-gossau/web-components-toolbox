@@ -26,7 +26,7 @@ export default class SliderButton extends Shadow() {
       const index = id + 1
       const value = index * 100 - 50
 
-      this.milestoneMobile.innerHTML = this.milestones[id].getAttribute('data-slider-target')
+      this.milestoneMobile.innerHTML = this.milestones[id].parentNode.getAttribute('data-slider-target')
       this.changeCarousel(value, this.slider)
     }
 
@@ -114,34 +114,26 @@ export default class SliderButton extends Shadow() {
         position: relative;
         display: flex;
         justify-content: center;
+        height: calc(var(--nav-padding-bottom) - 0.75rem);
+        top: calc(var(--nav-height) + 0.75rem);
       }
 
       :host .tab-slider {
         position: absolute;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         flex-direction: column;
-        height: 200px;
-        bottom: -30px;
-        top: 360px;
         z-index: 2;
         width: var(--slider-width);
         max-width: var(--slider-max-width);
       }
 
       :host .progress-bar{
-        position: relative;
         width: 100%;
-        height: 40px;
+        height: 2.5rem;
       }
 
       :host .progress-slider{
-        position: absolute;
-        top: 50%;
         width: 100%;
         height: 6px;
-        margin-top: -3px;
         background: #FFFFFF;
         border-radius: 2px;
         box-shadow: inset 0 1px 0 0 rgb(0 0 0 / 30%);
@@ -152,10 +144,9 @@ export default class SliderButton extends Shadow() {
       :host .progress-slider::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
-        width: 40px;
-        height: 40px;
+        width: 2.5rem;
+        height: 2.5rem;
         background: #D1033B;
-        cursor: pointer;
         border-radius: 50%;
         box-shadow: 0 2px 2px #b90234;
         cursor: grab;
@@ -163,8 +154,8 @@ export default class SliderButton extends Shadow() {
       }
       
       :host .progress-slider::-moz-range-thumb {
-        width: 40px;
-        height: 40px;
+        width: 2.5rem;
+        height: 2.5rem;
         background: #D1033B;
         cursor: pointer;
         border-radius: 50%;
@@ -173,26 +164,11 @@ export default class SliderButton extends Shadow() {
         z-index: 3;
       }
 
-      :host .active-indicator{
-        position: absolute;
-        z-index: 2;
-        top: 50%;
-        left: 0;
-        width: 40px;
-        height: 40px;
-        margin-top: -20px;
-        background-color: #D1033B;
-        border-radius: 50%;
-        box-shadow: 0 2px 2px #b90234;
-        cursor: grab;
-      }
-
       :host .progress-bar:not(.is-dragging) .active-indicator {
         transition: left .4s cubic-bezier(.93,0,.16,1.02);
       }
 
       :host .milestones{
-        position: relative;
         display: flex;
         justify-content: space-evenly;
         width: 100%;
@@ -200,7 +176,7 @@ export default class SliderButton extends Shadow() {
       :host .milestone-wrapper{
         position: relative;
         z-index: 1;
-        width: 185px;
+        width: 11.5625rem;
         padding-top: 10px;
         cursor: pointer;
         text-align: center;
@@ -212,18 +188,18 @@ export default class SliderButton extends Shadow() {
 
       :host .milestone{
         position: absolute;
-        top: -20px;
+        top: -1.5rem;
         left: 50%;
         display: -ms-flexbox;
         display: flex;
-        width: 40px;
-        height: 40px;
+        width: 2.5rem;
+        height: 2.5rem;
         -ms-flex-align: center;
         align-items: center;
         -ms-flex-pack: center;
         justify-content: center;
-        margin-top: -20px;
-        margin-left: -20px;
+        margin-top: -1.25rem;
+        margin-left: -1.25rem;
         cursor: pointer;
       }
 
@@ -231,7 +207,7 @@ export default class SliderButton extends Shadow() {
         position: absolute;
         left: auto;
         right: auto;
-        top: 10px;
+        top: 1.5rem;
         display: none;
       }
 
@@ -239,14 +215,14 @@ export default class SliderButton extends Shadow() {
       :host .milestone::before {
         display: block;
         width: 6px;
-        height: 20px;
+        height: 1.25rem;
         background: #D1033B;
         border-radius: 2px;
         content: '';
         position: absolute;
       }
 
-      @media screen and (max-width: 991px){
+      @media screen and (max-width: _max-width_){
         :host .milestone-mobile{
           display: block;
         }
@@ -257,30 +233,6 @@ export default class SliderButton extends Shadow() {
           width: 100%;
         }
 
-      }
-      
-      @media screen and (min-width: 992px) and (max-width: 1199px){
-        :host .tab-slider {
-          top: 315px;
-        }
-      }
-
-      @media screen and (min-width: 768px) and (max-width: 991px){
-        :host .tab-slider {
-          top: 306px;
-        }
-      }
-
-      @media screen and (min-width: 480px) and (max-width: 767px){
-        :host .tab-slider {
-          top: 213px;
-        }
-      }
-
-      @media screen and (max-width: 479px){
-        :host .tab-slider {
-          top: 135px;
-        }
       }
     `
   }
