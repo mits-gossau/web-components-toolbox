@@ -7,12 +7,11 @@ export default class ProductList extends Prototype() {
     this.config = this.configSetup()
     this.requestArticleCategory = event => {
       this.config.filterOptions.category = [event.detail.tag]
-      this.widgetRenderSetup(this.msrcProductListWrapper, this.config)
+      this.widgetRenderSetup()
     }
   }
 
   connectedCallback () {
-    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.requestArticleCategory)
     const showPromises = []
     if (this.shouldComponentRender()) showPromises.push(this.render())
     if (showPromises.length) {
@@ -22,6 +21,7 @@ export default class ProductList extends Prototype() {
         this.renderCSS()
       })
     }
+    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.requestArticleCategory)
   }
 
   disconnectedCallback () {
@@ -41,8 +41,8 @@ export default class ProductList extends Prototype() {
     return setup
   }
 
-  widgetRenderSetup (node, config, msrc = this.msrc) {
-    msrc.components.articles.productList(node, config)
+  widgetRenderSetup () {
+    this.msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
   }
 
   shouldComponentRender () {
@@ -50,12 +50,13 @@ export default class ProductList extends Prototype() {
   }
 
   render () {
-    return this.loadDependency().then(msrc => {
+    this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
+    return this.loadDependency().then(async msrc => {
       this.msrc = msrc
-      this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
-      this.widgetRenderSetup(this.msrcProductListWrapper, this.config, msrc)
+      await msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
       const getStylesReturn = this.getStyles(document.createElement('style'))
       this.html = [this.msrcProductListWrapper, getStylesReturn[0]]
+      return getStylesReturn[1] // use this line if css build up should be avoided
     })
   }
 

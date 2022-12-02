@@ -138,7 +138,7 @@ export default class Login extends Prototype() {
         if ((button = this.msrcLoginButtonWrapper.querySelector('button'))) button.classList.add('font-size-tiny')
       })
       this.html = [this.msrcLoginButtonWrapper, getStylesReturn[0]]
-      // return getStylesReturn[1] // use this line if css build up should be avoided
+      return getStylesReturn[1] // use this line if css build up should be avoided
     })
   }
 }

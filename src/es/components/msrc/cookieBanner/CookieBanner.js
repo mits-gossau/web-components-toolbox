@@ -34,7 +34,7 @@ import { Prototype } from '../Prototype.js'
  */
 export default class CookieBanner extends Prototype() {
   constructor (...args) {
-    super({ mode: 'false' }, ...args) // disabling shadow-DOM to have msrc styles flow into the node
+    super({ mode: 'false' }, ...args) // disabling shadow-DOM to have msrc styles flow into the node / workaround with getStyles available but not needed, because this component is usually outside any other wc with shadow-dom
 
     this.transitionendListener = event => {
       if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {

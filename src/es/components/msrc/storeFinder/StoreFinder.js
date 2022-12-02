@@ -75,7 +75,7 @@ import { Prototype } from '../Prototype.js'
  * }
  */
 export default class StoreFinder extends Prototype() {
-  // !IMPORTANT: Must be in the LIGHT DOM for styles to get through
+  // !IMPORTANT: Must be in the LIGHT DOM for query Selectors to get through!
   constructor (...args) {
     super({ mode: 'false' }, ...args)
   }

@@ -77,9 +77,9 @@ export default class ReviewsSummary extends Prototype() {
    */
   render () {
     this.msrcContainer = this.root.querySelector('div') || document.createElement('div')
-    return this.loadDependency().then(msrc => {
+    return this.loadDependency().then(async msrc => {
       // Initialize the reviewsSummary button
-      msrc.components.community.ratingsReviews.reviewsSummary(this.msrcContainer, {
+      await msrc.components.community.ratingsReviews.reviewsSummary(this.msrcContainer, {
         env: this.getAttribute('env') || 'local',
         webAPIKey: this.getAttribute('web-api-key') || '',
         originSSR: this.getAttribute('origin-ssr') || null,
@@ -98,7 +98,7 @@ export default class ReviewsSummary extends Prototype() {
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       this.html = [this.msrcContainer, getStylesReturn[0]]
-      // return getStylesReturn[1] // use this line if css build up should be avoided
+      return getStylesReturn[1] // use this line if css build up should be avoided
     })
   }
 }

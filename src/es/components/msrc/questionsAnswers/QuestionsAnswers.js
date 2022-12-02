@@ -79,9 +79,9 @@ export default class QuestionsAnswers extends Prototype() {
    */
   render () {
     this.msrcContainer = this.root.querySelector('div') || document.createElement('div')
-    return this.loadDependency().then(msrc => {
+    return this.loadDependency().then(async msrc => {
       // Initialize the questionsAnswers button
-      msrc.components.community.questionsAnswers(this.msrcContainer, {
+      await msrc.components.community.questionsAnswers(this.msrcContainer, {
         env: this.getAttribute('env') || 'local',
         translationEnv: this.getAttribute('env') || 'local',
         webAPIKey: this.getAttribute('web-api-key') || '',
@@ -102,7 +102,7 @@ export default class QuestionsAnswers extends Prototype() {
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       this.html = [this.msrcContainer, getStylesReturn[0]]
-      // return getStylesReturn[1] // use this line if css build up should be avoided
+      return getStylesReturn[1] // use this line if css build up should be avoided
     })
   }
 }

@@ -45,35 +45,77 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
    * grab the msrc styles from the head style node with the attribute data-styled
    *
    * @param {HTMLStyleElement} [style=document.createElement('style')]
-   * @return {[HTMLStyleElement, Promise<string>]}
+   * @param {number} repeats
+   * @param {number} ms
+   * @return {[HTMLStyleElement, Promise<HTMLStyleElement[]>]}
    */
-  getStyles (style = document.createElement('style'), repeats = 25, ms = 200) {
+  getStyles (style = document.createElement('style'), repeats = 5, ms = 40) {
     style.setAttribute('_css-msrc', '')
     style.setAttribute('protected', 'true') // this will avoid deletion by html=''
+    /** @type {HTMLStyleElement[]} */
+    const grabbedStyles = [] // grab styles only once
+    /**
+     * hook into any function and observe through your func the execution
+     *
+     * @param {any} obj
+     * @param {string} prop
+     * @param {()=>void} func
+     * @return {boolean}
+     */
+    const hook = (obj, prop, func) => {
+      let isHooked
+      obj[`_${prop}_funcs`] = (isHooked = Array.isArray(obj[`_${prop}_funcs`])) ? obj[`_${prop}_funcs`] : []
+      // inject function into array
+      obj[`_${prop}_funcs`].push(func)
+      if (isHooked) return false
+      // setup hook
+      obj[`_${prop}`] = obj[prop]
+      obj[prop] = (...args) => {
+        obj[`_${prop}`](...args) // call original function
+        obj[`_${prop}_funcs`].forEach(func => func(...args)) // call hook/subscribed functions
+      }
+      return true
+    }
+    /**
+     * recursively check for new style[data-styled]
+     *
+     * @param {string} [lastCssText='']
+     * @param {number} [counter=0]
+     * @return {Promise<HTMLStyleElement[]>}
+     */
     const grabStyles = (lastCssText = '', counter = 0) => {
       return new Promise(resolve => {
         let cssText = ''
-        /** @type {HTMLStyleElement[]} */
+        /** @type {any[]} */
         let componentStyles
-        if ((componentStyles = Array.from(document.querySelectorAll('style[data-styled]'))).length) {
-          componentStyles.forEach(componentStyle => {
-            if (componentStyle.sheet && componentStyle.sheet.rules && componentStyle.sheet.rules.length) {
-              Array.from(componentStyle.sheet.rules).forEach(rule => (cssText += rule.cssText))
+        if ((componentStyles = Array.from(document.querySelectorAll('style[data-styled]')).filter(
+          /**
+           * @param {HTMLStyleElement} componentStyle
+           * @return {boolean}
+           */
+          componentStyle => !grabbedStyles.includes(componentStyle))).length
+        ) {
+          componentStyles.forEach(
+             /**
+              * setup Promise function
+              *
+              * @param {any} componentStyle
+              * @return {void}
+              */
+            componentStyle => {
+              // grab the initial style
+              style.textContent += cssText = componentStyle.sheet && componentStyle.sheet.cssRules && componentStyle.sheet.cssRules.length
+                ? Array.from(componentStyle.sheet.cssRules).reduce((acc, cssRule) => (acc += cssRule.cssText), '')
+                : ''
+              // hook/subscribe to new rules set by insertRule commands
+              hook(componentStyle.sheet, 'insertRule', rule => style.textContent += rule)
+              grabbedStyles.push(componentStyle)
             }
-          })
+          )
         }
-        if (counter < repeats || lastCssText !== cssText) {
-          return setTimeout(() => {
-            if (lastCssText === cssText) {
-              counter++
-            } else {
-              counter = 0
-              style.textContent = cssText
-            }
-            resolve(grabStyles(cssText, counter))
-          }, ms)
-        }
-        return resolve(style.textContent = cssText)
+        // add the initial styles to the stylesheet and keep looping to discover new styles
+        if (counter < repeats || lastCssText !== cssText) return setTimeout(() => resolve(grabStyles(cssText, lastCssText === cssText ? counter + 1 : 0)), ms)
+        return resolve(grabbedStyles)
       })
     }
     return [style, grabStyles()]
