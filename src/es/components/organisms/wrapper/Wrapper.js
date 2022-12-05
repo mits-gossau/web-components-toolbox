@@ -282,7 +282,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       }, [0, 0, 0, ''])
       let freeWidth = ((100 - bookedWidth) / (childNodesLengthNotWidthHundredPercent - bookedCount))
       // @ts-ignore
-      if (freeWidth === Infinity) freeWidth = 0
+      if (freeWidth === Infinity || freeWidth === -Infinity) freeWidth = 0
       this.style.textContent = ''
       for (let i = 1; i < childNodesLength + 1; i++) {
         this.setCss(/* CSS */`
