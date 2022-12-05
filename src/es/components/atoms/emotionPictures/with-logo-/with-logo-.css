@@ -1,8 +1,8 @@
 :host {
-   --emotion-pictures-with-logo-a-color-hover: var(--emotion-pictures-with-logo-a-color-hover-custom, var(--color-hover));
+   --emotion-pictures-with-logo-a-color-hover: var(--emotion-pictures-with-logo-a-color-hover-custom, var(--background-color, var(--color-hover)));
    --emotion-pictures-with-logo-a-text-decoration: none;
-   --emotion-pictures-with-logo-bg-background-color: var(--emotion-pictures-with-logo-bg-background-color-custom, var(--m-white));
-   --emotion-pictures-with-logo-bg-color: var(--emotion-pictures-with-logo-bg-color-custom, var(--m-black));
+   --emotion-pictures-with-logo-bg-background-color: var(--emotion-pictures-with-logo-bg-background-color-custom, var(--color-secondary, var(--m-white)));
+   --emotion-pictures-with-logo-bg-color: var(--emotion-pictures-with-logo-bg-color-custom, var(--background-color, var(--m-black)));
    --emotion-pictures-with-logo-div-margin-mobile: var(--emotion-pictures-with-logo-div-margin-mobile-custom, var(--content-spacing-mobile));
    --emotion-pictures-with-logo-h1-text-transform: var(--emotion-pictures-with-logo-h2-text-transform);
    --emotion-pictures-with-logo-h2-font-family-secondary: var(--emotion-pictures-with-logo-h2-font-family-secondary-custom, var(--font-family-bold));
