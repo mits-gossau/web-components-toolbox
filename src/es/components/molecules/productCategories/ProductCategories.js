@@ -55,6 +55,7 @@ export default class ProductCategories extends Shadow() {
         border-bottom: var(--li-border-bottom, 0) solid var(--background-color);
         height:var(--li-height, 100%);
         width:var(--li-width, 100%);
+        transition: var(--transition, all 0.3s ease-out);
       }
       :host li:hover {
         background-color:var(--li-background-color-hover, red);
