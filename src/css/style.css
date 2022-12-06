@@ -366,9 +366,9 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   margin-bottom: 1em;
 }
 :host ol.big li::before {
-  font-size: var(--big-li-before-font-size, 2em);
+  font-size: var(--big-li-before-font-size, 1.75em);
   position: absolute;
-  top: var(--big-li-before-top, -0.4em);
+  top: var(--big-li-before-top, -0.45em);
   left: calc(-1 * var(--big-li-before-left, var(--ol-margin, 1.75em)));
   display: block;
   width: var(--big-li-before-width, var(--ol-margin, 2em));
