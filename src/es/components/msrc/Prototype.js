@@ -64,7 +64,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
      */
     const hook = (obj, prop, func) => {
       let isHooked
-      obj[`_${prop}_funcs`] = (isHooked = Array.isArray(obj[`_${prop}_funcs`])) ? obj[`_${prop}_funcs`] : []
+      obj[`_${prop}_funcs`] = (isHooked === Array.isArray(obj[`_${prop}_funcs`])) ? obj[`_${prop}_funcs`] : []
       // inject function into array
       obj[`_${prop}_funcs`].push(func)
       if (isHooked) return false
