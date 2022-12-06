@@ -82,7 +82,7 @@ export default class CarouselTwo extends Shadow() {
           activeChild.classList.add('active')
           activeChild.setAttribute('aria-hidden', 'false')
           this.dispatchEvent(new CustomEvent(this.getAttribute('carousel-changed') || 'carousel-changed', {
-            detail: {node: activeChild},
+            detail: { node: activeChild },
             bubbles: true,
             cancelable: true,
             composed: true
@@ -507,7 +507,7 @@ export default class CarouselTwo extends Shadow() {
           // harmonize the default-.css namespace with carousel-two-seperate-nav-
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-seperate-nav-')
           setAttributeStyles()
-        })        
+        })
       default:
         return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }
@@ -521,7 +521,7 @@ export default class CarouselTwo extends Shadow() {
   renderHTML () {
     this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
     this.nav = this.root.querySelector(this.cssSelector + ' > nav') || document.createElement('nav')
-    if (!this.hasAttribute('no-default-arrow-nav')){
+    if (!this.hasAttribute('no-default-arrow-nav')) {
       this.arrowNav = this.root.querySelector(this.cssSelector + ' > .arrow-nav') || document.createElement('span')
       this.arrowNav.classList.add('arrow-nav')
     }
@@ -625,7 +625,7 @@ export default class CarouselTwo extends Shadow() {
       } // important that default keyboard works
       // node.scrollIntoView() // scrolls x and y
       this.dispatchEvent(new CustomEvent(this.getAttribute('carousel-changed') || 'carousel-changed', {
-        detail: {node: node},
+        detail: { node },
         bubbles: true,
         cancelable: true,
         composed: true

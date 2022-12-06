@@ -64,7 +64,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
      */
     const hook = (obj, prop, func) => {
       let isHooked
-      obj[`_${prop}_funcs`] = (isHooked = Array.isArray(obj[`_${prop}_funcs`])) ? obj[`_${prop}_funcs`] : []
+      obj[`_${prop}_funcs`] = (isHooked === Array.isArray(obj[`_${prop}_funcs`])) ? obj[`_${prop}_funcs`] : []
       // inject function into array
       obj[`_${prop}_funcs`].push(func)
       if (isHooked) return false
@@ -96,7 +96,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
           componentStyle => !grabbedStyles.includes(componentStyle))).length
         ) {
           componentStyles.forEach(
-             /**
+            /**
               * setup Promise function
               *
               * @param {any} componentStyle
@@ -108,7 +108,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
                 ? Array.from(componentStyle.sheet.cssRules).reduce((acc, cssRule) => (acc += cssRule.cssText), '')
                 : ''
               // hook/subscribe to new rules set by insertRule commands
-              hook(componentStyle.sheet, 'insertRule', rule => style.textContent += rule)
+              hook(componentStyle.sheet, 'insertRule', rule => { style.textContent += rule })
               grabbedStyles.push(componentStyle)
             }
           )
