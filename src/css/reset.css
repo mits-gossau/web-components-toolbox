@@ -120,6 +120,6 @@ a[href^="mailto:"] {
 }
 /* https://github.com/csstools/sanitize.css/blob/main/assets.css */
 :where(iframe, img, input, video, select, textarea) {
-  height: auto;
+  /* height: auto; */
   max-width: 100%;
 }

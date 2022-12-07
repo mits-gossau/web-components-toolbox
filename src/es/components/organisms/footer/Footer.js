@@ -451,7 +451,7 @@ export default class Footer extends Shadow() {
         gap: 1.875rem;
       }
       :host .footer-links-row:not(:last-child){
-        border-right: 1px solid var(--m-gray-500);
+        border-right: var(--footer-default-boarder-right-custom, 1px solid var(--m-gray-500));
       }
       :host .footer-links-row ul, :host .footer-links-row ul.bull {
         list-style: none;
