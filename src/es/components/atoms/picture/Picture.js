@@ -170,48 +170,51 @@ export default class Picture extends Intersection() {
         filter: var(--filter-hover, var(--filter, none));
         transform: var(--transform-hover, var(--transform, none));
       }
-      ${(this.hasAttribute('no-modal-icon')) ? /* css */ `
-        :host([open-modal]) {
-          cursor: pointer;
-        }
-        :host([open-modal]) .close-btn {
-          display: none;
-        }
-      ` : /* css */`
       /* modal stuff */
-      :host([open-modal]) {
-        display: block !important; /* must be display block for adjustBtnPosition calculations of this.getBoundingClientRect */
-        cursor: pointer;
-        position: relative;
+      ${(this.hasAttribute('no-modal-icon')) 
+        ? /* css */ `
+          :host([open-modal]) {
+            cursor: pointer;
+          }
+          :host([open-modal]) .close-btn {
+            display: none;
+          }
+        `
+        : /* css */`
+          :host([open-modal]) {
+            display: block !important; /* must be display block for adjustBtnPosition calculations of this.getBoundingClientRect */
+            cursor: pointer;
+            position: relative;
+          }
+          :host([open-modal][open]) > .close-btn.adjusted {
+            display: none;
+          }
+          :host([open-modal][loaded]:not([open])) > .close-btn.adjusted {
+            display: flex;
+            animation: var(--close-btn-appear, appear .3s ease-out);
+          }
+          :host([open-modal]) > .close-btn {
+            background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
+            border-radius: 50%;
+            border: 0;
+            box-sizing: border-box;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            height: 7px;
+            padding: 0.75em;
+            width: 7px;
+            position: absolute;
+            right: calc(var(--close-btn-right, var(--content-spacing)) / 2);
+            bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
+          }
+          :host([open-modal]) > .close-btn > span {
+            height: 22px;
+            width: 22px;
+          }
+        `
       }
-      :host([open-modal][open]) > .close-btn.adjusted {
-        display: none;
-      }
-      :host([open-modal][loaded]:not([open])) > .close-btn.adjusted {
-        display: flex;
-        animation: var(--close-btn-appear, appear .3s ease-out);
-      }
-      :host([open-modal]) > .close-btn {
-        background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
-        border-radius: 50%;
-        border: 0;
-        box-sizing: border-box;
-        cursor: pointer;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        height: 7px;
-        padding: 0.75em;
-        width: 7px;
-        position: absolute;
-        right: calc(var(--close-btn-right, var(--content-spacing)) / 2);
-        bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
-      }
-      :host([open-modal]) > .close-btn > span {
-        height: 22px;
-        width: 22px;
-      }
-      `}
       @media only screen and (max-width: _max-width_) {
         :host picture img {
           border-radius: var(--border-radius-mobile, 0);

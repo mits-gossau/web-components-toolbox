@@ -75,6 +75,7 @@ export default class Hotspot extends Shadow() {
         }
 
         :host .image-button {
+            cursor: pointer;
             position: absolute;
             background-color: var(--color-secondary);
             right: 1rem;
