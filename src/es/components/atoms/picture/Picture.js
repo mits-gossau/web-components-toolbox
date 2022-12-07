@@ -176,8 +176,9 @@ export default class Picture extends Intersection() {
           :host([open-modal]) {
             cursor: pointer;
           }
-          :host([open-modal]) .close-btn {
+          :host([open-modal]) > .close-btn {
             display: none;
+            background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
           }
         `
         : /* css */`
