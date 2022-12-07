@@ -123,15 +123,58 @@ export default class Arrow extends Shadow() {
       :host([direction=left]) > svg {
         transform: rotate(180deg);
       }
-      @keyframes move {
-        0% {transform: translateY(0);}
-        48% {transform: translateY(-0.8em); opacity: 1;}
-        49% {transform: translateY(-0.8em); opacity: 0;}
-        50% {transform: translateY(0.8em); opacity: 0;}
-        51% {transform: translateY(0.8em); opacity: 1;}
-        100% {transform: translateY(0);}
-      }
     `
+    switch (this.getAttribute('direction')) {
+      case 'up':
+        this.css = /* css */`
+          @keyframes move {
+            0% {transform: rotate(270deg) translateY(0);}
+            48% {transform: rotate(270deg) translateY(-0.8em); opacity: 1;}
+            49% {transform: rotate(270deg) translateY(-0.8em); opacity: 0;}
+            50% {transform: rotate(270deg) translateY(0.8em); opacity: 0;}
+            51% {transform: rotate(270deg) translateY(0.8em); opacity: 1;}
+            100% {transform: rotate(270deg) translateY(0);}
+          }
+        `
+        break
+      case 'down':
+        this.css = /* css */`
+          @keyframes move {
+            0% {transform: rotate(90deg) translateY(0);}
+            48% {transform: rotate(90deg) translateY(-0.8em); opacity: 1;}
+            49% {transform: rotate(90deg) translateY(-0.8em); opacity: 0;}
+            50% {transform: rotate(90deg) translateY(0.8em); opacity: 0;}
+            51% {transform: rotate(90deg) translateY(0.8em); opacity: 1;}
+            100% {transform: rotate(90deg) translateY(0);}
+          }
+        `
+        break
+      case 'left':
+        this.css = /* css */`
+          @keyframes move {
+            0% {transform: rotate(180deg) translateY(0);}
+            48% {transform: rotate(180deg) translateY(-0.8em); opacity: 1;}
+            49% {transform: rotate(180deg) translateY(-0.8em); opacity: 0;}
+            50% {transform: rotate(180deg) translateY(0.8em); opacity: 0;}
+            51% {transform: rotate(180deg) translateY(0.8em); opacity: 1;}
+            100% {transform: rotate(180deg) translateY(0);}
+          }
+        `
+        break
+      default:
+        // right
+        this.css = /* css */`
+          @keyframes move {
+            0% {transform: translateY(0);}
+            48% {transform: translateY(-0.8em); opacity: 1;}
+            49% {transform: translateY(-0.8em); opacity: 0;}
+            50% {transform: translateY(0.8em); opacity: 0;}
+            51% {transform: translateY(0.8em); opacity: 1;}
+            100% {transform: translateY(0);}
+          }
+        `
+        break
+    }
     // font-family can have an effect on size on the bounding h-tag with .bg-color
     if (this.parentElement && this.parentElement.children.length === 1) this.parentElement.setAttribute('style', 'font-family: HelveticaNowText, Helvetica, Arial, sans-serif;')
   }

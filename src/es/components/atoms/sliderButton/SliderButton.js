@@ -1,7 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global CustomEvent */
 /* global self */
 
 /**
@@ -22,7 +21,7 @@ export default class SliderButton extends Shadow() {
     this.hasRendered = false
 
     this.carouselChanged = event => {
-      const id = Number(event.detail.node.getAttribute('id').replace(/.*-(.*?)/,'$1'))
+      const id = Number(event.detail.node.getAttribute('id').replace(/.*-(.*?)/, '$1'))
       const index = id + 1
       const value = index * 100 - 50
 
@@ -274,7 +273,7 @@ export default class SliderButton extends Shadow() {
       milestone.setAttribute('data-index', index)
       const milestoneBar = document.createElement('span')
       milestoneBar.classList.add('milestone-progress-bar')
-      milestoneBar.setAttribute('data-index', index)      
+      milestoneBar.setAttribute('data-index', index)
       milestone.appendChild(milestoneBar)
 
       milestoneDiv.appendChild(milestone)
@@ -312,7 +311,8 @@ export default class SliderButton extends Shadow() {
   get sliderDiv () {
     return this._sliderDiv || (this._sliderDiv = document.createElement('div'))
   }
-    get milestoneWrapper () {
+
+  get milestoneWrapper () {
     return this._milestoneWrapper || (this._milestoneWrapper = document.createElement('div'))
   }
 

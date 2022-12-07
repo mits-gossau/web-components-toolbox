@@ -223,7 +223,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
     if (this.hasAttribute('no-calc-column-width')) return
     self.requestAnimationFrame(timeStamp => {
       // set width attributes as css vars
-      let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE' && !node.hasAttribute('hidden'))
+      let childNodes = Array.from(children).filter(node => node.nodeName !== 'STYLE' && (node.nodeName !== 'DIV' || !node.hasAttribute('hidden'))) // ignore hidden divs to allow placing hidden elements, which then must be wrapped by <div hidden>...</div>
       const childNodesLength = Number(this.getAttribute('simulate-children')) || childNodes.length
       let childNodesLengthNotWidthHundredPercent = childNodesLength
       if (childNodes.length < childNodesLength) {
@@ -282,7 +282,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       }, [0, 0, 0, ''])
       let freeWidth = ((100 - bookedWidth) / (childNodesLengthNotWidthHundredPercent - bookedCount))
       // @ts-ignore
-      if (freeWidth === Infinity) freeWidth = 0
+      if (freeWidth === Infinity || freeWidth === -Infinity) freeWidth = 0
       this.style.textContent = ''
       for (let i = 1; i < childNodesLength + 1; i++) {
         this.setCss(/* CSS */`

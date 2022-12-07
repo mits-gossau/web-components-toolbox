@@ -50,3 +50,26 @@ tbody tr td:first-child {
     min-width: 30%;
     max-width: 30%;
 }
+
+:host ol {
+    padding-left: 2em;
+    counter-reset: item;
+    list-style: none;
+}
+
+:host ol li {
+    position: relative;
+    margin-bottom: 1em;
+}
+
+:host ol li::before {
+    font-size: 1.75em;
+    position: absolute;
+    top: -0.45em;
+    left: calc(-1 * 1.75em);
+    width: 2em;
+    color: var(--color-secondary);
+    content: counters(item, ".") ".";
+    counter-increment: item;
+    text-align: center;
+}
