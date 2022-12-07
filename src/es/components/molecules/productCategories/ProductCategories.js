@@ -61,11 +61,8 @@ export default class ProductCategories extends Shadow() {
         background-color:var(--li-background-color-hover, red);
       }
       :host a-link {
-        align-items:var(--a-link-align-items,center);
-        display:var(--a-link-display, flex);
-        flex-direction:var(--a-link-flex-direction,row);
+        display:var(--a-link-display, block); 
         height:var(--a-link-height,100%);
-        justify-content:var(--a-link-justify-content, flex-start);
         width:var(--a-link-width,100%);
       }
       @media only screen and (max-width: _max-width_) {}`

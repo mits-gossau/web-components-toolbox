@@ -6,9 +6,4 @@
     --categories-default-li-border-bottom:var(--categories-default-li-border-bottom-custom, 0);
     --categories-default-li-height:var(--categories-default-li-height-custom, 100%);
     --categories-default-ul-list-style:var(--categories-default-ul-list-style-custom, none);
-    --category-icon-img-margin: 0 1.5em 0 0.75em;
-    --category-icon-img-width: 2rem;
-    --category-link-color-hover:var(--category-link-color-hover-custom, var(--background-color));
-    --category-link-color:var(--category-link-color-custom, var(--color-secondary, red));
-    --category-link-height:var(--category-link-height-custom, auto);
 }
