@@ -26,6 +26,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  *  {string} [alt] alt-text for the image
  *  {string} [loading=lazy] image loading
  *  {string} [open-modal=""] does emit event with name set by open-modal which can be reacted on by eg. organisms/Modal.js
+ *  {string} [no-modal-icon=""] hidde the open-modal button for a cleaner look
  *  {string} [picture-load=""] does emit event with name set by picture-load which can be reacted on by eg. molecules/Flyer.js
  * }
  * @css {
@@ -169,6 +170,14 @@ export default class Picture extends Intersection() {
         filter: var(--filter-hover, var(--filter, none));
         transform: var(--transform-hover, var(--transform, none));
       }
+      ${(this.hasAttribute('no-modal-icon')) ? /* css */ `
+        :host([open-modal]) {
+          cursor: pointer;
+        }
+        :host([open-modal]) .close-btn {
+          display: none;
+        }
+      ` : /* css */`
       /* modal stuff */
       :host([open-modal]) {
         display: block !important; /* must be display block for adjustBtnPosition calculations of this.getBoundingClientRect */
@@ -202,6 +211,7 @@ export default class Picture extends Intersection() {
         height: 22px;
         width: 22px;
       }
+      `}
       @media only screen and (max-width: _max-width_) {
         :host picture img {
           border-radius: var(--border-radius-mobile, 0);

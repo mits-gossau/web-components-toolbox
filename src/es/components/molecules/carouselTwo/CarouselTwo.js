@@ -13,6 +13,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * TODO: slides-per-view
  *
  * @attribute {
+ * {string} [small-arrow-nav=""] remove wight:50% on arrows to allow a click on slide
  * }
  * @css {
  * }
@@ -334,7 +335,7 @@ export default class CarouselTwo extends Shadow() {
         margin: var(--arrow-nav-margin, 0);
         justify-content: center;
         height: 100%;
-        width: 50%;
+        ${!this.hasAttribute('small-arrow-nav') ? 'width: 50%;' : ''}
         opacity: var(--arrow-nav-opacity, 0.5);
         transition: all .3s ease-out;
       }
