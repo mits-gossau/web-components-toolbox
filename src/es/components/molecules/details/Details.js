@@ -130,13 +130,18 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
   connectedCallback () {
     super.connectedCallback()
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.openEventName, this.openEventListener)
     self.addEventListener('resize', this.resizeListener)
     this.root.addEventListener('click', this.clickEventListener)
     document.body.addEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
     this.checkMedia()
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => (this.hidden = false))
+    }
   }
 
   disconnectedCallback () {
@@ -316,7 +321,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
   /**
    * renders the m-Details css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */` 
