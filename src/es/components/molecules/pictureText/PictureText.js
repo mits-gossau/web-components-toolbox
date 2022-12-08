@@ -80,6 +80,9 @@ export default class Hotspot extends Shadow() {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr;
         max-width: 100%;
+        align-items: end;
+        overflow: overlay;
+        max-height: 90vh;
       }
       :host .wrapper > * {
         grid-column: 1;
@@ -89,8 +92,8 @@ export default class Hotspot extends Shadow() {
         cursor: pointer;
         background-color: var(--image-button-background-color);
         margin: 1em;
-        width: 2.4rem;
-        height: 2.4rem;
+        width: 38px;
+        height: 38px;
         border: 0;
         border-radius: 50%;
         transition: background-color 0.3s ease-out;
@@ -103,9 +106,6 @@ export default class Hotspot extends Shadow() {
       :host([place-bottom]) .image-button {
         align-self: end;
       }
-      :host([place-bottom]) .image-button::before {
-        top: 1rem;
-      }
       :host .image-button:hover{
         background-color: var(--image-button-background-color-hover, var(--image-button-background-color));
       }
@@ -113,20 +113,20 @@ export default class Hotspot extends Shadow() {
         border-top: 2px solid var(--image-button-border-color);
         border-bottom: 2px solid var(--image-button-border-color);
         position: absolute;
-        top: 0.98rem;
-        left: 0.7rem;
-        width: 1rem;
-        height: 0.2rem;
+        top: 16px;
+        left: 11px;
+        width: 16px;
+        height: 3px;
         content: '';
         transition: border-top-color 0.3s ease-out;
       }
       :host .image-button::after{
         border-bottom: 2px solid var(--image-button-border-color);
         position: absolute;
-        top: 1rem;
-        left: 0.7rem;
-        width: 0.625rem;
-        height: 0.625rem;
+        top: 16px;
+        left: 11px;
+        width: 10px;
+        height: 10px;
         content: '';
         transition: border-bottom-color 0.3s ease-out;
       }
@@ -158,9 +158,6 @@ export default class Hotspot extends Shadow() {
       @media only screen and (max-width: _max-width_) {
         :host .content-wrapper {
           background: var(--content-wrapper-background-mobile, var(--content-wrapper-background));
-        }
-        :host([place-bottom]) .image-button::before, :host .image-button::before {
-          top: 0.92rem;
         }
       }
     `

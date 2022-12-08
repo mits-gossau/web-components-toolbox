@@ -7,4 +7,6 @@
     --picture-text-default-image-button-background-color: var(--picture-text-default-image-button-background-color-custom, var(--color-secondary));
     --picture-text-default-image-button-border-color: var(--picture-text-default-image-button-border-color-custom, var(--background-color));
     --picture-text-default-p-margin: 0;
+    --img-object-fit: cover;
+    --img-width: 100%;
   }
