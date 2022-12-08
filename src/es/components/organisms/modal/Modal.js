@@ -226,7 +226,6 @@ export default class Modal extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host > section {
-        cursor: pointer;
         height: 0;
         opacity: 0;
         overscroll-behavior: contain;
@@ -274,6 +273,10 @@ export default class Modal extends Shadow() {
         height: 14px;
         padding: 1.5em;
         width: 14px;
+        position: absolute;
+        top: 1em;
+        right: 1em;
+        z-index: 2;
       }
       :host([open]) > section > div > #close.close-btn span {
         height: 14px;

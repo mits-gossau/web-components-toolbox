@@ -25,6 +25,12 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  --text-transform [none]
  *  --color-hover [yellow]
  * }
+ *
+ *
+ * @deprecated Do not use this component anymore!
+ * Try using the "atoms/button" component for link-like elements instead
+ *
+ *
  */
 export default class Link extends Shadow() {
   constructor (a, ...args) {

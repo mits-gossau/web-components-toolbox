@@ -3,12 +3,12 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global CustomEvent */
 
-export default class ProductCategories extends Shadow() {
+export default class Categories extends Shadow() {
   constructor (...args) {
     super(...args)
 
     this.clickListener = event => {
-      if (!event.target || event.target.tagName !== 'A-LINK') return false
+      if (!event.target || event.target.tagName !== 'A-BUTTON') return false
       event.preventDefault()
       this.dispatchRequestCategoriesEvent(event.target.getAttribute('category'))
     }
@@ -51,19 +51,10 @@ export default class ProductCategories extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
       :host li {
-        background-color:var(--li-background-color, red);
-        border-bottom: var(--li-border-bottom, 0) solid var(--background-color);
-        height:var(--li-height, 100%);
-        width:var(--li-width, 100%);
-        transition: var(--transition, all 0.3s ease-out);
+        padding-bottom: var(--li-padding-bottom, 0);
       }
-      :host li:hover {
-        background-color:var(--li-background-color-hover, red);
-      }
-      :host a-link {
-        display:var(--a-link-display, block); 
-        height:var(--a-link-height,100%);
-        width:var(--a-link-width,100%);
+      :host li > a-button {
+        width:var(--a-button-width, 100%);
       }
       @media only screen and (max-width: _max-width_) {}`
 
