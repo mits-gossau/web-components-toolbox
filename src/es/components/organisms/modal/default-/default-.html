@@ -125,6 +125,7 @@
 <br>
 <h2>Modal grabbing the hidden carousel</h2>
 <o-wrapper namespace=wrapper-text-center->
+  <a-picture width=25% open-modal open-modal-target='div[hidden]' defaultSource="./img/Virtualhub StageOne LED.jpg" alt="Bio Herbst Istock 871137282 Bearbeitet"></a-picture>
   <a-picture width=25% open-modal open-modal-target='div[hidden]' defaultSource="./img/jcr_content2.jpeg" alt="Migros1"></a-picture>
   <a-picture width=25% open-modal open-modal-target='div[hidden]' defaultSource="./img/jcr_content3.jpeg" alt="Migros2"></a-picture>
   <a-picture width=25% open-modal open-modal-target='div[hidden]' defaultSource="./img/dummy_2.jpeg" alt="Migros3"></a-picture>
@@ -133,6 +134,16 @@
   <div hidden>
     <m-carousel-two history namespace="carousel-two-default-">
       <section>
+        <m-picture-text namespace="picture-text-default-" place-right place-bottom>             
+            <a-picture picture-load
+                      alt="Bio Herbst Istock 871137282 Bearbeitet"
+                      defaultSource="./img/Virtualhub StageOne LED.jpg">
+            </a-picture>
+                <div class="content">
+                    <h3 class="title-border">Virtualhub LED Studio</h3>
+                    <div><p>Position: SideHall 3<br />Grösse Bühne: 8.00 x 5.00m<br />Anzahl Speaker: bis 6 gleichzeitig<br />Position Speaker: sitzend / stehend<br />Anzahl Publikum: max. 50 Gäste<br /><br />Hintergrund: LED Wall curved<br />Grösse: 13.00m x 3.50m<br />Videoregie: Barco E2<br /><br />Catering: individuelles Konzept</p></div>
+                </div>
+        </m-picture-text>
         <a-picture picture-load defaultSource="./img/jcr_content2.jpeg" alt="Migros1"></a-picture>
         <a-picture picture-load defaultSource="./img/jcr_content3.jpeg" alt="Migros2"></a-picture>
         <a-picture picture-load defaultSource="./img/jcr_content5_2.jpeg" alt="Migros3"></a-picture>

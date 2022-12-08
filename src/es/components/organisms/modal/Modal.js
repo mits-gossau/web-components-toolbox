@@ -226,7 +226,6 @@ export default class Modal extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host > section {
-        cursor: pointer;
         height: 0;
         opacity: 0;
         overscroll-behavior: contain;
