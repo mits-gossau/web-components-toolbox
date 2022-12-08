@@ -58,7 +58,7 @@ import { Prototype } from '../Prototype.js'
  *    oidcClaims: OIDCClaims,
  *    language: string,
  *    responseType: string,
- *  }>} [config="{}"] (not used!)
+ *  }>} [config=""] (not used!)
  * }
  */
 export default class Login extends Prototype() {
@@ -130,7 +130,7 @@ export default class Login extends Prototype() {
         size: this.getAttribute('size') || 'small',
         loginReturnTo: this.getAttribute('loginReturnTo') || '',
         logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
-        config: this.constructor.parseAttribute(this.getAttribute('config') || '{}')
+        config: this.hasAttribute('config') ? this.constructor.parseAttribute(this.getAttribute('config') || '{}') : ''
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       getStylesReturn[1].then(() => {
