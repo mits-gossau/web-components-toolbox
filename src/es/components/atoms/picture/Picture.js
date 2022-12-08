@@ -171,7 +171,7 @@ export default class Picture extends Intersection() {
         transform: var(--transform-hover, var(--transform, none));
       }
       /* modal stuff */
-      ${(this.hasAttribute('no-modal-icon')) 
+      ${(this.hasAttribute('no-modal-icon'))
         ? /* css */ `
           :host([open-modal]) {
             cursor: pointer;
