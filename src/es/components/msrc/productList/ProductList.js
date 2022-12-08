@@ -6,7 +6,7 @@ export default class ProductList extends Prototype() {
     super(...args)
     this.config = this.configSetup()
     this.requestArticleCategory = event => {
-      this.config.filterOptions.category = [event.detail.tag]
+      this.config.filterOptions.category = [event.detail.tag || event.detail.category]
       this.widgetRenderSetup()
     }
   }

@@ -21,7 +21,6 @@ export default class Hotspot extends Shadow() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)
 
-
     this.buttonClickListener = e => {
       if (this.hasAttribute('show-text')) {
         this.removeAttribute('show-text')
@@ -29,7 +28,6 @@ export default class Hotspot extends Shadow() {
         this.setAttribute('show-text', true)
       }
     }
-
   }
 
   connectedCallback () {
@@ -186,7 +184,7 @@ export default class Hotspot extends Shadow() {
    */
   renderHTML () {
     if (this.content === null) return
-    
+
     this.button.classList.add('image-button')
 
     this.contentWrapper.classList.add('content-wrapper')
