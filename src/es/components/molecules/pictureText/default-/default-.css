@@ -1,0 +1,12 @@
+:host {
+    --picture-text-default-color: var(--picture-text-default-color-custom, var(--background-color, var(--m-white)));
+    --picture-text-default-content-wrapper-background-mobile: var(--picture-text-default-content-wrapper-background-mobile-custom, linear-gradient(-180deg,rgba(255,255,255,0) 0,rgba(255,255,255,0) 30%,rgba(61,61,61,.5) 50%,rgba(14,14,14,.8) 100%));
+    --picture-text-default-content-wrapper-background: var(--picture-text-default-content-wrapper-background-custom, linear-gradient(-180deg,rgba(255,255,255,0) 0,rgba(255,255,255,0) 30%,rgba(61,61,61,.5) 50%,rgba(14,14,14,.8) 60%,rgba(14,14,14,.8) 100%));
+    --picture-text-default-image-button-background-color-hover: var(--picture-text-default-image-button-background-color-hover-custom, var(--color-hover));
+    --picture-text-default-image-button-background-color-show-text: var(--picture-text-default-image-button-background-color-show-text-custom, var(--m-gray-600));
+    --picture-text-default-image-button-background-color: var(--picture-text-default-image-button-background-color-custom, var(--color-secondary));
+    --picture-text-default-image-button-border-color: var(--picture-text-default-image-button-border-color-custom, var(--background-color));
+    --picture-text-default-p-margin: 0;
+    --img-object-fit: cover;
+    --img-width: 100%;
+  }

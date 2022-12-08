@@ -11,10 +11,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *
  * }
  * @attribute {
- * {number} [top] The position to top
- * {number} [left] The position to left
- * {left, right, top, bottom } [place=bottom] default is bottom
-
+ * { has } [place-right] default is left
+ * { has } [place-bottom] default is top
  * }
  */
 export default class Hotspot extends Shadow() {
@@ -28,16 +26,23 @@ export default class Hotspot extends Shadow() {
         this.setAttribute('show-text', true)
       }
     }
+
+    this.clickListener = event => {
+      if (event.composedPath()[0] !== this.button && this.hasAttribute('show-text')) this.removeAttribute('show-text')
+    }
+
   }
 
   connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     this.button.addEventListener('click', this.buttonClickListener)
+    this.addEventListener('click', this.clickListener)
   }
 
   disconnectedCallback () {
     this.button.removeEventListener('click', this.buttonClickListener)
+    this.removeEventListener('click', this.clickListener)
   }
 
   /**
@@ -65,99 +70,95 @@ export default class Hotspot extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-        :host .wrapper {
-            width: max-content;
-            position: relative;
-            --color: var(--m-white);
-            max-width: 100%;
-        }
-
-        :host .image-button {
-            cursor: pointer;
-            position: absolute;
-            background-color: var(--color-secondary);
-            right: 1rem;
-            bottom: 0.625rem;
-            width: 2.4rem;
-            height: 2.4rem;
-            border: 0;
-            border-radius: 50%;
-            transition: background-color 150ms 50ms ease-in-out;
-            z-index: 2;
-        }
-        :host .image-button:hover{
-            background-color: var(--color-hover);
-        }
-        :host .image-button::before{
-            border-top: 2px solid #fff;
-            border-bottom: 2px solid #fff;
-            position: absolute;
-            top: 1rem;
-            left: 0.7rem;
-            width: 1rem;
-            height: 0.2rem;
-            content: '';
-            transition: border-top-color 150ms 50ms ease-in-out;
-        }
-        :host .image-button::after{
-            border-bottom: 2px solid #fff;
-            position: absolute;
-            top: 1rem;
-            left: 0.7rem;
-            width: 0.625rem;
-            height: 0.625rem;
-            content: '';
-            transition: border-bottom-color 150ms 50ms ease-in-out;
-        }
-
+      :host([show-text]) {
+        cursor: pointer;
+      }
+      :host .wrapper {
+        width: max-content;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+        max-width: 100%;
+        align-items: end;
+        overflow: overlay;
+        max-height: 90vh;
+      }
+      :host .wrapper > * {
+        grid-column: 1;
+        grid-row: 1;
+      }
+      :host .image-button {
+        cursor: pointer;
+        background-color: var(--image-button-background-color);
+        margin: 1em;
+        width: 38px;
+        height: 38px;
+        border: 0;
+        border-radius: 50%;
+        transition: background-color 0.3s ease-out;
+        position: relative;
+        z-index: 3;
+      }
+      :host([place-right]) .image-button {
+        justify-self: end;
+      }
+      :host([place-bottom]) .image-button {
+        align-self: end;
+      }
+      :host .image-button:hover{
+        background-color: var(--image-button-background-color-hover, var(--image-button-background-color));
+      }
+      :host .image-button::before{
+        border-top: 2px solid var(--image-button-border-color);
+        border-bottom: 2px solid var(--image-button-border-color);
+        position: absolute;
+        top: 16px;
+        left: 11px;
+        width: 16px;
+        height: 3px;
+        content: '';
+        transition: border-top-color 0.3s ease-out;
+      }
+      :host .image-button::after{
+        border-bottom: 2px solid var(--image-button-border-color);
+        position: absolute;
+        top: 16px;
+        left: 11px;
+        width: 10px;
+        height: 10px;
+        content: '';
+        transition: border-bottom-color 0.3s ease-out;
+      }
+      :host .content-wrapper {
+        display: flex;
+        align-items: end;
+        color: var(--color);
+        background: var(--content-wrapper-background);
+        opacity: 0;
+        transition: opacity .3s ease-out;
+      }
+      :host .content {
+        padding: 1em;
+        z-index: 2;
+      }
+      :host([show-text]) .content-wrapper{
+        opacity: 1;
+      }
+      :host([show-text]) .image-button{
+        background-color: var(--image-button-background-color-show-text, var(--image-button-background-color));
+      }
+      :host([show-text]) .image-button::before{
+        border-top: 2px solid transparent;
+        border-bottom: 2px solid var(--image-button-border-color);
+      }
+      :host([show-text]) .image-button::after{
+        border-bottom: 2px solid transparent;
+      }
+      @media only screen and (max-width: _max-width_) {
         :host .content-wrapper {
-            color: var(--color);
-            display: none;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            background: linear-gradient(-180deg,rgba(255,255,255,0) 0,rgba(255,255,255,0) 30%,rgba(61,61,61,.5) 50%,rgba(14,14,14,.8) 100%);
-            opacity: 0;
-            transition: opacity 150ms .2s ease-in-out;
+          background: var(--content-wrapper-background-mobile, var(--content-wrapper-background));
         }
-
-        :host .content {
-            padding: 0 2.2rem 3.1rem;
-            z-index: 2;
-        }
-
-        :host([show-text]) .content-wrapper{
-            display: flex;
-            align-items: end;
-            opacity: 1;
-            transition: opacity 150ms 0s ease-in-out;
-        }
-
-        :host([show-text]) .image-button{
-            background-color: var(--m-gray-600);
-        }
-        :host([show-text]) .image-button::before{
-            border-top: 2px solid transparent;
-            border-bottom: 2px solid #fff;
-        }
-        :host([show-text]) .image-button::after{
-            border-bottom: 2px solid transparent;
-        }
-
-
-        @media only screen and (max-width: _max-width_) {
-            :host .wrapper {
-                display: flex;
-                align-items: center;
-                height: 90vh;
-            }
-
-            :host .content-wrapper {
-                background: linear-gradient(-180deg,rgba(255,255,255,0) 0,rgba(255,255,255,0) 30%,rgba(61,61,61,.5) 50%,rgba(14,14,14,.8) 60%,rgba(14,14,14,.8) 100%);
-            }
-        }
+      }
     `
 
     const styles = [{
