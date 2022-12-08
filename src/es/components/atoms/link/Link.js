@@ -25,6 +25,12 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  --text-transform [none]
  *  --color-hover [yellow]
  * }
+ *
+ *
+ * @deprecated Do not use this component anymore!
+ * Try using the "atoms/button" component for link-like elements instead
+ *
+ *
  */
 export default class Link extends Shadow() {
   constructor (a, ...args) {
@@ -210,6 +216,22 @@ export default class Link extends Shadow() {
           }
         `
         : ''}
+        ${this.getAttribute('namespace') === 'category-'
+        ? /* CSS */`
+          :host > a {
+            display: flex;
+            align-items: center;
+            gap:var(--gap, 1em);
+
+          }
+          :host > a svg {
+            min-width: var(--svg-min-width, 1.75em);
+            min-height: var(--svg-min-height, 1.75em);
+            width: var(--svg-width, 1.75em);
+            height: var(--svg-height, 1.75em);
+          }
+        `
+        : ''}
       @media only screen and (max-width: _max-width_) {
         :host > a, :host > ${this.hitAreaTagName} {
           color:var(--color-mobile, var(--color, inherit));
@@ -235,6 +257,11 @@ export default class Link extends Shadow() {
       case 'tag-filter-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tag-filter-/tag-filter-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+      case 'category-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./category-/category-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
     }

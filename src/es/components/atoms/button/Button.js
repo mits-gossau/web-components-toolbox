@@ -108,7 +108,7 @@ export default class Button extends Shadow() {
         font-family: var(--font-family, unset);
         font-size: var(--font-size, 1em);
         font-weight: var(--font-weight, 400);
-        justify-content: center;
+        justify-content: var(--justify-content, center);
         letter-spacing: var(--letter-spacing, normal);
         line-height: var(--line-height, 1.5em);
         margin: var(--margin, auto);
@@ -208,6 +208,20 @@ export default class Button extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`,
           namespace: false
         }])
+      case 'button-category-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./primary-/primary-.css`,
+          namespace: false
+        },
+        {
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./category-/category-.css`,
+          namespace: false
+        }], false).then(fetchCSSParams => {
+          // harmonize the primary-.css namespace with --category
+          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--primary-/g, '--category-')
+        })
     }
   }
 

@@ -1,0 +1,4 @@
+:host {
+    --category-color-hover: var(--category-color-hover-custom, var(--background-color));
+    --category-color: var(--category-color-custom, var(--color-secondary, red));
+}

@@ -47,18 +47,6 @@ import { Prototype } from '../Prototype.js'
  *    scope: string,
  *    claims: { userinfo: { given_name: null, family_name: null, email: null } }
  *  }>} [setup="{}"] (not used!)
- *  {string|Partial<{
- *    env: 'local|test|production',
- *    oidcClientId: string,
- *    oidcClientSecret: string,
- *    oidcRedirectURI: string,
- *    oidcSilentRedirectURI: string,
- *    oidcScope: string,
- *    oidcLoginUrl: string,
- *    oidcClaims: OIDCClaims,
- *    language: string,
- *    responseType: string,
- *  }>} [config="{}"] (not used!)
  * }
  */
 export default class Login extends Prototype() {
@@ -129,8 +117,7 @@ export default class Login extends Prototype() {
         theme: this.getAttribute('theme') || 'alnatura',
         size: this.getAttribute('size') || 'small',
         loginReturnTo: this.getAttribute('loginReturnTo') || '',
-        logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
-        config: this.constructor.parseAttribute(this.getAttribute('config') || '{}')
+        logoutReturnTo: this.getAttribute('logoutReturnTo') || ''
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       getStylesReturn[1].then(() => {
