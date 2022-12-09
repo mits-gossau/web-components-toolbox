@@ -30,7 +30,6 @@ export default class Hotspot extends Shadow() {
     this.clickListener = event => {
       if (event.composedPath()[0] !== this.button && this.hasAttribute('show-text')) this.removeAttribute('show-text')
     }
-
   }
 
   connectedCallback () {
