@@ -298,6 +298,9 @@ export default class CarouselTwo extends Shadow() {
       :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover {
         opacity: var(--nav-opacity-hover, var(--nav-opacity-active, 1));
       }
+      :host(.has-default-nav) > nav {
+        flex-wrap: wrap;
+      }
       :host(.has-default-nav) > nav > * {
         background-color: var(--nav-background-color, pink);
         border-radius: var(--nav-border-radius, 50%);
