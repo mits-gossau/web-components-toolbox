@@ -6,6 +6,7 @@
 </head>
 
 <body>
+  <hr>
   <h1>web-components-toolbox</h1>
   <h2>Setup</h2>
   <ol>
@@ -146,7 +147,7 @@
       </ul>
     `
   </script>
-  <h3>Carousel</h3>
+  <h3>Carousel !!!deprecated!!!</h3>
   <div id=carousel></div>
   <script>
     document.querySelector('#carousel').innerHTML = /* HTML */`
@@ -178,6 +179,7 @@
       </ul>
     `
   </script>
+  <h1>Organisms</h1>
   <h3>Wrapper</h3>
   <div id=wrapper></div>
   <script>
@@ -200,10 +202,11 @@
       </ul>
     `
   </script>
-  <h3>Body</h3>
-  <div id=body></div>
+  <h1>Pages</h1>
+  <h3>Pages</h3>
+  <div id=pages></div>
   <script>
-    document.querySelector('#body').innerHTML = /* HTML */`
+    document.querySelector('#pages').innerHTML = /* HTML */`
       <ul>
         <li><a href="./docs/Template.html?${headerFooterQuery}&content=../../../../src/es/components/pages/Home.html">"mandant preview" Page</a></li>
         <li><a href="./docs/Template.html?${headerFooterQuery}&content=../../../../src/es/components/pages/Home.html#testAnchor">"anchor preview" Page</a></li>
@@ -243,5 +246,55 @@
       `
   </script>
 </body>
-
+<script>
+  const ul = document.createElement('ul')
+  ul.classList.add('overview')
+  document.body.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(node => {
+    const li = document.createElement('li')
+    const a = document.createElement('a')
+    li.appendChild(a)
+    // add a direct link to the folder
+    const folderLink = location.href.replace(location.hash, '') + 'src' + node.nextElementSibling.nextElementSibling.querySelector('[href]')?.getAttribute('href').split('/src').filter(str => str.includes(node.textContent.replace(/\s/, '').toLowerCase()))[0]?.match(new RegExp('.*?' + node.textContent.replace(/\s/, '').toLowerCase(), 'g'))
+    if (!folderLink.includes('undefined')) {
+      const folderA = document.createElement('a')
+      folderA.setAttribute('href', folderLink)
+      folderA.setAttribute('target', '_blank')
+      folderA.innerHTML = '&nbsp;&nbsp;&nbsp;👉&nbsp;&nbsp;folder'
+      li.appendChild(folderA)
+    }
+    let id
+    node.setAttribute('id', (id = node.textContent.replace(/\s/, '')))
+    a.setAttribute('href', `#${id}`)
+    let clone
+    a.appendChild((clone = node.cloneNode(true)))
+    clone.removeAttribute('id')
+    ul.appendChild(li)
+  })
+  document.body.prepend(ul)
+</script>
+<style>
+  .overview {
+    font-size: 0.7em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    align-items: baseline;
+    list-style: none;
+  }
+  .overview h1, .overview h2, .overview h3, .overview h4, .overview h5, .overview h6 {
+    margin: 0;
+  }
+  .overview > li:has(h1) {
+    width: 100%;
+  }
+  .overview > li:has(h1) + * {
+    align-items: baseline;
+    display: flex;
+    margin-left: 3em;
+  }
+  .overview > li:has(h1) + *::before {
+    content: '→';
+    margin-right: 1em;
+  }
+</style>
 </html>

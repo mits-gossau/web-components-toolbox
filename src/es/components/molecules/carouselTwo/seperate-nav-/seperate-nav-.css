@@ -17,6 +17,10 @@
     align-content: center;
 }
 
+:host section {
+    width: 100vw;
+}
+
 :host .nav {
     background-position: 50% 50%;
     background-repeat: no-repeat;
@@ -62,7 +66,7 @@
     :host a-slider-button,
     :host .nav:after,
     :host .nav {
-        --nav-height: 70vh;
+        --nav-height: min(70vh, 500px);
         --nav-padding-bottom: 9rem;
     }
     :host .nav a-picture {
@@ -89,6 +93,7 @@
 
     :host {
         --slider-width: 90vw;
+        --content-spacing-mobile: 1rem 0;
     }
 
     :host .content {
