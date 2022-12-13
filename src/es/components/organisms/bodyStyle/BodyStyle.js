@@ -46,15 +46,24 @@ export default class BodyStyle extends Body {
     this.css = ''
     this._css.textContent = bodyCss
     const attributesMobile = []
+    const cssSyntax = (attribute, isMobile = false) => {
+      let attributeName = isMobile ? attribute.name.replace('-mobile', '') : attribute.name
+      if (/-prop$/.test(attributeName)) {
+        return `${attributeName.replace('-prop', '')}:${attribute.value};`
+      } else if (/-var$/.test(attributeName)) {
+        return `--${attributeName.replace('-var', '')}:${attribute.value};`
+      }
+      return `${attributeName}:${attribute.value};--${attributeName}:${attribute.value};` 
+    }
     this.css = /* css */`
       :host {
         ${Array.from(this.attributes).reduce((acc, attribute) => {
-          if (!attribute || !attribute.name || !attribute.value) return acc
+          if (!attribute || !attribute.name || !attribute.value || attribute.name.includes('aria') || attribute.name.includes('tabindex')) return acc
           if (attribute.name.includes('-mobile')) {
             attributesMobile.push(attribute)
             return acc
           }
-          return `${acc}${attribute.name}: ${attribute.value};--${attribute.name}: ${attribute.value};`
+          return `${acc}${cssSyntax(attribute)}`
         }, '')}
         display: inline-block !important;
         width: 100% !important;
@@ -62,10 +71,7 @@ export default class BodyStyle extends Body {
       }
       @media only screen and (max-width: _max-width_) {
         :host {
-          ${Array.from(attributesMobile).reduce((acc, attribute) => {
-            const attributeName = attribute.name.replace('-mobile', '')
-            return `${acc}${attributeName}: ${attribute.value};--${attributeName}: ${attribute.value};`
-          }, '')}
+          ${Array.from(attributesMobile).reduce((acc, attribute) => `${acc}${cssSyntax(attribute, true)}`, '')}
         }
       }
     `
