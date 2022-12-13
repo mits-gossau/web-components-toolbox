@@ -31,13 +31,13 @@ export default class ProductList extends Prototype() {
   configSetup () {
     const setup = this.constructor.parseAttribute(this.getAttribute('config') || '{}')
     if (Object.keys(setup).length === 0) return
-    setup.webAPIKey = this.getAttribute('web-api-key') || ''
-    setup.mode = this.getAttribute('mode') || 'default'
-    setup.environment = this.getAttribute('env') || 'local'
-    setup.language = this.getAttribute('language') || 'de'
-    setup.sort = this.getAttribute('sort') || 'updated_at'
-    setup.paginationOptions.disabled = (this.getAttribute('pagination-disabled') === 'true')
-    setup.filterOptions.category = [this.getAttribute('category') || '']
+    if (this.hasAttribute('web-api-key')) setup.webAPIKey = this.getAttribute('web-api-key') || ''
+    if (this.hasAttribute('mode')) setup.mode = this.getAttribute('mode') || 'default'
+    if (this.hasAttribute('env')) setup.environment = this.getAttribute('env') || 'local'
+    if (this.hasAttribute('language')) setup.language = this.getAttribute('language') || 'de'
+    if (this.hasAttribute('sort')) setup.sort = this.getAttribute('sort') || 'updated_at'
+    if (this.hasAttribute('pagination-disabled') && setup.paginationOptions) setup.paginationOptions.disabled = (this.getAttribute('pagination-disabled') === 'true')
+    if (this.hasAttribute('category') && setup.filterOptions) setup.filterOptions.category = [this.getAttribute('category') || '']
     return setup
   }
 
