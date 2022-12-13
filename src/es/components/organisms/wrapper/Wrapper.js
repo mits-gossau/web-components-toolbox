@@ -17,6 +17,7 @@ import Body from '../body/Body.js'
  * }
  * @return {CustomElementConstructor | *}
  */
+// export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends ChosenHTMLElement {
 export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends ChosenHTMLElement {
   constructor (...args) {
     super(...args)
