@@ -37,7 +37,7 @@ export default class EmotionPictures extends Intersection() {
     super.connectedCallback()
     const init = () => {
       this.hidden = false
-      if (this.shown && Array.from(this.root.childNodes).filter(child => child.tagName !== 'STYLE').length > 1) this.shuffle()
+      if (this.shown && this.childNodes.length > 1) this.shuffle()
       this.css = /* CSS */`
       :host {
         --show: none;
@@ -91,7 +91,7 @@ export default class EmotionPictures extends Intersection() {
         align-items: start;
         justify-items: start;
       }
-      :host > *, :host > a {
+      :host > *:not(style), :host > a {
         grid-column: 1;
         grid-row: 1;
         opacity: 0;
@@ -225,11 +225,11 @@ export default class EmotionPictures extends Intersection() {
       this.interval = setInterval(() => {
         let shown
         if ((shown = this.shown)) {
-          Array.from(this.root.childNodes).forEach(node => node.classList.remove('shown'))
+          this.childNodes.forEach(node => node.classList.remove('shown'))
           if (shown.nextElementSibling && shown.nextElementSibling.tagName !== 'STYLE') {
             shown.nextElementSibling.classList.add('shown')
-          } else if (this.root.childNodes[0]) {
-            this.root.childNodes[0].classList.add('shown')
+          } else if (this.childNodes[0]) {
+            this.childNodes[0].classList.add('shown')
           }
           EmotionPictures.updateLogoPosition(this.shown, '.logo', 'logo-position')
         }
@@ -252,9 +252,13 @@ export default class EmotionPictures extends Intersection() {
 
   get shown () {
     return this.root.querySelector('.shown') || (() => {
-      if (this.root.childNodes[0]) this.root.childNodes[0].classList.add('shown')
-      return this.root.childNodes[0]
+      if (this.childNodes[0]) this.childNodes[0].classList.add('shown')
+      return this.childNodes[0]
     })()
+  }
+
+  get childNodes () {
+    return Array.from(this.root.childNodes).filter(childNode => childNode.tagName !== 'STYLE')
   }
 
   get aPicture () {
