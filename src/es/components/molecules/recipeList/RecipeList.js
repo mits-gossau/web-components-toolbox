@@ -15,16 +15,24 @@ export default class RecipeList extends Shadow() {
   }
 
   connectedCallback() {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS(), this.loadChildComponents())
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then((p) => {
+        this.hidden = false
+        this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
+          detail: {
+            recipe: "all"
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+    }
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
-    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
-      detail: {
-        recipe: "all"
-      },
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
+
   }
 
   disconnectedCallback() {
@@ -69,55 +77,46 @@ export default class RecipeList extends Shadow() {
   renderHTML(recipeList) {
     if (!recipeList.length) return
 
-    Promise.all([this.loadChildComponents()]).then(([child]) => {
 
-
-      const list = recipeList.map((recipe,index)=>{
-        if(index % 3 === 0){
-          console.log("open", index);
-        }else{
-          console.log("close",index);
-        }
-      })
-      
-
+    const list = recipeList.map((recipe, index) => {
+      return /* html */`
+            <m-teaser namespace=teaser-tile- href="https://www.migrosbank.ch">
+                <figure>
+                  <a-picture namespace="picture-teaser-" picture-load
+                      defaultSource="https://www.alnatura.ch/.imaging/mte/m5-bk-brand/medium16To9/dam/alnatura/Rezepte/2022/Salat_limonrimon-(3).jpg/jcr:content/Salat_limonrimon%20(3).jpg" alt="randomized image"></a-picture>
+                  <figcaption>
+                      <h5>${recipe.title}</h5>
+                      <a-link namespace=underline-><a>Mehr erfahren</a></a-link>
+                  </figcaption>
+                </figure>
+            </m-teaser>
+            `
     })
-    
-      // Promise.all([this.loadChildComponents()]).then(([child]) => {
-    //   const wrapper = document.createElement('div')
-    //   // const wrapperTeaser = [1][1]
-    //   // console.log(wrapperTeaser);
-    //   const recipes = []
-      
-    //   recipeList.forEach((recipeItem, index) => {
-    //     const recipeTeaser = new child[0][1]()
-    //     recipeTeaser.setAttribute('namespace', "teaser-tile-")
-    //     recipeTeaser.setAttribute('tabindex', index)
-    //     recipeTeaser.innerHTML = `
-    //       <figure>
-    //         <a-picture namespace="picture-teaser-" picture-load defaultSource="https://www.alnatura.ch/.imaging/mte/m5-bk-brand/medium16To9/dam/alnatura/Rezepte/2022/Salat_limonrimon-(3).jpg/jcr:content/Salat_limonrimon%20(3).jpg" alt="randomized image"></a-picture>
-    //         <figcaption>
-    //           <h5>Sabichsalat</h5>
-    //           <a-link namespace=underline-><a>Mehr erfahren</a></a-link>
-    //         </figcaption>
-    //       </figure>`
-    //     recipes.push(recipeTeaser)
-    //     wrapper.append(recipeTeaser)
+    let row = ""
+    list.forEach((item, index) => {
+      if (index % 3 === 0) {
+        if (index === 0) {
+          row += `<o-wrapper namespace="wrapper-teaser-">${item}`
+        } else {
+          row += `</o-wrapper><div class="spacer"></div><o-wrapper namespace="wrapper-teaser-">${item}`
+        }
+      } else {
+        row += item
+      }
+    })
+    const dummy = document.createElement('div')
+    dummy.innerHTML = row
+    this.html = dummy
 
-    //     //this.html = recipeTeaser.outerHTML
-    //   })
-    //   //this.html = ""
-    //   console.log(wrapper)
-    //   this.html = `<o-wrapper namespace="wrapper-teaser-">${wrapper.innerHTML}</o-wrapper>`
-    //   //this.html = wrapper.innerHTML
-    // })
-    
   }
 
   loadChildComponents() {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
       import('../../molecules/teaser/Teaser.js').then(
         module => ['m-teaser', module.default]
+      ),
+      import('../../atoms/picture/Picture.js').then(
+        module => ['a-picture', module.default]
       ),
       import('../../organisms/wrapper/Wrapper.js').then(
         module => ['o-wrapper', module.Wrapper()]
