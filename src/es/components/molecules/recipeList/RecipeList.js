@@ -68,34 +68,37 @@ export default class RecipeList extends Shadow() {
 
   renderHTML(recipeList) {
     if (!recipeList.length) return
-    Promise.all([this.loadChildComponents()]).then(([child]) => {
-      const wrapper = document.createElement('div')
-      // const wrapperTeaser = new child[1][1]() 
-      // console.log(wrapperTeaser);
-      const recipes = []
-      
-      recipeList.forEach((recipeItem, index) => {
-        const recipeTeaser = new child[0][1]()
-        recipeTeaser.setAttribute('namespace', "teaser-tile-")
-        recipeTeaser.setAttribute('tabindex', index)
-        recipeTeaser.innerHTML = `
-          <figure>
-            <a-picture namespace="picture-teaser-" picture-load defaultSource="https://www.alnatura.ch/.imaging/mte/m5-bk-brand/medium16To9/dam/alnatura/Rezepte/2022/Salat_limonrimon-(3).jpg/jcr:content/Salat_limonrimon%20(3).jpg" alt="randomized image"></a-picture>
-            <figcaption>
-              <h5>Sabichsalat</h5>
-              <a-link namespace=underline-><a>Mehr erfahren</a></a-link>
-            </figcaption>
-          </figure>`
-        recipes.push(recipeTeaser)
-        wrapper.append(recipeTeaser)
 
-        //this.html = recipeTeaser.outerHTML
-      })
-      //this.html = ""
-      console.log(wrapper)
-      //this.html = `<o-wrapper namespace="wrapper-teaser-">${wrapper.innerHTML}</o-wrapper>`
-      this.html = wrapper.innerHTML
-    })
+    Promise.all([this.loadChildComponents()]).then(([child]) => {
+    
+      // Promise.all([this.loadChildComponents()]).then(([child]) => {
+    //   const wrapper = document.createElement('div')
+    //   // const wrapperTeaser = [1][1]
+    //   // console.log(wrapperTeaser);
+    //   const recipes = []
+      
+    //   recipeList.forEach((recipeItem, index) => {
+    //     const recipeTeaser = new child[0][1]()
+    //     recipeTeaser.setAttribute('namespace', "teaser-tile-")
+    //     recipeTeaser.setAttribute('tabindex', index)
+    //     recipeTeaser.innerHTML = `
+    //       <figure>
+    //         <a-picture namespace="picture-teaser-" picture-load defaultSource="https://www.alnatura.ch/.imaging/mte/m5-bk-brand/medium16To9/dam/alnatura/Rezepte/2022/Salat_limonrimon-(3).jpg/jcr:content/Salat_limonrimon%20(3).jpg" alt="randomized image"></a-picture>
+    //         <figcaption>
+    //           <h5>Sabichsalat</h5>
+    //           <a-link namespace=underline-><a>Mehr erfahren</a></a-link>
+    //         </figcaption>
+    //       </figure>`
+    //     recipes.push(recipeTeaser)
+    //     wrapper.append(recipeTeaser)
+
+    //     //this.html = recipeTeaser.outerHTML
+    //   })
+    //   //this.html = ""
+    //   console.log(wrapper)
+    //   this.html = `<o-wrapper namespace="wrapper-teaser-">${wrapper.innerHTML}</o-wrapper>`
+    //   //this.html = wrapper.innerHTML
+    // })
     
   }
 
