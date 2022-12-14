@@ -107,30 +107,6 @@ export default class Teaser extends Intersection() {
         position: var(--position, static);
         overflow: hidden;
       }
-      ${this.getAttribute('namespace') === 'teaser-overlay-'
-      ? /* css */`
-          :host figure {
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: 1fr;
-          }
-          :host figure a-picture, :host figure figcaption {
-            grid-column: 1;
-            grid-row: 1;
-          }
-          :host figure figcaption {
-            z-index: 1;
-          }
-          :host figure figcaption *.bg-color {
-            padding-top: 0;
-          }
-          :host(:hover) figure figcaption * {
-            color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
-            background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
-            box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green)))), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
-          }
-        `
-        : ''}
       :host figure a-picture {
         height: var(--a-picture-height, auto);
         margin: var(--a-picture-margin, 0);
