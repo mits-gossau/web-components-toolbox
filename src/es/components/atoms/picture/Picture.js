@@ -154,7 +154,7 @@ export default class Picture extends Intersection() {
         min-height: var(--img-min-height, unset);
         min-width: var(--img-min-width, unset);
         object-fit: var(--img-object-fit, contain); /* cover does not render the same on IOS */
-        overflow: var(--overflow, initial);
+        overflow: var(--overflow, auto);
         transform: var(--transform, none);
         transition: var(--transition, none);
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
