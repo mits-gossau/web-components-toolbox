@@ -70,6 +70,18 @@ export default class RecipeList extends Shadow() {
     if (!recipeList.length) return
 
     Promise.all([this.loadChildComponents()]).then(([child]) => {
+
+
+      const list = recipeList.map((recipe,index)=>{
+        if(index % 3 === 0){
+          console.log("open", index);
+        }else{
+          console.log("close",index);
+        }
+      })
+      
+
+    })
     
       // Promise.all([this.loadChildComponents()]).then(([child]) => {
     //   const wrapper = document.createElement('div')
