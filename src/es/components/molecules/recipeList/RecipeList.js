@@ -70,7 +70,8 @@ export default class RecipeList extends Shadow() {
     if (!recipeList.length) return
     Promise.all([this.loadChildComponents()]).then(([child]) => {
       const wrapper = document.createElement('div')
-    
+      // const wrapperTeaser = new child[1][1]() 
+      // console.log(wrapperTeaser);
       const recipes = []
       
       recipeList.forEach((recipeItem, index) => {
@@ -92,8 +93,8 @@ export default class RecipeList extends Shadow() {
       })
       //this.html = ""
       console.log(wrapper)
-      this.html = `<o-wrapper namespace="wrapper-teaser-">${wrapper.innerHTML}</o-wrapper>`
-      //this.html = wrapper
+      //this.html = `<o-wrapper namespace="wrapper-teaser-">${wrapper.innerHTML}</o-wrapper>`
+      this.html = wrapper.innerHTML
     })
     
   }
