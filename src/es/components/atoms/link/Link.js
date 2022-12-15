@@ -39,7 +39,7 @@ export default class Link extends Shadow() {
     this._a = a
     this.setAttribute('role', 'link')
     this.removeAttribute('tabindex')
-    this.a.setAttribute('tabindex', '0')
+    if (this.a) this.a.setAttribute('tabindex', '0')
 
     this.mouseoverListener = event => {
       this.a.classList.add('hover')

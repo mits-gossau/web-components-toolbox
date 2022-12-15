@@ -77,6 +77,7 @@ export default class Hotspot extends Shadow() {
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: 1fr;
+        margin: 0 auto;
         max-width: 100%;
         align-items: end;
         overflow: overlay;

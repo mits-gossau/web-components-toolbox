@@ -1,0 +1,87 @@
+<h2>Single picture with picture</h3>
+<m-picture-with-picture namespace="picture-with-picture-default-">             
+    <a-picture picture-load
+               alt="Bio Herbst Istock 871137282 Bearbeitet"
+               defaultSource="./img/2022_ALNATURA_BILD_Randen-Salat_mit_geroesteten_Kichererbsen.jpg">
+    </a-picture>
+    <div>
+        <a-picture picture-load
+                   alt="dude1"
+                   defaultSource="./img/jcr content1.png">
+        </a-picture>
+        <a-picture picture-load
+                   alt="dude2"
+                   defaultSource="./img/jcr content2.png">
+        </a-picture>
+    </div>
+</m-picture-with-picture>
+<br><br><br><br><br><br><br>
+<m-picture-with-picture namespace="picture-with-picture-default-" place-right place-bottom>  
+    <a-picture picture-load
+               alt="Bio Herbst Istock 871137282 Bearbeitet"
+               defaultSource="./img/Virtualhub StageOne LED.jpg">
+    </a-picture>
+    <div>
+        <a-picture picture-load
+                   alt="dude"
+                   defaultSource="./img/jcr content1.png">
+        </a-picture>
+    </div>           
+</m-picture-with-picture>
+<br><br><br><br><br><br><br>
+<h2>Single picture with picture within teaser</h3>
+<o-wrapper namespace=wrapper-teaser->
+    <m-teaser namespace=teaser-overlay- href="/somewhereelse">
+        <figure>
+            <m-picture-with-picture namespace="picture-with-picture-default-" place-right>             
+                <a-picture picture-load
+                        alt="Bio Herbst Istock 871137282 Bearbeitet"
+                        defaultSource="./img/2022_ALNATURA_BILD_Randen-Salat_mit_geroesteten_Kichererbsen.jpg">
+                </a-picture>
+                <div>
+                    <a-picture picture-load
+                            alt="dude1"
+                            defaultSource="./img/jcr content1.png">
+                    </a-picture>
+                    <a-picture picture-load
+                            alt="dude2"
+                            defaultSource="./img/jcr content2.png">
+                    </a-picture>
+                </div>
+            </m-picture-with-picture>
+            <figcaption>
+                <h2 class=bg-color>Randen-Salat mit gerösteten Kichererbsen</h2>
+                <h2 class=bg-color><a-arrow move direction=right></a-arrow></h2>
+            </figcaption>
+        </figure>
+    </m-teaser>
+    <m-teaser namespace=teaser-overlay- href="/somewhere">
+        <figure>
+            <m-picture-with-picture namespace="picture-with-picture-default-" place-right>             
+                <a-picture picture-load
+                        alt="Bio Herbst Istock 871137282 Bearbeitet"
+                        defaultSource="./img/2022_ALNATURA_BILD_Randen-Salat_mit_geroesteten_Kichererbsen.jpg">
+                </a-picture>
+                <div>
+                    <a-picture picture-load
+                            alt="dude1"
+                            defaultSource="./img/jcr content1.png">
+                    </a-picture>
+                    <a-picture picture-load
+                            alt="dude2"
+                            defaultSource="./img/jcr content2.png">
+                    </a-picture>
+                </div>
+            </m-picture-with-picture>
+            <figcaption>
+                <h2 class=bg-color>Apfel-Crumble mit Vanille-Schlagcreme</h2>
+                <h2 class=bg-color><a-arrow move direction=right></a-arrow></h2>
+            </figcaption>
+        </figure>
+    </m-teaser>
+</o-wrapper>
+
+<!-- load web components for Demo Purposes Only -->
+<script class=template-script type="text/javascript" src="./default-.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=PictureWithPicture.js"></script>

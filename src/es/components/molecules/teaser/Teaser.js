@@ -107,38 +107,14 @@ export default class Teaser extends Intersection() {
         position: var(--position, static);
         overflow: hidden;
       }
-      ${this.getAttribute('namespace') === 'teaser-overlay-'
-      ? /* css */`
-          :host figure {
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: 1fr;
-          }
-          :host figure a-picture, :host figure figcaption {
-            grid-column: 1;
-            grid-row: 1;
-          }
-          :host figure figcaption {
-            z-index: 1;
-          }
-          :host figure figcaption *.bg-color {
-            padding-top: 0;
-          }
-          :host(:hover) figure figcaption * {
-            color: var(--bg-color-hover, var(--bg-color, var(--background-color, red)));
-            background-color: var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
-            box-shadow: var(--bg-padding, 0.5em) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green)))), calc(0px - var(--bg-padding, 0.5em)) 0 0 var(--bg-background-color-hover, var(--color-hover, var(--bg-background-color, var(--color-secondary, green))));
-          }
-        `
-        : ''}
-      :host figure a-picture {
+      :host figure a-picture, :host figure m-picture-with-picture {
         height: var(--a-picture-height, auto);
         margin: var(--a-picture-margin, 0);
         width: var(--a-picture-width, 100%);
         transition: var(--a-picture-transition, none);
         transform: var(--a-picture-transform, none);
       }
-      :host(:hover) figure a-picture {
+      :host(:hover) figure a-picture, :host(:hover) figure m-picture-with-picture {
         transform: var(--a-picture-transform-hover, var(--a-picture-transform, none));
       }
       :host figure figcaption {
@@ -161,7 +137,7 @@ export default class Teaser extends Intersection() {
       :host(:hover) figure figcaption {
         background-color: var(--figcaption-background-color-hover, var(--figcaption-background-color, #c2262f));
       }
-      :host(:hover) figure a-picture ~ figcaption {
+      :host(:hover) figure a-picture ~ figcaption, :host(:hover) figure m-picture-with-picture ~ figcaption {
         background-color: var(--a-picture-figcaption-background-color-hover, var(--figcaption-background-color-hover, var(--figcaption-background-color, #c2262f)));
       }
       :host([figcaption-bg-color-equal=true]) figure figcaption {
