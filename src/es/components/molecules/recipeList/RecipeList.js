@@ -78,9 +78,13 @@ export default class RecipeList extends Shadow() {
     if (!recipeList.length) return
 
 
-    const list = recipeList.map((recipe, index) => {
-      return /* html */`
-            <m-teaser namespace=teaser-tile- href="https://www.migrosbank.ch">
+
+
+    let row = ""
+    recipeList.forEach((recipe, index) => {
+
+      const teaser = `
+            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="https://www.migrosbank.ch">
                 <figure>
                   <a-picture namespace="picture-teaser-" picture-load
                       defaultSource="https://www.alnatura.ch/.imaging/mte/m5-bk-brand/medium16To9/dam/alnatura/Rezepte/2022/Salat_limonrimon-(3).jpg/jcr:content/Salat_limonrimon%20(3).jpg" alt="randomized image"></a-picture>
@@ -89,36 +93,58 @@ export default class RecipeList extends Shadow() {
                       <a-link namespace=underline-><a>Mehr erfahren</a></a-link>
                   </figcaption>
                 </figure>
-            </m-teaser>
+            </m-teaser></o-wrapper>
             `
-    })
-    let row = ""
-    list.forEach((item, index) => {
       if (index % 3 === 0) {
         if (index === 0) {
-          row += `<o-wrapper namespace="wrapper-teaser-">${item}`
+          row += `<o-wrapper namespace="wrapper-teaser-">${teaser}`
         } else {
-          row += `</o-wrapper><div class="spacer"></div><o-wrapper namespace="wrapper-teaser-">${item}`
+          row += `</o-wrapper><div class="spacer"></div><o-wrapper namespace="wrapper-teaser-">${teaser}`
         }
       } else {
-        row += item
+        row += teaser
       }
     })
-    const dummy = document.createElement('div')
-    dummy.innerHTML = row
-    this.html = dummy
+    // let row = ""
+    // list.forEach((item, index) => {
+    //   if (index % 3 === 0) {
+    //     if (index === 0) {
+    //       row += `<o-wrapper namespace="wrapper-teaser-">${item}`
+    //     } else {
+    //       row += `</o-wrapper><div class="spacer"></div><o-wrapper namespace="wrapper-teaser-">${item}`
+    //     }
+    //   } else {
+    //     row += item
+    //   }
+    // })
+    console.log(row);
+
+    // this.recipeListWrapper = document.createElement('div')
+    // this.recipeListWrapper.innerHTML = row
+
+    this.html = `
+      <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace="teaser-tile-" href="https://www.migrosbank.ch">
+          <figure>
+            <a-picture namespace="picture-teaser-" picture-load defaultSource="https://www.alnatura.ch/.imaging/mte/m5-bk-brand/medium16To9/dam/alnatura/Rezepte/2022/Salat_limonrimon-(3).jpg/jcr:content/Salat_limonrimon%20(3).jpg" alt="randomized image"></a-picture>
+              <figcaption>
+                <h5>d</h5>
+                <a-link namespace=underline-><a>Mehr erfahren</a></a-link>
+              </figcaption>
+          </figure>
+        </m-teaser>
+      </o-wrapper>`
   }
 
   loadChildComponents() {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
+      import('../../organisms/wrapper/Wrapper.js').then(
+        module => ['o-wrapper', module.Wrapper()]
+      ),
       import('../../molecules/teaser/Teaser.js').then(
         module => ['m-teaser', module.default]
       ),
       import('../../atoms/picture/Picture.js').then(
         module => ['a-picture', module.default]
-      ),
-      import('../../organisms/wrapper/Wrapper.js').then(
-        module => ['o-wrapper', module.Wrapper()]
       )
     ]).then(elements => {
       elements.forEach(element => {
