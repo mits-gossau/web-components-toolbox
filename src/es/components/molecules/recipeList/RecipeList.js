@@ -107,7 +107,6 @@ export default class RecipeList extends Shadow() {
     const dummy = document.createElement('div')
     dummy.innerHTML = row
     this.html = dummy
-
   }
 
   loadChildComponents() {
