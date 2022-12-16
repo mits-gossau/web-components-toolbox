@@ -11,7 +11,7 @@ export default class TagFilter extends Shadow() {
     super(...args)
 
     this.clickListener = event => {
-      if (!event.target || event.target.tagName !== 'A-LINK') return false
+      if (!event.target || event.target.tagName !== 'A-BUTTON') return false
       event.preventDefault()
       const tag = event.target.hasAttribute('tag') ? event.target.getAttribute('tag') : ''
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
@@ -19,6 +19,7 @@ export default class TagFilter extends Shadow() {
       this.setURLSearchParam('tag', tag, url)
       this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
       this.setActiveItem(tag, this.root.querySelector('ul'))
+
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
         detail: {
           tag: tag !== '' ? tag.split(',') : []
@@ -102,7 +103,7 @@ export default class TagFilter extends Shadow() {
     const ul = document.createElement('ul')
     tagList.forEach(tagItem => {
       const li = document.createElement('li')
-      li.innerHTML = `<a-link namespace="tag-filter-" tag=${tagItem.tag}><a href="#">${tagItem.name}</a></a-link>`
+      li.innerHTML = `<a-button namespace="tag-filter-button-" tag="${tagItem.tag}">${tagItem.name}</a-button>`
       ul.appendChild(li)
     })
     this.tagFilterWrapper.appendChild(ul)
@@ -111,8 +112,8 @@ export default class TagFilter extends Shadow() {
 
   loadChildComponents () {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
-      import('../../atoms/link/Link.js').then(
-        module => ['a-link', module.default]
+      import('../../atoms/button/Button.js').then(
+        module => ['a-button', module.default]
       )
     ]).then(elements => {
       elements.forEach(element => {
@@ -129,11 +130,12 @@ export default class TagFilter extends Shadow() {
    * @param { Element } element
    */
   setActiveItem (activeItem, element) {
-    Array.from(element.querySelectorAll('a-link')).forEach(element => {
+    Array.from(element.querySelectorAll('a-button')).forEach(element => {
+      const btn = element.shadowRoot ? element.shadowRoot.querySelector('button') : element
       if (element.getAttribute('tag') === activeItem) {
-        element.classList.add('active')
+        btn && btn.classList.add('hover')
       } else {
-        element.classList.remove('active')
+        btn && btn.classList.remove('hover')
       }
     })
   }
