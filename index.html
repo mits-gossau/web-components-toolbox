@@ -254,6 +254,15 @@
         </ul>
       `
   </script>
+  <h3>Recipe List</h3>
+  <div id=recipeList></div>
+  <script>
+    document.querySelector('#recipeList').innerHTML = /* HTML */`
+          <ul>
+            <li><a href="./docs/Template.html?${headerFooterQuery}&content=./src/es/components/molecules/recipeList/default-/default-.html">"default-" Page</a> / <a href=./src/es/components/molecules/recipeList/default-/default-.html>"default-" Plain</a></li>
+          </ul>
+        `
+  </script>
 </body>
 <script>
   const ul = document.createElement('ul')

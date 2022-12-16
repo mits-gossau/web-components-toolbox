@@ -1,0 +1,3 @@
+:host {
+    --recipe-list-default-spacer-margin: calc(var(--content-spacing)/2);
+}
