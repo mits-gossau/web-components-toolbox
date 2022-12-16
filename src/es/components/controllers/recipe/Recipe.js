@@ -14,9 +14,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Recipe extends Shadow() {
   constructor (...args) {
     super({ mode: 'false' }, ...args)
-
-    const endpoint = 'https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes'
-
     this.abortController = null
     this.requestListRecipeListener = async event => {
       if (this.abortController) this.abortController.abort()
@@ -24,7 +21,8 @@ export default class Recipe extends Shadow() {
       const fetchOptions = {
         signal: this.abortController.signal
       }
-
+      
+      const endpoint = 'https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes'
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
