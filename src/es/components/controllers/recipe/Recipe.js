@@ -1,8 +1,7 @@
 // @ts-check
-/* global CustomEvent */
 /* global fetch */
-/* global sessionStorage */
 /* global AbortController */
+/* global CustomEvent */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -16,20 +15,13 @@ export default class Recipe extends Shadow() {
   constructor (...args) {
     super({ mode: 'false' }, ...args)
 
-    const endpoint = 'https://dummyjson.com/products/'
-    const token = ''
+    const endpoint = 'https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes'
 
     this.abortController = null
     this.requestListRecipeListener = async event => {
-      console.log(event.detail);
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
       const fetchOptions = {
-        method: 'POST',
-        headers: {
-          Authorization: 'Bearer ' + token + ' ',
-          'Content-Type': 'application/json'
-        },
         signal: this.abortController.signal
       }
 
@@ -37,8 +29,8 @@ export default class Recipe extends Shadow() {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
             if (response.status >= 200 && response.status <= 299) {
-              let data = await response.json()
-              return data
+              const data = await response.json()
+              return data.data.recipes.results
             }
             throw new Error(response.statusText)
           })
