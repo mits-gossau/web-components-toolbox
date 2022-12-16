@@ -48,7 +48,7 @@ export default class Pagination extends Shadow() {
     }
 
     this.updatePopState = event => {
-      if (!event.state.page) return
+      if (!event.state || !event.state.page) return
       const urlParams = new URLSearchParams(location.search)
       const tagParam = urlParams.get('tag') || ''
       this.dispatchRequestNewsEvent(event.state.page - 1, tagParam)
