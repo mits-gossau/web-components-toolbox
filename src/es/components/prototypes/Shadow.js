@@ -370,7 +370,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   fetchCSS (fetchCSSParams, hide = true, useController = true) {
     if (hide) this.hidden = true
     if (!Array.isArray(fetchCSSParams)) fetchCSSParams = [fetchCSSParams]
-    if (useController && document.body.hasAttribute(this.getAttribute('fetch-css') || 'fetch-css')) {
+    if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-css') || 'fetch-css')) {
       // use: /src/es/components/controllers/fetchCss/FetchCss.js instead of fetching here, to use the cache from within the controller
       return new Promise(
         /**
@@ -490,7 +490,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   fetchHTML (paths, hide = true, useController = true) {
     if (hide) this.hidden = true
     if (!Array.isArray(paths)) paths = [paths]
-    if (useController && document.body.hasAttribute(this.getAttribute('fetch-html') || 'fetch-html')) {
+    if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-html') || 'fetch-html')) {
       // use: /src/es/components/controllers/fetchHtml/FetchHtml.js instead of fetching here, to use the cache from within the controller
       return new Promise(
         /**
