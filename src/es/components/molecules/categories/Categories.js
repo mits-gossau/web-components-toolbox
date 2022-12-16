@@ -2,6 +2,8 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global CustomEvent */
+/* global history */
+/* global location */
 
 export default class Categories extends Shadow() {
   constructor (...args) {
@@ -10,7 +12,20 @@ export default class Categories extends Shadow() {
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A-BUTTON') return false
       event.preventDefault()
-      this.dispatchRequestCategoriesEvent(event.target.getAttribute('category'))
+      history.replaceState && history.replaceState(
+        null, '', location.pathname + location.search.replace(/[?&]tag=[^&]+/, '').replace(/^&/, '?')
+      )
+      const element = event.target.hasAttribute('category') ? event.target.getAttribute('category') : ''
+      this.setActiveItem(element, this.root.querySelector('ul'))
+      const category = event.target.getAttribute('category')
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
+        detail: {
+          category
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
     }
   }
 
@@ -22,17 +37,6 @@ export default class Categories extends Shadow() {
 
   disconnectedCallback () {
     this.categoriesNavigation.removeEventListener('click', this.clickListener)
-  }
-
-  dispatchRequestCategoriesEvent (category) {
-    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
-      detail: {
-        category
-      },
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
   }
 
   shouldComponentRenderHTML () {
@@ -79,5 +83,16 @@ export default class Categories extends Shadow() {
       default:
         return this.fetchCSS(styles)
     }
+  }
+
+  setActiveItem (activeItem, element) {
+    Array.from(element.querySelectorAll('a-button')).forEach(element => {
+      const btn = element.shadowRoot ? element.shadowRoot.querySelector('button') : element
+      if (element.getAttribute('category') === activeItem) {
+        btn && btn.classList.add('hover')
+      } else {
+        btn && btn.classList.remove('hover')
+      }
+    })
   }
 }

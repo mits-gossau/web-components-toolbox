@@ -47,13 +47,13 @@ export default class BodyStyle extends Body {
     this._css.textContent = bodyCss
     const attributesMobile = []
     const cssSyntax = (attribute, isMobile = false) => {
-      let attributeName = isMobile ? attribute.name.replace('-mobile', '') : attribute.name
+      const attributeName = isMobile ? attribute.name.replace('-mobile', '') : attribute.name
       if (/-prop$/.test(attributeName)) {
         return `${attributeName.replace('-prop', '')}:${attribute.value};`
       } else if (/-var$/.test(attributeName)) {
         return `--${attributeName.replace('-var', '')}:${attribute.value};`
       }
-      return `${attributeName}:${attribute.value};--${attributeName}:${attribute.value};` 
+      return `${attributeName}:${attribute.value};--${attributeName}:${attribute.value};`
     }
     this.css = /* css */`
       :host {

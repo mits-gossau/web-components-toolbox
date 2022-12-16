@@ -176,7 +176,7 @@ export default class Arrow extends Shadow() {
         break
     }
     // font-family can have an effect on size on the bounding h-tag with .bg-color
-    //if (this.parentElement && this.parentElement.children.length === 1) this.parentElement.setAttribute('style', 'font-family: HelveticaNowText, Helvetica, Arial, sans-serif;')
+    // if (this.parentElement && this.parentElement.children.length === 1) this.parentElement.setAttribute('style', 'font-family: HelveticaNowText, Helvetica, Arial, sans-serif;')
   }
 
   /**

@@ -1,11 +1,13 @@
 // @ts-check
 import { Prototype } from '../Prototype.js'
 
+/* global CustomEvent */
+
 export default class ProductList extends Prototype() {
   constructor (...args) {
     super(...args)
     this.config = this.configSetup()
-    this.requestArticleCategory = event => {
+    this.answerArticleCategory = event => {
       this.config.filterOptions.category = [event.detail.tag || event.detail.category]
       this.widgetRenderSetup()
     }
@@ -21,7 +23,13 @@ export default class ProductList extends Prototype() {
         this.renderCSS()
       })
     }
-    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.requestArticleCategory)
+    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerArticleCategory)
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
+      detail: {},
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
   }
 
   disconnectedCallback () {
