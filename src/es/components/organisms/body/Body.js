@@ -105,8 +105,8 @@ export default class Body extends Shadow() {
         display: var(--any-display, block);
       }
       :host > main > * {
-        margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-        width: var(--content-width, 55%);
+        margin: var(--any-content-spacing, var(--content-spacing, unset)) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+        width: var(--any-content-width, var(--content-width, 55%));
       }
       :host(.content-max-width) > main > *:not(.ignore-max-width), :host> main > *.content-max-width {
         max-width: var(--content-max-width, none);
@@ -131,8 +131,8 @@ export default class Body extends Shadow() {
           padding: var(--main-padding-mobile, var(--main-padding, 0));
         }
         :host > main > * {
-          margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-          width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
+          margin: var(--any-content-spacing-mobile, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+          width: var(--any-content-width-mobile, var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)));
         }
         :host(.content-max-width) > main > *:not(.ignore-max-width), :host> main > *.content-max-width {
           max-width: var(--content-max-width-mobile, none);

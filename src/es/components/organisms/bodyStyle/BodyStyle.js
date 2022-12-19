@@ -81,11 +81,11 @@ export default class BodyStyle extends Body {
     if ((this.parentNode.tagName !== 'MAIN' && (this.parentNode.tagName || (this.parentNode.host && this.parentNode.host.tagName)) !== 'O-BODY-STYLE') && (!self.getComputedStyle(this).getPropertyValue('--content-width') || !self.getComputedStyle(this).getPropertyValue('--content-width-mobile'))) {
       this.css = /* css */`
         :host > * {
-          width: calc(100% - var(--content-spacing) * 2);
+          width: var(--content-width, calc(100% - var(--content-spacing) * 2));
         }
         @media only screen and (max-width: _max-width_) {
           :host > * {
-            width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
+            width: var(--content-width-mobile, var(--content-width, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)));
           }
         }
       `

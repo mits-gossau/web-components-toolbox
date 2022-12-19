@@ -139,6 +139,9 @@ export default class Picture extends Intersection() {
    */
   renderCSS () {
     this.css = /* css */`
+      :host {
+        overflow: var(--host-overflow, initial);
+      }
       :host picture {
         display: var(--display, inline); /* don't use flex here, it can have strange side effects */
       }
