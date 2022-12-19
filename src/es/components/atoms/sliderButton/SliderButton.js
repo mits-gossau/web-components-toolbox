@@ -25,8 +25,8 @@ export default class SliderButton extends Shadow() {
       const index = id + 1
       const value = index * 100 - 50
 
-      this.milestoneMobile.innerHTML = this.milestones[id].parentNode.getAttribute('data-slider-target')
-      this.changeCarousel(value, this.slider)
+      this.milestoneMobile.innerHTML = this.milestones[id]?.parentNode.getAttribute('data-slider-target')
+      this.changeCarousel(value, this.slider, false)
     }
 
     this.sliderChange = e => {
@@ -41,7 +41,13 @@ export default class SliderButton extends Shadow() {
     }
 
     this.buttonClickListener = e => {
-      Array.from(this.parentNode.host.nav.children)[e.target.getAttribute('data-index')].click()
+      for (let i = 0; i < e.composedPath().length; i++) {
+        let index = e.composedPath()[i].getAttribute('data-index')
+        if (index != null){
+          Array.from(this.parentNode.host.nav.children)[index].click()
+          break
+        } 
+      }
     }
 
     let requestAnimationFrameID = null
