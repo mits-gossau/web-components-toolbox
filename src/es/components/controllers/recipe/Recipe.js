@@ -22,7 +22,7 @@ export default class Recipe extends Shadow() {
         signal: this.abortController.signal
       }
       
-      const endpoint = 'https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes'
+      const endpoint = 'https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=12&offset=0'
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
