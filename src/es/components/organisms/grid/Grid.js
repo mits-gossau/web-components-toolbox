@@ -80,9 +80,8 @@ export default class Grid extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    this.grid = this.root.querySelector('div') || document.createElement('div')
-    this.grid.innerHTML = "Grid Content"
-    this.html = this.grid
+    // this.grid = this.root.querySelector('div') || document.createElement('div')
+    // this.html = this.grid
   }
 
   
