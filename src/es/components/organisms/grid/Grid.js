@@ -47,7 +47,9 @@ export default class Grid extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host {}
+      :host > div {
+        display:grid;
+      }
       @media only screen and (max-width: _max-width_) {
         :host {}
       }
@@ -80,8 +82,10 @@ export default class Grid extends Shadow() {
    * @return {void}
    */
   renderHTML () {
-    // this.grid = this.root.querySelector('div') || document.createElement('div')
-    // this.html = this.grid
+    const gridItems = this.root.querySelectorAll('div')
+    this.grid = document.createElement('div')
+    Array.from(gridItems).forEach(item => this.grid?.appendChild(item))
+    this.html = this.grid
   }
 
   
