@@ -1,1 +1,44 @@
-:host {}
+:host > section {
+    grid-template-columns: 30% 1fr;
+}
+/* ****************************************** first-container-vertical ****************************************** */
+/* filter left */
+:host([first-container-vertical]) > section > *:nth-child(1) {
+    grid-row: 1 / span 2;
+    grid-column: 1 / 1;
+    background:yellow;
+}
+/* title + filter sub level */
+:host([first-container-vertical]) > section > *:nth-child(2) {
+    grid-row: 1 / 1;
+    grid-column: 2 / 2;
+    background:red;
+}
+/* list */
+:host([first-container-vertical]) > section > *:nth-child(3) {
+    grid-row: 2 / 2;
+    grid-column: 2 / 2;
+    background:green;
+}
+/* ****************************************** first-container-horizontal ****************************************** */
+/* filter left */
+:host([first-container-horizontal]) > section > *:nth-child(1) {
+    grid-row: 1 / 1;
+    grid-column: 1 / span 2;
+    background:yellow;
+}
+/* title + filter sub level */
+:host([first-container-horizontal]) > section > *:nth-child(2) {
+    grid-row: 2 / 2;
+    grid-column: 1 / 1;
+    background:red;
+}
+/* list */
+:host([first-container-horizontal]) > section > *:nth-child(3) {
+    grid-row: 2 / 2;
+    grid-column: 2 / 2;
+    background:green;
+}
+@media only screen and (max-width: _max-width_) {
+    :host {}
+}

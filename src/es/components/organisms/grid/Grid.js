@@ -47,21 +47,10 @@ export default class Grid extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host > div {
+      :host > section {
         display:grid;
-        grid-template-columns:1fr 1fr;
       }
-      :host .item {
-        background-color:pink;
-      }
-      :host .item1 {
-        grid-row: 1 / span 2;
-        grid-column: 1 / 1;
-        background:yellow;
-      }
-      @media only screen and (max-width: _max-width_) {
-        :host {}
-      }
+      
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
@@ -88,12 +77,14 @@ export default class Grid extends Shadow() {
   /**
    * renders the html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
-  renderHTML () {
-    const gridItems = this.root.querySelectorAll('div')
-    this.grid = document.createElement('div')
-    Array.from(gridItems).forEach(item => this.grid?.appendChild(item))
-    this.html = this.grid
+  renderHTML() {
+    this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
+    Array.from(this.root.children).forEach(node => {
+      if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
+    })
+    this.html = [this.section]
+    return Promise.resolve()
   }
 }

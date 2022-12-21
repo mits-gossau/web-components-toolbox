@@ -14,7 +14,7 @@ export default class Pagination extends Shadow() {
     this.pagination = this.root.querySelector('div') || document.createElement('div')
     this.answerEventNameListener = event => {
       event.detail.fetch.then(() => {
-        const news = sessionStorage.getItem('news') || ''
+        const news = sessionStorage.getItem(this.getAttribute('article') || 'article') || ''
         const newsData = JSON.parse(news)
         let { total, limit, skip } = newsData?.data.newsEntryCollection
         const urlParams = new URLSearchParams(location.search)
