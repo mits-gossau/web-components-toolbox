@@ -87,6 +87,4 @@ export default class Grid extends Shadow() {
     Array.from(gridItems).forEach(item => this.grid?.appendChild(item))
     this.html = this.grid
   }
-
-  
 }
