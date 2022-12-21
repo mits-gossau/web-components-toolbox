@@ -79,7 +79,7 @@ export default class RecipeList extends Shadow() {
       let row = ''
       recipeList.forEach((recipe, index) => {
         const teaser = `
-            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="${recipe.slug}">
+            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="${this.getAttribute("detail-page-link") ?? ""}?${recipe.slug}">
                 <figure>
                   <a-picture namespace="picture-teaser-" picture-load
                       defaultSource="${recipe.imageSrc}" alt="${recipe.imageAlt}"></a-picture>
