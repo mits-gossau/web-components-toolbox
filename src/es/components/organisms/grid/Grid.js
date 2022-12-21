@@ -18,8 +18,13 @@ export default class Grid extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    const showPromises = []
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    if (showPromises.length) {
+      this.hidden = true
+      Promise.all(showPromises).then(() => (this.hidden = false))
+    }
   }
 
   /**
@@ -68,7 +73,10 @@ export default class Grid extends Shadow() {
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./2colums2rows-/2colums2rows-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false)
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible
+          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        })
       default:
         return this.fetchCSS(styles)
     }
@@ -85,6 +93,7 @@ export default class Grid extends Shadow() {
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
     this.html = [this.section]
+    this.setAttribute('count-section-children', this.section.children.length)
     return Promise.resolve()
   }
 }
