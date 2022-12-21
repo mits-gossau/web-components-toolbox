@@ -49,6 +49,15 @@ export default class Grid extends Shadow() {
     this.css = /* css */`
       :host > div {
         display:grid;
+        grid-template-columns:1fr 1fr;
+      }
+      :host .item {
+        background-color:pink;
+      }
+      :host .item1 {
+        grid-row: 1 / span 2;
+        grid-column: 1 / 1;
+        background:yellow;
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
