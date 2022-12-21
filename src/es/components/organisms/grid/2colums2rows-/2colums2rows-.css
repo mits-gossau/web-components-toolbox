@@ -1,5 +1,5 @@
 :host > section {
-    grid-template-columns: ${this.getAttribute('first-column-with') || '30%'} 1fr;
+    grid-template-columns: ${this.getAttribute('first-column-with') || 'auto'} auto;
     grid-gap: var(--grid-2columns2rows-grid-gap-custom, var(--content-spacing));
 }
 :host > section > *[style] {
@@ -47,7 +47,7 @@
 }
 @media only screen and (max-width: _max-width_) {
     :host > section {
-        grid-template-columns: 1fr;
+        grid-template-columns: auto;
         grid-gap: var(--grid-2columns2rows-grid-gap-mobile-custom, var(--grid-2columns2rows-grid-gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
     }
     :host > section > * {
