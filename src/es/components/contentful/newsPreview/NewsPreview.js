@@ -31,7 +31,7 @@ export default class NewsPreview extends Shadow() {
     this.loadChildComponents()
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     const url = new URL(this.newsUrl, this.newsUrl.charAt(0) === '/' ? location.origin : this.newsUrl.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-    url.searchParams.set('news', this.news.slug)
+    url.searchParams.set(this.getAttribute('article') || 'article', this.news.slug)
     this.newsWrapper.innerHTML = /* html */ `
     <a class="link" href="${url.href}">
     <o-wrapper>
