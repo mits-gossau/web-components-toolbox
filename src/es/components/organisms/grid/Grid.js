@@ -54,8 +54,13 @@ export default class Grid extends Shadow() {
     this.css = /* css */`
       :host > section {
         display:grid;
+        ${this.hasAttribute('height')
+          ? /* css */`
+            height: ${this.getAttribute('height') || '100%'};
+          `
+          : ''
+        }
       }
-      
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
@@ -92,8 +97,11 @@ export default class Grid extends Shadow() {
     Array.from(this.root.children).forEach(node => {
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
-    this.html = [this.section]
     this.setAttribute('count-section-children', this.section.children.length)
+    Array.from(this.section.children).forEach(node => {
+      if ((node.getAttribute('style') || '').includes('background')) node.setAttribute('has-background', 'true')
+    })
+    this.html = [this.section]
     return Promise.resolve()
   }
 }
