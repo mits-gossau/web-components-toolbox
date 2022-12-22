@@ -17,7 +17,19 @@ export default class TagFilter extends Shadow() {
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       this.setURLSearchParam('page', '1', url)
       this.setURLSearchParam('tag', tag, url)
-      this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
+      // TEST
+      // this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-history-push') || 'request-history-push', {
+        detail: {
+          state: { ...history.state, tag, page: 1 },
+          title: document.title,
+          href: url.href
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+      // TEST
       this.setActiveItem(tag, this.root.querySelector('ul'))
 
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
@@ -157,7 +169,7 @@ export default class TagFilter extends Shadow() {
    * @param {string} documentTitle
    * @param {string} href
    */
-  historyPushState (history, stateData, documentTitle, href) {
-    history.pushState(stateData, documentTitle, href)
-  }
+  // historyPushState (history, stateData, documentTitle, href) {
+  //   history.pushState(stateData, documentTitle, href)
+  // }
 }

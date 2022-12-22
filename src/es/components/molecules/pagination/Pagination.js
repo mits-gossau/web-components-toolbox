@@ -9,26 +9,55 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
     this.answerEventNameListener = event => {
-      event.detail.fetch.then(() => {
-        const news = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || ''
-        const newsData = JSON.parse(news)
-        let { total, limit, skip } = newsData?.data.newsEntryCollection
-        const urlParams = new URLSearchParams(location.search)
-        const pageParam = urlParams.get('page') || 1
-        if (pageParam === 1) {
-          history.pushState({ ...history.state, page: 1 }, document.title, location.href)
+     
+      event.detail.fetch.then((data) => {
+      
+       
+        
+        if (this.hasAttribute('length-only')){
+       
+         const total = data.total
+         const limit = data.limit
+         const skip = data.offset
+         debugger
+          this.renderHTML(total, limit, skip) 
+        }else{
+          const news = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || ''
+          const newsData = JSON.parse(news)
+          let { total, limit, skip } = newsData?.data.newsEntryCollection
+          const urlParams = new URLSearchParams(location.search)
+          const pageParam = urlParams.get('page') || 1
+          if (pageParam === 1) {
+            // TEST
+            // history.pushState({ ...history.state, page: 1 }, document.title, location.href)
+            this.dispatchEvent(new CustomEvent(this.getAttribute('request-history-push') || 'request-history-push', {
+              detail: {
+                state: { ...history.state, page: 1 },
+                title: document.title,
+                href: location.href
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+            // TEST
+          }
+          const page = Number(pageParam)
+          const calcSkipPage = (page - 1) * 5
+          if (calcSkipPage !== skip) {
+            skip = calcSkipPage
+          }
+          const pages = Math.ceil(total / limit)
+          this.renderHTML(pages, limit, skip)
         }
-        const page = Number(pageParam)
-        const calcSkipPage = (page - 1) * 5
-        if (calcSkipPage !== skip) {
-          skip = calcSkipPage
-        }
-        const pages = Math.ceil(total / limit)
-        this.renderHTML(pages, limit, skip)
+
+
+
+        
       })
     }
 
@@ -39,11 +68,27 @@ export default class Pagination extends Shadow() {
       url.searchParams.set('page', event.target.textContent)
       const urlParams = new URLSearchParams(location.search)
       const tagParam = urlParams.get('tag')
-      url.searchParams.set('tag', tagParam || history.state?.tag || '')
-      history.pushState({ ...history.state, tag: tagParam, page: event.target.textContent }, document.title, url.href)
+      if(tagParam){
+        url.searchParams.set('tag', tagParam || history.state?.tag || '')
+      }
+      // history.pushState({ ...history.state, tag: tagParam, page: event.target.textContent }, document.title, url.href)
+      // test
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-history-push') || 'request-history-push', {
+        detail: {
+          state: { ...history.state, tag: tagParam, page: event.target.textContent }, 
+          title: document.title, 
+          href: url.href
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+      // test
+      
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
+      debugger
       this.dispatchRequestNewsEvent(event.target.textContent - 1, tagParam || history.state?.tag || '')
     }
 
@@ -55,20 +100,20 @@ export default class Pagination extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
-  dispatchRequestNewsEvent (page, tag) {
+  dispatchRequestNewsEvent(page, tag) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         skip: page,
@@ -80,11 +125,11 @@ export default class Pagination extends Shadow() {
     }))
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML (pages, limit, skip) {
+  renderHTML(pages, limit, skip) {
     this.html = ''
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
@@ -107,7 +152,7 @@ export default class Pagination extends Shadow() {
    * @param {string} items
    * @return {string}
    */
-  setRel (items) {
+  setRel(items) {
     const nodes = new DOMParser().parseFromString(items, 'text/html').body.childNodes
     if (nodes.length === 1) {
       // @ts-ignore
@@ -156,7 +201,7 @@ export default class Pagination extends Shadow() {
     return Array.from(updateNodes).map(item => item.outerHTML).join('')
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host {
       background-color:var(--background-color, black);

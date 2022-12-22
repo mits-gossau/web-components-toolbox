@@ -9,7 +9,7 @@ export default class RecipeList extends Shadow() {
     super(...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(recipeData => {
-        this.renderHTML(recipeData)
+        this.renderHTML(recipeData.results)
       })
     }
   }
@@ -23,7 +23,7 @@ export default class RecipeList extends Shadow() {
         this.hidden = false
         this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
           detail: {
-            recipe: 'all'
+            skip: 0
           },
           bubbles: true,
           cancelable: true,
@@ -75,6 +75,7 @@ export default class RecipeList extends Shadow() {
 
   renderHTML (recipeList) {
     if (!recipeList.length) return
+    this.html = ""
     Promise.all([recipeList, this.loadChildComponents()]).then(() => {
       let row = ''
       recipeList.forEach((recipe, index) => {
