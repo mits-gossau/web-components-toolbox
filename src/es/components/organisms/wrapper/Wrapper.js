@@ -116,8 +116,8 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         padding: var(--padding-last-child, var(--padding, 0)) !important;
       }
       :host > section > * > *:not([style]):last-child {
-        margin: var(--any-margin-last-child, var(--any-margin, 0)) !important;
-        padding: var(--any-padding-last-child, var(--any-padding, 0)) !important;
+        padding-bottom: var(--any-padding-bottom-last-child, var(--any-padding-bottom, 0)) !important;
+        margin-bottom: var(--any-margin-bottom-last-child, var(--any-margin-bottom, 0)) !important;
       }
       @media only screen and (max-width: _max-width_) {
         :host > section {
@@ -137,8 +137,8 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           padding: var(--padding-last-child-mobile, var(--padding-last-child, var(--padding-mobile, var(--padding, 0)))) !important;
         }
         :host > section > * > *:not([style]):last-child {
-          margin: var(--any-margin-last-child-mobile, var(--any-margin-last-child, var(--any-margin-mobile, var(--any-margin, 0)))) !important;
-          padding: var(--any-padding-last-child-mobile, var(--any-padding-last-child, var(--any-padding-mobile, var(--any-padding, 0)))) !important;
+          padding-bottom: var(--any-padding-bottom-last-child-mobile, var(--any-padding-bottom-last-child, var(--any-padding-bottom-mobile, var(--any-padding-bottom, 0)))) !important;
+          margin-bottom: var(--any-margin-bottom-last-child-mobile, var(--any-margin-bottom-last-child, var(--any-margin-bottom-mobile, var(--any-margin-bottom, 0)))) !important;
         }
         :host > section > *.first-mobile {
           order: -1;
@@ -153,7 +153,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         }
         ${this.hasAttribute('picture-last-mobile')
           ? /* css */`
-            :host > section > :not(a-picture):not(picture):not(img) {
+            :host > section > *:not(a-picture):not(picture):not(img) {
               order: -1;
             }
           `
