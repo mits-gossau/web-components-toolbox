@@ -31,7 +31,7 @@ export default class NewsList extends Shadow() {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.hidden = true
     const newsViewed = sessionStorage.getItem('news-viewed')?.toLowerCase() === 'true'
-    let currentPageSkip = newsViewed ? this.getCurrentPageSkip(sessionStorage.getItem(this.getAttribute('article') || 'article') || '') : 0
+    let currentPageSkip = newsViewed ? this.getCurrentPageSkip(sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '') : 0
     sessionStorage.removeItem('news-viewed')
     const urlParams = new URLSearchParams(location.search)
     const pageParam = urlParams.get('page') || 1
@@ -42,7 +42,7 @@ export default class NewsList extends Shadow() {
 
     let tagValue = [urlParams.get('tag')]
     if (tagValue[0] === null || tagValue[0] === '') {
-      tagValue = this.getTag(sessionStorage.getItem(this.getAttribute('article') || 'article') || '{}')
+      tagValue = this.getTag(sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '{}')
     }
 
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {

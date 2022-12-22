@@ -65,8 +65,8 @@ export default class News extends Shadow() {
   loadNews (self, sessionStorage) {
     const queryString = self.location.search
     const urlParams = new URLSearchParams(queryString)
-    const slug = urlParams.get(this.getAttribute('article') || 'article') || ''
-    const news = sessionStorage.getItem(this.getAttribute('article') || 'article')
+    const slug = urlParams.get(this.getAttribute('slug-name') || 'news') || ''
+    const news = sessionStorage.getItem(this.getAttribute('slug-name') || 'news')
     return { slug, news }
   }
 

@@ -58,7 +58,7 @@ export default class Contentful extends Shadow() {
             if (response.status >= 200 && response.status <= 299) {
               let data = await response.json()
               data = this.injectData(data, 'tag', variables.tags)
-              sessionStorage.setItem(this.getAttribute('article') || 'article', JSON.stringify(data))
+              sessionStorage.setItem(this.getAttribute('slug-name') || 'news', JSON.stringify(data))
               return data
             }
             throw new Error(response.statusText)
