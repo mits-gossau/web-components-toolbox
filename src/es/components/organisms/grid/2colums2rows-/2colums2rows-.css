@@ -46,21 +46,21 @@
     grid-column: 2 / 2;
 }
 @media only screen and (max-width: _max-width_) {
-    :host > section {
+    :host(:not([no-mobile])) > section {
         grid-template-columns: auto;
         grid-gap: var(--grid-2columns2rows-grid-gap-mobile-custom, var(--grid-2columns2rows-grid-gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
     }
-    :host > section > * {
+    :host(:not([no-mobile])) > section > * {
         padding: var(--grid-2columns2rows-padding-mobile-custom, var(--grid-2columns2rows-padding-custom, var(--content-spacing-mobile, var(--content-spacing))));
     }
-    :host([first-container-horizontal]) > section > *:nth-child(1),
-    :host([first-container-vertical]) > section > *:nth-child(1),
-    :host([first-container-horizontal]) > section > *:nth-child(2),
-    :host([first-container-vertical]) > section > *:nth-child(2),
-    :host([first-container-horizontal][count-section-children="2"]) > section > *:nth-child(2),
-    :host([first-container-vertical][count-section-children="2"]) > section > *:nth-child(2),
-    :host([first-container-horizontal]) > section > *:nth-child(3),
-    :host([first-container-vertical]) > section > *:nth-child(3) {
+    :host([first-container-horizontal]:not([no-mobile])) > section > *:nth-child(1),
+    :host([first-container-vertical]:not([no-mobile])) > section > *:nth-child(1),
+    :host([first-container-horizontal]:not([no-mobile])) > section > *:nth-child(2),
+    :host([first-container-vertical]:not([no-mobile])) > section > *:nth-child(2),
+    :host([first-container-horizontal][count-section-children="2"]:not([no-mobile])) > section > *:nth-child(2),
+    :host([first-container-vertical][count-section-children="2"]:not([no-mobile])) > section > *:nth-child(2),
+    :host([first-container-horizontal]:not([no-mobile])) > section > *:nth-child(3),
+    :host([first-container-vertical]:not([no-mobile])) > section > *:nth-child(3) {
         grid-row: auto;
         grid-column: auto;
     }
