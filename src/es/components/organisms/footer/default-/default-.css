@@ -11,7 +11,7 @@
   --footer-default-invert-svg-color: var(--footer-default-invert-background-color);
   --footer-default-invert-svg-color: var(--footer-default-invert-svg-color-custom, var(--color-secondary));
   --footer-default-wrapper-last-contains-details-margin-bottom: 0;
-  --picture-footer-logo-img-width: min(35px, 10vw);
+  --picture-footer-logo-img-height: min(35px, 10vw);
   --picture-store-logo-img-margin-mobile: var(--picture-store-logo-img-margin);
   --picture-store-logo-img-margin: 0;
 }
