@@ -13,19 +13,18 @@ export default class Pagination extends Shadow() {
     super(...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
     this.answerEventNameListener = event => {
-     
+
       event.detail.fetch.then((data) => {
-      
-       
-        
-        if (this.hasAttribute('length-only')){
-       
-         const total = data.total
-         const limit = data.limit
-         const skip = data.offset
-         debugger
-          this.renderHTML(total, limit, skip) 
-        }else{
+
+
+
+        if (this.hasAttribute('length-only')) {
+          const total = data.total
+          const limit = data.limit
+          const skip = data.offset
+          debugger
+          this.renderHTML(total, limit, skip)
+        } else {
           const news = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || ''
           const newsData = JSON.parse(news)
           let { total, limit, skip } = newsData?.data.newsEntryCollection
@@ -57,7 +56,7 @@ export default class Pagination extends Shadow() {
 
 
 
-        
+
       })
     }
 
@@ -68,15 +67,15 @@ export default class Pagination extends Shadow() {
       url.searchParams.set('page', event.target.textContent)
       const urlParams = new URLSearchParams(location.search)
       const tagParam = urlParams.get('tag')
-      if(tagParam){
+      if (tagParam) {
         url.searchParams.set('tag', tagParam || history.state?.tag || '')
       }
       // history.pushState({ ...history.state, tag: tagParam, page: event.target.textContent }, document.title, url.href)
       // test
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-history-push') || 'request-history-push', {
         detail: {
-          state: { ...history.state, tag: tagParam, page: event.target.textContent }, 
-          title: document.title, 
+          state: { ...history.state, tag: tagParam, page: event.target.textContent },
+          title: document.title,
           href: url.href
         },
         bubbles: true,
@@ -84,7 +83,7 @@ export default class Pagination extends Shadow() {
         composed: true
       }))
       // test
-      
+
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
