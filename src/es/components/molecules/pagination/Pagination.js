@@ -14,12 +14,14 @@ export default class Pagination extends Shadow() {
     this.pagination = this.root.querySelector('div') || document.createElement('div')
     this.answerEventNameListener = event => {
       event.detail.fetch.then((data) => {
+        const compactMode = this.hasAttribute('compact')
         if (this.hasAttribute('length-only')) {
-          const total = data.total
+          //const total = data.total
+          const total = 648 // TODO!!!
           const limit = data.limit
           const skip = data.offset
-          debugger
-          this.renderHTML(total, limit, skip)
+          const pages = Math.ceil(total / limit)
+          this.renderHTML(pages, limit, skip, compactMode)
         } else {
           const news = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || ''
           const newsData = JSON.parse(news)
@@ -35,16 +37,18 @@ export default class Pagination extends Shadow() {
             skip = calcSkipPage
           }
           const pages = Math.ceil(total / limit)
-          this.renderHTML(pages, limit, skip)
+          this.renderHTML(pages, limit, skip, compactMode)
         }
       })
     }
 
     this.clickListener = event => {
-      if (!event.target || event.target.tagName !== 'A') return false
       event.preventDefault()
+      if (!event.target || event.target.tagName !== 'A' || event.target.hasAttribute('placeholder')) return false
+      const page = event.target.hasAttribute('page') ? event.target.getAttribute('page') : event.target.textContent 
+      debugger
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-      url.searchParams.set('page', event.target.textContent)
+      url.searchParams.set('page', page)
       const urlParams = new URLSearchParams(location.search)
       const tagParam = urlParams.get('tag')
       if (tagParam) {
@@ -55,7 +59,7 @@ export default class Pagination extends Shadow() {
         url.searchParams.delete('page')
       }
       debugger
-      this.dispatchRequestNewsEvent(event.target.textContent - 1, tagParam || history.state?.tag || '')
+      this.dispatchRequestNewsEvent(page - 1, tagParam || history.state?.tag || '')
     }
 
     this.updatePopState = event => {
@@ -95,14 +99,32 @@ export default class Pagination extends Shadow() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML(pages, limit, skip) {
+  renderHTML(pages, limit, skip, compactMode) {
     this.html = ''
     let pageItems = ''
-    for (let i = 0; i < pages; ++i) {
-      const active = (skip / limit)
-      pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
+
+    if (compactMode && pages > 4) {
+      pageItems += `<li class="page-item"><a page=${skip}> <- </a></li>`
+      for (let i = 0; i < 3; ++i) {
+        pageItems +=`<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
+      }
+      pageItems += `<li class="page-item"><a placeholder>...</a></li>`
+      for (var i = pages-3; i < pages; i++) {
+        pageItems +=`<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
+      }
+      pageItems += `<li class="page-item"><a next> -> </a></li>`
+    }else{
+      for (let i = 0; i < pages; ++i) {
+        const active = (skip / limit)
+        pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
+      }
     }
+
+debugger
+
+
     const withRelAttributeOnLinks = this.setRel(pageItems)
+    
     this.pagination.innerHTML =
       `<nav>
         <ul class="pagination">

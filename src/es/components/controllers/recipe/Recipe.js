@@ -24,8 +24,8 @@ export default class Recipe extends Shadow() {
         signal: this.abortController.signal
       }
       const limit = event.detail && event.detail.limit || this.getAttribute('limit') || 0
-      const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) * skip : 0
-      debugger
+      const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip)  : 0
+      
       const endpoint = `https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=${limit}&offset=${currentSkip}`
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
         detail: {

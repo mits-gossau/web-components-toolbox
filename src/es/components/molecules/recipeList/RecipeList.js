@@ -24,7 +24,6 @@ export default class RecipeList extends Shadow() {
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
         const page = Number(pageParam) - 1
-        debugger
         this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
           detail: {
             skip: page
