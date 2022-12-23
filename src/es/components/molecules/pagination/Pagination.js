@@ -23,6 +23,7 @@ export default class Pagination extends Shadow() {
           const pages = Math.ceil(total / limit)
           this.renderHTML(pages, limit, skip, compactMode)
         } else {
+          debugger
           const news = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || ''
           const newsData = JSON.parse(news)
           let { total, limit, skip } = newsData?.data.newsEntryCollection
@@ -45,7 +46,7 @@ export default class Pagination extends Shadow() {
     this.clickListener = event => {
       event.preventDefault()
       if (!event.target || event.target.tagName !== 'A' || event.target.hasAttribute('placeholder')) return false
-      const page = event.target.hasAttribute('page') ? event.target.getAttribute('page') : event.target.textContent 
+      const page = event.target.hasAttribute('page') ? event.target.getAttribute('page') : event.target.textContent
       debugger
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', page)
@@ -104,27 +105,42 @@ export default class Pagination extends Shadow() {
     let pageItems = ''
 
     if (compactMode && pages > 4) {
-      pageItems += `<li class="page-item"><a page=${skip}> <- </a></li>`
-      for (let i = 0; i < 3; ++i) {
-        pageItems +=`<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
+      if (skip > 3 && skip <= 68) {
+        pageItems += `
+          <li class="page-item"><a page=${skip}>&#60;</a></li>
+          <li class="page-item" page="1"><a target="_self" class="page-link">1</a></li>
+          <li class="page-item"><a placeholder>...</a></li>
+          <li class="page-item active" page="${skip + 1}" ><a target="_self" class="page-link active">${skip + 1}</a></li>
+          <li class="page-item"><a placeholder>...</a></li>
+          <li class="page-item" page="${pages}"><a target="_self" class="page-link">${pages}</a></li>
+          <li class="page-item"><a page=${skip + 2} next>&#62;</a></li>`
+      } else if (skip >= 68) {
+        pageItems += `
+          <li class="page-item"><a page=${skip}>&#60;</a></li>
+          <li class="page-item" page="1"><a target="_self" class="page-link">1</a></li>
+          <li class="page-item"><a placeholder>...</a></li>
+          <li class="page-item ${pages - 3 === skip ? 'active' : ''}" page="${pages - 2}"><a target="_self" class="page-link ${pages - 3 === skip ? 'active' : ''}">${pages - 2}</a></li>
+          <li class="page-item ${pages - 2 === skip ? 'active' : ''}" page="${pages - 1}"><a target="_self" class="page-link ${pages - 2 === skip ? 'active' : ''}">${pages - 1}</a></li>
+          <li class="page-item ${pages - 1 === skip ? 'active' : ''}" page="${pages}"><a target="_self" class="page-link ${pages - 1 === skip ? 'active' : ''}">${pages}</a></li>
+          `
+      } else {
+        for (let i = 0; i < 4; ++i) {
+          pageItems += `<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
+        }
+        pageItems += `<li class="page-item"><a placeholder>...</a></li>`
+        for (var i = pages - 4; i < pages; i++) {
+          pageItems += `<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
+        }
+        pageItems += `<li class="page-item"><a page=${skip + 2} next>&#62;</a></li>`
       }
-      pageItems += `<li class="page-item"><a placeholder>...</a></li>`
-      for (var i = pages-3; i < pages; i++) {
-        pageItems +=`<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
-      }
-      pageItems += `<li class="page-item"><a next> -> </a></li>`
-    }else{
+    } else {
       for (let i = 0; i < pages; ++i) {
         const active = (skip / limit)
         pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
       }
     }
-
-debugger
-
-
     const withRelAttributeOnLinks = this.setRel(pageItems)
-    
+
     this.pagination.innerHTML =
       `<nav>
         <ul class="pagination">
@@ -141,14 +157,15 @@ debugger
    * @return {string}
    */
   setRel(items) {
-    const nodes = new DOMParser().parseFromString(items, 'text/html').body.childNodes
+    const childNodes = new DOMParser().parseFromString(items, 'text/html').body.childNodes
+    const nodes = Array.from(childNodes).filter(node => node.nodeType !== 3) // filter out text nodes
     if (nodes.length === 1) {
       // @ts-ignore
       return nodes[0].outerHTML
     }
     const url = location.href
     const pageParam = url.substring(url.lastIndexOf('page='))
-    const updateNodes = Array.from(nodes).reduce((acc, cur, index, nodes) => {
+    const updateNodes = nodes.reduce((acc, cur, index, nodes) => {
       // @ts-ignore
       if (cur.classList.contains('active')) {
         if (index === 0) {
