@@ -7,7 +7,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class TagFilter extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
 
     this.clickListener = event => {
@@ -17,19 +17,7 @@ export default class TagFilter extends Shadow() {
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       this.setURLSearchParam('page', '1', url)
       this.setURLSearchParam('tag', tag, url)
-      // TEST
-      // this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
-      this.dispatchEvent(new CustomEvent(this.getAttribute('request-history-push') || 'request-history-push', {
-        detail: {
-          state: { ...history.state, tag, page: 1 },
-          title: document.title,
-          href: url.href
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      }))
-      // TEST
+      this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
       this.setActiveItem(tag, this.root.querySelector('ul'))
 
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
@@ -49,7 +37,7 @@ export default class TagFilter extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     // @ts-ignore
     const tagList = this.constructor.parseAttribute(this.getAttribute('tag') || [])
@@ -58,20 +46,20 @@ export default class TagFilter extends Shadow() {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.tagFilterWrapper.removeEventListener('click', this.clickListener)
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  shouldComponentRenderHTML () {
+  shouldComponentRenderHTML() {
     return !this.tagFilterWrapper
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host ul {
       flex-wrap:var(--flex-wrap, wrap);
@@ -108,7 +96,7 @@ export default class TagFilter extends Shadow() {
    * @param {Array<object>} tagList
    * @returns void
    */
-  renderHTML (tagList) {
+  renderHTML(tagList) {
     if (!tagList.length) return
     this.loadChildComponents()
     this.tagFilterWrapper = this.root.querySelector('div') || document.createElement('div')
@@ -122,7 +110,7 @@ export default class TagFilter extends Shadow() {
     this.html = this.tagFilterWrapper
   }
 
-  loadChildComponents () {
+  loadChildComponents() {
     return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
       import('../../atoms/button/Button.js').then(
         module => ['a-button', module.default]
@@ -141,7 +129,7 @@ export default class TagFilter extends Shadow() {
    * @param {string} activeItem
    * @param { Element } element
    */
-  setActiveItem (activeItem, element) {
+  setActiveItem(activeItem, element) {
     Array.from(element.querySelectorAll('a-button')).forEach(element => {
       const btn = element.shadowRoot ? element.shadowRoot.querySelector('button') : element
       if (element.getAttribute('tag') === activeItem) {
@@ -158,7 +146,7 @@ export default class TagFilter extends Shadow() {
    * @param {string} value
    * @param {object} url
    */
-  setURLSearchParam (param, value, url) {
+  setURLSearchParam(param, value, url) {
     url.searchParams.set(param, value)
   }
 
@@ -169,7 +157,7 @@ export default class TagFilter extends Shadow() {
    * @param {string} documentTitle
    * @param {string} href
    */
-  // historyPushState (history, stateData, documentTitle, href) {
-  //   history.pushState(stateData, documentTitle, href)
-  // }
+  historyPushState(history, stateData, documentTitle, href) {
+    history.pushState(stateData, documentTitle, href)
+  }
 }

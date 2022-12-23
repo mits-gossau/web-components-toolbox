@@ -23,7 +23,6 @@ export default class Recipe extends Shadow() {
       const fetchOptions = {
         signal: this.abortController.signal
       }
-     
       const limit = event.detail && event.detail.limit || this.getAttribute('limit') || 0
       const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) * skip : 0
       debugger
