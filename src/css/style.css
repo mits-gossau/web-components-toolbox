@@ -470,6 +470,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   width: var(--table-width, 100%);
 }
 :host table td, :host table th {
+  border: var(--table-border, 0);
   vertical-align: var(--table-vertical-align, top);
 }
 /* spacer-stylings */
