@@ -87,6 +87,13 @@ export default class Pagination extends Shadow() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
+  /**
+   * Render HTML View
+   * @param {Number} pages  
+   * @param {Number} limit 
+   * @param {Number} skip 
+   * @param {Boolean} compactMode  
+   */
   renderHTML(pages, limit, skip, compactMode) {
     this.html = ''
     let pageItems = compactMode ? this.renderCompactHTML(skip, limit, pages) : this.renderAllPagesHTML(pages, skip, limit)
@@ -102,7 +109,13 @@ export default class Pagination extends Shadow() {
     this.html = this.pagination
   }
 
-
+/**
+ * Render Pages as 'Compact' View - Ex. 1,2,3 ... 8,9,10
+ * @param {Number} skip 
+ * @param {Number} limit 
+ * @param {Number} pages 
+ * @returns {string}
+ */
   renderCompactHTML(skip, limit, pages) {
     const START_RANGE = 2
     const END_RANGE = pages - 2
@@ -143,6 +156,13 @@ export default class Pagination extends Shadow() {
     return pageItems
   }
 
+  /**
+   * Render all Pages
+   * @param {Number} pages  
+   * @param {Number} skip 
+   * @param {Number} limit 
+   * @returns {string}
+   */
   renderAllPagesHTML(pages, skip, limit){
     let pageItems = ""
     for (let i = 0; i < pages; ++i) {
