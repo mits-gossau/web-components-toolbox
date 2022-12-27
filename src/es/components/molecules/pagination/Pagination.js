@@ -1,7 +1,6 @@
 // @ts-check
 /* global self */
 /* global CustomEvent */
-/* global sessionStorage */
 /* global location */
 /* global history */
 /* global DOMParser */
@@ -12,42 +11,60 @@ export default class Pagination extends Shadow() {
   constructor (...args) {
     super(...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
+    // this.answerEventNameListener = event => {
+    //   event.detail.fetch.then((data) => {
+    //     const compactMode = this.hasAttribute('compact')
+    //     if (this.hasAttribute('length-only')) {
+    //       let { total, limit, skip } = data
+    //       const pages = Math.ceil(total / limit)
+    //       debugger
+    //       this.renderHTML(pages, limit, skip, compactMode)
+    //     } else {
+    //       debugger
+    //       // const news = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || ''
+    //       // const newsData = JSON.parse(news)
+    //       // let { total, limit, skip } = newsData?.data.newsEntryCollection
+    //       let { total, limit, skip } =  data
+    //       const urlParams = new URLSearchParams(location.search)
+    //       const pageParam = urlParams.get('page') || 1
+    //       if (pageParam === 1) {
+    //         history.pushState({ ...history.state, page: 1 }, document.title, location.href)
+    //       }
+    //       const page = Number(pageParam)
+    //       const calcSkipPage = (page - 1) * 5
+    //       if (calcSkipPage !== skip) {
+    //         skip = calcSkipPage
+    //       }
+    //       const pages = Math.ceil(total / limit)
+    //       this.renderHTML(pages, limit, skip, compactMode)
+    //     }
+    //   })
+    // }
+
     this.answerEventNameListener = event => {
       event.detail.fetch.then((data) => {
         const compactMode = this.hasAttribute('compact')
-        if (this.hasAttribute('length-only')) {
-          // const total = data.total
-          const total = 648 // TODO!!!
-          const limit = data.limit
-          const skip = data.offset
-          const pages = Math.ceil(total / limit)
-          this.renderHTML(pages, limit, skip, compactMode)
-        } else {
-          debugger
-          const news = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || ''
-          const newsData = JSON.parse(news)
-          let { total, limit, skip } = newsData?.data.newsEntryCollection
-          const urlParams = new URLSearchParams(location.search)
-          const pageParam = urlParams.get('page') || 1
-          if (pageParam === 1) {
-            history.pushState({ ...history.state, page: 1 }, document.title, location.href)
-          }
-          const page = Number(pageParam)
-          const calcSkipPage = (page - 1) * 5
-          if (calcSkipPage !== skip) {
-            skip = calcSkipPage
-          }
-          const pages = Math.ceil(total / limit)
-          this.renderHTML(pages, limit, skip, compactMode)
+        let { total, limit, skip } = data
+        const urlParams = new URLSearchParams(location.search)
+        const pageParam = urlParams.get('page') || 1
+        if (pageParam === 1) {
+          history.pushState({ ...history.state, page: 1 }, document.title, location.href)
         }
-      })
+        const page = Number(pageParam)
+        const calcSkipPage = (page - 1) * data.limit
+        if (calcSkipPage !== skip) {
+          skip = calcSkipPage
+        }
+        const pages = Math.ceil(total / limit)
+        this.renderHTML(pages, limit, skip, compactMode)
+      }
+      )
     }
 
     this.clickListener = event => {
       event.preventDefault()
       if (!event.target || event.target.tagName !== 'A' || event.target.hasAttribute('placeholder')) return false
       const page = event.target.hasAttribute('page') ? event.target.getAttribute('page') : event.target.textContent
-      debugger
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', page)
       const urlParams = new URLSearchParams(location.search)
@@ -59,7 +76,6 @@ export default class Pagination extends Shadow() {
       if (url.searchParams.get('page') === '1') {
         url.searchParams.delete('page')
       }
-      debugger
       this.dispatchRequestNewsEvent(page - 1, tagParam || history.state?.tag || '')
     }
 

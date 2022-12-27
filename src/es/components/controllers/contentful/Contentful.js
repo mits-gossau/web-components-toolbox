@@ -59,7 +59,7 @@ export default class Contentful extends Shadow() {
               let data = await response.json()
               data = this.injectData(data, 'tag', variables.tags)
               sessionStorage.setItem(this.getAttribute('slug-name') || 'news', JSON.stringify(data))
-              return data
+              return data.data.newsEntryCollection
             }
             throw new Error(response.statusText)
           })

@@ -10,7 +10,7 @@ export default class RecipeList extends Shadow() {
     super(...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(recipeData => {
-        this.renderHTML(recipeData.results)
+        this.renderHTML(recipeData.items)
       })
     }
   }

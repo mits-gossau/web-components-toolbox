@@ -31,7 +31,15 @@ export default class Recipe extends Shadow() {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
             if (response.status >= 200 && response.status <= 299) {
               const data = await response.json()
-              return data.data.recipes
+              // return data.data.recipes
+              // TODO!!!
+              return {
+                items: data.data.recipes.results,
+                limit: data.data.recipes.limit,
+                skip: data.data.recipes.offset,
+                tag: [],
+                total: 648
+              }
             }
             throw new Error(response.statusText)
           })

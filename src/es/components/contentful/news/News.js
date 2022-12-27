@@ -84,7 +84,7 @@ export default class News extends Shadow() {
     }
     if (!news) return false
     const newsData = typeof news === 'string' ? JSON.parse(news) : news
-    const { items } = newsData.data.newsEntryCollection
+    const { items } = (newsData.data && newsData.data.newsEntryCollection) || newsData
     news = items.find(item => item.slug === slug)
     return news
   }
