@@ -1,6 +1,7 @@
 // @ts-check
 /* global customElements */
 /* global CustomEvent */
+/* global location */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -78,12 +79,12 @@ export default class RecipeList extends Shadow() {
 
   renderHTML (recipeList) {
     if (!recipeList.length) return
-    this.html = ""
+    this.html = ''
     Promise.all([recipeList, this.loadChildComponents()]).then(() => {
       let row = ''
       recipeList.forEach((recipe, index) => {
         const teaser = `
-            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="${this.getAttribute("detail-page-link") ?? ""}?${recipe.slug}">
+            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="${this.getAttribute('detail-page-link') ?? ''}?${recipe.slug}">
                 <figure>
                   <a-picture namespace="picture-teaser-" picture-load
                       defaultSource="${recipe.imageSrc}" alt="${recipe.imageAlt}"></a-picture>

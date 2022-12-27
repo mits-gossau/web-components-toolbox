@@ -15,17 +15,16 @@ export default class Recipe extends Shadow() {
   constructor (...args) {
     super({ mode: 'false' }, ...args)
     this.abortController = null
-   
-    const skip = this.getAttribute('skip') || 0
+
     this.requestListRecipeListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
       const fetchOptions = {
         signal: this.abortController.signal
       }
-      const limit = event.detail && event.detail.limit || this.getAttribute('limit') || 0
-      const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip)  : 0
-      
+      const limit = (event.detail && event.detail.limit) || this.getAttribute('limit') || 0
+      const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) : 0
+
       const endpoint = `https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=${limit}&offset=${currentSkip}`
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
         detail: {

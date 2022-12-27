@@ -9,14 +9,14 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
     this.answerEventNameListener = event => {
       event.detail.fetch.then((data) => {
         const compactMode = this.hasAttribute('compact')
         if (this.hasAttribute('length-only')) {
-          //const total = data.total
+          // const total = data.total
           const total = 648 // TODO!!!
           const limit = data.limit
           const skip = data.offset
@@ -71,20 +71,20 @@ export default class Pagination extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
-  dispatchRequestNewsEvent(page, tag) {
+  dispatchRequestNewsEvent (page, tag) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         skip: page,
@@ -96,11 +96,11 @@ export default class Pagination extends Shadow() {
     }))
   }
 
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML(pages, limit, skip, compactMode) {
+  renderHTML (pages, limit, skip, compactMode) {
     this.html = ''
     let pageItems = ''
 
@@ -127,8 +127,8 @@ export default class Pagination extends Shadow() {
         for (let i = 0; i < 4; ++i) {
           pageItems += `<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
         }
-        pageItems += `<li class="page-item"><a placeholder>...</a></li>`
-        for (var i = pages - 4; i < pages; i++) {
+        pageItems += '<li class="page-item"><a placeholder>...</a></li>'
+        for (let i = pages - 4; i < pages; i++) {
           pageItems += `<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
         }
         pageItems += `<li class="page-item"><a page=${skip + 2} next>&#62;</a></li>`
@@ -136,7 +136,7 @@ export default class Pagination extends Shadow() {
     } else {
       for (let i = 0; i < pages; ++i) {
         const active = (skip / limit)
-        pageItems += `<li class="page-item ${i === active ? 'active' : ''} "page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
+        pageItems += `<li class="page-item ${i === active ? 'active' : ''} " page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
       }
     }
     const withRelAttributeOnLinks = this.setRel(pageItems)
@@ -156,7 +156,7 @@ export default class Pagination extends Shadow() {
    * @param {string} items
    * @return {string}
    */
-  setRel(items) {
+  setRel (items) {
     const childNodes = new DOMParser().parseFromString(items, 'text/html').body.childNodes
     const nodes = Array.from(childNodes).filter(node => node.nodeType !== 3) // filter out text nodes
     if (nodes.length === 1) {
@@ -206,7 +206,7 @@ export default class Pagination extends Shadow() {
     return Array.from(updateNodes).map(item => item.outerHTML).join('')
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */ `
     :host {
       background-color:var(--background-color, black);

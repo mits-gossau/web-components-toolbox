@@ -42,11 +42,11 @@ export default class SliderButton extends Shadow() {
 
     this.buttonClickListener = e => {
       for (let i = 0; i < e.composedPath().length; i++) {
-        let index = e.composedPath()[i].getAttribute('data-index')
-        if (index != null){
+        const index = e.composedPath()[i].getAttribute('data-index')
+        if (index != null) {
           Array.from(this.parentNode.host.nav.children)[index].click()
           break
-        } 
+        }
       }
     }
 
