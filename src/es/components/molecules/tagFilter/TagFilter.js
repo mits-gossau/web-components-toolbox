@@ -13,11 +13,13 @@ export default class TagFilter extends Shadow() {
     this.clickListener = event => {
       if (!event.target || event.target.tagName !== 'A-BUTTON') return false
       event.preventDefault()
+
       const tag = event.target.hasAttribute('tag') ? event.target.getAttribute('tag') : ''
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-      this.setURLSearchParam('page', '1', url)
-      this.setURLSearchParam('tag', tag, url)
-      this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
+      url.searchParams.set('page', '1')
+      url.searchParams.set('tag', tag)
+      history.pushState({ ...history.state, tag, page: 1 }, document.title, url.href)
+
       this.setActiveItem(tag, this.root.querySelector('ul'))
 
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
@@ -148,16 +150,5 @@ export default class TagFilter extends Shadow() {
    */
   setURLSearchParam (param, value, url) {
     url.searchParams.set(param, value)
-  }
-
-  /**
-   * Push data to history
-   * @param {History} history
-   * @param {object} stateData
-   * @param {string} documentTitle
-   * @param {string} href
-   */
-  historyPushState (history, stateData, documentTitle, href) {
-    history.pushState(stateData, documentTitle, href)
   }
 }

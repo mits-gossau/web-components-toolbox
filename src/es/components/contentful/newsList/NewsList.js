@@ -143,7 +143,7 @@ export default class NewsList extends Shadow() {
   renderHTML (newsFetch, namespace) {
     // here a loading animation could be added
     Promise.all([newsFetch, this.loadChildComponents()]).then(([news, child]) => {
-      const { items } = news.data.newsEntryCollection
+      const { items } = news
       const wrapper = document.createElement('div')
       items.forEach(news => {
         // @ts-ignore

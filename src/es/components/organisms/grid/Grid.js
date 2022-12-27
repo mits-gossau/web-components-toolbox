@@ -1,10 +1,9 @@
 // @ts-check
-/* global customElements */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
- * Grid 
+ * Grid
  *
  * @export
  * @class Grid
@@ -13,10 +12,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {}
  */
 export default class Grid extends Shadow() {
-  constructor (...args) {
-    super(...args)
-  }
-
   connectedCallback () {
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
@@ -92,7 +87,7 @@ export default class Grid extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderHTML() {
+  renderHTML () {
     this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
     Array.from(this.root.children).forEach(node => {
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)

@@ -1,6 +1,7 @@
 // @ts-check
 /* global customElements */
 /* global CustomEvent */
+/* global location */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -9,7 +10,7 @@ export default class RecipeList extends Shadow() {
     super(...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(recipeData => {
-        this.renderHTML(recipeData)
+        this.renderHTML(recipeData.items)
       })
     }
   }
@@ -21,9 +22,12 @@ export default class RecipeList extends Shadow() {
       this.hidden = true
       Promise.all(showPromises).then(() => {
         this.hidden = false
+        const urlParams = new URLSearchParams(location.search)
+        const pageParam = urlParams.get('page') || 1
+        const page = Number(pageParam) - 1
         this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
           detail: {
-            recipe: 'all'
+            skip: page
           },
           bubbles: true,
           cancelable: true,
@@ -75,11 +79,12 @@ export default class RecipeList extends Shadow() {
 
   renderHTML (recipeList) {
     if (!recipeList.length) return
+    this.html = ''
     Promise.all([recipeList, this.loadChildComponents()]).then(() => {
       let row = ''
       recipeList.forEach((recipe, index) => {
         const teaser = `
-            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="${this.getAttribute("detail-page-link") ?? ""}?${recipe.slug}">
+            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="${this.getAttribute('detail-page-link') ?? ''}?${recipe.slug}">
                 <figure>
                   <a-picture namespace="picture-teaser-" picture-load
                       defaultSource="${recipe.imageSrc}" alt="${recipe.imageAlt}"></a-picture>
