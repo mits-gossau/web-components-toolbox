@@ -36,7 +36,7 @@ export default class Recipe extends Shadow() {
               return {
                 items: data.data.recipes.results,
                 limit: data.data.recipes.limit,
-                skip: data.data.recipes.offset,
+                skip: data.data.recipes.offset * 9,
                 tag: [],
                 total: 648
               }

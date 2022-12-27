@@ -8,38 +8,9 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
-    // this.answerEventNameListener = event => {
-    //   event.detail.fetch.then((data) => {
-    //     const compactMode = this.hasAttribute('compact')
-    //     if (this.hasAttribute('length-only')) {
-    //       let { total, limit, skip } = data
-    //       const pages = Math.ceil(total / limit)
-    //       debugger
-    //       this.renderHTML(pages, limit, skip, compactMode)
-    //     } else {
-    //       debugger
-    //       // const news = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || ''
-    //       // const newsData = JSON.parse(news)
-    //       // let { total, limit, skip } = newsData?.data.newsEntryCollection
-    //       let { total, limit, skip } =  data
-    //       const urlParams = new URLSearchParams(location.search)
-    //       const pageParam = urlParams.get('page') || 1
-    //       if (pageParam === 1) {
-    //         history.pushState({ ...history.state, page: 1 }, document.title, location.href)
-    //       }
-    //       const page = Number(pageParam)
-    //       const calcSkipPage = (page - 1) * 5
-    //       if (calcSkipPage !== skip) {
-    //         skip = calcSkipPage
-    //       }
-    //       const pages = Math.ceil(total / limit)
-    //       this.renderHTML(pages, limit, skip, compactMode)
-    //     }
-    //   })
-    // }
 
     this.answerEventNameListener = event => {
       event.detail.fetch.then((data) => {
@@ -51,6 +22,7 @@ export default class Pagination extends Shadow() {
           history.pushState({ ...history.state, page: 1 }, document.title, location.href)
         }
         const page = Number(pageParam)
+        //const calcSkipPage = (page - 1) * data.limit
         const calcSkipPage = (page - 1) * data.limit
         if (calcSkipPage !== skip) {
           skip = calcSkipPage
@@ -64,6 +36,7 @@ export default class Pagination extends Shadow() {
     this.clickListener = event => {
       event.preventDefault()
       if (!event.target || event.target.tagName !== 'A' || event.target.hasAttribute('placeholder')) return false
+      debugger
       const page = event.target.hasAttribute('page') ? event.target.getAttribute('page') : event.target.textContent
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', page)
@@ -87,20 +60,20 @@ export default class Pagination extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
-  dispatchRequestNewsEvent (page, tag) {
+  dispatchRequestNewsEvent(page, tag) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         skip: page,
@@ -112,49 +85,13 @@ export default class Pagination extends Shadow() {
     }))
   }
 
-  shouldComponentRenderCSS () {
+  shouldComponentRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderHTML (pages, limit, skip, compactMode) {
+  renderHTML(pages, limit, skip, compactMode) {
     this.html = ''
-    let pageItems = ''
-
-    if (compactMode && pages > 4) {
-      if (skip > 3 && skip <= 68) {
-        pageItems += `
-          <li class="page-item"><a page=${skip}>&#60;</a></li>
-          <li class="page-item" page="1"><a target="_self" class="page-link">1</a></li>
-          <li class="page-item"><a placeholder>...</a></li>
-          <li class="page-item active" page="${skip + 1}" ><a target="_self" class="page-link active">${skip + 1}</a></li>
-          <li class="page-item"><a placeholder>...</a></li>
-          <li class="page-item" page="${pages}"><a target="_self" class="page-link">${pages}</a></li>
-          <li class="page-item"><a page=${skip + 2} next>&#62;</a></li>`
-      } else if (skip >= 68) {
-        pageItems += `
-          <li class="page-item"><a page=${skip}>&#60;</a></li>
-          <li class="page-item" page="1"><a target="_self" class="page-link">1</a></li>
-          <li class="page-item"><a placeholder>...</a></li>
-          <li class="page-item ${pages - 3 === skip ? 'active' : ''}" page="${pages - 2}"><a target="_self" class="page-link ${pages - 3 === skip ? 'active' : ''}">${pages - 2}</a></li>
-          <li class="page-item ${pages - 2 === skip ? 'active' : ''}" page="${pages - 1}"><a target="_self" class="page-link ${pages - 2 === skip ? 'active' : ''}">${pages - 1}</a></li>
-          <li class="page-item ${pages - 1 === skip ? 'active' : ''}" page="${pages}"><a target="_self" class="page-link ${pages - 1 === skip ? 'active' : ''}">${pages}</a></li>
-          `
-      } else {
-        for (let i = 0; i < 4; ++i) {
-          pageItems += `<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
-        }
-        pageItems += '<li class="page-item"><a placeholder>...</a></li>'
-        for (let i = pages - 4; i < pages; i++) {
-          pageItems += `<li class="page-item ${i === skip ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === skip ? 'active' : ''}">${i + 1}</a></li>`
-        }
-        pageItems += `<li class="page-item"><a page=${skip + 2} next>&#62;</a></li>`
-      }
-    } else {
-      for (let i = 0; i < pages; ++i) {
-        const active = (skip / limit)
-        pageItems += `<li class="page-item ${i === active ? 'active' : ''} " page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
-      }
-    }
+    let pageItems = compactMode ? this.renderCompactHTML(skip, limit, pages) : this.renderAllPagesHTML(pages, skip, limit)
     const withRelAttributeOnLinks = this.setRel(pageItems)
 
     this.pagination.innerHTML =
@@ -167,12 +104,62 @@ export default class Pagination extends Shadow() {
     this.html = this.pagination
   }
 
+
+  renderCompactHTML(skip, limit, pages) {
+    const START_RANGE = 2
+    const END_RANGE = pages - 2
+    const selectedPage = (skip / limit)
+    let pageItems = ""
+
+    if (selectedPage > START_RANGE && selectedPage < END_RANGE) {
+      pageItems += `
+        <li class="page-item"><a page=${selectedPage}>&#60;</a></li>
+        <li class="page-item" page="1"><a target="_self" class="page-link">1</a></li>
+        <li class="page-item"><a placeholder>...</a></li>
+        <li class="page-item active" page="${selectedPage + 1}" ><a target="_self" class="page-link active">${selectedPage + 1}</a></li>
+        <li class="page-item"><a placeholder>...</a></li>
+        <li class="page-item" page="${pages}"><a target="_self" class="page-link">${pages}</a></li>
+        <li class="page-item"><a page=${selectedPage + 2} next>&#62;</a></li>
+        `
+    } else if (selectedPage >= END_RANGE) {
+      pageItems += `
+        <li class="page-item"><a page=${selectedPage}>&#60;</a></li>
+        <li class="page-item" page="1"><a target="_self" class="page-link">1</a></li>
+        <li class="page-item"><a placeholder>...</a></li>
+        <li class="page-item ${pages - 3 === selectedPage ? 'active' : ''}" page="${pages - 2}"><a target="_self" class="page-link ${pages - 3 === selectedPage ? 'active' : ''}">${pages - 2}</a></li>
+        <li class="page-item ${pages - 2 === selectedPage ? 'active' : ''}" page="${pages - 1}"><a target="_self" class="page-link ${pages - 2 === selectedPage ? 'active' : ''}">${pages - 1}</a></li>
+        <li class="page-item ${pages - 1 === selectedPage ? 'active' : ''}" page="${pages}"><a target="_self" class="page-link ${pages - 1 === selectedPage ? 'active' : ''}">${pages}</a></li>
+        `
+    } else {
+      // first 3
+      for (let i = 0; i < 3; ++i) {
+        pageItems += `<li class="page-item ${i === selectedPage ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === selectedPage ? 'active' : ''}">${i + 1}</a></li>`
+      }
+      pageItems += '<li class="page-item"><a placeholder>...</a></li>'
+      // last 3
+      for (let i = pages - 3; i < pages; i++) {
+        pageItems += `<li class="page-item ${i === selectedPage ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === selectedPage ? 'active' : ''}">${i + 1}</a></li>`
+      }
+      pageItems += `<li class="page-item"><a page=${selectedPage + 2} next>&#62;</a></li>`
+    }
+    return pageItems
+  }
+
+  renderAllPagesHTML(pages, skip, limit){
+    let pageItems = ""
+    for (let i = 0; i < pages; ++i) {
+      const active = (skip / limit)
+      pageItems += `<li class="page-item ${i === active ? 'active' : ''} " page="${i + 1}" ><a target="_self" class="page-link ${i === active ? 'active' : ''}">${i + 1}</a></li>`
+    } 
+    return pageItems
+  }
+
   /**
    * Set "rel" attribute to previous and next link
    * @param {string} items
    * @return {string}
    */
-  setRel (items) {
+  setRel(items) {
     const childNodes = new DOMParser().parseFromString(items, 'text/html').body.childNodes
     const nodes = Array.from(childNodes).filter(node => node.nodeType !== 3) // filter out text nodes
     if (nodes.length === 1) {
@@ -222,7 +209,7 @@ export default class Pagination extends Shadow() {
     return Array.from(updateNodes).map(item => item.outerHTML).join('')
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host {
       background-color:var(--background-color, black);
