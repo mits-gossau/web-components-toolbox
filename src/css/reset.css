@@ -119,7 +119,11 @@ a[href^="mailto:"] {
   padding: 0;
 }
 /* https://github.com/csstools/sanitize.css/blob/main/assets.css */
-:where(iframe, img, input, video, select, textarea) {
+:where(img, input, video, select, textarea) {
+  height: auto;
+  max-width: 100%;
+}
+:where(iframe) {
   /* height: auto; */
   max-width: 100%;
 }
