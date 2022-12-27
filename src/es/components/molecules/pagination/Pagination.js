@@ -22,7 +22,6 @@ export default class Pagination extends Shadow() {
           history.pushState({ ...history.state, page: 1 }, document.title, location.href)
         }
         const page = Number(pageParam)
-        //const calcSkipPage = (page - 1) * data.limit
         const calcSkipPage = (page - 1) * data.limit
         if (calcSkipPage !== skip) {
           skip = calcSkipPage
@@ -36,7 +35,6 @@ export default class Pagination extends Shadow() {
     this.clickListener = event => {
       event.preventDefault()
       if (!event.target || event.target.tagName !== 'A' || event.target.hasAttribute('placeholder')) return false
-      debugger
       const page = event.target.hasAttribute('page') ? event.target.getAttribute('page') : event.target.textContent
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('page', page)
