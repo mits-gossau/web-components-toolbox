@@ -124,17 +124,17 @@ export default class Pagination extends Shadow() {
 
     if (selectedPage > START_RANGE && selectedPage < END_RANGE) {
       pageItems += `
-        <li class="page-item"><a page=${selectedPage}>&#60;</a></li>
+        <li class="page-item"><a page=${selectedPage}>&larr;</a></li>
         <li class="page-item" page="1"><a target="_self" class="page-link">1</a></li>
         <li class="page-item"><a placeholder>...</a></li>
         <li class="page-item active" page="${selectedPage + 1}" ><a target="_self" class="page-link active">${selectedPage + 1}</a></li>
         <li class="page-item"><a placeholder>...</a></li>
         <li class="page-item" page="${pages}"><a target="_self" class="page-link">${pages}</a></li>
-        <li class="page-item"><a page=${selectedPage + 2} next>&#62;</a></li>
+        <li class="page-item"><a page=${selectedPage + 2} next>&rarr;</a></li>
         `
     } else if (selectedPage >= END_RANGE) {
       pageItems += `
-        <li class="page-item"><a page=${selectedPage}>&#60;</a></li>
+        <li class="page-item"><a page=${selectedPage}>&larr;</a></li>
         <li class="page-item" page="1"><a target="_self" class="page-link">1</a></li>
         <li class="page-item"><a placeholder>...</a></li>
         <li class="page-item ${pages - 3 === selectedPage ? 'active' : ''}" page="${pages - 2}"><a target="_self" class="page-link ${pages - 3 === selectedPage ? 'active' : ''}">${pages - 2}</a></li>
@@ -151,7 +151,7 @@ export default class Pagination extends Shadow() {
       for (let i = pages - 3; i < pages; i++) {
         pageItems += `<li class="page-item ${i === selectedPage ? 'active' : ''}" page="${i + 1}" ><a target="_self" class="page-link ${i === selectedPage ? 'active' : ''}">${i + 1}</a></li>`
       }
-      pageItems += `<li class="page-item"><a page=${selectedPage + 2} next>&#62;</a></li>`
+      pageItems += `<li class="page-item"><a page=${selectedPage + 2} next>&rarr;</a></li>`
     }
     return pageItems
   }
