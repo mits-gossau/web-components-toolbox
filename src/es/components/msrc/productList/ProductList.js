@@ -7,7 +7,7 @@ export default class ProductList extends Prototype() {
   constructor (...args) {
     super(...args)
     this.config = this.configSetup()
-    this.answerArticleCategory = event => {
+    this.requestListArticlesEventListener = event => {
       this.config.filterOptions.category = [event.detail.tag || event.detail.category]
       this.widgetRenderSetup()
     }
@@ -23,17 +23,11 @@ export default class ProductList extends Prototype() {
         this.renderCSS()
       })
     }
-    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerArticleCategory)
-    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
-      detail: {},
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
+    document.body.addEventListener(this.getAttribute('request-list-articles') || 'request-list-articles', this.requestListArticlesEventListener)
   }
 
   disconnectedCallback () {
-    document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.requestArticleCategory)
+    document.body.removeEventListener(this.getAttribute('request-list-articles') || 'request-list-articles', this.requestListArticlesEventListener)
   }
 
   configSetup () {
@@ -50,7 +44,19 @@ export default class ProductList extends Prototype() {
   }
 
   widgetRenderSetup () {
-    this.msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
+    this.dispatchEvent(new CustomEvent(this.getAttribute('list-articles') || 'list-articles', {
+      detail: {
+        this: this,
+        config: this.config,
+        msrcProductListWrapper: this.msrcProductListWrapper,
+        tag: this.config.filterOptions.category,
+        subTagFetch: fetch(`https://testadmin.alnatura.ch/umbraco/api/ProductsApi/GetCats?cat=${this.config.filterOptions.category}`)
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
+    return this.msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
   }
 
   shouldComponentRender () {
@@ -61,7 +67,7 @@ export default class ProductList extends Prototype() {
     this.msrcProductListWrapper = this.root.querySelector('div') || document.createElement('div')
     return this.loadDependency().then(async msrc => {
       this.msrc = msrc
-      await msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
+      await this.widgetRenderSetup()
       const getStylesReturn = this.getStyles(document.createElement('style'))
       this.html = [this.msrcProductListWrapper, getStylesReturn[0]]
       return getStylesReturn[1] // use this line if css build up should be avoided
