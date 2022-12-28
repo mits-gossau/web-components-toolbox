@@ -13,8 +13,13 @@ export default class News extends Shadow() {
     this.RESOLVE_MSG = 'LOADED'
     this.ERROR_MSG = 'Error. News could not be displayed.'
     this.clickListener = event => {
-      const windowOpenTarget = event.target.tagName === 'A-BUTTON' ? '_self' : '_blank'
-      self.open(this.newsListUrl, windowOpenTarget)
+      const url = new URL(document.referrer)
+      if (url.searchParams.has('page')) {
+        window.history.back()
+      } else {
+        const windowOpenTarget = event.target.tagName === 'A-BUTTON' ? '_self' : '_blank'
+        self.open(this.newsListUrl, windowOpenTarget)
+      }
     }
   }
 
@@ -114,6 +119,7 @@ export default class News extends Shadow() {
       this.newsWrapper.innerHTML = eval('`' + htmls[0] + '`')// eslint-disable-line no-eval
 
       this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {
+        document.title = metaTitle
         this.html = this.newsWrapper
       })
     })
