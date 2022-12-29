@@ -60,7 +60,8 @@ export default class Contentful extends Shadow() {
               let data = await response.json()
               data = this.injectData(data, 'tag', variables.tags)
               sessionStorage.setItem(this.getAttribute('slug-name') || 'news', JSON.stringify(data))
-              console.log('dispatch', this.getAttribute('list-news') || 'list-news', data.data.newsEntryCollection);
+              if (data.data.newsEntryCollection.tag.length > 1) data.data.newsEntryCollection.tag = data.data.newsEntryCollection.tag.splice(1,)
+              console.log('dispatch', this.getAttribute('list-news') || 'list-news', data.data.newsEntryCollection.tag);
               return data.data.newsEntryCollection
             }
             throw new Error(response.statusText)
