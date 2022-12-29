@@ -40,8 +40,16 @@ export default class Button extends Shadow() {
         }))
       }
     }
-    this.answerEventListener = event => {
-      const tags = event.detail[this.getAttribute('active-detail-property-name') || 'tags']
+    this.answerEventListener = async event => {
+      let tags = event.detail.tags
+      if (this.hasAttribute('active-detail-property-name')) {
+        tags = await this.getAttribute('active-detail-property-name').split(':').reduce(async (accumulator, propertyName) => {
+          propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
+          if (accumulator instanceof Promise) accumulator = await accumulator
+          return accumulator[propertyName]
+        }, event.detail)
+      }
+      console.log('changed', tags, this.getAttribute('tag'));
       if (tags && tags.length) this.button.classList[tags.includes(this.getAttribute('tag')) ? 'add' : 'remove']('active')
     }
     // link behavior made accessible
@@ -62,6 +70,7 @@ export default class Button extends Shadow() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     this.button.addEventListener('click', this.clickListener)
+    console.log('listening', this.getAttribute('answer-event-name'));
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
     if (this.mouseEventElement) {
