@@ -104,9 +104,11 @@ export default class TagFilter extends Shadow() {
     if (!tagList || !tagList.length) return
     this.loadChildComponents()
     this.html = ''
+    const request = this.getAttribute('request-event-name')
+    const answer = this.getAttribute('answer-event-name')
     tagList.forEach(tagItem => {
       // TODO: fix attribute naming to harmonize with api
-      this.html = `<a-button namespace="button-category-" tag="${tagItem.code}" request-event-name="request-list-articles" answer-event-name="list-articles">${tagItem.name}</a-button>`
+      this.html = `<a-button namespace="button-category-" tag="${tagItem.code}" request-event-name="${request}" answer-event-name="${answer}">${tagItem.name}</a-button>`
     })
   }
 
