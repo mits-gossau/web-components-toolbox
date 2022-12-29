@@ -7,10 +7,7 @@ export default class ProductList extends Prototype() {
   constructor (...args) {
     super(...args)
     this.config = this.configSetup()
-    this.requestListArticlesEventListener = event => {
-      this.config.filterOptions.category = [event.detail.tag || event.detail.category]
-      this.widgetRenderSetup()
-    }
+    this.requestListArticlesEventListener = event => this.widgetRenderSetup(event)
   }
 
   connectedCallback () {
@@ -43,14 +40,21 @@ export default class ProductList extends Prototype() {
     return setup
   }
 
-  widgetRenderSetup () {
+  widgetRenderSetup (event = null) {
+    if (event) this.config.filterOptions.category = event.detail.tags || [event.detail.category]
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-articles') || 'list-articles', {
       detail: {
         this: this,
         config: this.config,
         msrcProductListWrapper: this.msrcProductListWrapper,
-        tag: this.config.filterOptions.category,
-        subTagFetch: fetch(`https://testadmin.alnatura.ch/umbraco/api/ProductsApi/GetCats?cat=${this.config.filterOptions.category}`)
+        tags: this.config.filterOptions.category,
+        subTagFetch: event && event.detail.fetchSubTags ? fetch(`https://testadmin.alnatura.ch/umbraco/api/ProductsApi/GetCats?cat=${this.config.filterOptions.category}`).then(async response => {
+          if (response.status >= 200 && response.status <= 299) {
+            return await response.json()
+          }
+          throw new Error(response.statusText)
+        }) : null,
+        clearSubTags: event && event.detail.clearSubTags
       },
       bubbles: true,
       cancelable: true,

@@ -20,15 +20,8 @@ export default class TagFilter extends Shadow() {
     }
     this.answerEventListener = event => {
       const tagsFetch = event.detail[this.getAttribute('tag-detail-property-name') || 'tag-detail-property-name']
-      if (tagsFetch) {
-        tagsFetch.then(async response => {
-          if (response.status >= 200 && response.status <= 299) {
-            const data = await response.json()
-            return this.renderHTML(data)
-          }
-          throw new Error(response.statusText)
-        })
-      }
+      if (event.detail.clearSubTags) this.html = ''
+      if (tagsFetch) tagsFetch.then(data => this.renderHTML(data, event))
     }
   }
 
@@ -98,17 +91,21 @@ export default class TagFilter extends Shadow() {
   /**
    * Render HTML
    * @param {Array<object>} tagList
+   * @param {CustomEvent} [event=null]
    * @returns void
    */
-  renderHTML (tagList) {
+  renderHTML (tagList, event = null) {
     if (!tagList || !tagList.length) return
     this.loadChildComponents()
     this.html = ''
-    const request = this.getAttribute('request-event-name')
-    const answer = this.getAttribute('answer-event-name')
     tagList.forEach(tagItem => {
       // TODO: fix attribute naming to harmonize with api
-      this.html = `<a-button namespace="button-category-" tag="${tagItem.code}" request-event-name="${request}" answer-event-name="${answer}">${tagItem.name}</a-button>`
+      this.html = `<a-button
+          namespace="button-category-"
+          tag="${tagItem.code}"
+          answer-event-name="${this.getAttribute('answer-event-name')}"
+          request-event-name="${this.getAttribute('request-event-name')}"
+        >${tagItem.name}</a-button>`
     })
   }
 

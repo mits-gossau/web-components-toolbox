@@ -29,7 +29,9 @@ export default class Button extends Shadow() {
         this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
           detail: {
             origEvent: event,
-            tag: this.getAttribute('tag'),
+            tags: [this.getAttribute('tag')],
+            fetchSubTags: this.hasAttribute('fetch-sub-tags'),
+            clearSubTags: this.hasAttribute('clear-sub-tags'),
             this: this
           },
           bubbles: true,
@@ -39,7 +41,7 @@ export default class Button extends Shadow() {
       }
     }
     this.answerEventListener = event => {
-      const tags = event.detail[this.getAttribute('active-detail-property-name') || 'tag']
+      const tags = event.detail[this.getAttribute('active-detail-property-name') || 'tags']
       if (tags && tags.length) this.button.classList[tags.includes(this.getAttribute('tag')) ? 'add' : 'remove']('active')
     }
     // link behavior made accessible
