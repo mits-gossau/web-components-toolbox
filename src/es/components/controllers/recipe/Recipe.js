@@ -46,7 +46,7 @@ export default class Recipe extends Shadow() {
             if (response.status >= 200 && response.status <= 299) {
               const data = await response.json()
               // return data.data.recipes
-              // TODO!!!!
+              // TODO
               return {
                 items: data.data.recipes.results,
                 limit: 9,
