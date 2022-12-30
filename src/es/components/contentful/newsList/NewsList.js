@@ -30,41 +30,15 @@ export default class NewsList extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.hidden = true
-    const newsViewed = sessionStorage.getItem('news-viewed')?.toLowerCase() === 'true'
-    let currentPageSkip = newsViewed ? this.getCurrentPageSkip(sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '') : 0
-    sessionStorage.removeItem('news-viewed')
-    const urlParams = new URLSearchParams(location.search)
-    const pageParam = urlParams.get('page') || 1
-    const page = Number(pageParam) - 1
-    if (currentPageSkip !== page) {
-      currentPageSkip = page
-    }
-
-    let tagValue = [urlParams.get('tag')]
-    if (tagValue[0] === null || tagValue[0] === '') {
-      tagValue = this.getTag(sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '{}')
-    }
-
-    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
-      detail: {
-        skip: currentPageSkip,
-        tag: tagValue
-      },
+    Promise.all([this.loadScriptDependency(), this.loadDependency()]).then(() => this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       bubbles: true,
       cancelable: true,
       composed: true
-    }))
+    })))
   }
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
-  }
-
-  getCurrentPageSkip (sessionData) {
-    if (sessionData === '') return 0
-    const newsData = JSON.parse(sessionData)
-    const { skip, limit } = newsData.data.newsEntryCollection
-    return skip / limit
   }
 
   loadScriptDependency () {
@@ -176,15 +150,5 @@ export default class NewsList extends Shadow() {
       })
       return elements
     }))
-  }
-
-  /**
-   * Get tag from store
-   * @param {string} store
-   * @returns Array
-   */
-  getTag (store) {
-    const newsData = JSON.parse(store)
-    return newsData?.data?.newsEntryCollection?.tag || []
   }
 }
