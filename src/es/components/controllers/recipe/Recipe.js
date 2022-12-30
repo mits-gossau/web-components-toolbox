@@ -12,7 +12,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Recipe extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super({ mode: 'false' }, ...args)
     this.abortController = null
 
@@ -20,10 +20,8 @@ export default class Recipe extends Shadow() {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
 
-      // const limit = (event.detail && event.detail.limit) || this.getAttribute('limit') || 0
-      // const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) : 0
-
-
+      const limit = (event.detail && event.detail.limit) || this.getAttribute('limit') || 0
+      const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) : 0
 
       const payload = {
         limit: 9,
@@ -40,9 +38,8 @@ export default class Recipe extends Shadow() {
         body: JSON.stringify(payload),
         signal: this.abortController.signal
       }
-      debugger
-      // const endpoint = `https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=${limit}&offset=${currentSkip}`
-      const endpoint = 'https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes'
+
+      const endpoint = this.getAttribute('endpoint')
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
@@ -68,11 +65,11 @@ export default class Recipe extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.addEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.removeEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
   }
 }
