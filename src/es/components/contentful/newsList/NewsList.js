@@ -12,7 +12,6 @@ export default class NewsList extends Shadow() {
     super(...args)
     this.RESOLVE_STATE = 'LOADED'
     this.answerEventNameListener = event => {
-      console.log('newsListGotEvent', this.getAttribute('answer-event-name') || 'answer-event-name', event);
       this.hidden = false
       const newsPreviewNamespace = this.getAttribute('news-preview-namespace') || 'preview-default-'
       this.loadScriptDependency().then(script => {
@@ -27,7 +26,7 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  connectedCallback () { 
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.hidden = true
@@ -46,7 +45,6 @@ export default class NewsList extends Shadow() {
       tagValue = this.getTag(sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '{}')
     }
 
-    console.log('newslist dispatch first2', this.getAttribute('request-event-name') || 'request-event-name');
     Promise.all([this.loadScriptDependency(), this.loadDependency()]).then(() => this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         skip: currentPageSkip,

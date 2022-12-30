@@ -26,7 +26,6 @@ export default class Contentful extends Shadow() {
     this.abortController = null
 
     this.requestListNewsListener = async event => {
-
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
       const variables = {
@@ -60,8 +59,7 @@ export default class Contentful extends Shadow() {
               let data = await response.json()
               data = this.injectData(data, 'tag', variables.tags)
               sessionStorage.setItem(this.getAttribute('slug-name') || 'news', JSON.stringify(data))
-              if (data.data.newsEntryCollection.tag.length > 1) data.data.newsEntryCollection.tag = data.data.newsEntryCollection.tag.splice(1,)
-              console.log('dispatch', this.getAttribute('list-news') || 'list-news', data.data.newsEntryCollection.tag);
+              if (data.data.newsEntryCollection.tag.length > 1) data.data.newsEntryCollection.tag = data.data.newsEntryCollection.tag.splice(1)
               return data.data.newsEntryCollection
             }
             throw new Error(response.statusText)

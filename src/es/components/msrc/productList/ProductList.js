@@ -48,12 +48,14 @@ export default class ProductList extends Prototype() {
         config: this.config,
         msrcProductListWrapper: this.msrcProductListWrapper,
         tags: this.config.filterOptions.category,
-        subTagFetch: event && event.detail.fetchSubTags ? fetch(`https://testadmin.alnatura.ch/umbraco/api/ProductsApi/GetCats?cat=${this.config.filterOptions.category}`).then(async response => {
-          if (response.status >= 200 && response.status <= 299) {
-            return await response.json()
-          }
-          throw new Error(response.statusText)
-        }) : null,
+        subTagFetch: event && event.detail.fetchSubTags
+          ? fetch(`https://testadmin.alnatura.ch/umbraco/api/ProductsApi/GetCats?cat=${this.config.filterOptions.category}`).then(async response => {
+            if (response.status >= 200 && response.status <= 299) {
+              return await response.json()
+            }
+            throw new Error(response.statusText)
+          })
+          : null,
         clearSubTags: event && event.detail.clearSubTags
       },
       bubbles: true,

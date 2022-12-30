@@ -2,6 +2,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
+/* global CustomEvent */
 
 /**
  * Creates an Button
@@ -43,17 +44,13 @@ export default class Button extends Shadow() {
     }
     this.answerEventListener = async event => {
       let tags = event.detail.tags
-      console.log('active shit1', this.getAttribute('active-detail-property-name'));
       if (this.getAttribute('active-detail-property-name')) {
-        console.log('active shit2', this.getAttribute('active-detail-property-name'), typeof this.getAttribute('active-detail-property-name'));
         tags = await this.getAttribute('active-detail-property-name').split(':').reduce(async (accumulator, propertyName) => {
           propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
           if (accumulator instanceof Promise) accumulator = await accumulator
-          console.log('reducer', accumulator[propertyName]);
           return accumulator[propertyName]
         }, event.detail)
       }
-      console.log('changed', event.detail.tags, this.getAttribute('active-detail-property-name'), this.getAttribute('tag'));
       if (tags && tags.length) this.button.classList[tags.includes(this.getAttribute('tag')) ? 'add' : 'remove']('active')
     }
     // link behavior made accessible
@@ -74,7 +71,6 @@ export default class Button extends Shadow() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     this.button.addEventListener('click', this.clickListener)
-    console.log('listening', this.getAttribute('answer-event-name'));
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
     if (this.mouseEventElement) {
