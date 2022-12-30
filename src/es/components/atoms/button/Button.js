@@ -27,7 +27,7 @@ export default class Button extends Shadow() {
       }
       if (this.getAttribute('request-event-name')) {
         this.button.classList.toggle('active')
-        debugger
+
         this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
           detail: {
             origEvent: event,

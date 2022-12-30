@@ -12,7 +12,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Recipe extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super({ mode: 'false' }, ...args)
     this.abortController = null
 
@@ -20,8 +20,8 @@ export default class Recipe extends Shadow() {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
 
-      const limit = (event.detail && event.detail.limit) || this.getAttribute('limit') || 0
-      const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) : 0
+      // const limit = (event.detail && event.detail.limit) || this.getAttribute('limit') || 0
+      // const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) : 0
 
       const payload = {
         limit: 9,
@@ -65,11 +65,11 @@ export default class Recipe extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
   }
 }
