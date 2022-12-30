@@ -25,6 +25,9 @@
     grid-row: 2 / 2;
     grid-column: 2 / 2;
 }
+:host([first-container-vertical]) > section > *[count-children="0"]:nth-child(2) ~ * {
+    grid-row: 1 / 2;
+}
 /* ****************************************** first-container-horizontal ****************************************** */
 /* title + filter top */
 :host([first-container-horizontal]) > section > *:nth-child(1) {

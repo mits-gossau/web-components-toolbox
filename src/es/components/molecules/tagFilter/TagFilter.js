@@ -3,20 +3,12 @@
 /* global history */
 /* global customElements */
 
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Mutation } from '../../prototypes/Mutation.js'
 
-export default class TagFilter extends Shadow() {
-  constructor (...args) {
-    super(...args)
+export default class TagFilter extends Mutation() {
+  constructor (options = {}, ...args) {
+    super(Object.assign(options, { mutationObserverInit: { childList: true } }), ...args)
 
-    this.clickListener = event => {
-      if (!event.target || event.target.tagName !== 'A-BUTTON') return false
-      const tag = event.target.hasAttribute('tag') ? event.target.getAttribute('tag') : ''
-      const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-      url.searchParams.set('page', '1')
-      url.searchParams.set('tag', tag)
-      history.pushState({ ...history.state, tag, page: 1 }, document.title, url.href)
-    }
     this.answerEventListener = event => {
       const tagsFetch = event.detail[this.getAttribute('tag-detail-property-name') || 'tag-detail-property-name']
       if (event.detail.clearSubTags) this.html = ''
@@ -25,17 +17,20 @@ export default class TagFilter extends Shadow() {
   }
 
   connectedCallback () {
+    super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     // @ts-ignore
-    if (this.shouldComponentRenderHTML()) this.renderHTML(this.constructor.parseAttribute(this.getAttribute('tag') || []))
-    // TODO: history / params stuff
-    /* this.tagFilterWrapper.addEventListener('click', this.clickListener) */
+    if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventListener)
   }
 
   disconnectedCallback () {
-    this.tagFilterWrapper.removeEventListener('click', this.clickListener)
+    super.disconnectedCallback()
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventListener)
+  }
+
+  mutationCallback (mutationList, observer) {
+    this.setAttribute('count-children', Array.from(this.root.children).filter(child => child.tagName !== 'STYLE').length)
   }
 
   shouldComponentRenderCSS () {

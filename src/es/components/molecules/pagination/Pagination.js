@@ -18,9 +18,6 @@ export default class Pagination extends Shadow() {
         let { total, limit, skip } = data
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
-        if (pageParam === 1) {
-          history.pushState({ ...history.state, page: 1 }, document.title, location.href)
-        }
         const page = Number(pageParam)
         const calcSkipPage = (page - 1) * data.limit
         if (calcSkipPage !== skip) {
@@ -36,25 +33,7 @@ export default class Pagination extends Shadow() {
       event.preventDefault()
       if (!event.target || event.target.tagName !== 'A' || event.target.hasAttribute('placeholder')) return false
       const page = event.target.hasAttribute('page') ? event.target.getAttribute('page') : event.target.textContent
-      const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-      url.searchParams.set('page', page)
-      const urlParams = new URLSearchParams(location.search)
-      const tagParam = urlParams.get('tag')
-      if (tagParam) {
-        url.searchParams.set('tag', tagParam || history.state?.tag || '')
-      }
-      history.pushState({ ...history.state, tag: tagParam, page: event.target.textContent }, document.title, url.href)
-      if (url.searchParams.get('page') === '1') {
-        url.searchParams.delete('page')
-      }
-      this.dispatchRequestNewsEvent(page - 1, tagParam || history.state?.tag || '')
-    }
-
-    this.updatePopState = event => {
-      if (!event.state || !event.state.page) return
-      const urlParams = new URLSearchParams(location.search)
-      const tagParam = urlParams.get('tag') || ''
-      this.dispatchRequestNewsEvent(event.state.page - 1, tagParam)
+      this.dispatchRequestNewsEvent(page - 1)
     }
   }
 
@@ -62,20 +41,17 @@ export default class Pagination extends Shadow() {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
-    self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
-    self.removeEventListener('popstate', this.updatePopState)
   }
 
-  dispatchRequestNewsEvent (page, tag) {
+  dispatchRequestNewsEvent (page) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
-        skip: page,
-        tag: tag ? [tag] : []
+        skip: page
       },
       bubbles: true,
       cancelable: true,

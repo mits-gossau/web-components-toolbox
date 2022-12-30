@@ -28,11 +28,24 @@ export default class Contentful extends Shadow() {
     this.requestListNewsListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
+      const pushHistory = event && event.detail && event.detail.pushHistory
       const variables = {
-        tags: event.detail && event.detail.tags !== undefined ? [tag, ...new Set(event.detail.tags)] : [tag],
+        tags: [tag, ...this.getTags()],
         limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit),
-        skip: event.detail && event.detail.skip !== undefined ? Number(event.detail.skip) * skip : 0
       }
+      // set tag resets the page parameter
+      if (event.detail && event.detail.tags !== undefined) {
+        variables.tags = [tag, ...new Set(event.detail.tags)]
+        this.setTag(variables.tags[1] || variables.tags[0], pushHistory)
+      }
+      // skip must be set after tags, since it may got reset by new tag parameter
+      if (event.detail && event.detail.skip !== undefined) {
+        variables.skip = Number(event.detail.skip)
+        this.setPage(String(variables.skip + 1), pushHistory)
+      } else {
+        variables.skip = this.getCurrentPageSkip()
+      }
+      // tags is expected to only have only one value... Alnatura is the topic selector, Expl.: All: ['Alnatura'] only Interview: ['Alnatura', 'interview']
       let query = null
       try {
         // @ts-ignore
@@ -70,14 +83,23 @@ export default class Contentful extends Shadow() {
         composed: true
       }))
     }
-  }
 
+    this.updatePopState = event => {
+      if (!event.state) return
+      if (!event.detail) event.detail = {...event.state}
+      event.detail.pushHistory = false
+      this.requestListNewsListener(event)
+    }
+  }
+ss
   connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-news') || 'request-list-news', this.requestListNewsListener)
+    self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-news') || 'request-list-news', this.requestListNewsListener)
+    self.removeEventListener('popstate', this.updatePopState)
   }
 
   /**
@@ -85,7 +107,7 @@ export default class Contentful extends Shadow() {
    * @param {*} data
    * @param {*} additionalDataKey
    * @param {*} additionalData
-   * @returns
+   * @return
    */
   injectData (data, additionalDataKey, additionalData) {
     return {
@@ -98,5 +120,74 @@ export default class Contentful extends Shadow() {
         }
       }
     }
+  }
+  
+  /**
+   * Set tag and page in window.history
+   * @param {string} tag
+   * @param {boolean} [pushHistory = true]
+   * @return {void}
+   */
+  setTag (tag, pushHistory = true) {
+    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    url.searchParams.set('tag', tag)
+    url.searchParams.set('page', '1')
+    if (pushHistory) history.pushState({ ...history.state, tag, page: '1' }, document.title, url.href)
+  }
+
+  /**
+   * Get tag from url else store
+   * @param {string} [store=sessionStorage]
+   * @return [string]
+   */
+  getTags (store = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '{}') {
+    const urlParams = new URLSearchParams(location.search)
+    const tag = urlParams.get('tag')
+    if (tag) return [tag]
+    const newsData = JSON.parse(store)
+    return newsData?.data?.newsEntryCollection?.tag || []
+  }
+
+  /**
+   * Set page in window.history
+   * @param {string} page
+   * @param {boolean} [pushHistory = true]
+   * @return {void}
+   */
+  setPage (page, pushHistory = true) {
+    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    if (page === '1') {
+      url.searchParams.delete('page')
+    } else {
+      url.searchParams.set('page', page)
+    }
+    if (pushHistory) history.pushState({ ...history.state, tag: this.getTags[1] || this.getTags[0], page }, document.title, url.href)
+  }
+
+  /**
+   * Get page from url
+   * @return [string]
+   */
+  getPage () {
+    const urlParams = new URLSearchParams(location.search)
+    return Number(urlParams.get('page') || 1)
+  }
+
+  /**
+   * Get skip aka. offset for the api request from url else store
+   * @param {string} [sessionData=sessionStorage]
+   * @return [number]
+   */
+  getCurrentPageSkip (sessionData = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '') {
+    const newsViewed = sessionStorage.getItem('news-viewed')?.toLowerCase() === 'true'
+    sessionStorage.removeItem('news-viewed')
+    if (sessionData === '') return 0
+    // TODO: strange behavior, since it always returns getPage
+    const newsData = JSON.parse(sessionData)
+    const { skip, limit } = newsData.data.newsEntryCollection
+    const currentPageSkip = skip / limit
+    const page = this.getPage()
+    if (currentPageSkip !== page - 1) return page - 1
+    return currentPageSkip
   }
 }

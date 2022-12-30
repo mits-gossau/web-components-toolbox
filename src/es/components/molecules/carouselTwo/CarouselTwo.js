@@ -97,9 +97,9 @@ export default class CarouselTwo extends Shadow() {
           if (this.hasAttribute('history') && !this.hasAttribute('interval') && !self.location.hash.includes(activeChild.getAttribute('id'))) {
             const url = `${self.location.href.split('#')[0]}#${activeChild.getAttribute('id')}`
             if (self.location.hash.includes('next') || self.location.hash.includes('previous')) {
-              self.history.replaceState({ ...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
+              self.history.replaceState({ ...history.state, picture: activeChild.getAttribute('id'), url }, document.title, url)
             } else {
-              self.history.pushState({ ...history.state, picture: activeChild.getAttribute('id'), url }, undefined, url)
+              self.history.pushState({ ...history.state, picture: activeChild.getAttribute('id'), url }, document.title, url)
             }
           }
         }
