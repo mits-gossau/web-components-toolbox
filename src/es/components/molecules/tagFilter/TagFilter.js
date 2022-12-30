@@ -17,7 +17,7 @@ export default class TagFilter extends Shadow() {
       url.searchParams.set('tag', tag)
       history.pushState({ ...history.state, tag, page: 1 }, document.title, url.href)
     }
-    this.answerEventListener = event => {
+    this.answerEventListener = event => {  
       const tagsFetch = event.detail[this.getAttribute('tag-detail-property-name') || 'tag-detail-property-name']
       if (event.detail.clearSubTags) this.html = ''
       if (tagsFetch) tagsFetch.then(data => this.renderHTML(data, event))

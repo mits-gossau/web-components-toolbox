@@ -23,6 +23,8 @@ export default class Recipe extends Shadow() {
       // const limit = (event.detail && event.detail.limit) || this.getAttribute('limit') || 0
       // const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) : 0
 
+
+
       const payload = {
         limit: 9,
         offset: 0,
@@ -38,7 +40,7 @@ export default class Recipe extends Shadow() {
         body: JSON.stringify(payload),
         signal: this.abortController.signal
       }
-
+      debugger
       // const endpoint = `https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=${limit}&offset=${currentSkip}`
       const endpoint = 'https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes'
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {

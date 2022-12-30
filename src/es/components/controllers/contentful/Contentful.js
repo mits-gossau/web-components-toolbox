@@ -52,6 +52,7 @@ export default class Contentful extends Shadow() {
         signal: this.abortController.signal
       }
 
+     
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-news') || 'list-news', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
