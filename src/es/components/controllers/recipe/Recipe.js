@@ -12,7 +12,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Recipe extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super({ mode: 'false' }, ...args)
     this.abortController = null
 
@@ -22,7 +22,7 @@ export default class Recipe extends Shadow() {
 
       const limit = (event.detail && event.detail.limit) || this.getAttribute('limit') || 0
       const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) : 0
-  
+
       const payload = {
         limit: 9,
         offset: 0,
@@ -30,7 +30,7 @@ export default class Recipe extends Shadow() {
       }
 
       const fetchOptions = {
-        method: 'POST', 
+        method: 'POST',
         headers: {
           Accept: 'application.json',
           'Content-Type': 'application/json'
