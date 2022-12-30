@@ -25,11 +25,12 @@ export default class Button extends Shadow() {
         self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
       }
       if (this.getAttribute('request-event-name')) {
-        this.button.classList.add('active')
+        this.button.classList.toggle('active')
         this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
           detail: {
             origEvent: event,
             tags: [this.getAttribute('tag')],
+            isActive: this.button.classList.contains('active'),
             fetchSubTags: this.hasAttribute('fetch-sub-tags'),
             clearSubTags: this.hasAttribute('clear-sub-tags'),
             this: this
@@ -42,14 +43,17 @@ export default class Button extends Shadow() {
     }
     this.answerEventListener = async event => {
       let tags = event.detail.tags
-      if (this.hasAttribute('active-detail-property-name')) {
+      console.log('active shit1', this.getAttribute('active-detail-property-name'));
+      if (this.getAttribute('active-detail-property-name')) {
+        console.log('active shit2', this.getAttribute('active-detail-property-name'), typeof this.getAttribute('active-detail-property-name'));
         tags = await this.getAttribute('active-detail-property-name').split(':').reduce(async (accumulator, propertyName) => {
           propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
           if (accumulator instanceof Promise) accumulator = await accumulator
+          console.log('reducer', accumulator[propertyName]);
           return accumulator[propertyName]
         }, event.detail)
       }
-      console.log('changed', tags, this.getAttribute('tag'));
+      console.log('changed', event.detail.tags, this.getAttribute('active-detail-property-name'), this.getAttribute('tag'));
       if (tags && tags.length) this.button.classList[tags.includes(this.getAttribute('tag')) ? 'add' : 'remove']('active')
     }
     // link behavior made accessible

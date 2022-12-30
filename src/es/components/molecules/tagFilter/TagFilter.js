@@ -103,9 +103,9 @@ export default class TagFilter extends Shadow() {
       this.html = `<a-button
           namespace="button-category-"
           tag="${tagItem.code}"
-          answer-event-name="${this.getAttribute('answer-event-name')}"
-          request-event-name="${this.getAttribute('request-event-name')}"
-          active-detail-property-name="${this.getAttribute('active-detail-property-name')}"
+          answer-event-name="${this.getAttribute('answer-event-name') || ''}"
+          request-event-name="${this.getAttribute('request-event-name') || ''}"
+          active-detail-property-name="${this.getAttribute('active-detail-property-name') || ''}"
         >${tagItem.name}</a-button>`
     })
   }
