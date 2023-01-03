@@ -31,7 +31,10 @@ export default class Button extends Shadow() {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
-    if (this.textContent.length) this.labelText = this.textContent // allow its initial textContent to become the label if there are no nodes but only text
+    if (this.textContent.length){
+      this.labelText = this.textContent // allow its initial textContent to become the label if there are no nodes but only text
+      this.textContent = "";
+    }
     this.mouseoverListener = event => {
       this.button.classList.add('hover')
     }
@@ -227,7 +230,7 @@ export default class Button extends Shadow() {
 
   renderHTML () {
     this.html = /* html */`
-      <button type="button">
+      <button type="${this.hasAttribute('type') ? this.getAttribute('type') : 'button'}">
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </button>
     `
