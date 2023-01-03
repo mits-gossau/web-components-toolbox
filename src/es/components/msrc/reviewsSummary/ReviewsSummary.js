@@ -78,12 +78,13 @@ export default class ReviewsSummary extends Prototype() {
   render () {
     this.msrcContainer = this.root.querySelector('div') || document.createElement('div')
     return this.loadDependency().then(async msrc => {
+      const user = await self.msrc.utilities.login.getUser()
       // Initialize the reviewsSummary button
       await msrc.components.community.ratingsReviews.reviewsSummary(this.msrcContainer, {
         env: this.getAttribute('env') || 'local',
         webAPIKey: this.getAttribute('web-api-key') || '',
         originSSR: this.getAttribute('origin-ssr') || null,
-        userToken: this.getAttribute('user-token') || '',
+        userToken: this.getAttribute('user-token') || user.id_token || '',
         authenticationStatus: this.getAttribute('authentication-status') || '',
         targetIdentifier: this.getAttribute('target-identifier') || '',
         targetType: this.getAttribute('target-type') || 'PRODUCT',
