@@ -160,6 +160,7 @@ export default class Login extends Prototype() {
   get user () {
     return this.userPromise || (this.userPromise = new Promise(async resolve => {
         const msrc = await this.loadDependency()
+        // https://react-components.migros.ch/?path=/docs/msrc-login-00-readme--page#events
         const instance = await msrc.messenger.getInstance()
         instance.subscribe('login:authenticate', ({ isManualLogin, loggedIn, error }) => resolve(msrc.utilities.login.getUser()))
     }))
