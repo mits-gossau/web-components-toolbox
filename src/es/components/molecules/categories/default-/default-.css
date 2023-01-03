@@ -1,5 +1,0 @@
-:host {
-    --categories-default-li-padding-bottom: var(--categories-default-li-padding-bottom-custom, 0);
-    --categories-default-ul-list-style: var(--categories-default-ul-list-style-custom, none);
-    --categories-default-ul-margin: var(--categories-default-ul-margin-custom, 0);
-}

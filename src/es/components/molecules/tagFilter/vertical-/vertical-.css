@@ -4,3 +4,15 @@
 :host a-button {
     width: 100%;
 }
+@media only screen and (max-width: _max-width_) {
+    :host {
+        flex-direction: row;
+        justify-content: start;
+    }
+    :host([has-icons]) a-button {
+        width: calc(33.33% - (var(--tag-filter-vertical-gap, 0.25em) * 0.6666));
+    }
+    :host([has-icons][icons-four]) a-button {
+        width: calc(25% - (var(--tag-filter-vertical-gap, 0.25em) * 0.75));
+    }
+}

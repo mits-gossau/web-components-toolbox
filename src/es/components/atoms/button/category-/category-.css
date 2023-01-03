@@ -1,10 +1,23 @@
 :host {
---button-category-background-color-hover: var(--button-category-background-color-hover-custom, var(--color-secondary));
---button-category-background-color:var(--button-category-background-color-custom, var(--background-color));
---button-category-border-radius:var(--button-category-border-radius-custom,0);
---button-category-color-hover: var(--button-category-color-hover-custom, var(--background-color, red));
---button-category-color:var(--button-category-color-custom, var(--color-secondary, red));
---button-category-justify-content:var(--button-category-justify-content-custom, flex-start);
---button-category-padding:var(--button-category-padding-custom, 0.75em 0.5em);
---button-category-width:var(--button-category-width-custom, 100%);
+    --button-category-background-color-hover: var(--button-category-background-color-hover-custom, var(--color-secondary));
+    --button-category-background-color:var(--button-category-background-color-custom, var(--background-color));
+    --button-category-border-radius:var(--button-category-border-radius-custom,0);
+    --button-category-color-hover: var(--button-category-color-hover-custom, var(--background-color, red));
+    --button-category-color:var(--button-category-color-custom, var(--color-secondary, red));
+    --button-category-icon-height-mobile: auto;
+    --button-category-icon-left-margin-mobile: 0 0 0.5em 0;
+    --button-category-icon-width-mobile: min(5em, 100%);
+    --button-category-justify-content:var(--button-category-justify-content-custom, flex-start);
+    --button-category-padding:var(--button-category-padding-custom, 0.75em 0.5em);
+    --button-category-width:var(--button-category-width-custom, 100%);
+}
+#label {
+    white-space: break-spaces;
+    word-break: break-word;
+}
+@media only screen and (max-width: _max-width_) {
+    button {
+        flex-direction: column;
+        height: 100%;
+    }
 }

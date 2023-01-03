@@ -29,39 +29,56 @@ export default class Recipe extends Shadow() {
         filters: {}
       }
 
-      const fetchOptions = {
-        method: 'POST',
-        headers: {
-          Accept: 'application.json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload),
-        signal: this.abortController.signal
-      }
+      // const fetchOptions = {
+      //   method: 'POST',
+      //   headers: {
+      //     Accept: 'application.json',
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify(payload),
+      //   signal: this.abortController.signal
+      // }
 
-      const endpoint = this.getAttribute('endpoint')
-      this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
-        detail: {
-          fetch: fetch(endpoint, fetchOptions).then(async response => {
-            if (response.status >= 200 && response.status <= 299) {
-              const data = await response.json()
-              // return data.data.recipes
-              // TODO
-              return {
-                items: data.data.recipes.results,
-                limit: 9,
-                skip: data.data.recipes.offset * 9,
-                tag: [],
-                total: 648
-              }
-            }
-            throw new Error(response.statusText)
-          })
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      }))
+      // const fetchOptions = {
+      //   method: 'GET',
+      //   signal: this.abortController.signal
+      // }
+
+      var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+
+
+
+      fetch("http://admin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=100&offset=0&searchTerm=linsen", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+
+    //   const endpoint = this.getAttribute('endpoint')
+    //   this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
+    //     detail: {
+    //       fetch: fetch(endpoint, fetchOptions).then(async response => {
+    //         if (response.status >= 200 && response.status <= 299) {
+    //           const data = await response.json()
+    //           // return data.data.recipes
+    //           // TODO
+    //           return {
+    //             items: data.data.recipes.results,
+    //             limit: 9,
+    //             skip: data.data.recipes.offset * 9,
+    //             tag: [],
+    //             total: 648
+    //           }
+    //         }
+    //         throw new Error(response.statusText)
+    //       })
+    //     },
+    //     bubbles: true,
+    //     cancelable: true,
+    //     composed: true
+    //   }))
     }
   }
 

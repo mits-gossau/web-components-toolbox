@@ -2,7 +2,7 @@
     flex-direction: row;
 }
 @media only screen and (max-width: _max-width_) {
-    :host a-button {
-        width: 100%;
+    :host {
+        justify-content: start;
     }
 }

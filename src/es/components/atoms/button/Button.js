@@ -61,7 +61,7 @@ export default class Button extends Shadow() {
       this.setAttribute('role', 'link')
     }
     if (this.textContent.length){
-      this.labelText = this.textContent // allow its initial textContent to become the label if there are no nodes but only text
+      this.labelText = this.textContent.trim() // allow its initial textContent to become the label if there are no nodes but only text
       this.textContent = "";
     }
     this.mouseoverListener = event => {
