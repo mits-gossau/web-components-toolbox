@@ -2,6 +2,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
+/* global CustomEvent */
 
 /**
  * Creates an Button
@@ -20,11 +21,39 @@ export default class Button extends Shadow() {
     super(...args)
 
     this.clickListener = event => {
-      this.button.classList.add('active')
       if (this.hasAttribute('href')) {
         event.stopPropagation()
         self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
       }
+      if (this.getAttribute('request-event-name')) {
+        this.button.classList.toggle('active')
+
+        this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+          detail: {
+            origEvent: event,
+            tags: [this.getAttribute('tag')],
+            isActive: this.button.classList.contains('active'),
+            fetchSubTags: this.hasAttribute('fetch-sub-tags'),
+            clearSubTags: this.hasAttribute('clear-sub-tags'),
+            this: this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      }
+    }
+    this.answerEventListener = async event => {
+      let tags = event.detail.tags
+
+      if (this.getAttribute('active-detail-property-name')) {
+        tags = await this.getAttribute('active-detail-property-name').split(':').reduce(async (accumulator, propertyName) => {
+          propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
+          if (accumulator instanceof Promise) accumulator = await accumulator
+          return accumulator[propertyName]
+        }, event.detail)
+      }
+      if (tags && tags.length) this.button.classList[tags.includes(this.getAttribute('tag')) ? 'add' : 'remove']('active')
     }
     // link behavior made accessible
     if (this.hasAttribute('href')) {
@@ -47,6 +76,7 @@ export default class Button extends Shadow() {
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     this.button.addEventListener('click', this.clickListener)
+    if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
     if (this.mouseEventElement) {
       this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
@@ -56,6 +86,7 @@ export default class Button extends Shadow() {
 
   disconnectedCallback () {
     this.button.removeEventListener('click', this.clickListener)
+    if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     if (this.mouseEventElement) {
       this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
       this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
@@ -130,7 +161,7 @@ export default class Button extends Shadow() {
         color: var(--color-hover, var(--color, #FFFFFF));
         opacity: var(--opacity-hover, var(--opacity, 1));
       }
-      button:active {
+      button:active, button.active {
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
@@ -161,6 +192,9 @@ export default class Button extends Shadow() {
       .icon-left, .icon-right {
         height: var(--icon-height, 1.5em);
         width: var(--icon-width, auto);
+      }
+      .icon-left, .icon-right {
+        flex-shrink: 0;
       }
       @media only screen and (max-width: _max-width_) {
         button {

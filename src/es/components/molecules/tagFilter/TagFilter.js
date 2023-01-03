@@ -1,54 +1,36 @@
 // @ts-check
-/* global CustomEvent */
 /* global location */
 /* global history */
 /* global customElements */
 
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Mutation } from '../../prototypes/Mutation.js'
 
-export default class TagFilter extends Shadow() {
-  constructor (...args) {
-    super(...args)
+export default class TagFilter extends Mutation() {
+  constructor (options = {}, ...args) {
+    super(Object.assign(options, { mutationObserverInit: { childList: true } }), ...args)
 
-    this.clickListener = event => {
-      if (!event.target || event.target.tagName !== 'A-BUTTON') return false
-      event.preventDefault()
-      const tag = event.target.hasAttribute('tag') ? event.target.getAttribute('tag') : ''
-      const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
-      this.setURLSearchParam('page', '1', url)
-      this.setURLSearchParam('tag', tag, url)
-      this.historyPushState(history, { ...history.state, tag, page: 1 }, document.title, url.href)
-      this.setActiveItem(tag, this.root.querySelector('ul'))
-
-      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
-        detail: {
-          tag: tag !== '' ? tag.split(',') : []
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      }))
-    }
-
-    this.answerEventNameListener = event => {
-      const urlParams = new URLSearchParams(location.search)
-      const tagParam = urlParams.get('tag') || ''
-      this.setActiveItem(tagParam, this.root.querySelector('ul'))
+    this.answerEventListener = event => {
+      const tagsFetch = event.detail[this.getAttribute('tag-detail-property-name') || 'tag-detail-property-name']
+      if (event.detail.clearSubTags) this.html = ''
+      if (tagsFetch) tagsFetch.then(data => this.renderHTML(data, event))
     }
   }
 
   connectedCallback () {
+    super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     // @ts-ignore
-    const tagList = this.constructor.parseAttribute(this.getAttribute('tag') || [])
-    if (this.shouldComponentRenderHTML()) this.renderHTML(tagList)
-    this.tagFilterWrapper.addEventListener('click', this.clickListener)
-    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventListener)
   }
 
   disconnectedCallback () {
-    this.tagFilterWrapper.removeEventListener('click', this.clickListener)
-    document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    super.disconnectedCallback()
+    if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventListener)
+  }
+
+  mutationCallback (mutationList, observer) {
+    this.setAttribute('count-children', Array.from(this.root.children).filter(child => child.tagName !== 'STYLE').length)
   }
 
   shouldComponentRenderCSS () {
@@ -61,13 +43,17 @@ export default class TagFilter extends Shadow() {
 
   renderCSS () {
     this.css = /* css */ `
-    :host ul {
-      flex-wrap:var(--flex-wrap, wrap);
-    }
-    :host li {
-      padding:0 var(--content-spacing) var(--content-spacing) 0;
-    }
-    @media only screen and (max-width: _max-width_) {}
+      :host {
+        display: var(--display, flex);
+        flex-wrap:var(--flex-wrap, wrap);
+        gap: var(--gap, 0.25em);
+        width: 100%;
+      }
+      @media only screen and (max-width: _max-width_) {
+        :host {
+          flex-wrap:var(--flex-wrap, wrap);
+        }
+      }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
@@ -81,9 +67,14 @@ export default class TagFilter extends Shadow() {
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'tag-filter-default-':
+      case 'tag-filter-vertical-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./vertical-/vertical-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
+      case 'tag-filter-horizontal-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./horizontal-/horizontal-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
       default:
@@ -94,20 +85,23 @@ export default class TagFilter extends Shadow() {
   /**
    * Render HTML
    * @param {Array<object>} tagList
+   * @param {CustomEvent} [event=null]
    * @returns void
    */
-  renderHTML (tagList) {
-    if (!tagList.length) return
+  renderHTML (tagList, event = null) {
+    if (!tagList || !tagList.length) return
     this.loadChildComponents()
-    this.tagFilterWrapper = this.root.querySelector('div') || document.createElement('div')
-    const ul = document.createElement('ul')
+    this.html = ''
     tagList.forEach(tagItem => {
-      const li = document.createElement('li')
-      li.innerHTML = `<a-button namespace="tag-filter-button-" tag="${tagItem.tag}">${tagItem.name}</a-button>`
-      ul.appendChild(li)
+      // TODO: fix attribute naming to harmonize with api
+      this.html = `<a-button
+          namespace="button-category-"
+          tag="${tagItem.code}"
+          answer-event-name="${this.getAttribute('answer-event-name') || ''}"
+          request-event-name="${this.getAttribute('request-event-name') || ''}"
+          active-detail-property-name="${this.getAttribute('active-detail-property-name') || ''}"
+        >${tagItem.name}</a-button>`
     })
-    this.tagFilterWrapper.appendChild(ul)
-    this.html = this.tagFilterWrapper
   }
 
   loadChildComponents () {
@@ -125,22 +119,6 @@ export default class TagFilter extends Shadow() {
   }
 
   /**
-   * Set css class for active tag item
-   * @param {string} activeItem
-   * @param { Element } element
-   */
-  setActiveItem (activeItem, element) {
-    Array.from(element.querySelectorAll('a-button')).forEach(element => {
-      const btn = element.shadowRoot ? element.shadowRoot.querySelector('button') : element
-      if (element.getAttribute('tag') === activeItem) {
-        btn && btn.classList.add('hover')
-      } else {
-        btn && btn.classList.remove('hover')
-      }
-    })
-  }
-
-  /**
    * Set URL search param
    * @param {string} param
    * @param {string} value
@@ -148,16 +126,5 @@ export default class TagFilter extends Shadow() {
    */
   setURLSearchParam (param, value, url) {
     url.searchParams.set(param, value)
-  }
-
-  /**
-   * Push data to history
-   * @param {History} history
-   * @param {object} stateData
-   * @param {string} documentTitle
-   * @param {string} href
-   */
-  historyPushState (history, stateData, documentTitle, href) {
-    history.pushState(stateData, documentTitle, href)
   }
 }

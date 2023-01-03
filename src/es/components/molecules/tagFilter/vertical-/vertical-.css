@@ -1,0 +1,6 @@
+:host {
+    flex-direction: column;
+}
+:host a-button {
+    width: 100%;
+}
