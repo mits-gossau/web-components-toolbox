@@ -50,6 +50,27 @@ import { Prototype } from '../Prototype.js'
  * }
  */
 export default class Login extends Prototype() {
+  constructor (...args) {
+    super(...args)
+
+    this.requestMsrcUserListener = event => {
+      if (event.detail.resolve) {
+        event.detail.resolve(this.user)
+      } else {
+        this.dispatchEvent(new CustomEvent(this.getAttribute('msrc-user') || 'msrc-user', {
+          detail: {
+            origEvent: event,
+            user: this.user,
+            this: this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      }
+    }
+  }
+
   connectedCallback () {
     const showPromises = []
     if (this.shouldComponentRender()) showPromises.push(this.render())
@@ -57,6 +78,11 @@ export default class Login extends Prototype() {
       this.hidden = true
       Promise.all(showPromises).then(() => (this.hidden = false))
     }
+    document.body.addEventListener(this.getAttribute('request-msrc-user') || 'request-msrc-user', this.requestMsrcUserListener)
+  }
+
+  disconnectedCallback () {
+    document.body.removeEventListener(this.getAttribute('request-msrc-user') || 'request-msrc-user', this.requestMsrcUserListener)
   }
 
   /**
@@ -108,6 +134,8 @@ export default class Login extends Prototype() {
       }
     `
     this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
+    // subscribe to login:authenticate user by calling the getter before starting any msrc stuff
+    console.info('msrc user', this.user)
     return this.loadDependency().then(async msrc => {
       // Setup OIDC login configuration
       await msrc.utilities.login.setup(this.constructor.parseAttribute(this.getAttribute('setup') || '{}'))
@@ -127,5 +155,13 @@ export default class Login extends Prototype() {
       this.html = [this.msrcLoginButtonWrapper, getStylesReturn[0]]
       return getStylesReturn[1] // use this line if css build up should be avoided
     })
+  }
+
+  get user () {
+    return this.userPromise || (this.userPromise = new Promise(async resolve => {
+        const msrc = await this.loadDependency()
+        const instance = await msrc.messenger.getInstance()
+        instance.subscribe('login:authenticate', ({ isManualLogin, loggedIn, error }) => resolve(msrc.utilities.login.getUser()))
+    }))
   }
 }

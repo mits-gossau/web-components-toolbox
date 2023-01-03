@@ -307,6 +307,7 @@ export default class Picture extends Intersection() {
       this.img.setAttribute('alt', this.alt)
       if (this.alt === '') console.warn('a-picture alt is missing', this)
     }
+    if (!this.img) return console.warn('At Picture... no <img> nor a defaultSource was supplied: ', this)
     // https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/decoding
     this.img.setAttribute('decoding', 'async')
     // set the loading attribute to the image
