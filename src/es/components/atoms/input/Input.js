@@ -193,7 +193,7 @@ export default class Input extends Shadow() {
         box-shadow: none;
         font-family: inherit;
         font-size: var(--input-font-size, var(--font-size));
-        line-height: 0.5em;
+        line-height: var(--input-line-height, 0.5em);
         color: var(--icon-color, var(--color-secondary, var(--color)));
         font-style: normal;
         cursor: pointer;
@@ -251,7 +251,6 @@ export default class Input extends Shadow() {
         }
         :host([search]) button {
           right: var(--content-spacing-mobile);
-          line-height: 1.5;
         }
         .mui-form-group {
           max-width: var(--max-width-mobile, var(--max-width, none));

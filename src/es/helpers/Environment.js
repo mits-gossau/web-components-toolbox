@@ -13,7 +13,7 @@ self.Environment = {
    * @param {{constructor?: string, tagName?: string, namespace?: string}} organism
    * @return {string}
    */
-  mobileBreakpoint: ({ constructor, tagName, namespace }) => {
+  mobileBreakpoint: ({ constructor, tagName, namespace } = {}) => {
     switch (true) {
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Header'):
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Logo'):

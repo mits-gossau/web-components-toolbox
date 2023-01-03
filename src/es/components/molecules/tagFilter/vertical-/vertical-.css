@@ -9,6 +9,9 @@
         flex-direction: row;
         justify-content: start;
     }
+    :host a-button {
+        width: auto;
+    }
     :host([has-icons]) a-button {
         width: calc(33.33% - (var(--tag-filter-vertical-gap, 0.25em) * 0.6666));
     }
