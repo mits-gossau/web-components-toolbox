@@ -81,8 +81,10 @@ export default class RatingsReviews extends Prototype() {
   render () {
     this.msrcContainer = this.root.querySelector('div') || document.createElement('div')
     return this.loadDependency().then(async msrc => {
+      const user = await self.msrc.utilities.login.getUser()
       // Initialize the ratingsReviews button
       await msrc.components.community.ratingsReviews.ratingsReviews(this.msrcContainer, {
+        login: () => {},
         env: this.getAttribute('env') || 'local',
         translationEnv: this.getAttribute('env') || 'local',
         webAPIKey: this.getAttribute('web-api-key') || '',
@@ -90,7 +92,7 @@ export default class RatingsReviews extends Prototype() {
         targetIdentifier: this.getAttribute('target-identifier') || '',
         rootTargetIdentifier: this.getAttribute('root-target-identifier') || '',
         targetType: this.getAttribute('target-type') || 'PRODUCT',
-        userToken: this.getAttribute('user-token') || '',
+        userToken: this.getAttribute('user-token') || user.id_token || '',
         authenticationStatus: this.getAttribute('authentication-status') || '',
         oidcScopes: this.getAttribute('oidc-scopes') || '',
         theme: this.getAttribute('theme') || 'alnatura',
