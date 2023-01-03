@@ -80,7 +80,7 @@ export default class QuestionsAnswers extends Prototype() {
   render () {
     this.msrcContainer = this.root.querySelector('div') || document.createElement('div')
     return this.loadDependency().then(async msrc => {
-      const user = await self.msrc.utilities.login.getUser()
+      const user = await msrc.utilities.login.getUser()
       // Initialize the questionsAnswers button
       await msrc.components.community.questionsAnswers(this.msrcContainer, {
         login: () => {},

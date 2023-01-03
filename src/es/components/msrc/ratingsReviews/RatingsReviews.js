@@ -81,7 +81,7 @@ export default class RatingsReviews extends Prototype() {
   render () {
     this.msrcContainer = this.root.querySelector('div') || document.createElement('div')
     return this.loadDependency().then(async msrc => {
-      const user = await self.msrc.utilities.login.getUser()
+      const user = await msrc.utilities.login.getUser()
       // Initialize the ratingsReviews button
       await msrc.components.community.ratingsReviews.ratingsReviews(this.msrcContainer, {
         login: () => {},
