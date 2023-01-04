@@ -4,9 +4,9 @@
     --button-category-border-radius:var(--button-category-border-radius-custom,0);
     --button-category-color-hover: var(--button-category-color-hover-custom, var(--background-color, red));
     --button-category-color:var(--button-category-color-custom, var(--color-secondary, red));
-    --button-category-icon-height-mobile: auto;
+    --button-category-icon-height-mobile: var(--button-category-icon-height-mobile-custom, 2.5em);
     --button-category-icon-left-margin-mobile: 0 0 0.5em 0;
-    --button-category-icon-width-mobile: min(5em, 100%);
+    --button-category-icon-width-mobile: var(--button-category-icon-width-mobile-custom, min(auto, 100%));
     --button-category-justify-content:var(--button-category-justify-content-custom, flex-start);
     --button-category-padding:var(--button-category-padding-custom, 0.75em 0.5em);
     --button-category-width:var(--button-category-width-custom, 100%);
