@@ -48,7 +48,7 @@ export default class Recipe extends Shadow() {
         redirect: 'follow'
       }
 
-      fetch('http://admin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=100&offset=0&searchTerm=linsen', requestOptions)
+      fetch('https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=100&offset=0&searchTerm=linsen', requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
         .catch(error => console.log('error', error))
