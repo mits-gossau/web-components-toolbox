@@ -22,60 +22,45 @@ export default class Recipe extends Shadow() {
       // const limit = (event.detail && event.detail.limit) || this.getAttribute('limit') || 0
       // const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) : 0
 
-      // const payload = {
-      //   limit: 9,
-      //   offset: 0,
-      //   filters: {}
-      // }
-
-      // const fetchOptions = {
-      //   method: 'POST',
-      //   headers: {
-      //     Accept: 'application.json',
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify(payload),
-      //   signal: this.abortController.signal
-      // }
-
-      // const fetchOptions = {
-      //   method: 'GET',
-      //   signal: this.abortController.signal
-      // }
-
-      const requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
+      const payload = {
+        limit: 9,
+        offset: 0,
+        filters: {}
       }
 
-      fetch('https://testadmin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=100&offset=0&searchTerm=linsen', requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error))
+      const fetchOptions = {
+        method: 'POST',
+        headers: {
+          Accept: 'application.json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
+        signal: this.abortController.signal
+      }
 
-    //   const endpoint = this.getAttribute('endpoint')
-    //   this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
-    //     detail: {
-    //       fetch: fetch(endpoint, fetchOptions).then(async response => {
-    //         if (response.status >= 200 && response.status <= 299) {
-    //           const data = await response.json()
-    //           // return data.data.recipes
-    //           // TODO
-    //           return {
-    //             items: data.data.recipes.results,
-    //             limit: 9,
-    //             skip: data.data.recipes.offset * 9,
-    //             tag: [],
-    //             total: 648
-    //           }
-    //         }
-    //         throw new Error(response.statusText)
-    //       })
-    //     },
-    //     bubbles: true,
-    //     cancelable: true,
-    //     composed: true
-    //   }))
+      const endpoint = this.getAttribute('endpoint')
+      this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
+        detail: {
+          fetch: fetch(endpoint, fetchOptions).then(async response => {
+            if (response.status >= 200 && response.status <= 299) {
+              const data = await response.json()
+              // return data.data.recipes
+              // TODO
+              return {
+                items: data.data.recipes.results,
+                limit: 9,
+                skip: data.data.recipes.offset * 9,
+                tag: [],
+                total: 648
+              }
+            }
+            throw new Error(response.statusText)
+          })
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
     }
   }
 
