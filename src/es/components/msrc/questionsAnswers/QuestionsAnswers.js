@@ -21,7 +21,7 @@ import { Prototype } from '../Prototype.js'
  *  {string} [root-target-identifier=""]
  *  {"BOARD" | "CHAT" | "CROWDSOURCING" | "MANIA_CAMPAIGN" | "MANIA_ITEM" | "MIGROS_ENGAGEMENT_ARTICLE" | "MIGROS_SERVICE_PRODUCT" | "MIGUSTO_ARTICLE" | "MIGUSTO_RECIPE" | "PRODUCT" | "VOTING" | "VOTING_OPTION"} [target-type="PRODUCT"]
  *  {string | TokenProvider} [user-token=""]
- *  {"AUTHENTICATION_STARTED" | "AUTHENTICATION_FINISHED"} [authentication-status=""]
+ *  {"AUTHENTICATION_STARTED" | "AUTHENTICATION_FINISHED"} [authentication-status="AUTHENTICATION_FINISHED"]
  *  {string[]} [oidc-scopes=""]
  *  {string|DeepPartial<ThemeInterface>|
  *    "melectronics"|
@@ -91,7 +91,7 @@ export default class QuestionsAnswers extends Prototype() {
       })))
       // Initialize the questionsAnswers button
       await msrc.components.community.questionsAnswers(this.msrcContainer, {
-        login: () => {},
+        login: () => msrc.utilities.login.login(),
         env: this.getAttribute('env') || 'local',
         translationEnv: this.getAttribute('env') || 'local',
         webAPIKey: this.getAttribute('web-api-key') || '',
@@ -100,7 +100,7 @@ export default class QuestionsAnswers extends Prototype() {
         rootTargetIdentifier: this.getAttribute('root-target-identifier') || '',
         targetType: this.getAttribute('target-type') || 'PRODUCT',
         userToken: this.getAttribute('user-token') || (user && user.access_token) || '',
-        authenticationStatus: this.getAttribute('authentication-status') || '',
+        authenticationStatus: this.getAttribute('authentication-status') || 'AUTHENTICATION_FINISHED',
         oidcScopes: this.getAttribute('oidc-scopes') || '',
         theme: this.getAttribute('theme') || 'alnatura',
         language: this.getAttribute('language') || self.Environment.language,

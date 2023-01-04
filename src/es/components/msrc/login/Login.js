@@ -136,7 +136,7 @@ export default class Login extends Prototype() {
     `
     this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
     // subscribe to login:authenticate user by calling the getter before starting any msrc stuff
-    console.info('msrc user', this.user)
+    console.info('msrc user: ', this.user)
     return this.loadDependency().then(async msrc => {
       // Setup OIDC login configuration
       await msrc.utilities.login.setup(this.constructor.parseAttribute(this.getAttribute('setup') || '{}'))

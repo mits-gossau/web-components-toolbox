@@ -179,6 +179,7 @@ export default class Button extends Shadow() {
       #label {
         display: inline-block;
         position: relative;
+        text-align: var(--label-text-align, center);
       }
       #label.hide {
         display: none;

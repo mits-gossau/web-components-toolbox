@@ -17,7 +17,7 @@ import { Prototype } from '../Prototype.js'
  *  {string} [web-api-key=""] (required)
  *  {string} [origin-ssr=""]
  *  {string | TokenProvider} [user-token=""]
- *  {"AUTHENTICATION_STARTED" | "AUTHENTICATION_FINISHED"} [authentication-status=""]
+ *  {"AUTHENTICATION_STARTED" | "AUTHENTICATION_FINISHED"} [authentication-status="AUTHENTICATION_FINISHED"]
  *  {string} [target-identifier=""] (required)
  *  {"BOARD" | "CHAT" | "CROWDSOURCING" | "MANIA_CAMPAIGN" | "MANIA_ITEM" | "MIGROS_ENGAGEMENT_ARTICLE" | "MIGROS_SERVICE_PRODUCT" | "MIGUSTO_ARTICLE" | "MIGUSTO_RECIPE" | "PRODUCT" | "VOTING" | "VOTING_OPTION"} [target-type="PRODUCT"]
  *  {"de"|"fr"|"it"|"en"} [language=document.documentElement.getAttribute('lang') || 'de']
@@ -93,7 +93,7 @@ export default class ReviewsSummary extends Prototype() {
         webAPIKey: this.getAttribute('web-api-key') || '',
         originSSR: this.getAttribute('origin-ssr') || null,
         userToken: this.getAttribute('user-token') || (user && user.access_token) || '',
-        authenticationStatus: this.getAttribute('authentication-status') || '',
+        authenticationStatus: this.getAttribute('authentication-status') || 'AUTHENTICATION_FINISHED',
         targetIdentifier: this.getAttribute('target-identifier') || '',
         targetType: this.getAttribute('target-type') || 'PRODUCT',
         language: this.getAttribute('language') || self.Environment.language,
