@@ -2,6 +2,7 @@
 import { Prototype } from '../Prototype.js'
 
 /* global self */
+/* global CustomEvent */
 
 /**
  * ReviewsSummary https://react-components.migros.ch/?path=/story/msrc-community-04-widgets-ratings-reviews--reviews-summary
@@ -91,7 +92,7 @@ export default class ReviewsSummary extends Prototype() {
         env: this.getAttribute('env') || 'local',
         webAPIKey: this.getAttribute('web-api-key') || '',
         originSSR: this.getAttribute('origin-ssr') || null,
-        userToken: this.getAttribute('user-token') || user && user.id_token || '',
+        userToken: this.getAttribute('user-token') || (user && user.id_token) || '',
         authenticationStatus: this.getAttribute('authentication-status') || '',
         targetIdentifier: this.getAttribute('target-identifier') || '',
         targetType: this.getAttribute('target-type') || 'PRODUCT',

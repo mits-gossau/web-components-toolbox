@@ -1,7 +1,6 @@
 // @ts-check
 /* global fetch */
 /* global AbortController */
-/* global CustomEvent */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -23,11 +22,11 @@ export default class Recipe extends Shadow() {
       // const limit = (event.detail && event.detail.limit) || this.getAttribute('limit') || 0
       // const currentSkip = event.detail && event.detail.skip ? Number(event.detail.skip) : 0
 
-      const payload = {
-        limit: 9,
-        offset: 0,
-        filters: {}
-      }
+      // const payload = {
+      //   limit: 9,
+      //   offset: 0,
+      //   filters: {}
+      // }
 
       // const fetchOptions = {
       //   method: 'POST',
@@ -44,17 +43,15 @@ export default class Recipe extends Shadow() {
       //   signal: this.abortController.signal
       // }
 
-      var requestOptions = {
+      const requestOptions = {
         method: 'GET',
         redirect: 'follow'
-      };
+      }
 
-
-
-      fetch("http://admin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=100&offset=0&searchTerm=linsen", requestOptions)
+      fetch('http://admin.alnatura.ch/umbraco/api/AlnaturaRecipeApi/GetAllRecipes?limit=100&offset=0&searchTerm=linsen', requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
-        .catch(error => console.log('error', error));
+        .catch(error => console.log('error', error))
 
     //   const endpoint = this.getAttribute('endpoint')
     //   this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {

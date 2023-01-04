@@ -2,7 +2,6 @@
 /* global self */
 /* global CustomEvent */
 /* global location */
-/* global history */
 /* global DOMParser */
 
 import { Shadow } from '../../prototypes/Shadow.js'

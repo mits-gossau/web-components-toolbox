@@ -1,6 +1,4 @@
 // @ts-check
-/* global location */
-/* global history */
 /* global customElements */
 
 import { Mutation } from '../../prototypes/Mutation.js'
@@ -12,10 +10,12 @@ export default class TagFilter extends Mutation() {
     this.answerEventListener = event => {
       const tagsFetch = event.detail[this.getAttribute('tag-detail-property-name') || 'tag-detail-property-name']
       if (event.detail.clearSubTags) this.html = ''
-      if (tagsFetch) tagsFetch.then(data => {
-        this.renderHTML(data, event)
-        this.scrollIntoView()
-      })
+      if (tagsFetch) {
+        tagsFetch.then(data => {
+          this.renderHTML(data, event)
+          this.scrollIntoView()
+        })
+      }
     }
   }
 

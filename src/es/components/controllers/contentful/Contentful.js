@@ -1,6 +1,8 @@
 // @ts-check
 /* global CustomEvent */
+/* global history */
 /* global fetch */
+/* global location */
 /* global sessionStorage */
 /* global AbortController */
 /* global self */
@@ -21,7 +23,6 @@ export default class Contentful extends Shadow() {
     // @ts-ignore
     const endpoint = self.Environment.contentfulEndpoint + spaceId
     const limit = this.getAttribute('limit')
-    const skip = this.getAttribute('skip') || 0
     const tag = this.getAttribute('tag') || ''
     this.abortController = null
 
@@ -31,7 +32,7 @@ export default class Contentful extends Shadow() {
       const pushHistory = event && event.detail && event.detail.pushHistory
       const variables = {
         tags: [tag, ...this.getTags()],
-        limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit),
+        limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit)
       }
       // set tag resets the page parameter
       if (event.detail && event.detail.tags !== undefined) {
@@ -86,12 +87,13 @@ export default class Contentful extends Shadow() {
 
     this.updatePopState = event => {
       if (!event.state) return
-      if (!event.detail) event.detail = {...event.state}
+      if (!event.detail) event.detail = { ...event.state }
       event.detail.pushHistory = false
       this.requestListNewsListener(event)
     }
   }
-ss
+
+  ss
   connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-news') || 'request-list-news', this.requestListNewsListener)
     self.addEventListener('popstate', this.updatePopState)
@@ -121,7 +123,7 @@ ss
       }
     }
   }
-  
+
   /**
    * Set tag and page in window.history
    * @param {string} tag
@@ -179,7 +181,6 @@ ss
    * @return [number]
    */
   getCurrentPageSkip (sessionData = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '') {
-    const newsViewed = sessionStorage.getItem('news-viewed')?.toLowerCase() === 'true'
     sessionStorage.removeItem('news-viewed')
     if (sessionData === '') return 0
     // TODO: strange behavior, since it always returns getPage

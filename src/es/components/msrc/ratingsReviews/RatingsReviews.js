@@ -2,6 +2,7 @@
 import { Prototype } from '../Prototype.js'
 
 /* global self */
+/* global CustomEvent */
 
 /**
  * RatingsReviews https://react-components.migros.ch/?path=/docs/msrc-community-04-widgets-ratings-reviews--ratings-reviews
@@ -99,7 +100,7 @@ export default class RatingsReviews extends Prototype() {
         targetIdentifier: this.getAttribute('target-identifier') || '',
         rootTargetIdentifier: this.getAttribute('root-target-identifier') || '',
         targetType: this.getAttribute('target-type') || 'PRODUCT',
-        userToken: this.getAttribute('user-token') || user && user.id_token || '',
+        userToken: this.getAttribute('user-token') || (user && user.id_token) || '',
         authenticationStatus: this.getAttribute('authentication-status') || '',
         oidcScopes: this.getAttribute('oidc-scopes') || '',
         theme: this.getAttribute('theme') || 'alnatura',
