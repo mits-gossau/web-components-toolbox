@@ -22,13 +22,7 @@ export default class RecipeList extends Shadow() {
       this.hidden = true
       Promise.all(showPromises).then(() => {
         this.hidden = false
-        const urlParams = new URLSearchParams(location.search)
-        const pageParam = urlParams.get('page') || 1
-        const page = Number(pageParam) - 1
         this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
-          detail: {
-            skip: page
-          },
           bubbles: true,
           cancelable: true,
           composed: true
