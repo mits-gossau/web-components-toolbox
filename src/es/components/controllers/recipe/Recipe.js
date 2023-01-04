@@ -14,28 +14,47 @@ export default class Recipe extends Shadow() {
   constructor(...args) {
     super({ mode: 'false' }, ...args)
 
+    const recipeCat = {
+      "Drinks": false,
+      "Appetizers": false,
+      "MainDishes": false,
+      "DessertsAndBaking": false,
+      "DIY": false,
+      "veg": false
+    }
+
     this.abortController = null
 
-    const tag = this.getAttribute('tag') || ''
+    
     const limit = this.getAttribute('limit')
     
     this.requestListRecipeListener = async event => {
+
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
+    
+      let recipes = sessionStorage.getItem('recipes') || JSON.stringify(recipeCat) 
+      if(recipes !== ''){
+        sessionStorage.setItem('recipes', recipes)
+      }
+      let recipeData = JSON.parse(recipes)
+      if(event.detail && event.detail.tags){
+        recipeData[event.detail.tags[0]] = event.detail.isActive
+      }
+      sessionStorage.setItem('recipes', JSON.stringify(recipeData))
       
-      console.log("event detail", event.detail)
-
       const pushHistory = event && event.detail && event.detail.pushHistory
       const variables = {
-        tags: [tag, ...this.getTags()].filter(Boolean),
-        limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit)
+        limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit),
+        tags: this.getTags()
       }
 
       // set tag resets the page parameter
       if (event.detail && event.detail.tags !== undefined) {
-        variables.tags = [tag, ...new Set(event.detail.tags)].filter(Boolean)
-        this.setTag(variables.tags[1] || variables.tags[0], pushHistory)
-      }
+        const selected = Object.fromEntries(Object.entries(recipeData).filter(([key]) => recipeData[key]));
+        variables.tags = Object.keys(selected).join(';')
+        this.setTag(variables.tags, pushHistory)
+      } 
 
       // skip must be set after tags, since it may got reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {
@@ -50,25 +69,24 @@ export default class Recipe extends Shadow() {
         signal: this.abortController.signal
       }
 
-      variables.tags = variables.tags.map(tag => `&${tag}=true`)
-      console.log("vars", variables.tags.toString())
-
+      const recipePayload = []
+      Object.keys(recipeData).forEach((key, index) => {
+        const str = `${key}=${recipeData[key]}`
+        recipePayload.push(str)
+      });
+      
       let endpoint = this.getAttribute('endpoint')
-      endpoint += `?limit=${variables.limit}&skip=${variables.skip}${variables.tags.toString()}`
-
+      endpoint += `?limit=${variables.limit}&skip=${variables.skip}&${recipePayload.join('&')}`
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
             if (response.status >= 200 && response.status <= 299) {
               const data = await response.json()
-              console.log(data.data.recipes)
-              // return data.data.recipes
-              // TODO
               return {
                 items: data.data.recipes.results,
                 limit: data.data.recipes.limit,
                 skip: data.data.recipes.skip,
-                tag: [],
+                tag: variables.tags ? variables.tags.split(';') : [],
                 total: data.data.recipes.total
               }
             }
@@ -105,15 +123,12 @@ export default class Recipe extends Shadow() {
 
   /**
    * Get tag from url else store
-   * @param {string} [store=sessionStorage]
-   * @return [string]
+   * @return string
    */
-  getTags(store = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '{}') {
+  getTags() {
     const urlParams = new URLSearchParams(location.search)
     const tag = urlParams.get('tag')
-    if (tag) return [tag]
-    const newsData = JSON.parse(store)
-    return newsData?.data?.newsEntryCollection?.tag || []
+    if (tag) return tag
   }
 
   /**
@@ -143,18 +158,10 @@ export default class Recipe extends Shadow() {
 
   /**
    * Get skip aka. offset for the api request from url else store
-   * @param {string} [sessionData=sessionStorage]
    * @return [number]
    */
-  getCurrentPageSkip(sessionData = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '') {
-    sessionStorage.removeItem('news-viewed')
-    if (sessionData === '') return 0
-    // TODO: strange behavior, since it always returns getPage
-    const newsData = JSON.parse(sessionData)
-    const { skip, limit } = newsData.data.newsEntryCollection
-    const currentPageSkip = skip / limit
+  getCurrentPageSkip() {
     const page = this.getPage()
-    if (currentPageSkip !== page - 1) return page - 1
-    return currentPageSkip
+    return page - 1
   }
 }
