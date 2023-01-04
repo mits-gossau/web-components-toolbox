@@ -71,9 +71,9 @@ export default class RecipeList extends Shadow() {
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles])
+        }, ...styles], false)
       default:
-        return this.fetchCSS(styles)
+        return this.fetchCSS(styles, false)
     }
   }
 

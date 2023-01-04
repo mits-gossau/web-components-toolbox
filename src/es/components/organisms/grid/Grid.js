@@ -50,9 +50,7 @@ export default class Grid extends Shadow() {
       :host > section {
         display:grid;
         ${this.hasAttribute('height')
-          ? /* css */`
-            height: ${this.getAttribute('height') || '100%'};
-          `
+          ? `height: ${this.getAttribute('height') || '100%'};`
           : ''
         }
       }
@@ -78,7 +76,7 @@ export default class Grid extends Shadow() {
           fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
         })
       default:
-        return this.fetchCSS(styles)
+        return this.fetchCSS(styles, false)
     }
   }
 

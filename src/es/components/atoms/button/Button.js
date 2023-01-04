@@ -53,7 +53,12 @@ export default class Button extends Shadow() {
           return accumulator[propertyName]
         }, event.detail)
       }
-      if (tags && tags.length) this.button.classList[tags.includes(this.getAttribute('tag')) ? 'add' : 'remove']('active')
+      if (tags && tags.length) {
+        const tagsIncludesTag = this.hasAttribute('tag-search')
+          ? tags.some(tag => tag.includes(this.getAttribute('tag-search')))
+          : tags.includes(this.getAttribute('tag'))
+        this.button.classList[tagsIncludesTag ? 'add' : 'remove']('active')
+      }
     }
     // link behavior made accessible
     if (this.hasAttribute('href')) {
@@ -73,8 +78,8 @@ export default class Button extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldComponentRenderHTML()) this.renderHTML()
     this.button.addEventListener('click', this.clickListener)
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
@@ -256,7 +261,7 @@ export default class Button extends Shadow() {
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./category-/category-.css`,
           namespace: false
-        }], false).then(fetchCSSParams => {
+        }]).then(fetchCSSParams => {
           // harmonize the primary-.css namespace with --category
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--primary-/g, '--category-')
         })
