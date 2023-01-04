@@ -99,7 +99,7 @@ export default class QuestionsAnswers extends Prototype() {
         targetIdentifier: this.getAttribute('target-identifier') || '',
         rootTargetIdentifier: this.getAttribute('root-target-identifier') || '',
         targetType: this.getAttribute('target-type') || 'PRODUCT',
-        userToken: this.getAttribute('user-token') || (user && user.id_token) || '',
+        userToken: this.getAttribute('user-token') || (user && user.access_token) || '',
         authenticationStatus: this.getAttribute('authentication-status') || '',
         oidcScopes: this.getAttribute('oidc-scopes') || '',
         theme: this.getAttribute('theme') || 'alnatura',
