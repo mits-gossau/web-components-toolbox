@@ -1,5 +1,6 @@
 :host > section {
     grid-template-columns: ${this.getAttribute('first-column-with') || 'auto'} auto;
+    grid-template-rows: auto 1fr;
     grid-gap: var(--grid-2columns2rows-grid-gap-custom, var(--content-spacing));
 }
 :host > section > *[has-background] {
