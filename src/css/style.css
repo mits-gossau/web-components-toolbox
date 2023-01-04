@@ -457,8 +457,13 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   padding: var(--ul-icon-padding, 0);
 }
 /* table-tags */
-:host table {
+:host table tbody {
   display: table;
+}
+/* table-tags (scroll tables) */
+:host table {
+  display: block;
+  overflow: auto;
 }
 :host table, :host table tbody {
   border-collapse: var(--table-border-collapse, collapse);
@@ -472,6 +477,10 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 :host table td, :host table th {
   border: var(--table-border, 0);
   vertical-align: var(--table-vertical-align, top);
+  padding-right: var(--table-padding-right, 1em);
+}
+:host table td:last-child, :host table th:last-child {
+  padding-right: var(--table-padding-right-last-child, 0);
 }
 /* spacer-stylings */
 .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
@@ -606,14 +615,11 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     margin: var(--ul-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
     padding-left: var(--ul-margin-mobile, var(--content-spacing-mobile, var(--content-spacing)));
   }
-  /* table-tags (scroll tables) */
+  /* table-tags */
   :host table {
     border-collapse: var(--table-border-collapse-mobile, var(--table-border-collapse, collapse));
     border-spacing: var(--table-border-spacing-mobile, var(--table-border-spacing, 0));
-    border: 0;
-    display: block;
     max-width: var(--table-max-width-mobile, var(--table-max-width, 100%));
-    overflow: auto;
     word-break: var(--table-word-break-mobile, var(--table-word-break, normal));
     margin: var(--table-margin-mobile, var(--table-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
   }
