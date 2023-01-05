@@ -60,6 +60,7 @@ export default class ProductList extends Prototype() {
       cancelable: true,
       composed: true
     }))
+    this.msrcProductListWrapper.scrollIntoView()
     return this.msrc.components.articles.productList(this.msrcProductListWrapper, this.config)
   }
 

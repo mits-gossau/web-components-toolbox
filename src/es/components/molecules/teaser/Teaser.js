@@ -92,7 +92,7 @@ export default class Teaser extends Intersection() {
       }
       :host figure {
         display: var(--display, flex);
-        background-color: var(--background-color, #c2262f);
+        background-color: var(--background-color, transparent);
         border-radius: var(--border-radius, 0);
         flex-direction: var(--flex-direction, column);
         align-items: var(--align-items, flex-start);
@@ -122,7 +122,7 @@ export default class Teaser extends Intersection() {
         justify-content: var(--figcaption-justify-content, normal);
         align-items: var(--figcaption-align-items, normal);
         align-self: var(--figcaption-align-self, auto);
-        background-color: var(--figcaption-background-color, #c2262f);
+        background-color: var(--figcaption-background-color, transparent);
         margin: var(--figcaption-margin, 0);
         padding: var(--figcaption-padding, 1em);
         font-size: var(--figcaption-font-size, 1em);
@@ -133,10 +133,10 @@ export default class Teaser extends Intersection() {
         transform: var(--figcaption-transform, none);
       }
       :host(:hover) figure figcaption {
-        background-color: var(--figcaption-background-color-hover, var(--figcaption-background-color, #c2262f));
+        background-color: var(--figcaption-background-color-hover, var(--figcaption-background-color, transparent));
       }
       :host(:hover) figure a-picture ~ figcaption, :host(:hover) figure m-picture-with-picture ~ figcaption {
-        background-color: var(--a-picture-figcaption-background-color-hover, var(--figcaption-background-color-hover, var(--figcaption-background-color, #c2262f)));
+        background-color: var(--a-picture-figcaption-background-color-hover, var(--figcaption-background-color-hover, var(--figcaption-background-color, transparent)));
       }
       :host([figcaption-bg-color-equal=true]) figure figcaption {
         padding: var(--figcaption-bg-color-equal-padding, var(--figcaption-padding, 1em 0));
