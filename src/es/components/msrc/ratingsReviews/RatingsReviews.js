@@ -57,12 +57,10 @@ import { Prototype } from '../Prototype.js'
  */
 export default class RatingsReviews extends Prototype() {
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRender()) showPromises.push(this.render())
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
-    }
+    Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
   /**

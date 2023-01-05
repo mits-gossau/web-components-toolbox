@@ -33,25 +33,23 @@ export default class Teaser extends Intersection() {
 
   connectedCallback () {
     super.connectedCallback()
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
-          self.requestAnimationFrame(timeStamp => {
-            let figcaption, figcaptionBackgroundColor
-            if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
-              this.setAttribute('figcaption-bg-color-equal', true)
-            } else {
-              this.removeAttribute('figcaption-bg-color-equal')
-            }
-          })
-        }
-        this.hidden = false
-      })
-    }
+    Promise.all(showPromises).then(() => {
+      if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
+        self.requestAnimationFrame(timeStamp => {
+          let figcaption, figcaptionBackgroundColor
+          if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
+            this.setAttribute('figcaption-bg-color-equal', true)
+          } else {
+            this.removeAttribute('figcaption-bg-color-equal')
+          }
+        })
+      }
+      this.hidden = false
+    })
     this.addEventListener('click', this.clickListener)
     if (this.getAttribute('namespace') === 'teaser-overlay-') {
       this.addEventListener('mouseover', this.mouseoverListener)

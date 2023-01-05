@@ -40,15 +40,13 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
 
   connectedCallback () {
     super.connectedCallback()
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        this.hidden = false
-      })
-    }
+    Promise.all(showPromises).then(() => {
+      this.hidden = false
+    })
     this.addEventListener('click', this.clickListener)
     self.addEventListener('resize', this.resizeListener)
   }

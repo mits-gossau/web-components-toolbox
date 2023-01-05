@@ -24,6 +24,7 @@ export default class News extends Shadow() {
   }
 
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     const renderedHTML = () => {
@@ -44,12 +45,9 @@ export default class News extends Shadow() {
     } else {
       showPromises.push(this.renderHTML().then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
     }
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        this.hidden = false
-      })
-    }
+    Promise.all(showPromises).then(() => {
+      this.hidden = false
+    })
   }
 
   disconnectedCallback () {

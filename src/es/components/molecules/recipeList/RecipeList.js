@@ -16,19 +16,17 @@ export default class RecipeList extends Shadow() {
   }
 
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        this.hidden = false
-        this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
-          bubbles: true,
-          cancelable: true,
-          composed: true
-        }))
-      })
-    }
+    Promise.all(showPromises).then(() => {
+      this.hidden = false
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    })
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
@@ -44,6 +42,11 @@ export default class RecipeList extends Shadow() {
     return !this.recipeListWrapper
   }
 
+  /**
+   * renders
+   *
+   * @return {Promise<void>}
+   */
   renderCSS () {
     this.css = /* css */ `
     :host {}
