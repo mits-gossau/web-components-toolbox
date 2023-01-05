@@ -120,12 +120,13 @@ export default class ProductList extends Prototype() {
 
   renderCSS () {
     this.css = /* css */ `
-    a {
-      color: var(--color);
-    }
-    :host h2 {
-      font-family: "Helvetica Now Text XBold", var(--font-family-bold, var(--font-family, inherit));
-    }`
+      a {
+        color: var(--color);
+      }
+      :host h2 {
+        font-family: "Helvetica Now Text XBold", var(--font-family-bold, var(--font-family, inherit));
+      }
+    `
   }
 
   /**
