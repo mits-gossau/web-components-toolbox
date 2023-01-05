@@ -105,20 +105,18 @@ export default class Header extends Shadow() {
   }
 
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
     showPromises.push(new Promise(resolve => this.addEventListener('navigation-load', event => resolve(), { once: true })))
     if (this.aLogo && !this.aLogo.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('logo-load', event => resolve(), { once: true })))
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        this.hidden = false
-        this.setStickyOffsetHeight()
-        this.adjustLogoPos(true)
-        setTimeout(() => this.adjustLogoPos(true), 1000)
-      })
-    }
+    Promise.all(showPromises).then(() => {
+      this.hidden = false
+      this.setStickyOffsetHeight()
+      this.adjustLogoPos(true)
+      setTimeout(() => this.adjustLogoPos(true), 1000)
+    })
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
     this.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorListener)

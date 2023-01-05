@@ -13,13 +13,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Grid extends Shadow() {
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
-    }
+    Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
   /**

@@ -138,10 +138,10 @@ export default class Button extends Shadow() {
       }
       button {
         align-items: center;
-        background-color: var(--background-color, #000000);
+        background-color: var(--background-color, transparent);
         border-radius: var(--border-radius, 0.5em);
         border: var(--border-width, 0px) solid var(--border-color, transparent);
-        color: var(--color, #FFFFFF);
+        color: var(--color, black);
         cursor: pointer;
         display: flex;
         font-family: var(--font-family, unset);

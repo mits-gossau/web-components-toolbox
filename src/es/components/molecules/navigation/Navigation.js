@@ -101,32 +101,30 @@ export default class Navigation extends Mutation() {
   }
 
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        this.hidden = false
-        this.checkIfWrapped(true)
-        setTimeout(() => this.checkIfWrapped(true), 1000)
-        this.setFocusLostClickBehavior()
-        this.css = /* CSS */`
-          :host {
-            --show: none;
-            --appear: none;
-          }
-        `
-        this.dispatchEvent(new CustomEvent(this.getAttribute('navigation-load') || 'navigation-load', {
-          detail: {
-            child: this
-          },
-          bubbles: true,
-          cancelable: true,
-          composed: true
-        }))
-      })
-    }
+    Promise.all(showPromises).then(() => {
+      this.hidden = false
+      this.checkIfWrapped(true)
+      setTimeout(() => this.checkIfWrapped(true), 1000)
+      this.setFocusLostClickBehavior()
+      this.css = /* CSS */`
+        :host {
+          --show: none;
+          --appear: none;
+        }
+      `
+      this.dispatchEvent(new CustomEvent(this.getAttribute('navigation-load') || 'navigation-load', {
+        detail: {
+          child: this
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    })
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
     super.connectedCallback()

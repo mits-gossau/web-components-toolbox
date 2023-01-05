@@ -45,6 +45,7 @@ export default class EmotionPictures extends Intersection() {
       }
       `
     }
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
@@ -55,12 +56,7 @@ export default class EmotionPictures extends Intersection() {
     if (this.aVideo && this.aVideo.hasAttribute('video-load') && !this.aVideo.hasAttribute('loaded')) {
       showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('video-load', event => resolve(), { once: true }))))
     }
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(init)
-    } else {
-      init()
-    }
+    Promise.all(showPromises).then(init)
   }
 
   disconnectedCallback () {
@@ -215,6 +211,8 @@ export default class EmotionPictures extends Intersection() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
           namespace: false
         }], false)
+      default:
+        return this.fetchCSS(styles, false)
     }
   }
 

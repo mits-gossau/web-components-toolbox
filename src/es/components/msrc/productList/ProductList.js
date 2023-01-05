@@ -27,15 +27,13 @@ export default class ProductList extends Prototype() {
   }
 
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRender()) showPromises.push(this.render())
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        this.hidden = false
-        this.renderCSS()
-      })
-    }
+    Promise.all(showPromises).then(() => {
+      this.hidden = false
+      this.renderCSS()
+    })
     document.body.addEventListener(this.getAttribute('request-list-articles') || 'request-list-articles', this.requestListArticlesEventListener)
     self.addEventListener('popstate', this.updatePopState)
   }
@@ -101,6 +99,7 @@ export default class ProductList extends Prototype() {
       cancelable: true,
       composed: true
     }))
+    this.msrcProductListWrapper.scrollIntoView()
     return Promise.all([this.msrc.components.articles.productList(this.msrcProductListWrapper, this.config), subTagFetch])
   }
 
