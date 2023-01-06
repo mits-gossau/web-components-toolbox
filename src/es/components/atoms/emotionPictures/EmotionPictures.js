@@ -16,6 +16,28 @@ export default class EmotionPictures extends Intersection() {
     this.setAttribute('role', 'banner')
     Array.from(this.aPictures).forEach(node => node.setAttribute('loading', this.getAttribute('loading') || 'eager'))
     Array.from(this.aVideos).forEach(node => node.setAttribute('loading', this.getAttribute('loading') || 'eager'))
+    let timeout = null
+    // force the emotion image to at least fill the over layed contents height
+    this.resizeListener = event => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        if (!this.overlayContent) return
+        const overlayContentRect = this.overlayContent.getBoundingClientRect()
+        const thisRect = this.getBoundingClientRect()
+        // relative top to its parent
+        const top = overlayContentRect.top - thisRect.top
+        this.style.textContent = /* CSS */`
+          :host > * a-picture {
+            --img-max-height: max(calc(${Math.ceil(top + overlayContentRect.height)}px + var(--content-spacing)), var(--${this.namespace}img-max-height, 75vh));
+          }
+          @media only screen and (max-width: _max-width_) {
+            :host > * a-picture {
+              --img-max-height: max(calc(${Math.ceil(top + overlayContentRect.height)}px + var(--content-spacing-mobile, var(--content-spacing))), var(--${this.namespace}img-max-height, 75vh));
+            }
+          }
+        `
+      }, 200)
+    }
   }
 
   intersectionCallback (entries, observer) {
@@ -44,6 +66,7 @@ export default class EmotionPictures extends Intersection() {
         --appear: none;
       }
       `
+      this.resizeListener()
     }
     this.hidden = true
     const showPromises = []
@@ -57,11 +80,13 @@ export default class EmotionPictures extends Intersection() {
       showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('video-load', event => resolve(), { once: true }))))
     }
     Promise.all(showPromises).then(init)
+    self.addEventListener('resize', this.resizeListener)
   }
 
   disconnectedCallback () {
     super.disconnectedCallback()
     this.shuffle(false)
+    self.removeEventListener('resize', this.resizeListener)
   }
 
   /**
@@ -164,6 +189,9 @@ export default class EmotionPictures extends Intersection() {
         --picture-teaser-img-object-fit:var(--${this.getAttribute('namespace') || ''}img-object-fit, cover);
       }
     `, undefined, '', false)
+    
+    // add the style for resize to the html
+    this.html = this.style
 
     const styles = [
       {
@@ -277,5 +305,17 @@ export default class EmotionPictures extends Intersection() {
 
   get logoPosition () {
     return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center'
+  }
+
+  get overlayContent () {
+    return this.root.querySelector(':host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video) ')
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 }
