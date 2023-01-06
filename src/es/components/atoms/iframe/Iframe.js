@@ -28,7 +28,7 @@ export default class Iframe extends Intersection() {
 
   connectedCallback () {
     super.connectedCallback()
-    const finalRender = this.shouldComponentRenderHTML() ? this.renderHTML() : () => {}
+    const finalRender = this.shouldComponentRenderHTML() ? this.renderHTML() : () => console.warn('No required template tag found within this component: ', this)
     const renderPromises = []
     renderPromises.push(new Promise(resolve => document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => resolve(event), { once: true })))
     renderPromises.push(new Promise(resolve => this.intersecting = event => resolve(event)))
