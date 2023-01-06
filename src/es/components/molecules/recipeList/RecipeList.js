@@ -86,7 +86,7 @@ export default class RecipeList extends Shadow() {
                       defaultSource="${recipe.imageSrc}" alt="${recipe.imageAlt}"></a-picture>
                   <figcaption>
                       <h5>${recipe.title}</h5>
-                      <a-link namespace=underline-><a>Zum Rezept</a></a-link>
+                      <a-link namespace=underline-><a>${this.getAttribute('zum-rezept-translation' ?? '')}</a></a-link>
                   </figcaption>
                 </figure>
             </m-teaser></o-wrapper>
