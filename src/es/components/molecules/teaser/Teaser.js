@@ -33,25 +33,23 @@ export default class Teaser extends Intersection() {
 
   connectedCallback () {
     super.connectedCallback()
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
-          self.requestAnimationFrame(timeStamp => {
-            let figcaption, figcaptionBackgroundColor
-            if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
-              this.setAttribute('figcaption-bg-color-equal', true)
-            } else {
-              this.removeAttribute('figcaption-bg-color-equal')
-            }
-          })
-        }
-        this.hidden = false
-      })
-    }
+    Promise.all(showPromises).then(() => {
+      if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
+        self.requestAnimationFrame(timeStamp => {
+          let figcaption, figcaptionBackgroundColor
+          if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
+            this.setAttribute('figcaption-bg-color-equal', true)
+          } else {
+            this.removeAttribute('figcaption-bg-color-equal')
+          }
+        })
+      }
+      this.hidden = false
+    })
     this.addEventListener('click', this.clickListener)
     if (this.getAttribute('namespace') === 'teaser-overlay-') {
       this.addEventListener('mouseover', this.mouseoverListener)
@@ -94,7 +92,7 @@ export default class Teaser extends Intersection() {
       }
       :host figure {
         display: var(--display, flex);
-        background-color: var(--background-color, #c2262f);
+        background-color: var(--background-color, transparent);
         border-radius: var(--border-radius, 0);
         flex-direction: var(--flex-direction, column);
         align-items: var(--align-items, flex-start);
@@ -124,7 +122,7 @@ export default class Teaser extends Intersection() {
         justify-content: var(--figcaption-justify-content, normal);
         align-items: var(--figcaption-align-items, normal);
         align-self: var(--figcaption-align-self, auto);
-        background-color: var(--figcaption-background-color, #c2262f);
+        background-color: var(--figcaption-background-color, transparent);
         margin: var(--figcaption-margin, 0);
         padding: var(--figcaption-padding, 1em);
         font-size: var(--figcaption-font-size, 1em);
@@ -135,10 +133,10 @@ export default class Teaser extends Intersection() {
         transform: var(--figcaption-transform, none);
       }
       :host(:hover) figure figcaption {
-        background-color: var(--figcaption-background-color-hover, var(--figcaption-background-color, #c2262f));
+        background-color: var(--figcaption-background-color-hover, var(--figcaption-background-color, transparent));
       }
       :host(:hover) figure a-picture ~ figcaption, :host(:hover) figure m-picture-with-picture ~ figcaption {
-        background-color: var(--a-picture-figcaption-background-color-hover, var(--figcaption-background-color-hover, var(--figcaption-background-color, #c2262f)));
+        background-color: var(--a-picture-figcaption-background-color-hover, var(--figcaption-background-color-hover, var(--figcaption-background-color, transparent)));
       }
       :host([figcaption-bg-color-equal=true]) figure figcaption {
         padding: var(--figcaption-bg-color-equal-padding, var(--figcaption-padding, 1em 0));

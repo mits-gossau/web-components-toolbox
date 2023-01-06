@@ -125,6 +125,7 @@ export default class CarouselTwo extends Shadow() {
   }
 
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
@@ -135,15 +136,12 @@ export default class CarouselTwo extends Shadow() {
       if (picture && picture.hasAttribute('picture-load') && !picture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => picture.addEventListener('picture-load', event => resolve(), { once: true })))
     })
     // Carousel still pops instead of appear nicely. With slow network connection it works though.
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        this.hidden = false
-        const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
-        this.scrollIntoView(activeChild || this.section.children[0], false)
-        this.setInterval()
-      })
-    }
+    Promise.all(showPromises).then(() => {
+      this.hidden = false
+      const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
+      this.scrollIntoView(activeChild || this.section.children[0], false)
+      this.setInterval()
+    })
     this.addEventListener('click', this.clickListener)
     this.section.addEventListener('scroll', this.scrollListener)
     Array.from(this.section.children).forEach(node => node.addEventListener('focus', this.focusListener))

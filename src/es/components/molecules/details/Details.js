@@ -130,6 +130,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
 
   connectedCallback () {
     super.connectedCallback()
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) this.renderHTML()
@@ -138,10 +139,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
     this.root.addEventListener('click', this.clickEventListener)
     document.body.addEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
     this.checkMedia()
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
-    }
+    Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
   disconnectedCallback () {
@@ -511,6 +509,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-portion-/menu-portion-.css`,
           namespace: false
         }, ...styles], false)
+      default:
+        return this.fetchCSS(styles, false)
     }
   }
 

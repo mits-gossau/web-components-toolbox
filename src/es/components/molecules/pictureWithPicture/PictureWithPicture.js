@@ -17,13 +17,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class PictureWithPicture extends Shadow() {
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
-    }
+    Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
   /**
@@ -47,7 +45,7 @@ export default class PictureWithPicture extends Shadow() {
   /**
    * renders the a-PictureWithPicture css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`

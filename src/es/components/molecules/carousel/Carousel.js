@@ -136,6 +136,7 @@ export default class MacroCarousel extends Shadow() {
     const runResizePromises = []
     if (this.shouldComponentRenderCSS()) runResizePromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) runResizePromises.push(this.renderHTML())
+    this.hidden = true
     const showPromises = Array.from(runResizePromises)
     self.addEventListener('resize', this.resizeListener)
     setTimeout(() => this.resizeListener(), 5000)
@@ -166,10 +167,7 @@ export default class MacroCarousel extends Shadow() {
       document.body.addEventListener('pause', this.focusEventListener, true)
     }
     if (runResizePromises.length) Promise.all(runResizePromises).then(() => self.requestAnimationFrame(timeStamp => this.resizeListener()))
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => (this.hidden = false))
-    }
+    Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
   disconnectedCallback () {

@@ -36,22 +36,20 @@ export default class Footer extends Shadow() {
   }
 
   connectedCallback () {
+    this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
-    if (showPromises.length) {
-      this.hidden = true
-      Promise.all(showPromises).then(() => {
-        const wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
-        Footer.recalcWrappers(wrappers) // make sure that the wrapper has all the variables just set and recalc
-        this.injectCssIntoWrappers(wrappers)
-        this.loadChildComponents().then(modules => {
-          let moduleDetails
-          if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) Footer.injectCssIntoDetails(this.autoAddDetails(wrappers, moduleDetails).details)
-        })
-        this.hidden = false
+    Promise.all(showPromises).then(() => {
+      const wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
+      Footer.recalcWrappers(wrappers) // make sure that the wrapper has all the variables just set and recalc
+      this.injectCssIntoWrappers(wrappers)
+      this.loadChildComponents().then(modules => {
+        let moduleDetails
+        if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) Footer.injectCssIntoDetails(this.autoAddDetails(wrappers, moduleDetails).details)
       })
-    }
+      this.hidden = false
+    })
   }
 
   /**
