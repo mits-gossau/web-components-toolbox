@@ -1,7 +1,6 @@
 // @ts-check
 /* global CustomEvent */
 /* global customElements */
-/* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 

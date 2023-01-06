@@ -93,7 +93,6 @@ export default class Contentful extends Shadow() {
     }
   }
 
-
   connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-news') || 'request-list-news', this.requestListNewsListener)
     self.addEventListener('popstate', this.updatePopState)

@@ -1,6 +1,10 @@
 // @ts-check
 /* global fetch */
 /* global AbortController */
+/* global location */
+/* global sessionStorage */
+/* global CustomEvent */
+/* global history */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -11,38 +15,36 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Recipe extends Shadow() {
-  constructor(...args) {
+  constructor (...args) {
     super({ mode: 'false' }, ...args)
 
     const recipeCat = {
-      "Drinks": false,
-      "Appetizers": false,
-      "MainDishes": false,
-      "DessertsAndBaking": false,
-      "DIY": false,
-      "veg": false
+      Drinks: false,
+      Appetizers: false,
+      MainDishes: false,
+      DessertsAndBaking: false,
+      DIY: false,
+      veg: false
     }
 
     this.abortController = null
 
-    
     const limit = this.getAttribute('limit')
-    
-    this.requestListRecipeListener = async event => {
 
+    this.requestListRecipeListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-    
-      let recipes = sessionStorage.getItem('recipes') || JSON.stringify(recipeCat) 
-      if(recipes !== ''){
+
+      const recipes = sessionStorage.getItem('recipes') || JSON.stringify(recipeCat)
+      if (recipes !== '') {
         sessionStorage.setItem('recipes', recipes)
       }
-      let recipeData = JSON.parse(recipes)
-      if(event.detail && event.detail.tags){
+      const recipeData = JSON.parse(recipes)
+      if (event.detail && event.detail.tags) {
         recipeData[event.detail.tags[0]] = event.detail.isActive
       }
       sessionStorage.setItem('recipes', JSON.stringify(recipeData))
-      
+
       const pushHistory = event && event.detail && event.detail.pushHistory
       const variables = {
         limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit),
@@ -51,10 +53,10 @@ export default class Recipe extends Shadow() {
 
       // set tag resets the page parameter
       if (event.detail && event.detail.tags !== undefined) {
-        const selected = Object.fromEntries(Object.entries(recipeData).filter(([key]) => recipeData[key]));
+        const selected = Object.fromEntries(Object.entries(recipeData).filter(([key]) => recipeData[key]))
         variables.tags = Object.keys(selected).join(';')
         this.setTag(variables.tags, pushHistory)
-      } 
+      }
 
       // skip must be set after tags, since it may got reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {
@@ -73,8 +75,8 @@ export default class Recipe extends Shadow() {
       Object.keys(recipeData).forEach((key, index) => {
         const str = `${key}=${recipeData[key]}`
         recipePayload.push(str)
-      });
-      
+      })
+
       let endpoint = this.getAttribute('endpoint')
       endpoint += `?limit=${variables.limit}&skip=${variables.skip}&${recipePayload.join('&')}`
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
@@ -100,11 +102,11 @@ export default class Recipe extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
   }
 
@@ -114,7 +116,7 @@ export default class Recipe extends Shadow() {
    * @param {boolean} [pushHistory = true]
    * @return {void}
    */
-  setTag(tag, pushHistory = true) {
+  setTag (tag, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
@@ -125,7 +127,7 @@ export default class Recipe extends Shadow() {
    * Get tag from url else store
    * @return string
    */
-  getTags() {
+  getTags () {
     const urlParams = new URLSearchParams(location.search)
     const tag = urlParams.get('tag')
     if (tag) return tag
@@ -137,7 +139,7 @@ export default class Recipe extends Shadow() {
    * @param {boolean} [pushHistory = true]
    * @return {void}
    */
-  setPage(page, pushHistory = true) {
+  setPage (page, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     if (page === '1') {
       url.searchParams.delete('page')
@@ -151,7 +153,7 @@ export default class Recipe extends Shadow() {
    * Get page from url
    * @return [string]
    */
-  getPage() {
+  getPage () {
     const urlParams = new URLSearchParams(location.search)
     return Number(urlParams.get('page') || 1)
   }
@@ -160,7 +162,7 @@ export default class Recipe extends Shadow() {
    * Get skip aka. offset for the api request from url else store
    * @return [number]
    */
-  getCurrentPageSkip() {
+  getCurrentPageSkip () {
     const page = this.getPage()
     return page - 1
   }

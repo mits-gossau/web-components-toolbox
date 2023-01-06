@@ -7,7 +7,7 @@ self.Environment = {
   contentfulEndpoint: 'https://graphql.contentful.com/content/v1/spaces/',
   language: document.documentElement.getAttribute('lang') || 'de',
   /**
-   * Get custom mobile breakpoint 
+   * Get custom mobile breakpoint
    * @param {{constructor?: string, tagName?: string, namespace?: string}} organism
    * @return {string}
    */
