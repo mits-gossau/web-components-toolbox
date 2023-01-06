@@ -26,7 +26,6 @@ HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css
 
 TODO:
-- [ ] Reduce emotion-picture settings in variablesCustom.css and make more correct by default
 - [ ] redo header and navigation /\drem/, then eliminate all rem values
 - [ ] Template.html api call to fetch page content for previews
 - [ ] new flex-box wrapper: flex-grow (flex: 1) wrapper with empty children to simulate instead of o-wrapper width approach
