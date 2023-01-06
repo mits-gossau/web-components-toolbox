@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global self */
 
@@ -21,17 +21,23 @@ import { Shadow } from '../../prototypes/Shadow.js'
     </a-iframe>
  * }
  */
-export default class Iframe extends Shadow() {
-  constructor (...args) {
-    super(...args) // disabling shadow-DOM to have msrc styles flow into the node
-
-    this.wcConfigLoadListener = event => {
-      if (this.shouldComponentRenderHTML()) this.renderHTML()
-    }
+export default class Iframe extends Intersection() {
+  constructor (options = {}, ...args) {
+    super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
   }
 
   connectedCallback () {
-    document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', this.wcConfigLoadListener, { once: true })
+    super.connectedCallback()
+    const finalRender = this.shouldComponentRenderHTML() ? this.renderHTML() : () => {}
+    const renderPromises = []
+    renderPromises.push(new Promise(resolve => document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => resolve(event), { once: true })))
+    renderPromises.push(new Promise(resolve => this.intersecting = event => resolve(event)))
+    Promise.all(renderPromises).then(finalRender)
+  }
+
+  intersectionCallback (entries, observer) {
+    // @ts-ignore
+    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) this.intersecting()
   }
 
   /**
@@ -46,7 +52,7 @@ export default class Iframe extends Shadow() {
   /**
    * renders the html
    *
-   * @return {void}
+   * @return {()=>void} final render function with a default of 200ms timeout
    */
   renderHTML () {
     // prefetch or pre connect o the iframes src
@@ -66,7 +72,7 @@ export default class Iframe extends Shadow() {
     `
     const templateContent = this.template.content
     this.template.remove()
-    setTimeout(() => {
+    return () => setTimeout(() => {
       this.html = templateContent
       this.css = ''
       this.css = /*css*/`
