@@ -189,7 +189,7 @@ export default class EmotionPictures extends Intersection() {
         --picture-teaser-img-object-fit:var(--${this.getAttribute('namespace') || ''}img-object-fit, cover);
       }
     `, undefined, '', false)
-    
+
     // add the style for resize to the html
     this.html = this.style
 

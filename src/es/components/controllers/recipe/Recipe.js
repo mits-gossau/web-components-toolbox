@@ -15,37 +15,31 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Recipe extends Shadow() {
+  RECIPE_CATEGORIES = {
+    Drinks: false,
+    Appetizers: false,
+    MainDishes: false,
+    DessertsAndBaking: false,
+    DIY: false,
+    veg: false
+  }
+
   constructor (...args) {
     super({ mode: 'false' }, ...args)
-
-    const recipeCat = {
-      Drinks: false,
-      Appetizers: false,
-      MainDishes: false,
-      DessertsAndBaking: false,
-      DIY: false,
-      veg: false
-    }
-
     this.abortController = null
-
     const limit = this.getAttribute('limit')
 
     this.requestListRecipeListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-
-      const recipes = sessionStorage.getItem('recipes') || JSON.stringify(recipeCat)
-      if (recipes !== '') {
-        sessionStorage.setItem('recipes', recipes)
-      }
-      const recipeData = JSON.parse(recipes)
+      const recipeData = JSON.parse(this.getRecipeSelection())
       if (event.detail && event.detail.tags) {
         recipeData[event.detail.tags[0]] = event.detail.isActive
       }
-      sessionStorage.setItem('recipes', JSON.stringify(recipeData))
+      this.setRecipeSelection(recipeData)
 
       const pushHistory = event && event.detail && event.detail.pushHistory
+
       const variables = {
         limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit),
         tags: this.getTags()
@@ -58,7 +52,7 @@ export default class Recipe extends Shadow() {
         this.setTag(variables.tags, pushHistory)
       }
 
-      // skip must be set after tags, since it may got reset by new tag parameter
+      // skip must be set after tags, since it may get reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {
         variables.skip = Number(event.detail.skip)
         this.setPage(String(variables.skip + 1), pushHistory)
@@ -71,14 +65,8 @@ export default class Recipe extends Shadow() {
         signal: this.abortController.signal
       }
 
-      const recipePayload = []
-      Object.keys(recipeData).forEach((key, index) => {
-        const str = `${key}=${recipeData[key]}`
-        recipePayload.push(str)
-      })
-
       let endpoint = this.getAttribute('endpoint')
-      endpoint += `?limit=${variables.limit}&skip=${variables.skip}&${recipePayload.join('&')}`
+      endpoint += `?limit=${variables.limit}&skip=${variables.skip}&${this.createRecipeSelectionPayload(recipeData)}`
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
@@ -108,6 +96,28 @@ export default class Recipe extends Shadow() {
 
   disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
+  }
+
+  createRecipeSelectionPayload (recipeSelection) {
+    const recipePayload = []
+    Object.keys(recipeSelection).forEach(key => {
+      const str = `${key}=${recipeSelection[key]}`
+      recipePayload.push(str)
+    })
+    return recipePayload.join('&')
+  }
+
+  getRecipeSelection () {
+    let recipes = sessionStorage.getItem('recipes')
+    if (!recipes) {
+      sessionStorage.setItem('recipes', JSON.stringify(this.RECIPE_CATEGORIES))
+      recipes = JSON.stringify(this.RECIPE_CATEGORIES)
+    }
+    return recipes
+  }
+
+  setRecipeSelection (recipeSelection) {
+    sessionStorage.setItem('recipes', JSON.stringify(recipeSelection))
   }
 
   /**

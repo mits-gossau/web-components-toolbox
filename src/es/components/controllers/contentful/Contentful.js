@@ -41,8 +41,9 @@ export default class Contentful extends Shadow() {
       }
       // skip must be set after tags, since it may got reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {
-        variables.skip = Number(event.detail.skip)
-        this.setPage(String(variables.skip + 1), pushHistory)
+        const skipValue = Number(event.detail.skip)
+        variables.skip = skipValue * 5 // contentful skip value
+        this.setPage(String(skipValue + 1), pushHistory) // visual skip value
       } else {
         variables.skip = this.getCurrentPageSkip()
       }
