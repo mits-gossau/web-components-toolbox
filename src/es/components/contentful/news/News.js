@@ -237,7 +237,7 @@ export default class News extends Shadow() {
       contentfulRenderer.setAttribute('id', 'contentful-renderer')
       try {
         // @ts-ignore
-        contentfulRenderer.setAttribute('src', self.Environment.contentfulRenderer)
+        contentfulRenderer.setAttribute('src', `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../controllers/contentful/rich-text-html-renderer.es5.min.js`)
         document.body.appendChild(contentfulRenderer)
         contentfulRenderer.onload = () => resolve(this.RESOLVE_MSG)
       } catch (e) {

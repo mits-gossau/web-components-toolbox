@@ -67,7 +67,7 @@ export default class NewsList extends Shadow() {
       contentfulRenderer.setAttribute('type', 'text/javascript')
       contentfulRenderer.setAttribute('id', 'contentful-renderer')
       try {
-        contentfulRenderer.setAttribute('src', self.Environment.contentfulRenderer)
+        contentfulRenderer.setAttribute('src', `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../controllers/contentful/rich-text-html-renderer.es5.min.js`)
         document.body.appendChild(contentfulRenderer)
         contentfulRenderer.onload = () => resolve(this.RESOLVE_STATE)
       } catch (e) {
