@@ -47,6 +47,7 @@ export default class ProductList extends Prototype() {
   }
 
   configSetup () {
+    // https://react-components.migros.ch/?path=/docs/msrc-articles-06-widgets--product-list
     const setup = this.constructor.parseAttribute(this.getAttribute('config') || '{}')
     if (Object.keys(setup).length === 0) return
     if (this.hasAttribute('web-api-key')) setup.webAPIKey = this.getAttribute('web-api-key') || ''
@@ -122,12 +123,31 @@ export default class ProductList extends Prototype() {
   }
 
   renderCSS () {
-    this.css = /* css */ `
+    this.css = /* css */`
       a {
         color: var(--color);
       }
       :host h2 {
         font-family: "Helvetica Now Text XBold", var(--font-family-bold, var(--font-family, inherit));
+      }
+      /* msrc style overwrite */
+      :host div[data-testid="msrc-articles--pagination"] {
+        background-color: var(--color-secondary);
+      }
+      :host ul > li > button > div[color="text"] {
+        color: var(--background-color);
+      }
+      :host ul > li > button[data-testid="msrc-articles--pagination-link-current-page"] > div[color="text"] {
+        color: var(--color);
+      }
+      :host ul > li > button {
+        border-color: var(--color-secondary);
+      }
+      :host ul > li > button[data-testid="msrc-articles--pagination-link-current-page"], :host ul > li > button:hover {
+        border-color: var(--color-tertiary, var(--color-secondary));
+      }
+      :host ul > li > button[data-testid="msrc-articles--pagination-link-next"], :host ul > li > button[data-testid="msrc-articles--pagination-link-previous"] {
+        color: var(--background-color);
       }
     `
   }
