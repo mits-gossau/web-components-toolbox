@@ -10,15 +10,16 @@
 }} productListEventDetail */
 
 import { Prototype } from '../Prototype.js'
+import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global CustomEvent */
 /* global location */
 /* global self */
 /* global history */
 
-export default class ProductList extends Prototype() {
-  constructor (...args) {
-    super(...args)
+export default class ProductList extends Intersection(Prototype()) {
+  constructor(options = {}, ...args) {
+    super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
     this.config = this.configSetup()
     this.requestListArticlesEventListener = event => this.widgetRenderSetup(event)
     this.updatePopState = event => {
@@ -30,20 +31,27 @@ export default class ProductList extends Prototype() {
   }
 
   connectedCallback () {
-    this.hidden = true
-    const showPromises = []
-    if (this.shouldComponentRender()) showPromises.push(this.render())
-    Promise.all(showPromises).then(() => {
-      this.hidden = false
-      this.renderCSS()
-    })
+    super.connectedCallback()
     document.body.addEventListener(this.getAttribute('request-list-articles') || 'request-list-articles', this.requestListArticlesEventListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
+    super.disconnectedCallback()
     document.body.removeEventListener(this.getAttribute('request-list-articles') || 'request-list-articles', this.requestListArticlesEventListener)
     self.removeEventListener('popstate', this.updatePopState)
+  }
+
+  intersectionCallback(entries, observer) {
+    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
+      this.hidden = true
+      const showPromises = []
+      if (this.shouldComponentRender()) showPromises.push(this.render())
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+        this.renderCSS()
+      })
+    }
   }
 
   configSetup () {
