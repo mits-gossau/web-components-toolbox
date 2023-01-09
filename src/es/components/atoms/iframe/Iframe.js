@@ -28,6 +28,7 @@ export default class Iframe extends Intersection() {
 
   connectedCallback () {
     super.connectedCallback()
+    if (this.shouldComponentRenderCSS()) this.renderCSS()
     const finalRender = this.shouldComponentRenderHTML() ? this.renderHTML() : () => console.warn('No required template tag found within this component: ', this)
     const renderPromises = []
     renderPromises.push(new Promise(resolve => document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => resolve(event), { once: true })))
@@ -45,9 +46,51 @@ export default class Iframe extends Intersection() {
    *
    * @return {boolean}
    */
+  shouldComponentRenderCSS () {
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+  }
+  
+
+  /**
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
   shouldComponentRenderHTML () {
     return this.template
   }
+
+
+  /**
+   * renders the a-Iframe css
+   *
+   * @return {void}
+   */
+  renderCSS () {
+    this.css = /* css */`
+      :host {
+        width: 100%;
+        position: relative;
+        padding: var(--wrapper-teaser-padding);
+        --wrapper-teaser-padding: calc(56.10% / 4);
+        height: 0;
+        overflow: hidden;
+      }
+      :host > iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      @media screen and (max-width: _max-width_) {
+        :host {
+          --wrapper-teaser-padding: calc(56.10% / 2);
+        }
+      }
+    `
+  }
+
 
   /**
    * renders the html
@@ -74,7 +117,6 @@ export default class Iframe extends Intersection() {
     this.template.remove()
     return () => setTimeout(() => {
       this.html = templateContent
-      this.css = ''
       this.css = /*css*/`
         :host {
           line-height: 0;
