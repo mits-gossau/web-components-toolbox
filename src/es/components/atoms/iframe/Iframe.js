@@ -24,6 +24,11 @@ import { Intersection } from '../../prototypes/Intersection.js'
 export default class Iframe extends Intersection() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
+
+    // cant set the same namespace in backend as o-wrapper 
+    if (!this.hasAttribute("namespace") && this.getRootNode().host.getAttribute("namespace")) 
+      this.setAttribute("namespace", this.getRootNode().host.getAttribute("namespace"))
+    
   }
 
   connectedCallback () {
@@ -69,23 +74,28 @@ export default class Iframe extends Intersection() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        width: 100%;
-        position: relative;
-        padding: var(--wrapper-teaser-padding);
-        --wrapper-teaser-padding: calc(56.10% / 4);
+        --${this.getAttribute("namespace")}padding: calc(56.10% / 4);
         height: 0;
+        line-height: 0;
         overflow: hidden;
+        padding: var(--${this.getAttribute("namespace")}padding, 0); /* no namespace in this component */
+        position: relative;
+
+        ${this.hasAttribute('background-color')
+          ? `background-color: ${this.getAttribute('background-color')};`
+          : ''
+        }
       }
       :host > iframe {
+        height: 100%;
+        left: 0;
         position: absolute;
         top: 0;
-        left: 0;
         width: 100%;
-        height: 100%;
       }
       @media screen and (max-width: _max-width_) {
         :host {
-          --wrapper-teaser-padding: calc(56.10% / 2);
+          --${this.getAttribute("namespace")}padding: calc(56.10% / 2);
         }
       }
     `
@@ -104,24 +114,10 @@ export default class Iframe extends Intersection() {
     link.setAttribute('href', this.iframe.getAttribute('src'))
     document.head.appendChild(link)
     // set the fix height of the iframe until we load it
-    this.css = /*css*/`
-      :host {
-        height: ${this.iframe.getAttribute('height')}px;
-        ${this.hasAttribute('background-color')
-          ? `background-color: ${this.getAttribute('background-color')};`
-          : ''
-        }
-      }
-    `
     const templateContent = this.template.content
     this.template.remove()
     return () => setTimeout(() => {
       this.html = templateContent
-      this.css = /*css*/`
-        :host {
-          line-height: 0;
-        }
-      `
     }, this.getAttribute('timeout') && this.getAttribute('timeout') !== null
       ? Number(this.getAttribute('timeout'))
       : 200)
