@@ -16,7 +16,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * @example {
     <a-iframe>
       <template>
-        <iframe width='100%' height='480' src='https://my.matterport.com/show/?m=YSNEkt4DstH&brand=0' frameborder='0' allowfullscreen allow='vr'></iframe>
+        <iframe width='853' height='480' src='https://my.matterport.com/show/?m=YSNEkt4DstH&brand=0' frameborder='0' allowfullscreen allow='vr'></iframe>
       </template>
     </a-iframe>
  * }
@@ -24,30 +24,20 @@ import { Intersection } from '../../prototypes/Intersection.js'
 export default class Iframe extends Intersection() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
-
-    // cant set the same namespace in backend as o-wrapper 
-    if (!this.hasAttribute("namespace")) 
-      this.setAttribute("namespace", this.getRootNode().host.hasAttribute("namespace") ? this.getRootNode().host.getAttribute("namespace") : "")
-
-    this.ratio = 56.10
-    if (this.iframe.hasAttribute('width') && this.iframe.hasAttribute('height'))
-      this.ratio = this.iframe.getAttribute('height').replace("px", "") / this.iframe.getAttribute('width').replace("px", "") * 100
-    
   }
 
   connectedCallback () {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    const finalRender = this.shouldComponentRenderHTML() ? this.renderHTML() : () => console.warn('No required template tag found within this component: ', this)
-    const renderPromises = []
-    renderPromises.push(new Promise(resolve => document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => resolve(event), { once: true })))
-    renderPromises.push(new Promise(resolve => this.intersecting = event => resolve(event)))
-    Promise.all(renderPromises).then(finalRender)
+    if (!this.intersecting) this.intersecting = this.shouldComponentRenderHTML() ? this.renderHTML() : () => console.warn('No required template tag found within this component: ', this)
   }
 
   intersectionCallback (entries, observer) {
-    // @ts-ignore
-    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) this.intersecting()
+    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
+      // @ts-ignore
+      this.intersecting()
+      this.intersectionObserveStop()
+    }
   }
 
   /**
@@ -78,28 +68,15 @@ export default class Iframe extends Intersection() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        --${this.getAttribute("namespace")}padding: calc(${this.ratio}% / 4);
-        height: 0;
         line-height: 0;
-        overflow: hidden;
-        padding: var(--${this.getAttribute("namespace")}padding, 0); /* no namespace in this component */
-        position: relative;
-
+      }
+      :host, :host > iframe {
+        aspect-ratio: ${this.iframe.getAttribute('width')} / ${this.iframe.getAttribute('height')};
+        width: 100%;
+        height: auto;
         ${this.hasAttribute('background-color')
           ? `background-color: ${this.getAttribute('background-color')};`
           : ''
-        }
-      }
-      :host > iframe {
-        height: 100%;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-      }
-      @media screen and (max-width: _max-width_) {
-        :host {
-          --${this.getAttribute("namespace")}padding: calc(${this.ratio}% / 2);
         }
       }
     `
@@ -117,7 +94,6 @@ export default class Iframe extends Intersection() {
     link.setAttribute('rel', 'prefetch')
     link.setAttribute('href', this.iframe.getAttribute('src'))
     document.head.appendChild(link)
-    // set the fix height of the iframe until we load it
     const templateContent = this.template.content
     this.template.remove()
     return () => setTimeout(() => {
