@@ -26,8 +26,12 @@ export default class Iframe extends Intersection() {
     super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
 
     // cant set the same namespace in backend as o-wrapper 
-    if (!this.hasAttribute("namespace") && this.getRootNode().host.getAttribute("namespace")) 
-      this.setAttribute("namespace", this.getRootNode().host.getAttribute("namespace"))
+    if (!this.hasAttribute("namespace")) 
+      this.setAttribute("namespace", this.getRootNode().host.hasAttribute("namespace") ? this.getRootNode().host.getAttribute("namespace") : "")
+
+    this.ratio = 56.10
+    if (this.iframe.hasAttribute('width') && this.iframe.hasAttribute('height'))
+      this.ratio = this.iframe.getAttribute('height').replace("px", "") / this.iframe.getAttribute('width').replace("px", "") * 100
     
   }
 
@@ -74,7 +78,7 @@ export default class Iframe extends Intersection() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        --${this.getAttribute("namespace")}padding: calc(56.10% / 4);
+        --${this.getAttribute("namespace")}padding: calc(${this.ratio}% / 4);
         height: 0;
         line-height: 0;
         overflow: hidden;
@@ -95,7 +99,7 @@ export default class Iframe extends Intersection() {
       }
       @media screen and (max-width: _max-width_) {
         :host {
-          --${this.getAttribute("namespace")}padding: calc(56.10% / 2);
+          --${this.getAttribute("namespace")}padding: calc(${this.ratio}% / 2);
         }
       }
     `
