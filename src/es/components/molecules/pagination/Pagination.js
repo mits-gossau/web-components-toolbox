@@ -13,7 +13,6 @@ export default class Pagination extends Shadow() {
 
     this.answerEventNameListener = event => {
       event.detail.fetch.then((data) => {
-        const compactMode = this.hasAttribute('compact')
         let { total, limit, skip } = data
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
@@ -23,6 +22,7 @@ export default class Pagination extends Shadow() {
           skip = calcSkipPage
         }
         const pages = Math.ceil(total / limit)
+        const compactMode = this.hasAttribute('compact') && pages > 5
         this.renderHTML(pages, limit, skip, compactMode)
       }
       )
