@@ -1,12 +1,14 @@
 :host {
-    --news-alnatura-h1-color: var(--news-default-h1-color-custom, var(--color-secondary, var(--color)));
+    --news-alnatura-h1-color: var(--news-alnatura-h1-color-custom, var(--color-secondary, var(--color)));
     --news-alnatura-h1-margin: var(--content-spacing) 0;
-    --news-alnatura-intro-font-size: var(--news-default-intro-font-size-custom, inherit);
-    --news-alnatura-li-before-background-color: var(--news-default-li-before-background-color-custom, var(--color));
-    --news-alnatura-link-collection-padding: var(--news-default-link-collection-padding-custom, var(--content-spacing));
+    --news-alnatura-intro-font-size: var(--news-alnatura-intro-font-size-custom, inherit);
+    --news-alnatura-li-before-background-color: var(--news-alnatura-li-before-background-color-custom, var(--color));
+    --news-alnatura-link-collection-padding: 0;
     --news-alnatura-p-line-height: var(--p-line-height, var(--line-height, normal));
-    --news-alnatura-p-white-space: var(--news-default-p-white-space-custom, pre-line);
-    --news-alnatura-ul-list-style: var(--news-default-ul-list-style-custom, none);
+    --news-alnatura-p-white-space: var(--news-alnatura-p-white-space-custom, pre-line);
+    --news-alnatura-table-padding-right-last-child: 1em;
+    --news-alnatura-table-vertical-align: top;
+    --news-alnatura-ul-list-style: var(--news-alnatura-ul-list-style-custom, none);
 }
 
 :host ul>li>p {
@@ -23,33 +25,29 @@
 }
 
 :host .content-one-picture-wrapper,
-.content-two-picture-wrapper {
+:host .content-two-picture-wrapper {
     clear: both;
     float: right;
     margin: var(--content-spacing, 0) 0 var(--content-spacing, 0) var(--content-spacing, 0);
     max-width: 17vw;
 }
 
-:host table,
-th,
-td {
-    padding: 0.5em 0;
+:host .image-one-description {
+    padding-top: 1em;
 }
 
-:host table {
-    border-collapse: collapse;
+:host td, th {
+    padding: 1em 0.5em;
 }
 
-:host td>p {
+:host table * p {
     line-height: 100%;
     margin: 0;
 }
 
-:host thead tr th:first-child,
-tbody tr td:first-child {
-    width: 30%;
-    min-width: 30%;
-    max-width: 30%;
+/* striping */
+tr:nth-of-type(odd) {
+    background: #eee;
 }
 
 :host ol {
@@ -73,4 +71,18 @@ tbody tr td:first-child {
     content: counters(item, ".") ".";
     counter-increment: item;
     text-align: center;
+}
+
+@media only screen and (max-width: _max-width_) {
+
+    :host {
+        --img-object-fit: cover;
+    }
+
+    :host .content-one-picture-wrapper,
+    :host .content-two-picture-wrapper {
+        max-width: 100vw;
+        float: unset;
+        margin: var(--content-spacing-mobile, 0) 0;
+    }
 }
