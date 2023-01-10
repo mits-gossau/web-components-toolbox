@@ -466,6 +466,10 @@ export default class Navigation extends Mutation() {
           background-color: var(--background-color, black) !important;
           scrollbar-color: var(--color-secondary) var(--background-color);
         }
+        /* fix: mobile url address bar covers the footer part of the navigation */
+        :host > nav {
+          height: calc(100% + 100px)
+        }
         :host > nav {
           background-color: var(--background-color, black);
           display: flex;
