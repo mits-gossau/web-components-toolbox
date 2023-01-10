@@ -18,7 +18,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
 /* global history */
 
 export default class ProductList extends Intersection(Prototype()) {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
     this.config = this.configSetup()
     this.requestListArticlesEventListener = event => this.widgetRenderSetup(event)
@@ -42,7 +42,7 @@ export default class ProductList extends Intersection(Prototype()) {
     self.removeEventListener('popstate', this.updatePopState)
   }
 
-  intersectionCallback(entries, observer) {
+  intersectionCallback (entries, observer) {
     if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
       this.hidden = true
       const showPromises = []

@@ -8,6 +8,7 @@ export default class RecipeList extends Shadow() {
   constructor (...args) {
     super(...args)
     this.answerEventNameListener = event => {
+      this.renderHTML('loading')
       event.detail.fetch.then(recipeData => {
         this.renderHTML(recipeData.items)
       })
@@ -18,6 +19,7 @@ export default class RecipeList extends Shadow() {
     this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) this.renderHTML('loading')
     Promise.all(showPromises).then(() => {
       this.hidden = false
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
@@ -76,6 +78,11 @@ export default class RecipeList extends Shadow() {
   renderHTML (recipeList) {
     if (!recipeList.length) return
     this.html = ''
+    if (recipeList === 'loading') {
+      this.loadChildComponents()
+      this.html = '<a-loading></a-loading>'
+      return this.html
+    }
     Promise.all([recipeList, this.loadChildComponents()]).then(() => {
       let row = ''
       recipeList.forEach((recipe, index) => {
@@ -115,6 +122,9 @@ export default class RecipeList extends Shadow() {
       ),
       import('../../atoms/picture/Picture.js').then(
         module => ['a-picture', module.default]
+      ),
+      import('../../atoms/loading/Loading.js').then(
+        module => ['a-loading', module.default]
       )
     ]).then(elements => {
       elements.forEach(element => {

@@ -66,7 +66,7 @@ export default class Recipe extends Shadow() {
       }
 
       let endpoint = this.getAttribute('endpoint')
-      endpoint += `?limit=${variables.limit}&skip=${variables.skip}&${this.createRecipeSelectionPayload(recipeData)}`
+      endpoint += `?limit=${variables.limit}&skip=${variables.skip}&${this.createRecipeSelectionPayload(recipeData)}${event.detail && event.detail.value ? `&searchTerm=${event.detail.value}` : ''}`
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
