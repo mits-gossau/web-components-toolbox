@@ -61,6 +61,13 @@
     width: 100%;
 }
 
+:host article table {
+    display: table;
+}
+:host article table > tbody{
+    display: table-row-group;
+}
+
 
 @media screen and (min-width: calc(_max-width_ + 1px)) {
     :host a-slider-button,
