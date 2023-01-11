@@ -364,14 +364,14 @@ export default class Navigation extends Mutation() {
       }
       :host > nav > ul > li {
         margin: var(--margin);
-        border-bottom: 2px solid transparent;
+        border-bottom: var(--border-width, 2px) solid transparent;
         transition: all 0.1s ease;
       }
       :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
-        border-bottom: 2px solid var(--border-color, var(--color));
+        border-bottom: var(--border-width, 2px) solid var(--border-color, var(--color));
       }
       :host > nav > ul li:not(:hover).open {
-        border-bottom: 2px solid var(--border-color, var(--color));
+        border-bottom: var(--border-width, 2px) solid var(--border-color, var(--color));
       }
       :host > nav > ul > li > div.background {
         cursor: auto;
