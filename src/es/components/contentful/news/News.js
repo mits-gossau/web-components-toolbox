@@ -31,7 +31,7 @@ export default class News extends Shadow() {
       this.backBtn.addEventListener('click', this.clickListener)
       sessionStorage.setItem('news-viewed', 'TRUE')
     }
-    if (!this.loadNews(self, sessionStorage).news) {
+    if (!this.getNews()) {
       // @ts-ignore
       showPromises.push(new Promise(resolve => document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', event => event.detail.fetch.then(data => {
         resolve(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))

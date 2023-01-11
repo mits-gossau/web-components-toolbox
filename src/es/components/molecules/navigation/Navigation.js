@@ -54,7 +54,16 @@ export default class Navigation extends Mutation() {
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
       // console.log('changed', this.isDesktop === (this.isDesktop = this.checkMedia('desktop')));
       if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((!this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) {
-        document.documentElement.classList.add(this.getAttribute('no-scroll') || 'no-scroll')
+        this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+          detail: {
+            hasNoScroll: true,
+            origEvent: event,
+            this: this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
         if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'true')
       }
       self.requestAnimationFrame(timeStamp => this.backgroundAdjust())
@@ -457,6 +466,10 @@ export default class Navigation extends Mutation() {
           background-color: var(--background-color, black) !important;
           scrollbar-color: var(--color-secondary) var(--background-color);
         }
+        /* fix: mobile url address bar covers the footer part of the navigation */
+        :host > nav {
+          height: calc(100% + 100px)
+        }
         :host > nav {
           background-color: var(--background-color, black);
           display: flex;
@@ -670,7 +683,16 @@ export default class Navigation extends Mutation() {
                 event.preventDefault()
                 if (this.focusLostClose) {
                   event.stopPropagation()
-                  if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) document.documentElement.classList[isOpen ? 'remove' : 'add'](this.getAttribute('no-scroll') || 'no-scroll')
+                  if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+                    detail: {
+                      hasNoScroll: !isOpen,
+                      origEvent: event,
+                      this: this
+                    },
+                    bubbles: true,
+                    cancelable: true,
+                    composed: true
+                  }))
                 }
                 this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
                 if (event.target && event.target.parentNode && event.target.parentNode.parentNode && event.target.parentNode.parentNode.tagName === 'UL') event.target.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
@@ -700,7 +722,16 @@ export default class Navigation extends Mutation() {
             if (this.hasAttribute('focus-lost-close-mobile')) {
               this.adjustArrowDirections(event, arrowDirections)
               if (this.hasAttribute('no-scroll')) {
-                document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+                this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+                  detail: {
+                    hasNoScroll: false,
+                    origEvent: event,
+                    this: this
+                  },
+                  bubbles: true,
+                  cancelable: true,
+                  composed: true
+                }))
                 if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'false')
               }
               this.openClose(false)

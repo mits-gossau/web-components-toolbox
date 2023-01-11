@@ -41,7 +41,16 @@ export default class Body extends Shadow() {
         clearTimeout(this.timeout)
         this.timeout = setTimeout(() => {
           element.scrollIntoView({ behavior: 'auto' })
-          document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+          this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+            detail: {
+              hasNoScroll: false,
+              origEvent: event,
+              this: this
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
         }, 500) // lazy loading pics make this necessary to reach target
         self.removeEventListener('hashchange', this.clickAnchorEventListener)
         location.hash = location.hash.replace('_scrolled', '') + '_scrolled'

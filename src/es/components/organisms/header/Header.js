@@ -17,7 +17,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {
  *  NOTE: grid-area: header;
  *  --position [sticky]
- *  --z-index [100]
+ *  --z-index [1000]
  *  --align-items [center]
  *  --background-color [black]
  *  --height  [85px]
@@ -167,7 +167,7 @@ export default class Header extends Shadow() {
         grid-area: header;
         position: var(--position, sticky);
         top: 0;
-        z-index: var(--z-index, 100);
+        z-index: var(--z-index, 1000);
         text-align: var(--text-align, initial);
       }
       :host > * {
@@ -271,7 +271,7 @@ export default class Header extends Shadow() {
       :host > header > a-logo{
         position: absolute;
         left: calc((100% - var(--content-width, 55%)) / 2);
-        z-index: 101;
+        z-index: 1001;
         top: var(--a-logo-top, 0);
         transition: top 0.2s ease-out;
       }
@@ -373,7 +373,7 @@ export default class Header extends Shadow() {
         :host  > header > a-menu-icon{
           align-self: var(--a-menu-icon-align-self-mobile, var(--a-menu-icon-align-self, var(--align-self, auto)));
           display: var(--a-menu-icon-display-mobile, block);
-          z-index: 102;
+          z-index: 1002;
         }
         :host  > header.open > a-menu-icon{
           --a-menu-icon-height: var(--a-menu-icon-height-open-mobile);
@@ -418,7 +418,16 @@ export default class Header extends Shadow() {
     })
     this.html = this.header
     if (this.hasAttribute('sticky')) this.classList.add('top')
-    self.addEventListener('resize', event => document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll'))
+    self.addEventListener('resize', event => this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+      detail: {
+        hasNoScroll: false,
+        origEvent: event,
+        this: this
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    })))
     return this.getAttribute('menu-icon')
       ? this.loadChildComponents().then(children => {
         this.MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
@@ -426,7 +435,17 @@ export default class Header extends Shadow() {
           this.header.classList.toggle('open')
           const prop = this.header.classList.contains('open') ? 'add' : 'remove'
           if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', this.header.classList.contains('open') ? 'true' : 'false')
-          document.documentElement.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
+          this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+            detail: {
+              hasNoScroll: this.header.classList.contains('open'),
+              origEvent: event,
+              this: this
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+          
           Array.from(this.header.children).forEach(node => {
             node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
           })
