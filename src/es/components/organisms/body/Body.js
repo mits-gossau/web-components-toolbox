@@ -60,6 +60,7 @@ export default class Body extends Shadow() {
   }
 
   connectedCallback () {
+    super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
@@ -71,6 +72,7 @@ export default class Body extends Shadow() {
   }
 
   disconnectedCallback () {
+    super.disconnectedCallback()
     document.body.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
     self.removeEventListener('hashchange', this.clickAnchorEventListener)
   }

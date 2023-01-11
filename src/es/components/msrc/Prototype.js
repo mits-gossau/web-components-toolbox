@@ -28,6 +28,13 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
       if (isMsrcLoaded()) {
         resolve(self.msrc) // eslint-disable-line
       } else {
+        // prefetch or pre connect o the iframes src
+        if (!document.head.querySelector('link[href="https://cdn.migros.ch"]')) {
+          const link = document.createElement('link')
+          link.setAttribute('rel', 'prefetch')
+          link.setAttribute('href', 'https://cdn.migros.ch')
+          document.head.appendChild(link)
+        }
         // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')

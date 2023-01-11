@@ -49,7 +49,10 @@ export default class ProductList extends Intersection(Prototype()) {
       if (this.shouldComponentRender()) showPromises.push(this.render())
       Promise.all(showPromises).then(() => {
         this.hidden = false
-        this.renderCSS()
+        if (this.shouldComponentRenderCSS()) {
+          this.renderCSS()
+          this.intersectionObserveStop()
+        }
       })
     }
   }
@@ -113,6 +116,15 @@ export default class ProductList extends Intersection(Prototype()) {
     }))
     this.msrcProductListWrapper.scrollIntoView()
     return Promise.all([this.msrc.components.articles.productList(this.msrcProductListWrapper, this.config), subTagFetch])
+  }
+
+  /**
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
+  shouldComponentRenderCSS () {
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   shouldComponentRender () {

@@ -1,5 +1,6 @@
 // @ts-check
 import Body from '../body/Body.js'
+import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global self */
 
@@ -19,11 +20,39 @@ import Body from '../body/Body.js'
  *  Note: all of src/es/components/web-components-cms-template/src/es/components/organisms/Body.js
  * }
  */
-export default class BodyStyle extends Body {
-  constructor (...args) {
-    super(...args)
+export default class BodyStyle extends Intersection(Body) {
+  constructor (options = {}, ...args) {
+    super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
 
     this.setAttribute('aria-label', 'Section')
+  }
+
+  intersectionCallback (entries, observer) {
+    // render css on intersection because this component is often used for backgrounds including css backgrounds with images. those can by default not be loaded lazy nor support sources, thats why we load them on intersection
+    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
+      if (this.intersectionShouldComponentRenderCSS()) {
+        this.renderCSS()
+        this.intersectionObserveStop()
+      }
+    }
+  }
+
+  /**
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
+  shouldComponentRenderCSS () {
+    return false
+  }
+
+  /**
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
+  intersectionShouldComponentRenderCSS () {
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
