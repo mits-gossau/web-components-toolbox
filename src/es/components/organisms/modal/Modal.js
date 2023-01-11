@@ -56,6 +56,10 @@ export default class Modal extends Shadow() {
     this.eventDetail = null
     // open
     this.openModalListener = event => {
+      if (event && event.detail && event.detail.forceOpen && this.hasAttribute('no-mobile')) {
+        this.setAttribute('had-no-mobile', '')
+        this.removeAttribute('no-mobile')
+      }
       if (!this.open && (!this.hasAttribute('no-mobile') || this.checkMedia('desktop'))) {
         let actionAtLast = () => {}
         this.open = true
@@ -127,6 +131,10 @@ export default class Modal extends Shadow() {
     }
     this.closeModalListener = event => {
       if (this.open) {
+        if (this.hasAttribute('had-no-mobile')) {
+          this.setAttribute('no-mobile', '')
+          this.removeAttribute('had-no-mobile')
+        }
         this.open = false
         let duration = self.getComputedStyle(this).getPropertyValue(`--${this.namespace || ''}transition`)
         duration = duration ? Number(duration.replace(/.*?\s([\d.]*)s/g, '$1')) * 1000 : 300
@@ -283,20 +291,14 @@ export default class Modal extends Shadow() {
         width: 14px;
       }
       @media only screen and (max-width: _max-width_) {
-        ${this.hasAttribute('no-mobile')
-          ? /* css */`
-            :host {
-              display: none;
-            }
-          `
-          : /* css */`
-            :host([open]) > section {
-              padding: var(--padding-mobile, var(--padding, min(var(--content-spacing-mobile, var(--content-spacing)), 4vw)));
-            }
-            :host([open]) > section > div > #close {
-              margin: var(--close-margin-mobile, var(--close-margin, 0 0 var(--content-spacing-mobile, var(--content-spacing)) 0));
-            }
-          `
+        :host([no-mobile]) {
+          display: none;
+        }
+        :host([open]) > section {
+          padding: var(--padding-mobile, var(--padding, min(var(--content-spacing-mobile, var(--content-spacing)), 4vw)));
+        }
+        :host([open]) > section > div > #close {
+          margin: var(--close-margin-mobile, var(--close-margin, 0 0 var(--content-spacing-mobile, var(--content-spacing)) 0));
         }
       }
     `

@@ -71,7 +71,7 @@ export default class Iframe extends Intersection() {
         line-height: 0;
       }
       :host, :host > iframe {
-        ${this.iframe.getAttribute('width') && !this.iframe.getAttribute('width').includes('%') && this.iframe.getAttribute('height') && !this.iframe.getAttribute('height').includes('%')
+        ${this.iframe && this.iframe.getAttribute('width') && !this.iframe.getAttribute('width').includes('%') && this.iframe.getAttribute('height') && !this.iframe.getAttribute('height').includes('%')
           ? `aspect-ratio: ${this.iframe.getAttribute('width')} / ${this.iframe.getAttribute('height')};`
           // @ts-ignore
           : console.warn('This component requires an Iframe with fix/absolute width and height values: ', this) || ''
