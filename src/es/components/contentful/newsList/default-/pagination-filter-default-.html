@@ -1,42 +1,20 @@
-<m-tag-filter
-    answer-event-name="list-news"
-    request-event-name="request-list-news"
-    namespace="tag-filter-default-"
-    tag="[
-    {
-        'name':'Alle News',
-        'tag':[]
-    },
-    {
-        'name':'Aktionen',
-        'tag':['Aktionen']
-    },
-    {
-        'name':'Aktuelles',
-        'tag':['Aktuelles']
-    },
-    {
-        'name':'Neueröffnungen & Events',
-        'tag':['neueroeffnungen-events']
-    },
-    {
-        'name':'Warenrückrufe',
-        'tag':['Warenrückrufe']
-    },
-    {
-        'name':'Interviews & Kolumnen',
-        'tag':['interviews-kolumne']
-    }
-    ]">
+<m-tag-filter namespace="tag-filter-horizontal-">
+    <a-button namespace="button-category-" answer-event-name="list-news" request-event-name="request-list-news"
+        active-detail-property-name="fetch:tag" tag="Alnatura">Alle News</a-button>
+    <a-button namespace="button-category-" answer-event-name="list-news" request-event-name="request-list-news"
+        active-detail-property-name="fetch:tag" tag="Aktionen">Aktionen</a-button>
+    <a-button namespace="button-category-" answer-event-name="list-news" request-event-name="request-list-news"
+        active-detail-property-name="fetch:tag" tag="Aktuelles">Aktuelles</a-button>
+    <a-button namespace="button-category-" answer-event-name="list-news" request-event-name="request-list-news"
+        active-detail-property-name="fetch:tag" tag="neueroeffnungen-events">Neueröffnungen & Events</a-button>
+    <a-button namespace="button-category-" answer-event-name="list-news" request-event-name="request-list-news"
+        active-detail-property-name="fetch:tag" tag="Warenrückrufe">Warenrückrufe</a-button>
+    <a-button namespace="button-category-" answer-event-name="list-news" request-event-name="request-list-news"
+        active-detail-property-name="fetch:tag" tag="interviews-kolumne">Interviews & Kolumnen</a-button>
 </m-tag-filter>
-<m-pagination
-    answer-event-name="list-news"
-    request-event-name="request-list-news"
-    namespace="pagination-default-"
-></m-pagination>
-<contentful-news-list
-    answer-event-name="list-news"
-    request-event-name="request-list-news"
+<m-pagination answer-event-name="list-news" request-event-name="request-list-news"
+    namespace="pagination-default-"></m-pagination>
+<contentful-news-list answer-event-name="list-news" request-event-name="request-list-news"
     namespace="news-list-default-"
     news-url="/docs/Template.html?logo=/src/es/components/atoms/logo/default-/default-.html&nav=/src/es/components/molecules/navigation/default-/default-.html&footer=/src/es/components/organisms/footer/default-/default-.html&content=/src/es/components/molecules/news/default-/default-.html"
     news-preview-namespace="">
