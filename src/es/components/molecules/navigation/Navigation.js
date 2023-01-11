@@ -855,6 +855,11 @@ export default class Navigation extends Mutation() {
   }
 
   openClose (open = true) {
+    // mobile has an extra height: calc(100% + 100px) url workaround, but scroll back when closed
+    if (!open && this.getMedia() !== 'desktop') this.scroll({
+      top: 0,
+      behavior: 'smooth'
+    })
     if (!open && this.nav.getAttribute('aria-expanded') === 'true') {
       Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
         link.classList.remove('open')
