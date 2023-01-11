@@ -77,23 +77,25 @@ export default class RecipeList extends Shadow() {
 
   renderHTML (recipeList) {
     if (!recipeList.length) return
+    const recipeListHeight = this.offsetHeight
+    console.log(recipeListHeight);
     this.html = ''
     if (recipeList === 'loading') {
       this.loadChildComponents()
-      this.html = '<a-loading></a-loading>'
+      this.html = `<a-loading style="height:${recipeListHeight}px"></a-loading>`
       return this.html
     }
     Promise.all([recipeList, this.loadChildComponents()]).then(() => {
       let row = ''
       recipeList.forEach((recipe, index) => {
         const teaser = `
-            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="${this.getAttribute('detail-page-link') ?? ''}?${recipe.slug}">
+            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="${this.getAttribute('detail-page-link') || ''}?${recipe.slug}">
                 <figure>
                   <a-picture namespace="picture-teaser-" picture-load
                       defaultSource="${recipe.imageSrc}" alt="${recipe.imageAlt}"></a-picture>
                   <figcaption>
                       <h5>${recipe.title}</h5>
-                      <a-link namespace=underline-><a>${this.getAttribute('zum-rezept-translation' ?? '')}</a></a-link>
+                      <a-link namespace=underline-><a>${this.getAttribute('zum-rezept-translation' || '')}</a></a-link>
                   </figcaption>
                 </figure>
             </m-teaser></o-wrapper>

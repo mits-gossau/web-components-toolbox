@@ -11,8 +11,11 @@ export default class Pagination extends Shadow() {
     super(...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
 
+    
     this.answerEventNameListener = event => {
+      this.hidden = true
       event.detail.fetch.then((data) => {
+        this.hidden = false
         let { total, limit, skip } = data
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
@@ -37,6 +40,7 @@ export default class Pagination extends Shadow() {
   }
 
   connectedCallback () {
+    this.hidden = true
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
@@ -276,9 +280,9 @@ export default class Pagination extends Shadow() {
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles])
+        }, ...styles], false)
       default:
-        return this.fetchCSS(styles)
+        return this.fetchCSS(styles,false)
     }
   }
 }

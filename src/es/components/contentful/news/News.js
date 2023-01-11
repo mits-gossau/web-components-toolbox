@@ -126,7 +126,10 @@ export default class News extends Shadow() {
   setMetaTags (metaTags) {
     return /** @type {Promise<void>} */(new Promise((resolve) => {
       for (const [key, value] of Object.entries(metaTags)) {
-        document.getElementsByTagName('meta').namedItem(key)?.setAttribute('content', value)
+        if (document.getElementsByTagName('meta').namedItem(key)){
+          // @ts-ignore
+          document.getElementsByTagName('meta').namedItem(key).setAttribute('content', value)
+        }
       }
       resolve()
     }))
