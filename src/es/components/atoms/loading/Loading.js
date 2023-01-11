@@ -3,7 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * Loading animation
- * Example at: rrecipe list
+ * Example at: recipe list
  * As an atom, this component can not hold further children (those would be quantum)
  *
  * @export

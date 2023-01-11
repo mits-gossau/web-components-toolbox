@@ -154,6 +154,9 @@ export default class News extends Shadow() {
       align-items:var(--align-items, flex-start);
       align-content:var(--align-content, flex-start);
     }
+    :host news > * {
+      max-width:100%;
+    }
     :host ul li {
       position: var(--li-position, relative);
       padding-left: var(--li-padding-left, 2em);
