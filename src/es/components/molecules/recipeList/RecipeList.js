@@ -78,7 +78,6 @@ export default class RecipeList extends Shadow() {
   renderHTML (recipeList) {
     if (!recipeList.length) return
     const recipeListHeight = this.offsetHeight
-    console.log(recipeListHeight);
     this.html = ''
     if (recipeList === 'loading') {
       this.loadChildComponents()
