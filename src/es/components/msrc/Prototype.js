@@ -29,9 +29,9 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
         resolve(self.msrc) // eslint-disable-line
       } else {
         // prefetch or pre connect o the iframes src
-        if (!document.head.querySelector('link[href="https://cdn.migros.ch"]')) {
+        if (this.hasAttribute('prefetch') && !document.head.querySelector('link[href="https://cdn.migros.ch"]')) {
           const link = document.createElement('link')
-          link.setAttribute('rel', 'prefetch')
+          link.setAttribute('rel', 'dns-prefetch')
           link.setAttribute('href', 'https://cdn.migros.ch')
           document.head.appendChild(link)
         }

@@ -89,10 +89,13 @@ export default class Iframe extends Intersection() {
    */
   renderHTML () {
     // prefetch or pre connect o the iframes src
-    const link = document.createElement('link')
-    link.setAttribute('rel', 'prefetch')
-    link.setAttribute('href', this.iframe.getAttribute('src'))
-    document.head.appendChild(link)
+    if (this.hasAttribute('preload') && !document.head.querySelector(`link[href="${this.iframe.getAttribute('src')}"]`)) {
+      const link = document.createElement('link')
+      link.setAttribute('rel', 'preload')
+      link.setAttribute('as', 'document')
+      link.setAttribute('href', this.iframe.getAttribute('src'))
+      document.head.appendChild(link)
+    }
     const templateContent = this.template.content
     this.template.remove()
     return () => setTimeout(() => {
