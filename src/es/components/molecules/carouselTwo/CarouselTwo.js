@@ -26,7 +26,7 @@ export default class CarouselTwo extends Shadow() {
     // on click anchor scroll to the image with the matching id or previous/next
     this.clickListener = event => {
       let target
-      if ((target = event.composedPath().find(node => typeof node.getAttribute === 'function' && node.getAttribute('href')))) {
+      if ((target = event.composedPath().find(node => typeof node.getAttribute === 'function' && node.getAttribute('href') && node.getAttribute('href').substring(0, 1) === '#'))) {
         let sectionChild
         if ((sectionChild = this.section.querySelector(target.getAttribute('href')))) {
           this.scrollIntoView(sectionChild)
