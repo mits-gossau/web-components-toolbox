@@ -133,7 +133,7 @@
     left: var(--content-spacing-mobile, var(--content-spacing)) !important;
     width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)) !important;
   }
-  :host > nav > ul li > o-nav-wrapper > section > ul:not(:last-of-type) {
+  :host > nav > ul li > o-nav-wrapper > section > ul:not(:last-of-type):not([width="100%"]) {
     --any-padding-bottom-last-child-mobile: 0.5em;
   }
   /* allow two uls to be merged into one block */
