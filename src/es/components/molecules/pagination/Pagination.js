@@ -11,7 +11,6 @@ export default class Pagination extends Shadow() {
     super(...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
 
-    
     this.answerEventNameListener = event => {
       this.hidden = true
       event.detail.fetch.then((data) => {
@@ -282,7 +281,7 @@ export default class Pagination extends Shadow() {
           namespace: false
         }, ...styles], false)
       default:
-        return this.fetchCSS(styles,false)
+        return this.fetchCSS(styles, false)
     }
   }
 }

@@ -5,6 +5,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global customElements */
 /* global self */
 /* global MutationObserver */
+/* global CustomEvent */
 
 /**
  * Header can be sticky and hosts as a flex mostly a logo and a navigation
@@ -445,7 +446,7 @@ export default class Header extends Shadow() {
             cancelable: true,
             composed: true
           }))
-          
+
           Array.from(this.header.children).forEach(node => {
             node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
           })

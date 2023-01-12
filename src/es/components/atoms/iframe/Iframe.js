@@ -1,8 +1,6 @@
 // @ts-check
 import { Intersection } from '../../prototypes/Intersection.js'
 
-/* global self */
-
 /**
  * Lazy load Iframe
  * Example at: /src/es/components/atoms/iframe/Iframe.html
@@ -48,7 +46,6 @@ export default class Iframe extends Intersection() {
   shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
-  
 
   /**
    * evaluates if a render is necessary
@@ -58,7 +55,6 @@ export default class Iframe extends Intersection() {
   shouldComponentRenderHTML () {
     return this.template
   }
-
 
   /**
    * renders the a-Iframe css
@@ -86,7 +82,6 @@ export default class Iframe extends Intersection() {
     `
   }
 
-
   /**
    * renders the html
    *
@@ -112,6 +107,6 @@ export default class Iframe extends Intersection() {
   }
 
   get iframe () {
-    return this.template && this.template.content.querySelector('iframe') || this.root.querySelector('iframe')
+    return (this.template && this.template.content.querySelector('iframe')) || this.root.querySelector('iframe')
   }
 }
