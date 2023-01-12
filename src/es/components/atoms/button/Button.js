@@ -208,6 +208,14 @@ export default class Button extends Shadow() {
           margin: var(--margin-mobile, var(--margin, auto));
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
+        button:hover, button.hover {
+          background-color: var(--background-color-hover-mobile, var(--background-color-hover, var(--background-color, #B24800)));
+          color: var(--color-hover-mobile, var(--color-hover, var(--color, #FFFFFF)));
+        }
+        button:active, button.active {
+          background-color: var(--background-color-active-mobile, var(--background-color-active, var(--background-color-hover, var(--background-color, #803300))));
+          color: var(--color-active-mobile, var(--color-active, var(--color-hover, var(--color, #FFFFFF))));
+        }
         .icon-left {
           margin: var(--icon-left-margin-mobile, var(--icon-left-margin, 0 0.5em 0 0));
         }
