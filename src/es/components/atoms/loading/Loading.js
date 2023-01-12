@@ -42,15 +42,14 @@ export default class Loading extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-      min-height:30vw;
-      align-items: center;
+      min-height:30vh;
+      align-items: start;
       background-color: var(--background-color, white);
       box-sizing: border-box;
       cursor: progress;
       display: grid;
       grid-template-columns: 1fr;
       grid-template-rows: 1fr;
-      justify-content: center;
       opacity: 1;
       overflow: hidden;
       width: 100%;

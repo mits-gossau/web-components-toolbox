@@ -16,19 +16,14 @@ export default class RecipeList extends Shadow() {
   }
 
   connectedCallback () {
-    this.hidden = true
-    const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldComponentRenderHTML()) this.renderHTML('loading')
-    Promise.all(showPromises).then(() => {
-      this.hidden = false
-      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      }))
-    })
+    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    this.renderHTML('loading')
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
   }
 
   disconnectedCallback () {
@@ -39,19 +34,17 @@ export default class RecipeList extends Shadow() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  shouldComponentRenderHTML () {
-    return !this.recipeListWrapper
-  }
-
   /**
    * renders
    *
    * @return {Promise<void>}
    */
   renderCSS () {
-    this.css = /* css */ `
-    :host {}
-    @media only screen and (max-width: _max-width_) {}
+    this.html = this.style
+    this.css = /* css */`
+      :host {
+        display: block;
+      }
     `
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
@@ -77,24 +70,39 @@ export default class RecipeList extends Shadow() {
 
   renderHTML (recipeList) {
     if (!recipeList.length) return
-    const recipeListHeight = this.offsetHeight
+    let recipeListHeight = this.offsetHeight
     this.html = ''
     if (recipeList === 'loading') {
-      this.style.textContent = /* css */`
+      this.loadChildComponents()
+      this.html = '<a-loading></a-loading>'
+      const setStyleTextContent = () => this.style.textContent = /* css */`
         :host {
           min-height: ${recipeListHeight}px;
         }
       `
-      this.addEventListener('picture-load', event => (this.style.textContent = ''), {once: true})
-      this.loadChildComponents()
-      this.html = '<a-loading></a-loading>'
-      return this.html
+      let initialTimoutId = null
+      if (!recipeListHeight) initialTimoutId = setTimeout(() => {
+        recipeListHeight = this.offsetHeight
+        setStyleTextContent()
+      }, 1000);
+      setStyleTextContent()
+      let timeoutId = null
+      let pictureLoadEventListener
+      this.addEventListener('picture-load', (pictureLoadEventListener = event => {
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(() => {
+          clearTimeout(initialTimoutId)
+          this.style.textContent = ''
+          this.removeEventListener('picture-load', pictureLoadEventListener)
+        }, 200)
+      }))
+      return
     }
     Promise.all([recipeList, this.loadChildComponents()]).then(() => {
       let row = ''
       recipeList.forEach((recipe, index) => {
         const teaser = `
-            <o-wrapper namespace="wrapper-teaser-"><m-teaser namespace=teaser-tile- href="${this.getAttribute('detail-page-link') || ''}?${recipe.slug}">
+            <m-teaser namespace=teaser-tile- href="${this.getAttribute('detail-page-link') || ''}?${recipe.slug}">
                 <figure>
                   <a-picture namespace="picture-teaser-" picture-load
                       defaultSource="${recipe.imageSrc}" alt="${recipe.imageAlt}"></a-picture>
@@ -103,7 +111,7 @@ export default class RecipeList extends Shadow() {
                       <a-link namespace=underline-><a>${this.getAttribute('zum-rezept-translation') || ''}</a></a-link>
                   </figcaption>
                 </figure>
-            </m-teaser></o-wrapper>
+            </m-teaser>
             `
         if (index % 3 === 0) {
           if (index === 0) {
