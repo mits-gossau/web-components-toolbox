@@ -80,8 +80,14 @@ export default class RecipeList extends Shadow() {
     const recipeListHeight = this.offsetHeight
     this.html = ''
     if (recipeList === 'loading') {
+      this.style.textContent = /* css */`
+        :host {
+          min-height: ${recipeListHeight}px;
+        }
+      `
+      this.addEventListener('picture-load', event => (this.style.textContent = ''), {once: true})
       this.loadChildComponents()
-      this.html = `<a-loading style="height:${recipeListHeight}px"></a-loading>`
+      this.html = '<a-loading></a-loading>'
       return this.html
     }
     Promise.all([recipeList, this.loadChildComponents()]).then(() => {
@@ -134,5 +140,13 @@ export default class RecipeList extends Shadow() {
       })
       return elements
     }))
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 }
