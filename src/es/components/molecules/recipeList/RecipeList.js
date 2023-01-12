@@ -70,7 +70,7 @@ export default class RecipeList extends Shadow() {
 
   renderHTML (recipeList) {
     if (Array.isArray(recipeList) && !recipeList.length) {
-      this.html = "" // clear previous loading element
+      this.html = '' // clear previous loading element
       this.html = `${this.getAttribute('no-recipe-found-translation') || 'Leider haben wir keine Rezepte zu diesem Suchbegriff gefunden.'}`
       return
     }
@@ -79,23 +79,27 @@ export default class RecipeList extends Shadow() {
     if (recipeList === 'loading') {
       this.loadChildComponents()
       this.html = '<a-loading></a-loading>'
-      const setStyleTextContent = () => this.style.textContent = /* css */`
+      const setStyleTextContent = () => {
+        this.style.textContent = /* css */`
         :host {
           min-height: ${recipeListHeight}px;
         }
       `
-      let initialTimoutId = null
-      if (!recipeListHeight) initialTimoutId = setTimeout(() => {
-        recipeListHeight = this.offsetHeight
-        setStyleTextContent()
-      }, 1000);
+      }
+      let initialTimeoutId = null
+      if (!recipeListHeight) {
+        initialTimeoutId = setTimeout(() => {
+          recipeListHeight = this.offsetHeight
+          setStyleTextContent()
+        }, 1000)
+      }
       setStyleTextContent()
       let timeoutId = null
       let pictureLoadEventListener
       this.addEventListener('picture-load', (pictureLoadEventListener = event => {
         clearTimeout(timeoutId)
         timeoutId = setTimeout(() => {
-          clearTimeout(initialTimoutId)
+          clearTimeout(initialTimeoutId)
           this.style.textContent = ''
           this.removeEventListener('picture-load', pictureLoadEventListener)
         }, 200)
