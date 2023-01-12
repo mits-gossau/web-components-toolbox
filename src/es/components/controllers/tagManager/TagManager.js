@@ -69,6 +69,16 @@ export default class TagManager extends Shadow() {
    * @return {HTMLScriptElement|false}
    */
   setup (gtmId = this.getAttribute('id') || 'GTM-XXXXXX') {
+    // prefetch or pre connect o the iframes src
+    const linkAnalytics = document.createElement('link')
+    linkAnalytics.setAttribute('rel', 'prefetch')
+    linkAnalytics.setAttribute('href', 'https://www.google-analytics.com')
+    document.head.appendChild(linkAnalytics)
+    // prefetch or pre connect o the iframes src
+    const linkManager = document.createElement('link')
+    linkManager.setAttribute('rel', 'prefetch')
+    linkManager.setAttribute('href', 'https://www.googletagmanager.com')
+    document.head.appendChild(linkManager)
     // @ts-ignore
     self.dataLayer = self.dataLayer || []
     // cookie domain error when only localhost in url bar (only for local debugging)
