@@ -69,7 +69,11 @@ export default class RecipeList extends Shadow() {
   }
 
   renderHTML (recipeList) {
-    if (!recipeList.length) return
+    if (Array.isArray(recipeList) && !recipeList.length) {
+      this.html = "" // clear previous loading element
+      this.html = `${this.getAttribute('no-recipe-found-translation') || 'Leider haben wir keine Rezepte zu diesem Suchbegriff gefunden.'}`
+      return
+    }
     let recipeListHeight = this.offsetHeight
     this.html = ''
     if (recipeList === 'loading') {
