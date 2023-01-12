@@ -12,9 +12,7 @@ export default class Pagination extends Shadow() {
     this.pagination = this.root.querySelector('div') || document.createElement('div')
 
     this.answerEventNameListener = event => {
-      this.hidden = true
       event.detail.fetch.then((data) => {
-        this.hidden = false
         let { total, limit, skip } = data
         const urlParams = new URLSearchParams(location.search)
         const pageParam = urlParams.get('page') || 1
@@ -39,7 +37,6 @@ export default class Pagination extends Shadow() {
   }
 
   connectedCallback () {
-    this.hidden = true
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
@@ -74,6 +71,7 @@ export default class Pagination extends Shadow() {
    */
   renderHTML (pages, limit, skip, compactMode) {
     this.html = ''
+    this.hidden = !pages // hide if there are no 'pages' available
     const pageItems = compactMode ? this.renderCompactHTML(skip, limit, pages) : this.renderAllPagesHTML(pages, skip, limit)
     const withRelAttributeOnLinks = this.setRel(pageItems)
 
@@ -207,7 +205,7 @@ export default class Pagination extends Shadow() {
 
   renderCSS () {
     this.css = /* css */ `
-    :host {
+    :host > div {
       background-color:var(--background-color, black);
       display: var(--display, block);
       height:var(--height, 100%);
