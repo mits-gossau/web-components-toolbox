@@ -7,6 +7,7 @@ import { Prototype } from '../Prototype.js'
 /**
  * Login https://react-components.migros.ch/?path=/story/msrc-login-03-widgets-login-button--button-large
  * Example at: alnatura Home.html
+ * // TODO: Switch flyout
  *
  * @export
  * @class Login
@@ -47,7 +48,13 @@ import { Prototype } from '../Prototype.js'
  *    redirectURI: string,
  *    scope: string,
  *    claims: { userinfo: { given_name: null, family_name: null, email: null } }
- *  }>} [setup="{}"] (not used!)
+ *  }>} [setup="{}"] 
+ *  
+ * 
+ * 
+ * // profile flyout settings
+ * // setting: https://react-components.migros.ch/?path=/docs/msrc-login-03-widgets-profile-flyout-widget--profile-flyout
+ * ...
  * }
  */
 export default class Login extends Prototype() {
@@ -120,6 +127,9 @@ export default class Login extends Prototype() {
       :host > div > button {
         max-width: 50vw;
       }
+      :host([profile-flyout]){
+        background-color:transparent;
+      }
       @media only screen and (max-width: _max-width_) {
         :host {
           gap: calc(var(--content-spacing-mobile, var(--content-spacing, 1em)) * 2);
@@ -139,7 +149,9 @@ export default class Login extends Prototype() {
       // Setup OIDC login configuration
       await msrc.utilities.login.setup(this.constructor.parseAttribute(this.getAttribute('setup') || '{}'))
       // Initialize the login button
-      await msrc.components.login.button(this.msrcLoginButtonWrapper, {
+      await msrc.components.login[this.hasAttribute('profile-flyout')
+        ? 'profileFlyout' 
+        : 'button'](this.msrcLoginButtonWrapper, {
         language: this.getAttribute('language') || self.Environment.language,
         theme: this.getAttribute('theme') || 'alnatura',
         size: this.getAttribute('size') || 'small',
