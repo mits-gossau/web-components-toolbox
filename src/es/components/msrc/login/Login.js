@@ -48,10 +48,10 @@ import { Prototype } from '../Prototype.js'
  *    redirectURI: string,
  *    scope: string,
  *    claims: { userinfo: { given_name: null, family_name: null, email: null } }
- *  }>} [setup="{}"] 
- *  
- * 
- * 
+ *  }>} [setup="{}"]
+ *
+ *
+ *
  * // profile flyout settings
  * // setting: https://react-components.migros.ch/?path=/docs/msrc-login-03-widgets-profile-flyout-widget--profile-flyout
  * ...
@@ -150,7 +150,7 @@ export default class Login extends Prototype() {
       await msrc.utilities.login.setup(this.constructor.parseAttribute(this.getAttribute('setup') || '{}'))
       // Initialize the login button
       await msrc.components.login[this.hasAttribute('profile-flyout')
-        ? 'profileFlyout' 
+        ? 'profileFlyout'
         : 'button'](this.msrcLoginButtonWrapper, {
         language: this.getAttribute('language') || self.Environment.language,
         theme: this.getAttribute('theme') || 'alnatura',
