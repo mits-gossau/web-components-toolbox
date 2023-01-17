@@ -6,8 +6,8 @@ import { Prototype } from '../Prototype.js'
 
 /**
  * Login https://react-components.migros.ch/?path=/story/msrc-login-03-widgets-login-button--button-large
+ * For Flyout Widget Version set 'profile-flyout' attribute https://react-components.migros.ch/?path=/docs/msrc-login-03-widgets-profile-flyout-widget--profile-flyout
  * Example at: alnatura Home.html
- * // TODO: Switch flyout
  *
  * @export
  * @class Login
@@ -50,11 +50,6 @@ import { Prototype } from '../Prototype.js'
  *    claims: { userinfo: { given_name: null, family_name: null, email: null } }
  *  }>} [setup="{}"]
  *
- *
- *
- * // profile flyout settings
- * // setting: https://react-components.migros.ch/?path=/docs/msrc-login-03-widgets-profile-flyout-widget--profile-flyout
- * ...
  * }
  */
 export default class Login extends Prototype() {
@@ -156,7 +151,8 @@ export default class Login extends Prototype() {
         theme: this.getAttribute('theme') || 'alnatura',
         size: this.getAttribute('size') || 'small',
         loginReturnTo: this.getAttribute('loginReturnTo') || '',
-        logoutReturnTo: this.getAttribute('logoutReturnTo') || ''
+        logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
+        headerHeight: { mobile: '26px' }
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       getStylesReturn[1].then(() => {
