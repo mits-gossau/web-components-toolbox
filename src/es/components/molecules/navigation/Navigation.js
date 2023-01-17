@@ -713,7 +713,7 @@ export default class Navigation extends Mutation() {
               } else if (a.getAttribute('href')) {
                 event.preventDefault()
                 // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
-                this.setAttribute('style', 'display: none;')
+                if (this.getMedia() !== 'desktop') this.setAttribute('style', 'display: none;')
                 setTimeout(() => this.removeAttribute('style'), 3000)
                 self.open(a.getAttribute('href'), a.getAttribute('target') || '_self')
               }
