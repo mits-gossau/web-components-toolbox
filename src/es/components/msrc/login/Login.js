@@ -104,7 +104,7 @@ export default class Login extends Prototype() {
     this.css = /* css */`
       :host {
         display: flex;
-        align-items: end;
+        align-items: center;
         justify-content: end;
         gap: calc(var(--content-spacing, 1em) * 2);
         margin: calc(var(--content-spacing, unset) / 2) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
@@ -134,6 +134,10 @@ export default class Login extends Prototype() {
         :host .font-size-tiny {
           font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
           line-height: var(--line-height-mobile, var(--line-height, normal));
+        }
+        :host button {
+          min-width: 3em;
+          min-height: 3em;
         }
       }
     `
