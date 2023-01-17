@@ -121,11 +121,12 @@ export default class RecipeList extends Shadow() {
                 </figure>
             </m-teaser>
             `
-        if (index % 3 === 0) {
+        const simulateChildren = this.getAttribute('simulate-children') || 3
+        if (index % simulateChildren === 0) {
           if (index === 0) {
-            row += `<o-wrapper namespace="wrapper-teaser-">${teaser}`
+            row += `<o-wrapper namespace="wrapper-teaser-" simulate-children="${simulateChildren}">${teaser}`
           } else {
-            row += `</o-wrapper><div class="spacer"></div><o-wrapper namespace="wrapper-teaser-">${teaser}`
+            row += `</o-wrapper><div class="spacer"></div><o-wrapper namespace="wrapper-teaser-" simulate-children="${simulateChildren}">${teaser}`
           }
         } else {
           row += teaser

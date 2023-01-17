@@ -197,7 +197,7 @@ export default class ProductList extends Intersection(Prototype()) {
 
   /**
    * Get detail from url else store
-   * @param {string} [name='detail]
+   * @param {string} [name='detail']
    * @return {productListEventDetail|null}
    */
   getFilter (name = 'detail') {

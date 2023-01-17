@@ -11,6 +11,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *
  * @export
  * @attribute {namespace} namespace
+ * @attribute {any-key-listener} listens to any change by key stroke with a 1s delay
+ * @attribute {change-listener} native change event listener listens on blur
+ * @attribute {delete-listener} listens click on this and figures native delete cross click
  * @type {CustomElementConstructor}
  */
 export default class Input extends Shadow() {
@@ -26,9 +29,16 @@ export default class Input extends Shadow() {
     this.setAttribute('aria-label', this.inputType)
     if (!this.children.length) this.labelText = this.textContent
 
-    this.clickListener = event => {
-      if (!this.inputField.value) return
+    this.lastValue = ''
+    this.clickListener = (event, retry = true) => {
+      if (this.lastValue === this.inputField.value) {
+        // when delete native icon is pushed the value is not updated when the event hits here
+        if (retry && event.composedPath()[0] === this.inputField) setTimeout(() => this.clickListener(event, false), 50)
+        return
+      }
+      this.lastValue = this.inputField.value
       if (this.getAttribute('search')) {
+        if (!this.inputField.value) return
         location.href = `${this.getAttribute('search')}${encodeURIComponent(this.inputField.value)}`
       } else {
         this.dispatchEvent(new CustomEvent(this.getAttribute('submit-search') || 'submit-search', {
@@ -42,8 +52,16 @@ export default class Input extends Shadow() {
         }))
       }
     }
+    this.changeListener = event => {
+      if (!this.hasAttribute('change-listener')) return
+      this.clickListener(event)
+    }
+    this.keydownTimeoutId = null
     this.keydownListener = event => {
-      if (event.keyCode === 13) return this.clickListener(event)
+      if (this.root.querySelector(':focus') !== this.inputField) return
+      if (!this.hasAttribute('any-key-listener') && event.keyCode !== 13) return
+      clearTimeout(this.keydownTimeoutId)
+      this.keydownTimeoutId = setTimeout(() => this.clickListener(event), event.keyCode === 13 ? 0 : 1000) // no timeout on enter
     }
   }
 
@@ -61,7 +79,12 @@ export default class Input extends Shadow() {
     if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
 
     if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
-      this.searchButton.addEventListener('click', this.clickListener)
+      if (this.hasAttribute('delete-listener')) {
+        this.addEventListener('click', this.clickListener)
+      } else {
+        this.searchButton.addEventListener('click', this.clickListener)
+      }
+      this.inputField.addEventListener('change', this.changeListener)
       document.addEventListener('keydown', this.keydownListener)
       if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
     }
@@ -69,7 +92,12 @@ export default class Input extends Shadow() {
 
   disconnectedCallback () {
     if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
-      this.searchButton.removeEventListener('click', this.clickListener)
+      if (this.hasAttribute('delete-listener')) {
+        this.removeEventListener('click', this.clickListener)
+      } else {
+        this.searchButton.removeEventListener('click', this.clickListener)
+      }
+      this.inputField.removeEventListener('change', this.changeListener)
       document.removeEventListener('keydown', this.keydownListener)
     }
   }
