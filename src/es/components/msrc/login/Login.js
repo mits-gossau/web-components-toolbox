@@ -136,8 +136,12 @@ export default class Login extends Prototype() {
           line-height: var(--line-height-mobile, var(--line-height, normal));
         }
         :host button {
-          min-width: 3em;
-          min-height: 3em;
+          min-width: 3em !important;
+          min-height: 3em !important;
+        }
+        :host nav {
+          position: fixed !important;
+          top: 0 !important;
         }
       }
     `
