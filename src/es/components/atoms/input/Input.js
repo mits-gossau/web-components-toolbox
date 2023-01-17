@@ -173,7 +173,7 @@ export default class Input extends Shadow() {
         padding: var(--search-input-padding, 0.75em var(--content-spacing));
         padding-right: max(2.5em, 35px);
         border-radius: var(--border-radius, 0.5em);
-        width: var(--search-input-width-big, var(--search-input-width, 11em));
+        width: var(--search-input-width-big, var(--search-input-width, 100%));
         min-width: 9.7em;
       }
 

@@ -9,19 +9,25 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
- * TODO
+ * Recipes are retrieved via the corresponding endpoint as set as an attribute
+ * As a controller, this component communicates exclusively through events
+ * Example: https://www.alnatura.ch/rezepte
+ *
  * @export
  * @class Recipe
  * @type {CustomElementConstructor}
  */
 export default class Recipe extends Shadow() {
+  // Recipe Filter Options/Categories
   RECIPE_CATEGORIES = {
     Drinks: false,
     Appetizers: false,
     MainDishes: false,
     DessertsAndBaking: false,
     DIY: false,
-    veg: false
+    Vegetarian: false,
+    Vegan: false,
+    GlutenFree: false
   }
 
   constructor (...args) {
@@ -64,7 +70,6 @@ export default class Recipe extends Shadow() {
         method: 'GET',
         signal: this.abortController.signal
       }
-
       let endpoint = this.getAttribute('endpoint')
       endpoint += `?limit=${variables.limit}&skip=${variables.skip}&${this.createRecipeSelectionPayload(recipeData)}${event.detail && event.detail.value ? `&searchTerm=${event.detail.value}` : ''}`
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
