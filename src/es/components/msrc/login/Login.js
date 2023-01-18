@@ -122,8 +122,9 @@ export default class Login extends Prototype() {
       :host > div > button {
         max-width: 50vw;
       }
-      :host([profile-flyout]){
-        background-color:transparent;
+      :host([profile-flyout]) button[aria-label="Profile"]{
+          min-width: 3em !important;
+          min-height: 3em !important;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -135,11 +136,7 @@ export default class Login extends Prototype() {
           font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
           line-height: var(--line-height-mobile, var(--line-height, normal));
         }
-        :host button {
-          min-width: 3em !important;
-          min-height: 3em !important;
-        }
-        :host nav {
+        :host([profile-flyout]) nav {
           position: fixed !important;
           top: 0 !important;
         }
