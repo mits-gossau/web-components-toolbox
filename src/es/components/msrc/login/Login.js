@@ -122,9 +122,8 @@ export default class Login extends Prototype() {
       :host > div > button {
         max-width: 50vw;
       }
-      :host([profile-flyout]) button[aria-label="Profile"]{
-          min-width: 3em !important;
-          min-height: 3em !important;
+      :host([profile-flyout]) {
+          max-height: 2.5em !important;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
