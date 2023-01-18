@@ -27,7 +27,8 @@ export default class Recipe extends Shadow() {
     DIY: false,
     Vegetarian: false,
     Vegan: false,
-    GlutenFree: false
+    GlutenFree: false,
+    LactoseFree: false
   }
 
   constructor (...args) {
