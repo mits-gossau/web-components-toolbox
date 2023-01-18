@@ -468,7 +468,7 @@ export default class Navigation extends Mutation() {
         }
         /* fix: mobile url address bar covers the footer part of the navigation */
         :host > nav {
-          height: calc(100% + 200px)
+          height: calc(100% + 300px)
         }
         :host > nav {
           background-color: var(--background-color, black);
@@ -857,7 +857,7 @@ export default class Navigation extends Mutation() {
   }
 
   openClose (open = true) {
-    // mobile has an extra height: calc(100% + 200px) url workaround, but scroll back when closed
+    // mobile has an extra height: calc(100% + 300px) url workaround, but scroll back when closed
     if (!open && this.getMedia() !== 'desktop') {
       this.scroll({
         top: 0,
