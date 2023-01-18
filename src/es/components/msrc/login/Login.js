@@ -135,10 +135,6 @@ export default class Login extends Prototype() {
           font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
           line-height: var(--line-height-mobile, var(--line-height, normal));
         }
-        :host([profile-flyout]) nav {
-          position: fixed !important;
-          top: 0 !important;
-        }
       }
     `
     this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
