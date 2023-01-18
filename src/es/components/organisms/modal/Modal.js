@@ -49,7 +49,7 @@ export default class Modal extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    //this.setAttribute('aria-label', 'Section')
+    // this.setAttribute('aria-label', 'Section')
     this.setAttribute('aria-expanded', 'false')
     this.open = false
     this.clone = null

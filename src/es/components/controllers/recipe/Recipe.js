@@ -67,12 +67,15 @@ export default class Recipe extends Shadow() {
         variables.skip = this.getCurrentPageSkip()
       }
 
+      // set search value from input field
+      this.setSearchTerm(event.detail)
+
       const fetchOptions = {
         method: 'GET',
         signal: this.abortController.signal
       }
       let endpoint = this.getAttribute('endpoint')
-      endpoint += `?limit=${variables.limit}&skip=${variables.skip}&${this.createRecipeSelectionPayload(recipeData)}${event.detail && event.detail.value ? `&searchTerm=${event.detail.value}` : ''}`
+      endpoint += `?limit=${variables.limit}&skip=${variables.skip}&${this.createRecipeSelectionPayload(recipeData)}&searchTerm=${this.getSearchTerm()}`
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-recipe') || 'list-recipe', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {
@@ -124,6 +127,20 @@ export default class Recipe extends Shadow() {
 
   setRecipeSelection (recipeSelection) {
     sessionStorage.setItem('recipes', JSON.stringify(recipeSelection))
+  }
+
+  setSearchTerm (eventDetail, pushHistory = true) {
+    if (eventDetail && eventDetail.key === 'inputSearch') {
+      const searchTerm = eventDetail.value
+      const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+      url.searchParams.set('search-term', searchTerm)
+      if (pushHistory) history.pushState({ ...history.state, searchTerm }, document.title, url.href)
+    }
+  }
+
+  getSearchTerm () {
+    const urlParams = new URLSearchParams(location.search)
+    return urlParams.get('search-term') || ''
   }
 
   /**

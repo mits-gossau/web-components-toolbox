@@ -22,7 +22,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
   constructor (...args) {
     super(...args)
 
-    //this.setAttribute('aria-label', 'Section')
+    // this.setAttribute('aria-label', 'Section')
     this.clickListener = event => {
       if (this.hasAttribute('href')) self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
     }
