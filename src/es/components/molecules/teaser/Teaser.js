@@ -163,7 +163,7 @@ export default class Teaser extends Intersection() {
         opacity: var(--figcaption-any-opacity, 1);
       }
       :host(.intersecting) figure figcaption > * {
-        transition: var(--intersecting-figcaption-any-transition, var(--figcaption-any-transition, color 0.3s ease-out));
+        transition: var(--intersecting-figcaption-any-transition, var(--figcaption-any-transition, color 0.3s ease-out, background-color 0.3s ease-out, box-shadow 0.3s ease-out));
         transform: var(--intersecting-figcaption-any-transform, var(--figcaption-any-transform, none));
         opacity: var(--intersecting-figcaption-any-opacity, var(--figcaption-any-opacity, 1));
       }

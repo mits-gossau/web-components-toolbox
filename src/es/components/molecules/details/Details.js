@@ -377,13 +377,21 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
         padding: var(--summary-child-padding, 0);
         color:var(--summary-child-color, var(--color, unset));
       }
+      :host details summary > div > *.dropdown-icon {
+        margin: var(--summary-dropdown-icon-margin, var(--summary-child-margin, 0));
+        padding: var(--summary-dropdown-icon-padding, var(--summary-child-padding, 0));
+      }
+      :host details[open] summary > div > * {
+        margin: var(--summary-child-margin-open, var(--summary-child-margin, 0));
+        padding: var(--summary-child-padding-open, var(--summary-child-padding, 0));
+      }
+      :host details[open] summary > div > *.dropdown-icon {
+        margin: var(--summary-dropdown-icon-margin-open, var(--summary-dropdown-icon-margin, var(--summary-child-margin-open, var(--summary-child-margin, 0))));
+        padding: var(--summary-dropdown-icon-padding-open, var(--summary-dropdown-icon-padding, var(--summary-child-padding-open, var(--summary-child-padding, 0))));
+      }
       :host details summary > div:hover > *, :host details summary > div:active > *, :host details summary > div:focus > * {
         --svg-color: var(--summary-child-color-hover, var(--color-hover, var(--summary-child-color, var(--color, unset))));
         color: var(--summary-child-color-hover, var(--color-hover, var(--summary-child-color, var(--color, unset))));
-      }
-      :host details[open] summary > div > * {
-        margin: var(--summary-child-margin-open, 0);
-        padding: var(--summary-child-padding-open, 0);
       }
       :host details summary ~ * {
         margin: var(--child-margin, 0);
@@ -439,9 +447,21 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends
           margin: var(--child-margin-mobile, var(--child-margin, 0));
           padding: var(--child-padding-mobile, var(--child-padding, 0));
         }
+        :host details summary > div > * {
+          margin: var(--summary-child-margin-mobile, var(--summary-child-margin, 0));
+          padding: var(--summary-child-padding-mobile, var(--summary-child-padding, 0));
+        }
+        :host details summary > div > *.dropdown-icon {
+          margin: var(--summary-dropdown-icon-margin-mobile, var(--summary-child-margin-mobile, var(--summary-dropdown-icon-margin, var(--summary-child-margin, 0))));
+          padding: var(--summary-dropdown-icon-padding-mobile, var(--summary-child-padding-mobile, var(--summary-dropdown-icon-padding, var(--summary-child-padding, 0))));
+        }
         :host details[open] summary > div > * {
-          margin: var(--summary-child-margin-open-mobile, var(--summary-child-margin-open, 0));
-          padding: var(--summary-child-padding-open-mobile, var(--summary-child-padding-open, 0));
+          margin: var(--summary-child-margin-open-mobile, var(--summary-child-margin-mobile, var(--summary-child-margin-open, var(--summary-child-margin, 0))));
+          padding: var(--summary-child-padding-open-mobile, var(--summary-child-padding-mobile, var(--summary-child-padding-open, var(--summary-child-padding, 0))));
+        }
+        :host details[open] summary > div > *.dropdown-icon {
+          margin: var(--summary-dropdown-icon-margin-open-mobile, var(--summary-dropdown-icon-margin-mobile, var(--summary-child-margin-open-mobile, var(--summary-child-margin-mobile, var(--summary-dropdown-icon-margin-open, var(--summary-dropdown-icon-margin, var(--summary-child-margin-open, var(--summary-child-margin, 0))))))));
+          padding: var(--summary-dropdown-icon-padding-open-mobile, var(--summary-dropdown-icon-padding-mobile, var(--summary-child-padding-open-mobile, var(--summary-child-padding-mobile, var(--summary-dropdown-icon-padding-open, var(--summary-dropdown-icon-padding, var(--summary-child-padding-open, var(--summary-child-padding, 0))))))));
         }
         summary ~ * > *:not(style):not(script) {
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */

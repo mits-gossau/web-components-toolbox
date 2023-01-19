@@ -22,7 +22,7 @@
   --navigation-default-margin: 0;
   --navigation-default-padding: 0;
   --navigation-default-search-li-padding-mobile: 0;
-  --navigation-default-search-li-padding: calc(0.25rem + 2px) 0 0.25rem var(--content-spacing-mobile);
+  --navigation-default-search-li-padding: var(--navigation-default-search-li-padding-custom, calc(0.25rem + 2px) 0 0.25rem var(--content-spacing-mobile));
   --navigation-default-transition: all 0.2s ease-out, color 0.3s ease-out;
   --navigation-default-white-space: normal;
   --navigation-default-word-break: break-word;

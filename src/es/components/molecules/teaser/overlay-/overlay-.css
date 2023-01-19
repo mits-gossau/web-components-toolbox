@@ -38,5 +38,5 @@
   z-index: 1;
 }
 :host figure figcaption *.bg-color {
-  padding-top: 0;
+  padding-top: var(--teaser-overlay-bg-padding-top-custom, 0);
 }

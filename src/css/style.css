@@ -9,13 +9,13 @@
   display: var(--h1-display, var(--h-display, block));
   font-size: var(--h1-font-size, 1.75em);
   line-height: var(--h1-line-height, 1.286em);
-  font-family: var(--h1-font-family, var(--font-family-bold, var(--font-family, inherit)));
+  font-family: var(--h1-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h1-font-weight, var(--h-font-weight, normal));
-  text-align: var(--h1-text-align, start);
-  word-break: var(--h1-word-break, normal);
-  text-transform: var(--h1-text-transform, none);
+  text-align: var(--h1-text-align, var(--h-text-align, start));
+  word-break: var(--h1-word-break, var(--h-word-break, normal));
+  text-transform: var(--h1-text-transform, var(--h-text-transform, none));
   margin: var(--h1-margin, 0 auto 1.143em);
-  padding: var(--h1-padding, unset);
+  padding: var(--h1-padding, var(--h-padding, unset));
 }
 :host h1.font-family-secondary {
   font-family: var(--h1-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
@@ -28,13 +28,13 @@
   display: var(--h2-display, var(--h-display, block));
   font-size: var(--h2-font-size, 1.5em);
   line-height: var(--h2-line-height, 1.334em);
-  font-family: var(--h2-font-family, var(--font-family-bold, var(--font-family, inherit)));
+  font-family: var(--h2-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h2-font-weight, var(--h-font-weight, normal));
-  text-align: var(--h2-text-align, start);
-  word-break: var(--h2-word-break, normal);
-  text-transform: var(--h2-text-transform, none);
+  text-align: var(--h2-text-align, var(--h-text-align, start));
+  word-break: var(--h2-word-break, var(--h-word-break, normal));
+  text-transform: var(--h2-text-transform, var(--h-text-transform, none));
   margin: var(--h2-margin, 0 auto 1.143em);
-  padding: var(--h2-padding, unset);
+  padding: var(--h2-padding, var(--h-padding, unset));
 }
 :host h2.font-family-secondary {
   font-family: var(--h2-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
@@ -47,13 +47,13 @@
   display: var(--h3-display, var(--h-display, block));
   font-size: var(--h3-font-size, 1.25em);
   line-height: var(--h3-line-height, 1.4em);
-  font-family: var(--h3-font-family, var(--font-family-bold, var(--font-family, inherit)));
+  font-family: var(--h3-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h3-font-weight, var(--h-font-weight, normal));
-  text-align: var(--h3-text-align, start);
-  word-break: var(--h3-word-break, normal);
-  text-transform: var(--h3-text-transform, none);
+  text-align: var(--h3-text-align, var(--h-text-align, start));
+  word-break: var(--h3-word-break, var(--h-word-break, normal));
+  text-transform: var(--h3-text-transform, var(--h-text-transform, none));
   margin: var(--h3-margin, 0 auto 1.143em);
-  padding: var(--h3-padding, unset);
+  padding: var(--h3-padding, var(--h-padding, unset));
 }
 :host h3.font-family-secondary {
   font-family: var(--h3-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
@@ -66,13 +66,13 @@
   display: var(--h4-display, var(--h-display, block));
   font-size: var(--h4-font-size, 1.125em);
   line-height: var(--h4-line-height, 1.334em);
-  font-family: var(--h4-font-family, var(--font-family-bold, var(--font-family, inherit)));
+  font-family: var(--h4-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h4-font-weight, var(--h-font-weight, normal));
-  text-align: var(--h4-text-align, start);
-  word-break: var(--h4-word-break, normal);
-  text-transform: var(--h4-text-transform, none);
+  text-align: var(--h4-text-align, var(--h-text-align, start));
+  word-break: var(--h4-word-break, var(--h-word-break, normal));
+  text-transform: var(--h4-text-transform, var(--h-text-transform, none));
   margin: var(--h4-margin, 0 auto 1.143em);
-  padding: var(--h4-padding, unset);
+  padding: var(--h4-padding, var(--h-padding, unset));
 }
 :host h4.font-family-secondary {
   font-family: var(--h4-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
@@ -85,13 +85,13 @@
   display: var(--h5-display, var(--h-display, block));
   font-size: var(--h5-font-size, 1em);
   line-height: var(--h5-line-height, 1.334em);
-  font-family: var(--h5-font-family, var(--font-family-bold, var(--font-family, inherit)));
+  font-family: var(--h5-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h5-font-weight, var(--h-font-weight, normal));
-  text-align: var(--h5-text-align, start);
-  word-break: var(--h5-word-break, normal);
-  text-transform: var(--h5-text-transform, none);
+  text-align: var(--h5-text-align, var(--h-text-align, start));
+  word-break: var(--h5-word-break, var(--h-word-break, normal));
+  text-transform: var(--h5-text-transform, var(--h-text-transform, none));
   margin: var(--h5-margin, 0 auto 1.143em);
-  padding: var(--h5-padding, unset);
+  padding: var(--h5-padding, var(--h-padding, unset));
 }
 :host h5.font-family-secondary {
   font-family: var(--h5-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit))));
@@ -104,13 +104,13 @@
   display: var(--h6-display, var(--h1-display, var(--h-display, block)));
   font-size: var(--h6-font-size, var(--h1-font-size, 1.75em));
   line-height: var(--h6-line-height, var(--h1-line-height, 1.286em));
-  font-family: var(--h6-font-family, var(--h1-font-family, var(--font-family-bold, var(--font-family, inherit))));
+  font-family: var(--h6-font-family, var(--h1-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit)))));
   font-weight: var(--h6-font-weight, var(--h1-font-weight, var(--h-font-weight, normal)));
-  text-align: var(--h6-text-align, var(--h1-text-align, start));
-  word-break: var(--h6-word-break, var(--h1-word-break, normal));
-  text-transform: var(--h6-text-transform, var(--h1-text-transform, none));
+  text-align: var(--h6-text-align, var(--h1-text-align, var(--h-text-align, start)));
+  word-break: var(--h6-word-break, var(--h1-word-break, var(--h-word-break, normal)));
+  text-transform: var(--h6-text-transform, var(--h1-text-transform, var(--h-text-transform, none)));
   margin: var(--h6-margin, var(--h1-margin, 0 auto 1.143em));
-  padding: var(--h6-padding, var(--h1-padding, unset));
+  padding: var(--h6-padding, var(--h1-padding, var(--h-padding, unset)));
 }
 :host h6.font-family-secondary {
   font-family: var(--h6-font-family-secondary, var(--h1-font-family-secondary, var(--font-family-secondary, var(--font-family-bold, var(--font-family, inherit)))));
@@ -525,43 +525,43 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   :host h1 {
     font-size: var(--h1-font-size-mobile, var(--h1-font-size, 1.75em));
     line-height: var(--h1-line-height-mobile, var(--h1-line-height, 1.286em));
-    word-break: var(--h1-word-break-mobile, var(--h1-word-break, normal));
-    text-transform: var(--h1-text-transform-mobile, var(--h1-text-transform, none));
+    word-break: var(--h1-word-break-mobile, var(--h1-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
+    text-transform: var(--h1-text-transform-mobile, var(--h1-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h1-margin-mobile, var(--h1-margin, 0 auto 1.143em));
   }
   :host h2 {
     font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5em));
     line-height: var(--h2-line-height-mobile, var(--h2-line-height, 1.334em));
-    word-break: var(--h2-word-break-mobile, var(--h2-word-break, normal));
-    text-transform: var(--h2-text-transform-mobile, var(--h2-text-transform, none));
+    word-break: var(--h2-word-break-mobile, var(--h2-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
+    text-transform: var(--h2-text-transform-mobile, var(--h2-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h2-margin-mobile, var(--h2-margin, 0 auto 1.143em));
   }
   :host h3 {
     font-size: var(--h3-font-size-mobile, var(--h3-font-size, 1.25em));
     line-height: var(--h3-line-height-mobile, var(--h3-line-height, 1.4em));
-    word-break: var(--h3-word-break-mobile, var(--h3-word-break, normal));
-    text-transform: var(--h3-text-transform-mobile, var(--h3-text-transform, none));
+    word-break: var(--h3-word-break-mobile, var(--h3-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
+    text-transform: var(--h3-text-transform-mobile, var(--h3-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h3-margin-mobile, var(--h3-margin, 0 auto 1.143em));
   }
   :host h4 {
     font-size: var(--h4-font-size-mobile, var(--h4-font-size, 1.125em));
     line-height: var(--h4-line-height-mobile, var(--h4-line-height, 1.334em));
-    word-break: var(--h4-word-break-mobile, var(--h4-word-break, normal));
-    text-transform: var(--h4-text-transform-mobile, var(--h4-text-transform, none));
+    word-break: var(--h4-word-break-mobile, var(--h4-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
+    text-transform: var(--h4-text-transform-mobile, var(--h4-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h4-margin-mobile, var(--h4-margin, 0 auto 1.143em));
   }
   :host h5 {
     font-size: var(--h5-font-size-mobile, var(--h5-font-size, 1em));
     line-height: var(--h5-line-height-mobile, var(--h5-line-height, 1.334em));
-    word-break: var(--h5-word-break-mobile, var(--h5-word-break, normal));
-    text-transform: var(--h5-text-transform-mobile, var(--h5-text-transform, none));
+    word-break: var(--h5-word-break-mobile, var(--h5-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
+    text-transform: var(--h5-text-transform-mobile, var(--h5-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto 1.143em));
   }
   :host h6 {
     font-size: var(--h6-font-size-mobile, var(--h6-font-size, var(--h1-font-size-mobile, var(--h1-font-size, 1.75em))));
     line-height: var(--h6-line-height-mobile, var(--h6-line-height, var(--h1-line-height-mobile, var(--h1-line-height, 1.286em))));
-    word-break: var(--h6-word-break-mobile, var(--h6-word-break, var(--h1-word-break-mobile, var(--h1-word-break, normal))));
-    text-transform: var(--h6-text-transform-mobile, var(--h6-text-transform, var(--h1-text-transform-mobile, var(--h1-text-transform, none))));
+    word-break: var(--h6-word-break-mobile, var(--h6-word-break, var(--h1-word-break-mobile, var(--h1-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))))));
+    text-transform: var(--h6-text-transform-mobile, var(--h6-text-transform, var(--h1-text-transform-mobile, var(--h1-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))))));
     margin: var(--h6-margin-mobile, var(--h6-margin, var(--h1-margin-mobile, var(--h1-margin, 0 auto 1.143em))));
   }
   /* text stylings */
