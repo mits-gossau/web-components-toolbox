@@ -326,7 +326,6 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
     this.html = [this.section, this.style]
-    if (this.getAttribute('namespace') === 'nature-') console.log('render html');
     return Promise.resolve()
   }
 
