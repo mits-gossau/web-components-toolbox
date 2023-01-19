@@ -52,7 +52,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
  */
 
 // @ts-ignore
-export const Details = (ChosenHTMLElement = Mutation()) => class Wrapper extends ChosenHTMLElement {
+export const Details = (ChosenHTMLElement = Mutation()) => class Details extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['open'] }, importMetaUrl: import.meta.url }), ...args)
 

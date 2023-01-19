@@ -31,14 +31,19 @@ export default class BodyStyle extends Intersection(Body) {
     // render css on intersection because this component is often used for backgrounds including css backgrounds with images. those can by default not be loaded lazy nor support sources, thats why we load them on intersection
     if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
       if (this.intersectionShouldComponentRenderCSS()) {
-        this.renderCSS()
+        if (this.hasAttribute('only-render-attribute-to-css')) {
+          this.renderAttributesToCSS()
+          this.importStyles()
+        } else {
+          this.renderCSS()
+        }
         this.intersectionObserveStop()
       }
     }
   }
 
   /**
-   * evaluates if a render is necessary
+   * block the parent Body.js to renderCSS
    *
    * @return {boolean}
    */
@@ -74,6 +79,32 @@ export default class BodyStyle extends Intersection(Body) {
     const bodyCss = this.css.replace(/\s>\smain/g, '')
     this.css = ''
     this._css.textContent = bodyCss
+    this.renderAttributesToCSS()
+    this.css = /* css */`
+      :host {
+        display: inline-block !important;
+        width: 100% !important;
+        margin: 0 !important;
+      }
+    `
+    // BodyStyle has to be 100% (minus content spacing) when it is not within o-body nor o-body-style
+    // in case it is within  o-body or o-body-style, it's children have the inherit o-body :host > * (any direct child) width styling, desktop width (:host > main > * { width: var(--content-width, 55%);) since itself has 100% by line 54 (width: 100% !important;)
+    // !DON'T stack two o-body-style in each other, except directly within main
+    if ((this.parentNode.tagName !== 'MAIN' && (this.parentNode.tagName || (this.parentNode.host && this.parentNode.host.tagName)) !== 'O-BODY-STYLE') && (!self.getComputedStyle(this).getPropertyValue('--content-width') || !self.getComputedStyle(this).getPropertyValue('--content-width-mobile'))) {
+      this.css = /* css */`
+        :host > * {
+          width: var(--content-width, calc(100% - var(--content-spacing) * 2));
+        }
+        @media only screen and (max-width: _max-width_) {
+          :host > * {
+            width: var(--content-width-mobile, var(--content-width, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)));
+          }
+        }
+      `
+    }
+  }
+
+  renderAttributesToCSS () {
     const attributesMobile = []
     const cssSyntax = (attribute, isMobile = false) => {
       const attributeName = isMobile ? attribute.name.replace('-mobile', '') : attribute.name
@@ -94,9 +125,6 @@ export default class BodyStyle extends Intersection(Body) {
           }
           return `${acc}${cssSyntax(attribute)}`
         }, '')}
-        display: inline-block !important;
-        width: 100% !important;
-        margin: 0 !important;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -104,20 +132,5 @@ export default class BodyStyle extends Intersection(Body) {
         }
       }
     `
-    // BodyStyle has to be 100% (minus content spacing) when it is not within o-body nor o-body-style
-    // in case it is within  o-body or o-body-style, it's children have the inherit o-body :host > * (any direct child) width styling, desktop width (:host > main > * { width: var(--content-width, 55%);) since itself has 100% by line 54 (width: 100% !important;)
-    // !DON'T stack two o-body-style in each other, except directly within main
-    if ((this.parentNode.tagName !== 'MAIN' && (this.parentNode.tagName || (this.parentNode.host && this.parentNode.host.tagName)) !== 'O-BODY-STYLE') && (!self.getComputedStyle(this).getPropertyValue('--content-width') || !self.getComputedStyle(this).getPropertyValue('--content-width-mobile'))) {
-      this.css = /* css */`
-        :host > * {
-          width: var(--content-width, calc(100% - var(--content-spacing) * 2));
-        }
-        @media only screen and (max-width: _max-width_) {
-          :host > * {
-            width: var(--content-width-mobile, var(--content-width, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)));
-          }
-        }
-      `
-    }
   }
 }

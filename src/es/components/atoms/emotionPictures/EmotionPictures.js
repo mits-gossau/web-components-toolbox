@@ -129,7 +129,7 @@ export default class EmotionPictures extends Intersection() {
       }
       :host > div, :host > a {
         position: relative;
-        width: var(--width, 100%);
+        width: var(--a-width, 100%);
       }
       :host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video) {
         position: absolute;
@@ -161,6 +161,9 @@ export default class EmotionPictures extends Intersection() {
         top: 0;
       }
       @media only screen and (max-width: _max-width_) {
+        :host {
+          width: var(--width-mobile, var(--width, 100%)) !important;
+        }
         :host > div h2.font-size-big, :host > a h2.font-size-big {
           font-size: var(--h2-font-size-mobile);
         }

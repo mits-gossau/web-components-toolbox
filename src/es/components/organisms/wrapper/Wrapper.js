@@ -39,7 +39,6 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
   }
 
   connectedCallback () {
-    super.connectedCallback()
     this.hidden = true
     const showPromises = []
     if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
@@ -49,12 +48,13 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
     })
     this.addEventListener('click', this.clickListener)
     self.addEventListener('resize', this.resizeListener)
+    super.connectedCallback() // extend body and call it to get the scroll behavior
   }
 
   disconnectedCallback () {
-    super.disconnectedCallback()
     this.removeEventListener('click', this.clickListener)
     self.removeEventListener('resize', this.resizeListener)
+    super.disconnectedCallback() // extend body and call it to get the scroll behavior
   }
 
   /**
@@ -153,6 +153,23 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           ? /* css */`
             :host > section > *:not(a-picture):not(picture):not(img) {
               order: -1;
+            }
+          `
+          : ''
+        }
+        ${this.hasAttribute('overlay-mobile')
+          ? /* css */`
+            :host > section {
+              display: grid;
+            }
+            :host > section > * {
+              display: block;
+              grid-column: 1;
+              grid-row: 1;
+            }
+            :host > section > *:not([style]):last-child {
+              margin: var(--content-spacing-mobile, var(--content-spacing, 2em)) auto !important;
+              width: calc(100% - var(--content-spacing-mobile, var(--content-spacing, 2em)) * 2) !important;
             }
           `
           : ''
@@ -309,6 +326,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
     this.html = [this.section, this.style]
+    if (this.getAttribute('namespace') === 'nature-') console.log('render html');
     return Promise.resolve()
   }
 
