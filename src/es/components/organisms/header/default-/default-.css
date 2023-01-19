@@ -43,8 +43,8 @@
   --header-default-m-navigation-height-open-mobile: var(--header-default-m-navigation-height-mobile);
   --header-default-m-navigation-top-mobile: var(--header-default-height-mobile);
   --header-default-m-navigation-transition: none;
-  --header-default-margin-mobile: var(--content-spacing-mobile) auto;
-  --header-default-margin: var(--content-spacing) auto;
+  --header-default-margin-mobile: var(--header-default-margin-mobile-custom, var(--content-spacing-mobile) auto);
+  --header-default-margin: var(--header-default-margin-custom, var(--content-spacing) auto);
   --header-default-order: 0;
   --header-default-position-open-mobile: fixed;
   --header-default-position: static;
