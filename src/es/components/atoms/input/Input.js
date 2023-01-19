@@ -52,16 +52,28 @@ export default class Input extends Shadow() {
         }))
       }
     }
-    this.changeListener = event => {
-      if (!this.hasAttribute('change-listener')) return
-      this.clickListener(event)
-    }
+    this.changeListener = event => this.clickListener(event)
     this.keydownTimeoutId = null
     this.keydownListener = event => {
       if (this.root.querySelector(':focus') !== this.inputField) return
       if (!this.hasAttribute('any-key-listener') && event.keyCode !== 13) return
       clearTimeout(this.keydownTimeoutId)
       this.keydownTimeoutId = setTimeout(() => this.clickListener(event), event.keyCode === 13 ? 0 : 1000) // no timeout on enter
+    }
+    this.answerEventListener = async event => {
+      let searchTerm = event.detail.searchTerm
+
+      if (this.getAttribute('active-detail-property-name')) {
+        searchTerm = await this.getAttribute('active-detail-property-name').split(':').reduce(async (accumulator, propertyName) => {
+          propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
+          if (accumulator instanceof Promise) accumulator = await accumulator
+          return accumulator[propertyName]
+        }, event.detail)
+      }
+      if (searchTerm) {
+        this.inputField.value = searchTerm
+        this.lastValue = this.inputField.value
+      }
     }
   }
 
@@ -84,9 +96,10 @@ export default class Input extends Shadow() {
       } else {
         this.searchButton.addEventListener('click', this.clickListener)
       }
-      this.inputField.addEventListener('change', this.changeListener)
+      if (this.hasAttribute('change-listener')) this.inputField.addEventListener('change', this.changeListener)
       document.addEventListener('keydown', this.keydownListener)
       if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
+      if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     }
   }
 
@@ -97,8 +110,9 @@ export default class Input extends Shadow() {
       } else {
         this.searchButton.removeEventListener('click', this.clickListener)
       }
-      this.inputField.removeEventListener('change', this.changeListener)
+      if (this.hasAttribute('change-listener')) this.inputField.removeEventListener('change', this.changeListener)
       document.removeEventListener('keydown', this.keydownListener)
+      if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     }
   }
 

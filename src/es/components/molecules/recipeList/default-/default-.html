@@ -1,5 +1,16 @@
 
-<a-input inputid="inputSearch" placeholder="Suchen..." submit-search="request-list-recipe" search="" type=search any-key-listener change-listener delete-listener></a-input>
+<a-input
+    inputid="inputSearch"
+    placeholder="Suchen..."
+    submit-search="request-list-recipe"
+    search=""
+    type=search
+    any-key-listener
+    change-listener
+    delete-listener
+    answer-event-name="list-recipe"
+    active-detail-property-name="fetch:searchTerm"
+></a-input>
 <o-grid namespace="grid-2colums2rows-" first-container-vertical first-column-with="20%">
     <section>
         <m-tag-filter namespace="tag-filter-vertical-">

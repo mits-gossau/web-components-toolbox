@@ -18,23 +18,24 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Recipe extends Shadow() {
-  // Recipe Filter Options/Categories
-  RECIPE_CATEGORIES = {
-    Drinks: false,
-    Appetizers: false,
-    MainDishes: false,
-    DessertsAndBaking: false,
-    DIY: false,
-    Vegetarian: false,
-    Vegan: false,
-    GlutenFree: false,
-    LactoseFree: false
-  }
-
   constructor (...args) {
     super({ mode: 'false' }, ...args)
     this.abortController = null
+
+    // Recipe Filter Options/Categories
+    this.RECIPE_CATEGORIES = Recipe.parseAttribute(this.getAttribute('recipe_categories')) || {
+      Drinks: false,
+      Appetizers: false,
+      MainDishes: false,
+      DessertsAndBaking: false,
+      DIY: false,
+      Vegetarian: false,
+      Vegan: false,
+      GlutenFree: false,
+      LactoseFree: false
+    }
     const limit = this.getAttribute('limit')
+
 
     this.requestListRecipeListener = async event => {
       if (this.abortController) this.abortController.abort()
@@ -82,6 +83,7 @@ export default class Recipe extends Shadow() {
             if (response.status >= 200 && response.status <= 299) {
               const data = await response.json()
               return {
+                searchTerm: this.getSearchTerm(),
                 items: data.data.recipes.results,
                 limit: data.data.recipes.limit,
                 skip: data.data.recipes.skip,
