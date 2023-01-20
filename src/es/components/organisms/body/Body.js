@@ -192,8 +192,26 @@ export default class Body extends Shadow() {
     this.main = this.root.querySelector(this.cssSelector + ' > main') || document.createElement('main')
     Array.from(this.root.children).forEach(node => {
       if (node === this.main || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
+      
+      // find nodes to open their child links in new window
+      const links = Array.from(node.querySelectorAll('[child-href-target-blank]'))
+      if (links.length) this.setLinkTarget(links)
+      
       this.main.appendChild(node)
     })
     this.html = this.main
+  }
+
+  /**
+   * Find every href element in node list and set target value to _blank
+   *
+   * @param {Array} nodeList
+   */
+  setLinkTarget (nodeList) {
+    nodeList.forEach(node => {
+      node.querySelectorAll('a').forEach((href) => {
+        href.setAttribute('target', '_blank')
+      })
+    })
   }
 }
