@@ -176,6 +176,7 @@ export default class Logo extends Shadow() {
           max-height: var(--max-height-mobile, var(--max-height, none));
           width: var(--width-mobile, auto);
           max-width: var(--max-width-mobile, var(--max-width, 80vw));
+          margin: var(--img-margin-mobile, var(--img-margin, 0));
         }
         :host > ${this.textSelector}{
           box-sizing: var(--text-box-sizing-mobile, border-box);

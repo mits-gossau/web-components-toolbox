@@ -31,7 +31,7 @@
   --header-default-border-bottom: var(--header-default-border-bottom-custom, none);
   --header-default-box-sizing-open-mobile: border-box;
   --header-default-content-width-mobile: 100%;
-  --header-default-flex-wrap: wrap;
+  --header-default-flex-wrap: var(--header-default-flex-wrap-custom, wrap);
   --header-default-height-mobile: 5rem;
   --header-default-height: auto;
   --header-default-justify-content-mobile: space-between;
