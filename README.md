@@ -25,6 +25,8 @@ CSS Rules:
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css
 
+## Mater Branch locked 🙌
+
 TODO:
 - [ ] redo header and navigation /\drem/, then eliminate all rem values
 - [ ] Template.html api call to fetch page content for previews
