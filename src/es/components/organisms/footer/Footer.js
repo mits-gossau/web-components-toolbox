@@ -81,11 +81,11 @@ export default class Footer extends Shadow() {
         grid-area: footer;
       }
       :host > footer {
-        margin: var(--margin, 0);
-        width: var(--width, auto);
+        margin: var(--footer-margin, 0);
+        width: var(--footer-width, auto);
       }
       :host > footer > *, :host > footer .invert > * {
-        padding: var(--padding, 0);
+        padding: var(--footer-any-padding, 0);
         margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--content-width, 55%);
       }
@@ -158,11 +158,11 @@ export default class Footer extends Shadow() {
       }
       @media only screen and (max-width: _max-width_) {
         :host > footer {
-          margin: var(--margin-mobile, var(--margin, 0));
-          width: var(--width-mobile, var(--width, auto));
+          margin: var(--footer-margin-mobile, var(--footer-margin, 0));
+          width: var(--footer-width-mobile, var(--footer-width, auto));
         }
         :host > footer > *, :host > footer .invert > * {
-          padding: var(--padding-mobile, var(--padding, 0));
+          padding: var(--footer-any-padding-mobile, var(--footer-any-padding, 0));
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto var(--content-spacing-mobile, var(--content-spacing, unset)); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
         }
@@ -436,6 +436,9 @@ export default class Footer extends Shadow() {
         display: flex;
         flex-direction: row;
         gap: 1.875rem;
+      }
+      :host .footer-links-row {
+        --details-default-icon-right-child-margin-mobile: var(--footer-links-row-margin, var(--details-default-icon-right-child-margin-mobile, var(--details-default-icon-right-child-margin, 0)));
       }
       :host .footer-links-row ul, :host .footer-links-row ul.bull {
         list-style: none;
