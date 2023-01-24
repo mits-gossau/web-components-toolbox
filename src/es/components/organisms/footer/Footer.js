@@ -80,7 +80,12 @@ export default class Footer extends Shadow() {
       :host {
         grid-area: footer;
       }
+      :host > footer {
+        margin: var(--margin, 0);
+        width: var(--width, auto);
+      }
       :host > footer > *, :host > footer .invert > * {
+        padding: var(--padding, 0);
         margin: var(--content-spacing, unset) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--content-width, 55%);
       }
@@ -152,7 +157,12 @@ export default class Footer extends Shadow() {
         justify-content: right;
       }
       @media only screen and (max-width: _max-width_) {
+        :host > footer {
+          margin: var(--margin-mobile, var(--margin, 0));
+          width: var(--width-mobile, var(--width, auto));
+        }
         :host > footer > *, :host > footer .invert > * {
+          padding: var(--padding-mobile, var(--padding, 0));
           margin: var(--content-spacing-mobile, var(--content-spacing, unset)) auto var(--content-spacing-mobile, var(--content-spacing, unset)); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
         }
