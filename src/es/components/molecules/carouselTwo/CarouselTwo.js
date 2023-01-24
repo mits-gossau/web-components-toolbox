@@ -552,6 +552,7 @@ export default class CarouselTwo extends Shadow() {
         for (let i = 0; i < 2; i++) {
           const a = document.createElement('a')
           a.setAttribute('href', i === 0 ? '#previous' : '#next')
+          a.setAttribute('aria-label', i === 0 ? 'previous slide' : 'next slide')
           const arrow = new children[0][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
           arrow.setAttribute('direction', i === 0 ? 'left' : 'right')
           a.appendChild(arrow)
@@ -564,6 +565,7 @@ export default class CarouselTwo extends Shadow() {
         // make sure the ids match between section and navigation nodes
         const id = `${this.id}-${i}`
         node.setAttribute('id', id)
+        node.setAttribute('aria-label', `slide ${i + 1}`)
         node.setAttribute('aria-hidden', 'true')
         // set the id on the nav child
         if (this.nav.children[i]) {
@@ -579,6 +581,7 @@ export default class CarouselTwo extends Shadow() {
             navNode.appendChild(navNodeChild)
           }
           navNode.setAttribute('href', `#${id}`)
+          navNode.setAttribute('aria-label', `slide ${i + 1}`)
         } else if (!this.hasAttribute('no-default-nav')) {
           console.warn('CarouselTwo.js expected a nav node (navChildNode) corresponding with the slide (sectionChildNode).', { navChildNode: this.nav.children[i], sectionChildNode: node, carousel: this })
         }

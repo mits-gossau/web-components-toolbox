@@ -309,6 +309,7 @@ export default class Header extends Shadow() {
             ? 'margin-top: 0;'
             : ''
           }
+          width: var(--width-mobile, var(--width, 100%));
         }
         :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
           animation: close .4s ease-in;

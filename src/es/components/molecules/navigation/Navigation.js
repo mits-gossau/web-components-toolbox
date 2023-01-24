@@ -387,9 +387,9 @@ export default class Navigation extends Mutation() {
         display: none;
         position: fixed;
         background-color: var(--m-gray-500);
-        width: 100vw;
+        width: var(--ul-li-div-background-width, 100vw);
         height: 100vw;
-        left: 0;
+        left: var(--ul-li-div-background-left, 0);
         top: 0;
         opacity: 0;
       }
@@ -413,7 +413,7 @@ export default class Navigation extends Mutation() {
         overflow: auto;
         box-sizing: border-box;
         max-height: 80vh;
-        padding: 2.5rem calc((100% - var(--content-width, 55%)) / 2);
+        padding: 2.5rem calc((100% - var(--content-width-custom, var(--content-width, 55%))) / 2);
         transition: all 0.2s ease;
         z-index: var(--li-ul-z-index, auto);
       }
@@ -501,7 +501,10 @@ export default class Navigation extends Mutation() {
           border-bottom: var(--header-default-border-bottom);
           display: flex;
           justify-content: space-between;
-          width: 100%;
+          width: var(--ul-li-width-mobile, 100%);
+        }
+        :host > nav > ul > li.search{
+          width: var(--ul-li-width-search-mobile, var(--ul-li-width-mobile, 100%));
         }
         :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
           border-bottom: var(--header-default-border-bottom);
