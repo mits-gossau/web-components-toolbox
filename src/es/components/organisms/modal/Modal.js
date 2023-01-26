@@ -50,6 +50,7 @@ export default class Modal extends Shadow() {
     super(...args)
 
     // this.setAttribute('aria-label', 'Section')
+    this.setAttribute('role', 'dialog') // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role
     this.setAttribute('aria-expanded', 'false')
     this.open = false
     this.clone = null
