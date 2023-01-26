@@ -53,7 +53,11 @@ export default class ProductList extends Intersection(Prototype()) {
           this.renderCSS()
           // Issue loading animation hanging
           // https://jira.migros.net/browse/SHAREDCMP-2625
-          setTimeout(() => self.scroll(0, 1), 200)
+          setTimeout(() => {
+            const scrollY = self.scrollY
+            self.scroll(0, scrollY + 1)
+            self.scroll(0, scrollY)
+          }, 200)
           this.intersectionObserveStop()
         }
       })
