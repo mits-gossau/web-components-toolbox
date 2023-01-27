@@ -155,7 +155,8 @@ export default class Login extends Prototype() {
         headerHeight: { mobile: '26px' },
         inlinks: {
           account: this.getAttribute('account') || ''
-        }
+        },
+        links:[this.getAttribute('links') || '']
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       getStylesReturn[1].then(() => {
