@@ -152,7 +152,10 @@ export default class Login extends Prototype() {
         size: this.getAttribute('size') || 'small',
         loginReturnTo: this.getAttribute('loginReturnTo') || '',
         logoutReturnTo: this.getAttribute('logoutReturnTo') || '',
-        headerHeight: { mobile: '26px' }
+        headerHeight: { mobile: '26px' },
+        inlinks: {
+          account: this.getAttribute('account') || ''
+        }
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       getStylesReturn[1].then(() => {
