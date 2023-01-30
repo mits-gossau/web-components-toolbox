@@ -17,7 +17,7 @@ import Body from '../body/Body.js'
  * }
  * @return {CustomElementConstructor | *}
  */
-// export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends ChosenHTMLElement {
+// extend body for scroll to anchor behavior
 export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends ChosenHTMLElement {
   constructor (...args) {
     super(...args)
