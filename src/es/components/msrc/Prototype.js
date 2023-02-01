@@ -39,7 +39,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        mainScript.setAttribute('src', '//cdn.migros.ch/msrc/20221205123932/main.js')
+        mainScript.setAttribute('src', `//cdn.migros.ch/msrc/${self.Environment && self.Environment.msrcVersion || '20221205123932'}/main.js`)
         mainScript.onload = () => {
           if (isMsrcLoaded()) resolve(self.msrc) // eslint-disable-line
         }

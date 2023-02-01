@@ -6,6 +6,7 @@ self.Environment = {
   isLocalhost: location.hostname === 'localhost',
   contentfulEndpoint: 'https://graphql.contentful.com/content/v1/spaces/',
   language: document.documentElement.getAttribute('lang') || 'de',
+  msrcVersion: (new URL(document.currentScript.src)).searchParams.get('msrcVersion') || '20221205123932',
   /**
    * Get custom mobile breakpoint
    * @param {{constructor?: string, tagName?: string, namespace?: string}} organism
