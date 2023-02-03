@@ -28,10 +28,13 @@ HTML/CSS Tooling:
 ## Mater Branch locked 🙌
 
 TODO:
-- [ ] redo header and navigation /\drem/, then eliminate all rem values
-- [ ] Template.html api call to fetch page content for previews
-- [ ] new flex-box wrapper: flex-grow (flex: 1) wrapper with empty children to simulate instead of o-wrapper width approach
-- [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src
+- [ ] Template.html api call to fetch page content for previews (playwright or https://github.com/Rob--W/cors-anywhere)
+- [ ] redo header and navigation /\drem/, then eliminate all rem values (tbd @miduca)
+- [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src (tbd @video use)
 
-TODO asap:
-- [ ] hover on parent prototype
+TODO Cleanup Sprints:
+- [ ] hover on parent prototype which can be inherited (mouseover|mouseout)
+- [ ] loadChildComponents to shadow analog fetchHTML (new fetchWC) including wc-config as controller with event listener supports: import with tagName + path and :not(:defined) resolve by dictionary
+- [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
+- [ ] documenter.js
+- [ ] playwright single component tests
