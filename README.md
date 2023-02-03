@@ -38,3 +38,4 @@ TODO Cleanup Sprints:
 - [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
 - [ ] documenter.js
 - [ ] playwright single component tests
+- [ ] develop branch with strict testing and release guidelines
