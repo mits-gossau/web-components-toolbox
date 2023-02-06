@@ -36,7 +36,6 @@ export default class Recipe extends Shadow() {
     }
     const limit = this.getAttribute('limit')
 
-
     this.requestListRecipeListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()

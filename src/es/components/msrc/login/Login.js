@@ -37,6 +37,9 @@ import { Prototype } from '../Prototype.js'
  *    "fitnesspark"|
  *    "mgb"|
  *    "migusto"} [theme="alnatura"]
+ *  {string} [account="document.documentElement.getAttribute('account') || ''"]
+ *  {string} [newsletter-link="document.documentElement.getAttribute('newsletter-link') || ''"]
+ *  {string} [newsletter-link-label="document.documentElement.getAttribute('newsletter-link-label') || ''"]
  *  {"large"|"medium"|"small"} [size="small"]
  *  {string} [loginReturnTo="self.location"]
  *  {string} [logoutReturnTo="self.location"]
@@ -155,7 +158,7 @@ export default class Login extends Prototype() {
         inlinks: {
           account: this.getAttribute('account') || ''
         },
-        links:[{'label': this.getAttribute('newsletter-link-label') || '','link': this.getAttribute('newsletter-link') || ''}]
+        links: [{ label: this.getAttribute('newsletter-link-label') || '', link: this.getAttribute('newsletter-link') || '' }]
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       getStylesReturn[1].then(() => {
@@ -168,7 +171,7 @@ export default class Login extends Prototype() {
   }
 
   get user () {
-    return this.userPromise || (this.userPromise = new Promise(async resolve => {
+    return this.userPromise || (this.userPromise = new Promise(async resolve => { // eslint-disable-line
       const msrc = await this.loadDependency()
       // https://react-components.migros.ch/?path=/docs/msrc-login-00-readme--page#events
       const instance = await msrc.messenger.getInstance()

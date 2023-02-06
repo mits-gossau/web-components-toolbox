@@ -125,7 +125,7 @@ export default class Body extends Shadow() {
       :host(.content-max-width-two) > main > *:not(.ignore-max-width), :host > main > *.content-max-width-two {
         max-width: var(--content-max-width-two, none);
       }
-      :host >main > *:first-child { /* important: avoid this rule to be extended by BodyStyles Regex: "/\s>\smain/g" by writing: ">main" */
+      :host >main > *:first-child { /* important: avoid this rule to be extended by BodyStyles Regex: "/s>smain/g" by writing: ">main" */
         margin-top: var(--any-margin-top-first-child, unset);
       }
       :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child {
@@ -154,7 +154,8 @@ export default class Body extends Shadow() {
         :host(.content-max-width-two) > main > *:not(.ignore-max-width), :host > main > *.content-max-width-two {
           max-width: var(--content-max-width-two-mobile, none);
         }
-        :host >main > *:first-child { /* important: avoid this rule to be extended by BodyStyles Regex: "/\s>\smain/g" by writing: ">main" */
+       
+        :host >main > *:first-child { /* important: avoid this rule to be extended by BodyStyles Regex: "/s>smain/g" by writing: ">main" */
           margin-top: var(--any-margin-top-first-child-mobile, unset);
         }
         :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child {
@@ -192,11 +193,11 @@ export default class Body extends Shadow() {
     this.main = this.root.querySelector(this.cssSelector + ' > main') || document.createElement('main')
     Array.from(this.root.children).forEach(node => {
       if (node === this.main || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
-      
+
       // find nodes to open their child links in new window
       const links = Array.from(node.querySelectorAll('[child-href-target-blank]'))
       if (links.length) this.setLinkTarget(links)
-      
+
       this.main.appendChild(node)
     })
     this.html = this.main
