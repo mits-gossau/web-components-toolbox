@@ -33,7 +33,8 @@ TODO:
 - [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src (tbd @video use)
 
 TODO Cleanup Sprints:
-- [ ] hover on parent prototype which can be inherited (mouseover|mouseout)
+- [ ] hover on parent prototype class which can be inherited (mouseover|mouseout)
+- [ ] @ setCSS and fetchCSS allow not only to define the namespace but also a namespace replacer (for expl. --default-button- replaced by --fancy-button-) to inherit a template
 - [ ] loadChildComponents to shadow analog fetchHTML (new fetchWC) including wc-config as controller with event listener supports: import with tagName + path and :not(:defined) resolve by dictionary
 - [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
 - [ ] documenter.js
