@@ -14,26 +14,25 @@
     <div class="content">
         ${imageOne ? `<div class="content-one-picture-wrapper">
             <a-picture mobile-breakpoint="${this.mobileBreakpoint}" picture-load
-                defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg"
-                alt="${imageOne.description !== '' ? imageOne.description : imageOne.title}" query-width="w"
-                query-format="fm" query-quality="q" query-height="h"></a-picture>
-            <p class="image-one-description font-size-tiny">${imageOne.description !== '' ? imageOne.description
-                : imageOne.title}</p>
+                defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" 
+                alt="${imageOne.title ? imageOne.title : ''}"
+                query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>
+            <p class="image-one-description font-size-tiny">${imageOne.description ? imageOne.description : ''}</p>
         </div>` : ''}
         ${contentOne
         ? `<div class="content-one-text-wrapper">
             <p>${self.documentToHtmlString(contentOne.json, linkRenderOptions)}</p>
         </div>`
         : ''}
-        ${imageTwo ? `<div class="content-two-picture-wrapper"><a-picture mobile-breakpoint="${this.mobileBreakpoint}" picture-load
-            defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg"
-            alt="${imageTwo.description !== '' ? imageTwo.description : imageTwo.title}" query-width="w"
-            query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
-            ${contentTwo
-            ? `<div class="content-two-text-wrapper">
-                <p>${self.documentToHtmlString(contentTwo.json, linkRenderOptions)}</p>
-            </div>`
-            : imageTwo ? '<br />' : ''}
+        ${imageTwo ? `<div class="content-two-picture-wrapper"><a-picture mobile-breakpoint="${this.mobileBreakpoint}"
+                picture-load defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg"
+                alt="${imageTwo.title ? imageTwo.title : ''}" query-width="w" query-format="fm" query-quality="q"
+                query-height="h"></a-picture></div>` : ''}
+        ${contentTwo
+        ? `<div class="content-two-text-wrapper">
+            <p>${self.documentToHtmlString(contentTwo.json, linkRenderOptions)}</p>
+        </div>`
+        : imageTwo ? '<br />' : ''}
     </div>
     ${linkListCollection.items.length ? `<div class="link-collection">
         ${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
