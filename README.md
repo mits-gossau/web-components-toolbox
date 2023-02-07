@@ -27,16 +27,16 @@ HTML/CSS Tooling:
 
 ## Mater Branch locked 🙌
 
+TODO Cleanup Sprints:
+- [ ] playwright single component tests
+- [ ] hover on parent prototype class which can be inherited (mouseover|mouseout)
+- [ ] @ setCSS and fetchCSS allow not only to define the namespace but also a namespace replacer func/regex (for expl. --default-button- replaced by --fancy-button-) to inherit a template
+- [ ] loadChildComponents to shadow analog fetchHTML (new fetchWC) including wc-config as controller with event listener supports: import with tagName + path and :not(:defined) resolve by dictionary
+- [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
+- [ ] documenter.js
+- [x] --develop branch with strict testing and release guidelines-- NO DO except branch can be selected at pipeline UI | Page specific repo points to certain toolbox commit at master
+
 TODO:
 - [ ] Template.html api call to fetch page content for previews (playwright or https://github.com/Rob--W/cors-anywhere)
 - [ ] redo header and navigation /\drem/, then eliminate all rem values (tbd @miduca)
 - [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src (tbd @video use)
-
-TODO Cleanup Sprints:
-- [ ] hover on parent prototype class which can be inherited (mouseover|mouseout)
-- [ ] @ setCSS and fetchCSS allow not only to define the namespace but also a namespace replacer (for expl. --default-button- replaced by --fancy-button-) to inherit a template
-- [ ] loadChildComponents to shadow analog fetchHTML (new fetchWC) including wc-config as controller with event listener supports: import with tagName + path and :not(:defined) resolve by dictionary
-- [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
-- [ ] documenter.js
-- [ ] playwright single component tests
-- [ ] develop branch with strict testing and release guidelines
