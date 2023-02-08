@@ -106,8 +106,19 @@ export default class BodyStyle extends Intersection(Body) {
 
   renderAttributesToCSS () {
     const attributesMobile = []
-    const cssSyntax = (attribute, isMobile = false) => {
-      const attributeName = isMobile ? attribute.name.replace('-mobile', '') : attribute.name
+    const attributesBefore = []
+    const attributesBeforeMobile = []
+    const beforeProps = /* css */`
+      position: absolute;
+      content: '';
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+    `
+    const cssSyntax = (attribute, isMobile = false, isBefore = false) => {
+      let attributeName = isMobile ? attribute.name.replace('-mobile', '') : attribute.name
+      attributeName = isBefore ? attributeName.replace('-before', '') : attribute.name
       if (/-prop$/.test(attributeName)) {
         return `${attributeName.replace('-prop', '')}:${attribute.value};`
       } else if (/-var$/.test(attributeName)) {
@@ -118,18 +129,50 @@ export default class BodyStyle extends Intersection(Body) {
     this.css = /* css */`
       :host {
         ${Array.from(this.attributes).reduce((acc, attribute) => {
-          if (!attribute || !attribute.name || !attribute.value || attribute.name.includes('aria') || attribute.name.includes('tabindex')) return acc
-          if (attribute.name.includes('-mobile')) {
+          if (!attribute || !attribute.name || !attribute.value || attribute.name.includes('aria') || attribute.name.includes('tabindex') || attribute.name.includes('class') || attribute.name.includes('style')) return acc
+          if (attribute.name.includes('-before')) {
+            if (attribute.name.includes('-mobile')) {
+              attributesBeforeMobile.push(attribute)
+            } else {
+              attributesBefore.push(attribute)
+            }
+            return acc
+          } else if (attribute.name.includes('-mobile')) {
             attributesMobile.push(attribute)
             return acc
           }
           return `${acc}${cssSyntax(attribute)}`
         }, '')}
       }
-      @media only screen and (max-width: _max-width_) {
-        :host {
-          ${Array.from(attributesMobile).reduce((acc, attribute) => `${acc}${cssSyntax(attribute, true)}`, '')}
-        }
+      ${attributesBefore.length
+        ? /* css */`
+          :host:before {
+            ${beforeProps}
+            ${attributesBefore.reduce((acc, attribute) => `${acc}${cssSyntax(attribute, false, true)}`, '')}
+          }
+        `
+        : ''
+      }
+      ${attributesBeforeMobile.length
+        ? /* css */`
+          @media only screen and (max-width: _max-width_) {
+            :host:before {
+              ${beforeProps}
+              ${attributesBeforeMobile.reduce((acc, attribute) => `${acc}${cssSyntax(attribute, true, true)}`, '')}
+            }
+          }
+        `
+        : ''
+      }
+      ${attributesMobile.length
+        ? /* css */`
+          @media only screen and (max-width: _max-width_) {
+            :host {
+              ${attributesMobile.reduce((acc, attribute) => `${acc}${cssSyntax(attribute, true)}`, '')}
+            }
+          }
+        `
+        : ''
       }
     `
   }
