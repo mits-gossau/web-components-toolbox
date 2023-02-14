@@ -218,6 +218,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-legends-/menu-legends-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
+        case 'news-post-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./news-post-/news-post-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(() => this.calcColumnWidth())
       default:
         if (!this.hasAttribute('namespace')) {
           this.css = /* css */`
