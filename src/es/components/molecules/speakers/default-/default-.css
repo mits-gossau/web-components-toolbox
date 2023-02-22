@@ -1,0 +1,43 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 9.2rem;
+  margin-right: 0.5rem;
+}
+
+:host .m-speakers__name {
+  --speakers-default-p-margin: 1rem 0 1rem;
+  --speakers-default-p-font-size: 1rem;
+}
+
+:host .m-speakers__function,
+:host .m-speakers__text {
+  --speakers-default-p-font-size: 0.6rem;
+}
+
+@media only screen and (max-width: _max-width_) {
+  :host {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  :host .o-wrapper__teasers {
+    flex-direction: column;
+  }
+
+  :host .m-speakers__name {
+    --speakers-default-p-margin-mobile: 1rem 0 1rem;
+    --speakers-default-p-font-size-mobile: 1.5rem;
+  }
+
+  :host .m-speakers__function,
+  :host .m-speakers__text {
+    --speakers-default-p-font-size-mobile: 1rem;
+  }
+
+  :host .m-speakers__text {
+    --speakers-default-p-margin-mobile: 0 0 1rem 0;
+  }
+}
