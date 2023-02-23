@@ -1,9 +1,10 @@
 // @ts-check
-/* global sessionStorage */
-/* global self */
 /* global customElements */
-/* global DocumentFragment */
 /* global CustomEvent */
+/* global DocumentFragment */
+/* global location */
+/* global self */
+/* global sessionStorage */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -270,18 +271,18 @@ export default class News extends Shadow() {
   }
 
   /**
-   * If 'error-url' attribute is set, redirect to corresponding page 
+   * If 'error-url' attribute is set, redirect to corresponding page
    * otherwise show error message on current page
    */
-  handleError(){
-    if(this.errorURL){
-      location.href = this.errorURL;
-    }else{
+  handleError () {
+    if (this.errorURL) {
+      location.href = this.errorURL
+    } else {
       this.html = this.ERROR_MSG
     }
   }
 
-  get errorURL(){
+  get errorURL () {
     return this.getAttribute('error-url')
   }
 
