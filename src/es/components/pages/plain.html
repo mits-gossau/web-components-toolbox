@@ -20,15 +20,17 @@
 
   <body>
     <c-contentful space-id="sqcdqqsdj2qy" token="N0oUSHJElroOFejl3xoL-KMDTU7rNDfwa84cG_JCPxg" limit="5" skip="5" tag="Alnatura">
-      <o-body>
-        <contentful-news-list
-          answer-event-name="list-news"
-          request-event-name="request-list-news"
-          namespace="news-list-default-"
-          news-url="/docs/Template.html?logo=/src/es/components/atoms/logo/default-/default-.html&nav=/src/es/components/molecules/navigation/default-/default-.html&footer=/src/es/components/organisms/footer/default-/default-.html&content=/src/es/components/molecules/news/default-/default-.html"
-          news-preview-namespace="">
-        </contentful-news-list>
-      </o-body>
+      <c-fetch-modules>
+        <o-body>
+          <contentful-news-list
+            answer-event-name="list-news"
+            request-event-name="request-list-news"
+            namespace="news-list-default-"
+            news-url="/docs/Template.html?logo=/src/es/components/atoms/logo/default-/default-.html&nav=/src/es/components/molecules/navigation/default-/default-.html&footer=/src/es/components/organisms/footer/default-/default-.html&content=/src/es/components/molecules/news/default-/default-.html"
+            news-preview-namespace="">
+          </contentful-news-list>
+        </o-body>
+      </c-fetch-modules>
     </c-contentful>
     <!-- start - important for loading animation -->
     <section class="loading">

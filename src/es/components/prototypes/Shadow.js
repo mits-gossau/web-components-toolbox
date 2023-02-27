@@ -476,6 +476,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
                 if (this.root.querySelector(this.cssSelector + ` > [_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, node)
               }
               if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
+              // @ts-ignore
               return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
             }
           )
@@ -598,7 +599,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   fetchModules (fetchModulesParams, hide = true, useController = true) {
     if (hide) this.hidden = true
     if (!Array.isArray(fetchModulesParams)) fetchModulesParams = [fetchModulesParams]
-    if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-html') || 'fetch-html')) {
+    if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-modules') || 'fetch-modules')) {
       // use: /src/es/components/controllers/fetchHtml/FetchHtml.js instead of fetching here, to use the cache from within the controller
       return new Promise(
         /**
@@ -607,7 +608,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
          * @param {any} resolve
          * @return {boolean}
          */
-        resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('fetch-html') || 'fetch-html', {
+        resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('fetch-modules') || 'fetch-modules', {
           /** @type {import("../controllers/fetchModules/FetchModules.js").fetchModulesEventDetail} */
           detail: {
             fetchModulesParams,
@@ -620,7 +621,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }))
       ).then(
         /**
-         * the controller resolving fetch-html will return with its fetchHtml results
+         * the controller resolving fetch-modules will return with its fetchHtml results
          *
          * @param {fetchModulesParams[]} resultFetchModulesParams
          * @return {fetchModulesParams[]}
@@ -642,7 +643,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           /**
            * return the paths with the response.text or an Error
            *
-           * @param {CustomElementConstructor} module
+           * @param {any} module
            * @return {fetchModulesParams}
            */
           module => {
@@ -719,7 +720,9 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     // @ts-ignore
     if (innerHTML.length === undefined) innerHTML = [innerHTML]
     // @ts-ignore
-    Array.from(innerHTML).forEach(node => {
+    Array.from(innerHTML).forEach(
+      node => {
+        // @ts-ignore
       if (node) this.root.appendChild(node)
     })
   }

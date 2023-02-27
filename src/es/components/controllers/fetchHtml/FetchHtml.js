@@ -5,8 +5,6 @@
  node: HTMLElement
 }} fetchHtmlEventDetail */
 
-import { Shadow } from '../../prototypes/Shadow.js'
-
 /* global fetch */
 
 /**
@@ -19,9 +17,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class FetchHtml
  * @type {CustomElementConstructor}
  */
-export default class FetchHtml extends Shadow() {
-  constructor (...args) {
-    super({ mode: 'false' }, ...args)
+export default class FetchHtml extends HTMLElement {
+  constructor () {
+    super()
 
     /**
      * caching the fetched style by path
@@ -49,6 +47,7 @@ export default class FetchHtml extends Shadow() {
           } else {
             this.fetchHtmlCache.set(path, (fetchHtml = FetchHtml.fetchHtml(path, event.detail.node)))
           }
+          // @ts-ignore
           return fetchHtml
         }
       )).then(htmls => event.detail.resolve(htmls)).catch(error => error)
@@ -57,11 +56,13 @@ export default class FetchHtml extends Shadow() {
 
   connectedCallback () {
     document.body.setAttribute(this.getAttribute('fetch-html') || 'fetch-html', 'true')
+    // @ts-ignore
     this.addEventListener(this.getAttribute('fetch-html') || 'fetch-html', this.fetchHtmlListener)
   }
 
   disconnectedCallback () {
     document.body.removeAttribute(this.getAttribute('fetch-html') || 'fetch-html')
+    // @ts-ignore
     this.removeEventListener(this.getAttribute('fetch-html') || 'fetch-html', this.fetchHtmlListener)
   }
 
