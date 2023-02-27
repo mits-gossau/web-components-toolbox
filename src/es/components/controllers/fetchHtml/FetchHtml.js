@@ -6,6 +6,7 @@
 }} fetchHtmlEventDetail */
 
 /* global fetch */
+/* global HTMLElement */
 
 /**
  * FetchHtml is a caching mechanism for src/es/components/prototypes/Shadow.js:fetchHTML L:490 and can just be set as an ancestor which listens to the fetch-html events

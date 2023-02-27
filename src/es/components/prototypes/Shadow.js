@@ -25,6 +25,7 @@
 /* global self */
 /* global fetch */
 /* global CustomEvent */
+/* global customElements */
 
 /**
  * Shadow is a helper with a few functions for every web component which possibly allows a shadowRoot (atom, organism and molecule)
@@ -723,8 +724,8 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     Array.from(innerHTML).forEach(
       node => {
         // @ts-ignore
-      if (node) this.root.appendChild(node)
-    })
+        if (node) this.root.appendChild(node)
+      })
   }
 
   // display trumps hidden property, which we resolve here as well as we allow an animation on show

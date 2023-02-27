@@ -5,7 +5,8 @@
  node: HTMLElement
 }} fetchModulesEventDetail */
 
-/* global fetch */
+/* global HTMLElement */
+/* global customElements */
 
 /**
  * FetchModules is a caching mechanism for src/es/components/prototypes/Shadow.js:fetchModules L:598 and can just be set as an ancestor which listens to the fetch-modules events
