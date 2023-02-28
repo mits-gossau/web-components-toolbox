@@ -82,7 +82,7 @@ export default class CookieBanner extends Prototype() {
         line-height: var(--line-height, normal) !important;
         font-weight: var(--font-weight, normal) !important;
       }
-      :host > div {
+      :host > div > div {
         background-color: var(--background-color, white) !important;
         box-shadow: var(--box-shadow-color, var(--color) 0px -1px 3px) !important;
         border-top: var(--border-top, 1px solid var(--color)) !important;
