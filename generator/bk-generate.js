@@ -1,9 +1,9 @@
 const shell = require('shelljs')
 
 // CHANGE THIS
-const GIT_REPO = 'https://github.com/mits-gossau/web-components-toolbox-nature.git'
+const GIT_REPO = 'https://github.com/mits-gossau/web-components-toolbox-klubschule.git'
 const NEW_PROJECT_DIR = ''
-const NEW_PROJECT_NAME = 'web-components-toolbox-nature'
+const NEW_PROJECT_NAME = 'web-components-toolbox-klubschule'
 
 // LEAVE THIS AS IT IS!
 const REF_REPO = 'https://github.com/mits-gossau/web-components-toolbox-alnatura'
