@@ -1,0 +1,28 @@
+:host .m-list__heading {
+  font-size: 0.75rem;
+  margin: 0 0 2rem;
+  --list-vertical-h2-text-transform: uppercase;
+}
+
+:host .m-list__list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  list-style: none;
+  width: 100%;
+  --list-vertical-ul-margin: 0;
+}
+
+@media only screen and (max-width: _max-width_) {
+  :host .m-list__heading {
+    font-size: 1rem;
+  }
+
+  :host .m-list__list {
+    flex-direction: column;
+  }
+
+  :host .o-wrapper__list-item + .o-wrapper__list-item {
+    margin-top: 1rem;
+  }
+}
