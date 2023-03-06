@@ -1,13 +1,13 @@
 const shell = require('shelljs')
 
 // CHANGE THIS
-const GIT_REPO = 'https://github.com/mits-gossau/web-components-toolbox-klubschule.git'
+const GIT_REPO = 'https://github.com/mits-gossau/eb-components-toolbox-klubschule-wettbewerb.git'
 const NEW_PROJECT_DIR = ''
-const NEW_PROJECT_NAME = 'web-components-toolbox-klubschule'
+const NEW_PROJECT_NAME = 'web-components-toolbox-klubschule-wettbewerb'
 
 // LEAVE THIS AS IT IS!
-const REF_REPO = 'https://github.com/mits-gossau/web-components-toolbox-alnatura'
-const REF_DIR = 'web-components-toolbox-alnatura'
+const REF_REPO = 'https://github.com/mits-gossau/web-components-toolbox-klubschule.git'
+const REF_DIR = 'web-components-toolbox-klubschule'
 
 function init () {
   shell.cd(NEW_PROJECT_DIR)
