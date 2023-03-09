@@ -1,23 +1,8 @@
 :host {
   --wrapper-teaser-recipe-justify-content: left;
 }
-:host .item {
-  width: 33%;
-  position: relative;
-}
-:host .item > h4 {
-  position: absolute;
-  background-color: var(--background-color, white);
-  top: 1rem;
-  left: 1rem;
-  --wrapper-teaser-recipe-h4-padding: 0 2rem;
-  --wrapper-teaser-recipe-h4-font-size: 1.4em;
-}
 @media only screen and (max-width: _max-width_) {
   :host {
     --wrapper-teaser-gap: var(--wrapper-teaser-gap-mobile-custom, var(--wrapper-teaser-gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
-  }
-  :host .item {
-    width: 50% !important;
   }
 }
