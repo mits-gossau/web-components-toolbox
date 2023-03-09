@@ -1,0 +1,21 @@
+:host {
+  width: 33%;
+  --teaser-overlay-top-bg-color: var(--color-tertiary);
+  --teaser-overlay-top-bg-background-color: var(--m-white);
+  --teaser-overlay-top-bg-padding-top: var(--bg-padding-bottom);
+}
+:host(:hover) {
+  --teaser-overlay-top-bg-background-color: var(--teaser-overlay-top-bg-background-color-hover-custom, var(--m-gray-300));
+}
+:host figure {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+:host figure a-picture, :host figure m-picture-with-picture, :host figure figcaption {
+  grid-column: 1;
+  grid-row: 1;
+}
+:host figure figcaption {
+  z-index: 1;
+}
