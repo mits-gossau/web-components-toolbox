@@ -4,4 +4,5 @@
   --button-primary-background-color: var(--button-primary-background-color-custom, var(--color-secondary, var(--m-orange-600)));
   --button-primary-color: var(--button-primary-color-custom, var(--background-color, var(--m-white)));
   --button-primary-font-family: var(--font-family);
+  --button-primary-text-transform: uppercase;
 }
