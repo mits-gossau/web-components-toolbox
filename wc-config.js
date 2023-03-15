@@ -190,6 +190,11 @@
       separateFolder: true
     },
     {
+      selector: 'mcs-',
+      url: 'mcs/',
+      separateFolder: true
+    },
+    {
       selector: 'contentful-',
       url: 'contentful/',
       separateFolder: true
