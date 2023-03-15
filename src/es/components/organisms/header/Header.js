@@ -170,6 +170,7 @@ export default class Header extends Shadow() {
         top: 0;
         z-index: var(--z-index, 1000);
         text-align: var(--text-align, initial);
+        background-color: var(--host-background-color, transparent);
       }
       :host > * {
         font-size: var(--font-size, 1rem);

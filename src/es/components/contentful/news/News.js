@@ -1,9 +1,10 @@
 // @ts-check
-/* global sessionStorage */
-/* global self */
 /* global customElements */
-/* global DocumentFragment */
 /* global CustomEvent */
+/* global DocumentFragment */
+/* global location */
+/* global self */
+/* global sessionStorage */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -34,7 +35,7 @@ export default class News extends Shadow() {
     if (!this.getNews()) {
       // @ts-ignore
       showPromises.push(new Promise(resolve => document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', event => event.detail.fetch.then(data => {
-        resolve(this.renderHTML(data).then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
+        resolve(this.renderHTML(data).then(renderedHTML).catch(() => this.handleError()))
       }), { once: true })))
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
         detail: { limit: 0 },
@@ -43,7 +44,7 @@ export default class News extends Shadow() {
         composed: true
       }))
     } else {
-      showPromises.push(this.renderHTML().then(renderedHTML).catch(() => (this.html = this.ERROR_MSG)))
+      showPromises.push(this.renderHTML().then(renderedHTML).catch(() => this.handleError()))
     }
     Promise.all(showPromises).then(() => {
       this.hidden = false
@@ -267,6 +268,22 @@ export default class News extends Shadow() {
       })
       return elements
     }))
+  }
+
+  /**
+   * If 'error-url' attribute is set, redirect to corresponding page
+   * otherwise show error message on current page
+   */
+  handleError () {
+    if (this.errorURL) {
+      location.href = this.errorURL
+    } else {
+      this.html = this.ERROR_MSG
+    }
+  }
+
+  get errorURL () {
+    return this.getAttribute('error-url')
   }
 
   get newsListUrl () {

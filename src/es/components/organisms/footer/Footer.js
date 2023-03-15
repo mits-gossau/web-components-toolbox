@@ -123,7 +123,7 @@ export default class Footer extends Shadow() {
       }
       :host > footer .footer-links > ul {
         flex-direction: row;
-        justify-content: start;
+        justify-content: var(--justify-content-custom, start);
       }
       :host > footer .language-switcher > ul > li, :host > footer .footer-links > ul > li {
         border: 0;
@@ -142,7 +142,7 @@ export default class Footer extends Shadow() {
       }
       /* force copyright to be at first position desktop */
       :host > footer .footer-links > ul > li.copyright {
-        order: -1;
+        order: var(--order-custom, -1);
         padding: 0 var(--content-spacing) 0 0;
       }
       /* in case copyright and language are supposed to be on the same line on desktop */

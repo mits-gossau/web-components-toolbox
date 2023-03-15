@@ -151,19 +151,21 @@ export default class Picture extends Intersection() {
         display: var(--img-display, block);
         filter: var(--filter, none);
         height: var(--img-height, auto);
+        image-rendering: var(--image-rendering, -webkit-optimize-contrast); /* fix blurred image on webkit: https://www.betriebsrestaurants-migros.ch/landingpages/swissgrid/info-menuplan/ */
         margin: var(--img-margin, auto);
         max-height: var(--img-max-height, 75vh);
         max-width: var(--img-max-width, 100%); /* max-content would have been nice to not scale up the image, but in general make the editor use big enough images and this must stay at 100% default value, otherwise there are several side effects */
         min-height: var(--img-min-height, unset);
         min-width: var(--img-min-width, unset);
         object-fit: var(--img-object-fit, contain); /* cover does not render the same on IOS */
+        opacity: 0;
         overflow: var(--overflow, auto);
+        position: var(--position, static);
         transform: var(--transform, none);
         transition: var(--transition, none);
         vertical-align: middle; /* use middle to avoid having a gap at the bottom of the image https://stackoverflow.com/questions/5804256/image-inside-div-has-extra-space-below-the-image */
         width: var(--img-width, max-content);
-        image-rendering: var(--image-rendering, -webkit-optimize-contrast); /* fix blurred image on webkit: https://www.betriebsrestaurants-migros.ch/landingpages/swissgrid/info-menuplan/ */
-        opacity: 0;
+        z-index: var(--z-index, auto);
       }
       :host([loaded]) picture img {
         animation: var(--appear, appear .3s ease-out);
