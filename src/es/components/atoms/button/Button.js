@@ -273,11 +273,11 @@ export default class Button extends Shadow() {
           // harmonize the primary-.css namespace with --category
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--primary-/g, '--category-')
         })
-        case 'button-square-':
-          return this.fetchCSS([{
-            // @ts-ignore
-            path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./square-/square-.css`,
-            namespace: false
+      case 'button-square-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./square-/square-.css`,
+          namespace: false
         }])
     }
   }
