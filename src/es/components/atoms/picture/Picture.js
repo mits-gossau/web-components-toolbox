@@ -279,6 +279,11 @@ export default class Picture extends Intersection() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./store-logo-/store-logo-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
+      case 'picture-cover-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./cover-/cover-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
     }
   }
 
