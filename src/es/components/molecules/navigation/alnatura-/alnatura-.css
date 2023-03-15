@@ -17,15 +17,15 @@
   --navigation-alnatura-padding: 0;
 }
 :host > nav > ul > li > a-link {
-  --navigation-alnatura-color-active: var(navigation-alnatura-color-active-custom, var(--menu-background-color));
+  --navigation-alnatura-color-active: var(--navigation-alnatura-color-active-custom, var(--menu-background-color));
 }
 :host > nav > ul > li.open > a-link {
   --navigation-alnatura-background-color-hover: var(--menu-color);
   --navigation-alnatura-background-color-active: var(--menu-color);
 }
 :host > nav > ul > li:not(.open) > a-link {
-  --navigation-alnatura-color-active: var(navigation-alnatura-not-open-color-active-custom, var(--color-tertiary));
-  --navigation-alnatura-color-hover: var(navigation-alnatura-not-open-color-hover-custom, var(--color-tertiary));
+  --navigation-alnatura-color-active: var(--navigation-alnatura-not-open-color-active-custom, var(--color-tertiary));
+  --navigation-alnatura-color-hover: var(--navigation-alnatura-not-open-color-hover-custom, var(--color-tertiary));
 }
 :host > nav > ul li.open, :host > nav > ul li:hover, :host > nav > ul li.active {
   --navigation-alnatura-path-color: var(--color-hover);
