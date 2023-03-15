@@ -198,6 +198,11 @@ export default class Logo extends Shadow() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
+      case 'logo-partner-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./partner-/partner-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
     }
   }
 

@@ -103,7 +103,10 @@ export default class Footer extends Shadow() {
         background-color: var(--invert-background-color);
       }
       :host > footer .invert.orange {
+        color: var(--invert-orange-color, var(--invert-color));
         --a-color-hover: var(--invert-orange-a-color-hover, var(--invert-a-color-hover));
+        --a-color: var(--invert-orange-a-color, var(--invert-a-color));
+        background-color: var(--invert-orange-background-color, var(--invert-background-color));
       }
       :host > footer o-wrapper[namespace=footer-default-] {
         --align-items: normal;

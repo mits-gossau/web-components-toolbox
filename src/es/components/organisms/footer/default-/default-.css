@@ -7,6 +7,9 @@
   --footer-default-invert-color-hover: var(--footer-default-invert-color-hover-custom, var(--color-hover));
   --footer-default-invert-color: var(--footer-default-invert-color-custom, var(--background-color));
   --footer-default-invert-orange-a-color-hover: var(--footer-default-invert-orange-a-color-hover-custom, var(--color-hover));
+  --footer-default-invert-orange-a-color: var(--footer-default-invert-orange-a-color-custom, var(--footer-default-invert-color));
+  --footer-default-invert-orange-background-color: var(--footer-default-invert-orange-background-color-custom, var(--footer-default-invert-background-color));
+  --footer-default-invert-orange-color: var(--footer-default-invert-orange-color-custom, var(--footer-default-invert-color));
   --footer-default-invert-svg-color-hover: var(--footer-default-invert-svg-color-hover-custom, var(--color-hover));
   --footer-default-invert-svg-color: var(--footer-default-invert-background-color);
   --footer-default-invert-svg-color: var(--footer-default-invert-svg-color-custom, var(--color-secondary));
