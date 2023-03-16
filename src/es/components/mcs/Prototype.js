@@ -38,8 +38,13 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        const {version} = await (await fetch('https://digital-campaign-factory.migros.ch/api/version')).json()
-        mainScript.setAttribute('src', `https://digital-campaign-factory.migros.ch/static-widgets/${(self.Environment && self.Environment.mcsVersion) || version || 'v1.112.3'}/main.js`)
+        let version = 'v1.112.3'
+        try {
+          version = (await (await fetch('https://digital-campaign-factory.migros.ch/api/version')).json()).version
+        } catch (error) {
+          console.warn('error at https://digital-campaign-factory.migros.ch/api/version fetch, falling back to old version: ', version)
+        }
+        mainScript.setAttribute('src', `https://digital-campaign-factory.migros.ch/static-widgets/${(self.Environment && self.Environment.mcsVersion) || version}/main.js`)
         mainScript.onload = () => {
           if (isMcsLoaded()) resolve(self.mcs) // eslint-disable-line
         }
