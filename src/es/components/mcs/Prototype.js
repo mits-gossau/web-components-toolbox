@@ -27,24 +27,27 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
       if (isMcsLoaded()) {
         resolve(self.mcs) // eslint-disable-line
       } else {
+        const baseUrl = (self.Environment && self.Environment.mcsBaseUrl) || 'https://digital-campaign-factory.migros.ch'
         // prefetch or pre connect o the iframes src
-        if (this.hasAttribute('prefetch') && !document.head.querySelector('link[href="https://digital-campaign-factory.migros.ch"]')) {
+        if (this.hasAttribute('prefetch') && !document.head.querySelector(`link[href="${baseUrl}"]`)) {
           const link = document.createElement('link')
           link.setAttribute('rel', 'dns-prefetch')
-          link.setAttribute('href', 'https://digital-campaign-factory.migros.ch')
+          link.setAttribute('href', baseUrl)
           document.head.appendChild(link)
         }
         // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        let version = 'v1.112.3'
-        try {
-          version = (await (await fetch('https://digital-campaign-factory.migros.ch/api/version')).json()).version
-        } catch (error) {
-          console.warn('error at https://digital-campaign-factory.migros.ch/api/version fetch, falling back to old version: ', version)
+        let version = self.Environment && self.Environment.mcsVersion
+        if (!version) {
+          try {
+            version = (await (await fetch(`${baseUrl}/api/version`)).json()).version
+          } catch (error) {
+            console.warn(`error at ${baseUrl}/api/version fetch, falling back to old version: `, version)
+          }
         }
-        mainScript.setAttribute('src', `https://digital-campaign-factory.migros.ch/static-widgets/${(self.Environment && self.Environment.mcsVersion) || version}/main.js`)
+        mainScript.setAttribute('src', `${baseUrl}/static-widgets/${version || 'v1.112.3'}/main.js`)
         mainScript.onload = () => {
           if (isMcsLoaded()) resolve(self.mcs) // eslint-disable-line
         }
