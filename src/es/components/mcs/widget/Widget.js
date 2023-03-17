@@ -101,6 +101,8 @@ export default class Widget extends Prototype() {
         "language": "${this.getAttribute('language') || self.Environment.language}",
         "${name}Id": "${id}"
       }`))
+      this.setAttribute('name', name)
+      this.setAttribute('id', id)
       return this.html = this.mscWrapper
     })
   }
