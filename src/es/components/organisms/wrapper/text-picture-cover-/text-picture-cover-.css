@@ -12,6 +12,10 @@
   align-items: flex-start;
 }
 
+:host .o-wrapper__content--start {
+  justify-content: flex-start;
+}
+
 :host .o-wrapper__info {
   display: flex;
   justify-content: space-between;
