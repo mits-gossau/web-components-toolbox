@@ -5,7 +5,7 @@
     --navigation-nature-color-active: var(--m-white);
     --navigation-nature-color-hover: green;
     --navigation-nature-a-link-content-spacing: 0.5em 0;
-    --navigation-nature-padding: 0 0 0 4em;
+    --navigation-nature-padding: 0 0 0 2em;
 }
 
 :host>nav>ul li.open>o-nav-wrapper>section {
@@ -27,11 +27,10 @@
         --navigation-nature-background-color: var(--m-white);
         --navigation-nature-color-mobile: var(--color-tertiary);
         --navigation-nature-color-active: var(--navigation-nature-color-active-custom);
-
     }
 
     :host>nav>ul li.open>o-nav-wrapper>section {
-        margin: var(--content-spacing-mobile);
+        margin: var(--content-spacing-mobile) 0;
     }
 
     :host>nav>ul li.open {
