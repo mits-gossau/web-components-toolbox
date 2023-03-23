@@ -1,7 +1,7 @@
 :host {
     --navigation-nature-section-background-color: var(--background-color);
     --navigation-nature-section-margin-top-desktop: 29px;
-    --navigation-nature-margin: 0 1em 0 1em;
+    --navigation-nature-margin: 0 0.5em 0 0.5em;
     --navigation-nature-color-active: var(--m-white);
     --navigation-nature-color-hover: green;
     --navigation-nature-a-link-content-spacing: 0.5em 0;
