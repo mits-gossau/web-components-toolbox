@@ -482,6 +482,9 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 :host table td:last-child, :host table th:last-child {
   padding-right: var(--table-padding-right-last-child, 0);
 }
+:host table td[align="right"]{
+  white-space: nowrap;
+}
 /* spacer-stylings */
 .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
   display: block;
