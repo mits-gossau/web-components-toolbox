@@ -13,6 +13,10 @@
     --any-padding-bottom-last-child: 1em;
 }
 
+:host>nav>ul:not(.open) li:not(.active):not(.open):hover {
+    --navigation-nature-border-color: transparent;
+}
+
 :host>nav>ul li.open>o-nav-wrapper>section>ul li {
     border-bottom: 1px solid var(--navigation-nature-border-color-custom);
     padding: 1em 0 !important;
@@ -20,6 +24,11 @@
 
 :host>nav>ul li.open>o-nav-wrapper>section>ul li.active {
     --navigation-nature-color-active: var(--navigation-nature-color-active-custom);
+}
+@media screen and (min-width: calc(_max-width_ + 1px)) {
+    :host > nav > ul > li.active:not(.search):not(.open) {
+        border-bottom: var(--navigation-nature-border-width,var(--border-width, 2px)) solid var(--navigation-nature-border-color,var(--border-color, var(--navigation-nature-color,var(--color))));
+    }
 }
 
 @media only screen and (max-width: _max-width_) {
