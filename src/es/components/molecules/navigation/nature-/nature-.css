@@ -27,6 +27,7 @@
         --navigation-nature-background-color: var(--m-white);
         --navigation-nature-color-mobile: var(--color-tertiary);
         --navigation-nature-color-active: var(--navigation-nature-color-active-custom);
+        --navigation-nature-header-default-border-bottom: 1px solid var(--navigation-nature-border-color-custom);
     }
 
     :host>nav>ul li.open>o-nav-wrapper>section {
@@ -38,11 +39,21 @@
 
     }
 
+    :host>nav>ul > li:nth-last-child(2),
+    :host>nav>ul > li:last-child,
+    :host>nav>ul li.open>o-nav-wrapper>section>ul {
+        --navigation-nature-header-default-border-bottom: 0;
+    }
+
     :host(.no-scroll) a-link {
         --navigation-nature-a-link-font-size-no-scroll-mobile: 1em;
     }
 
     :host(.no-scroll)>nav>ul li ul a-link {
         --navigation-nature-a-link-second-level-font-size-mobile: 1em;
+    }
+
+    :host > nav > ul > li.search > * {
+        margin: 0 1.2143rem;
     }
 }
