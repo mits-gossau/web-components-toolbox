@@ -478,6 +478,8 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   border: var(--table-border, 0);
   vertical-align: var(--table-vertical-align, top);
   padding-right: var(--table-padding-right, 1em);
+}
+:host table td[align="right"]:first-child, :host table th[align="right"]:first-child {
   white-space: var(--table-white-space, normal);
 }
 :host table td:last-child, :host table th:last-child {
