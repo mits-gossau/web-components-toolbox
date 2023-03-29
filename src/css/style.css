@@ -478,6 +478,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   border: var(--table-border, 0);
   vertical-align: var(--table-vertical-align, top);
   padding-right: var(--table-padding-right, 1em);
+  white-space: var(--table-white-space, normal);
 }
 :host table td:last-child, :host table th:last-child {
   padding-right: var(--table-padding-right-last-child, 0);
