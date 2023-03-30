@@ -310,6 +310,17 @@ export default class Footer extends Shadow() {
               arr[i - 1].appendChild(clone)
             })
           } else {
+            // grab all web components to be cloned (only works on first level, means atoms)
+            const clones = []
+            Array.from(sectionChild.querySelectorAll('*')).filter(node => node.root).forEach(node => {
+              const clone = node.cloneNode(true)
+              clones.push(clone)
+              clone.html = ''
+              clone.html = node.html
+              const placeholderNode = document.createElement('div')
+              placeholderNode.classList.add(`placeholder-node-${clones.length - 1}`)
+              node.replaceWith(placeholderNode)
+            })
             // move all children into a dedicated div
             // create a summary/details for each sectionChild
             const detailsDiv = document.createElement('div')
@@ -321,6 +332,12 @@ export default class Footer extends Shadow() {
                 </details>
               </m-details>
             `
+            // replace the placeholders with its clones
+            clones.forEach((clone, i) => {
+              let placeholderNode
+              if ((placeholderNode = detailsDiv.children[0].root.querySelector(`.placeholder-node-${i}`))) placeholderNode.replaceWith(clone)
+            })
+            // set the details
             details.push(detailsDiv.children[0])
             sectionChild.appendChild(detailsDiv.children[0])
           }
