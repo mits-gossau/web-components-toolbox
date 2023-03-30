@@ -317,9 +317,7 @@ export default class Footer extends Shadow() {
               clones.push(clone)
               clone.html = ''
               clone.html = node.html
-              const placeholderNode = document.createElement('div')
-              placeholderNode.classList.add(`placeholder-node-${clones.length - 1}`)
-              node.replaceWith(placeholderNode)
+              node.classList.add(`placeholder-node-${clones.length - 1}`)
             })
             // move all children into a dedicated div
             // create a summary/details for each sectionChild
