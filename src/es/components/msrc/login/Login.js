@@ -122,6 +122,9 @@ export default class Login extends Prototype() {
         text-decoration: none;
         font-weight: var(--font-weight-strong, bold);
       }
+      :host > div {
+        position: relative;
+      }
       :host > div > button {
         max-width: 50vw;
       }
