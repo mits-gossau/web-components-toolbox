@@ -2,7 +2,6 @@
 import { Prototype } from '../Prototype.js'
 
 /* global self */
-/* global CustomEvent */
 
 /**
  * digital-campaign-factory Widget ask niels
@@ -33,10 +32,10 @@ import { Prototype } from '../Prototype.js'
                         let {version} = await (await fetch('https://digital-campaign-factory.migros.ch/api/version')).json();
                         var script = document.createElement('script');
                         const src = 'https://digital-campaign-factory.migros.ch/static-widgets/%version%/main.js'.replace('%version%', version);
-                
+
                         script.type = 'text/javascript';
                         script.src = src;
-                
+
                         script.onload = () => {if (window.mcs !== undefined){ window.mcs.wheel(document.getElementById('mdcf-wheel'), { language: 'de', wheelId: 'W1wlwhzIlaCHivyqdvlW' });}};
                         head.appendChild(script);
                     }
@@ -51,7 +50,7 @@ export default class Widget extends Prototype() {
   constructor (...args) {
     super({ mode: 'false' }, ...args)
   }
-  
+
   connectedCallback () {
     this.hidden = true
     const showPromises = []
@@ -103,7 +102,7 @@ export default class Widget extends Prototype() {
       }`))
       this.setAttribute('name', name)
       this.setAttribute('id', id)
-      return this.html = this.mscWrapper
+      return (this.html = this.mscWrapper)
     })
   }
 

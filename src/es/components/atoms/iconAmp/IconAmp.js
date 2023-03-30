@@ -53,14 +53,14 @@ export default class IconAmp extends Shadow() {
    */
   shouldComponentRenderHTML () {
     return !this.svg
-  } 
+  }
 
   /**
    * renders the css
    *
    * @return {void}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         vertical-align: middle;
