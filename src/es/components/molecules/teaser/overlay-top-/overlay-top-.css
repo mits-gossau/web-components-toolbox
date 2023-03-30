@@ -1,11 +1,12 @@
 :host {
-  width: 33%;
+  width: var(--teaser-overlay-top-width, 33%);
   --teaser-overlay-top-bg-color: var(--color-tertiary);
   --teaser-overlay-top-bg-background-color: var(--m-white);
   --teaser-overlay-top-bg-padding-top: var(--bg-padding-bottom);
+  --teaser-overlay-top-figcaption-padding: 3em;
 }
 :host(:hover) {
-  --teaser-overlay-top-bg-background-color: var(--teaser-overlay-top-bg-background-color-hover-custom, var(--m-gray-300));
+  --teaser-overlay-top-bg-color: var(--teaser-overlay-top-bg-color-hover, #D48A42);
 }
 :host figure {
   display: grid;
@@ -18,4 +19,11 @@
 }
 :host figure figcaption {
   z-index: 1;
+}
+
+@media only screen and (max-width: _max-width_) {
+  :host {
+    width: var(--teaser-overlay-top-width-mobile, 50%);
+    --teaser-overlay-top-figcaption-padding: 2em;
+  }
 }
