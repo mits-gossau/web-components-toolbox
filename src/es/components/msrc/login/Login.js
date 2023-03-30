@@ -125,8 +125,8 @@ export default class Login extends Prototype() {
       :host > div {
         position: relative;
       }
-      :host > div > button {
-        max-width: 50vw;
+      :host > div div[open] {
+        top: 15px;
       }
       :host([profile-flyout]) {
           max-height: 2.5em !important;
@@ -140,6 +140,9 @@ export default class Login extends Prototype() {
         :host .font-size-tiny {
           font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
           line-height: var(--line-height-mobile, var(--line-height, normal));
+        }
+        :host > div div[open] {
+          top: 0 !important;
         }
       }
     `
