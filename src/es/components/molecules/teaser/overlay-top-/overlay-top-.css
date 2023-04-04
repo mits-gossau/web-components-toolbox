@@ -1,6 +1,8 @@
 :host {
-  width: var(--teaser-overlay-top-width, 33%);
-  --teaser-overlay-top-bg-color: var(--color-tertiary);
+  --img-height: 100%;
+  --img-object-fit: cover;
+  --img-width: 100%;
+  --teaser-overlay-top-bg-color: var(--color-tertiary, var(--color));
   --teaser-overlay-top-bg-background-color: var(--m-white);
   --teaser-overlay-top-bg-padding-top: var(--bg-padding-bottom);
   --teaser-overlay-top-figcaption-padding: 3em;
@@ -23,7 +25,6 @@
 
 @media only screen and (max-width: _max-width_) {
   :host {
-    width: var(--teaser-overlay-top-width-mobile, 50%);
     --teaser-overlay-top-figcaption-padding: 2em;
   }
 }

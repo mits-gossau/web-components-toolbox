@@ -125,6 +125,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           margin: var(--margin-mobile, var(--margin, 0)) !important;
           padding: var(--padding-mobile, var(--padding, 0)) !important;
           ${this.hasAttribute('flex-nowrap-mobile') ? '' : 'width: 100% !important;'}
+          ${this.hasAttribute('width-mobile') ? `width: ${this.getAttribute('width-mobile')} !important;` : ''}
         }
         :host > section > *:not([style]):first-child {
           margin: var(--margin-first-child-mobile, var(--margin-first-child, var(--margin-mobile, var(--margin, 0)))) !important;
@@ -317,8 +318,8 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         this.setCss(/* CSS */`
           :host > section > *:nth-child(${i}) {
             width: calc(var(--any-${i}-width, ${freeWidth}%) - ${(!childNodes[i - 1].hasAttribute('width') || !childNodes[i - 1].getAttribute('width').includes('100')
-              ? margin
-              : 0) / childNodesLengthNotWidthHundredPercent}${unit || 'px'});
+              ? margin || 0
+              : 0) / childNodesLengthNotWidthHundredPercent || 0}${unit || 'px'});
           }
         `, undefined, undefined, undefined, this.style)
       }
