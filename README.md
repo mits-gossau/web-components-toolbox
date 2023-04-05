@@ -34,8 +34,8 @@ HTML/CSS Tooling:
 TODO Cleanup Sprints:
 - [ ] playwright single component tests
 - [ ] hover on parent prototype class which can be inherited (mouseover|mouseout)
-- [ ] @ setCSS and fetchCSS allow not only to define the namespace but also a namespace replacer func/regex (for expl. --default-button- replaced by --fancy-button-) to inherit a template
-- [ ] loadChildComponents to shadow analog fetchHTML (new fetchWC) including wc-config as controller with event listener supports: import with tagName + path and :not(:defined) resolve by dictionary
+- [ ] @ setCSS and fetchCSS allow not only to define the namespace but also a namespace replacer func/regex (for expl. --default-button- replaced by --fancy-button-) to inherit a template expl. https://github.com/mits-gossau/web-components-toolbox/blob/master/src/es/components/molecules/navigation/Navigation.js#L622 + allow eval to consume js vars from css template https://github.com/mits-gossau/web-components-toolbox/blob/master/src/es/components/organisms/grid/Grid.js#L74
+- [x] loadChildComponents to shadow analog fetchHTML (new fetchWC) including wc-config as controller with event listener supports: import with tagName + path and :not(:defined) resolve by dictionary
 - [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
 - [ ] documenter.js
 - [x] --develop branch with strict testing and release guidelines-- NO DO except branch can be selected at pipeline UI | Page specific repo points to certain toolbox commit at master
