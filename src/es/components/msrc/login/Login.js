@@ -183,7 +183,12 @@ export default class Login extends Prototype() {
       const msrc = await this.loadDependency()
       // https://react-components.migros.ch/?path=/docs/msrc-login-00-readme--page#events
       const instance = await msrc.messenger.getInstance()
-      instance.subscribe('login:authenticate', ({ isManualLogin, loggedIn, error }) => resolve(msrc.utilities.login.getUser()))
+      // in case the subscribe event login:authenticate does not fire
+      const timeoutId = setTimeout(() => resolve(msrc.utilities.login.getUser()), 3000)
+      instance.subscribe('login:authenticate', ({ isManualLogin, loggedIn, error }) => {
+        clearTimeout(timeoutId)
+        resolve(msrc.utilities.login.getUser())
+      })
     }))
   }
 }
