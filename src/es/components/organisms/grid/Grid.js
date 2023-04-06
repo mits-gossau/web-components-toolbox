@@ -39,42 +39,46 @@ export default class Grid extends Shadow() {
   }
 
   /**
-   * renders the o-grid css
+   * Renders the o-grid CSS.
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
-    this.css = /* css */`
+  async renderCSS() {
+    this.css = /* css */ `
       :host > section {
-        display:grid;
-        ${this.hasAttribute('height')
-          ? `height: ${this.getAttribute('height') || '100%'};`
-          : ''
-        }
+        display: grid;
+        ${this.hasAttribute('height') ? `height: ${this.getAttribute('height') || '100%'};` : ''}
       }
-    `
+    `;
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
-        namespace: false
+        namespace: false,
       },
       {
         path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
-        namespaceFallback: true
-      }
-    ]
+        namespaceFallback: true,
+      },
+    ];
     switch (this.getAttribute('namespace')) {
       case 'grid-2colums2rows-':
-        return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./2colums2rows-/2colums2rows-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // make template ${code} accessible
-          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
-        })
+        const fetchCSSParams = await this.fetchCSS(
+          [
+            {
+              path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./2colums2rows-/2colums2rows-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+            },
+            ...styles,
+          ],
+          false
+        );
+        // make template ${code} accessible
+        fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        break;
       default:
-        return this.fetchCSS(styles, false)
+        await this.fetchCSS(styles, false);
+        break;
     }
   }
 
