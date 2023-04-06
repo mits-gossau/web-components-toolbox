@@ -12,30 +12,35 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {}
  */
 export default class Grid extends Shadow() {
-  connectedCallback () {
-    this.hidden = true
-    const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
-    Promise.all(showPromises).then(() => (this.hidden = false))
+  async connectedCallback() {
+    this.hidden = true;
+    const showPromises = [];
+    if (this.shouldRenderCSS()) {
+      showPromises.push(this.renderCSS());
+    }
+    if (this.shouldRenderHTML()) {
+      showPromises.push(this.renderHTML());
+    }
+    await Promise.all(showPromises);
+    this.hidden = false;
   }
 
   /**
-   * evaluates if a render is necessary
+   * Evaluates whether a render is necessary.
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+  shouldRenderCSS() {
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`);
   }
 
   /**
-   * evaluates if a render is necessary
+   * Evaluates whether a render is necessary.
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
-    return !this.grid
+  shouldRenderHTML() {
+    return !this.grid;
   }
 
   /**
