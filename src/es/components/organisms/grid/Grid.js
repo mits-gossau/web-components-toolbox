@@ -79,20 +79,19 @@ export default class Grid extends Shadow() {
   }
 
   /**
-   * renders the html
+   * Renders the HTML.
    *
    * @return {Promise<void>}
    */
-  renderHTML () {
-    this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
-    Array.from(this.root.children).forEach(node => {
-      if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
-    })
-    this.setAttribute('count-section-children', this.section.children.length)
-    Array.from(this.section.children).forEach(node => {
-      if ((node.getAttribute('style') || '').includes('background')) node.setAttribute('has-background', 'true')
-    })
-    this.html = [this.section]
-    return Promise.resolve()
+  async renderHTML() {
+    const section = this.root.querySelector(`${this.cssSelector} > section`) || document.createElement('section');
+    for (const node of Array.from(this.root.children)) {
+      if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') section.appendChild(node);
+    }
+    this.setAttribute('count-section-children', section.children.length);
+    for (const node of section.children) {
+      if ((node.getAttribute('style') || '').includes('background')) node.setAttribute('has-background', 'true');
+    }
+    this.html = [section];
   }
 }
