@@ -248,6 +248,14 @@
 :host *.bg-color-no-box-shadow > a-arrow {
   margin-bottom: 0;
 }
+:host *.bg-color-no-box-shadow-inline {
+  box-shadow: none !important;
+  padding: 0 var(--bg-padding, 0.5em);
+  position: static;
+}
+:host *.bg-color-no-box-shadow-inline::after {
+  display: none;
+}
 :host *.bg-price {
   color: var(--bg-price, var(--m-black, black));
   cursor: auto;
