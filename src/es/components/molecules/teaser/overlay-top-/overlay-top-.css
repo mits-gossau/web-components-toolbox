@@ -6,6 +6,7 @@
   --teaser-overlay-top-bg-background-color: var(--m-white);
   --teaser-overlay-top-bg-padding-top: var(--bg-padding-bottom);
   --teaser-overlay-top-figcaption-padding: 3em 3em 0 3em;
+  --teaser-overlay-top-bg-no-box-shadow-inline-padding: var(--teaser-overlay-top-bg-no-box-shadow-inline-padding-custom, 0.15em 0.5em);
 }
 :host(:hover) {
   --teaser-overlay-top-bg-color: var(--teaser-overlay-top-bg-color-hover, #D48A42);
