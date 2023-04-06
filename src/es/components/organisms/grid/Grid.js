@@ -49,37 +49,36 @@ export default class Grid extends Shadow() {
    * @return {Promise<void>}
    */
   async renderCSS() {
+    const url = import.meta.url.replace(/(.*\/)(.*)$/, '$1');
     this.css = /* css */ `
       :host > section {
         display: grid;
         ${this.hasAttribute('height') ? `height: ${this.getAttribute('height') || '100%'};` : ''}
       }
     `;
-    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${url}../../../../css/reset.css`,
         namespace: false,
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${url}../../../../css/style.css`,
         namespaceFallback: true,
       },
     ];
     switch (this.getAttribute('namespace')) {
       case 'grid-2colums2rows-':
-        const fetchCSSParams = await this.fetchCSS(
+        const [{ styleNode, style }] = await this.fetchCSS(
           [
             {
-              path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./2colums2rows-/2colums2rows-.css`, // apply namespace since it is specific and no fallback
+              path: `${url}./2colums2rows-/2colums2rows-.css`,
               namespace: false,
             },
             ...styles,
           ],
           false
         );
-        // make template ${code} accessible
-        fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        styleNode.textContent = `${style}`;
         break;
       default:
         await this.fetchCSS(styles, false);
