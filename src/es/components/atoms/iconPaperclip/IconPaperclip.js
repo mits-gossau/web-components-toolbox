@@ -82,6 +82,8 @@ export default class IconPaperclip extends Shadow() {
       }
       :host(:hover) > svg path, :host(.hover) > svg path{
         stroke: var(--path-color-hover, var(--color-hover, var(--color, #777)));
+      }
+      :host(:hover), :host(.hover){
         cursor: pointer;
       }
     `
