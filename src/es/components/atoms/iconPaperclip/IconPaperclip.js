@@ -82,6 +82,7 @@ export default class IconPaperclip extends Shadow() {
       }
       :host(:hover) > svg path, :host(.hover) > svg path{
         stroke: var(--path-color-hover, var(--color-hover, var(--color, #777)));
+        cursor: pointer;
       }
     `
     // font-family can have an effect on size on the bounding h-tag with .bg-color
