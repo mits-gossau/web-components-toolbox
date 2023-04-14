@@ -1,0 +1,5 @@
+:host {
+    --form-order-item-default-border-top-color:pink;
+    --form-order-item-default-padding: calc(var(--content-spacing)/2) 0;
+    --form-order-item-default-a-input-width: var(--form-order-item-default-a-input-width-custom, 4em);
+}

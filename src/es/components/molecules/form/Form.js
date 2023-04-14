@@ -51,7 +51,7 @@ export default class Form extends Shadow() {
               event.preventDefault()
               inputTypeFile.value = ''
               this.changeListener(event)
-            }, {once: true})
+            }, { once: true })
           } else if (typeFileLabel.hasAttribute('original-label')) {
             if (inputTypeFile.hasAttribute('remove-file-title')) inputTypeFile.removeAttribute('title')
             inputTypeFile.parentNode.classList.remove('has-files')
