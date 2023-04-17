@@ -1,47 +1,45 @@
 // @ts-check
 /* global self */
-/* global CustomEvent */
-/* global location */
-/* global DOMParser */
 
 import Form from '../form/Form.js'
 
 export default class FormOrderItem extends Form {
-  constructor (...args) {
+  //inputFieldQuantity;
+  constructor(...args) {
     super(...args)
-    this.keydownListener = event => {
+    this.eventListener = event => {
       const inputField = this.root.querySelector(':focus')
-      const value = inputField?.value ? inputField.value : "0"
+      const value = inputField?.value ? inputField.value : '0'
+      this.updateInputAttributeValue(inputField, value)
       this.calcTotal(value, this.priceAttribute, this.priceTotalElement)
-    } 
+    }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    self.addEventListener('click', this.keydownListener)
-    self.addEventListener('keyup', this.keydownListener)
+    this.addEventListener('focusout', this.eventListener)
+    this.addEventListener('focusin', this.eventListener)
+    this.addEventListener('change', this.eventListener)
+    this.addEventListener('keyup', this.eventListener)
     this.setPrice(this.priceAttribute, this.priceElement)
-    this.calcTotal("0",this.priceAttribute,this.priceTotalElement)
+    this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
-    document.removeEventListener('change', this.keydownListener)
+    this.removeEventListener('focusout', this.eventListener)
+    this.removeEventListener('focusin', this.eventListener)
+    this.removeEventListener('change', this.eventListener)
+    this.removeEventListener('keyup', this.eventListener)
   }
 
-  shouldComponentRenderCSS() {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
-  }
-
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
       :host {
         margin:0 auto !important;
       }
       :host input[type=number] {
         width:var(--a-input-width, auto);
-        
       }
       :host > div {
         align-items: center;
@@ -77,19 +75,28 @@ export default class FormOrderItem extends Form {
     }
   }
 
-  setPrice(priceAttribute, priceElement){
-    if(!priceElement) return
+  setPrice(priceAttribute, priceElement) {
+    if (!priceElement) return
     priceElement.innerText = priceAttribute
   }
 
-  calcTotal(value, price, targetElement){
-    if(!targetElement) return
+  calcTotal(value, price, targetElement) {
+    if (!targetElement) return
     const total = value === '0' ? parseFloat(value).toFixed(2) : (parseFloat(value) * parseFloat(price)).toFixed(2)
-    targetElement.innerText = total 
+    targetElement.innerText = total
   }
 
+  updateInputAttributeValue(element, value) {
+    if (!element) return
+    const quantity = value !== '0' ? value : ''
+    element.setAttribute('value', quantity)
+  }
 
-  get priceAttribute(){
+  get quantityField() {
+    return this.root.querySelector('#quantity')
+  }
+
+  get priceAttribute() {
     return this.getAttribute('price')
   }
 
