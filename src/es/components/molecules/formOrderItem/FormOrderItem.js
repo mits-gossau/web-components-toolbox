@@ -21,7 +21,6 @@ export default class FormOrderItem extends Form {
   connectedCallback () {
     super.connectedCallback()
     this.clearQuantityBtn.addEventListener('click', this.clickListener)
-    this.addEventListener('change', this.eventListener)
     this.addEventListener('keyup', this.eventListener)
     this.setPrice(this.priceAttribute, this.priceElement)
     this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
@@ -30,7 +29,6 @@ export default class FormOrderItem extends Form {
   disconnectedCallback () {
     super.disconnectedCallback()
     this.clearQuantityBtn.removeEventListener('click', this.clickListener)
-    this.removeEventListener('change', this.eventListener)
     this.removeEventListener('keyup', this.eventListener)
   }
 
@@ -41,6 +39,14 @@ export default class FormOrderItem extends Form {
       }
       :host input[type=number] {
         width:var(--a-input-width, auto);
+      }
+      :host input[type=number]::-webkit-outer-spin-button,
+      :host input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      :host input[type=number] {
+        -moz-appearance:textfield;
       }
       :host > div {
         align-items: center;
