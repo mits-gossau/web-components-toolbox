@@ -3,6 +3,7 @@ import { Shadow } from '../prototypes/Shadow.js'
 
 /* global self */
 /* global HTMLElement */
+/* global fetch */
 
 /**
  * Prototype is a helper with a few functions for mcs digital-campaign-factory

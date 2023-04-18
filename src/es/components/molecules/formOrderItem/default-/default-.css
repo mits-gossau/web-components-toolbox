@@ -1,0 +1,25 @@
+:host {
+    --form-order-item-default-padding: calc(var(--content-spacing)/2) 0;
+    --form-order-item-default-a-input-width: var(--form-order-item-default-a-input-width-custom, 4em);
+    --button-tertiary-icon-left-margin:0;
+    --button-tertiary-icon-height:1em;
+    --button-tertiary-icon-width:1em;
+}
+
+:host .product {
+    width: var(--form-order-item-default-product-width,12em);
+}
+
+:host .type {
+    width:var(--form-order-item-default-type-width,5em);
+}
+
+:host .price {
+    text-align:right;
+    width:var(--form-order-item-default-price-width,5em);
+}
+
+:host .price-total{
+    text-align:right;
+    width:var(--form-order-item-default-price-total-width,10em);
+}
