@@ -14,7 +14,7 @@ export default class FormOrderItem extends Form {
     }
     this.clickListener = event => {
       this.quantityField.value = ''
-      this.calcTotal(0, this.priceAttribute, this.priceTotalElement)
+      this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
     }
   }
 
@@ -95,6 +95,7 @@ export default class FormOrderItem extends Form {
     if (!targetElement) return
     const total = value === '0' ? parseFloat(value).toFixed(2) : (parseFloat(value) * parseFloat(price)).toFixed(2)
     targetElement.innerText = total
+    this.setAttribute('total', total)
   }
 
   /**
@@ -113,7 +114,7 @@ export default class FormOrderItem extends Form {
   }
 
   get priceAttribute () {
-    return this.getAttribute('price')
+    return this.getAttribute('price') || 0
   }
 
   get priceElement () {
