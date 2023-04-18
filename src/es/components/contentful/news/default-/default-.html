@@ -25,6 +25,20 @@
             defaultSource="${imageTwo.url}?w=2160&q=80&fm=jpg"
             alt="${imageTwo.description !== '' ? imageTwo.description : imageTwo.title}" query-width="w"
             query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''}
+        ${contentThree
+        ? `<p>${self.documentToHtmlString(contentThree.json, linkRenderOptions)}</p>`
+        : ''}
+        ${imageThree ? `<a-picture mobile-breakpoint="${this.mobileBreakpoint}" picture-load
+            defaultSource="${imageThree.url}?w=2160&q=80&fm=jpg"
+            alt="${imageThree.description !== '' ? imageThree.description : imageThree.title}" query-width="w"
+            query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''}
+        ${contentFour
+        ? `<p>${self.documentToHtmlString(contentFour.json, linkRenderOptions)}</p>`
+        : ''}
+        ${imageFour ? `<a-picture mobile-breakpoint="${this.mobileBreakpoint}" picture-load
+            defaultSource="${imageFour.url}?w=2160&q=80&fm=jpg"
+            alt="${imageFour.description !== '' ? imageFour.description : imageFour.title}" query-width="w" query-format="fm"
+            query-quality="q" query-height="h"></a-picture>` : ''}
     </div>
     ${linkListCollection.items.length ? `<div class="link-collection">
         ${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}

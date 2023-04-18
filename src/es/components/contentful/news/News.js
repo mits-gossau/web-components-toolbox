@@ -107,7 +107,7 @@ export default class News extends Shadow() {
       this.loadDependency()
     ]).then((htmls) => {
       /* eslint-disable  no-unused-vars */
-      const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, linkListCollection, metaDescription, metaKeywords, metaTitle } = this.getNews(undefined, data)
+      const { date, tags, introHeadline, introImage, location, introText, contentOne, imageOne, contentTwo, imageTwo, contentThree, imageThree, contentFour, imageFour, linkListCollection, metaDescription, metaKeywords, metaTitle } = this.getNews(undefined, data)
       /* eslint-disable  no-unused-vars */
       const linkRenderOptions = {
         renderNode: {

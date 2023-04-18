@@ -25,6 +25,18 @@ query GetNews($limit: Int!, $skip: Int!) {
       imageTwo {
         ...AssetProps
       }
+      contentThree {
+        json
+      }
+      imageThree {
+        ...AssetProps
+      }
+      contentFour {
+        json
+      }
+      imageFour {
+        ...AssetProps
+      }
       linkListCollection(limit: 15) {
         items {
           linkText
