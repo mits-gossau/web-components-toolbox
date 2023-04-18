@@ -1,5 +1,4 @@
 :host {
-    --form-order-item-default-border-top-color:pink;
     --form-order-item-default-padding: calc(var(--content-spacing)/2) 0;
     --form-order-item-default-a-input-width: var(--form-order-item-default-a-input-width-custom, 4em);
     --button-tertiary-icon-left-margin:0;
@@ -8,27 +7,19 @@
 }
 
 :host .product {
-    background-color:green;
-    width: 12em;
+    width: var(--form-order-item-default-product-width,12em);
 }
 
 :host .type {
-    background-color:aqua;
-    width:5em;
-}
-
-:host .quantity {
-
-    background-color:red;
+    width:var(--form-order-item-default-type-width,5em);
 }
 
 :host .price {
     text-align:right;
-    width:5em;
+    width:var(--form-order-item-default-price-width,5em);
 }
 
 :host .price-total{
     text-align:right;
-    background:rosybrown;
-    width: 10em;
+    width:var(--form-order-item-default-price-total-width,10em);
 }

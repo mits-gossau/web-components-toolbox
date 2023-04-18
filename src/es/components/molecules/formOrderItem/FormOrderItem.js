@@ -75,17 +75,33 @@ export default class FormOrderItem extends Form {
     }
   }
 
+  /**
+   * Set item price based on attribute value
+   * @param {string} priceAttribute
+   * @param {HTMLElement} priceElement
+   */
   setPrice (priceAttribute, priceElement) {
     if (!priceElement) return
     priceElement.innerText = priceAttribute
   }
 
+  /**
+   * Calculate total price and display in target element
+   * @param {string} value
+   * @param {string} price
+   * @param {HTMLElement} targetElement
+   */
   calcTotal (value, price, targetElement) {
     if (!targetElement) return
     const total = value === '0' ? parseFloat(value).toFixed(2) : (parseFloat(value) * parseFloat(price)).toFixed(2)
     targetElement.innerText = total
   }
 
+  /**
+   * Update attribute 'value'
+   * @param {HTMLElement} element
+   * @param {string} value
+   */
   updateInputAttributeValue (element, value) {
     if (!element) return
     const quantity = value !== '0' ? value : ''
