@@ -15,10 +15,10 @@ export default class Grid extends Shadow() {
   async connectedCallback () {
     this.hidden = true
     const showPromises = []
-    if (this.shouldRenderCSS()) {
+    if (this.shouldComponentRenderCSS()) {
       showPromises.push(this.renderCSS())
     }
-    if (this.shouldRenderHTML()) {
+    if (this.shouldComponentRenderHTML()) {
       showPromises.push(this.renderHTML())
     }
     await Promise.all(showPromises)
@@ -30,7 +30,7 @@ export default class Grid extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -39,7 +39,7 @@ export default class Grid extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldComponentRenderHTML () {
     return !this.grid
   }
 
