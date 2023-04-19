@@ -12,17 +12,17 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {}
  */
 export default class Grid extends Shadow() {
-  async connectedCallback() {
-    this.hidden = true;
-    const showPromises = [];
+  async connectedCallback () {
+    this.hidden = true
+    const showPromises = []
     if (this.shouldRenderCSS()) {
-      showPromises.push(this.renderCSS());
+      showPromises.push(this.renderCSS())
     }
     if (this.shouldRenderHTML()) {
-      showPromises.push(this.renderHTML());
+      showPromises.push(this.renderHTML())
     }
-    await Promise.all(showPromises);
-    this.hidden = false;
+    await Promise.all(showPromises)
+    this.hidden = false
   }
 
   /**
@@ -30,8 +30,8 @@ export default class Grid extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`);
+  shouldRenderCSS () {
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
@@ -39,8 +39,8 @@ export default class Grid extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
-    return !this.grid;
+  shouldRenderHTML () {
+    return !this.grid
   }
 
   /**
@@ -48,41 +48,41 @@ export default class Grid extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  async renderCSS() {
-    const url = import.meta.url.replace(/(.*\/)(.*)$/, '$1');
+  async renderCSS () {
+    const url = import.meta.url.replace(/(.*\/)(.*)$/, '$1')
     this.css = /* css */ `
       :host > section {
         display: grid;
         ${this.hasAttribute('height') ? `height: ${this.getAttribute('height') || '100%'};` : ''}
       }
-    `;
+    `
     const styles = [
       {
         path: `${url}../../../../css/reset.css`,
-        namespace: false,
+        namespace: false
       },
       {
         path: `${url}../../../../css/style.css`,
-        namespaceFallback: true,
-      },
-    ];
+        namespaceFallback: true
+      }
+    ]
     switch (this.getAttribute('namespace')) {
       case 'grid-2colums2rows-':
         const [{ styleNode, style }] = await this.fetchCSS(
           [
             {
               path: `${url}./2colums2rows-/2colums2rows-.css`,
-              namespace: false,
+              namespace: false
             },
-            ...styles,
+            ...styles
           ],
           false
-        );
-        styleNode.textContent = `${style}`;
-        break;
+        )
+        styleNode.textContent = `${style}`
+        break
       default:
-        await this.fetchCSS(styles, false);
-        break;
+        await this.fetchCSS(styles, false)
+        break
     }
   }
 
@@ -91,15 +91,15 @@ export default class Grid extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  async renderHTML() {
-    const section = this.root.querySelector(`${this.cssSelector} > section`) || document.createElement('section');
+  async renderHTML () {
+    const section = this.root.querySelector(`${this.cssSelector} > section`) || document.createElement('section')
     for (const node of Array.from(this.root.children)) {
-      if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') section.appendChild(node);
+      if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') section.appendChild(node)
     }
-    this.setAttribute('count-section-children', section.children.length);
+    this.setAttribute('count-section-children', section.children.length)
     for (const node of section.children) {
-      if ((node.getAttribute('style') || '').includes('background')) node.setAttribute('has-background', 'true');
+      if ((node.getAttribute('style') || '').includes('background')) node.setAttribute('has-background', 'true')
     }
-    this.html = [section];
+    this.html = [section]
   }
 }
