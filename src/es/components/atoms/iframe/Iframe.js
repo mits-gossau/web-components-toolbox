@@ -27,11 +27,21 @@ export default class Iframe extends Intersection() {
   connectedCallback () {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (!this.intersecting) this.intersecting = this.shouldComponentRenderHTML() ? this.renderHTML() : () => console.warn('No required template tag found within this component: ', this)
+    if (!this.intersecting) {
+      this.intersecting = this.shouldComponentRenderHTML()
+        ? this.renderHTML()
+        : () =>
+            console.warn(
+              'No required template tag found within this component: ',
+              this
+            )
+    }
   }
 
   intersectionCallback (entries, observer) {
-    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
+    if (
+      (this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)
+    ) {
       // @ts-ignore
       this.intersecting()
       this.intersectionObserveStop()
@@ -44,7 +54,9 @@ export default class Iframe extends Intersection() {
    * @return {boolean}
    */
   shouldComponentRenderCSS () {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+    return !this.root.querySelector(
+      `:host > style[_css], ${this.tagName} > style[_css]`
+    )
   }
 
   /**
@@ -62,23 +74,34 @@ export default class Iframe extends Intersection() {
    * @return {void}
    */
   renderCSS () {
-    this.css = /* css */`
+    this.css = /* css */ `
       :host {
         line-height: 0;
       }
       :host, :host > iframe {
-        ${this.iframe && this.iframe.getAttribute('width') && !this.iframe.getAttribute('width').includes('%') && this.iframe.getAttribute('height') && !this.iframe.getAttribute('height').includes('%')
-          ? `aspect-ratio: ${this.iframe.getAttribute('width')} / ${this.iframe.getAttribute('height')};`
-          // @ts-ignore
-          : console.warn('This component requires an Iframe with fix/absolute width and height values: ', this) || ''
+        ${
+          this.iframe &&
+          this.iframe.getAttribute('width') &&
+          !this.iframe.getAttribute('width').includes('%') &&
+          this.iframe.getAttribute('height') &&
+          !this.iframe.getAttribute('height').includes('%')
+            ? `aspect-ratio: ${this.iframe.getAttribute(
+                'width'
+              )} / ${this.iframe.getAttribute('height')};`
+            : // @ts-ignore
+              console.warn(
+                'This component requires an Iframe with fix/absolute width and height values: ',
+                this
+              ) || ''
         }
         width: 100%;
         height: auto;
-        ${this.hasAttribute('background-color')
-          ? `background-color: ${this.getAttribute('background-color')};`
-          : ''
+        ${
+          this.hasAttribute('background-color')
+            ? `background-color: ${this.getAttribute('background-color')};`
+            : ''
         }
-        max-height: var(--max-height, 75vh);
+        max-height: var(--max-height, ${this.hasAttribute('keep-aspect-ratio') ? 'max-content' : '75vh'});
       }
     `
   }
@@ -90,7 +113,12 @@ export default class Iframe extends Intersection() {
    */
   renderHTML () {
     // prefetch or pre connect o the iframes src
-    if (this.hasAttribute('preload') && !document.head.querySelector(`link[href="${this.iframe.getAttribute('src')}"]`)) {
+    if (
+      this.hasAttribute('preload') &&
+      !document.head.querySelector(
+        `link[href="${this.iframe.getAttribute('src')}"]`
+      )
+    ) {
       const link = document.createElement('link')
       link.setAttribute('rel', 'preload')
       link.setAttribute('as', 'document')
@@ -99,11 +127,15 @@ export default class Iframe extends Intersection() {
     }
     const templateContent = this.template.content
     this.template.remove()
-    return () => setTimeout(() => {
-      this.html = templateContent
-    }, this.getAttribute('timeout') && this.getAttribute('timeout') !== null
-      ? Number(this.getAttribute('timeout'))
-      : 200)
+    return () =>
+      setTimeout(
+        () => {
+          this.html = templateContent
+        },
+        this.getAttribute('timeout') && this.getAttribute('timeout') !== null
+          ? Number(this.getAttribute('timeout'))
+          : 200
+      )
   }
 
   get template () {
@@ -111,6 +143,9 @@ export default class Iframe extends Intersection() {
   }
 
   get iframe () {
-    return (this.template && this.template.content.querySelector('iframe')) || this.root.querySelector('iframe')
+    return (
+      (this.template && this.template.content.querySelector('iframe')) ||
+      this.root.querySelector('iframe')
+    )
   }
 }
