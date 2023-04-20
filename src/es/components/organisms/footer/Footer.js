@@ -103,7 +103,10 @@ export default class Footer extends Shadow() {
         background-color: var(--invert-background-color);
       }
       :host > footer .invert.orange {
+        color: var(--invert-orange-color, var(--invert-color));
         --a-color-hover: var(--invert-orange-a-color-hover, var(--invert-a-color-hover));
+        --a-color: var(--invert-orange-a-color, var(--invert-a-color));
+        background-color: var(--invert-orange-background-color, var(--invert-background-color));
       }
       :host > footer o-wrapper[namespace=footer-default-] {
         --align-items: normal;
@@ -123,7 +126,7 @@ export default class Footer extends Shadow() {
       }
       :host > footer .footer-links > ul {
         flex-direction: row;
-        justify-content: start;
+        justify-content: var(--justify-content-custom, start);
       }
       :host > footer .language-switcher > ul > li, :host > footer .footer-links > ul > li {
         border: 0;
@@ -142,7 +145,7 @@ export default class Footer extends Shadow() {
       }
       /* force copyright to be at first position desktop */
       :host > footer .footer-links > ul > li.copyright {
-        order: -1;
+        order: var(--order-custom, -1);
         padding: 0 var(--content-spacing) 0 0;
       }
       /* in case copyright and language are supposed to be on the same line on desktop */
@@ -307,6 +310,15 @@ export default class Footer extends Shadow() {
               arr[i - 1].appendChild(clone)
             })
           } else {
+            // grab all web components to be cloned (only works on first level, means atoms)
+            const clones = []
+            Array.from(sectionChild.querySelectorAll('*')).filter(node => node.root).forEach(node => {
+              const clone = node.cloneNode(true)
+              clones.push(clone)
+              clone.html = ''
+              clone.html = node.html
+              node.classList.add(`placeholder-node-${clones.length - 1}`)
+            })
             // move all children into a dedicated div
             // create a summary/details for each sectionChild
             const detailsDiv = document.createElement('div')
@@ -318,6 +330,12 @@ export default class Footer extends Shadow() {
                 </details>
               </m-details>
             `
+            // replace the placeholders with its clones
+            clones.forEach((clone, i) => {
+              let placeholderNode
+              if ((placeholderNode = detailsDiv.children[0].root.querySelector(`.placeholder-node-${i}`))) placeholderNode.replaceWith(clone)
+            })
+            // set the details
             details.push(detailsDiv.children[0])
             sectionChild.appendChild(detailsDiv.children[0])
           }
@@ -437,6 +455,10 @@ export default class Footer extends Shadow() {
         flex-direction: row;
         gap: 1.875rem;
       }
+      :host .social-links svg {
+        height: 1.625rem;
+        width: auto;
+      }
       :host .footer-links-row {
         --details-default-icon-right-child-margin-mobile: var(--footer-links-row-margin, var(--details-default-icon-right-child-margin-mobile, var(--details-default-icon-right-child-margin, 0)));
       }
@@ -460,6 +482,10 @@ export default class Footer extends Shadow() {
         display: flex;
         flex-direction: row;
         gap: 1.875rem;
+      }
+      :host .social-links svg {
+        height: 1.625rem;
+        width: auto;
       }
       :host .footer-links-row:not(:last-child){
         border-right: var(--${this.getAttribute('namespace') || ''}boarder-right, 1px solid var(--m-gray-500));

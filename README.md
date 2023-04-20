@@ -3,6 +3,13 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 
 ## [organize components](https://wiki.migros.net/display/OCC/Web+Components+CMS+Template)
 
+Install:
+- git submodule update --init --recursive --remote --force
+- npm install
+
+Previews:
+- https://mits-gossau.github.io/web-components-toolbox/
+
 JS Rules:
 - use as little JS as possible. First think, if your problem could be solved with CSS before using JS
 - Component should share its breakpoint with children
@@ -25,18 +32,22 @@ CSS Rules:
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css
 
-## Mater Branch locked 🙌
+## Master Branch locked 🙌
 
 TODO Cleanup Sprints:
-- [ ] playwright single component tests
 - [ ] hover on parent prototype class which can be inherited (mouseover|mouseout)
 - [ ] @ setCSS and fetchCSS allow not only to define the namespace but also a namespace replacer func/regex (for expl. --default-button- replaced by --fancy-button-) to inherit a template
-- [x] loadChildComponents to shadow analog fetchHTML
+- [x] loadChildComponents to shadow analog fetchHTML (new fetchWC) including wc-config as controller with event listener supports: import with tagName + path and :not(:defined) resolve by dictionary
 - [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
-- [ ] documenter.js
-- [x] --develop branch with strict testing and release guidelines-- NO DO except branch can be selected at pipeline UI | Page specific repo points to certain toolbox commit at master
+- [ ] async await
+- [ ] rename should "component" render
 
 TODO:
+- [ ] playwright single component tests
+- [ ] documenter.js / automatic story book documentation by comments
 - [ ] Template.html api call to fetch page content for previews (playwright or https://github.com/Rob--W/cors-anywhere)
 - [ ] redo header and navigation /\drem/, then eliminate all rem values (tbd @miduca)
 - [ ] video lazy loading analog src/es/components/web-components-toolbox/src/es/components/atoms/picture/Picture.js with intersection and data-src (tbd @video use)
+- [ ] rework the reset.css with the new learnings from https://medium.com/appwrite-io/css-layers-for-css-resets-f60f270aa1cd
+- [ ] print.css and some ideas from here https://alvaromontoro.hashnode.dev/css-tip-style-your-radio-buttons-and-checkboxes-for-printing?utm_source=newsletter&utm_medium=email&utm_campaign=wdrl-309
+- [ ] scroll timeout solutions replaced by scrollend https://developer.chrome.com/blog/scrollend-a-new-javascript-event/?utm_source=newsletter&utm_medium=email&utm_campaign=wdrl-310

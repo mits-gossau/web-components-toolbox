@@ -83,6 +83,9 @@ export default class IconPaperclip extends Shadow() {
       :host(:hover) > svg path, :host(.hover) > svg path{
         stroke: var(--path-color-hover, var(--color-hover, var(--color, #777)));
       }
+      :host(:hover), :host(.hover){
+        cursor: pointer;
+      }
     `
     // font-family can have an effect on size on the bounding h-tag with .bg-color
     if (this.parentElement && this.parentElement.children.length === 1) this.parentElement.setAttribute('style', 'font-family: inherit')
@@ -118,7 +121,11 @@ export default class IconPaperclip extends Shadow() {
     this._parentNodeShadowRootHost = node
   }
 
+  get parentNodeParentNode () {
+    return this.parentNode.parentNode
+  }
+
   get mouseEventElement () {
-    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : 'svg']
+    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-parent-element') ? 'parentNodeParentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : 'svg']
   }
 }

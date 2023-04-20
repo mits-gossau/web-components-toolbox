@@ -118,7 +118,7 @@ export default class BodyStyle extends Intersection(Body) {
     `
     const cssSyntax = (attribute, isMobile = false, isBefore = false) => {
       let attributeName = isMobile ? attribute.name.replace('-mobile', '') : attribute.name
-      attributeName = isBefore ? attributeName.replace('-before', '') : attribute.name
+      attributeName = isBefore ? attributeName.replace('-before', '') : attributeName
       if (/-prop$/.test(attributeName)) {
         return `${attributeName.replace('-prop', '')}:${attribute.value};`
       } else if (/-var$/.test(attributeName)) {

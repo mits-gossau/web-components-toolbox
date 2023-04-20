@@ -1,0 +1,19 @@
+:host {
+  --button-square-text-transform: uppercase;
+  --button-square-padding: 0.25rem 0.75rem;
+  --button-square-border-radius: 0;
+  --button-square-color: white;
+  --button-square-background-color: #232323;
+  --button-square-font-size: 0.75rem;
+}
+
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --button-square-padding: 0.5rem 1rem;
+    width: 100%
+  }
+
+  :host button {
+    --button-square-width: 100%;
+  }
+}

@@ -28,18 +28,19 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
       if (isMsrcLoaded()) {
         resolve(self.msrc) // eslint-disable-line
       } else {
+        const baseUrl = (self.Environment && self.Environment.msrcBaseUrl) || 'https://cdn.migros.ch'
         // prefetch or pre connect o the iframes src
-        if (this.hasAttribute('prefetch') && !document.head.querySelector('link[href="https://cdn.migros.ch"]')) {
+        if (this.hasAttribute('prefetch') && !document.head.querySelector(`link[href="${baseUrl}"]`)) {
           const link = document.createElement('link')
           link.setAttribute('rel', 'dns-prefetch')
-          link.setAttribute('href', 'https://cdn.migros.ch')
+          link.setAttribute('href', baseUrl)
           document.head.appendChild(link)
         }
         // TODO: Should Integrity check? https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        mainScript.setAttribute('src', `//cdn.migros.ch/msrc/${(self.Environment && self.Environment.msrcVersion) || '20221205123932'}/main.js`)
+        mainScript.setAttribute('src', `${baseUrl}/msrc/${(self.Environment && self.Environment.msrcVersion) || '20221205123932'}/main.js`)
         mainScript.onload = () => {
           if (isMsrcLoaded()) resolve(self.msrc) // eslint-disable-line
         }

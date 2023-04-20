@@ -1,12 +1,17 @@
 /* global self */
 /* global location */
 
+const currentScriptUrl = new URL(document.currentScript.src)
+
 // @ts-ignore
 self.Environment = {
   isLocalhost: location.hostname === 'localhost',
-  contentfulEndpoint: 'https://graphql.contentful.com/content/v1/spaces/',
-  language: document.documentElement.getAttribute('lang') || 'de',
-  msrcVersion: (new URL(document.currentScript.src)).searchParams.get('msrcVersion') || '20221205123932',
+  language: currentScriptUrl.searchParams.get('language') || document.documentElement.getAttribute('lang') || 'de',
+  contentfulEndpoint: currentScriptUrl.searchParams.get('contentfulEndpoint') || 'https://graphql.contentful.com/content/v1/spaces/',
+  msrcBaseUrl: currentScriptUrl.searchParams.get('msrcBaseUrl') || 'https://cdn.migros.ch',
+  msrcVersion: currentScriptUrl.searchParams.get('msrcVersion') || '20221205123932',
+  mcsBaseUrl: currentScriptUrl.searchParams.get('mcsBaseUrl') || 'https://digital-campaign-factory.migros.ch',
+  mcsVersion: currentScriptUrl.searchParams.get('mcsVersion'), /* || 'v1.112.3', // the newest version gets fetched if this parameter is not set */
   /**
    * Get custom mobile breakpoint
    * @param {{constructor?: string, tagName?: string, namespace?: string}} organism
@@ -29,7 +34,7 @@ self.Environment = {
   getApiBaseUrl: function (type) {
     switch (type) {
       case 'zadb':
-        return this.isLocalhost ? 'https://testadmin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi' : 'https://admin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi'
+        return currentScriptUrl.searchParams.get('zadbEndpoint') || this.isLocalhost ? 'https://testadmin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi' : 'https://admin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi'
       default:
         return ''
     }

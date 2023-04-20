@@ -38,8 +38,8 @@ import { Prototype } from '../Prototype.js'
  *    "mgb"|
  *    "migusto"} [theme="alnatura"]
  *  {string} [account="document.documentElement.getAttribute('account') || ''"]
- *  {string} [newsletter-link="document.documentElement.getAttribute('newsletter-link') || ''"]
- *  {string} [newsletter-link-label="document.documentElement.getAttribute('newsletter-link-label') || ''"]
+ *  {string} [contact-link="document.documentElement.getAttribute('contact-link') || ''"]
+ *  {string} [contact-link-label="document.documentElement.getAttribute('contact-link-label') || ''"]
  *  {"large"|"medium"|"small"} [size="small"]
  *  {string} [loginReturnTo="self.location"]
  *  {string} [logoutReturnTo="self.location"]
@@ -122,8 +122,11 @@ export default class Login extends Prototype() {
         text-decoration: none;
         font-weight: var(--font-weight-strong, bold);
       }
-      :host > div > button {
-        max-width: 50vw;
+      :host > div {
+        position: relative;
+      }
+      :host > div div[open] {
+        top: 15px;
       }
       :host([profile-flyout]) {
           max-height: 2.5em !important;
@@ -138,11 +141,16 @@ export default class Login extends Prototype() {
           font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
           line-height: var(--line-height-mobile, var(--line-height, normal));
         }
+        :host > div div[open] {
+          top: 0 !important;
+        }
       }
     `
     this.msrcLoginButtonWrapper = this.root.querySelector('div') || document.createElement('div')
     // subscribe to login:authenticate user by calling the getter before starting any msrc stuff
     return this.loadDependency().then(async msrc => {
+      // subscribe before login | https://jira.migros.net/browse/MUTOBOTEAM-1964
+      this.user
       // Setup OIDC login configuration
       await msrc.utilities.login.setup(this.constructor.parseAttribute(this.getAttribute('setup') || '{}'))
       // Initialize the login button
@@ -158,7 +166,7 @@ export default class Login extends Prototype() {
         inlinks: {
           account: this.getAttribute('account') || ''
         },
-        links: [{ label: this.getAttribute('newsletter-link-label') || '', link: this.getAttribute('newsletter-link') || '' }]
+        links: [{ label: this.getAttribute('contact-link-label') || '', link: this.getAttribute('contact-link') || '' }]
       })
       const getStylesReturn = this.getStyles(document.createElement('style'))
       getStylesReturn[1].then(() => {
@@ -175,7 +183,12 @@ export default class Login extends Prototype() {
       const msrc = await this.loadDependency()
       // https://react-components.migros.ch/?path=/docs/msrc-login-00-readme--page#events
       const instance = await msrc.messenger.getInstance()
-      instance.subscribe('login:authenticate', ({ isManualLogin, loggedIn, error }) => resolve(msrc.utilities.login.getUser()))
+      // in case the subscribe event login:authenticate does not fire
+      const timeoutId = setTimeout(() => resolve(msrc.utilities.login.getUser()), 3000)
+      instance.subscribe('login:authenticate', ({ isManualLogin, loggedIn, error }) => {
+        clearTimeout(timeoutId)
+        resolve(msrc.utilities.login.getUser())
+      })
     }))
   }
 }

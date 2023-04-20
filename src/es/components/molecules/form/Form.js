@@ -34,6 +34,32 @@ export default class Form extends Shadow() {
     this.textAreaKeyUpListener = event => {
       this.updateCounter(event.target)
     }
+
+    this.changeListener = event => {
+      // input file detection with writing the selected files into the label
+      let inputTypeFile
+      if ((inputTypeFile = event.composedPath()[0]) && inputTypeFile.hasAttribute('type') && inputTypeFile.getAttribute('type') === 'file') {
+        const files = Array.from(inputTypeFile.files)
+        let typeFileLabel
+        if ((typeFileLabel = inputTypeFile.parentNode.querySelector('.type-file-label'))) {
+          if (files.length) {
+            if (inputTypeFile.hasAttribute('remove-file-title')) inputTypeFile.setAttribute('title', (inputTypeFile.getAttribute('remove-file-title')))
+            inputTypeFile.parentNode.classList.add('has-files')
+            if (!typeFileLabel.hasAttribute('original-label')) typeFileLabel.setAttribute('original-label', typeFileLabel.innerHTML)
+            typeFileLabel.innerHTML = files.reduce((acc, file, i) => `${acc}${file.name}${files[i + 1] ? '<br>' : ''}`, '&nbsp;')
+            inputTypeFile.addEventListener('click', event => {
+              event.preventDefault()
+              inputTypeFile.value = ''
+              this.changeListener(event)
+            }, { once: true })
+          } else if (typeFileLabel.hasAttribute('original-label')) {
+            if (inputTypeFile.hasAttribute('remove-file-title')) inputTypeFile.removeAttribute('title')
+            inputTypeFile.parentNode.classList.remove('has-files')
+            typeFileLabel.innerHTML = typeFileLabel.getAttribute('original-label')
+          }
+        }
+      }
+    }
   }
 
   connectedCallback () {
@@ -45,6 +71,7 @@ export default class Form extends Shadow() {
         a.addEventListener('keyup', this.textAreaKeyUpListener)
       }
     })
+    this.addEventListener('change', this.changeListener)
   }
 
   disconnectedCallback () {
@@ -54,6 +81,7 @@ export default class Form extends Shadow() {
         a.removeEventListener('keyup', this.textAreaKeyUpListener)
       }
     })
+    this.removeEventListener('change', this.changeListener)
   }
 
   /**
@@ -130,6 +158,14 @@ export default class Form extends Shadow() {
     this.css = /* css */`
       :host {
         width:100%;
+      }
+      :host .has-files:after {
+        content: 'x';
+        position: absolute;
+        top: 0.1em;
+        right: 0.3em;
+        line-height: 1em;
+        pointer-events: none;
       }
       legend {
         font-family: var(--font-family-bold, var(--font-family, inherit));

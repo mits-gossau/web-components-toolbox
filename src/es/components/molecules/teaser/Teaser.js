@@ -232,6 +232,11 @@ export default class Teaser extends Intersection() {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overlay-/overlay-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
+      case 'teaser-overlay-top-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overlay-top-/overlay-top-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
       case 'teaser-download-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`, // apply namespace since it is specific and no fallback

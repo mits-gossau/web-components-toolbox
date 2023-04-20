@@ -1,0 +1,10 @@
+:host {
+  display: block;
+}
+
+:host img {
+  --logo-partner-width: 250px;
+  --logo-partner-height: 142px;
+  --logo-partner-width-mobile: 120px;
+  --logo-partner-height-mobile: 65px;
+}

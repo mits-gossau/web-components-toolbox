@@ -1,7 +1,7 @@
 :host {
   --gap-custom: 0;
   --menu-background-color: var(--background-color);
-  --menu-color: var(--color-tertiary);
+  --menu-color: var(--menu-color-custom, var(--color-tertiary));
   --navigation-alnatura-background-color-open: var(--menu-color);
   --navigation-alnatura-border-color: var(--menu-color);
   --navigation-alnatura-content-width: var(--navigation-alnatura-content-width-custom, var(--header-default-content-width));
@@ -17,15 +17,15 @@
   --navigation-alnatura-padding: 0;
 }
 :host > nav > ul > li > a-link {
-  --navigation-alnatura-color-active: var(--menu-background-color);
+  --navigation-alnatura-color-active: var(--navigation-alnatura-color-active-custom, var(--menu-background-color));
 }
 :host > nav > ul > li.open > a-link {
   --navigation-alnatura-background-color-hover: var(--menu-color);
   --navigation-alnatura-background-color-active: var(--menu-color);
 }
 :host > nav > ul > li:not(.open) > a-link {
-  --navigation-alnatura-color-active: var(--color-tertiary);
-  --navigation-alnatura-color-hover: var(--color-tertiary);
+  --navigation-alnatura-color-active: var(--navigation-alnatura-not-open-color-active-custom, var(--color-tertiary));
+  --navigation-alnatura-color-hover: var(--navigation-alnatura-not-open-color-hover-custom, var(--color-tertiary));
 }
 :host > nav > ul li.open, :host > nav > ul li:hover, :host > nav > ul li.active {
   --navigation-alnatura-path-color: var(--color-hover);
@@ -89,7 +89,7 @@
   :host > nav > ul > li:not(.open) > a-link {
     --navigation-alnatura-color-hover: var(--color-hover);
   }
-  :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
+  :host > nav > ul:not(.language-switcher):not(.open):not(:hover) > li.active:not(.search):not(:last-child), :host > nav > ul:not(.language-switcher) > li.active:not(.search):not(:last-child), :host > nav > ul:not(.language-switcher) > li:not(.search):not(:last-child), :host > nav > ul:not(.language-switcher) > li:hover:not(.search):not(:last-child) {
     border-bottom: 2px dotted var(--menu-color) !important;
   }
   :host > nav > ul > li > a-link, :host(.no-scroll) > nav > ul > li > a-link {

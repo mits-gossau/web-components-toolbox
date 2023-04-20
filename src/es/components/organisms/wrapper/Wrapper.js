@@ -125,6 +125,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           margin: var(--margin-mobile, var(--margin, 0)) !important;
           padding: var(--padding-mobile, var(--padding, 0)) !important;
           ${this.hasAttribute('flex-nowrap-mobile') ? '' : 'width: 100% !important;'}
+          ${this.hasAttribute('width-mobile') ? `width: ${this.getAttribute('width-mobile')} !important;` : ''}
         }
         :host > section > *:not([style]):first-child {
           margin: var(--margin-first-child-mobile, var(--margin-first-child, var(--margin-mobile, var(--margin, 0)))) !important;
@@ -193,6 +194,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
+      case 'wrapper-teaser-recipe-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-recipe-/teaser-recipe-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(() => this.calcColumnWidth())
       case 'wrapper-text-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./text-/text-.css`, // apply namespace since it is specific and no fallback
@@ -216,6 +222,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       case 'menu-legends-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-legends-/menu-legends-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(() => this.calcColumnWidth())
+      case 'wrapper-text-picture-cover-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./text-picture-cover-/text-picture-cover-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
       default:
@@ -307,8 +318,8 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         this.setCss(/* CSS */`
           :host > section > *:nth-child(${i}) {
             width: calc(var(--any-${i}-width, ${freeWidth}%) - ${(!childNodes[i - 1].hasAttribute('width') || !childNodes[i - 1].getAttribute('width').includes('100')
-              ? margin
-              : 0) / childNodesLengthNotWidthHundredPercent}${unit || 'px'});
+              ? margin || 0
+              : 0) / childNodesLengthNotWidthHundredPercent || 0}${unit || 'px'});
           }
         `, undefined, undefined, undefined, this.style)
       }

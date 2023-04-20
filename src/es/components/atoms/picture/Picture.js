@@ -158,6 +158,7 @@ export default class Picture extends Intersection() {
         min-height: var(--img-min-height, unset);
         min-width: var(--img-min-width, unset);
         object-fit: var(--img-object-fit, contain); /* cover does not render the same on IOS */
+        object-position: ${this.hasAttribute('img-object-position') ? this.getAttribute('img-object-position') : 'var(--img-object-position, 50% 50%)'};
         opacity: 0;
         overflow: var(--overflow, auto);
         position: var(--position, static);
@@ -277,6 +278,11 @@ export default class Picture extends Intersection() {
       case 'picture-store-logo-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./store-logo-/store-logo-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
+      case 'picture-cover-':
+        return this.fetchCSS([{
+          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./cover-/cover-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
     }
