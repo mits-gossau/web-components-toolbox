@@ -101,10 +101,7 @@ export default class Iframe extends Intersection() {
             ? `background-color: ${this.getAttribute('background-color')};`
             : ''
         }
-        max-height: var(--max-height, 75vh);
-      }
-      :host([keep-aspect-ratio]), :host([keep-aspect-ratio]) > iframe {
-        max-height: max-content;
+        max-height: var(--max-height, ${this.hasAttribute('aspect-ratio') ? 'max-content' : '75vh'});
       }
     `
   }
