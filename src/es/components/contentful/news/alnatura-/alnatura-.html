@@ -14,8 +14,7 @@
     <div class="content">
         ${imageOne ? `<div class="content-one-picture-wrapper">
             <a-picture mobile-breakpoint="${this.mobileBreakpoint}" picture-load
-                defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" 
-                alt="${imageOne.title ? imageOne.title : ''}"
+                defaultSource="${imageOne.url}?w=2160&q=80&fm=jpg" alt="${imageOne.title ? imageOne.title : ''}"
                 query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>
             <p class="image-one-description font-size-tiny">${imageOne.description ? imageOne.description : ''}</p>
         </div>` : ''}
@@ -33,6 +32,24 @@
             <p>${self.documentToHtmlString(contentTwo.json, linkRenderOptions)}</p>
         </div>`
         : imageTwo ? '<br />' : ''}
+        ${imageThree ? `<div class="content-three-picture-wrapper"><a-picture
+                mobile-breakpoint="${this.mobileBreakpoint}" picture-load
+                defaultSource="${imageThree.url}?w=2160&q=80&fm=jpg" alt="${imageThree.title ? imageThree.title : ''}"
+                query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
+        ${contentThree
+        ? `<div class="content-three-text-wrapper">
+            <p>${self.documentToHtmlString(contentThree.json, linkRenderOptions)}</p>
+        </div>`
+        : imageThree ? '<br />' : ''}
+        ${imageFour ? `<div class="content-four-picture-wrapper"><a-picture mobile-breakpoint="${this.mobileBreakpoint}"
+                picture-load defaultSource="${imageFour.url}?w=2160&q=80&fm=jpg"
+                alt="${imageFour.title ? imageFour.title : ''}" query-width="w" query-format="fm" query-quality="q"
+                query-height="h"></a-picture></div>` : ''}
+        ${contentFour
+        ? `<div class="content-four-text-wrapper">
+            <p>${self.documentToHtmlString(contentFour.json, linkRenderOptions)}</p>
+        </div>`
+        : imageFour ? '<br />' : ''}
     </div>
     ${linkListCollection.items.length ? `<div class="link-collection">
         ${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
