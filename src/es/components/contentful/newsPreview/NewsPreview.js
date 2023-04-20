@@ -1,6 +1,5 @@
 // @ts-check
 /* global location */
-/* global customElements */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 export default class NewsPreview extends Shadow() {
@@ -28,7 +27,16 @@ export default class NewsPreview extends Shadow() {
       this.html = this.ERROR_MSG
       return
     }
-    this.loadChildComponents()
+    this.fetchModules([
+      {
+        path: `${this.importMetaUrl}../../organisms/wrapper/Wrapper.js`,
+        name: 'o-wrapper'
+      },
+      {
+        path: `${this.importMetaUrl}../../atoms/picture/Picture.js`,
+        name: 'a-picture'
+      }
+    ])
     this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
     const url = new URL(this.newsUrl, this.newsUrl.charAt(0) === '/' ? location.origin : this.newsUrl.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set(this.getAttribute('slug-name') || 'news', this.news.slug)
@@ -97,23 +105,6 @@ export default class NewsPreview extends Shadow() {
       default:
         return this.fetchCSS(styles)
     }
-  }
-
-  loadChildComponents () {
-    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
-      import('../../organisms/wrapper/Wrapper.js').then(
-        module => ['o-wrapper', module.Wrapper()]
-      ),
-      import('../../atoms/picture/Picture.js').then(
-        module => ['a-picture', module.default]
-      )
-    ]).then(elements => {
-      elements.forEach(element => {
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
   }
 
   get newsUrl () {
