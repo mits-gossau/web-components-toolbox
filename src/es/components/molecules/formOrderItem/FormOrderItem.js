@@ -102,6 +102,15 @@ export default class FormOrderItem extends Form {
     const total = value === '0' ? parseFloat(value).toFixed(2) : (parseFloat(value) * parseFloat(price)).toFixed(2)
     targetElement.innerText = total
     this.setAttribute('total', total)
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
+      detail: {
+        total,
+        name: this.getElementName
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
   }
 
   /**
@@ -134,4 +143,9 @@ export default class FormOrderItem extends Form {
   get clearQuantityBtn () {
     return this.root.querySelector('a-button') || null
   }
+
+  get getElementName(){
+    return this.getAttribute('name') || ''
+  }
+
 }
