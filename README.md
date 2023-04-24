@@ -36,6 +36,7 @@ HTML/CSS Tooling:
 
 TODO Cleanup Sprints:
 - [ ] hover on parent prototype class which can be inherited (mouseover|mouseout)
+- [ ] keep body hidden at connected callback until style.css is loaded https://github.com/mits-gossau/web-components-toolbox/blob/master/src/es/components/organisms/body/Body.js
 - [ ] rename should "component" render
 - [ ] fetchCSS.then replace to replaces property
 - [ ] from loadChildComponents to shadow fetchModules
