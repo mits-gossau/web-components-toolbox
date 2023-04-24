@@ -36,11 +36,11 @@ HTML/CSS Tooling:
 
 TODO Cleanup Sprints:
 - [ ] hover on parent prototype class which can be inherited (mouseover|mouseout)
-- [ ] @ setCSS and fetchCSS allow not only to define the namespace but also a namespace replacer func/regex (for expl. --default-button- replaced by --fancy-button-) to inherit a template
-- [x] loadChildComponents to shadow analog fetchHTML (new fetchWC) including wc-config as controller with event listener supports: import with tagName + path and :not(:defined) resolve by dictionary
+- [ ] rename should "component" render
+- [ ] fetchCSS.then replace to replaces property
+- [ ] from loadChildComponents to shadow fetchModules
 - [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
 - [ ] async await
-- [ ] rename should "component" render
 
 TODO:
 - [ ] playwright single component tests
