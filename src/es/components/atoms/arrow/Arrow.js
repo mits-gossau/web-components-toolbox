@@ -20,33 +20,38 @@ import { Hover } from '../../prototypes/Hover.js'
  * }
  */
 export default class Arrow extends Hover() {
+  
   static get observedAttributes () {
     return ['hover']
   }
 
-  constructor (...args) {
-    super(...args)
+  constructor(options = {}, ...args) {
+    
+    super(Object.assign(options, { hoverInit: { level: '2', className: 'xox' } }), ...args)
 
-    this.mouseoverListener = event => {
-      if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', 'true')
-      this.classList.add('hover')
-    }
-    this.mouseoutListener = event => {
-      if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', '')
-      this.classList.remove('hover')
-    }
+    // this.mouseoverListener = event => {
+    //   if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', 'true')
+    //   this.classList.add('hover')
+    // }
+    // this.mouseoutListener = event => {
+    //   if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', '')
+    //   this.classList.remove('hover')
+    // }
   }
 
   connectedCallback () {
+    super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
-    this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
+    //console.log(this.mouseEventElement)
+    // this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
+    // this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
   }
 
   disconnectedCallback () {
-    this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
-    this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
+    super.disconnectedCallback()
+    // this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
+    // this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
     this.parentNodeShadowRootHost = null
   }
 
