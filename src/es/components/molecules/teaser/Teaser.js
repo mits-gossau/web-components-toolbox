@@ -219,14 +219,17 @@ export default class Teaser extends Intersection() {
       case 'teaser-tile-rounded-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          // harmonize the tile-.css namespace with teaser-tile-rounded-
+          replaces: [{
+            pattern: '--teaser-tile-',
+            flags: 'g',
+            replacement: '--teaser-tile-rounded-'
+          }]
         }, {
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tile-rounded-/tile-rounded-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the tile-.css namespace with teaser-tile-rounded-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--teaser-tile-/g, '--teaser-tile-rounded-')
-        })
+        }, ...styles], false)
       case 'teaser-overlay-':
         return this.fetchCSS([{
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overlay-/overlay-.css`, // apply namespace since it is specific and no fallback

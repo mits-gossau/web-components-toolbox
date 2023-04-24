@@ -12,6 +12,7 @@
   maxWidth?: string,
   importMetaUrl?: string,
   node?: HTMLElement & Shadow & *
+  replaces?: {pattern: string, flags: string, replacement: string}[]
 }} fetchCSSParams */
 /** @typedef {{
   path: string,
@@ -209,9 +210,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {boolean} [appendStyleNode = true]
    * @param {string} [maxWidth = this.mobileBreakpoint]
    * @param {HTMLElement & Shadow} [node = this]
+   * @param {{pattern: string, flags: string, replacement: string}[]} [replaces = []]
    * @return {string}
    */
-  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true, maxWidth = this.mobileBreakpoint, node = this) {
+  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true, maxWidth = this.mobileBreakpoint, node = this, replaces = []) {
     if (!styleNode) {
     /** @type {HTMLStyleElement} */
       styleNode = document.createElement('style')
@@ -236,6 +238,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           style = Shadow.cssNamespaceToVar(style, namespace)
         }
       }
+      replaces.forEach(replace => (style = style.replace(new RegExp(replace.pattern, replace.flags), replace.replacement)))
       // TODO: Review the safari fix below, if the bug got fixed within safari itself (NOTE: -webkit prefix did not work for text-decoration-thickness). DONE 2021.11.10 | LAST CHECKED 2021.11.10
       // safari text-decoration un-supported shorthand fix
       if (Shadow.isMac && style.includes('text-decoration:')) style = Shadow.cssTextDecorationShortHandFix(style, node)
@@ -464,7 +467,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
              * @param {fetchCSSParams} path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error
              * @return {fetchCSSParams}
              */
-            ({ path, cssSelector, namespace, namespaceFallback, styleNode, style, appendStyleNode = true, error, maxWidth = this.mobileBreakpoint, node = this }, i) => {
+            ({ path, cssSelector, namespace, namespaceFallback, styleNode, style, appendStyleNode = true, error, maxWidth = this.mobileBreakpoint, node = this, replaces = [] }, i) => {
               if (error) return fetchCSSParams[i]
               // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/controllers/fetchCss/FetchCss.js
               // create a new style node if none is supplied
@@ -478,7 +481,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
               }
               if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
               // @ts-ignore
-              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node) }
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node, replaces) }
             }
           )
         }
