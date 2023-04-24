@@ -44,10 +44,11 @@ export default class TotalPrice extends Shadow() {
   renderCSS() {
     this.css = /* css */`
       :host > div {
-        display: flex;
-        justify-content: flex-end;
         align-items: center;
+        display: flex;
         flex-direction: row;
+        gap:var(--gap, 1em);
+        justify-content: flex-end;
       }
     `
   }
@@ -78,8 +79,25 @@ export default class TotalPrice extends Shadow() {
    */
   renderHTML() {
     this.divWrapper = document.createElement('div')
-    this.totalPriceElement = document.createElement('p')
+    this.divWrapper.appendChild(this.createTextContentElement(this.totalText))
+    this.totalPriceElement = this.createTextContentElement('0.00')
     this.divWrapper.appendChild(this.totalPriceElement)
+    this.divWrapper.appendChild(this.createTextContentElement('CHF'))
     this.html = this.divWrapper
+  }
+
+  /**
+   * create a simple p element
+   * @param {string} content 
+   * @returns 
+   */
+  createTextContentElement(content){
+    const contentElement = document.createElement('p')
+    if(content) contentElement.textContent = content
+    return contentElement  
+  }
+
+  get totalText() {
+    return this.getAttribute('total-text') || 'Total'
   }
 }
