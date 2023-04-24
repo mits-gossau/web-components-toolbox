@@ -1,5 +1,6 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+//import { Shadow } from '../../prototypes/Shadow.js'
+import { Hover } from '../../prototypes/Hover.js'
 
 /**
  * Arrow is an icon
@@ -18,7 +19,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  --color-hover [white]
  * }
  */
-export default class Arrow extends Shadow() {
+export default class Arrow extends Hover() {
   static get observedAttributes () {
     return ['hover']
   }
