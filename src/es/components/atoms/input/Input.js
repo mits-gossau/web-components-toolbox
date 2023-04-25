@@ -79,8 +79,8 @@ export default class Input extends Shadow() {
 
   connectedCallback () {
     // render template
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTML()
+    if (this.shouldRenderCSS()) this.renderCSS()
 
     // init configuration
     this.disabled = this.hasAttribute('disabled')
@@ -125,7 +125,7 @@ export default class Input extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector('style[_css]')
   }
 
@@ -134,7 +134,7 @@ export default class Input extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.inputField
   }
 

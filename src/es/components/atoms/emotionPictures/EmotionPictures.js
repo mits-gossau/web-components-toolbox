@@ -73,7 +73,7 @@ export default class EmotionPictures extends Intersection() {
     }
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) {
       showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('picture-load', event => {
         if (!event || !event.detail || !event.detail.error) resolve()
@@ -97,7 +97,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 

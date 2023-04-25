@@ -21,9 +21,9 @@ export default class TagFilter extends Mutation() {
 
   connectedCallback () {
     super.connectedCallback()
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldRenderCSS()) this.renderCSS()
     // @ts-ignore
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldRenderHTML()) this.renderHTML()
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventListener)
   }
 
@@ -36,11 +36,11 @@ export default class TagFilter extends Mutation() {
     this.setAttribute('count-children', Array.from(this.root.children).filter(child => child.tagName !== 'STYLE').length)
   }
 
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.tagFilterWrapper
   }
 

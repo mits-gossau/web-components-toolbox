@@ -24,7 +24,7 @@ export default class NewsList extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldRenderCSS()) this.renderCSS()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.hidden = true
     Promise.all([this.loadScriptDependency(), this.loadDependency()]).then(() => this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
@@ -75,7 +75,7 @@ export default class NewsList extends Shadow() {
     })
   }
 
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 

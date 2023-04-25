@@ -19,8 +19,8 @@ export default class PictureWithPicture extends Shadow() {
   connectedCallback () {
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) this.renderHTML()
     Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
@@ -29,7 +29,7 @@ export default class PictureWithPicture extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -38,7 +38,7 @@ export default class PictureWithPicture extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.wrapper
   }
 

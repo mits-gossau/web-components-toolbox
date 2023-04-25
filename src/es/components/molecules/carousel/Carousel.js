@@ -134,8 +134,8 @@ export default class MacroCarousel extends Shadow() {
 
   connectedCallback () {
     const runResizePromises = []
-    if (this.shouldComponentRenderCSS()) runResizePromises.push(this.renderCSS())
-    if (this.shouldComponentRenderHTML()) runResizePromises.push(this.renderHTML())
+    if (this.shouldRenderCSS()) runResizePromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) runResizePromises.push(this.renderHTML())
     this.hidden = true
     const showPromises = Array.from(runResizePromises)
     self.addEventListener('resize', this.resizeListener)
@@ -198,7 +198,7 @@ export default class MacroCarousel extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -207,7 +207,7 @@ export default class MacroCarousel extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.scripts.length
   }
 

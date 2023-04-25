@@ -112,8 +112,8 @@ export default class Navigation extends Mutation() {
   connectedCallback () {
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     Promise.all(showPromises).then(() => {
       this.hidden = false
       this.checkIfWrapped(true)
@@ -174,7 +174,7 @@ export default class Navigation extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -183,7 +183,7 @@ export default class Navigation extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.nav
   }
 

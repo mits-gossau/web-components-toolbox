@@ -54,7 +54,7 @@ export default class Widget extends Prototype() {
   connectedCallback () {
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRender()) showPromises.push(this.render())
+    if (this.shouldRender()) showPromises.push(this.render())
     Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
@@ -63,7 +63,7 @@ export default class Widget extends Prototype() {
    *
    * @return {boolean}
    */
-  shouldComponentRender () {
+  shouldRender () {
     return !this.mscWrapper
   }
 

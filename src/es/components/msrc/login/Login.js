@@ -80,7 +80,7 @@ export default class Login extends Prototype() {
   connectedCallback () {
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRender()) showPromises.push(this.render())
+    if (this.shouldRender()) showPromises.push(this.render())
     Promise.all(showPromises).then(() => (this.hidden = false))
     document.body.addEventListener(this.getAttribute('request-msrc-user') || 'request-msrc-user', this.requestMsrcUserListener)
   }
@@ -94,7 +94,7 @@ export default class Login extends Prototype() {
    *
    * @return {boolean}
    */
-  shouldComponentRender () {
+  shouldRender () {
     return !this.msrcLoginButtonWrapper
   }
 

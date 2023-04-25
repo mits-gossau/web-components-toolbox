@@ -10,15 +10,15 @@ export default class NewsPreview extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTML()
+    if (this.shouldRenderCSS()) this.renderCSS()
   }
 
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.newsWrapper
   }
 
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 

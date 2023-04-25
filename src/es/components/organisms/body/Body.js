@@ -61,8 +61,8 @@ export default class Body extends Shadow() {
 
   connectedCallback () {
     super.connectedCallback()
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
     if (location.hash) {
       self.addEventListener('load', event => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), { once: true })
@@ -82,7 +82,7 @@ export default class Body extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -91,7 +91,7 @@ export default class Body extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.main
   }
 
