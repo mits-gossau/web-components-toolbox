@@ -1,5 +1,7 @@
 // @ts-check
 
+/* global CustomEvent */
+
 import Form from '../form/Form.js'
 
 export default class FormOrderItem extends Form {
@@ -144,8 +146,7 @@ export default class FormOrderItem extends Form {
     return this.root.querySelector('a-button') || null
   }
 
-  get getElementName(){
+  get getElementName () {
     return this.getAttribute('name') || ''
   }
-
 }

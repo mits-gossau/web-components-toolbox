@@ -12,7 +12,7 @@ import { Shadow } from './Shadow.js'
  * @param {Function | *} ChosenClass
  * @attribute {'string'} [hoverInit=`{
       'level': undefined
-      'className': '',  
+      'className': '',
     }`]
  * @requires {
       Shadow: {
@@ -47,7 +47,6 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
       className: this.getAttribute('hover-class-name') || 'active'
       /* node?: recursively found node on connected callback */
     }
-    
   }
 
   /**
