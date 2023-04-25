@@ -6,25 +6,25 @@ import { Shadow } from './Shadow.js'
 
 
 export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass {
- 
-  constructor (options = { hoverInit: {} }, ...args) {
+
+  constructor(options = { hoverInit: undefined }, ...args) {
     super(options, ...args)
-     
     this.hoverInit = typeof options.hoverInit === 'object' ? options.hoverInit : {
-      level: this.getAttribute('hover-level') || 1, // number or function (id===34 | tagName==='span')
-      className: this.getAttribute('hover-class-name') || 'active'
+      level: this.getAttribute('hover-level') || undefined,
+      className: this.getAttribute('hover-class-name') || undefined
       /* node?: recursively found node on connected callback */
     }
 
-    //console.log("HOVER Constructor", this.hoverInit);
-
     this.mouseOverListener = event => {
-     console.log("MOUSE over")
+      console.log("MOUSE over", this.hoverElement)
+      this.hoverElement.classList.add('hover')
     }
+
     this.mouseOutListener = event => {
-      console.log("mouse OUT")
+      console.log("mouse OUT", this.hoverElement)
+      this.hoverElement.classList.remove('hover')
     }
-    
+
   }
 
   /**
@@ -32,12 +32,15 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    *
    * @return {void}
    */
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
-    // this.hoverTarget.addEventListener('mouseover', this.mouseOverListener)
-    console.log("Hover CB", this.findTargetElement(this, this.hoverInit.level, this.hoverInit.className))
-    // this.targetElement.addEventListener('mouseover', this.mouseOverListener)
-    // this.targetElement.addEventListener('mouseout', this.mouseOutListener)
+    if (this.hoverInit.level || this.hoverInit.className) {
+      this.hoverElement = this.hoverTarget()
+      console.log("Hover element in CC", this.hoverElement)
+      this.hoverElement.addEventListener('mouseover', this.mouseOverListener)
+      this.hoverElement.addEventListener('mouseout', this.mouseOutListener)
+    }
+
   }
 
   /**
@@ -45,24 +48,51 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    *
    * @return {void}
    */
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
-    // detach mouse events
-    // _hoverTarget = null // TODO 
+    this._target = null
+    this.hoverElement && this.hoverElement.removeEventListener('mouseover', this.mouseoverListener)
+    this.hoverElement && this.hoverElement.removeEventListener('mouseout', this.mouseoutListener)
   }
 
-  get hoverTarget(){
-    // TODO: 
-    // 1. Find parent from => element
-    // 1.1 > based on level => level
-    // 1.2 > based on class name set on parent => selector
-    // 2. return the parent to attach the listener
-    return null
+  get hoverTarget() {
+    return this._target || (this._target = (() => {
+      const classNameElement = this.findByClassName(this, this.hoverInit.className)
+      //const classNameElement = this.fancyFindByClassName(this, this.hoverInit.className)
+      //console.log("classNameElement", classNameElement)
+      const levelElement = this.findByLevel(this, Number(this.hoverInit.level))
+      //console.log("levelElement", levelElement);
+      return levelElement || classNameElement
+    }))
   }
 
-  // findTargetElement(element,level,selector) {
-  //   console.log("---", element, level, selector)
-    
-  //   return "abc"
-  // }
+  findByClassName(el, className) {
+    while (el.parentNode) {
+      el = el.parentNode;
+      if (el.classList && el.classList.contains(className)) {
+        return el;
+      }
+    }
+    return null;
+  }
+
+  fancyFindByClassName(el, className) {
+    if (!el || el.classList && el.classList.contains(className)) {
+      return el
+    } else {
+      return this.fancyFindByClassName(el.parentElement, className)
+    }
+  }
+
+  findByLevel(el, level) {
+    let currentLevel = 1
+    while (el.parentNode) {
+      el = el.parentNode
+      if (currentLevel === level) {
+        return el
+      }
+      currentLevel++
+    }
+  }
+
 }

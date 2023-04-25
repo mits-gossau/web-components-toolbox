@@ -27,7 +27,7 @@ export default class Arrow extends Hover() {
 
   constructor(options = {}, ...args) {
 
-    //super(Object.assign(options, { hoverInit: { level: '2', className: 'xox' } }), ...args)
+    //super(Object.assign(options, { hoverInit: { level: '2', className: 'custom-arrow-class' } }), ...args)
     super(...args)
 
     // this.mouseoverListener = event => {
