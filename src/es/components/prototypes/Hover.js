@@ -9,16 +9,14 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
  
   constructor (options = { hoverInit: {} }, ...args) {
     super(options, ...args)
-    
-    console.log("THIS", this)
-    
+     
     this.hoverInit = typeof options.hoverInit === 'object' ? options.hoverInit : {
       level: this.getAttribute('hover-level') || 1, // number or function (id===34 | tagName==='span')
       className: this.getAttribute('hover-class-name') || 'active'
       /* node?: recursively found node on connected callback */
     }
 
-    console.log("HOVER CB", this.mouseEventElement);
+    //console.log("HOVER Constructor", this.hoverInit);
 
     this.mouseOverListener = event => {
      console.log("MOUSE over")
@@ -35,10 +33,11 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    * @return {void}
    */
   connectedCallback () {
-    console.log("Hover CB", this.mouseEventElement)
     super.connectedCallback()
-    // this.mouseEventElement.addEventListener('mouseover', this.mouseOverListener)
-    // this.mouseEventElement.addEventListener('mouseout', this.mouseOutListener)
+    // this.hoverTarget.addEventListener('mouseover', this.mouseOverListener)
+    console.log("Hover CB", this.findTargetElement(this, this.hoverInit.level, this.hoverInit.className))
+    // this.targetElement.addEventListener('mouseover', this.mouseOverListener)
+    // this.targetElement.addEventListener('mouseout', this.mouseOutListener)
   }
 
   /**
@@ -49,13 +48,21 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
   disconnectedCallback () {
     super.disconnectedCallback()
     // detach mouse events
+    // _hoverTarget = null // TODO 
   }
 
-  get mouseEventElement() {
-    console.log("---",this.getAttribute('hover-level'))
-    debugger
-    return "abc"
-    //debugger
-    //return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : 'svg']
+  get hoverTarget(){
+    // TODO: 
+    // 1. Find parent from => element
+    // 1.1 > based on level => level
+    // 1.2 > based on class name set on parent => selector
+    // 2. return the parent to attach the listener
+    return null
   }
+
+  // findTargetElement(element,level,selector) {
+  //   console.log("---", element, level, selector)
+    
+  //   return "abc"
+  // }
 }

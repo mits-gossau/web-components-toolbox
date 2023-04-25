@@ -26,8 +26,9 @@ export default class Arrow extends Hover() {
   }
 
   constructor(options = {}, ...args) {
-    
-    super(Object.assign(options, { hoverInit: { level: '2', className: 'xox' } }), ...args)
+
+    //super(Object.assign(options, { hoverInit: { level: '2', className: 'xox' } }), ...args)
+    super(...args)
 
     // this.mouseoverListener = event => {
     //   if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', 'true')
