@@ -1,6 +1,6 @@
 :host {
     --align-items: start;
-    --aspect-ratio: 1.75/1;
+    --image-rendering: auto;
     --h3-color: var(--color-secondary);
     --h3-margin: 0;
     --img-object-fit: cover;
