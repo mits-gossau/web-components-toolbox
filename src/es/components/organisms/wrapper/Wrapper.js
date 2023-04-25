@@ -41,8 +41,8 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
   connectedCallback () {
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     Promise.all(showPromises).then(() => {
       this.hidden = false
     })
@@ -62,7 +62,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -71,7 +71,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.section
   }
 

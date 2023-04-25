@@ -15,7 +15,7 @@ export default class Breadcrumb extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldRenderCSS()) this.renderCSS()
   }
 
   /**
@@ -23,7 +23,7 @@ export default class Breadcrumb extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 

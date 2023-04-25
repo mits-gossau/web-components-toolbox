@@ -38,8 +38,8 @@ export default class MenuIcon extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTML()
     if (!this.hasAttribute('no-click')) this.addEventListener('click', this.clickListener)
   }
 
@@ -52,7 +52,7 @@ export default class MenuIcon extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -61,7 +61,7 @@ export default class MenuIcon extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.root.querySelector('div')
   }
 

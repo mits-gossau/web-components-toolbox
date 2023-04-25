@@ -47,10 +47,10 @@ export default class ProductList extends Intersection(Prototype()) {
     if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
       this.hidden = true
       const showPromises = []
-      if (this.shouldComponentRender()) showPromises.push(this.render())
+      if (this.shouldRender()) showPromises.push(this.render())
       Promise.all(showPromises).then(() => {
         this.hidden = false
-        if (this.shouldComponentRenderCSS()) {
+        if (this.shouldRenderCSS()) {
           this.renderCSS()
           // Issue loading animation hanging
           // https://jira.migros.net/browse/SHAREDCMP-2625
@@ -131,11 +131,11 @@ export default class ProductList extends Intersection(Prototype()) {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  shouldComponentRender () {
+  shouldRender () {
     return !this.msrcProductListWrapper
   }
 

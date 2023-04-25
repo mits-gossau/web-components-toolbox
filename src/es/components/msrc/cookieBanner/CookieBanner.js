@@ -39,9 +39,9 @@ export default class CookieBanner extends Prototype() {
     this.transitionendListener = event => {
       if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
         setTimeout(() => {
-          if (this.shouldComponentRenderHTML()) this.render()
+          if (this.shouldRenderHTML()) this.render()
         }, Number(this.getAttribute('timeout')))
-      } else if (this.shouldComponentRenderHTML()) this.render()
+      } else if (this.shouldRenderHTML()) this.render()
     }
   }
 
@@ -50,9 +50,9 @@ export default class CookieBanner extends Prototype() {
       document.body.addEventListener(this.getAttribute('flyer-transitionend') || 'flyer-transitionend', this.transitionendListener, { once: true })
     } else if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
       setTimeout(() => {
-        if (this.shouldComponentRenderHTML()) this.render()
+        if (this.shouldRenderHTML()) this.render()
       }, Number(this.getAttribute('timeout')))
-    } else if (this.shouldComponentRenderHTML()) this.render()
+    } else if (this.shouldRenderHTML()) this.render()
   }
 
   disconnectedCallback () {
@@ -64,7 +64,7 @@ export default class CookieBanner extends Prototype() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.scripts.length
   }
 

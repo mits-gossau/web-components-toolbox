@@ -127,8 +127,8 @@ export default class CarouselTwo extends Shadow() {
   connectedCallback () {
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     Array.from(this.section.children).concat(Array.from(this.nav.children)).forEach(node => {
       const picture = node.tagName === 'A-PICTURE'
         ? node
@@ -168,7 +168,7 @@ export default class CarouselTwo extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -177,7 +177,7 @@ export default class CarouselTwo extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.section || !this.nav || !this.arrowNav
   }
 

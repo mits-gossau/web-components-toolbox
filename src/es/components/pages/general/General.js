@@ -32,7 +32,7 @@ export default class General extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldRenderCSS()) this.renderCSS()
     this.addEventListener(this.getAttribute('no-scroll') || 'no-scroll', this.noScrollEventListener)
   }
 
@@ -45,7 +45,7 @@ export default class General extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
