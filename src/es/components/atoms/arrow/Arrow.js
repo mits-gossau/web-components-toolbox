@@ -44,7 +44,6 @@ export default class Arrow extends Hover() {
     super.connectedCallback()
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
-    //console.log(this.mouseEventElement)
     // this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
     // this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
   }
