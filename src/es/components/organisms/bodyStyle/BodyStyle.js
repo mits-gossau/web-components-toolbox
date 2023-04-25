@@ -30,7 +30,7 @@ export default class BodyStyle extends Intersection(Body) {
   intersectionCallback (entries, observer) {
     // render css on intersection because this component is often used for backgrounds including css backgrounds with images. those can by default not be loaded lazy nor support sources, thats why we load them on intersection
     if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
-      if (this.intersectionshouldRenderCSS()) {
+      if (this.intersectionShouldRenderCSS()) {
         if (this.hasAttribute('only-render-attribute-to-css')) {
           this.renderAttributesToCSS()
           this.importStyles()
@@ -56,7 +56,7 @@ export default class BodyStyle extends Intersection(Body) {
    *
    * @return {boolean}
    */
-  intersectionshouldRenderCSS () {
+  intersectionShouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
