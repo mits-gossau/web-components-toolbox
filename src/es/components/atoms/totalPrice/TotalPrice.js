@@ -1,10 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-
 export default class TotalPrice extends Shadow() {
-
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     const itemList = []
     this.answerEventNameListener = event => {
@@ -13,26 +11,26 @@ export default class TotalPrice extends Shadow() {
           total: event.detail.total,
           name: event.detail.name
         }
-        const currentItem = itemList.find(il => il.name === item.name);
+        const currentItem = itemList.find(il => il.name === item.name)
         if (currentItem) {
           currentItem.total = item.total
         } else {
           itemList.push(item)
         }
         const priceValues = itemList.map(i => i.total)
-        const totalPrice = price => price.reduce((a, b) => a + Number(b), 0);
+        const totalPrice = price => price.reduce((a, b) => a + Number(b), 0)
         this.totalPriceElement.textContent = parseFloat(totalPrice(priceValues)).toFixed(2)
       }
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldComponentRenderCSS()) this.renderCSS()
     if (this.shouldComponentRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
@@ -41,7 +39,7 @@ export default class TotalPrice extends Shadow() {
    *
    * @return {void}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host > div {
         align-items: center;
@@ -58,17 +56,16 @@ export default class TotalPrice extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS() {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
-
 
   /**
    * evaluates if a render is necessary
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML() {
+  shouldComponentRenderHTML () {
     return !this.totalPriceElement
   }
 
@@ -77,7 +74,7 @@ export default class TotalPrice extends Shadow() {
    *
    * @return {void}
    */
-  renderHTML() {
+  renderHTML () {
     this.divWrapper = document.createElement('div')
     this.divWrapper.appendChild(this.createTextContentElement(this.totalText))
     this.totalPriceElement = this.createTextContentElement('0.00')
@@ -88,16 +85,16 @@ export default class TotalPrice extends Shadow() {
 
   /**
    * create a simple p element
-   * @param {string} content 
-   * @returns 
+   * @param {string} content
+   * @returns
    */
-  createTextContentElement(content){
+  createTextContentElement (content) {
     const contentElement = document.createElement('p')
-    if(content) contentElement.textContent = content
-    return contentElement  
+    if (content) contentElement.textContent = content
+    return contentElement
   }
 
-  get totalText() {
+  get totalText () {
     return this.getAttribute('total-text') || 'Total'
   }
 }
