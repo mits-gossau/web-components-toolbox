@@ -11,18 +11,17 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
     super(options, ...args)
     this.hoverInit = typeof options.hoverInit === 'object' ? options.hoverInit : {
       level: this.getAttribute('hover-level') || undefined,
-      className: this.getAttribute('hover-class-name') || undefined
-      /* node?: recursively found node on connected callback */
+      selector: this.getAttribute('hover-selector') || undefined
     }
 
     this.mouseOverListener = event => {
-      console.log("MOUSE over", this.hoverElement)
-      this.hoverElement.classList.add('hover')
+      console.log("MOUSE over", event.target)
+      this.classList.add('hover')
     }
 
     this.mouseOutListener = event => {
-      console.log("mouse OUT", this.hoverElement)
-      this.hoverElement.classList.remove('hover')
+      console.log("mouse OUT", event.target)
+      this.classList.remove('hover')
     }
 
   }
@@ -34,11 +33,10 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    */
   connectedCallback() {
     super.connectedCallback()
-    if (this.hoverInit.level || this.hoverInit.className) {
-      this.hoverElement = this.hoverTarget()
-      console.log("Hover element in CC", this.hoverElement)
-      this.hoverElement.addEventListener('mouseover', this.mouseOverListener)
-      this.hoverElement.addEventListener('mouseout', this.mouseOutListener)
+    if (this.hoverInit.level || this.hoverInit.selector) {
+      console.log("Hover element in CC", this.hoverTarget)
+      this.hoverTarget.addEventListener('mouseover', this.mouseOverListener)
+      this.hoverTarget.addEventListener('mouseout', this.mouseOutListener)
     }
 
   }
@@ -50,49 +48,57 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    */
   disconnectedCallback() {
     super.disconnectedCallback()
-    this._target = null
-    this.hoverElement && this.hoverElement.removeEventListener('mouseover', this.mouseoverListener)
-    this.hoverElement && this.hoverElement.removeEventListener('mouseout', this.mouseoutListener)
+    if (this.hoverInit.level || this.hoverInit.selector) {
+      this.hoverTarget.removeEventListener('mouseover', this.mouseoverListener)
+      this.hoverTarget.removeEventListener('mouseout', this.mouseoutListener)
+      this.hoverTarget = null
+    }
+  }
+
+  set hoverTarget(value) {
+    this._hoverTarget = value
   }
 
   get hoverTarget() {
-    return this._target || (this._target = (() => {
-      const classNameElement = this.findByClassName(this, this.hoverInit.className)
-      //const classNameElement = this.fancyFindByClassName(this, this.hoverInit.className)
-      //console.log("classNameElement", classNameElement)
-      const levelElement = this.findByLevel(this, Number(this.hoverInit.level))
-      //console.log("levelElement", levelElement);
-      return levelElement || classNameElement
-    }))
+    return this._hoverTarget || (this._hoverTarget = (() => {
+      if (this.hoverInit.selector) return Hover.findByQuerySelector(this, this.hoverInit.selector)
+      return Hover.findByLevel(this, Number(this.hoverInit.level)) 
+    })())
   }
 
-  findByClassName(el, className) {
-    while (el.parentNode) {
-      el = el.parentNode;
-      if (el.classList && el.classList.contains(className)) {
-        return el;
+  /**
+   * find html element by level
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @return {HTMLElement}
+   */
+  static findByQuerySelector(el, selector) {
+    while ((el = el.parentNode || el.host)) {
+      console.log({el, parent: (el.parentNode || el.host)});
+      const parentNode = el.parentNode || el.host
+      if (parentNode && parentNode.querySelector(selector)) {
+        return el
       }
     }
-    return null;
+    return document.documentElement
   }
-
-  fancyFindByClassName(el, className) {
-    if (!el || el.classList && el.classList.contains(className)) {
-      return el
-    } else {
-      return this.fancyFindByClassName(el.parentElement, className)
-    }
-  }
-
-  findByLevel(el, level) {
+ 
+  /**
+   * find html element by level
+   *
+   * @param {HTMLElement | any} el
+   * @param {number} level
+   * @return {HTMLElement}
+   */
+  static findByLevel(el, level) {
     let currentLevel = 1
-    while (el.parentNode) {
-      el = el.parentNode
-      if (currentLevel === level) {
+    while ((el = el.parentNode || el.host)) {
+      if (currentLevel >= level && el.tagName) {
         return el
       }
       currentLevel++
     }
+    return el
   }
-
 }
