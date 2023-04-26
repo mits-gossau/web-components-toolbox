@@ -273,7 +273,7 @@
   margin: var(--p-margin, 0 auto var(--content-spacing));
 }
 /* a-tag */
-:host a:not([wrapper]) {
+:host a {
   cursor: pointer;
   color: var(--a-color, var(--color-secondary, var(--color, pink)));
   font-weight: var(--a-font-weight, var(--font-weight, normal));
@@ -288,6 +288,7 @@
 }
 :host a[wrapper] {
   color: inherit;
+  margin: var(--a-wrapper-margin, var(--a-margin, 0 auto));
   text-decoration: inherit;
 }
 :host *:not(main) a {

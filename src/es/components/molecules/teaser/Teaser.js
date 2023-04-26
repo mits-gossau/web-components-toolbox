@@ -15,9 +15,6 @@ export default class Teaser extends Intersection() {
     super(Object.assign(options, { intersectionObserverInit: { rootMargin: '0px 0px 0px 0px' } }), ...args)
 
     this.setAttribute('role', 'figure')
-    this.clickListener = event => {
-      if (this.hasAttribute('href')) self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
-    }
     // link behavior made accessible
     if (this.hasAttribute('href')) {
       this.setAttribute('data-href', this.getAttribute('href'))
@@ -48,6 +45,7 @@ export default class Teaser extends Intersection() {
           }
         })
       }
+      this.checkIfLink()
       this.hidden = false
     })
     this.addEventListener('click', this.clickListener)
@@ -257,6 +255,22 @@ export default class Teaser extends Intersection() {
         }, ...styles], false)
       default:
         return this.fetchCSS(styles, false)
+    }
+  }
+
+  checkIfLink () {
+    // accessible and seo conform a tag wrapped around this component
+    if (this.hasAttribute('href') && this.parentNode) {
+      const a = document.createElement('a')
+      a.setAttribute('wrapper', '')
+      a.setAttribute('href', this.getAttribute('href'))
+      a.setAttribute('target', this.getAttribute('target') || '_self')
+      if(this.hasAttribute('rel')) a.setAttribute('rel', this.getAttribute('rel'))
+      a.style.color = "inherit"
+      a.style.textDecoration = "inherit"
+      this.parentNode.replaceChild(a, this)
+      a.appendChild(this)
+      this.checkIfLink = () => {}
     }
   }
 

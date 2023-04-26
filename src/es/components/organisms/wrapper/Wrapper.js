@@ -40,6 +40,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     Promise.all(showPromises).then(() => {
+      this.checkIfLink()
       this.hidden = false
     })
     self.addEventListener('resize', this.resizeListener)
@@ -337,6 +338,10 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
     this.html = [this.section, this.style]
+    return Promise.resolve()
+  }
+
+  checkIfLink () {
     // accessible and seo conform a tag wrapped around this component
     if (this.hasAttribute('href') && this.parentNode) {
       const a = document.createElement('a')
@@ -348,8 +353,8 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       a.style.textDecoration = "inherit"
       this.parentNode.replaceChild(a, this)
       a.appendChild(this)
+      this.checkIfLink = () => {}
     }
-    return Promise.resolve()
   }
 
   /**
