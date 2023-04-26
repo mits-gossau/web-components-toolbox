@@ -1,29 +1,26 @@
 // @ts-check
 
-/* global Hover */
-
 import { Shadow } from './Shadow.js'
 
-
 export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass {
-
-  constructor(options = { hoverInit: undefined }, ...args) {
+  constructor (options = { hoverInit: undefined }, ...args) {
     super(options, ...args)
-    this.hoverInit = typeof options.hoverInit === 'object' ? options.hoverInit : {
-      level: this.getAttribute('hover-level') || undefined,
-      selector: this.getAttribute('hover-selector') || undefined
-    }
+    this.hoverInit = typeof options.hoverInit === 'object'
+      ? options.hoverInit
+      : {
+          level: this.getAttribute('hover-level') || undefined,
+          selector: this.getAttribute('hover-selector') || undefined
+        }
 
     this.mouseOverListener = event => {
-      console.log("MOUSE over", event.target)
+      this.setAttribute('hover', 'true')
       this.classList.add('hover')
     }
 
     this.mouseOutListener = event => {
-      console.log("mouse OUT", event.target)
+      this.setAttribute('hover', '')
       this.classList.remove('hover')
     }
-
   }
 
   /**
@@ -31,14 +28,12 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    *
    * @return {void}
    */
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     if (this.hoverInit.level || this.hoverInit.selector) {
-      console.log("Hover element in CC", this.hoverTarget)
       this.hoverTarget.addEventListener('mouseover', this.mouseOverListener)
       this.hoverTarget.addEventListener('mouseout', this.mouseOutListener)
     }
-
   }
 
   /**
@@ -46,7 +41,7 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    *
    * @return {void}
    */
-  disconnectedCallback() {
+  disconnectedCallback () {
     super.disconnectedCallback()
     if (this.hoverInit.level || this.hoverInit.selector) {
       this.hoverTarget.removeEventListener('mouseover', this.mouseoverListener)
@@ -55,27 +50,26 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
     }
   }
 
-  set hoverTarget(value) {
+  set hoverTarget (value) {
     this._hoverTarget = value
   }
 
-  get hoverTarget() {
+  get hoverTarget () {
     return this._hoverTarget || (this._hoverTarget = (() => {
       if (this.hoverInit.selector) return Hover.findByQuerySelector(this, this.hoverInit.selector)
-      return Hover.findByLevel(this, Number(this.hoverInit.level)) 
+      return Hover.findByLevel(this, Number(this.hoverInit.level))
     })())
   }
 
   /**
-   * find html element by level
+   * find html element by id or class
    *
    * @param {HTMLElement | any} el
    * @param {string} selector
    * @return {HTMLElement}
    */
-  static findByQuerySelector(el, selector) {
+  static findByQuerySelector (el, selector) {
     while ((el = el.parentNode || el.host)) {
-      console.log({el, parent: (el.parentNode || el.host)});
       const parentNode = el.parentNode || el.host
       if (parentNode && parentNode.querySelector(selector)) {
         return el
@@ -83,7 +77,7 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
     }
     return document.documentElement
   }
- 
+
   /**
    * find html element by level
    *
@@ -91,7 +85,7 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    * @param {number} level
    * @return {HTMLElement}
    */
-  static findByLevel(el, level) {
+  static findByLevel (el, level) {
     let currentLevel = 1
     while ((el = el.parentNode || el.host)) {
       if (currentLevel >= level && el.tagName) {

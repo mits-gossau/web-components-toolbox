@@ -1,5 +1,4 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
 import { Hover } from '../../prototypes/Hover.js'
 
 /**
@@ -20,42 +19,26 @@ import { Hover } from '../../prototypes/Hover.js'
  * }
  */
 export default class Arrow extends Hover() {
-
-  static get observedAttributes() {
+  static get observedAttributes () {
     return ['hover']
   }
 
-  constructor(options = {}, ...args) {
-
-    //super(Object.assign(options, { hoverInit: { level: '2', className: 'custom-arrow-class' } }), ...args)
+  constructor (options = {}, ...args) {
     super(...args)
-
-    // this.mouseoverListener = event => {
-    //   if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', 'true')
-    //   this.classList.add('hover')
-    // }
-    // this.mouseoutListener = event => {
-    //   if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', '')
-    //   this.classList.remove('hover')
-    // }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-    // this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
-    // this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     super.disconnectedCallback()
-    // this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
-    // this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
     this.parentNodeShadowRootHost = null
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback (name, oldValue, newValue) {
     if (name === 'hover') {
       const duration = 300
       // NOTE: Don't copy below part, usually setting css must go through function setCss but the below is an exception, since it does not contain css variables!
@@ -74,7 +57,7 @@ export default class Arrow extends Hover() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -83,7 +66,7 @@ export default class Arrow extends Hover() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.svg
   }
 
@@ -92,7 +75,7 @@ export default class Arrow extends Hover() {
    *
    * @return {void}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         cursor: pointer;
@@ -190,7 +173,7 @@ export default class Arrow extends Hover() {
    *
    * @return {void}
    */
-  renderHTML() {
+  renderHTML () {
     // TODO: SVG's should be taken from icons folder but fetch can't use cache and is too slow on loads of requests at once. object, img, etc. does not work for css styling. so most likely it needs a node script copying this stuff on update in the icon folder.
     // TODO: or solve the problem with an icon controller with caching. Send event with Promise.resolve to controller, which then resolves it with the svg
     // src/es/components/web-components-toolbox/src/icons/chevron_right.svg
@@ -202,29 +185,15 @@ export default class Arrow extends Hover() {
     this.html = this.style
   }
 
-  get svg() {
+  get svg () {
     return this.root.querySelector('svg')
   }
 
-  get style() {
+  get style () {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
       return style
     })())
-  }
-
-  get parentNodeShadowRootHost() {
-    if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
-    const searchShadowRoot = node => node.root || node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
-    return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
-  }
-
-  set parentNodeShadowRootHost(node) {
-    this._parentNodeShadowRootHost = node
-  }
-
-  get mouseEventElement() {
-    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : 'svg']
   }
 }
