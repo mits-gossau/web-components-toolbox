@@ -41,8 +41,8 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
   connectedCallback () {
     this.hidden = true
     const showPromises = []
-    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldComponentRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
     Promise.all(showPromises).then(() => {
       this.hidden = false
     })
@@ -62,7 +62,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldComponentRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -71,7 +71,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldComponentRenderHTML () {
     return !this.section
   }
 
@@ -116,6 +116,9 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       :host > section > * > *:not([style]):last-child {
         padding-bottom: var(--any-padding-bottom-last-child, var(--any-padding-bottom, 0)) !important;
         margin-bottom: var(--any-margin-bottom-last-child, var(--any-margin-bottom, 0)) !important;
+      }
+      :host([fix-one-pixel-glitch]) > section > *:not(:first-child) {
+        transform: translateX(-1px) scaleX(1.005);
       }
       @media only screen and (max-width: _max-width_) {
         :host > section {
@@ -174,6 +177,9 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
             }
           `
           : ''
+        }
+        :host([fix-one-pixel-glitch]) > section > *:not(:first-child) {
+          transform: none;
         }
       }
     `
