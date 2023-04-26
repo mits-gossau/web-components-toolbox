@@ -1,6 +1,5 @@
 // @ts-check
-//import { Shadow } from '../../prototypes/Shadow.js'
-import { Hover } from '../../prototypes/Hover.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * Arrow is an icon
@@ -20,7 +19,7 @@ import { Hover } from '../../prototypes/Hover.js'
  * }
  */
 export default class Arrow extends Hover() {
-  
+
   static get observedAttributes () {
     return ['hover']
   }
@@ -74,7 +73,7 @@ export default class Arrow extends Hover() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -83,7 +82,7 @@ export default class Arrow extends Hover() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.svg
   }
 

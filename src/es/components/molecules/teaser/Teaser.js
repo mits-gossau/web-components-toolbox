@@ -35,7 +35,7 @@ export default class Teaser extends Intersection() {
     super.connectedCallback()
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     Promise.all(showPromises).then(() => {
       if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
@@ -75,7 +75,7 @@ export default class Teaser extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 

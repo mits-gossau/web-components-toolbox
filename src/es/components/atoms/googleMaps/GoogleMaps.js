@@ -30,8 +30,8 @@ export default class GoogleMaps extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTML()
     if (this.transportIcons) {
       this.transportIcons.forEach(transportIcon => {
         transportIcon.addEventListener('click', this.googleMapTransport)
@@ -50,7 +50,7 @@ export default class GoogleMaps extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -59,7 +59,7 @@ export default class GoogleMaps extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.scripts.length
   }
 

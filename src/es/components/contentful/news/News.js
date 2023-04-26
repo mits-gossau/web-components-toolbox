@@ -27,7 +27,7 @@ export default class News extends Shadow() {
   connectedCallback () {
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     const renderedHTML = () => {
       this.backBtn.addEventListener('click', this.clickListener)
       sessionStorage.setItem('news-viewed', 'TRUE')
@@ -55,7 +55,7 @@ export default class News extends Shadow() {
     this.backBtn.removeEventListener('click', this.clickListener)
   }
 
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 

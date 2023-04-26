@@ -37,7 +37,7 @@ export default class Pagination extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldRenderCSS()) this.renderCSS()
     self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
   }
@@ -58,7 +58,7 @@ export default class Pagination extends Shadow() {
     }))
   }
 
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 

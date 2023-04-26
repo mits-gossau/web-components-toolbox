@@ -72,8 +72,8 @@ export default class Logo extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTML()
     self.addEventListener('resize', this.resizeListener)
   }
 
@@ -86,7 +86,7 @@ export default class Logo extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -95,7 +95,7 @@ export default class Logo extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.img && !!this.getAttribute('src')
   }
 

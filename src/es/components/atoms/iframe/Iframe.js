@@ -26,9 +26,9 @@ export default class Iframe extends Intersection() {
 
   connectedCallback () {
     super.connectedCallback()
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
+    if (this.shouldRenderCSS()) this.renderCSS()
     if (!this.intersecting) {
-      this.intersecting = this.shouldComponentRenderHTML()
+      this.intersecting = this.shouldRenderHTML()
         ? this.renderHTML()
         : () =>
             console.warn(
@@ -53,7 +53,7 @@ export default class Iframe extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(
       `:host > style[_css], ${this.tagName} > style[_css]`
     )
@@ -64,7 +64,7 @@ export default class Iframe extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return this.template
   }
 

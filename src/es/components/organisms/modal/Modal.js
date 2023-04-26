@@ -178,8 +178,8 @@ export default class Modal extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML();
+    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTML();
     (this.getAttribute('listen-at') ? document.querySelector(this.getAttribute('listen-at')) : document.body).addEventListener(this.getAttribute('open-modal') || 'open-modal', this.openModalListener)
     this.addEventListener('click', this.clickListener)
     this.addEventListener('click', this.anyCloseModalListener)
@@ -214,7 +214,7 @@ export default class Modal extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -223,7 +223,7 @@ export default class Modal extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.section
   }
 

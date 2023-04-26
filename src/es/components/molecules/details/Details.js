@@ -132,8 +132,8 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
     super.connectedCallback()
     this.hidden = true
     const showPromises = []
-    if (this.shouldComponentRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.openEventName, this.openEventListener)
     self.addEventListener('resize', this.resizeListener)
     this.root.addEventListener('click', this.clickEventListener)
@@ -303,7 +303,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -312,7 +312,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.divSummary
   }
 

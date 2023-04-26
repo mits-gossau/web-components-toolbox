@@ -27,9 +27,9 @@ export default class TagManager extends Shadow() {
     this.wcConfigLoadListener = event => {
       if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
         setTimeout(() => {
-          if (this.shouldComponentRenderHTML()) this.render()
+          if (this.shouldRenderHTML()) this.render()
         }, Number(this.getAttribute('timeout')))
-      } else if (this.shouldComponentRenderHTML()) this.render()
+      } else if (this.shouldRenderHTML()) this.render()
     }
   }
 
@@ -38,9 +38,9 @@ export default class TagManager extends Shadow() {
       document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', this.wcConfigLoadListener, { once: true })
     } else if (this.getAttribute('timeout') && this.getAttribute('timeout') !== null) {
       setTimeout(() => {
-        if (this.shouldComponentRenderHTML()) this.render()
+        if (this.shouldRenderHTML()) this.render()
       }, Number(this.getAttribute('timeout')))
-    } else if (this.shouldComponentRenderHTML()) this.render()
+    } else if (this.shouldRenderHTML()) this.render()
   }
 
   /**
@@ -48,7 +48,7 @@ export default class TagManager extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.scripts.length
   }
 

@@ -30,7 +30,7 @@ export default class Email extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldRenderHTML()) this.renderHTML()
     this.addEventListener('click', this.clickListener)
   }
 
@@ -43,7 +43,7 @@ export default class Email extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     return !this.root.querySelector('a')
   }
 

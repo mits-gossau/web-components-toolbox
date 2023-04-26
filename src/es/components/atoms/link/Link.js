@@ -50,8 +50,8 @@ export default class Link extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldComponentRenderCSS()) this.renderCSS()
-    if (this.shouldComponentRenderHTML()) this.renderHTML()
+    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTML()
     if (this.mouseEventElement) {
       this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
       this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
@@ -72,7 +72,7 @@ export default class Link extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderCSS () {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -81,7 +81,7 @@ export default class Link extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldComponentRenderHTML () {
+  shouldRenderHTML () {
     if (!this._hasRendered) return (this._hasRendered = true)
     return false
   }
