@@ -205,8 +205,8 @@ export default class FetchCss extends Shadow(WebWorker()) {
    * @param {import("../../prototypes/Shadow.js").fetchCSSParams} fetchCSSParam
    * @return {string}
    */
-  static cacheKeyGenerator ({ path, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl }) {
-    return JSON.stringify({ path, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl })
+  static cacheKeyGenerator ({ path, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl, replaces = [] }) {
+    return JSON.stringify({ path, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl, replaces })
   }
 
   /**

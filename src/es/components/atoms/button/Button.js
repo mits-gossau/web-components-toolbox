@@ -20,11 +20,9 @@ export default class Button extends Shadow() {
   constructor (...args) {
     super(...args)
 
+    this.buttonTagName = this.hasAttribute('href') ? 'a' : 'button'
     this.clickListener = event => {
-      if (this.hasAttribute('href')) {
-        event.stopPropagation()
-        self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
-      }
+      if (this.hasAttribute('disabled')) event.preventDefault()
       if (this.getAttribute('request-event-name')) {
         this.button.classList.toggle('active')
         this.button.setAttribute('aria-pressed', this.button.classList.contains('active')) // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-pressed
@@ -136,7 +134,7 @@ export default class Button extends Shadow() {
         cursor: unset !important;
         display: inline-block;
       }
-      button {
+      ${this.buttonTagName} {
         align-items: center;
         background-color: var(--background-color, transparent);
         border-radius: var(--border-radius, 0.5em);
@@ -155,22 +153,26 @@ export default class Button extends Shadow() {
         outline: var(--outline, none);
         overflow: hidden;
         padding: var(--padding, calc(0.75em - var(--border-width, 0px)) calc(1.5em - var(--border-width, 0px)));
+        text-decoration: var(--text-decoration, none);
         text-transform: var(--text-transform, none);
         touch-action: manipulation;
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
       }
-      button:hover, button.hover {
+      :host a {
+        width: var(--width, fit-content);
+      }
+      ${this.buttonTagName}:hover, ${this.buttonTagName}.hover {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
         opacity: var(--opacity-hover, var(--opacity, 1));
       }
-      button:active, button.active {
+      ${this.buttonTagName}:active, ${this.buttonTagName}.active {
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
-      :host button[disabled] {
+      :host ${this.buttonTagName}[disabled] {
         border: var(--border-width-disabled, var(--border-width, 0px)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));
         background-color: var(--background-color-disabled, var(--background-color, #FFDAC2));
         color: var(--color-disabled, var(--color, #FFFFFF));
@@ -178,7 +180,7 @@ export default class Button extends Shadow() {
         opacity: var(--opacity-disabled, var(--opacity, 1));
         transition: opacity 0.3s ease-out;
       }
-      :host button[disabled]:hover, :host button[disabled].hover {
+      :host ${this.buttonTagName}[disabled]:hover, :host ${this.buttonTagName}[disabled].hover {
         opacity: var(--opacity-disabled-hover, var(--opacity-disabled, var(--opacity, 1)));
       }
       #label {
@@ -203,16 +205,16 @@ export default class Button extends Shadow() {
         flex-shrink: 0;
       }
       @media only screen and (max-width: _max-width_) {
-        button {
+        ${this.buttonTagName} {
           font-size: var(--font-size-mobile, var(--font-size, 1em));
           margin: var(--margin-mobile, var(--margin, auto));
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
-        button:hover, button.hover {
+        ${this.buttonTagName}:hover, ${this.buttonTagName}.hover {
           background-color: var(--background-color-hover-mobile, var(--background-color-hover, var(--background-color, #B24800)));
           color: var(--color-hover-mobile, var(--color-hover, var(--color, #FFFFFF)));
         }
-        button:active, button.active {
+        ${this.buttonTagName}:active, ${this.buttonTagName}.active {
           background-color: var(--background-color-active-mobile, var(--background-color-active, var(--background-color-hover, var(--background-color, #803300))));
           color: var(--color-active-mobile, var(--color-active, var(--color-hover, var(--color, #FFFFFF))));
         }
@@ -228,42 +230,55 @@ export default class Button extends Shadow() {
         }
       }
     `
+    const replaces = this.buttonTagName === 'a'
+      ? [{
+        pattern: '[^-]{1}button',
+        flags: 'g',
+        replacement: 'a'
+      }]
+      : []
     switch (this.getAttribute('namespace')) {
       case 'button-primary-':
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./primary-/primary-.css`,
-          namespace: false
+          namespace: false,
+          replaces
         }])
       case 'button-secondary-':
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./secondary-/secondary-.css`,
-          namespace: false
+          namespace: false,
+          replaces
         }])
       case 'button-tertiary-':
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tertiary-/tertiary-.css`,
-          namespace: false
+          namespace: false,
+          replaces
         }])
       case 'button-quaternary-':
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./quaternary-/quaternary-.css`,
-          namespace: false
+          namespace: false,
+          replaces
         }])
       case 'button-download-':
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`,
-          namespace: false
+          namespace: false,
+          replaces
         }])
       case 'button-category-':
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./primary-/primary-.css`,
-          namespace: false
+          namespace: false,
+          replaces
         },
         {
           // @ts-ignore
@@ -277,16 +292,21 @@ export default class Button extends Shadow() {
         return this.fetchCSS([{
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./square-/square-.css`,
-          namespace: false
+          namespace: false,
+          replaces
         }])
     }
   }
 
   renderHTML () {
     this.html = /* html */`
-      <button type="${this.hasAttribute('type') ? this.getAttribute('type') : 'button'}">
+      <${this.buttonTagName} 
+        ${this.buttonTagName === 'a'
+          ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''}`
+          : ''}
+        type="${this.hasAttribute('type') ? this.getAttribute('type') : 'button'}">
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
-      </button>
+      </${this.buttonTagName}>
     `
     if (this.getAttribute('namespace') === 'button-download-') {
       this.button.prepend(this.downloadIcon)
@@ -299,7 +319,7 @@ export default class Button extends Shadow() {
   }
 
   get button () {
-    return this.root.querySelector('button')
+    return this.root.querySelector(this.buttonTagName)
   }
 
   get label () {
