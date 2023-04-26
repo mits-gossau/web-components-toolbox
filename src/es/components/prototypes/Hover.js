@@ -8,8 +8,12 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
     this.hoverInit = typeof options.hoverInit === 'object'
       ? options.hoverInit
       : {
-          level: this.getAttribute('hover-level') || undefined,
-          selector: this.getAttribute('hover-selector') || undefined
+          level: this.getAttribute('hover-level') || this.hasAttribute('hover-on-parent-element')
+            ? 1
+            : undefined,
+          selector: this.getAttribute('hover-selector') || this.hasAttribute('hover-on-parent-shadow-root-host')
+            ? 'hover-on-parent-shadow-root-host'
+            : undefined
         }
 
     this.mouseOverListener = event => {
@@ -56,7 +60,9 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
 
   get hoverTarget () {
     return this._hoverTarget || (this._hoverTarget = (() => {
-      if (this.hoverInit.selector) return Hover.findByQuerySelector(this, this.hoverInit.selector)
+      if (this.hoverInit.selector) return this.hoverInit.selector === 'hover-on-parent-shadow-root-host'
+      ? Hover.findNextHost(this)
+      : Hover.findByQuerySelector(this, this.hoverInit.selector)
       return Hover.findByLevel(this, Number(this.hoverInit.level))
     })())
   }
@@ -94,5 +100,22 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
       currentLevel++
     }
     return el
+  }
+
+  /**
+   * find next component with a shadowRoot
+   *
+   * @param {HTMLElement | any} el
+   * @return {HTMLElement}
+   */
+  static findNextHost (el) {
+    const searchShadowRoot = el => el.root || el.shadowRoot
+      ? el
+      : el.parentNode
+        ? searchShadowRoot(el.parentNode)
+        : el.host
+          ? searchShadowRoot(el.host)
+          : el
+    return searchShadowRoot(el.parentNode || el.host)
   }
 }
