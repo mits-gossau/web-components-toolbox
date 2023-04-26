@@ -273,7 +273,7 @@
   margin: var(--p-margin, 0 auto var(--content-spacing));
 }
 /* a-tag */
-:host a {
+:host a:not([wrapper]) {
   cursor: pointer;
   color: var(--a-color, var(--color-secondary, var(--color, pink)));
   font-weight: var(--a-font-weight, var(--font-weight, normal));
@@ -285,6 +285,10 @@
   display: var(--a-display, block);
   margin: var(--a-margin, 0 auto var(--content-spacing));
   transition: var(--a-transition, color 0.3s ease-out);
+}
+:host a[wrapper] {
+  color: inherit;
+  text-decoration: inherit;
 }
 :host *:not(main) a {
   display: var(--any-a-display, var(--a-display, inline));
