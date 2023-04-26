@@ -23,7 +23,7 @@ export default class Arrow extends Hover() {
     return ['hover']
   }
 
-  constructor (options = {}, ...args) {
+  constructor (...args) {
     super(...args)
   }
 
@@ -31,11 +31,6 @@ export default class Arrow extends Hover() {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-  }
-
-  disconnectedCallback () {
-    super.disconnectedCallback()
-    this.parentNodeShadowRootHost = null
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
