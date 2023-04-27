@@ -455,9 +455,15 @@ export default class Footer extends Shadow() {
         flex-direction: row;
         gap: 1.875rem;
       }
+      :host(.font-size-tiny) .social-links {
+        gap: 1.4rem;
+      }
       :host .social-links svg {
         height: 1.625rem;
         width: auto;
+      }
+      :host(.font-size-tiny) .social-links svg {
+        height: 1.3rem;
       }
       :host .footer-links-row {
         --details-default-icon-right-child-margin-mobile: var(--footer-links-row-margin, var(--details-default-icon-right-child-margin-mobile, var(--details-default-icon-right-child-margin, 0)));
@@ -483,9 +489,15 @@ export default class Footer extends Shadow() {
         flex-direction: row;
         gap: 1.875rem;
       }
+      :host(.font-size-tiny) .social-links {
+        gap: 1rem;
+      }
       :host .social-links svg {
         height: 1.625rem;
         width: auto;
+      }
+      :host(.font-size-tiny) .social-links svg {
+        height: 1.3rem;
       }
       :host .footer-links-row:not(:last-child){
         border-right: var(--${this.getAttribute('namespace') || ''}boarder-right, 1px solid var(--m-gray-500));
