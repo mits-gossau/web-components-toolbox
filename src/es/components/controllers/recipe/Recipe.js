@@ -98,14 +98,22 @@ export default class Recipe extends Shadow() {
         composed: true
       }))
     }
+    this.updatePopState = event => {
+      if (!event.state) return
+      if (!event.detail) event.detail = { ...event.state }
+      event.detail.pushHistory = false
+      this.requestListRecipeListener(event)
+    }
   }
 
   connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
+    self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
+    self.removeEventListener('popstate', this.updatePopState)
   }
 
   createRecipeSelectionPayload (recipeSelection) {
