@@ -20,6 +20,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Recipe extends Shadow() {
   constructor (...args) {
     super({ mode: 'false' }, ...args)
+    this.origTitle = document.title
     this.abortController = null
 
     // Recipe Filter Options/Categories
@@ -43,15 +44,19 @@ export default class Recipe extends Shadow() {
       if (event.detail) {
         if (event.detail.tags) {
           recipeData[event.detail.tags[0]] = event.detail.isActive
-        } else if (event.detail.tag) {
+        } else if (event.detail.tag || (!event.detail.page && !event.detail.skip && !event.detail.key)) {
           // when only tag is delivered from pop state reset all props to false and use the popstate props as true
           for (const key in recipeData) {
             recipeData[key] = false
           }
-          recipeData = Object.assign(recipeData, event.detail.tag.split(';').reduce((acc, tag) => {
+          if (event.detail.tag) recipeData = Object.assign(recipeData, event.detail.tag.split(';').reduce((acc, tag) => {
             acc[tag] = true
             return acc
           }, {}))
+        } else if (!event.detail.key && !event.detail.skip) {
+          for (const key in recipeData) {
+            recipeData[key] = false
+          }
         }
       }
       this.setRecipeSelection(recipeData)
@@ -69,6 +74,10 @@ export default class Recipe extends Shadow() {
         variables.tags = Object.keys(selected).join(';')
         this.setTag(variables.tags, pushHistory, event)
       }
+      if (event.detail && (event.detail.tags !== undefined || event.detail.tag !== undefined)) this.setTitle({detail:{textContent: Object.entries(recipeData).reduce((acc, entry, i) => {
+        if (!entry[1]) return acc
+        return acc + (i === 0 ? '' : ' ') + entry[0]
+      }, '') || this.origTitle}})
 
       // skip must be set after tags, since it may get reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {
@@ -110,7 +119,6 @@ export default class Recipe extends Shadow() {
       }))
     }
     this.updatePopState = event => {
-      if (!event.state) return
       if (!event.detail) event.detail = { ...event.state }
       event.detail.pushHistory = false
       this.requestListRecipeListener(event)
@@ -154,7 +162,6 @@ export default class Recipe extends Shadow() {
       const searchTerm = eventDetail.value
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('search-term', searchTerm)
-      this.setTitle({detail: eventDetail})
       if (pushHistory) history.pushState({ ...history.state, searchTerm }, document.title, url.href)
     }
   }
@@ -175,7 +182,6 @@ export default class Recipe extends Shadow() {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
-    this.setTitle(Object.assign({}, event, {detail: {textContent: tag.replace(/;/g, ', ')}}))
     if (pushHistory) history.pushState({ ...history.state, tag, page: '1' }, document.title, url.href)
   }
 
@@ -203,8 +209,9 @@ export default class Recipe extends Shadow() {
     } else {
       url.searchParams.set('page', page)
     }
-    this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
-    if (pushHistory) history.pushState({ ...history.state, tag: this.getTags[1] || this.getTags[0], page }, document.title, url.href)
+    // set Page is very difficult and would need more testing, assumption that this wouldn't effect SEO anyways, since pages are proper links in opposite to buttons
+    //this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
+    if (pushHistory) history.pushState({ ...history.state, tag: this.getTags(), page }, document.title, url.href)
   }
 
   /**

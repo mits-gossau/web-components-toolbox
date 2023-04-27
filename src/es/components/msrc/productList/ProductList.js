@@ -100,6 +100,7 @@ export default class ProductList extends Intersection(Prototype()) {
         detail
       }
     }
+    this.setTitle(event)
     if (event) this.config.filterOptions.category = event.detail.tags || this.configSetup().filterOptions.category
     let subTagFetch
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-articles') || 'list-articles', {
@@ -197,14 +198,6 @@ export default class ProductList extends Intersection(Prototype()) {
     url.searchParams.set('detail', detailValue)
     // save the last with sub categories into the url
     if (detail.fetchSubTags) url.searchParams.set('detailWithSubTags', detailValue)
-    let textContent
-    if (event.detail.textContent && (textContent = event.detail.textContent.trim())) {
-      if (document.title.includes('|')) {
-        document.title = document.title.replace(/[^|]*(.*)/, textContent + ' $1')
-      } else {
-        document.title = textContent
-      }
-    }
     if (detail.pushHistory !== false) history.pushState({ ...history.state, ...detail }, document.title, url.href)
   }
 
@@ -219,6 +212,24 @@ export default class ProductList extends Intersection(Prototype()) {
       return JSON.parse(decodeURIComponent(urlParams.get(name) || '')) || null
     } catch (e) {
       return null
+    }
+  }
+
+  /**
+   * @param {CustomEvent | null} event
+   * @param {false | string} [addToTitle = false]
+   */
+  setTitle (event, addToTitle = false) {
+    let textContent
+    if (event && event.detail && event.detail.textContent && (textContent = event.detail.textContent.trim())) {
+      if (addToTitle) {
+        document.title = document.title.replace(new RegExp(`(.*)${addToTitle.replace(/\s/g, '\\s').replace(/\|/g, '\\|')}.*`), '$1')
+        document.title += addToTitle + textContent 
+      } else if (document.title.includes('|')) {
+        document.title = document.title.replace(/[^|]*(.*)/, textContent + ' $1')
+      } else {
+        document.title = textContent
+      }
     }
   }
 }

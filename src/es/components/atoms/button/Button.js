@@ -51,7 +51,7 @@ export default class Button extends Shadow() {
           return accumulator[propertyName]
         }, event.detail)
       }
-      if (tags && tags.length) {
+      if (tags) {
         const tagsIncludesTag = this.hasAttribute('tag-search')
           ? tags.some(tag => tag.includes(this.getAttribute('tag-search')))
           : tags.includes(this.getAttribute('tag'))
