@@ -1,51 +1,29 @@
 // @ts-check
 
-/* global Hover */
-
 import { Shadow } from './Shadow.js'
 
-/**
- * Hover is a helper which sets up a new Hover in the context of a web component
- *
- * @export
- * @function Hover
- * @param {Function | *} ChosenClass
- * @attribute {'string'} [hoverInit=`{
-      'level': undefined
-      'className': '',
-    }`]
- * @requires {
-      Shadow: {
-        connectedCallback,
-        disconnectedCallback,
-        parseAttribute,
-        root,
-        shadowRoot
-      }
-    }
- * @property {
-      hover,
-      hoverInit,
-      mutationCallback,
-      mutationObserveStart,
-      mutationObserveStop
-    }
- * @return {CustomElementConstructor | *}
- */
 export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass {
-  /**
-   * Creates an instance of Hover. The constructor will be called for every custom element using this class when initially created.
-   *
-   * @param {{hoverInit: HoverInit | undefined}} [options = {hoverInit: undefined}]
-   * @param {*} args
-   */
   constructor (options = { hoverInit: undefined }, ...args) {
     super(options, ...args)
+    this.hoverInit = typeof options.hoverInit === 'object'
+      ? options.hoverInit
+      : {
+          level: this.getAttribute('hover-level') || this.hasAttribute('hover-on-parent-element')
+            ? 1
+            : undefined,
+          selector: this.getAttribute('hover-selector') || this.hasAttribute('hover-on-parent-shadow-root-host')
+            ? 'hover-on-parent-shadow-root-host'
+            : undefined
+        }
 
-    this.hoverInit = typeof options.hoverInit === 'object' ? options.hoverInit : {
-      level: this.getAttribute('hover-level') || 1, // number or function (id===34 | tagName==='span')
-      className: this.getAttribute('hover-class-name') || 'active'
-      /* node?: recursively found node on connected callback */
+    this.mouseOverListener = event => {
+      this.setAttribute('hover', 'true')
+      this.classList.add('hover')
+    }
+
+    this.mouseOutListener = event => {
+      this.setAttribute('hover', '')
+      this.classList.remove('hover')
     }
   }
 
@@ -56,7 +34,10 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    */
   connectedCallback () {
     super.connectedCallback()
-    // attach mouse events (over/out)
+    if (this.hoverInit.level || this.hoverInit.selector) {
+      this.hoverTarget.addEventListener('mouseover', this.mouseOverListener)
+      this.hoverTarget.addEventListener('mouseout', this.mouseOutListener)
+    }
   }
 
   /**
@@ -66,6 +47,75 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
    */
   disconnectedCallback () {
     super.disconnectedCallback()
-    // detach mouse events
+    if (this.hoverInit.level || this.hoverInit.selector) {
+      this.hoverTarget.removeEventListener('mouseover', this.mouseoverListener)
+      this.hoverTarget.removeEventListener('mouseout', this.mouseoutListener)
+      this.hoverTarget = null
+    }
+  }
+
+  set hoverTarget (value) {
+    this._hoverTarget = value
+  }
+
+  get hoverTarget () {
+    return this._hoverTarget || (this._hoverTarget = (() => {
+      if (this.hoverInit.selector) return this.hoverInit.selector === 'hover-on-parent-shadow-root-host'
+      ? Hover.findNextHost(this)
+      : Hover.findByQuerySelector(this, this.hoverInit.selector)
+      return Hover.findByLevel(this, Number(this.hoverInit.level))
+    })())
+  }
+
+  /**
+   * find html element by id or class
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @return {HTMLElement}
+   */
+  static findByQuerySelector (el, selector) {
+    while ((el = el.parentNode || el.host)) {
+      const parentNode = el.parentNode || el.host
+      if (parentNode && parentNode.querySelector(selector)) {
+        return el
+      }
+    }
+    return document.documentElement
+  }
+
+  /**
+   * find html element by level
+   *
+   * @param {HTMLElement | any} el
+   * @param {number} level
+   * @return {HTMLElement}
+   */
+  static findByLevel (el, level) {
+    let currentLevel = 1
+    while ((el = el.parentNode || el.host)) {
+      if (currentLevel >= level && el.tagName) {
+        return el
+      }
+      currentLevel++
+    }
+    return el
+  }
+
+  /**
+   * find next component with a shadowRoot
+   *
+   * @param {HTMLElement | any} el
+   * @return {HTMLElement}
+   */
+  static findNextHost (el) {
+    const searchShadowRoot = el => el.root || el.shadowRoot
+      ? el
+      : el.parentNode
+        ? searchShadowRoot(el.parentNode)
+        : el.host
+          ? searchShadowRoot(el.host)
+          : el
+    return searchShadowRoot(el.parentNode || el.host)
   }
 }
