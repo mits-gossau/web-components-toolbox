@@ -33,7 +33,8 @@ export default class Button extends Shadow() {
             isActive: this.button.classList.contains('active'),
             fetchSubTags: this.hasAttribute('fetch-sub-tags'),
             clearSubTags: this.hasAttribute('clear-sub-tags'),
-            this: this
+            this: this,
+            textContent: this.label.textContent,
           },
           bubbles: true,
           cancelable: true,

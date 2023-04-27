@@ -6,7 +6,8 @@
   isActive: boolean,
   origEvent: CustomEvent,
   tags: [string],
-  this: HTMLElement
+  this: HTMLElement,
+  textContent: string
 }} productListEventDetail */
 
 import { Prototype } from '../Prototype.js'
@@ -89,7 +90,7 @@ export default class ProductList extends Intersection(Prototype()) {
     let detail
     // check if it has a real event or else it renders the first-time after load at render
     if (event && event.detail && event.detail.tags) {
-      if (setFilter) this.setFilter(event.detail)
+      if (setFilter) this.setFilter(event)
     } else if ((detail = this.getFilter())) {
       // check if this has no subTags and won't clear subTags plus if there has been a detailWithSubTags in the url pre-run it
       if (!detail.fetchSubTags && !detail.clearSubTags) {
@@ -182,21 +183,29 @@ export default class ProductList extends Intersection(Prototype()) {
 
   /**
    * Set detail and page in window.history
-   * @param {productListEventDetail} detail
+   * @param {CustomEvent} event
    * @return {void}
    */
-  setFilter (detail) {
-    detail = {
-      pushHistory: detail.pushHistory,
-      fetchSubTags: detail.fetchSubTags,
-      clearSubTags: detail.clearSubTags,
-      tags: detail.tags
+  setFilter (event) {
+    const detail = {
+      pushHistory: event.detail.pushHistory,
+      fetchSubTags: event.detail.fetchSubTags,
+      clearSubTags: event.detail.clearSubTags,
+      tags: event.detail.tags
     }
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     const detailValue = encodeURIComponent(JSON.stringify(detail))
     url.searchParams.set('detail', detailValue)
     // save the last with sub categories into the url
     if (detail.fetchSubTags) url.searchParams.set('detailWithSubTags', detailValue)
+    let textContent
+    if (event.detail.textContent && (textContent = event.detail.textContent.trim())) {
+      if (document.title.includes('|')) {
+        document.title = document.title.replace(/[^|]*(.*)/, textContent + ' $1')
+      } else {
+        document.title = textContent
+      }
+    }
     if (detail.pushHistory !== false) history.pushState({ ...history.state, ...detail }, document.title, url.href)
   }
 

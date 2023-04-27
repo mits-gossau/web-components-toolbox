@@ -50,7 +50,9 @@ export default class Pagination extends Shadow() {
   dispatchRequestNewsEvent (page) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
-        skip: page
+        skip: page,
+        textContent: String(page + 1),
+        pageName: this.getAttribute('page-name') || 'Page'
       },
       bubbles: true,
       cancelable: true,

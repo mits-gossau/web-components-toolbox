@@ -56,13 +56,13 @@ export default class Recipe extends Shadow() {
       if (event.detail && event.detail.tags !== undefined) {
         const selected = Object.fromEntries(Object.entries(recipeData).filter(([key]) => recipeData[key]))
         variables.tags = Object.keys(selected).join(';')
-        this.setTag(variables.tags, pushHistory)
+        this.setTag(variables.tags, pushHistory, event)
       }
 
       // skip must be set after tags, since it may get reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {
         variables.skip = Number(event.detail.skip)
-        this.setPage(String(variables.skip + 1), pushHistory)
+        this.setPage(String(variables.skip + 1), pushHistory, event)
       } else {
         variables.skip = this.getCurrentPageSkip()
       }
@@ -135,6 +135,7 @@ export default class Recipe extends Shadow() {
       const searchTerm = eventDetail.value
       const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
       url.searchParams.set('search-term', searchTerm)
+      this.setTitle({detail: eventDetail})
       if (pushHistory) history.pushState({ ...history.state, searchTerm }, document.title, url.href)
     }
   }
@@ -148,12 +149,14 @@ export default class Recipe extends Shadow() {
    * Set tag and page in window.history
    * @param {string} tag
    * @param {boolean} [pushHistory = true]
+   * @param {CustomEvent} event
    * @return {void}
    */
-  setTag (tag, pushHistory = true) {
+  setTag (tag, pushHistory = true, event) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
+    this.setTitle(Object.assign({}, event, {detail: {textContent: tag.replace(/;/g, ', ')}}))
     if (pushHistory) history.pushState({ ...history.state, tag, page: '1' }, document.title, url.href)
   }
 
@@ -171,15 +174,17 @@ export default class Recipe extends Shadow() {
    * Set page in window.history
    * @param {string} page
    * @param {boolean} [pushHistory = true]
+   * @param {CustomEvent} event
    * @return {void}
    */
-  setPage (page, pushHistory = true) {
+  setPage (page, pushHistory = true, event) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     if (page === '1') {
       url.searchParams.delete('page')
     } else {
       url.searchParams.set('page', page)
     }
+    this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
     if (pushHistory) history.pushState({ ...history.state, tag: this.getTags[1] || this.getTags[0], page }, document.title, url.href)
   }
 
@@ -199,5 +204,23 @@ export default class Recipe extends Shadow() {
   getCurrentPageSkip () {
     const page = this.getPage()
     return page - 1
+  }
+
+  /**
+   * @param {CustomEvent} event
+   * @param {false | string} [addToTitle = false]
+   */
+  setTitle (event, addToTitle = false) {
+    let textContent
+    if (event && event.detail && event.detail.textContent && (textContent = event.detail.textContent.trim())) {
+      if (addToTitle) {
+        document.title = document.title.replace(new RegExp(`(.*)${addToTitle.replace(/\s/g, '\\s').replace(/\|/g, '\\|')}.*`), '$1')
+        document.title += addToTitle + textContent 
+      } else if (document.title.includes('|')) {
+        document.title = document.title.replace(/[^|]*(.*)/, textContent + ' $1')
+      } else {
+        document.title = textContent
+      }
+    }
   }
 }

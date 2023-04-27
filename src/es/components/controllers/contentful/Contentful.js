@@ -37,13 +37,13 @@ export default class Contentful extends Shadow() {
       // set tag resets the page parameter
       if (event.detail && event.detail.tags !== undefined) {
         variables.tags = [tag, ...new Set(event.detail.tags)]
-        this.setTag(variables.tags[1] || variables.tags[0], pushHistory)
+        this.setTag(variables.tags[1] || variables.tags[0], pushHistory, event)
       }
       // skip must be set after tags, since it may got reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {
         const skipValue = Number(event.detail.skip)
         variables.skip = skipValue * 5 // contentful skip value
-        this.setPage(String(skipValue + 1), pushHistory) // visual skip value
+        this.setPage(String(skipValue + 1), pushHistory, event) // visual skip value
       } else {
         variables.skip = this.getCurrentPageSkip()
       }
@@ -128,12 +128,14 @@ export default class Contentful extends Shadow() {
    * Set tag and page in window.history
    * @param {string} tag
    * @param {boolean} [pushHistory = true]
+   * @param {CustomEvent} event
    * @return {void}
    */
-  setTag (tag, pushHistory = true) {
+  setTag (tag, pushHistory = true, event) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
+    this.setTitle(event)
     if (pushHistory) history.pushState({ ...history.state, tag, page: '1' }, document.title, url.href)
   }
 
@@ -154,15 +156,17 @@ export default class Contentful extends Shadow() {
    * Set page in window.history
    * @param {string} page
    * @param {boolean} [pushHistory = true]
+   * @param {CustomEvent} event
    * @return {void}
    */
-  setPage (page, pushHistory = true) {
+  setPage (page, pushHistory = true, event) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     if (page === '1') {
       url.searchParams.delete('page')
     } else {
       url.searchParams.set('page', page)
     }
+    this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
     if (pushHistory) history.pushState({ ...history.state, tag: this.getTags[1] || this.getTags[0], page }, document.title, url.href)
   }
 
@@ -190,5 +194,23 @@ export default class Contentful extends Shadow() {
     const page = this.getPage()
     if (currentPageSkip !== page - 1) return page - 1
     return currentPageSkip
+  }
+
+  /**
+   * @param {CustomEvent} event
+   * @param {false | string} [addToTitle = false]
+   */
+  setTitle (event, addToTitle = false) {
+    let textContent
+    if (event && event.detail && event.detail.textContent && (textContent = event.detail.textContent.trim())) {
+      if (addToTitle) {
+        document.title = document.title.replace(new RegExp(`(.*)${addToTitle.replace(/\s/g, '\\s').replace(/\|/g, '\\|')}.*`), '$1')
+        document.title += addToTitle + textContent 
+      } else if (document.title.includes('|')) {
+        document.title = document.title.replace(/[^|]*(.*)/, textContent + ' $1')
+      } else {
+        document.title = textContent
+      }
+    }
   }
 }
