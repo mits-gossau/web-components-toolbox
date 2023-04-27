@@ -461,8 +461,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
          * @return {fetchCSSParams[]}
          */
         fetchCSSParams => {
-          if (hide) this.hidden = false
-          return fetchCSSParams.map(
+          const result = fetchCSSParams.map(
             /**
              * @param {fetchCSSParams} path, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, style, error
              * @return {fetchCSSParams}
@@ -484,6 +483,8 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
               return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node, replaces) }
             }
           )
+          if (hide) this.hidden = false
+          return result
         }
       ).catch(error => error)
     }
@@ -742,13 +743,22 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     }
     this._cssHidden.textContent = ''
     value ? this.setAttribute('aria-hidden', 'true') : this.removeAttribute('aria-hidden')
+    // the hidden setter is always executed and the a color change issue with browser default styles can't be solved anywhere else than directly here
+    const generalFix = /* css */`
+      a {
+        color: var(--color, inherit);
+        text-decoration: var(--text-decoration, inherit);
+      }
+    `
     this.setCss(value
       ? /* css */`
+        ${generalFix}
         :host {
           visibility: hidden !important;
         }
       `
       : /* css */`
+        ${generalFix}
         :host, :host > *, :host > * > * {
           animation: var(--show, show .3s ease-out);
         }
