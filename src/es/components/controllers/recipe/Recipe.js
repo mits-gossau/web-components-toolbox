@@ -39,9 +39,20 @@ export default class Recipe extends Shadow() {
     this.requestListRecipeListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-      const recipeData = JSON.parse(this.getRecipeSelection())
-      if (event.detail && event.detail.tags) {
-        recipeData[event.detail.tags[0]] = event.detail.isActive
+      let recipeData = JSON.parse(this.getRecipeSelection())
+      if (event.detail) {
+        if (event.detail.tags) {
+          recipeData[event.detail.tags[0]] = event.detail.isActive
+        } else if (event.detail.tag) {
+          // when only tag is delivered from pop state reset all props to false and use the popstate props as true
+          for (const key in recipeData) {
+            recipeData[key] = false
+          }
+          recipeData = Object.assign(recipeData, event.detail.tag.split(';').reduce((acc, tag) => {
+            acc[tag] = true
+            return acc
+          }, {}))
+        }
       }
       this.setRecipeSelection(recipeData)
 
