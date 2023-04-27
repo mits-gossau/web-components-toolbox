@@ -25,7 +25,6 @@ export default class ProductList extends Intersection(Prototype()) {
     this.config = this.configSetup()
     this.requestListArticlesEventListener = event => this.widgetRenderSetup(event)
     this.updatePopState = event => {
-      if (!event.state) return
       /** @type {productListEventDetail} */
       if (!event.detail) event.detail = { ...event.state }
       this.widgetRenderSetup(event, false)
@@ -101,7 +100,7 @@ export default class ProductList extends Intersection(Prototype()) {
         detail
       }
     }
-    if (event) this.config.filterOptions.category = event.detail.tags
+    if (event) this.config.filterOptions.category = event.detail.tags || this.configSetup().filterOptions.category
     let subTagFetch
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-articles') || 'list-articles', {
       detail: {
