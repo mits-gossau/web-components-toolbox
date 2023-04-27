@@ -37,14 +37,14 @@ export default class Contentful extends Shadow() {
       // set tag resets the page parameter
       if (event.detail && event.detail.tags !== undefined) {
         variables.tags = [tag, ...new Set(event.detail.tags)]
-        this.setTag(variables.tags[1] || variables.tags[0], pushHistory, event)
+        this.setTag(variables.tags[1] || variables.tags[0], event, pushHistory)
       }
       if (event.detail && (event.detail.tags !== undefined || event.detail.tag !== undefined)) this.setTitle(event)
       // skip must be set after tags, since it may got reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {
         const skipValue = Number(event.detail.skip)
         variables.skip = skipValue * 5 // contentful skip value
-        this.setPage(String(skipValue + 1), pushHistory, event) // visual skip value
+        this.setPage(String(skipValue + 1), pushHistory) // visual skip value
       } else {
         variables.skip = this.getCurrentPageSkip()
       }
@@ -128,11 +128,11 @@ export default class Contentful extends Shadow() {
   /**
    * Set tag and page in window.history
    * @param {string} tag
-   * @param {boolean} [pushHistory = true]
    * @param {CustomEvent} event
+   * @param {boolean} [pushHistory = true]
    * @return {void}
    */
-  setTag (tag, pushHistory = true, event) {
+  setTag (tag, event, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
@@ -158,10 +158,9 @@ export default class Contentful extends Shadow() {
    * Set page in window.history
    * @param {string} page
    * @param {boolean} [pushHistory = true]
-   * @param {CustomEvent} event
    * @return {void}
    */
-  setPage (page, pushHistory = true, event) {
+  setPage (page, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     if (page === '1') {
       url.searchParams.delete('page')
