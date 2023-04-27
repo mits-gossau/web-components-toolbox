@@ -26,12 +26,12 @@ export default class Contentful extends Shadow() {
     const tag = this.getAttribute('tag') || ''
     this.abortController = null
 
-    this.requestListNewsListener = async event => {
+    this.requestListNewsListener = async (event, useStore = true) => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
       const pushHistory = event && event.detail && event.detail.pushHistory
       const variables = {
-        tags: [tag, ...this.getTags()],
+        tags: [tag, ...this.getTags(undefined, useStore)],
         limit: event.detail && event.detail.limit !== undefined ? Number(event.detail.limit) : Number(limit)
       }
       // set tag resets the page parameter
@@ -87,10 +87,9 @@ export default class Contentful extends Shadow() {
     }
 
     this.updatePopState = event => {
-      if (!event.state) return
       if (!event.detail) event.detail = { ...event.state }
       event.detail.pushHistory = false
-      this.requestListNewsListener(event)
+      this.requestListNewsListener(event, !!event.state)
     }
   }
 
@@ -142,12 +141,14 @@ export default class Contentful extends Shadow() {
   /**
    * Get tag from url else store
    * @param {string} [store=sessionStorage]
+   * @param {boolean} [useStore = true]
    * @return [string]
    */
-  getTags (store = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '{}') {
+  getTags (store = sessionStorage.getItem(this.getAttribute('slug-name') || 'news') || '{}', useStore = true) {
     const urlParams = new URLSearchParams(location.search)
     const tag = urlParams.get('tag')
     if (tag) return [tag]
+    if (!useStore) return []
     const newsData = JSON.parse(store)
     return newsData?.data?.newsEntryCollection?.tag || []
   }
@@ -167,7 +168,7 @@ export default class Contentful extends Shadow() {
       url.searchParams.set('page', page)
     }
     this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
-    if (pushHistory) history.pushState({ ...history.state, tag: this.getTags[1] || this.getTags[0], page }, document.title, url.href)
+    if (pushHistory) history.pushState({ ...history.state, tag: this.getTags()[1] || this.getTags()[0], page }, document.title, url.href)
   }
 
   /**
