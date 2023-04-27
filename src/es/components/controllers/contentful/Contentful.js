@@ -168,7 +168,7 @@ export default class Contentful extends Shadow() {
       url.searchParams.set('page', page)
     }
     // set Page is very difficult and would need more testing, assumption that this wouldn't effect SEO anyways, since pages are proper links in opposite to buttons
-    //this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
+    // this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
     if (pushHistory) history.pushState({ ...history.state, tag: this.getTags()[1] || this.getTags()[0], page }, document.title, url.href)
   }
 
@@ -207,7 +207,7 @@ export default class Contentful extends Shadow() {
     if (event && event.detail && event.detail.textContent && (textContent = event.detail.textContent.trim())) {
       if (addToTitle) {
         document.title = document.title.replace(new RegExp(`(.*)${addToTitle.replace(/\s/g, '\\s').replace(/\|/g, '\\|')}.*`), '$1')
-        document.title += addToTitle + textContent 
+        document.title += addToTitle + textContent
       } else if (document.title.includes('|')) {
         document.title = document.title.replace(/[^|]*(.*)/, textContent + ' $1')
       } else {

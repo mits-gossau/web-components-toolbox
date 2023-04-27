@@ -265,9 +265,9 @@ export default class Teaser extends Intersection() {
       a.setAttribute('wrapper', '')
       a.setAttribute('href', this.getAttribute('href'))
       a.setAttribute('target', this.getAttribute('target') || '_self')
-      if(this.hasAttribute('rel')) a.setAttribute('rel', this.getAttribute('rel'))
-      a.style.color = "inherit"
-      a.style.textDecoration = "inherit"
+      if (this.hasAttribute('rel')) a.setAttribute('rel', this.getAttribute('rel'))
+      a.style.color = 'inherit'
+      a.style.textDecoration = 'inherit'
       this.parentNode.replaceChild(a, this)
       a.appendChild(this)
       this.checkIfLink = () => {}

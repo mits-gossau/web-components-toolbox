@@ -5,6 +5,7 @@
 /* global sessionStorage */
 /* global CustomEvent */
 /* global history */
+/* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -49,10 +50,12 @@ export default class Recipe extends Shadow() {
           for (const key in recipeData) {
             recipeData[key] = false
           }
-          if (event.detail.tag) recipeData = Object.assign(recipeData, event.detail.tag.split(';').reduce((acc, tag) => {
-            acc[tag] = true
-            return acc
-          }, {}))
+          if (event.detail.tag) {
+            recipeData = Object.assign(recipeData, event.detail.tag.split(';').reduce((acc, tag) => {
+              acc[tag] = true
+              return acc
+            }, {}))
+          }
         } else if (!event.detail.key && !event.detail.skip) {
           for (const key in recipeData) {
             recipeData[key] = false
@@ -74,10 +77,16 @@ export default class Recipe extends Shadow() {
         variables.tags = Object.keys(selected).join(';')
         this.setTag(variables.tags, pushHistory)
       }
-      if (event.detail && (event.detail.tags !== undefined || event.detail.tag !== undefined)) this.setTitle({detail:{textContent: Object.entries(recipeData).reduce((acc, entry, i) => {
-        if (!entry[1]) return acc
-        return acc + (i === 0 ? '' : ' ') + entry[0]
-      }, '') || this.origTitle}})
+      if (event.detail && (event.detail.tags !== undefined || event.detail.tag !== undefined)) {
+        this.setTitle({
+          detail: {
+            textContent: Object.entries(recipeData).reduce((acc, entry, i) => {
+              if (!entry[1]) return acc
+              return acc + (i === 0 ? '' : ' ') + entry[0]
+            }, '') || this.origTitle
+          }
+        })
+      }
 
       // skip must be set after tags, since it may get reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {
@@ -208,7 +217,7 @@ export default class Recipe extends Shadow() {
       url.searchParams.set('page', page)
     }
     // set Page is very difficult and would need more testing, assumption that this wouldn't effect SEO anyways, since pages are proper links in opposite to buttons
-    //this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
+    // this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
     if (pushHistory) history.pushState({ ...history.state, tag: this.getTags(), page }, document.title, url.href)
   }
 
@@ -239,7 +248,7 @@ export default class Recipe extends Shadow() {
     if (event && event.detail && event.detail.textContent && (textContent = event.detail.textContent.trim())) {
       if (addToTitle) {
         document.title = document.title.replace(new RegExp(`(.*)${addToTitle.replace(/\s/g, '\\s').replace(/\|/g, '\\|')}.*`), '$1')
-        document.title += addToTitle + textContent 
+        document.title += addToTitle + textContent
       } else if (document.title.includes('|')) {
         document.title = document.title.replace(/[^|]*(.*)/, textContent + ' $1')
       } else {

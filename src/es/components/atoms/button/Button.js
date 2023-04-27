@@ -1,7 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
 /* global CustomEvent */
 
 /**
@@ -34,7 +33,7 @@ export default class Button extends Shadow() {
             fetchSubTags: this.hasAttribute('fetch-sub-tags'),
             clearSubTags: this.hasAttribute('clear-sub-tags'),
             this: this,
-            textContent: this.label.textContent,
+            textContent: this.label.textContent
           },
           bubbles: true,
           cancelable: true,
@@ -233,10 +232,10 @@ export default class Button extends Shadow() {
     `
     const replaces = this.buttonTagName === 'a'
       ? [{
-        pattern: '[^-]{1}button',
-        flags: 'g',
-        replacement: 'a'
-      }]
+          pattern: '[^-]{1}button',
+          flags: 'g',
+          replacement: 'a'
+        }]
       : []
     switch (this.getAttribute('namespace')) {
       case 'button-primary-':
