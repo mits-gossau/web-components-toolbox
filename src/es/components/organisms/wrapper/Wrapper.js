@@ -117,6 +117,9 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         padding-bottom: var(--any-padding-bottom-last-child, var(--any-padding-bottom, 0)) !important;
         margin-bottom: var(--any-margin-bottom-last-child, var(--any-margin-bottom, 0)) !important;
       }
+      :host([fix-one-pixel-glitch]) > section > *:not(:first-child) {
+        transform: translateX(-1px) scaleX(1.005);
+      }
       @media only screen and (max-width: _max-width_) {
         :host > section {
           flex-direction: var(--flex-direction-mobile, var(--flex-direction, row));
@@ -174,6 +177,9 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
             }
           `
           : ''
+        }
+        :host([fix-one-pixel-glitch]) > section > *:not(:first-child) {
+          transform: none;
         }
       }
     `
