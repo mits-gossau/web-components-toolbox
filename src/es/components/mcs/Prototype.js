@@ -22,7 +22,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
    * @returns {Promise<{components: any}>}
    */
   loadDependency () {
-    return this.dependencyPromise || (this.dependencyPromise = new Promise(async (resolve) => {
+    return this.dependencyPromise || (this.dependencyPromise = new Promise(async (resolve) => { // eslint-disable-line no-async-promise-executor
       const isMcsLoaded = () => 'mcs' in self === true
       // needs markdown
       if (isMcsLoaded()) {

@@ -88,8 +88,8 @@ export default class Iframe extends Intersection() {
             ? `aspect-ratio: ${this.iframe.getAttribute(
                 'width'
               )} / ${this.iframe.getAttribute('height')};`
-            : // @ts-ignore
-              console.warn(
+            // @ts-ignore
+            : console.warn(
                 'This component requires an Iframe with fix/absolute width and height values: ',
                 this
               ) || ''

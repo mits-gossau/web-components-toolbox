@@ -150,7 +150,7 @@ export default class Login extends Prototype() {
     // subscribe to login:authenticate user by calling the getter before starting any msrc stuff
     return this.loadDependency().then(async msrc => {
       // subscribe before login | https://jira.migros.net/browse/MUTOBOTEAM-1964
-      this.user
+      this.initUser()
       // Setup OIDC login configuration
       await msrc.utilities.login.setup(this.constructor.parseAttribute(this.getAttribute('setup') || '{}'))
       // Initialize the login button
@@ -176,6 +176,10 @@ export default class Login extends Prototype() {
       this.html = [this.msrcLoginButtonWrapper, getStylesReturn[0]]
       return getStylesReturn[1] // use this line if css build up should be avoided
     })
+  }
+
+  initUser () {
+    return this.user
   }
 
   get user () {

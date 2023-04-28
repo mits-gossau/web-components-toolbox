@@ -73,6 +73,8 @@ export default class Input extends Shadow() {
       if (searchTerm) {
         this.inputField.value = searchTerm
         this.lastValue = this.inputField.value
+      } else {
+        this.inputField.value = ''
       }
     }
   }

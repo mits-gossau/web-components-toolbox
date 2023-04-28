@@ -286,6 +286,11 @@
   margin: var(--a-margin, 0 auto var(--content-spacing));
   transition: var(--a-transition, color 0.3s ease-out);
 }
+:host a[wrapper] {
+  color: inherit;
+  margin: var(--a-wrapper-margin, var(--a-margin, 0 auto));
+  text-decoration: inherit;
+}
 :host *:not(main) a {
   display: var(--any-a-display, var(--a-display, inline));
 }
