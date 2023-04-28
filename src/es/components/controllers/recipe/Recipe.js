@@ -62,7 +62,6 @@ export default class Recipe extends Shadow() {
           }
         }
       }
-      this.setRecipeSelection(recipeData)
 
       const pushHistory = event && event.detail && event.detail.pushHistory
 
@@ -77,7 +76,13 @@ export default class Recipe extends Shadow() {
         variables.tags = Object.keys(selected).join(';')
         this.setTag(variables.tags, pushHistory)
       }
+      for (const key in recipeData) {
+        let tags
+        if ((tags = this.getTags()) && tags.includes(key))recipeData[key] = true
+      }
+      this.setRecipeSelection(recipeData)
       if (event.detail && (event.detail.tags !== undefined || event.detail.tag !== undefined)) {
+        // @ts-ignore
         this.setTitle({
           detail: {
             textContent: Object.entries(recipeData).reduce((acc, entry, i) => {
@@ -127,6 +132,10 @@ export default class Recipe extends Shadow() {
         composed: true
       }))
     }
+    // inform about the url which would result on this filter
+    this.requestHrefEventListener = event => {
+      if (event.detail && event.detail.resolve) event.detail.resolve(this.setTag(event.detail.tags.join(';'), event.detail.pushHistory).href)
+    }
     this.updatePopState = event => {
       if (!event.detail) event.detail = { ...event.state }
       event.detail.pushHistory = false
@@ -136,11 +145,13 @@ export default class Recipe extends Shadow() {
 
   connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
+    this.addEventListener('request-href-' + (this.getAttribute('request-list-recipe') || 'request-list-recipe'), this.requestHrefEventListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
+    this.removeEventListener('request-href-' + (this.getAttribute('request-list-recipe') || 'request-list-recipe'), this.requestHrefEventListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
@@ -184,13 +195,14 @@ export default class Recipe extends Shadow() {
    * Set tag and page in window.history
    * @param {string} tag
    * @param {boolean} [pushHistory = true]
-   * @return {void}
+   * @return {URL}
    */
   setTag (tag, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
     if (pushHistory) history.pushState({ ...history.state, tag, page: '1' }, document.title, url.href)
+    return url
   }
 
   /**

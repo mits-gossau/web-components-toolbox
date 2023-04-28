@@ -87,6 +87,11 @@ export default class Contentful extends Shadow() {
       }))
     }
 
+    // inform about the url which would result on this filter
+    this.requestHrefEventListener = event => {
+      if (event.detail && event.detail.resolve) event.detail.resolve(this.setTag(event.detail.tags[1] || event.detail.tags[0], event, event.detail.pushHistory).href)
+    }
+
     this.updatePopState = event => {
       if (!event.detail) event.detail = { ...event.state }
       event.detail.pushHistory = false
@@ -97,11 +102,13 @@ export default class Contentful extends Shadow() {
 
   connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-news') || 'request-list-news', this.requestListNewsListener)
+    this.addEventListener('request-href-' + (this.getAttribute('request-list-news') || 'request-list-news'), this.requestHrefEventListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-news') || 'request-list-news', this.requestListNewsListener)
+    this.removeEventListener('request-href-' + (this.getAttribute('request-list-news') || 'request-list-news'), this.requestHrefEventListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
@@ -130,13 +137,14 @@ export default class Contentful extends Shadow() {
    * @param {string} tag
    * @param {CustomEvent} event
    * @param {boolean} [pushHistory = true]
-   * @return {void}
+   * @return {URL}
    */
   setTag (tag, event, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
     if (pushHistory) history.pushState({ ...history.state, textContent: event.detail.textContent, tag, page: '1' }, document.title, url.href)
+    return url
   }
 
   /**

@@ -19,22 +19,15 @@ export default class Button extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    this.buttonTagName = this.hasAttribute('href') ? 'a' : 'button'
+    this.origInnerHTML = this.root.innerHTML
     this.clickListener = event => {
       if (this.hasAttribute('disabled')) event.preventDefault()
       if (this.getAttribute('request-event-name')) {
+        event.preventDefault()
         this.button.classList.toggle('active')
         this.button.setAttribute('aria-pressed', this.button.classList.contains('active')) // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-pressed
         this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
-          detail: {
-            origEvent: event,
-            tags: [this.getAttribute('tag')],
-            isActive: this.button.classList.contains('active'),
-            fetchSubTags: this.hasAttribute('fetch-sub-tags'),
-            clearSubTags: this.hasAttribute('clear-sub-tags'),
-            this: this,
-            textContent: this.label.textContent
-          },
+          detail: this.getEventDetail(event),
           bubbles: true,
           cancelable: true,
           composed: true
@@ -73,11 +66,31 @@ export default class Button extends Shadow() {
     this.mouseoutListener = event => {
       this.button.classList.remove('hover')
     }
+    // request the href which results on a button click from the controller and if answered transfer this button into an a-node to have search engine robots follow the links
+    this.wcConfigLoadListener = event => new Promise(resolve => this.dispatchEvent(new CustomEvent('request-href-' + this.getAttribute('request-event-name'), {
+      detail: this.getEventDetail(null, false, resolve),
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))).then(href => {
+      if (href) {
+        this.setAttribute('href', href)
+        Promise.all([this.renderCSSPromise, this.renderHTMLPromise]).then(() => {
+          // reset component to have a instead of button tag
+          const oldAttributes = Array.from(this.button.attributes)
+          this.disconnectedCallback()
+          this.root.innerHTML = this.origInnerHTML
+          this.connectedCallback()
+          oldAttributes.forEach(attribute => this.button.setAttribute(attribute.name, attribute.value))
+        })
+      }
+    })
   }
 
   connectedCallback () {
-    if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
+    this.buttonTagName = this.hasAttribute('href') ? 'a' : 'button'
+    if (this.shouldRenderCSS()) this.renderCSSPromise = this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTMLPromise = this.renderHTML()
     this.button.addEventListener('click', this.clickListener)
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
@@ -85,6 +98,16 @@ export default class Button extends Shadow() {
       this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
       this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
     }
+    this.connectedCallbackOnce()
+  }
+
+  connectedCallbackOnce () {
+    if (document.body.hasAttribute('wc-config-load')) {
+      this.wcConfigLoadListener()
+    } else {
+      document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', this.wcConfigLoadListener, { once: true })
+    }
+    this.connectedCallbackOnce = () => {}
   }
 
   disconnectedCallback () {
@@ -128,6 +151,11 @@ export default class Button extends Shadow() {
     return !this.button || !this.label
   }
 
+  /**
+   * renders the o-teaser-wrapper css
+   *
+   * @return {Promise<void>}
+   */
   renderCSS () {
     this.css = /* css */`
       :host {
@@ -160,6 +188,7 @@ export default class Button extends Shadow() {
         width: var(--width, auto);
       }
       :host a {
+        box-sizing: border-box;
         width: var(--width, fit-content);
       }
       ${this.buttonTagName}:hover, ${this.buttonTagName}.hover {
@@ -295,9 +324,16 @@ export default class Button extends Shadow() {
           namespace: false,
           replaces
         }])
+      default:
+        return Promise.resolve()
     }
   }
 
+  /**
+   * renders the html
+   *
+   * @return {Promise<void>}
+   */
   renderHTML () {
     this.html = /* html */`
       <${this.buttonTagName} 
@@ -316,6 +352,27 @@ export default class Button extends Shadow() {
     if ((iconLeft = this.root.querySelector('.icon-left'))) this.button.prepend(iconLeft)
     let iconRight
     if ((iconRight = this.root.querySelector('.icon-right'))) this.button.append(iconRight)
+    return Promise.resolve()
+  }
+
+  /**
+   * @param {Event | null} event
+   * @param {boolean} [pushHistory=undefined]
+   * @param {(value: any)=>void} [resolve=undefined]
+   * @return {{origEvent: Event | null, tags: [string], isActive: boolean, fetchSubTags: boolean, clearSubTags: boolean, this: Button, textContent: string, pushHistory?: boolean, resolve?: (value: any)=>void}}
+   */
+  getEventDetail (event, pushHistory, resolve) {
+    return {
+      origEvent: event,
+      tags: [this.getAttribute('tag')],
+      isActive: this.button.classList.contains('active'),
+      fetchSubTags: this.hasAttribute('fetch-sub-tags'),
+      clearSubTags: this.hasAttribute('clear-sub-tags'),
+      this: this,
+      textContent: this.label.textContent,
+      pushHistory,
+      resolve
+    }
   }
 
   get button () {

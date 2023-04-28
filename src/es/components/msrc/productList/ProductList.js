@@ -24,6 +24,10 @@ export default class ProductList extends Intersection(Prototype()) {
     super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
     this.config = this.configSetup()
     this.requestListArticlesEventListener = event => this.widgetRenderSetup(event)
+    // inform about the url which would result on this filter
+    this.requestHrefEventListener = event => {
+      if (event.detail && event.detail.resolve) event.detail.resolve(this.setFilter(event).href)
+    }
     this.updatePopState = event => {
       /** @type {productListEventDetail} */
       if (!event.detail) event.detail = { ...event.state }
@@ -34,12 +38,14 @@ export default class ProductList extends Intersection(Prototype()) {
   connectedCallback () {
     super.connectedCallback()
     document.body.addEventListener(this.getAttribute('request-list-articles') || 'request-list-articles', this.requestListArticlesEventListener)
+    document.body.addEventListener('request-href-' + (this.getAttribute('request-list-articles') || 'request-list-articles'), this.requestHrefEventListener)
     self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     super.disconnectedCallback()
     document.body.removeEventListener(this.getAttribute('request-list-articles') || 'request-list-articles', this.requestListArticlesEventListener)
+    document.body.removeEventListener('request-href-' + (this.getAttribute('request-list-articles') || 'request-list-articles'), this.requestHrefEventListener)
     self.removeEventListener('popstate', this.updatePopState)
   }
 
@@ -184,7 +190,7 @@ export default class ProductList extends Intersection(Prototype()) {
   /**
    * Set detail and page in window.history
    * @param {CustomEvent} event
-   * @return {void}
+   * @return {URL}
    */
   setFilter (event) {
     const detail = {
@@ -199,6 +205,7 @@ export default class ProductList extends Intersection(Prototype()) {
     // save the last with sub categories into the url
     if (detail.fetchSubTags) url.searchParams.set('detailWithSubTags', detailValue)
     if (detail.pushHistory !== false) history.pushState({ ...history.state, ...detail }, document.title, url.href)
+    return url
   }
 
   /**
