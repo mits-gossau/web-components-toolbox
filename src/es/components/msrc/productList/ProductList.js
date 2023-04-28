@@ -105,6 +105,7 @@ export default class ProductList extends Intersection(Prototype()) {
       event = {
         detail
       }
+      event.detail.textContent = event.detail.tags.join(' ')
     }
     this.setTitle(event)
     if (event) this.config.filterOptions.category = event.detail.tags || this.configSetup().filterOptions.category

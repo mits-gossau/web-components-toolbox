@@ -81,7 +81,7 @@ export default class Recipe extends Shadow() {
         if ((tags = this.getTags()) && tags.includes(key))recipeData[key] = true
       }
       this.setRecipeSelection(recipeData)
-      if (event.detail && (event.detail.tags !== undefined || event.detail.tag !== undefined)) {
+      if (Object.entries(recipeData).some(entry => entry[1])) {
         // @ts-ignore
         this.setTitle({
           detail: {
