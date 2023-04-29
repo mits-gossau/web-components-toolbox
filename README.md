@@ -34,12 +34,14 @@ HTML/CSS Tooling:
 
 ## Master Branch locked 🙌
 
-TODO Cleanup Sprints:
-- [ ] mouseEventElement (mouseover|mouseout) hover on parent to prototype Hover class
-- [ ] fetchCSS.then replace to replaces property
-- [ ] from loadChildComponents to shadow fetchModules
+Checklist for each component:
+- [ ] Note date of cleaning/overhaul
+- [ ] Transform mouseEventElement (mouseover|mouseout) hover on parent to prototype Hover.js class
+- [ ] Remove fetchCSS.then replace and use replaces property
+- [ ] Split the Template Switch/Case into a separate function, that it can be overwritten by components which extend it
+- [ ] Change the loadChildComponents function to use the Shadow.js fetchModules
 - [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
-- [ ] async await
+- [ ] consider async await especially at "return Promise.resolve" lines
 
 TODO:
 - [ ] playwright single component tests
