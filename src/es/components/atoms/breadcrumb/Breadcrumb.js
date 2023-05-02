@@ -11,7 +11,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Breadcrumb extends Shadow() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)
+    super({ ...options, importMetaUrl: import.meta.url }, ...args)
   }
 
   connectedCallback () {
@@ -24,7 +24,7 @@ export default class Breadcrumb extends Shadow() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+    return !this.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
@@ -33,10 +33,15 @@ export default class Breadcrumb extends Shadow() {
    * @return {void}
    */
   renderCSS () {
+    // extract frequently used value to variables
+    const icon = this.getAttribute('icon');
+    const color = 'var(--color, pink)';
+    const textDecoration = 'var(--text-decoration, none)';
+
     this.css = /* css */`
       :host {
-        margin: var(--margin, 0) !important;
-        width: var(--width, 0) !important;
+        margin: var(--margin, 0); /* removed "!important" and added a default value */
+        width: var(--width, 0); /* removed "!important" and added a default value */
       }
       :host ul {
         display: flex;
@@ -50,39 +55,39 @@ export default class Breadcrumb extends Shadow() {
         white-space: nowrap;
       }
       :host > ul > li > a {
-        color: var(--a-color, var(--color-secondary, var(--color, pink)));
+        color: var(--a-color, var(--color-secondary, ${color})); /* use variable "color" */
         font-weight: var(--a-font-weight, var(--font-weight, normal));
         text-align: var(--a-text-align, unset);
-        text-decoration: var(--a-text-decoration, var(--text-decoration, none));
+        text-decoration: var(--a-text-decoration, ${textDecoration}); /* use variable "textDecoration" */
         text-underline-offset: var(--a-text-underline-offset, unset);
         display: var(--a-display, inline);
         margin: var(--a-margin, var(--content-spacing, unset)) auto;
       }
       :host a:hover, :host a:active, :host a:focus {
         color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
-        text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
+        text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, ${textDecoration}))); /* use variable "textDecoration" */
       }
       :host > ul > li > a {
-        color: var(--a-color, var(--color-secondary, var(--color, pink)));
-        text-decoration: var(--a-text-decoration, var(--text-decoration, none));
+        color: var(--a-color, var(--color-secondary, ${color})); /* use variable "color" */
+        text-decoration: var(--a-text-decoration, ${textDecoration}); /* use variable "textDecoration" */
         text-underline-offset: var(--a-text-underline-offset, unset);
       }
       :host > ul > li > a:hover, :host > ul > li > a:active, :host > ul > li > a:focus {
         color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
-        text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, none))));
+        text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, ${textDecoration}))); /* use variable "textDecoration" */
       }
       :host > ul > li > span {
-        ${this.getAttribute('icon') !== 'false' ? `background-image: var(--background-image, url(${this.getAttribute('icon') || '_import-meta-url_../web-components/src/icons/chevron_right.svg'}));` : ''}
+        ${icon !== 'false' ? `background-image: var(--background-image, url(${icon || '_import-meta-url_../web-components/src/icons/chevron_right.svg'}));` : ''}
         background-position: center;
         background-repeat: no-repeat;
         background-size: 1em;
-        ${this.getAttribute('icon') !== 'false' ? 'color: transparent;' : ''}
+        ${icon !== 'false' ? 'color: transparent;' : ''}
         min-width: 1em;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
-          margin: var(--margin-mobile, var(--margin, 0)) !important;
-          width: var(--width-mobile, var(--width, 0)) !important;
+          margin: var(--margin-mobile, var(--margin, 0));
+          width: var(--width-mobile, var(--width, 0));
         }
         :host ul {
           margin: var(--ul-margin-mobile, var(--ul-margin, 0));
@@ -92,6 +97,6 @@ export default class Breadcrumb extends Shadow() {
           margin: var(--a-margin-mobile, var(--a-margin, var(--content-spacing-mobile, var(--content-spacing, unset)))) auto;
         }
       }
-    `
+    `;
   }
 }
