@@ -5,6 +5,7 @@
 /* global sessionStorage */
 /* global CustomEvent */
 /* global history */
+/* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -20,6 +21,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Recipe extends Shadow() {
   constructor (...args) {
     super({ mode: 'false' }, ...args)
+    this.origTitle = document.title
     this.abortController = null
 
     // Recipe Filter Options/Categories
@@ -39,11 +41,27 @@ export default class Recipe extends Shadow() {
     this.requestListRecipeListener = async event => {
       if (this.abortController) this.abortController.abort()
       this.abortController = new AbortController()
-      const recipeData = JSON.parse(this.getRecipeSelection())
-      if (event.detail && event.detail.tags) {
-        recipeData[event.detail.tags[0]] = event.detail.isActive
+      let recipeData = JSON.parse(this.getRecipeSelection())
+      if (event.detail) {
+        if (event.detail.tags) {
+          recipeData[event.detail.tags[0]] = event.detail.isActive
+        } else if (event.detail.tag || (!event.detail.page && !event.detail.skip && !event.detail.key)) {
+          // when only tag is delivered from pop state reset all props to false and use the popstate props as true
+          for (const key in recipeData) {
+            recipeData[key] = false
+          }
+          if (event.detail.tag) {
+            recipeData = Object.assign(recipeData, event.detail.tag.split(';').reduce((acc, tag) => {
+              acc[tag] = true
+              return acc
+            }, {}))
+          }
+        } else if (!event.detail.key && !event.detail.skip) {
+          for (const key in recipeData) {
+            recipeData[key] = false
+          }
+        }
       }
-      this.setRecipeSelection(recipeData)
 
       const pushHistory = event && event.detail && event.detail.pushHistory
 
@@ -57,6 +75,22 @@ export default class Recipe extends Shadow() {
         const selected = Object.fromEntries(Object.entries(recipeData).filter(([key]) => recipeData[key]))
         variables.tags = Object.keys(selected).join(';')
         this.setTag(variables.tags, pushHistory)
+      }
+      for (const key in recipeData) {
+        let tags
+        if ((tags = this.getTags()) && tags.includes(key))recipeData[key] = true
+      }
+      this.setRecipeSelection(recipeData)
+      if (Object.entries(recipeData).some(entry => entry[1])) {
+        // @ts-ignore
+        this.setTitle({
+          detail: {
+            textContent: Object.entries(recipeData).reduce((acc, entry, i) => {
+              if (!entry[1]) return acc
+              return acc + (i === 0 ? '' : ' ') + entry[0]
+            }, '') || this.origTitle
+          }
+        })
       }
 
       // skip must be set after tags, since it may get reset by new tag parameter
@@ -98,14 +132,27 @@ export default class Recipe extends Shadow() {
         composed: true
       }))
     }
+    // inform about the url which would result on this filter
+    this.requestHrefEventListener = event => {
+      if (event.detail && event.detail.resolve) event.detail.resolve(this.setTag(event.detail.tags.join(';'), event.detail.pushHistory).href)
+    }
+    this.updatePopState = event => {
+      if (!event.detail) event.detail = { ...event.state }
+      event.detail.pushHistory = false
+      this.requestListRecipeListener(event)
+    }
   }
 
   connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
+    this.addEventListener('request-href-' + (this.getAttribute('request-list-recipe') || 'request-list-recipe'), this.requestHrefEventListener)
+    self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
+    this.removeEventListener('request-href-' + (this.getAttribute('request-list-recipe') || 'request-list-recipe'), this.requestHrefEventListener)
+    self.removeEventListener('popstate', this.updatePopState)
   }
 
   createRecipeSelectionPayload (recipeSelection) {
@@ -148,13 +195,14 @@ export default class Recipe extends Shadow() {
    * Set tag and page in window.history
    * @param {string} tag
    * @param {boolean} [pushHistory = true]
-   * @return {void}
+   * @return {URL}
    */
   setTag (tag, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
     if (pushHistory) history.pushState({ ...history.state, tag, page: '1' }, document.title, url.href)
+    return url
   }
 
   /**
@@ -180,7 +228,9 @@ export default class Recipe extends Shadow() {
     } else {
       url.searchParams.set('page', page)
     }
-    if (pushHistory) history.pushState({ ...history.state, tag: this.getTags[1] || this.getTags[0], page }, document.title, url.href)
+    // set Page is very difficult and would need more testing, assumption that this wouldn't effect SEO anyways, since pages are proper links in opposite to buttons
+    // this.setTitle(event, event.detail && event.detail.pageName ? ` ${event.detail.pageName} ` : ' Page ')
+    if (pushHistory) history.pushState({ ...history.state, tag: this.getTags(), page }, document.title, url.href)
   }
 
   /**
@@ -199,5 +249,23 @@ export default class Recipe extends Shadow() {
   getCurrentPageSkip () {
     const page = this.getPage()
     return page - 1
+  }
+
+  /**
+   * @param {CustomEvent} event
+   * @param {false | string} [addToTitle = false]
+   */
+  setTitle (event, addToTitle = false) {
+    let textContent
+    if (event && event.detail && event.detail.textContent && (textContent = event.detail.textContent.trim())) {
+      if (addToTitle) {
+        document.title = document.title.replace(new RegExp(`(.*)${addToTitle.replace(/\s/g, '\\s').replace(/\|/g, '\\|')}.*`), '$1')
+        document.title += addToTitle + textContent
+      } else if (document.title.includes('|')) {
+        document.title = document.title.replace(/[^|]*(.*)/, textContent + ' $1')
+      } else {
+        document.title = textContent
+      }
+    }
   }
 }

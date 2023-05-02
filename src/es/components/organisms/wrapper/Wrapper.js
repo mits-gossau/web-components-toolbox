@@ -22,10 +22,6 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
   constructor (...args) {
     super(...args)
 
-    // this.setAttribute('aria-label', 'Section')
-    this.clickListener = event => {
-      if (this.hasAttribute('href')) self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
-    }
     // link behavior made accessible
     if (this.hasAttribute('href')) {
       this.setAttribute('data-href', this.getAttribute('href'))
@@ -44,15 +40,14 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     Promise.all(showPromises).then(() => {
+      this.checkIfLink()
       this.hidden = false
     })
-    this.addEventListener('click', this.clickListener)
     self.addEventListener('resize', this.resizeListener)
     super.connectedCallback() // extend body and call it to get the scroll behavior
   }
 
   disconnectedCallback () {
-    this.removeEventListener('click', this.clickListener)
     self.removeEventListener('resize', this.resizeListener)
     super.disconnectedCallback() // extend body and call it to get the scroll behavior
   }
@@ -117,6 +112,9 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         padding-bottom: var(--any-padding-bottom-last-child, var(--any-padding-bottom, 0)) !important;
         margin-bottom: var(--any-margin-bottom-last-child, var(--any-margin-bottom, 0)) !important;
       }
+      :host([fix-one-pixel-glitch]) > section > *:not(:first-child) {
+        transform: translateX(-1px) scaleX(1.005);
+      }
       @media only screen and (max-width: _max-width_) {
         :host > section {
           flex-direction: var(--flex-direction-mobile, var(--flex-direction, row));
@@ -174,6 +172,9 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
             }
           `
           : ''
+        }
+        :host([fix-one-pixel-glitch]) > section > *:not(:first-child) {
+          transform: none;
         }
       }
     `
@@ -338,6 +339,22 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
     })
     this.html = [this.section, this.style]
     return Promise.resolve()
+  }
+
+  checkIfLink () {
+    // accessible and seo conform a tag wrapped around this component
+    if (this.hasAttribute('href') && this.parentNode) {
+      const a = document.createElement('a')
+      a.setAttribute('wrapper', '')
+      a.setAttribute('href', this.getAttribute('href'))
+      a.setAttribute('target', this.getAttribute('target') || '_self')
+      if (this.hasAttribute('rel')) a.setAttribute('rel', this.getAttribute('rel'))
+      a.style.color = 'inherit'
+      a.style.textDecoration = 'inherit'
+      this.parentNode.replaceChild(a, this)
+      a.appendChild(this)
+      this.checkIfLink = () => {}
+    }
   }
 
   /**

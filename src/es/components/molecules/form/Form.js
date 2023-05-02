@@ -263,9 +263,6 @@ export default class Form extends Shadow() {
         grid-area: 1/1 / 2 / span1;
       }
       @media only screen and (max-width: _max-width_) {
-        :host {
-          width: 100% !important;
-        }
         ${this.getInputFieldsWithText()} {
           font-size: var(--font-size-mobile);
         }
