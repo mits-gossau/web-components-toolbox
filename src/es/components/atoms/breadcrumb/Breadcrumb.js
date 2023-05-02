@@ -34,9 +34,9 @@ export default class Breadcrumb extends Shadow() {
    */
   renderCSS () {
     // extract frequently used value to variables
-    const icon = this.getAttribute('icon');
-    const color = 'var(--color, pink)';
-    const textDecoration = 'var(--text-decoration, none)';
+    const icon = this.getAttribute('icon')
+    const color = 'var(--color, pink)'
+    const textDecoration = 'var(--text-decoration, none)'
 
     this.css = /* css */`
       :host {
@@ -97,6 +97,6 @@ export default class Breadcrumb extends Shadow() {
           margin: var(--a-margin-mobile, var(--a-margin, var(--content-spacing-mobile, var(--content-spacing, unset)))) auto;
         }
       }
-    `;
+    `
   }
 }
