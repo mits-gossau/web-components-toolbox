@@ -261,9 +261,9 @@ export default class Button extends Shadow() {
     `
     const replaces = this.buttonTagName === 'a'
       ? [{
-          pattern: '[^-]{1}button',
+          pattern: '([^-]{1})button',
           flags: 'g',
-          replacement: 'a'
+          replacement: '$1a'
         }]
       : []
     switch (this.getAttribute('namespace')) {
@@ -312,7 +312,8 @@ export default class Button extends Shadow() {
         {
           // @ts-ignore
           path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./category-/category-.css`,
-          namespace: false
+          namespace: false,
+          replaces
         }]).then(fetchCSSParams => {
           // harmonize the primary-.css namespace with --category
           fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--primary-/g, '--category-')
