@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Mutation } from '../../prototypes/Mutation.js'
 
 /* global Arrow */
 /* global customElements */
@@ -18,9 +18,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  * @type {CustomElementConstructor}
  */
-export default class CarouselTwo extends Shadow() {
-  constructor (...args) {
-    super(...args)
+export default class CarouselTwo extends Mutation() {
+  constructor (options = {}, ...args) {
+    super(Object.assign(options, { mutationObserverInit: { subtree: true, childList: true } }), ...args)
 
     if (this.hasAttribute('open-modal')) this.setAttribute('aria-haspopup', 'true')
     // on click anchor scroll to the image with the matching id or previous/next
@@ -125,6 +125,7 @@ export default class CarouselTwo extends Shadow() {
   }
 
   connectedCallback () {
+    super.connectedCallback()
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -153,6 +154,7 @@ export default class CarouselTwo extends Shadow() {
   }
 
   disconnectedCallback () {
+    super.disconnectedCallback()
     this.removeEventListener('click', this.clickListener)
     this.section.removeEventListener('scroll', this.scrollListener)
     Array.from(this.section.children).forEach(node => node.removeEventListener('focus', this.focusListener))
@@ -161,6 +163,19 @@ export default class CarouselTwo extends Shadow() {
       this.removeEventListener('focus', this.focusEventListener)
     }
     if (this.hasAttribute('history') && !this.hasAttribute('interval')) self.removeEventListener('hashchange', this.hashchangeEventListener)
+  }
+
+  // incase a child would manipulate itself, expl. teaser or wrapper wrapping themself with an a tag when they get an href
+  mutationCallback (mutationList, observer) {
+    if(mutationList[0] && mutationList[0].type === 'childList') mutationList[0].addedNodes.forEach(node => {
+      let id
+      if (!node.hasAttribute('id') && node.children[0] && node.children[0].hasAttribute('id') && (id = node.children[0].getAttribute('id')).includes(this.idPefix)) {
+        node.children[0].removeAttribute('id')
+        node.children[0].removeEventListener('focus', this.focusListener)
+        node.setAttribute('id', id)
+        node.addEventListener('focus', this.focusListener)
+      }
+    })
   }
 
   /**
@@ -707,6 +722,10 @@ export default class CarouselTwo extends Shadow() {
       ? this._id
       : this.getAttribute('id')
         ? (this._id = this.getAttribute('id'))
-        : (this._id = `img-${this.getRandomString()}`)
+        : (this._id = `${this.idPefix}${this.getRandomString()}`)
+  }
+
+  get idPefix () {
+    return 'img-'
   }
 }
