@@ -23,10 +23,6 @@ export default class Arrow extends Hover() {
     return ['hover']
   }
 
-  constructor (...args) {
-    super(...args)
-  }
-
   connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
