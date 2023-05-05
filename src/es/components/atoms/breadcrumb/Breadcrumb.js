@@ -24,7 +24,7 @@ export default class Breadcrumb extends Shadow() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
