@@ -40,8 +40,8 @@ export default class Breadcrumb extends Shadow() {
 
     this.css = /* css */`
       :host {
-        margin: var(--margin, 0); /* removed "!important" and added a default value */
-        width: var(--width, 0); /* removed "!important" and added a default value */
+        margin: var(--margin, 0) !important;
+        width: var(--width, 0) !important;
       }
       :host ul {
         display: flex;
@@ -86,8 +86,8 @@ export default class Breadcrumb extends Shadow() {
       }
       @media only screen and (max-width: _max-width_) {
         :host {
-          margin: var(--margin-mobile, var(--margin, 0));
-          width: var(--width-mobile, var(--width, 0));
+          margin: var(--margin-mobile, var(--margin, 0)) !important;
+          width: var(--width-mobile, var(--width, 0)) !important;
         }
         :host ul {
           margin: var(--ul-margin-mobile, var(--ul-margin, 0));
