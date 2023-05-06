@@ -43,7 +43,7 @@ export default class Contentful extends Shadow() {
         this.setTitle(event)
       } else if (variables.tags && variables.tags[1]) {
         // @ts-ignore
-        this.setTitle({detail:{textContent: variables.tags[1]}})
+        this.setTitle({ detail: { textContent: variables.tags[1] } })
       }
       // skip must be set after tags, since it may got reset by new tag parameter
       if (event.detail && event.detail.skip !== undefined) {

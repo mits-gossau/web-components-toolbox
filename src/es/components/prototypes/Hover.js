@@ -60,9 +60,11 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
 
   get hoverTarget () {
     return this._hoverTarget || (this._hoverTarget = (() => {
-      if (this.hoverInit.selector) return this.hoverInit.selector === 'hover-on-parent-shadow-root-host'
-      ? Hover.findNextHost(this)
-      : Hover.findByQuerySelector(this, this.hoverInit.selector)
+      if (this.hoverInit.selector) {
+        return this.hoverInit.selector === 'hover-on-parent-shadow-root-host'
+          ? Hover.findNextHost(this)
+          : Hover.findByQuerySelector(this, this.hoverInit.selector)
+      }
       return Hover.findByLevel(this, Number(this.hoverInit.level))
     })())
   }
