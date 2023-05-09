@@ -10,9 +10,13 @@ export default class FormOrderItem extends Form {
     this.eventListener = event => {
       const inputField = this.root.querySelector(':focus')
       if (!inputField) return
-      const value = inputField?.value ? inputField.value : '0'
-      this.updateInputAttributeValue(inputField, value)
-      this.calcTotal(value, this.priceAttribute, this.priceTotalElement)
+      if (inputField === this.clearQuantityBtn) {
+        if (event.key === 'Enter' || event.key === 'Spacebar' || event.key === ' ') this.clickListener();
+      } else {
+        const value = inputField?.value ? inputField.value : '0'
+        this.updateInputAttributeValue(inputField, value)
+        this.calcTotal(value, this.priceAttribute, this.priceTotalElement)
+      }
     }
     this.clickListener = event => {
       this.quantityField.value = ''
