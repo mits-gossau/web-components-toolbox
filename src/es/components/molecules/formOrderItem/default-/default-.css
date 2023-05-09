@@ -15,11 +15,11 @@
 }
 
 :host .price {
-    text-align:right;
+    text-align: right;
     width:var(--form-order-item-default-price-width,5em);
 }
 
 :host .price-total{
-    text-align:right;
+    text-align: right;
     width:var(--form-order-item-default-price-total-width,5em);
 }
