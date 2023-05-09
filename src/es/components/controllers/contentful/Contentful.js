@@ -17,7 +17,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Contentful extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options,
+    super({
+      ...options,
       importMetaUrl: import.meta.url,
       mode: 'false'
     }, ...args)

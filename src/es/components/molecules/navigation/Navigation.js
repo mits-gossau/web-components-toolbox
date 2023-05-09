@@ -44,9 +44,10 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Navigation extends Mutation() {
   constructor (options = {}, ...args) {
-    super({ ...options,
+    super({
+      ...options,
       importMetaUrl: import.meta.url,
-      mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
+      mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] }
     }, ...args)
 
     this.isDesktop = this.checkMedia('desktop')

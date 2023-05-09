@@ -20,9 +20,10 @@ import { Mutation } from '../../prototypes/Mutation.js'
  */
 export default class CarouselTwo extends Mutation() {
   constructor (options = {}, ...args) {
-    super({ ...options,
+    super({
+      ...options,
       importMetaUrl: import.meta.url,
-      mutationObserverInit: { subtree: true, childList: true },
+      mutationObserverInit: { subtree: true, childList: true }
     }, ...args)
 
     if (this.hasAttribute('open-modal')) this.setAttribute('aria-haspopup', 'true')
@@ -170,15 +171,17 @@ export default class CarouselTwo extends Mutation() {
 
   // incase a child would manipulate itself, expl. teaser or wrapper wrapping themself with an a tag when they get an href
   mutationCallback (mutationList, observer) {
-    if(mutationList[0] && mutationList[0].type === 'childList') mutationList[0].addedNodes.forEach(node => {
-      let id
-      if (Array.from(this.section.children).includes(node) &&!node.hasAttribute('id') && node.children[0] && node.children[0].hasAttribute('id') && (id = node.children[0].getAttribute('id')).includes(this.idPefix)) {
-        node.children[0].removeAttribute('id')
-        node.children[0].removeEventListener('focus', this.focusListener)
-        node.setAttribute('id', id)
-        node.addEventListener('focus', this.focusListener)
-      }
-    })
+    if (mutationList[0] && mutationList[0].type === 'childList') {
+      mutationList[0].addedNodes.forEach(node => {
+        let id
+        if (Array.from(this.section.children).includes(node) && !node.hasAttribute('id') && node.children[0] && node.children[0].hasAttribute('id') && (id = node.children[0].getAttribute('id')).includes(this.idPefix)) {
+          node.children[0].removeAttribute('id')
+          node.children[0].removeEventListener('focus', this.focusListener)
+          node.setAttribute('id', id)
+          node.addEventListener('focus', this.focusListener)
+        }
+      })
+    }
   }
 
   /**

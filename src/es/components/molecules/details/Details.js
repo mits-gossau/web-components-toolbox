@@ -54,9 +54,10 @@ import { Mutation } from '../../prototypes/Mutation.js'
 // @ts-ignore
 export const Details = (ChosenHTMLElement = Mutation()) => class Details extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
-    super({ ...options,
+    super({
+      ...options,
       importMetaUrl: import.meta.url,
-      mutationObserverInit: { attributes: true, attributeFilter: ['open'] },
+      mutationObserverInit: { attributes: true, attributeFilter: ['open'] }
     }, ...args)
 
     this.setAttribute('aria-expanded', 'false')

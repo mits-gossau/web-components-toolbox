@@ -21,9 +21,10 @@ import { Intersection } from '../../prototypes/Intersection.js'
 
 export default class ProductList extends Intersection(Prototype()) {
   constructor (options = {}, ...args) {
-    super({ ...options,
+    super({
+      ...options,
       importMetaUrl: import.meta.url,
-      intersectionObserverInit: { },
+      intersectionObserverInit: { }
     }, ...args)
     this.config = this.configSetup()
     this.requestListArticlesEventListener = event => this.widgetRenderSetup(event)

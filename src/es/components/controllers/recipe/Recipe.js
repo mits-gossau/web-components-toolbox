@@ -20,7 +20,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Recipe extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options,
+    super({
+      ...options,
       importMetaUrl: import.meta.url,
       mode: 'false'
     }, ...args)

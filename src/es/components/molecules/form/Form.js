@@ -20,7 +20,8 @@ import Button from '../../atoms/button/Button.js'
  */
 export default class Form extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options,
+    super({
+      ...options,
       importMetaUrl: import.meta.url,
       mode: 'false'
     }, ...args)
