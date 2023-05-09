@@ -94,7 +94,7 @@ export default class FormOrderItem extends Form {
    */
   setPrice (priceAttribute, priceElement) {
     if (!priceElement) return
-    priceElement.innerText = priceAttribute
+    priceElement.innerText = parseFloat(priceAttribute).toFixed(2)
   }
 
   /**
