@@ -7,19 +7,21 @@
 }
 
 :host .product {
-    width: var(--form-order-item-default-product-width,12em);
+    width:var(--form-order-item-default-product-width,12em);
+    margin:0 var(--content-spacing-mobile, 0) 0 0;
 }
 
 :host .type {
     width:var(--form-order-item-default-type-width,15em);
+    margin:0 0 0 var(--content-spacing-mobile, 0);
 }
 
 :host .price {
-    text-align: right;
+    text-align:right;
     width:var(--form-order-item-default-price-width,5em);
 }
 
 :host .price-total{
-    text-align: right;
+    text-align:right;
     width:var(--form-order-item-default-price-total-width,5em);
 }
