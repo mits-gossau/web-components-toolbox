@@ -21,9 +21,9 @@ import { Mutation } from '../../prototypes/Mutation.js'
 export default class CarouselTwo extends Mutation() {
   constructor (options = {}, ...args) {
     super({
-      ...options,
       importMetaUrl: import.meta.url,
-      mutationObserverInit: { subtree: true, childList: true }
+      mutationObserverInit: { subtree: true, childList: true },
+      ...options,
     }, ...args)
 
     if (this.hasAttribute('open-modal')) this.setAttribute('aria-haspopup', 'true')

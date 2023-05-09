@@ -44,9 +44,9 @@ export default class Picture extends Intersection() {
 
   constructor (options = {}, ...args) {
     super({
-      ...options,
       importMetaUrl: import.meta.url,
-      intersectionObserverInit: {}
+      intersectionObserverInit: {},
+      ...options,
     }, ...args)
 
     this.clickListener = event => {

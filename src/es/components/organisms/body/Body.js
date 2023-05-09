@@ -23,7 +23,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Body extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.timeout = null
     this.clickAnchorEventListener = event => {

@@ -34,7 +34,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Link extends Shadow() {
   constructor (a, options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this._a = a
     this.setAttribute('role', 'link')

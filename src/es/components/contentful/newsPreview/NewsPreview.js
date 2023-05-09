@@ -4,7 +4,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 export default class NewsPreview extends Shadow() {
   constructor (news, options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.news = news || null
     this.ERROR_MSG = 'Error. News could not be displayed.'
   }

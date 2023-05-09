@@ -6,7 +6,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class NewsList extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.RESOLVE_STATE = 'LOADED'
     this.answerEventNameListener = event => {
       this.hidden = false

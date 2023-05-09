@@ -10,7 +10,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class News extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.RESOLVE_MSG = 'LOADED'
     this.ERROR_MSG = 'Error. News could not be displayed.'
     this.clickListener = event => {

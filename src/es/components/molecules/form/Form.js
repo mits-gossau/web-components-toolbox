@@ -21,9 +21,9 @@ import Button from '../../atoms/button/Button.js'
 export default class Form extends Shadow() {
   constructor (options = {}, ...args) {
     super({
-      ...options,
       importMetaUrl: import.meta.url,
-      mode: 'false'
+      mode: 'false',
+      ...options,
     }, ...args)
 
     this.setAttribute('role', 'form')

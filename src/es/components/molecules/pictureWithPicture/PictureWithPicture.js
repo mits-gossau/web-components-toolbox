@@ -17,7 +17,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class PictureWithPicture extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
   }
 
   connectedCallback () {

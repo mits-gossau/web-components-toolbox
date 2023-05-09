@@ -6,7 +6,7 @@ import Form from '../form/Form.js'
 
 export default class FormOrderItem extends Form {
   constructor (options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.eventListener = event => {
       const inputField = this.root.querySelector(':focus')
       if (!inputField) return

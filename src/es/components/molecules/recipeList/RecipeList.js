@@ -6,7 +6,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class RecipeList extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       this.renderHTML('loading')
       event.detail.fetch.then(recipeData => {

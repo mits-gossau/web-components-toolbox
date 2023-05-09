@@ -35,7 +35,7 @@ HTML/CSS Tooling:
 ## Master Branch locked 🙌
 
 Checklist for each component:
-- [ ] Note date of cleaning/overhaul
+- [ ] Note date of cleaning/overhaul, fix comments, fix all type/file errors of red highlighted files
 - [ ] Transform mouseEventElement (mouseover|mouseout) hover on parent to prototype Hover.js class
 - [ ] Remove fetchCSS.then replace and use replaces property
 - [ ] Split the Template Switch/Case into a separate function, that it can be overwritten by components which extend it

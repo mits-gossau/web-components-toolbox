@@ -17,7 +17,7 @@ export default class Button extends Shadow() {
   }
 
   constructor (options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     // get the original innerHTML of the component, so that when it rerenders as an a-tag it doesn't loose its content
     let button

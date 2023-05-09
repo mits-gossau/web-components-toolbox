@@ -6,9 +6,9 @@ import { Mutation } from '../../prototypes/Mutation.js'
 export default class TagFilter extends Mutation() {
   constructor (options = {}, ...args) {
     super({
-      ...options,
       importMetaUrl: import.meta.url,
-      mutationObserverInit: { childList: true }
+      mutationObserverInit: { childList: true },
+      ...options,
     }, ...args)
 
     this.answerEventListener = event => {

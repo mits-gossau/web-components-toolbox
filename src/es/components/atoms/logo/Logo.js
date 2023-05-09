@@ -46,7 +46,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Logo extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.textSelector = ':not(img):not(a):not(style):not(script)'
     this.setAttribute('lang', document.documentElement.getAttribute('lang') || 'de')

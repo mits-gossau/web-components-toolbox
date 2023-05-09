@@ -51,7 +51,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class MacroCarousel extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.macroCarousel = document.createElement('macro-carousel')
     // copy all kids into the macro-carousel

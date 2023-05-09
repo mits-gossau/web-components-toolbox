@@ -15,9 +15,9 @@ import { Intersection } from '../../prototypes/Intersection.js'
 export default class EmotionPictures extends Intersection() {
   constructor (options = {}, ...args) {
     super({
-      ...options,
       importMetaUrl: import.meta.url,
-      intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 }
+      intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 },
+      ...options,
     }, ...args)
 
     this.setAttribute('role', 'banner')

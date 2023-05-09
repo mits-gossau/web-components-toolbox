@@ -18,9 +18,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Contentful extends Shadow() {
   constructor (options = {}, ...args) {
     super({
-      ...options,
       importMetaUrl: import.meta.url,
-      mode: 'false'
+      mode: 'false',
+      ...options,
     }, ...args)
     const token = this.getAttribute('token')
     const spaceId = this.getAttribute('space-id')
