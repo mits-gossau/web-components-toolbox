@@ -17,7 +17,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Hotspot extends Shadow() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)
+    super({ ...options, importMetaUrl: import.meta.url }, ...args)
 
     this.buttonClickListener = e => {
       if (this.hasAttribute('show-text')) {
@@ -163,7 +163,7 @@ export default class Hotspot extends Shadow() {
 
     const styles = [{
       // @ts-ignore
-      path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+      path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
       namespaceFallback: true
     }]
 
@@ -172,7 +172,7 @@ export default class Hotspot extends Shadow() {
       default:
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          path: `${this.importMetaUrl}./default-/default-.css`,
           namespace: false
         }, ...styles], false)
     }

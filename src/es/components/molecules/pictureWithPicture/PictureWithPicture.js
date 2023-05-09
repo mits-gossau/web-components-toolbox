@@ -16,6 +16,10 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class PictureWithPicture extends Shadow() {
+  constructor (options = {}, ...args) {
+    super({ ...options, importMetaUrl: import.meta.url }, ...args)
+  }
+
   connectedCallback () {
     this.hidden = true
     const showPromises = []
@@ -82,7 +86,7 @@ export default class PictureWithPicture extends Shadow() {
 
     const styles = [{
       // @ts-ignore
-      path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+      path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
       namespaceFallback: true
     }]
 
@@ -91,7 +95,7 @@ export default class PictureWithPicture extends Shadow() {
       default:
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          path: `${this.importMetaUrl}./default-/default-.css`,
           namespace: false
         }, ...styles], false)
     }

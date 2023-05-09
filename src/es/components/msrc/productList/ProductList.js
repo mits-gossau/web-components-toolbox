@@ -21,7 +21,10 @@ import { Intersection } from '../../prototypes/Intersection.js'
 
 export default class ProductList extends Intersection(Prototype()) {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
+    super({ ...options,
+      importMetaUrl: import.meta.url,
+      intersectionObserverInit: { },
+    }, ...args)
     this.config = this.configSetup()
     this.requestListArticlesEventListener = event => this.widgetRenderSetup(event)
     // inform about the url which would result on this filter
@@ -200,7 +203,7 @@ export default class ProductList extends Intersection(Prototype()) {
       clearSubTags: event.detail.clearSubTags,
       tags: event.detail.tags
     }
-    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
     const detailValue = encodeURIComponent(JSON.stringify(detail))
     url.searchParams.set('detail', detailValue)
     // save the last with sub categories into the url

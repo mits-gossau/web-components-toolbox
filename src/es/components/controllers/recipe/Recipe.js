@@ -19,8 +19,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Recipe extends Shadow() {
-  constructor (...args) {
-    super({ mode: 'false' }, ...args)
+  constructor (options = {}, ...args) {
+    super({ ...options,
+      importMetaUrl: import.meta.url,
+      mode: 'false'
+    }, ...args)
     this.origTitle = document.title
     this.abortController = null
 
@@ -180,7 +183,7 @@ export default class Recipe extends Shadow() {
   setSearchTerm (eventDetail, pushHistory = true) {
     if (eventDetail && eventDetail.key === 'inputSearch') {
       const searchTerm = eventDetail.value
-      const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+      const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
       url.searchParams.set('search-term', searchTerm)
       if (pushHistory) history.pushState({ ...history.state, searchTerm }, document.title, url.href)
     }
@@ -198,7 +201,7 @@ export default class Recipe extends Shadow() {
    * @return {URL}
    */
   setTag (tag, pushHistory = true) {
-    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
     if (pushHistory) history.pushState({ ...history.state, tag, page: '1' }, document.title, url.href)
@@ -222,7 +225,7 @@ export default class Recipe extends Shadow() {
    * @return {void}
    */
   setPage (page, pushHistory = true) {
-    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
     if (page === '1') {
       url.searchParams.delete('page')
     } else {

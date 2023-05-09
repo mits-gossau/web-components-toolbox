@@ -45,8 +45,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Logo extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ ...options, importMetaUrl: import.meta.url }, ...args)
 
     this.textSelector = ':not(img):not(a):not(style):not(script)'
     this.setAttribute('lang', document.documentElement.getAttribute('lang') || 'de')
@@ -195,12 +195,12 @@ export default class Logo extends Shadow() {
     switch (this.getAttribute('namespace')) {
       case 'logo-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
       case 'logo-partner-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./partner-/partner-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./partner-/partner-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
     }

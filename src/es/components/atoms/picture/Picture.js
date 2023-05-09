@@ -43,7 +43,10 @@ export default class Picture extends Intersection() {
   }
 
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
+    super({ ...options,
+      importMetaUrl: import.meta.url,
+      intersectionObserverInit: {},
+    }, ...args)
 
     this.clickListener = event => {
       if (!this.hasAttribute('open')) event.stopPropagation()
@@ -257,32 +260,32 @@ export default class Picture extends Intersection() {
     switch (this.getAttribute('namespace')) {
       case 'picture-overflow-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overflow-/overflow-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./overflow-/overflow-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
       case 'picture-overflow-scale-up-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./overflow-scale-up-/overflow-scale-up-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./overflow-scale-up-/overflow-scale-up-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
       case 'picture-scale-up-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./scale-up-/scale-up-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./scale-up-/scale-up-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
       case 'picture-teaser-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
       case 'picture-store-logo-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./store-logo-/store-logo-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./store-logo-/store-logo-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
       case 'picture-cover-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./cover-/cover-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./cover-/cover-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
     }
@@ -568,7 +571,7 @@ export default class Picture extends Intersection() {
    * @return {URL}
    */
   static newUrl (path) {
-    return new URL(path, path.charAt(0) === '/' ? location.origin : path.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    return new URL(path, path.charAt(0) === '/' ? location.origin : path.charAt(0) === '.' ? this.importMetaUrl : undefined)
   }
 
   /**

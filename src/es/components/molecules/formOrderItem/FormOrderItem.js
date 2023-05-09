@@ -5,8 +5,8 @@
 import Form from '../form/Form.js'
 
 export default class FormOrderItem extends Form {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ ...options, importMetaUrl: import.meta.url }, ...args)
     this.eventListener = event => {
       const inputField = this.root.querySelector(':focus')
       if (!inputField) return
@@ -63,11 +63,11 @@ export default class FormOrderItem extends Form {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
     ]
@@ -75,7 +75,7 @@ export default class FormOrderItem extends Form {
     switch (this.getAttribute('namespace')) {
       case 'form-order-item-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       default:

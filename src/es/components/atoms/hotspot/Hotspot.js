@@ -19,7 +19,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Hotspot extends Shadow() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { importMetaUrl: import.meta.url }), ...args)
+    super({ ...options, importMetaUrl: import.meta.url }, ...args)
     this.hasRendered = false
 
     this.buttonClickListener = e => {
@@ -253,33 +253,33 @@ export default class Hotspot extends Shadow() {
 
     const styles = [{
       // @ts-ignore
-      path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+      path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
       namespaceFallback: true
     }]
 
     switch (this.getAttribute('place')) {
       case 'left':
         styles.push({
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./place/left.css`,
+          path: `${this.importMetaUrl}./place/left.css`,
           namespaceFallback: true
         })
         break
       case 'right':
         styles.push({
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./place/right.css`,
+          path: `${this.importMetaUrl}./place/right.css`,
           namespaceFallback: true
         })
         break
       case 'top':
         styles.push({
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./place/top.css`,
+          path: `${this.importMetaUrl}./place/top.css`,
           namespaceFallback: true
         })
         break
       case 'bottom':
       default:
         styles.push({
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./place/bottom.css`,
+          path: `${this.importMetaUrl}./place/bottom.css`,
           namespaceFallback: true
         })
         break
@@ -289,14 +289,14 @@ export default class Hotspot extends Shadow() {
       case 'hotspot-helper-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./helper-/helper-.css`,
+          path: `${this.importMetaUrl}./helper-/helper-.css`,
           namespace: false
         }, ...styles], false)
       case 'hotspot-default-':
       default:
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          path: `${this.importMetaUrl}./default-/default-.css`,
           namespace: false
         }, ...styles], false)
     }

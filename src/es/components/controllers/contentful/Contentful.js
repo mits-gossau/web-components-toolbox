@@ -16,8 +16,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Contentful extends Shadow() {
-  constructor (...args) {
-    super({ mode: 'false' }, ...args)
+  constructor (options = {}, ...args) {
+    super({ ...options,
+      importMetaUrl: import.meta.url,
+      mode: 'false'
+    }, ...args)
     const token = this.getAttribute('token')
     const spaceId = this.getAttribute('space-id')
     // @ts-ignore
@@ -145,7 +148,7 @@ export default class Contentful extends Shadow() {
    * @return {URL}
    */
   setTag (tag, event, pushHistory = true) {
-    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
     url.searchParams.set('tag', tag)
     url.searchParams.set('page', '1')
     if (pushHistory) history.pushState({ ...history.state, textContent: event.detail.textContent, tag, page: '1' }, document.title, url.href)
@@ -174,7 +177,7 @@ export default class Contentful extends Shadow() {
    * @return {void}
    */
   setPage (page, pushHistory = true) {
-    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? import.meta.url.replace(/(.*\/)(.*)$/, '$1') : undefined)
+    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
     if (page === '1') {
       url.searchParams.delete('page')
     } else {

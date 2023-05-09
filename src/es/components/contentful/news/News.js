@@ -9,8 +9,8 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class News extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ ...options, importMetaUrl: import.meta.url }, ...args)
     this.RESOLVE_MSG = 'LOADED'
     this.ERROR_MSG = 'Error. News could not be displayed.'
     this.clickListener = event => {
@@ -100,8 +100,8 @@ export default class News extends Shadow() {
   renderHTML (data) {
     return Promise.all([
       this.getAttribute('namespace') === 'news-alnatura-'
-        ? this.fetchHTML([import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './alnatura-/alnatura-.html'])
-        : this.fetchHTML([import.meta.url.replace(/(.*\/)(.*)$/, '$1') + './default-/default-.html']),
+        ? this.fetchHTML([this.importMetaUrl + './alnatura-/alnatura-.html'])
+        : this.fetchHTML([this.importMetaUrl + './default-/default-.html']),
       this.loadChildComponents(),
       this.loadScriptDependency(),
       this.loadDependency()
@@ -195,23 +195,23 @@ export default class News extends Shadow() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
     ]
     switch (this.getAttribute('namespace')) {
       case 'news-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       case 'news-alnatura-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       default:
@@ -244,7 +244,7 @@ export default class News extends Shadow() {
       contentfulRenderer.setAttribute('id', 'contentful-renderer')
       try {
         // @ts-ignore
-        contentfulRenderer.setAttribute('src', `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../controllers/contentful/rich-text-html-renderer.es5.min.js`)
+        contentfulRenderer.setAttribute('src', `${this.importMetaUrl}../../controllers/contentful/rich-text-html-renderer.es5.min.js`)
         document.body.appendChild(contentfulRenderer)
         contentfulRenderer.onload = () => resolve(this.RESOLVE_MSG)
       } catch (e) {

@@ -40,7 +40,7 @@ Checklist for each component:
 - [ ] Remove fetchCSS.then replace and use replaces property
 - [ ] Split the Template Switch/Case into a separate function, that it can be overwritten by components which extend it
 - [ ] Change the loadChildComponents function to use the Shadow.js fetchModules
-- [ ] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
+- [x] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
 - [ ] consider async await especially at "return Promise.resolve" lines
 
 TODO:

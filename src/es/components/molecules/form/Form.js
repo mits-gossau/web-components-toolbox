@@ -20,7 +20,10 @@ import Button from '../../atoms/button/Button.js'
  */
 export default class Form extends Shadow() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { mode: 'false' }), ...args)
+    super({ ...options,
+      importMetaUrl: import.meta.url,
+      mode: 'false'
+    }, ...args)
 
     this.setAttribute('role', 'form')
     // scroll to first error
@@ -337,11 +340,11 @@ export default class Form extends Shadow() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
     ]
