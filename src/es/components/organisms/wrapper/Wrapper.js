@@ -10,7 +10,7 @@ import Body from '../body/Body.js'
  *
  * @export
  * @class Wrapper
- * @type {CustomElementConstructor}
+ * @type {CustomElementConstructor | *}
  * @attribute {
  *  {number%} [any-{columnNumber}-width] define which column has what exact width in percent
  *  {has} [flex-nowrap-mobile] force the content to not wrap on mobile view
@@ -19,8 +19,8 @@ import Body from '../body/Body.js'
  */
 // extend body for scroll to anchor behavior
 export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends ChosenHTMLElement {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     // link behavior made accessible
     if (this.hasAttribute('href')) {
@@ -181,53 +181,53 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
     ]
     switch (this.getAttribute('namespace')) {
       case 'wrapper-teaser-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
       case 'wrapper-teaser-recipe-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-recipe-/teaser-recipe-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./teaser-recipe-/teaser-recipe-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
       case 'wrapper-text-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./text-/text-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./text-/text-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
       case 'wrapper-text-center-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./text-center-/text-center-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./text-center-/text-center-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
       case 'wrapper-no-calc-column-width-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./no-calc-column-width-/no-calc-column-width-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./no-calc-column-width-/no-calc-column-width-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
       case 'wrapper-no-calc-column-width-left-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./no-calc-column-width-left-/no-calc-column-width-left-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./no-calc-column-width-left-/no-calc-column-width-left-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
       case 'menu-legends-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-legends-/menu-legends-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./menu-legends-/menu-legends-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
       case 'wrapper-text-picture-cover-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./text-picture-cover-/text-picture-cover-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./text-picture-cover-/text-picture-cover-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
       default:

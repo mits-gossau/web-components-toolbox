@@ -40,8 +40,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Video extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.sources = (this.getAttribute('sources') && Video.parseAttribute(this.getAttribute('sources'))) || null
   }
 
@@ -116,7 +116,7 @@ export default class Video extends Shadow() {
     switch (this.getAttribute('namespace')) {
       case 'video-crop-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./crop-/crop-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./crop-/crop-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
     }

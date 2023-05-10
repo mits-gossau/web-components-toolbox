@@ -44,7 +44,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Navigation extends Mutation() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] } }), ...args)
+    super({
+      importMetaUrl: import.meta.url,
+      mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
+      ...options,
+    }, ...args)
 
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
@@ -596,26 +600,26 @@ export default class Navigation extends Mutation() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
     ]
     switch (this.getAttribute('namespace')) {
       case 'navigation-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }], false)
       case 'navigation-alnatura-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, {
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the default-.css namespace with navigation-alnatura-
@@ -623,10 +627,10 @@ export default class Navigation extends Mutation() {
         })
       case 'navigation-nature-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, {
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./nature-/nature-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./nature-/nature-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the default-.css namespace with navigation-nature-
@@ -634,13 +638,13 @@ export default class Navigation extends Mutation() {
         })
       case 'navigation-yearbooks-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, {
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, {
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./yearbooks-/yearbooks-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./yearbooks-/yearbooks-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the default-.css namespace with navigation-alnatura-
