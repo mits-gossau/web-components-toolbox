@@ -207,6 +207,9 @@ export default class Pagination extends Shadow() {
 
   renderCSS () {
     this.css = /* css */ `
+    :host {
+      display: inherit;
+    }
     :host > div {
       background-color:var(--background-color, black);
       display: var(--display, block);
@@ -218,31 +221,19 @@ export default class Pagination extends Shadow() {
       margin:var(--ul-margin, 0);
     }
     :host li {
-      border:var(--li-border, 0);
+      border-right:var(--li-border-right, 1px var(--background-color) solid);
       display:var(--li-display, inline);
       font-size:var(--li-font-size, 1em);
-      height:var(--li-height, 5em);
-      padding:var(--li-padding, 0);
-      position:var(--li-position, relative);
+      height:var(--li-height, 5em); 
       width:var(--li-width, 5em);
     }
-    :host li::after {
-      background-color:var(--li-after-background, red);
-      content:var(--li-after-content, '');
-      height:var(--li-after-height, 100%);
-      left:var(--li-after-left, 0);
-      position:var(--li-after-position, absolute);
-      top:var(--li-after-top, 1em);
-      width:var(--li-after-width, 1px);
-    }
     :host li.active {
-      background:var(--li-active-background, white);
+      background:var(--li-background-active, white);
     }
     :host nav ul li > a {
       align-items:var(--li-a-align-items, center);
       border-top:var(--li-a-border-top, 1px solid black);
       display:var(--li-a-display, flex);
-      flex-direction:var(--li-a-flex-direction, row);
       height:var(--li-a-height, 100%);
       justify-content:var(--li-a-justify-content, center);
       margin:var(--li-a-margin, 0);
@@ -256,9 +247,9 @@ export default class Pagination extends Shadow() {
     }
     @media only screen and (max-width: _max-width_) {
       :host li {
-        font-size:var(--li-font-size-mobile, 1em);
-        height:var(--li-height-mobile, 5em);
-        width:var(--li-width-mobile, 2.5em);
+        font-size:var(--li-font-size-mobile, var(--li-font-size, 1em));
+        height:var(--li-height-mobile, var(--li-height, 5em));
+        width:var(--li-width-mobile, var(--li-width, 2.5em));
       }
     }`
 
