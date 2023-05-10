@@ -12,8 +12,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @css {}
  */
 export default class GoogleMaps extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.MAP_URL = `https://maps.googleapis.com/maps/api/js?v=weekly&key=${this.apiKey}&callback=initMap`
     this.DEFAULT_COORDINATES = { lat: 47.375600, lng: 8.675320 }
     if (!this.iframeUrl) {
@@ -126,7 +126,7 @@ export default class GoogleMaps extends Shadow() {
 
     const styles = [{
       // @ts-ignore
-      path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+      path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
       namespaceFallback: true
     }]
 
@@ -134,13 +134,13 @@ export default class GoogleMaps extends Shadow() {
       case 'google-maps-default-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          path: `${this.importMetaUrl}./default-/default-.css`,
           namespace: false
         }, ...styles], false)
       case 'google-maps-iframe-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./iframe-/iframe-.css`,
+          path: `${this.importMetaUrl}./iframe-/iframe-.css`,
           namespace: false
         }, ...styles], false)
     }

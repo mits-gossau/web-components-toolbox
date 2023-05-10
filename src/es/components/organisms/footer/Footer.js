@@ -28,8 +28,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Footer extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.setAttribute('role', 'navigation')
     this.setAttribute('aria-label', 'Footer')
@@ -207,12 +207,12 @@ export default class Footer extends Shadow() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false,
         maxWidth: this.getMobileBreakpoint({})
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true,
         maxWidth: this.getMobileBreakpoint({})
       }
@@ -220,7 +220,7 @@ export default class Footer extends Shadow() {
     switch (this.getAttribute('namespace')) {
       case 'footer-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       default:

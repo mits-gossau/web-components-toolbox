@@ -16,8 +16,8 @@ export default class Button extends Shadow() {
     return ['label', 'disabled']
   }
 
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     // get the original innerHTML of the component, so that when it rerenders as an a-tag it doesn't loose its content
     let button
@@ -282,48 +282,48 @@ export default class Button extends Shadow() {
       case 'button-primary-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./primary-/primary-.css`,
+          path: `${this.importMetaUrl}./primary-/primary-.css`,
           namespace: false,
           replaces
         }])
       case 'button-secondary-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./secondary-/secondary-.css`,
+          path: `${this.importMetaUrl}./secondary-/secondary-.css`,
           namespace: false,
           replaces
         }])
       case 'button-tertiary-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./tertiary-/tertiary-.css`,
+          path: `${this.importMetaUrl}./tertiary-/tertiary-.css`,
           namespace: false,
           replaces
         }])
       case 'button-quaternary-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./quaternary-/quaternary-.css`,
+          path: `${this.importMetaUrl}./quaternary-/quaternary-.css`,
           namespace: false,
           replaces
         }])
       case 'button-download-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./download-/download-.css`,
+          path: `${this.importMetaUrl}./download-/download-.css`,
           namespace: false,
           replaces
         }])
       case 'button-category-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./primary-/primary-.css`,
+          path: `${this.importMetaUrl}./primary-/primary-.css`,
           namespace: false,
           replaces
         },
         {
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./category-/category-.css`,
+          path: `${this.importMetaUrl}./category-/category-.css`,
           namespace: false,
           replaces
         }]).then(fetchCSSParams => {
@@ -333,7 +333,7 @@ export default class Button extends Shadow() {
       case 'button-square-':
         return this.fetchCSS([{
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./square-/square-.css`,
+          path: `${this.importMetaUrl}./square-/square-.css`,
           namespace: false,
           replaces
         }])
