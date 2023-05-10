@@ -5,7 +5,7 @@ const currentScriptUrl = new URL(document.currentScript.src)
 
 // @ts-ignore
 self.Environment = {
-  isLocalhost: location.hostname === 'localhost',
+  isTestingEnv: location.hostname === 'localhost' || location.hostname.includes('.local') || location.hostname.includes('test.') || location.hostname.includes('testadmin.'),
   language: currentScriptUrl.searchParams.get('language') || document.documentElement.getAttribute('lang') || 'de',
   contentfulEndpoint: currentScriptUrl.searchParams.get('contentfulEndpoint') || 'https://graphql.contentful.com/content/v1/spaces/',
   msrcBaseUrl: currentScriptUrl.searchParams.get('msrcBaseUrl') || 'https://cdn.migros.ch',
@@ -34,7 +34,7 @@ self.Environment = {
   getApiBaseUrl: function (type) {
     switch (type) {
       case 'zadb':
-        return currentScriptUrl.searchParams.get('zadbEndpoint') || this.isLocalhost ? 'https://testadmin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi' : 'https://admin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi'
+        return currentScriptUrl.searchParams.get('zadbEndpoint') || this.isTestingEnv ? 'https://testadmin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi' : 'https://admin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi'
       default:
         return ''
     }
