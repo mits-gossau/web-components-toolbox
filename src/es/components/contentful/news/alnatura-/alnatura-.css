@@ -25,13 +25,15 @@
 }
 
 :host .content-one-picture-wrapper,
-:host .content-two-picture-wrapper,
-:host .content-three-picture-wrapper,
-:host .content-four-picture-wrapper {
+:host .content-two-picture-wrapper {
     clear: both;
     float: right;
     margin: var(--content-spacing, 0) 0 var(--content-spacing, 0) var(--content-spacing, 0);
     max-width: 17vw;
+}
+
+:host .content-three-text-wrapper p, .content-four-text-wrapper p {
+    white-space: initial;
 }
 
 :host .image-one-description {
@@ -82,9 +84,7 @@ tr:nth-of-type(odd) {
     }
 
     :host .content-one-picture-wrapper,
-    :host .content-two-picture-wrapper,
-    :host .content-three-picture-wrapper,
-    :host .content-four-picture-wrapper {
+    :host .content-two-picture-wrapper {
         max-width: 100vw;
         float: unset;
         margin: var(--content-spacing-mobile, 0) 0;

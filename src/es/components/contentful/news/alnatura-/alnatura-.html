@@ -32,24 +32,20 @@
             <p>${self.documentToHtmlString(contentTwo.json, linkRenderOptions)}</p>
         </div>`
         : imageTwo ? '<br />' : ''}
-        ${imageThree ? `<div class="content-three-picture-wrapper"><a-picture
+        ${imageThree ? `<a-picture
                 mobile-breakpoint="${this.mobileBreakpoint}" picture-load
                 defaultSource="${imageThree.url}?w=2160&q=80&fm=jpg" alt="${imageThree.title ? imageThree.title : ''}"
-                query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture></div>` : ''}
+                query-width="w" query-format="fm" query-quality="q" query-height="h"></a-picture>` : ''}
         ${contentThree
-        ? `<div class="content-three-text-wrapper">
-            <p>${self.documentToHtmlString(contentThree.json, linkRenderOptions)}</p>
-        </div>`
-        : imageThree ? '<br />' : ''}
-        ${imageFour ? `<div class="content-four-picture-wrapper"><a-picture mobile-breakpoint="${this.mobileBreakpoint}"
+        ? `<div class="content-three-text-wrapper"><p>${self.documentToHtmlString(contentThree.json, linkRenderOptions)}</p></div>`
+        : ''}
+        ${imageFour ? `<a-picture mobile-breakpoint="${this.mobileBreakpoint}"
                 picture-load defaultSource="${imageFour.url}?w=2160&q=80&fm=jpg"
                 alt="${imageFour.title ? imageFour.title : ''}" query-width="w" query-format="fm" query-quality="q"
-                query-height="h"></a-picture></div>` : ''}
+                query-height="h"></a-picture>` : ''}
         ${contentFour
-        ? `<div class="content-four-text-wrapper">
-            <p>${self.documentToHtmlString(contentFour.json, linkRenderOptions)}</p>
-        </div>`
-        : imageFour ? '<br />' : ''}
+        ? `<div class="content-four-text-wrapper"><p>${self.documentToHtmlString(contentFour.json, linkRenderOptions)}</p></div>`
+        : ''}
     </div>
     ${linkListCollection.items.length ? `<div class="link-collection">
         ${this.renderLinkListCollection(linkListCollection.items)}</div>` : ''}
