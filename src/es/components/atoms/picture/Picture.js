@@ -1,4 +1,5 @@
 // @ts-check
+import { Hover } from '../../prototypes/Hover.js'
 import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global CustomEvent */
@@ -26,7 +27,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  *  {string} [alt] alt-text for the image
  *  {string} [loading=lazy] image loading
  *  {string} [open-modal=""] does emit event with name set by open-modal which can be reacted on by eg. organisms/Modal.js
- *  {string} [no-modal-icon=""] hidde the open-modal button for a cleaner look
+ *  {string} [no-modal-icon=""] hide the open-modal button for a cleaner look
  *  {string} [picture-load=""] does emit event with name set by picture-load which can be reacted on by eg. molecules/Flyer.js
  * }
  * @css {
@@ -37,7 +38,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  *  --object-fit [cover]
  * }
  */
-export default class Picture extends Intersection() {
+export default class Picture extends Intersection(Hover ) {
   static get observedAttributes () {
     return ['loading', 'pointer-events']
   }
@@ -61,12 +62,6 @@ export default class Picture extends Intersection() {
         composed: true
       }))
     }
-    this.mouseoverListener = event => {
-      this.picture.classList.add('hover')
-    }
-    this.mouseoutListener = event => {
-      this.picture.classList.remove('hover')
-    }
   }
 
   connectedCallback () {
@@ -77,20 +72,11 @@ export default class Picture extends Intersection() {
       this.setAttribute('aria-haspopup', 'true')
       this.addEventListener('click', this.clickListener)
     }
-    if (this.mouseEventElement) {
-      this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
-      this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
-    }
   }
 
   disconnectedCallback () {
     super.disconnectedCallback()
     if (this.hasAttribute('open-modal')) this.removeEventListener('click', this.clickListener)
-    if (this.mouseEventElement) {
-      this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
-      this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
-      this.parentNodeShadowRootHost = null
-    }
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -309,7 +295,7 @@ export default class Picture extends Intersection() {
       } else if (node.nodeName === 'SOURCE') {
         node.setAttribute('data-srcset', Picture.pathResolver(node.getAttribute('srcset')))
         node.removeAttribute('srcset')
-        this.sources.push(node)
+        this.sources?.push(node)
       }
     })
     // through defaultSource Attribute add img
@@ -350,7 +336,7 @@ export default class Picture extends Intersection() {
           console.warn(`a-picture src - missing attributes: ${i.src === '' ? 'src' : ''} ${i.type === '' ? 'type' : ''} ${i.size === '' ? 'size' : ''}`)
         }
       })
-      Array.from(div.children).forEach(node => this.sources.push(node))
+      Array.from(div.children).forEach(node => this.sources?.push(node))
     }
     // generate sources if there aren't any but the query in the picture src would allow by width parameter
     if (!this.sources.length) {
@@ -404,7 +390,7 @@ export default class Picture extends Intersection() {
           this.intersecting = () => {}
           this.intersectionObserveStop()
           const picture = document.createElement('picture')
-          this.sources.forEach(source => {
+          this.sources?.forEach(source => {
             picture.appendChild(source)
             source.setAttribute('srcset', source.getAttribute('data-srcset'))
           })
@@ -432,7 +418,7 @@ export default class Picture extends Intersection() {
       this.intersecting = () => {
         this.intersecting = () => {}
         this.intersectionObserveStop()
-        this.sources.forEach(source => {
+        this.sources?.forEach(source => {
           this.picture.appendChild(source)
           source.setAttribute('srcset', source.getAttribute('data-srcset'))
         })
@@ -514,7 +500,7 @@ export default class Picture extends Intersection() {
           
         `, undefined, undefined, true, this.style)
         }
-        if (!hasRepeat) this.closeBtn.classList.add('adjusted') // wait with showing the bubble until all is lastRepeat adjusted
+        if (!hasRepeat) this.closeBtn?.classList.add('adjusted') // wait with showing the bubble until all is lastRepeat adjusted
       }
       self.addEventListener('resize', () => adjustBtnPosition())
       img.addEventListener('load', () => adjustBtnPosition(), { once: true })
@@ -537,20 +523,6 @@ export default class Picture extends Intersection() {
 
   get sourcesObj () {
     return (this.getAttribute('sources') && Picture.parseAttribute(this.getAttribute('sources'))) || null
-  }
-
-  get parentNodeShadowRootHost () {
-    if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
-    const searchShadowRoot = node => node.root || node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
-    return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
-  }
-
-  set parentNodeShadowRootHost (node) {
-    this._parentNodeShadowRootHost = node
-  }
-
-  get mouseEventElement () {
-    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
   }
 
   get style () {

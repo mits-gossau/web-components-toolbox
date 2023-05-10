@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Hover } from '../../prototypes/Hover.js'
 
 /* global location */
 
@@ -32,39 +32,20 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *
  *
  */
-export default class Link extends Shadow() {
+export default class Link extends Hover() {
   constructor (a, options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
-
+    super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
     this._a = a
     this.setAttribute('role', 'link')
     this.removeAttribute('tabindex')
     if (this.a) this.a.setAttribute('tabindex', '0')
 
-    this.mouseoverListener = event => {
-      this.a.classList.add('hover')
-    }
-    this.mouseoutListener = event => {
-      this.a.classList.remove('hover')
-    }
   }
 
   connectedCallback () {
+    super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-    if (this.mouseEventElement) {
-      this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
-      this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
-    }
-  }
-
-  disconnectedCallback () {
-    super.disconnectedCallback()
-    if (this.mouseEventElement) {
-      this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
-      this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
-      this.parentNodeShadowRootHost = null
-    }
   }
 
   /**
@@ -316,19 +297,5 @@ export default class Link extends Shadow() {
 
   get iconPath () {
     return this.getAttribute('icon-path') || `${this.importMetaUrl}../../molecules/teaser/download-/img/download.svg`
-  }
-
-  get parentNodeShadowRootHost () {
-    if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
-    const searchShadowRoot = node => node.root || node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
-    return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
-  }
-
-  set parentNodeShadowRootHost (node) {
-    this._parentNodeShadowRootHost = node
-  }
-
-  get mouseEventElement () {
-    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
   }
 }

@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Hover } from '../../prototypes/Hover.js'
 
 /* global CustomEvent */
 
@@ -11,13 +11,13 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @attribute {namespace} namespace
  * @type {CustomElementConstructor}
  */
-export default class Button extends Shadow() {
+export default class Button extends Hover() {
   static get observedAttributes () {
     return ['label', 'disabled']
   }
 
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
 
     // get the original innerHTML of the component, so that when it rerenders as an a-tag it doesn't loose its content
     let button
@@ -72,12 +72,6 @@ export default class Button extends Shadow() {
       this.labelText = this.textContent.trim() // allow its initial textContent to become the label if there are no nodes but only text
       this.textContent = ''
     }
-    this.mouseoverListener = event => {
-      this.button.classList.add('hover')
-    }
-    this.mouseoutListener = event => {
-      this.button.classList.remove('hover')
-    }
     // request the href which results on a button click from the controller and if answered transfer this button into an a-node to have search engine robots follow the links
     this.wcConfigLoadListener = event => new Promise(resolve => this.dispatchEvent(new CustomEvent('request-href-' + this.getAttribute('request-event-name'), {
       detail: this.getEventDetail(null, false, resolve),
@@ -100,16 +94,13 @@ export default class Button extends Shadow() {
   }
 
   connectedCallback () {
+    super.connectedCallback()
     this.buttonTagName = this.hasAttribute('href') ? 'a' : 'button'
     if (this.shouldRenderCSS()) this.renderCSSPromise = this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTMLPromise = this.renderHTML()
     this.button.addEventListener('click', this.clickListener)
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
-    if (this.mouseEventElement) {
-      this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
-      this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
-    }
     this.connectedCallbackOnce()
   }
 
@@ -125,11 +116,6 @@ export default class Button extends Shadow() {
   disconnectedCallback () {
     this.button.removeEventListener('click', this.clickListener)
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
-    if (this.mouseEventElement) {
-      this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
-      this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
-      this.parentNodeShadowRootHost = null
-    }
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -406,9 +392,6 @@ export default class Button extends Shadow() {
     this._parentNodeShadowRootHost = node
   }
 
-  get mouseEventElement () {
-    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : undefined]
-  }
 
   get downloadIcon () {
     let iconImg
