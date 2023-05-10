@@ -221,8 +221,8 @@ export default class Pagination extends Shadow() {
       margin:var(--ul-margin, 0);
     }
     :host li {
-      border-right:var(--li-border-right, 1px var(--background-color) solid);
-      display:var(--li-display, inline);
+      border-top:var(--li-border-top, 1px solid black);
+      display:var(--li-display, inline-block);
       font-size:var(--li-font-size, 1em);
       height:var(--li-height, 5em); 
       width:var(--li-width, 5em);
@@ -230,9 +230,12 @@ export default class Pagination extends Shadow() {
     :host li.active {
       background:var(--li-background-active, white);
     }
+    :host nav ul li:hover {
+      border-top: var(--li-border-top-hover, 1px solid red);
+    }
     :host nav ul li > a {
       align-items:var(--li-a-align-items, center);
-      border-top:var(--li-a-border-top, 1px solid black);
+      border-left:var(--li-a-border-left, 1px var(--li-background-active, var(--background-color)) solid);
       display:var(--li-a-display, flex);
       height:var(--li-a-height, 100%);
       justify-content:var(--li-a-justify-content, center);
@@ -240,16 +243,19 @@ export default class Pagination extends Shadow() {
       text-decoration:var(--li-a-text-decoration, none);
     }
     :host nav ul li > a.active {
-      color:var(--li-a-active, black);
+      color:var(--li-a-color-active, black);
     }
-    :host nav ul li > a:hover {
-      border-top: var(--li-a-border-top-hover, 1px solid red);
+    :host nav ul li:has(> a.active) + li > a {
+      border-left:var(--li-hover-a-active-border-left, 1px transparent solid);
     }
     @media only screen and (max-width: _max-width_) {
       :host li {
         font-size:var(--li-font-size-mobile, var(--li-font-size, 1em));
         height:var(--li-height-mobile, var(--li-height, 5em));
         width:var(--li-width-mobile, var(--li-width, 2.5em));
+      }
+      :host nav ul li:has(> a.active) + li > a {
+        border-left:var(--li-hover-a-active-border-left-mobile, var(--li-hover-a-active-border-left, 1px var(--li-background-active, var(--background-color)) solid));
       }
     }`
 
