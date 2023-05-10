@@ -78,7 +78,7 @@ export default class ProductList extends Intersection(Prototype()) {
   configSetup () {
     // https://react-components.migros.ch/?path=/docs/msrc-articles-06-widgets--product-list
     const setup = this.constructor.parseAttribute(this.getAttribute('config') || '{}')
-    if (Object.keys(setup).length === 0) return
+    if (!setup || Object.keys(setup).length === 0) return
     if (this.hasAttribute('web-api-key')) setup.webAPIKey = this.getAttribute('web-api-key') || ''
     if (this.hasAttribute('mode')) setup.mode = this.getAttribute('mode') || 'default'
     if (this.hasAttribute('env')) setup.environment = this.getAttribute('env') || 'local'
@@ -119,7 +119,7 @@ export default class ProductList extends Intersection(Prototype()) {
         this: this,
         config: this.config,
         msrcProductListWrapper: this.msrcProductListWrapper,
-        tags: this.config.filterOptions.category,
+        tags: this.config?.filterOptions.category,
         subTagFetch: (subTagFetch = event && event.detail.fetchSubTags
           ? fetch((this.getAttribute('endpoint') ? this.getAttribute('endpoint') : 'https://testadmin.alnatura.ch/umbraco/api/ProductsApi/GetCats?cat=') + this.config.filterOptions.category).then(async response => {
             if (response.status >= 200 && response.status <= 299) {
