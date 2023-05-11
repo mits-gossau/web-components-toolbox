@@ -22,8 +22,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Body extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.timeout = null
     this.clickAnchorEventListener = event => {
@@ -181,11 +181,11 @@ export default class Body extends Shadow() {
   importStyles () {
     this.fetchCSS([
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`,
+        path: `${this.importMetaUrl}../../../../css/reset.css`,
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`
+        path: `${this.importMetaUrl}../../../../css/style.css`
       }
     ])
   }

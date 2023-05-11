@@ -5,7 +5,11 @@ import { Mutation } from '../../prototypes/Mutation.js'
 
 export default class TagFilter extends Mutation() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { mutationObserverInit: { childList: true } }), ...args)
+    super({
+      importMetaUrl: import.meta.url,
+      mutationObserverInit: { childList: true },
+      ...options,
+    }, ...args)
 
     this.answerEventListener = event => {
       const tagsFetch = event.detail[this.getAttribute('tag-detail-property-name') || 'tag-detail-property-name']
@@ -61,23 +65,23 @@ export default class TagFilter extends Mutation() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: false
       }
     ]
     switch (this.getAttribute('namespace')) {
       case 'tag-filter-vertical-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./vertical-/vertical-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./vertical-/vertical-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
       case 'tag-filter-horizontal-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./horizontal-/horizontal-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./horizontal-/horizontal-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
       default:

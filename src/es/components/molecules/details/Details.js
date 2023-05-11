@@ -54,7 +54,11 @@ import { Mutation } from '../../prototypes/Mutation.js'
 // @ts-ignore
 export const Details = (ChosenHTMLElement = Mutation()) => class Details extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { mutationObserverInit: { attributes: true, attributeFilter: ['open'] }, importMetaUrl: import.meta.url }), ...args)
+    super({
+      importMetaUrl: import.meta.url,
+      mutationObserverInit: { attributes: true, attributeFilter: ['open'] },
+      ...options,
+    }, ...args)
 
     this.setAttribute('aria-expanded', 'false')
     this.setAttribute('aria-label', 'Details')
@@ -492,28 +496,28 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`,
+        path: `${this.importMetaUrl}../../../../css/reset.css`,
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
     ]
     switch (this.getAttribute('namespace')) {
       case 'details-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          path: `${this.importMetaUrl}./default-/default-.css`,
           namespace: false
         }, ...styles], false)
       case 'details-default-icon-right-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`,
+          path: `${this.importMetaUrl}./default-/default-.css`,
           namespace: false
         },
         {
           // @ts-ignore
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-icon-right-/default-icon-right-.css`,
+          path: `${this.importMetaUrl}./default-icon-right-/default-icon-right-.css`,
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the details default-.css namespace with default-icon-right-
@@ -521,12 +525,12 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
         })
       case 'details-menu-single-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-single-/menu-single-.css`,
+          path: `${this.importMetaUrl}./menu-single-/menu-single-.css`,
           namespace: false
         }, ...styles], false)
       case 'details-menu-portion-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./menu-portion-/menu-portion-.css`,
+          path: `${this.importMetaUrl}./menu-portion-/menu-portion-.css`,
           namespace: false
         }, ...styles], false)
       default:

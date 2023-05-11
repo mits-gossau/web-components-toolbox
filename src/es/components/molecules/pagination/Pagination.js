@@ -7,8 +7,8 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
 
     this.answerEventNameListener = event => {
@@ -207,6 +207,9 @@ export default class Pagination extends Shadow() {
 
   renderCSS () {
     this.css = /* css */ `
+    :host {
+      display: inherit;
+    }
     :host > div {
       background-color:var(--background-color, black);
       display: var(--display, block);
@@ -218,58 +221,52 @@ export default class Pagination extends Shadow() {
       margin:var(--ul-margin, 0);
     }
     :host li {
-      border:var(--li-border, 0);
-      display:var(--li-display, inline);
+      border-top:var(--li-border-top, 1px solid black);
+      display:var(--li-display, inline-block);
       font-size:var(--li-font-size, 1em);
-      height:var(--li-height, 5em);
-      padding:var(--li-padding, 0);
-      position:var(--li-position, relative);
+      height:var(--li-height, 5em); 
       width:var(--li-width, 5em);
     }
-    :host li::after {
-      background-color:var(--li-after-background, red);
-      content:var(--li-after-content, '');
-      height:var(--li-after-height, 100%);
-      left:var(--li-after-left, 0);
-      position:var(--li-after-position, absolute);
-      top:var(--li-after-top, 1em);
-      width:var(--li-after-width, 1px);
-    }
     :host li.active {
-      background:var(--li-active-background, white);
+      background:var(--li-background-active, white);
+    }
+    :host nav ul li:hover {
+      border-top: var(--li-border-top-hover, 1px solid red);
     }
     :host nav ul li > a {
       align-items:var(--li-a-align-items, center);
-      border-top:var(--li-a-border-top, 1px solid black);
+      border-left:var(--li-a-border-left, 1px var(--li-background-active, var(--background-color)) solid);
       display:var(--li-a-display, flex);
-      flex-direction:var(--li-a-flex-direction, row);
       height:var(--li-a-height, 100%);
       justify-content:var(--li-a-justify-content, center);
       margin:var(--li-a-margin, 0);
       text-decoration:var(--li-a-text-decoration, none);
     }
     :host nav ul li > a.active {
-      color:var(--li-a-active, black);
+      color:var(--li-a-color-active, black);
     }
-    :host nav ul li > a:hover {
-      border-top: var(--li-a-border-top-hover, 1px solid red);
+    :host nav ul li:has(> a.active) + li > a {
+      border-left:var(--li-hover-a-active-border-left, 1px transparent solid);
     }
     @media only screen and (max-width: _max-width_) {
       :host li {
-        font-size:var(--li-font-size-mobile, 1em);
-        height:var(--li-height-mobile, 5em);
-        width:var(--li-width-mobile, 2.5em);
+        font-size:var(--li-font-size-mobile, var(--li-font-size, 1em));
+        height:var(--li-height-mobile, var(--li-height, 5em));
+        width:var(--li-width-mobile, var(--li-width, 2.5em));
+      }
+      :host nav ul li:has(> a.active) + li > a {
+        border-left:var(--li-hover-a-active-border-left-mobile, var(--li-hover-a-active-border-left, 1px var(--li-background-active, var(--background-color)) solid));
       }
     }`
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
     ]
@@ -277,7 +274,7 @@ export default class Pagination extends Shadow() {
     switch (this.getAttribute('namespace')) {
       case 'pagination-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
       default:

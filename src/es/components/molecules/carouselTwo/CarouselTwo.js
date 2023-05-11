@@ -20,7 +20,11 @@ import { Mutation } from '../../prototypes/Mutation.js'
  */
 export default class CarouselTwo extends Mutation() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { mutationObserverInit: { subtree: true, childList: true } }), ...args)
+    super({
+      importMetaUrl: import.meta.url,
+      mutationObserverInit: { subtree: true, childList: true },
+      ...options,
+    }, ...args)
 
     if (this.hasAttribute('open-modal')) this.setAttribute('aria-haspopup', 'true')
     // on click anchor scroll to the image with the matching id or previous/next
@@ -476,26 +480,26 @@ export default class CarouselTwo extends Mutation() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/reset.css`, // no variables for this reason no namespace
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
         namespace: false
       },
       {
-        path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
         namespaceFallback: true
       }
     ]
     switch (this.getAttribute('namespace')) {
       case 'carousel-two-default-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => setAttributeStyles())
       case 'carousel-two-thumbnail-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, {
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./thumbnail-/thumbnail-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./thumbnail-/thumbnail-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the default-.css namespace with carousel-two-thumbnail-
@@ -504,10 +508,10 @@ export default class CarouselTwo extends Mutation() {
         })
       case 'carousel-two-teaser-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, {
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the default-.css namespace with carousel-two-teaser-
@@ -516,10 +520,10 @@ export default class CarouselTwo extends Mutation() {
         })
       case 'carousel-two-seperate-nav-':
         return this.fetchCSS([{
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, {
-          path: `${import.meta.url.replace(/(.*\/)(.*)$/, '$1')}./seperate-nav-/seperate-nav-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./seperate-nav-/seperate-nav-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // harmonize the default-.css namespace with carousel-two-seperate-nav-
