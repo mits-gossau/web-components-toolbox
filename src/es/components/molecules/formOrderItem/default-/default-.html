@@ -1,6 +1,8 @@
 
 <m-form>
-    <a-total-price namespace="total-price-default-" total-text="Total Preis" answer-event-name="request-total-price"></a-total-price>
+    <a-total-price namespace="total-price-default-" total-text="Total Preis" answer-event-name="request-total-price" update-hidden-input>
+        <input type="hidden" value=""  />
+    </a-total-price>
     <m-form-order-item namespace="form-order-item-default-" price="2.50" request-event-name="request-total-price" name="Brot">
         <div>
             <div class="product">Brot</div>

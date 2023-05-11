@@ -11,7 +11,7 @@ export default class FormOrderItem extends Form {
       const inputField = this.root.querySelector(':focus')
       if (!inputField) return
       if (inputField === this.clearQuantityBtn) {
-        if (event.key === 'Enter' || event.key === 'Spacebar' || event.key === ' ') this.clickListener();
+        if (event.key === 'Enter' || event.key === 'Spacebar' || event.key === ' ') this.clickListener()
       } else {
         const value = inputField?.value ? inputField.value : '0'
         this.updateInputAttributeValue(inputField, value)

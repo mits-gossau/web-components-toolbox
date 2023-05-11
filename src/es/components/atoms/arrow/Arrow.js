@@ -128,7 +128,7 @@ export default class Arrow extends Hover() {
         directionKeyframes = rightKeyframes
         break
     }
-    this.css = directionKeyframes;
+    this.css = directionKeyframes
 
     this.css = /* css */ `
       :host {

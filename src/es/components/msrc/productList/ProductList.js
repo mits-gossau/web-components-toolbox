@@ -118,11 +118,11 @@ export default class ProductList extends Intersection(Prototype()) {
         tags: this.config.filterOptions.category,
         subTagFetch: (subTagFetch = event && event.detail.fetchSubTags
           ? fetch((this.getAttribute('endpoint') ? this.getAttribute('endpoint') : 'https://testadmin.alnatura.ch/umbraco/api/ProductsApi/GetCats?cat=') + this.config.filterOptions.category).then(async response => {
-            if (response.status >= 200 && response.status <= 299) {
-              return await response.json()
-            }
-            throw new Error(response.statusText)
-          })
+              if (response.status >= 200 && response.status <= 299) {
+                return await response.json()
+              }
+              throw new Error(response.statusText)
+            })
           : null),
         clearSubTags: event && event.detail.clearSubTags
       },
