@@ -253,6 +253,9 @@ export default class Teaser extends Intersection(Hover) {
     // accessible and seo conform a tag wrapped around this component
     if (this.hasAttribute('href') && this.parentNode) {
       const a = document.createElement('a')
+      Array.from(this.attributes).forEach(attribute => {
+        if (!attribute.name.includes('hidden')) a.setAttribute(attribute.name, attribute.value)
+      })
       a.setAttribute('wrapper', '')
       a.setAttribute('href', this.getAttribute('href'))
       a.setAttribute('target', this.getAttribute('target') || '_self')
