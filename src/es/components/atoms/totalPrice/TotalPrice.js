@@ -97,13 +97,13 @@ export default class TotalPrice extends Shadow() {
   }
 
   /**
-   * Update value of given Element
+   * Update attribute value of given Element
    * @param {HTMLElement} element
-   * @param {string} type
+   * @param {string} attribute
    * @param {string} value
    */
-  static updateElement (element, type, value) {
-    element[type] = value
+  static updateElement(element, attribute, value) {
+    element[attribute] = value
   }
 
   get totalText () {
