@@ -21,7 +21,7 @@ export default class TotalPrice extends Shadow() {
         const totalPriceCalc = price => price.reduce((a, b) => a + Number(b), 0)
         const totalPrice = parseFloat(totalPriceCalc(priceValues)).toFixed(2)
         TotalPrice.updateElement(this.totalPriceElement, 'textContent', totalPrice)
-        if (this.hasAttribute('update-hidden-input') && this.hiddenInput) TotalPrice.updateElement(this.hiddenInput, 'value', totalPrice)
+        if (this.hiddenInput) TotalPrice.updateElement(this.hiddenInput, 'value', totalPrice)
       }
     }
   }
@@ -110,7 +110,8 @@ export default class TotalPrice extends Shadow() {
     return this.getAttribute('total-text') || 'Total'
   }
 
-  get hiddenInput () {
-    return this.root.querySelector('input[type="hidden"]') || null
+  get hiddenInput () {    
+    const className = this.hasAttribute('update-hidden-input-class') ? this.getAttribute('update-hidden-input-class') : null
+    return this.parentElement.querySelector(`.${className}`)
   }
 }

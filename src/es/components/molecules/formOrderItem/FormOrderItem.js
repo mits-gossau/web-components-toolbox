@@ -26,7 +26,7 @@ export default class FormOrderItem extends Form {
 
   connectedCallback () {
     super.connectedCallback()
-    this.clearQuantityBtn.addEventListener('click', this.clickListener)
+    if(this.clearQuantityBtn) this.clearQuantityBtn.addEventListener('click', this.clickListener)
     this.addEventListener('keyup', this.eventListener)
     this.setPrice(this.priceAttribute, this.priceElement)
     this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
@@ -34,7 +34,7 @@ export default class FormOrderItem extends Form {
 
   disconnectedCallback () {
     super.disconnectedCallback()
-    this.clearQuantityBtn.removeEventListener('click', this.clickListener)
+    if (this.clearQuantityBtn) this.clearQuantityBtn.removeEventListener('click', this.clickListener)
     this.removeEventListener('keyup', this.eventListener)
   }
 
@@ -131,7 +131,7 @@ export default class FormOrderItem extends Form {
   }
 
   get quantityField () {
-    return this.root.querySelector('#quantity')
+    return this.root.querySelector('.quantity')
   }
 
   get priceAttribute () {

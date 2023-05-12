@@ -1,13 +1,17 @@
-
 <m-form>
-    <a-total-price namespace="total-price-default-" total-text="Total Preis" answer-event-name="request-total-price" update-hidden-input>
-        <input type="hidden" value=""  />
-    </a-total-price>
-    <m-form-order-item namespace="form-order-item-default-" price="2.50" request-event-name="request-total-price" name="Brot">
+    <div>
+        <input type="hidden" class="hiddenTotalInput" value="" />
+        <a-total-price namespace="total-price-default-" total-text="Total Preis" answer-event-name="request-total-price"
+            update-hidden-input-class="hiddenTotalInput">
+        </a-total-price>
+    </div>
+
+    <m-form-order-item namespace="form-order-item-default-" price="2.50" request-event-name="request-total-price"
+        name="Brot">
         <div>
             <div class="product">Brot</div>
-            <div class="quantity">
-                <input type="number" id="quantity" value="" min="0" required  />
+            <div>
+                <input class="quantity" type="number" id="quantity" value="" min="0" required />
             </div>
             <div class="type">Kilo</div>
             <div class="price"></div>
@@ -18,17 +22,18 @@
                 <a-button namespace="button-tertiary-">
                     <svg class="icon-left" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
                         <path
-                        d="M137.051,128l75.475-75.475c2.5-2.5,2.5-6.551,0-9.051s-6.551-2.5-9.051,0L128,118.949L52.525,43.475  c-2.5-2.5-6.551-2.5-9.051,0s-2.5,6.551,0,9.051L118.949,128l-75.475,75.475c-2.5,2.5-2.5,6.551,0,9.051  c1.25,1.25,2.888,1.875,4.525,1.875s3.275-0.625,4.525-1.875L128,137.051l75.475,75.475c1.25,1.25,2.888,1.875,4.525,1.875  s3.275-0.625,4.525-1.875c2.5-2.5,2.5-6.551,0-9.051L137.051,128z" />
+                            d="M137.051,128l75.475-75.475c2.5-2.5,2.5-6.551,0-9.051s-6.551-2.5-9.051,0L128,118.949L52.525,43.475  c-2.5-2.5-6.551-2.5-9.051,0s-2.5,6.551,0,9.051L118.949,128l-75.475,75.475c-2.5,2.5-2.5,6.551,0,9.051  c1.25,1.25,2.888,1.875,4.525,1.875s3.275-0.625,4.525-1.875L128,137.051l75.475,75.475c1.25,1.25,2.888,1.875,4.525,1.875  s3.275-0.625,4.525-1.875c2.5-2.5,2.5-6.551,0-9.051L137.051,128z" />
                     </svg>
                 </a-button>
             </div>
         </div>
     </m-form-order-item>
-    <m-form-order-item namespace="form-order-item-default-" price="12.50" request-event-name="request-total-price" name="Bananenkuchen">
+    <m-form-order-item namespace="form-order-item-default-" price="12.50" request-event-name="request-total-price"
+        name="Bananenkuchen">
         <div>
             <div class="product">Bananen</div>
-            <div class="quantity">
-                <input type="number" id="quantity" value="" min="0" />
+            <div>
+                <input class="quantity" type="number" id="quantity" value="" min="0" />
             </div>
             <div class="type">Stück</div>
             <div class="price"></div>
@@ -45,11 +50,12 @@
             </div>
         </div>
     </m-form-order-item>
-    <m-form-order-item namespace="form-order-item-default-" price="10" request-event-name="request-total-price" name="Apfel">
+    <m-form-order-item namespace="form-order-item-default-" price="10" request-event-name="request-total-price"
+        name="Apfel">
         <div>
             <div class="product">Expresszuschlag</div>
-            <div class="quantity">
-                <input type="number" id="quantity" value="" min="0" />
+            <div>
+                <input class="quantity" type="number" id="quantity" value="" min="0" />
             </div>
             <div class="type">Nur wenn nach 15 Uhr bestellt</div>
             <div class="price"></div>
@@ -57,11 +63,11 @@
             <div class="price-total"></div>
             <div class="currency">CHF</div>
             <div><a-button namespace="button-tertiary-">
-                <svg class="icon-left" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M137.051,128l75.475-75.475c2.5-2.5,2.5-6.551,0-9.051s-6.551-2.5-9.051,0L128,118.949L52.525,43.475  c-2.5-2.5-6.551-2.5-9.051,0s-2.5,6.551,0,9.051L118.949,128l-75.475,75.475c-2.5,2.5-2.5,6.551,0,9.051  c1.25,1.25,2.888,1.875,4.525,1.875s3.275-0.625,4.525-1.875L128,137.051l75.475,75.475c1.25,1.25,2.888,1.875,4.525,1.875  s3.275-0.625,4.525-1.875c2.5-2.5,2.5-6.551,0-9.051L137.051,128z" />
-                </svg>
-            </a-button></div>
+                    <svg class="icon-left" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M137.051,128l75.475-75.475c2.5-2.5,2.5-6.551,0-9.051s-6.551-2.5-9.051,0L128,118.949L52.525,43.475  c-2.5-2.5-6.551-2.5-9.051,0s-2.5,6.551,0,9.051L118.949,128l-75.475,75.475c-2.5,2.5-2.5,6.551,0,9.051  c1.25,1.25,2.888,1.875,4.525,1.875s3.275-0.625,4.525-1.875L128,137.051l75.475,75.475c1.25,1.25,2.888,1.875,4.525,1.875  s3.275-0.625,4.525-1.875c2.5-2.5,2.5-6.551,0-9.051L137.051,128z" />
+                    </svg>
+                </a-button></div>
         </div>
     </m-form-order-item>
     <!-- <m-form-order-item namespace="form-order-item-default-" price="12.50">
@@ -83,7 +89,7 @@
                 </div>
             </div>
         </m-form-order-item> -->
-    </m-form>
+</m-form>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./default-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
