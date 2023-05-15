@@ -79,12 +79,12 @@ export default class Hotspot extends Shadow() {
     this.css = /* css */`
       :host{
         ${this.getAttribute('top') != null
-? `
-        position: absolute; 
+        ? `
+          position: absolute;
           top: ${this.getAttribute('top')}%;         
           left: ${this.getAttribute('left')}%;
         `
-: 'position: relative;'}
+        : 'position: relative;'}
       }
 
       :host .btn-close{
@@ -94,13 +94,13 @@ export default class Hotspot extends Shadow() {
         background-size: contain;
         border-radius: 50%;
         border: 0;
-        display:block;
-        height: 1rem;
+        display: block;
+        height: var(--btn-close-size, 1rem);
         padding: 0;
         position: absolute;
-        right: 1.25rem;
-        top: 1.25rem;
-        width: 1rem;
+        right: var(--btn-close-right, var(--content-padding, 1.25rem));
+        top: var(--btn-close-top, var(--content-padding, 1.25rem));
+        width: var(--btn-close-size, 1rem);;
       }
 
       :host .btn-open {
@@ -118,7 +118,7 @@ export default class Hotspot extends Shadow() {
       :host .btn-open:after{
         background-position: 50% 50%;
         background-repeat: no-repeat;
-        box-shadow: 0 0 0 0 transparent;
+        box-shadow: var(--btn-open-after-box-shadow, 0 0 0 0 transparent);
         content: '';
         transition: transform .2s ease-out,
           box-shadow .2s ease-out,
@@ -137,32 +137,31 @@ export default class Hotspot extends Shadow() {
       }
 
       :host .content{
-        background-color: var(--hotspot-content-background-color, #fff);
-        outline:0;
+        background-color: var(--content-background-color, #fff);
+        outline: 0;
         z-index: 100;
       }
 
       @media screen and (min-width: _max-width_){
         :host .content{
           left: 50%;
-          padding: 1.25rem;
+          padding: var(--content-padding, 1.25rem);
           position: absolute;
           top: 50%;
           transform: scale(0) translate(-50%,-50%);
           transition: transform 250ms cubic-bezier(.755,.05,.855,.06);
-          width: 22rem;
+          width: var(--content-width, 22rem);
         }
         :host(.active) .content{
           transition: transform .4s 250ms cubic-bezier(.755,.05,.855,.06);
           visibility: visible;
         }
         :host .content:after{
-          border-width: 0.75rem;
-          border: solid #fff;
-          box-shadow: 5px 5px 15px -6px transparent;
+          border: solid var(--after-border-width, 0.75rem) var(--content-background-color, #fff);
+          box-shadow: 3px 3px 15px -1px transparent;
           content: ' ';
           height: 0;
-          margin-left: -0.75rem;
+          margin-left: calc(var(--after-border-width, 0.75rem) * -1);
           pointer-events: none;
           position: absolute;
           transition: box-shadow .1s cubic-bezier(.755,.05,.855,.06),
@@ -219,7 +218,7 @@ export default class Hotspot extends Shadow() {
           }
         }
         :host .content:before{
-          background-color: var(--hotspot-button-background-color, var(--color-secondary, #ff6600));
+          background-color: var(--button-background-color, var(--color-secondary, #ff6600));
           border-radius: 4px;
           content: '';
           height: 4px;
