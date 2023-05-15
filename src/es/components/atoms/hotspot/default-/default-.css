@@ -1,7 +1,7 @@
 :host .btn-open {
     border-radius: 50%;
     box-shadow: 1px 1px 15px -2px rgba(0, 0, 0, .1);
-    height: 3rem;
+    height: var(--hotspot-default-btn-open-size, 3rem);
     left: 50%;
     outline: 0;
     position: absolute;
@@ -10,7 +10,7 @@
     transition: transform .2s ease-out,
         box-shadow .2s ease-out,
         background-color .2s ease-out;
-    width: 3rem;
+    width: var(--hotspot-default-btn-open-size, 3rem);
     will-change: transform;
     z-index: 0;
 }
@@ -31,27 +31,27 @@
 :host .btn-open:before {
     background-color: rgba(255, 255, 255, .5);
     content: '';
-    height: 3rem;
+    height: var(--hotspot-default-btn-open-size, 3rem);
     transform: translate(-50%, -50%);
     transition: background-color .2s ease-out;
-    width: 3rem;
+    width: var(--hotspot-default-btn-open-size, 3rem);
 }
 
 :host .btn-open:after {
-    background-color: var(--hotspot-button-background-color, var(--color-secondary, #ff6600));
+    background-color: var(--hotspot-default-button-background-color, var(--color-secondary, #ff6600));
     background-image: url(_import-meta-url_./icons/close-white.svg);
-    height: 2.2rem;
+    height: var(--btn-open-size-inner, 2.2rem);
     transform: translate(-50%, -50%) rotate(-45deg);
-    width: 2.2rem;
+    width: var(--btn-open-size-inner, 2.2rem);
 }
 
 :host .btn-open:hover:after {
-    background-color: var(--hotspot-button-background-color-hover, var(--color-hover, #AACF80));
+    background-color: var(--hotspot-default-button-background-color-hover, var(--color-hover, #AACF80));
     box-shadow: 0 0 6px 0 rgba(0, 0, 0, .6);
 }
 
 :host(.active) .btn-open:after {
-    background-color: var(--hotspot-button-background-color-hover, var(--color-hover, #AACF80));
+    background-color: var(--hotspot-default-button-background-color-hover, var(--color-hover, #AACF80));
     transform: translate(-50%, -50%) rotate(0);
 }
 
