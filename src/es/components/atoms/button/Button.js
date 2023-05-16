@@ -164,7 +164,7 @@ export default class Button extends Shadow() {
   }
 
   /**
-   * renders the o-teaser-wrapper css
+   * renders the css
    *
    * @return {Promise<void>}
    */

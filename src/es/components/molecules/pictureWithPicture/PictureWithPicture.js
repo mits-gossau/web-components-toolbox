@@ -83,7 +83,15 @@ export default class PictureWithPicture extends Shadow() {
         width: ${this.getAttribute('icon-width') || '10%'};
       }
     `
+    return this.fetchTemplate()
+  }
 
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     const styles = [{
       // @ts-ignore
       path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level

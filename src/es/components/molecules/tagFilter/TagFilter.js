@@ -48,6 +48,11 @@ export default class TagFilter extends Mutation() {
     return !this.tagFilterWrapper
   }
 
+  /**
+   * renders the css
+   *
+   * @return {Promise<void>}
+   */
   renderCSS () {
     this.css = /* css */ `
       :host {
@@ -62,6 +67,15 @@ export default class TagFilter extends Mutation() {
         }
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {

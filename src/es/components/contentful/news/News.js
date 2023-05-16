@@ -115,6 +115,7 @@ export default class News extends Shadow() {
         }
       }
       this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
+      // make template ${code} accessible aka. set the variables in the literal string
       this.newsWrapper.innerHTML = eval('`' + htmls[0] + '`')// eslint-disable-line no-eval
 
       this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {

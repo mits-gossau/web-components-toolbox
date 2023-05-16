@@ -491,8 +491,16 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
 
         
       }
-      `
-
+    `
+    return this.fetchTemplate()
+  }
+  
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -513,16 +521,18 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
       case 'details-default-icon-right-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`,
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--details-default-',
+            flags: 'g',
+            replacement: '--details-default-icon-right-'
+          }]
         },
         {
           // @ts-ignore
           path: `${this.importMetaUrl}./default-icon-right-/default-icon-right-.css`,
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the details default-.css namespace with default-icon-right-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--details-default-/g, '--details-default-icon-right-')
-        })
+        }, ...styles], false)
       case 'details-menu-single-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./menu-single-/menu-single-.css`,
