@@ -30,6 +30,18 @@ export default class TotalPrice extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    
+    if (this.closest('m-form').getAttribute('fixed-price-total')) {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('answer-event-name') || 'answer-event-name', {
+        detail: {
+          total: this.closest('m-form').getAttribute('fixed-price-total'),
+          name: 'fixed-price-total'
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   disconnectedCallback () {

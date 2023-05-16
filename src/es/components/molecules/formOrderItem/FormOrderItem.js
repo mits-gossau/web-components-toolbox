@@ -30,6 +30,19 @@ export default class FormOrderItem extends Form {
     this.addEventListener('keyup', this.eventListener)
     this.setPrice(this.priceAttribute, this.priceElement)
     this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
+    if (this.getAttribute('is-fixed-price')) {
+      const currentPrice = parseFloat(this.priceAttribute)
+      const parentFormElement = this.closest('m-form')
+
+      if (parentFormElement.getAttribute('fixed-price-total')) {
+        let amount = parseFloat(parentFormElement.getAttribute('fixed-price-total'))
+        amount += currentPrice
+        parentFormElement.setAttribute('fixed-price-total', amount)
+      } else {
+        parentFormElement.setAttribute('fixed-price-total', currentPrice)
+      }
+      
+    }
   }
 
   disconnectedCallback () {
