@@ -31,11 +31,11 @@ export default class FormOrderItem extends Form {
     this.setPrice(this.priceAttribute, this.priceElement)
     this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
     if (this.getAttribute('is-fixed-price')) {
-      var currentPrice = parseFloat('1') * parseFloat(this.priceAttribute)
-      var parentFormElement = this.closest('m-form')
+      const currentPrice = parseFloat(this.priceAttribute)
+      const parentFormElement = this.closest('m-form')
 
       if (parentFormElement.getAttribute('fixed-price-total')) {
-        var amount = parseFloat(parentFormElement.getAttribute('fixed-price-total'))
+        let amount = parseFloat(parentFormElement.getAttribute('fixed-price-total'))
         amount += currentPrice
         parentFormElement.setAttribute('fixed-price-total', amount)
       } else {
