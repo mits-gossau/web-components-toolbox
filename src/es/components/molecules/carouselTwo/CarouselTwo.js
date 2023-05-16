@@ -432,6 +432,15 @@ export default class CarouselTwo extends Mutation() {
         }
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     // attribute controlled styles
     const setAttributeStyles = () => {
       if (this.hasAttribute('background-color')) {
@@ -477,6 +486,7 @@ export default class CarouselTwo extends Mutation() {
       `)
       }
     }
+
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -497,39 +507,42 @@ export default class CarouselTwo extends Mutation() {
       case 'carousel-two-thumbnail-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-two-default-',
+            flags: 'g',
+            replacement: '--carousel-two-thumbnail-'
+          }]
         }, {
           path: `${this.importMetaUrl}./thumbnail-/thumbnail-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the default-.css namespace with carousel-two-thumbnail-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-thumbnail-')
-          setAttributeStyles()
-        })
+        }, ...styles], false).then(() => setAttributeStyles())
       case 'carousel-two-teaser-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-two-default-',
+            flags: 'g',
+            replacement: '--carousel-two-teaser-'
+          }]
         }, {
           path: `${this.importMetaUrl}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the default-.css namespace with carousel-two-teaser-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-teaser-')
-          setAttributeStyles()
-        })
+        }, ...styles], false).then(() => setAttributeStyles())
       case 'carousel-two-seperate-nav-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-two-default-',
+            flags: 'g',
+            replacement: '--carousel-two-seperate-nav-'
+          }]
         }, {
           path: `${this.importMetaUrl}./seperate-nav-/seperate-nav-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the default-.css namespace with carousel-two-seperate-nav-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-two-default-/g, '--carousel-two-seperate-nav-')
-          setAttributeStyles()
-        })
+        }, ...styles], false).then(() => setAttributeStyles())
       default:
         return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }

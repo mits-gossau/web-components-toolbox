@@ -354,7 +354,15 @@ export default class MacroCarousel extends Shadow() {
         }
       }
     `.replace(/var\(--/g, `var(--${this.namespace}`)
+    return this.fetchTemplate()
+  }
 
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -371,25 +379,31 @@ export default class MacroCarousel extends Shadow() {
       case 'carousel-emotion-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-default-',
+            flags: 'g',
+            replacement: '--carousel-emotion-'
+          }]
         }, {
           // @ts-ignore
           path: `${this.importMetaUrl}./emotion-/emotion-.css`,
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-default-/g, '--carousel-emotion-')
-        })
+        }, ...styles], false)
       case 'carousel-portrait-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-default-',
+            flags: 'g',
+            replacement: '--carousel-portrait-'
+          }]
         }, {
           // @ts-ignore
           path: `${this.importMetaUrl}./portrait-/portrait-.css`,
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--carousel-default-/g, '--carousel-portrait-')
-        })
+        }, ...styles], false)
       default:
         return this.fetchCSS(styles, false)
     }

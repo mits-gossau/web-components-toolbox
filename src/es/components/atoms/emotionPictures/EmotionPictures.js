@@ -200,7 +200,15 @@ export default class EmotionPictures extends Intersection() {
 
     // add the style for resize to the html
     this.html = this.style
+    return this.fetchTemplate()
+  }
 
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     const styles = [
       {
         // @ts-ignore
@@ -231,16 +239,18 @@ export default class EmotionPictures extends Intersection() {
       case 'emotion-pictures-with-video-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./with-title-/with-title-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--emotion-pictures-with-title-',
+            flags: 'g',
+            replacement: '--emotion-pictures-with-video-'
+          }]
         },
         {
           // @ts-ignore
           path: `${this.importMetaUrl}./with-video-/with-video-.css`,
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the emotion-picture-with-title-.css namespace with --emotion-picture-with-video
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--emotion-pictures-with-title-/g, '--emotion-pictures-with-video-')
-        })
+        }, ...styles], false)
       case 'emotion-pictures-default-':
         return this.fetchCSS([{
           // @ts-ignore

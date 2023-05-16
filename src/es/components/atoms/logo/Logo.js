@@ -102,7 +102,7 @@ export default class Logo extends Shadow() {
   /**
    * renders the css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -192,6 +192,15 @@ export default class Logo extends Shadow() {
         }
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'logo-default-':
         return this.fetchCSS([{
@@ -203,6 +212,8 @@ export default class Logo extends Shadow() {
           path: `${this.importMetaUrl}./partner-/partner-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
+      default:
+        return Promise.resolve()
     }
   }
 

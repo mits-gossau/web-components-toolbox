@@ -139,7 +139,7 @@ export default class Picture extends Intersection() {
   /**
    * renders the css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -258,6 +258,15 @@ export default class Picture extends Intersection() {
         100%{opacity: 1}
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'picture-overflow-':
         return this.fetchCSS([{
@@ -289,6 +298,8 @@ export default class Picture extends Intersection() {
           path: `${this.importMetaUrl}./cover-/cover-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
+      default:
+        return Promise.resolve()
     }
   }
 

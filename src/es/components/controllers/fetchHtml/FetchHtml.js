@@ -29,7 +29,7 @@ export default class FetchHtml extends HTMLElement {
      */
     this.fetchHtmlCache = new Map()
     /**
-     * Listens to the event 'fetch-html' and resolve it with the paths returned by fetchCSS
+     * Listens to the event 'fetch-html' and resolve it with the paths returned by fetchHTML
      *
      * @param {CustomEvent & {detail: fetchHtmlEventDetail}} event
      */
