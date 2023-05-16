@@ -86,9 +86,6 @@ export default class BodyStyle extends Intersection(Body) {
         width: 100% !important;
         margin: 0 !important;
       }
-      :host([fix-one-pixel-glitch]) {
-        transform: translateY(-1px) scaleY(1.005);
-      }
     `
     // BodyStyle has to be 100% (minus content spacing) when it is not within o-body nor o-body-style
     // in case it is within  o-body or o-body-style, it's children have the inherit o-body :host > * (any direct child) width styling, desktop width (:host > main > * { width: var(--content-width, 55%);) since itself has 100% by line 54 (width: 100% !important;)
@@ -130,6 +127,9 @@ export default class BodyStyle extends Intersection(Body) {
       return `${attributeName}:${attribute.value};--${attributeName}:${attribute.value};`
     }
     this.css = /* css */`
+      :host([fix-one-pixel-glitch]) {
+        transform: translateY(-1px) scaleY(1.005);
+      }
       :host {
         ${Array.from(this.attributes).reduce((acc, attribute) => {
           if (!attribute || !attribute.name || !attribute.value || attribute.name.includes('aria') || attribute.name.includes('tabindex') || attribute.name.includes('class') || attribute.name.includes('style')) return acc
