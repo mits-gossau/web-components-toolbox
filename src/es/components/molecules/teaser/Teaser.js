@@ -269,10 +269,8 @@ export default class Teaser extends Intersection() {
       Array.from(this.attributes).forEach(attribute => {
         if (!attribute.name.includes('hidden')) a.setAttribute(attribute.name, attribute.value)
       })
+      if (a.hasAttribute('id')) this.removeAttribute('id')
       a.setAttribute('wrapper', '')
-      a.setAttribute('href', this.getAttribute('href'))
-      a.setAttribute('target', this.getAttribute('target') || '_self')
-      if (this.hasAttribute('rel')) a.setAttribute('rel', this.getAttribute('rel'))
       a.style.color = 'inherit'
       a.style.textDecoration = 'inherit'
       this.parentNode.replaceChild(a, this)

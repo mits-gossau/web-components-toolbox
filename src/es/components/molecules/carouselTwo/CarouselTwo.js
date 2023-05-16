@@ -173,11 +173,14 @@ export default class CarouselTwo extends Mutation() {
   mutationCallback (mutationList, observer) {
     if (mutationList[0] && mutationList[0].type === 'childList') {
       mutationList[0].addedNodes.forEach(node => {
-        let id
-        if (Array.from(this.section.children).includes(node) && !node.hasAttribute('id') && node.children[0] && node.children[0].hasAttribute('id') && (id = node.children[0].getAttribute('id')).includes(this.idPefix)) {
-          node.children[0].removeAttribute('id')
+        if (Array.from(this.section.children).includes(node)){
+          // grab the id if there was a mutation on the child being wrapped or so
+          let id
+          if (!node.hasAttribute('id') && node.children[0] && node.children[0].hasAttribute('id') && (id = node.children[0].getAttribute('id')).includes(this.idPefix)) {
+            node.children[0].removeAttribute('id')
+            node.setAttribute('id', id)
+          }
           node.children[0].removeEventListener('focus', this.focusListener)
-          node.setAttribute('id', id)
           node.addEventListener('focus', this.focusListener)
         }
       })
