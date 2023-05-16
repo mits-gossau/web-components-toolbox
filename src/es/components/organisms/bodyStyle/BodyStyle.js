@@ -127,9 +127,6 @@ export default class BodyStyle extends Intersection(Body) {
       return `${attributeName}:${attribute.value};--${attributeName}:${attribute.value};`
     }
     this.css = /* css */`
-      :host([fix-one-pixel-glitch]) {
-        transform: translateY(-1px) scaleY(1.005);
-      }
       :host {
         ${Array.from(this.attributes).reduce((acc, attribute) => {
           if (!attribute || !attribute.name || !attribute.value || attribute.name.includes('aria') || attribute.name.includes('tabindex') || attribute.name.includes('class') || attribute.name.includes('style')) return acc
