@@ -26,7 +26,7 @@ export default class FormOrderItem extends Form {
 
   connectedCallback () {
     super.connectedCallback()
-    if(this.clearQuantityBtn) this.clearQuantityBtn.addEventListener('click', this.clickListener)
+    if (this.clearQuantityBtn) this.clearQuantityBtn.addEventListener('click', this.clickListener)
     this.addEventListener('keyup', this.eventListener)
     this.setPrice(this.priceAttribute, this.priceElement)
     this.calcTotal('0', this.priceAttribute, this.priceTotalElement)

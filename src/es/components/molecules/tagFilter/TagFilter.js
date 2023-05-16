@@ -8,7 +8,7 @@ export default class TagFilter extends Mutation() {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { childList: true },
-      ...options,
+      ...options
     }, ...args)
 
     this.answerEventListener = event => {

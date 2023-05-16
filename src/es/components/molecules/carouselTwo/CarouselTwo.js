@@ -23,7 +23,7 @@ export default class CarouselTwo extends Mutation() {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { subtree: true, childList: true },
-      ...options,
+      ...options
     }, ...args)
 
     if (this.hasAttribute('open-modal')) this.setAttribute('aria-haspopup', 'true')
@@ -173,7 +173,7 @@ export default class CarouselTwo extends Mutation() {
   mutationCallback (mutationList, observer) {
     if (mutationList[0] && mutationList[0].type === 'childList') {
       mutationList[0].addedNodes.forEach(node => {
-        if (Array.from(this.section.children).includes(node)){
+        if (Array.from(this.section.children).includes(node)) {
           // grab the id if there was a mutation on the child being wrapped or so
           let id
           if (!node.hasAttribute('id') && node.children[0] && node.children[0].hasAttribute('id') && (id = node.children[0].getAttribute('id')).includes(this.idPefix)) {

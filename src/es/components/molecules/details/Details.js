@@ -57,7 +57,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { attributes: true, attributeFilter: ['open'] },
-      ...options,
+      ...options
     }, ...args)
 
     this.setAttribute('aria-expanded', 'false')
@@ -494,7 +494,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
     `
     return this.fetchTemplate()
   }
-  
+
   /**
    * fetches the template
    *

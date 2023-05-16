@@ -46,7 +46,7 @@ export default class Picture extends Intersection() {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: {},
-      ...options,
+      ...options
     }, ...args)
 
     this.clickListener = event => {

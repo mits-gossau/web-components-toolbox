@@ -17,7 +17,7 @@ export default class EmotionPictures extends Intersection() {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 },
-      ...options,
+      ...options
     }, ...args)
 
     this.setAttribute('role', 'banner')

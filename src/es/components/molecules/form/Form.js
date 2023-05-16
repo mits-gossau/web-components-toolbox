@@ -23,7 +23,7 @@ export default class Form extends Shadow() {
     super({
       importMetaUrl: import.meta.url,
       mode: 'false',
-      ...options,
+      ...options
     }, ...args)
 
     this.setAttribute('role', 'form')

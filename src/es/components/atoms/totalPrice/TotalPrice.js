@@ -102,7 +102,7 @@ export default class TotalPrice extends Shadow() {
    * @param {string} attribute
    * @param {string} value
    */
-  static updateElement(element, attribute, value) {
+  static updateElement (element, attribute, value) {
     element[attribute] = value
   }
 
@@ -110,7 +110,7 @@ export default class TotalPrice extends Shadow() {
     return this.getAttribute('total-text') || 'Total'
   }
 
-  get hiddenInput () {    
+  get hiddenInput () {
     const className = this.hasAttribute('update-hidden-input-class') ? this.getAttribute('update-hidden-input-class') : null
     return this.parentElement.querySelector(`.${className}`)
   }

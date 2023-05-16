@@ -47,7 +47,7 @@ export default class Navigation extends Mutation() {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
-      ...options,
+      ...options
     }, ...args)
 
     this.isDesktop = this.checkMedia('desktop')

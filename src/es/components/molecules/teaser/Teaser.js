@@ -15,7 +15,7 @@ export default class Teaser extends Intersection() {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: { rootMargin: '0px 0px 0px 0px' },
-      ...options,
+      ...options
     }, ...args)
 
     this.setAttribute('role', 'figure')
