@@ -9,7 +9,7 @@ export default class FormOrderItem extends Form {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.eventListener = event => {
       const inputField = this.root.querySelector(':focus')
-      if (!inputField) return
+      if (!inputField || inputField.getAttribute('type') === 'checkbox') return
       if (inputField === this.clearQuantityBtn) {
         if (event.key === 'Enter' || event.key === 'Spacebar' || event.key === ' ') this.clickListener()
       } else {
@@ -22,12 +22,20 @@ export default class FormOrderItem extends Form {
       this.quantityField.value = ''
       this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
     }
+    this.checkboxChangeListener = event => {
+      if(event.currentTarget.checked) {
+        this.calcTotal('1', this.priceAttribute, this.priceTotalElement)
+      } else {
+        this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
+      }
+    }
   }
 
   connectedCallback () {
     super.connectedCallback()
     if(this.clearQuantityBtn) this.clearQuantityBtn.addEventListener('click', this.clickListener)
     this.addEventListener('keyup', this.eventListener)
+    if(this.checkboxInput) this.checkboxInput.addEventListener('change', this.checkboxChangeListener)
     this.setPrice(this.priceAttribute, this.priceElement)
     this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
     if (this.getAttribute('is-fixed-price')) {
@@ -48,6 +56,7 @@ export default class FormOrderItem extends Form {
   disconnectedCallback () {
     super.disconnectedCallback()
     if (this.clearQuantityBtn) this.clearQuantityBtn.removeEventListener('click', this.clickListener)
+    if(this.checkboxInput) this.checkboxInput.removeEventListener('change', this.checkboxChangeListener)
     this.removeEventListener('keyup', this.eventListener)
   }
 
@@ -153,6 +162,10 @@ export default class FormOrderItem extends Form {
 
   get priceElement () {
     return this.root.querySelector('.price') || null
+  }
+
+  get checkboxInput () {
+    return this.root.querySelector('input[type=checkbox]') || null
   }
 
   get priceTotalElement () {
