@@ -230,7 +230,7 @@ export default class Modal extends Shadow() {
   /**
    * renders the o-modal css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -303,8 +303,18 @@ export default class Modal extends Shadow() {
         }
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'modal-default-':
+      default:
         return this.fetchCSS([{
           // @ts-ignore
           path: `${this.importMetaUrl}./default-/default-.css`,

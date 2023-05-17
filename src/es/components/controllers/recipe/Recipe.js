@@ -23,7 +23,7 @@ export default class Recipe extends Shadow() {
     super({
       importMetaUrl: import.meta.url,
       mode: 'false',
-      ...options,
+      ...options
     }, ...args)
     this.origTitle = document.title
     this.abortController = null

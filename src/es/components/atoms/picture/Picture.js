@@ -47,7 +47,7 @@ export default class Picture extends Intersection(Hover ) {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: {},
-      ...options,
+      ...options
     }, ...args)
 
     this.clickListener = event => {
@@ -125,7 +125,7 @@ export default class Picture extends Intersection(Hover ) {
   /**
    * renders the css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -244,6 +244,15 @@ export default class Picture extends Intersection(Hover ) {
         100%{opacity: 1}
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'picture-overflow-':
         return this.fetchCSS([{
@@ -275,6 +284,8 @@ export default class Picture extends Intersection(Hover ) {
           path: `${this.importMetaUrl}./cover-/cover-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
+      default:
+        return Promise.resolve()
     }
   }
 

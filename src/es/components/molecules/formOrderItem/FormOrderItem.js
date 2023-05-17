@@ -33,7 +33,7 @@ export default class FormOrderItem extends Form {
 
   connectedCallback () {
     super.connectedCallback()
-    if(this.clearQuantityBtn) this.clearQuantityBtn.addEventListener('click', this.clickListener)
+    if (this.clearQuantityBtn) this.clearQuantityBtn.addEventListener('click', this.clickListener)
     this.addEventListener('keyup', this.eventListener)
     if(this.checkboxInput) this.checkboxInput.addEventListener('change', this.checkboxChangeListener)
     this.setPrice(this.priceAttribute, this.priceElement)
@@ -60,6 +60,11 @@ export default class FormOrderItem extends Form {
     this.removeEventListener('keyup', this.eventListener)
   }
 
+  /**
+   * renders the css
+   *
+   * @return {Promise<void>}
+   */
   renderCSS () {
     this.css = /* css */ `
       :host {
@@ -84,8 +89,16 @@ export default class FormOrderItem extends Form {
         padding:var(--padding, 0);
         border-top: 1px solid var(--border-top-color, black);
       }
-    }`
+    `
+    return this.fetchTemplate()
+  }
 
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {

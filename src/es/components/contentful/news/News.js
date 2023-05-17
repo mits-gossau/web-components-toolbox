@@ -115,6 +115,7 @@ export default class News extends Shadow() {
         }
       }
       this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
+      // make template ${code} accessible aka. set the variables in the literal string
       this.newsWrapper.innerHTML = eval('`' + htmls[0] + '`')// eslint-disable-line no-eval
 
       this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {
@@ -192,6 +193,15 @@ export default class News extends Shadow() {
       white-space:var(--p-white-space, normal);
     }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {

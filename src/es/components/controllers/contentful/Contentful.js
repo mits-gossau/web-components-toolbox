@@ -20,7 +20,7 @@ export default class Contentful extends Shadow() {
     super({
       importMetaUrl: import.meta.url,
       mode: 'false',
-      ...options,
+      ...options
     }, ...args)
     const token = this.getAttribute('token')
     const spaceId = this.getAttribute('space-id')

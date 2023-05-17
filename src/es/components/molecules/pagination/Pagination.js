@@ -205,6 +205,11 @@ export default class Pagination extends Shadow() {
     return Array.from(updateNodes).map(item => item.outerHTML).join('')
   }
 
+  /**
+   * renders the css
+   *
+   * @return {Promise<void>}
+   */
   renderCSS () {
     this.css = /* css */ `
     :host {
@@ -258,7 +263,15 @@ export default class Pagination extends Shadow() {
         border-left:var(--li-hover-a-active-border-left-mobile, var(--li-hover-a-active-border-left, 1px var(--li-background-active, var(--background-color)) solid));
       }
     }`
+    return this.fetchTemplate()
+  }
 
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
