@@ -15,7 +15,7 @@ export default class Teaser extends Intersection() {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: { rootMargin: '0px 0px 0px 0px' },
-      ...options,
+      ...options
     }, ...args)
 
     this.setAttribute('role', 'figure')
@@ -190,6 +190,15 @@ export default class Teaser extends Intersection() {
         }
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -210,14 +219,16 @@ export default class Teaser extends Intersection() {
       case 'teaser-tile-text-center-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--teaser-tile-',
+            flags: 'g',
+            replacement: '--teaser-tile-text-center-'
+          }]
         }, {
           path: `${this.importMetaUrl}./tile-text-center-/tile-text-center-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the tile-.css namespace with teaser-tile-text-center-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--teaser-tile-/g, '--teaser-tile-text-center-')
-        })
+        }, ...styles], false)
       case 'teaser-tile-rounded-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./tile-/tile-.css`, // apply namespace since it is specific and no fallback
@@ -269,10 +280,8 @@ export default class Teaser extends Intersection() {
       Array.from(this.attributes).forEach(attribute => {
         if (!attribute.name.includes('hidden')) a.setAttribute(attribute.name, attribute.value)
       })
+      if (a.hasAttribute('id')) this.removeAttribute('id')
       a.setAttribute('wrapper', '')
-      a.setAttribute('href', this.getAttribute('href'))
-      a.setAttribute('target', this.getAttribute('target') || '_self')
-      if (this.hasAttribute('rel')) a.setAttribute('rel', this.getAttribute('rel'))
       a.style.color = 'inherit'
       a.style.textDecoration = 'inherit'
       this.parentNode.replaceChild(a, this)

@@ -47,7 +47,7 @@ export default class Navigation extends Mutation() {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
-      ...options,
+      ...options
     }, ...args)
 
     this.isDesktop = this.checkMedia('desktop')
@@ -597,6 +597,15 @@ export default class Navigation extends Mutation() {
         100% {left: 0}
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -617,40 +626,50 @@ export default class Navigation extends Mutation() {
       case 'navigation-alnatura-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--navigation-default-',
+            flags: 'g',
+            replacement: '--navigation-alnatura-'
+          }]
         }, {
           path: `${this.importMetaUrl}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the default-.css namespace with navigation-alnatura-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--navigation-default-/g, '--navigation-alnatura-')
-        })
+        }, ...styles], false)
       case 'navigation-nature-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--navigation-default-',
+            flags: 'g',
+            replacement: '--navigation-nature-'
+          }]
         }, {
           path: `${this.importMetaUrl}./nature-/nature-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the default-.css namespace with navigation-nature-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--navigation-default-/g, '--navigation-nature-')
-        })
+        }, ...styles], false)
       case 'navigation-yearbooks-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--navigation-default-',
+            flags: 'g',
+            replacement: '--navigation-yearbooks-'
+          }]
         }, {
           path: `${this.importMetaUrl}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--navigation-alnatura-',
+            flags: 'g',
+            replacement: '--navigation-yearbooks-'
+          }]
         }, {
           path: `${this.importMetaUrl}./yearbooks-/yearbooks-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // harmonize the default-.css namespace with navigation-alnatura-
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--navigation-default-/g, '--navigation-yearbooks-')
-          fetchCSSParams[1].styleNode.textContent = fetchCSSParams[1].styleNode.textContent.replace(/--navigation-alnatura-/g, '--navigation-yearbooks-')
-        })
+        }, ...styles], false)
       default:
         return Promise.resolve()
     }

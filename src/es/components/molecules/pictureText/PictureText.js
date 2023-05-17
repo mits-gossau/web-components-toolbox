@@ -65,7 +65,7 @@ export default class Hotspot extends Shadow() {
   /**
    * renders the a-Hotspot css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -160,7 +160,15 @@ export default class Hotspot extends Shadow() {
         }
       }
     `
+    return this.fetchTemplate()
+  }
 
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     const styles = [{
       // @ts-ignore
       path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level

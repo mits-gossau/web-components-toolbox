@@ -164,7 +164,7 @@ export default class Button extends Shadow() {
   }
 
   /**
-   * renders the o-teaser-wrapper css
+   * renders the css
    *
    * @return {Promise<void>}
    */
@@ -271,6 +271,15 @@ export default class Button extends Shadow() {
         }
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     const replaces = this.buttonTagName === 'a'
       ? [{
           pattern: '([^-]{1})button',
@@ -319,17 +328,18 @@ export default class Button extends Shadow() {
           // @ts-ignore
           path: `${this.importMetaUrl}./primary-/primary-.css`,
           namespace: false,
-          replaces
+          replaces: replaces.concat([{
+            pattern: '--button-primary-',
+            flags: 'g',
+            replacement: '--button-category-'
+          }])
         },
         {
           // @ts-ignore
           path: `${this.importMetaUrl}./category-/category-.css`,
           namespace: false,
           replaces
-        }]).then(fetchCSSParams => {
-          // harmonize the primary-.css namespace with --category
-          fetchCSSParams[0].styleNode.textContent = fetchCSSParams[0].styleNode.textContent.replace(/--primary-/g, '--category-')
-        })
+        }])
       case 'button-square-':
         return this.fetchCSS([{
           // @ts-ignore

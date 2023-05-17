@@ -57,6 +57,11 @@ export default class NewsPreview extends Shadow() {
     this.html = this.newsWrapper
   }
 
+  /**
+   * renders css
+   *
+   * @return {Promise<void>}
+   */
   renderCSS () {
     this.css = /* css */`
     :host > div {
@@ -83,7 +88,15 @@ export default class NewsPreview extends Shadow() {
         : ''}   
     @media only screen and (max-width: _max-width_) {}
     `
+    return this.fetchTemplate()
+  }
 
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {

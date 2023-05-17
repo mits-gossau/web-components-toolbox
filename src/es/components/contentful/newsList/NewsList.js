@@ -79,6 +79,11 @@ export default class NewsList extends Shadow() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
+  /**
+   * renders css
+   *
+   * @return {Promise<void>}
+   */
   renderCSS () {
     this.css = /* css */ `
     :host > div {
@@ -88,7 +93,15 @@ export default class NewsList extends Shadow() {
     }
     @media only screen and (max-width: _max-width_) {}
     `
+    return this.fetchTemplate()
+  }
 
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {

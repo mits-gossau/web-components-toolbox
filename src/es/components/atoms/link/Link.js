@@ -89,7 +89,7 @@ export default class Link extends Shadow() {
   /**
    * renders the css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -243,6 +243,15 @@ export default class Link extends Shadow() {
         }
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'underline-':
         return this.fetchCSS([{
@@ -264,6 +273,8 @@ export default class Link extends Shadow() {
           path: `${this.importMetaUrl}./category-/category-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
+      default:
+        return Promise.resolve()
     }
   }
 

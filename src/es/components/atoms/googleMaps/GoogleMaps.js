@@ -123,7 +123,15 @@ export default class GoogleMaps extends Shadow() {
         margin:0 0 6px var(--control-events-div-margin-left-mobile, 0);
       }
     }`
+    return this.fetchTemplate()
+  }
 
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
     const styles = [{
       // @ts-ignore
       path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
@@ -143,6 +151,8 @@ export default class GoogleMaps extends Shadow() {
           path: `${this.importMetaUrl}./iframe-/iframe-.css`,
           namespace: false
         }, ...styles], false)
+      default:
+        return Promise.resolve()
     }
   }
 
