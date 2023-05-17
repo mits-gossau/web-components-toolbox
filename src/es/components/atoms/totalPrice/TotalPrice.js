@@ -18,8 +18,10 @@ export default class TotalPrice extends Shadow() {
           itemList.push(item)
         }
         const priceValues = itemList.map(i => i.total)
-        const totalPrice = price => price.reduce((a, b) => a + Number(b), 0)
-        this.totalPriceElement.textContent = parseFloat(totalPrice(priceValues)).toFixed(2)
+        const totalPriceCalc = price => price.reduce((a, b) => a + Number(b), 0)
+        const totalPrice = parseFloat(totalPriceCalc(priceValues)).toFixed(2)
+        TotalPrice.updateElement(this.totalPriceElement, 'textContent', totalPrice)
+        if (this.hiddenInput) TotalPrice.updateElement(this.hiddenInput, 'value', totalPrice)
       }
     }
   }
@@ -28,6 +30,18 @@ export default class TotalPrice extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    
+    if (this.closest('m-form').getAttribute('fixed-price-total')) {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('answer-event-name') || 'answer-event-name', {
+        detail: {
+          total: this.closest('m-form').getAttribute('fixed-price-total'),
+          name: 'fixed-price-total'
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   disconnectedCallback () {
@@ -94,7 +108,22 @@ export default class TotalPrice extends Shadow() {
     return contentElement
   }
 
+  /**
+   * Update attribute value of given Element
+   * @param {HTMLElement} element
+   * @param {string} attribute
+   * @param {string} value
+   */
+  static updateElement(element, attribute, value) {
+    element[attribute] = value
+  }
+
   get totalText () {
     return this.getAttribute('total-text') || 'Total'
+  }
+
+  get hiddenInput () {    
+    const className = this.hasAttribute('update-hidden-input-class') ? this.getAttribute('update-hidden-input-class') : null
+    return this.parentElement.querySelector(`.${className}`)
   }
 }

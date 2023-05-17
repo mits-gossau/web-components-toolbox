@@ -198,11 +198,11 @@ export default class FormZadb extends Form {
 
   /**
    * Populates the data list
-   * @param {Array} results 
-   * @param {string} dataListId 
-   * @param {Array} dataValues 
-   * @param {HTMLInputElement} inputField 
-   * @returns 
+   * @param {Array} results
+   * @param {string} dataListId
+   * @param {Array} dataValues
+   * @param {HTMLInputElement} inputField
+   * @returns
    */
   showDataList (results, dataListId, dataValues, inputField) {
     if (!results || !results.length) return
