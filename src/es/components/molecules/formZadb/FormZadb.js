@@ -23,6 +23,7 @@ export default class FormZadb extends Form {
       street: {
         id: 'street',
         listId: 'street-list',
+        customErrorElement: '#street-field-validation-error',
         key: 'streetName'
       }
     }
@@ -57,7 +58,7 @@ export default class FormZadb extends Form {
         this.clearFieldValues([this.city, this.street])
       }
 
-      if (inputField.getAttribute('id') === this.inputFields.street.id) {
+      if (inputField?.getAttribute('id') === this.inputFields.street.id) {
         this.addListIdAttribute(inputField, this.inputFields.street.listId)
         if (inputField?.value.length >= 1) {
           this.showLoader(this.streetLoader)
@@ -183,6 +184,7 @@ export default class FormZadb extends Form {
 
   async searchCities (str) {
     this.triggerCustomZipError(false)
+    this.triggerCustomStreetError(false)
     if (str.length > 4) return
     const allCities = await this.getCities(str)
     if (!allCities.length && str.length === 4) {
@@ -192,8 +194,17 @@ export default class FormZadb extends Form {
   }
 
   async searchStreets (str, zip) {
-    if (Object.keys(this.streetsByZip).length === 0) this.streetsByZip = await this.getStreets(zip)
-    return this.streetsByZip.filter(street => street.streetName.toLowerCase().startsWith(str.toLowerCase()))
+    this.triggerCustomStreetError(false)
+    if (Object.keys(this.streetsByZip).length === 0) {
+      this.streetsByZip = await this.getStreets(zip)
+    }
+    const streets = this.streetsByZip.filter(street => street.streetName.toLowerCase().startsWith(str.toLowerCase()))
+    if(!streets.length) {
+      this.triggerCustomStreetError(true)
+      return []
+    }else{
+      return streets
+    }
   }
 
   /**
@@ -249,9 +260,6 @@ export default class FormZadb extends Form {
 
   async getStreets (zip) {
     try {
-      // if (this.controller) this.controller.abort()
-      // this.streetFetchController = new AbortController();
-      // const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/umbraco/api/BetriebsrestaurantZadbApi/GetStreetsByZip?zip=${zip}`, { signal: this.streetFetchController.signal })
       // @ts-ignore
       const response = await fetch(`${self.Environment.getApiBaseUrl('zadb')}/GetStreetsByZip?zip=${zip}`)
       const streets = await response.json()
@@ -298,6 +306,10 @@ export default class FormZadb extends Form {
     return this.root.querySelector(this.inputFields.zip.customErrorElement)
   }
 
+  get getCustomStreetErrorElement() {
+    return this.root.querySelector(this.inputFields.street.customErrorElement)
+  }
+
   hideLoader (loader) {
     if (!loader) return
     loader.style.visibility = 'hidden'
@@ -310,6 +322,11 @@ export default class FormZadb extends Form {
 
   triggerCustomZipError (displayElement) {
     const customError = this.getCustomZipErrorElement
+    customError.style.display = displayElement ? 'block' : 'none'
+  }
+
+  triggerCustomStreetError(displayElement) {
+    const customError = this.getCustomStreetErrorElement
     customError.style.display = displayElement ? 'block' : 'none'
   }
 }
