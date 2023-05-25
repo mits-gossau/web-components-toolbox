@@ -77,7 +77,7 @@ export default class LoadTemplateTag extends Intersection() {
   renderCSS () {
     this.css = /* css */ `
       :host {
-        display: contents;
+        display: inline;
       }
     `
   }
