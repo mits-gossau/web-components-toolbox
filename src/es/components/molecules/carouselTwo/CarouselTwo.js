@@ -31,6 +31,7 @@ export default class CarouselTwo extends Mutation() {
     this.clickListener = event => {
       let target
       if ((target = event.composedPath().find(node => typeof node.getAttribute === 'function' && node.getAttribute('href') && node.getAttribute('href').substring(0, 1) === '#'))) {
+        if (!this.hasAttribute('history')) event.preventDefault()
         let sectionChild
         if ((sectionChild = this.section.querySelector(target.getAttribute('href')))) {
           this.scrollIntoView(sectionChild)
@@ -172,6 +173,7 @@ export default class CarouselTwo extends Mutation() {
   // incase a child would manipulate itself, expl. teaser or wrapper wrapping themself with an a tag when they get an href
   mutationCallback (mutationList, observer) {
     if (mutationList[0] && mutationList[0].type === 'childList') {
+      this.setAttribute('count-section-children', this.section.children.length)
       mutationList[0].addedNodes.forEach(node => {
         if (Array.from(this.section.children).includes(node)) {
           // grab the id if there was a mutation on the child being wrapped or so
