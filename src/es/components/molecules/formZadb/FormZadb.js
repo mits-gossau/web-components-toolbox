@@ -17,13 +17,11 @@ export default class FormZadb extends Form {
       zip: {
         id: 'zip',
         listId: 'zip-list',
-        customErrorElement: '#plz-field-validation-error',
         key: 'localityName'
       },
       street: {
         id: 'street',
         listId: 'street-list',
-        customErrorElement: '#street-field-validation-error',
         key: 'streetName'
       }
     }
@@ -41,7 +39,7 @@ export default class FormZadb extends Form {
       // TODO: Refactor > Switch
       if (inputField?.getAttribute('id') === this.inputFields.zip.id) {
         this.addListIdAttribute(inputField, this.inputFields.zip.listId)
-
+        this.zip.setAttribute('value-from-list', 'false')
         if (inputField?.value.length >= 2) {
           this.removeListIdAttribute(inputField)
           this.showLoader(this.zipLoader)
@@ -60,6 +58,7 @@ export default class FormZadb extends Form {
 
       if (inputField?.getAttribute('id') === this.inputFields.street.id) {
         this.addListIdAttribute(inputField, this.inputFields.street.listId)
+        this.street.setAttribute('value-from-list', 'false')
         if (inputField?.value.length >= 1) {
           this.showLoader(this.streetLoader)
           this.streetResults = await this.searchStreets(inputField.value, this.zip.value)
@@ -74,17 +73,24 @@ export default class FormZadb extends Form {
           this.streetResults = []
           this.cleanDialogList(this.inputFields.street.listId)
         }
+        
       }
     }
 
     this.clickOutsideListener = (event) => {
       this.cleanDialogList(this.inputFields.zip.listId)
       this.cleanDialogList(this.inputFields.street.listId)
+      this.checkFieldsIfValueFromList()
     }
 
     this.zipSelectedListener = (event) => {
+      this.zip.setAttribute('value-from-list', 'true')
       this.zip.value = event.detail.value
       this.zipChangeListener(event)
+    }
+
+    this.streetSelectedListener = (event) => {
+      this.street.setAttribute('value-from-list', 'true')
     }
   }
 
@@ -93,6 +99,9 @@ export default class FormZadb extends Form {
     document.addEventListener('keyup', this.keydownListener)
     document.addEventListener('click', this.clickOutsideListener)
     this.addEventListener(this.inputFields.zip.listId, this.zipSelectedListener)
+    this.addEventListener(this.inputFields.street.listId, this.streetSelectedListener)
+    this.zip.addEventListener('focusout', this.checkFieldsIfValueFromList)
+    this.street.addEventListener('focusout', this.checkFieldsIfValueFromList)
     this.initForm()
   }
 
@@ -101,6 +110,14 @@ export default class FormZadb extends Form {
     document.removeEventListener('keyup', this.keydownListener)
     document.removeEventListener('click', this.clickOutsideListener)
     this.removeEventListener(this.inputFields.zip.listId, this.zipSelectedListener)
+    this.removeEventListener(this.inputFields.street.listId, this.streetSelectedListener)
+    this.zip.removeEventListener('focusout', this.checkFieldsIfValueFromList)
+    this.street.removeEventListener('focusout', this.checkFieldsIfValueFromList)
+  }
+
+  checkFieldsIfValueFromList = () => {
+    if (this.zip.getAttribute('value-from-list') !== 'true') this.zip.value = ''
+    if (this.street.getAttribute('value-from-list') !== 'true') this.street.value = ''
   }
 
   initForm () {
@@ -183,24 +200,19 @@ export default class FormZadb extends Form {
   }
 
   async searchCities (str) {
-    this.triggerCustomZipError(false)
-    this.triggerCustomStreetError(false)
     if (str.length > 4) return
     const allCities = await this.getCities(str)
     if (!allCities.length && str.length === 4) {
-      this.triggerCustomZipError(true)
     }
     return allCities.filter(city => city.zip.startsWith(str))
   }
 
   async searchStreets (str, zip) {
-    this.triggerCustomStreetError(false)
     if (Object.keys(this.streetsByZip).length === 0) {
       this.streetsByZip = await this.getStreets(zip)
     }
     const streets = this.streetsByZip.filter(street => street.streetName.toLowerCase().startsWith(str.toLowerCase()))
     if(!streets.length) {
-      this.triggerCustomStreetError(true)
       return []
     }else{
       return streets
@@ -302,14 +314,6 @@ export default class FormZadb extends Form {
     return this.root.querySelectorAll('input[list]') || []
   }
 
-  get getCustomZipErrorElement () {
-    return this.root.querySelector(this.inputFields.zip.customErrorElement)
-  }
-
-  get getCustomStreetErrorElement() {
-    return this.root.querySelector(this.inputFields.street.customErrorElement)
-  }
-
   hideLoader (loader) {
     if (!loader) return
     loader.style.visibility = 'hidden'
@@ -320,13 +324,4 @@ export default class FormZadb extends Form {
     loader.style.visibility = 'visible'
   }
 
-  triggerCustomZipError (displayElement) {
-    const customError = this.getCustomZipErrorElement
-    customError.style.display = displayElement ? 'block' : 'none'
-  }
-
-  triggerCustomStreetError(displayElement) {
-    const customError = this.getCustomStreetErrorElement
-    customError.style.display = displayElement ? 'block' : 'none'
-  }
 }
