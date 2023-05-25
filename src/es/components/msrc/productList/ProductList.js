@@ -134,7 +134,7 @@ export default class ProductList extends Intersection(Prototype()) {
       cancelable: true,
       composed: true
     }))
-    this.msrcProductListWrapper.scrollIntoView()
+    if (this.hasAttribute('scroll')) this.msrcProductListWrapper.scrollIntoView()
     return Promise.all([this.msrc.components.articles.productList(this.msrcProductListWrapper, this.config), subTagFetch])
   }
 
