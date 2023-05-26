@@ -112,12 +112,15 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         padding-bottom: var(--any-padding-bottom-last-child, var(--any-padding-bottom, 0)) !important;
         margin-bottom: var(--any-margin-bottom-last-child, var(--any-margin-bottom, 0)) !important;
       }
+      /* 26.05.2023 MUTOBOTEAM-2126 - TODO: remove this section after a while - tried to fix a one pixel glitch, which only occurs on certain width/zoom - clearly a browser issue, it may is connected to the color contrast between two boxes - an other pixel glitch could be solved by proper pic aspect-ratio */
+      /*
       :host([fix-one-pixel-glitch]) > section > * {
         transform: translateY(-1px) scaleY(1.005);
       }
       :host([fix-one-pixel-glitch]) > section > *:not(:first-child) {
         transform: translate(-1px, -1px) scale(1.005, 1.005);
       }
+      */
       @media only screen and (max-width: _max-width_) {
         :host > section {
           flex-direction: var(--flex-direction-mobile, var(--flex-direction, row));
@@ -176,9 +179,12 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           `
           : ''
         }
+        /* 26.05.2023 MUTOBOTEAM-2126 - TODO: remove this section after a while */
+        /*
         :host([fix-one-pixel-glitch]) > section > *:not(:first-child) {
           transform: none;
         }
+        */
       }
     `
     return this.fetchTemplate()
