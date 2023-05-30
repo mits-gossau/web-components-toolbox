@@ -1,6 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global CustomEvent */
+
 export default class TotalPrice extends Shadow() {
   constructor (...args) {
     super(...args)
@@ -30,7 +32,7 @@ export default class TotalPrice extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
-    
+
     if (this.closest('m-form').getAttribute('fixed-price-total')) {
       this.dispatchEvent(new CustomEvent(this.getAttribute('answer-event-name') || 'answer-event-name', {
         detail: {

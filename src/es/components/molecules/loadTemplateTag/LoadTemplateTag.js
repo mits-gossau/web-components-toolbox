@@ -2,8 +2,6 @@
 // @ts-check
 import { Intersection } from '../../prototypes/Intersection.js'
 
-/* global self */
-
 /**
  * LoadTemplateTag
  * Throw content inside a <template></template> tag into this component and it will load the template content on intersection
@@ -93,11 +91,13 @@ export default class LoadTemplateTag extends Intersection() {
     this.html = templateContent
     // TODO: have wc-config.js load the missing web components by event
     let notDefined
-    if ((notDefined = this.root.querySelectorAll(':not(:defined)')) && notDefined.length) console.error(
-      'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
-      notDefined,
-      this
-    )
+    if ((notDefined = this.root.querySelectorAll(':not(:defined)')) && notDefined.length) {
+      console.error(
+        'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+        notDefined,
+        this
+      )
+    }
   }
 
   get template () {

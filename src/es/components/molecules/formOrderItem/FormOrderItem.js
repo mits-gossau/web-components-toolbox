@@ -23,7 +23,7 @@ export default class FormOrderItem extends Form {
       this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
     }
     this.checkboxChangeListener = event => {
-      if(event.currentTarget.checked) {
+      if (event.currentTarget.checked) {
         this.calcTotal('1', this.priceAttribute, this.priceTotalElement)
       } else {
         this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
@@ -35,7 +35,7 @@ export default class FormOrderItem extends Form {
     super.connectedCallback()
     if (this.clearQuantityBtn) this.clearQuantityBtn.addEventListener('click', this.clickListener)
     this.addEventListener('keyup', this.eventListener)
-    if(this.checkboxInput) this.checkboxInput.addEventListener('change', this.checkboxChangeListener)
+    if (this.checkboxInput) this.checkboxInput.addEventListener('change', this.checkboxChangeListener)
     this.setPrice(this.priceAttribute, this.priceElement)
     this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
     if (this.getAttribute('is-fixed-price')) {
@@ -49,14 +49,13 @@ export default class FormOrderItem extends Form {
       } else {
         parentFormElement.setAttribute('fixed-price-total', currentPrice)
       }
-      
     }
   }
 
   disconnectedCallback () {
     super.disconnectedCallback()
     if (this.clearQuantityBtn) this.clearQuantityBtn.removeEventListener('click', this.clickListener)
-    if(this.checkboxInput) this.checkboxInput.removeEventListener('change', this.checkboxChangeListener)
+    if (this.checkboxInput) this.checkboxInput.removeEventListener('change', this.checkboxChangeListener)
     this.removeEventListener('keyup', this.eventListener)
   }
 
