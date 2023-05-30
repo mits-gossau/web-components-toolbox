@@ -493,7 +493,7 @@ export default class Footer extends Shadow() {
   }
 
   injectCssIntoWrapperAndDetails () {
-    return /*css*/ `
+    return /* css */ `
       :host .footer-links-row ul, :host .footer-links-row ul.bull {
         list-style: none;
         padding-left: 0;

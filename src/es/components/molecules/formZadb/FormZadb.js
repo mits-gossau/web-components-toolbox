@@ -73,7 +73,6 @@ export default class FormZadb extends Form {
           this.streetResults = []
           this.cleanDialogList(this.inputFields.street.listId)
         }
-        
       }
     }
 
@@ -212,9 +211,9 @@ export default class FormZadb extends Form {
       this.streetsByZip = await this.getStreets(zip)
     }
     const streets = this.streetsByZip.filter(street => street.streetName.toLowerCase().startsWith(str.toLowerCase()))
-    if(!streets.length) {
+    if (!streets.length) {
       return []
-    }else{
+    } else {
       return streets
     }
   }
@@ -323,5 +322,4 @@ export default class FormZadb extends Form {
     if (!loader) return
     loader.style.visibility = 'visible'
   }
-
 }
