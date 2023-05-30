@@ -24,6 +24,9 @@
   grid-column: 3 / 4;
   grid-row: 1 / 1;
 }
+:host([count-section-children="1"]) > *.arrow-nav, :host([count-section-children="2"]) > *.arrow-nav {
+  display: none;
+}
 @media only screen and (max-width: _max-width_) {
   :host {
     --carousel-two-teaser-section-child-min-width: 80%;

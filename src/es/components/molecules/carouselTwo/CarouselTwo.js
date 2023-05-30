@@ -31,6 +31,7 @@ export default class CarouselTwo extends Mutation() {
     this.clickListener = event => {
       let target
       if ((target = event.composedPath().find(node => typeof node.getAttribute === 'function' && node.getAttribute('href') && node.getAttribute('href').substring(0, 1) === '#'))) {
+        if (!this.hasAttribute('history')) event.preventDefault()
         let sectionChild
         if ((sectionChild = this.section.querySelector(target.getAttribute('href')))) {
           this.scrollIntoView(sectionChild)
@@ -55,6 +56,14 @@ export default class CarouselTwo extends Mutation() {
           composed: true
         }))
       }
+    }
+    this.keydownTimeoutId = null
+    this.keydownListener = event => {
+      clearTimeout(this.keydownTimeoutId)
+      this.keydownTimeoutId = setTimeout(() => {
+        if (event.keyCode === 37) return this.previous()
+        if (event.keyCode === 39) return this.next()
+      }, 200)
     }
     // on focus scroll to the right element
     this.focusListener = event => {
@@ -148,6 +157,7 @@ export default class CarouselTwo extends Mutation() {
       this.setInterval()
     })
     this.addEventListener('click', this.clickListener)
+    if (!this.hasAttribute('no-keydown')) document.addEventListener('keydown', this.keydownListener)
     this.section.addEventListener('scroll', this.scrollListener)
     Array.from(this.section.children).forEach(node => node.addEventListener('focus', this.focusListener))
     if (this.hasAttribute('interval')) {
@@ -160,6 +170,7 @@ export default class CarouselTwo extends Mutation() {
   disconnectedCallback () {
     super.disconnectedCallback()
     this.removeEventListener('click', this.clickListener)
+    if (!this.hasAttribute('no-keydown')) document.removeEventListener('keydown', this.keydownListener)
     this.section.removeEventListener('scroll', this.scrollListener)
     Array.from(this.section.children).forEach(node => node.removeEventListener('focus', this.focusListener))
     if (this.hasAttribute('interval')) {
@@ -172,6 +183,7 @@ export default class CarouselTwo extends Mutation() {
   // incase a child would manipulate itself, expl. teaser or wrapper wrapping themself with an a tag when they get an href
   mutationCallback (mutationList, observer) {
     if (mutationList[0] && mutationList[0].type === 'childList') {
+      this.setAttribute('count-section-children', this.section.children.length)
       mutationList[0].addedNodes.forEach(node => {
         if (Array.from(this.section.children).includes(node)) {
           // grab the id if there was a mutation on the child being wrapped or so
@@ -654,7 +666,8 @@ export default class CarouselTwo extends Mutation() {
     return this.scrollIntoView((this.activeSlide && this.activeSlide.nextElementSibling) || Array.from(this.section.children)[0], focus)
   }
 
-  scrollIntoView (node, focus = true, force = false) {
+  // NOTE: keep focus default on false, since this focus action can have bad side effects. Now, no other function calls this with focus=true. The original idea was, that a focus=false would set focus on the picture and for that support tab navigation.
+  scrollIntoView (node, focus = false, force = false) {
     if (typeof node === 'string') node = this.section.querySelector(node) || this.section.children[0]
     if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
     if (force || !node.classList.contains('active')) {

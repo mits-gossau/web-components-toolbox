@@ -46,7 +46,7 @@ export default class Footer extends Shadow() {
       this.injectCssIntoWrappers(wrappers)
       this.loadChildComponents().then(modules => {
         let moduleDetails
-        if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) Footer.injectCssIntoDetails(this.autoAddDetails(wrappers, moduleDetails).details)
+        if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) this.injectCssIntoDetails(this.autoAddDetails(wrappers, moduleDetails).details)
       })
       this.hidden = false
     })
@@ -455,32 +455,14 @@ export default class Footer extends Shadow() {
    *
    * @param {HTMLElement[] & any} details
    * @returns {HTMLElement[]}
-   * @static
    */
-  static injectCssIntoDetails (details) {
+  injectCssIntoDetails (details) {
     details.forEach(detail => detail.setCss(/* css */`
-      :host .social-links {
-        display: flex;
-        flex-direction: row;
-        gap: 1.875rem;
-      }
-      :host(.font-size-tiny) .social-links {
-        gap: 1.4rem;
-      }
-      :host .social-links svg {
-        height: 1.625rem;
-        width: auto;
-      }
-      :host(.font-size-tiny) .social-links svg {
-        height: 1.3rem;
-      }
+      ${this.injectCssIntoWrapperAndDetails()}
       :host .footer-links-row {
         --details-default-icon-right-child-margin-mobile: var(--footer-links-row-margin, var(--details-default-icon-right-child-margin-mobile, var(--details-default-icon-right-child-margin, 0)));
       }
-      :host .footer-links-row ul, :host .footer-links-row ul.bull {
-        list-style: none;
-        padding-left: 0;
-      }
+      
     `, undefined, false))
     return details
   }
@@ -493,38 +475,13 @@ export default class Footer extends Shadow() {
    */
   injectCssIntoWrappers (wrappers) {
     wrappers.forEach(wrapper => wrapper.setCss(/* css */`
-      :host .social-links {
-        display: flex;
-        flex-direction: row;
-        gap: 1.875rem;
-      }
-      :host(.font-size-tiny) .social-links {
-        gap: 1rem;
-      }
-      :host .social-links svg {
-        height: 1.625rem;
-        width: auto;
-      }
-      :host(.font-size-tiny) .social-links svg {
-        height: 1.3rem;
-      }
+      ${this.injectCssIntoWrapperAndDetails()}
       :host .footer-links-row:not(:last-child){
         border-right: var(--${this.getAttribute('namespace') || ''}boarder-right, 1px solid var(--m-gray-500));
-      }
-      :host .footer-links-row ul, :host .footer-links-row ul.bull {
-        list-style: none;
-        padding-left: 0;
       }
       :host .footer-links-row ul.bull li::before {
         border: 0;
         background-color: transparent;
-      }
-      :host ul li a svg {
-        color: var(--${this.getAttribute('namespace') || ''}invert-svg-color, var(--${this.getAttribute('namespace') || ''}invert-a-color));
-        transition: var(--invert-svg-transition, color 0.3s ease-out);
-      }
-      :host ul li a:hover svg {
-        color: var(--${this.getAttribute('namespace') || ''}invert-svg-color-hover, var(--${this.getAttribute('namespace') || ''}invert-a-color-hover));
       }
       @media only screen and (max-width: _max-width_) {
           :host .footer-links-row:not(:last-child){
@@ -533,5 +490,30 @@ export default class Footer extends Shadow() {
       }
     `, undefined, false))
     return wrappers
+  }
+
+  injectCssIntoWrapperAndDetails () {
+    return /*css*/ `
+      :host .footer-links-row ul, :host .footer-links-row ul.bull {
+        list-style: none;
+        padding-left: 0;
+      }
+      :host .social-links {
+        display: flex;
+        flex-direction: row;
+        gap: 1.875rem;
+      }
+      :host .social-links svg {
+        height: 1.625rem;
+        width: auto;
+      }
+      :host ul li a svg {
+        color: var(--${this.getAttribute('namespace') || ''}invert-svg-color, var(--${this.getAttribute('namespace') || ''}invert-a-color));
+        transition: var(--invert-svg-transition, color 0.3s ease-out);
+      }
+      :host ul li a:hover svg {
+        color: var(--${this.getAttribute('namespace') || ''}invert-svg-color-hover, var(--${this.getAttribute('namespace') || ''}invert-a-color-hover));
+      }
+    `
   }
 }

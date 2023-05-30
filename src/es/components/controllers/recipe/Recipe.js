@@ -150,13 +150,13 @@ export default class Recipe extends Shadow() {
   connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
     this.addEventListener('request-href-' + (this.getAttribute('request-list-recipe') || 'request-list-recipe'), this.requestHrefEventListener)
-    self.addEventListener('popstate', this.updatePopState)
+    if (!this.hasAttribute('no-popstate')) self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-recipe') || 'request-list-recipe', this.requestListRecipeListener)
     this.removeEventListener('request-href-' + (this.getAttribute('request-list-recipe') || 'request-list-recipe'), this.requestHrefEventListener)
-    self.removeEventListener('popstate', this.updatePopState)
+    if (!this.hasAttribute('no-popstate')) self.removeEventListener('popstate', this.updatePopState)
   }
 
   createRecipeSelectionPayload (recipeSelection) {

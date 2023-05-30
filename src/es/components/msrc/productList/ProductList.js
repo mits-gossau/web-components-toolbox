@@ -43,14 +43,14 @@ export default class ProductList extends Intersection(Prototype()) {
     super.connectedCallback()
     document.body.addEventListener(this.getAttribute('request-list-articles') || 'request-list-articles', this.requestListArticlesEventListener)
     document.body.addEventListener('request-href-' + (this.getAttribute('request-list-articles') || 'request-list-articles'), this.requestHrefEventListener)
-    self.addEventListener('popstate', this.updatePopState)
+    if (!this.hasAttribute('no-popstate')) self.addEventListener('popstate', this.updatePopState)
   }
 
   disconnectedCallback () {
     super.disconnectedCallback()
     document.body.removeEventListener(this.getAttribute('request-list-articles') || 'request-list-articles', this.requestListArticlesEventListener)
     document.body.removeEventListener('request-href-' + (this.getAttribute('request-list-articles') || 'request-list-articles'), this.requestHrefEventListener)
-    self.removeEventListener('popstate', this.updatePopState)
+    if (!this.hasAttribute('no-popstate')) self.removeEventListener('popstate', this.updatePopState)
   }
 
   intersectionCallback (entries, observer) {
