@@ -153,6 +153,7 @@ export default class Footer extends Shadow() {
         align-items: center;
         display: flex;
         flex-direction: row;
+        flex-wrap:wrap;
         gap: var(--content-spacing);
         justify-content: space-between;
       }
