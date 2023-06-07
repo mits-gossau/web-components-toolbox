@@ -14,10 +14,14 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
     this.hoverInit = typeof options.hoverInit === 'object'
       ? options.hoverInit
       : {
-          level: this.getAttribute('hover-level') || this.hasAttribute('hover-on-parent-element')
+          level: this.getAttribute('hover-level')
+            ? this.getAttribute('hover-level')
+            : this.hasAttribute('hover-on-parent-element')
             ? 1
             : undefined,
-          selector: this.getAttribute('hover-selector') || this.hasAttribute('hover-on-parent-shadow-root-host')
+          selector: this.getAttribute('hover-selector')
+            ? this.getAttribute('hover-selector')
+            : this.hasAttribute('hover-on-parent-shadow-root-host')
             ? 'hover-on-parent-shadow-root-host'
             : undefined
         }

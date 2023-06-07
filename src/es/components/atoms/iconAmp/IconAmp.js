@@ -45,7 +45,6 @@ export default class IconAmp extends Hover() {
    * @return {void}
    */
   renderCSS () {
-    debugger
     this.css = /* css */`
       :host {
         vertical-align: middle;
