@@ -3,15 +3,25 @@
 import { Shadow } from './Shadow.js'
 
 export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass {
+  /**
+   * Creates an instance of Shadow. The constructor will be called for every custom element using this class when initially created.
+   *
+   * @param {{hoverInit: {level?: number|undefined, selector?: string|undefined}|undefined}} options
+   * @param {*} args
+   */
   constructor (options = { hoverInit: undefined }, ...args) {
     super(options, ...args)
     this.hoverInit = typeof options.hoverInit === 'object'
       ? options.hoverInit
       : {
-          level: this.getAttribute('hover-level') || this.hasAttribute('hover-on-parent-element')
+          level: this.getAttribute('hover-level')
+            ? this.getAttribute('hover-level')
+            : this.hasAttribute('hover-on-parent-element')
             ? 1
             : undefined,
-          selector: this.getAttribute('hover-selector') || this.hasAttribute('hover-on-parent-shadow-root-host')
+          selector: this.getAttribute('hover-selector')
+            ? this.getAttribute('hover-selector')
+            : this.hasAttribute('hover-on-parent-shadow-root-host')
             ? 'hover-on-parent-shadow-root-host'
             : undefined
         }
@@ -35,8 +45,8 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
   connectedCallback () {
     super.connectedCallback()
     if (this.hoverInit.level || this.hoverInit.selector) {
-      this.hoverTarget.addEventListener('mouseover', this.mouseOverListener)
-      this.hoverTarget.addEventListener('mouseout', this.mouseOutListener)
+      this.hoverTarget?.addEventListener('mouseover', this.mouseOverListener)
+      this.hoverTarget?.addEventListener('mouseout', this.mouseOutListener)
     }
   }
 
@@ -48,16 +58,22 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
   disconnectedCallback () {
     super.disconnectedCallback()
     if (this.hoverInit.level || this.hoverInit.selector) {
-      this.hoverTarget.removeEventListener('mouseover', this.mouseoverListener)
-      this.hoverTarget.removeEventListener('mouseout', this.mouseoutListener)
+      this.hoverTarget?.removeEventListener('mouseover', this.mouseoverListener)
+      this.hoverTarget?.removeEventListener('mouseout', this.mouseoutListener)
       this.hoverTarget = null
     }
   }
 
+  /**
+   * @prop {HTMLElement|null} value
+   */
   set hoverTarget (value) {
     this._hoverTarget = value
   }
 
+  /**
+   * @return {HTMLElement|null}
+   */
   get hoverTarget () {
     return this._hoverTarget || (this._hoverTarget = (() => {
       if (this.hoverInit.selector) {

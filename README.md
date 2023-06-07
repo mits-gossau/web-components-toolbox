@@ -36,7 +36,7 @@ HTML/CSS Tooling:
 
 Checklist for each component:
 - [ ] Note date of cleaning/overhaul, fix comments, fix all type/file errors of red highlighted files
-- [ ] Transform mouseEventElement (mouseover|mouseout) hover on parent to prototype Hover.js class
+- [x] Transform mouseEventElement (mouseover|mouseout) hover on parent to prototype Hover.js class
 - [x] Remove fetchCSS.then replace and use replaces property
 - [x] Split the Template Switch/Case into a separate function, that it can be overwritten by components which extend it
 - [ ] Change the loadChildComponents function to use the Shadow.js fetchModules

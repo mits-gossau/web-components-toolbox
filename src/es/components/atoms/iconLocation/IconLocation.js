@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Hover } from '../../prototypes/Hover.js'
 
 /**
  * IconLocation is an icon
@@ -10,31 +10,15 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class IconLocation
  * @type {CustomElementConstructor}
  */
-export default class IconLocation extends Shadow() {
+export default class IconLocation extends Hover() {
   constructor (...args) {
     super(...args)
-
-    this.mouseoverListener = event => {
-      if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', 'true')
-      this.classList.add('hover')
-    }
-    this.mouseoutListener = event => {
-      if (this.hasAttribute('move') && !this.hasAttribute('hover-set-by-outside')) this.setAttribute('hover', '')
-      this.classList.remove('hover')
-    }
   }
 
   connectedCallback () {
+    super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-    this.mouseEventElement.addEventListener('mouseover', this.mouseoverListener)
-    this.mouseEventElement.addEventListener('mouseout', this.mouseoutListener)
-  }
-
-  disconnectedCallback () {
-    this.mouseEventElement.removeEventListener('mouseover', this.mouseoverListener)
-    this.mouseEventElement.removeEventListener('mouseout', this.mouseoutListener)
-    this.parentNodeShadowRootHost = null
   }
 
   /**
@@ -108,19 +92,5 @@ export default class IconLocation extends Shadow() {
 
   get svg () {
     return this.root.querySelector('svg')
-  }
-
-  get parentNodeShadowRootHost () {
-    if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
-    const searchShadowRoot = node => node.root || node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
-    return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
-  }
-
-  set parentNodeShadowRootHost (node) {
-    this._parentNodeShadowRootHost = node
-  }
-
-  get mouseEventElement () {
-    return this[this.hasAttribute('hover-on-parent-element') ? 'parentNode' : this.hasAttribute('hover-on-parent-shadow-root-host') ? 'parentNodeShadowRootHost' : 'svg']
   }
 }
