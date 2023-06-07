@@ -1,5 +1,4 @@
 // @ts-check
-import { Hover } from '../../prototypes/Hover.js'
 import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global self */
@@ -11,7 +10,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * @class Teaser
  * @type {CustomElementConstructor}
  */
-export default class Teaser extends Intersection(Hover) {
+export default class Teaser extends Intersection() {
   constructor (options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
@@ -24,6 +23,12 @@ export default class Teaser extends Intersection(Hover) {
     if (this.hasAttribute('href')) {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
+    }
+    this.mouseoverListener = event => {
+      if (this.aArrow) this.aArrow.setAttribute('hover', 'true')
+    }
+    this.mouseoutListener = event => {
+      if (this.aArrow) this.aArrow.setAttribute('hover', '')
     }
   }
 
@@ -48,11 +53,19 @@ export default class Teaser extends Intersection(Hover) {
       this.hidden = false
     })
     this.addEventListener('click', this.clickListener)
+    if (this.getAttribute('namespace') === 'teaser-overlay-') {
+      this.addEventListener('mouseover', this.mouseoverListener)
+      this.addEventListener('mouseout', this.mouseoutListener)
+    }
   }
 
   disconnectedCallback () {
     super.disconnectedCallback()
     this.removeEventListener('click', this.clickListener)
+    if (this.getAttribute('namespace') === 'teaser-overlay-') {
+      this.removeEventListener('mouseover', this.mouseoverListener)
+      this.removeEventListener('mouseout', this.mouseoutListener)
+    }
   }
 
   intersectionCallback (entries, observer) {

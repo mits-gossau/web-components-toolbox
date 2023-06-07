@@ -89,7 +89,7 @@ export default class Link extends Hover() {
             grid-column: 1;
             grid-row: 1;
           }
-          :host > a:hover ~ ${this.hitAreaTagName}, :host > a.hover ~ ${this.hitAreaTagName} {
+          :host > a:hover ~ ${this.hitAreaTagName}, :host(.hover) > a ~ ${this.hitAreaTagName} {
             color: var(--color-hover, var(--color, yellow));
             text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
           }
@@ -125,7 +125,7 @@ export default class Link extends Hover() {
         font-family: var(--font-family-active, var(--font-family-hover, var(--font-family, inherit)));
         text-decoration: var(--text-decoration-active, var(--text-decoration-hover, var(--text-decoration, none)));
       }
-      :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName}, :host > a.hover, :host > a.hover ~ ${this.hitAreaTagName} {
+      :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName}, :host(.hover) > a, :host(.hover) > a ~ ${this.hitAreaTagName} {
         background-color:var(--background-color-hover, transparent);
         box-shadow: var(--box-shadow-hover, none);
         color: var(--color-hover, var(--color, yellow));
@@ -191,7 +191,7 @@ export default class Link extends Hover() {
             transform: translateY(1em);
             transition: opacity .3s ease 0s,transform .3s ease 0s;
           }
-          :host > a:hover::after, :host > ${this.hitAreaTagName}:hover::after, :host > a.hover::after, :host > ${this.hitAreaTagName}.hover::after {
+          :host > a:hover::after, :host > ${this.hitAreaTagName}:hover::after, :host(.hover) > a::after, :host(.hover) > ${this.hitAreaTagName}::after {
             opacity: 1;
             transform: translateY(0);
           }

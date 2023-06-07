@@ -38,7 +38,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  *  --object-fit [cover]
  * }
  */
-export default class Picture extends Intersection(Hover ) {
+export default class Picture extends Intersection(Hover()) {
   static get observedAttributes () {
     return ['loading', 'pointer-events']
   }
@@ -162,7 +162,7 @@ export default class Picture extends Intersection(Hover ) {
         animation: var(--appear, appear .3s ease-out);
         opacity: 1;
       }
-      :host picture img:hover, :host picture.hover img {
+      :host picture img:hover, :host(.hover) picture img {
         filter: var(--filter-hover, var(--filter, none));
         transform: var(--transform-hover, var(--transform, none));
       }
@@ -222,7 +222,7 @@ export default class Picture extends Intersection(Hover ) {
           transition: var(--transition-mobile, var(--transition, none));
           width: var(--img-width-mobile, var(--img-width, 100%));
         }
-        :host picture img:hover, :host picture.hover img {
+        :host picture img:hover, :host(.hover) picture img {
           filter: var(--filter-mobile-hover, var(--filter-hover, var(--filter, none)));
           transform: var(--transform-mobile-hover, var(--transform-hover, var(--transform, none)));
         }

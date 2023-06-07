@@ -189,7 +189,7 @@ export default class Button extends Hover() {
         box-sizing: border-box;
         width: var(--width, fit-content);
       }
-      ${this.buttonTagName}:hover, ${this.buttonTagName}.hover {
+      ${this.buttonTagName}:hover, :host(.hover) {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
@@ -207,7 +207,7 @@ export default class Button extends Hover() {
         opacity: var(--opacity-disabled, var(--opacity, 1));
         transition: opacity 0.3s ease-out;
       }
-      :host ${this.buttonTagName}[disabled]:hover, :host ${this.buttonTagName}[disabled].hover {
+      :host ${this.buttonTagName}[disabled]:hover, :host(.hover) ${this.buttonTagName}[disabled] {
         opacity: var(--opacity-disabled-hover, var(--opacity-disabled, var(--opacity, 1)));
       }
       #label {
@@ -237,7 +237,7 @@ export default class Button extends Hover() {
           margin: var(--margin-mobile, var(--margin, auto));
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
-        ${this.buttonTagName}:hover, ${this.buttonTagName}.hover {
+        ${this.buttonTagName}:hover, :host(.hover) {
           background-color: var(--background-color-hover-mobile, var(--background-color-hover, var(--background-color, #B24800)));
           color: var(--color-hover-mobile, var(--color-hover, var(--color, #FFFFFF)));
         }
@@ -391,17 +391,6 @@ export default class Button extends Hover() {
   get label () {
     return this.root.querySelector('#label')
   }
-
-  get parentNodeShadowRootHost () {
-    if (this._parentNodeShadowRootHost) return this._parentNodeShadowRootHost
-    const searchShadowRoot = node => node.root || node.shadowRoot ? node : node.parentNode ? searchShadowRoot(node.parentNode) : node.host ? searchShadowRoot(node.host) : node
-    return (this._parentNodeShadowRootHost = searchShadowRoot(this.parentNode))
-  }
-
-  set parentNodeShadowRootHost (node) {
-    this._parentNodeShadowRootHost = node
-  }
-
 
   get downloadIcon () {
     let iconImg
