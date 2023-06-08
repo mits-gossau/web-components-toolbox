@@ -1,6 +1,5 @@
 // @ts-check
 /* global CustomEvent */
-/* global customElements */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -126,12 +125,24 @@ export default class NewsList extends Shadow() {
 
   renderHTML (newsFetch, namespace) {
     // here a loading animation could be added
-    Promise.all([newsFetch, this.loadChildComponents()]).then(([news, child]) => {
+    Promise.all([
+      newsFetch,
+      this.fetchModules([
+        {
+          path: `${this.importMetaUrl}../../contentful/newsPreview/NewsPreview.js`,
+          name: 'm-news-preview'
+        },
+        {
+          path: `${this.importMetaUrl}../../atoms/picture/Picture.js`,
+          name: 'a-picture'
+        }
+      ])
+    ]).then(([news, child]) => {
       const { items } = news
       const wrapper = document.createElement('div')
       items.forEach(news => {
         // @ts-ignore
-        const newsEle = new child[0][1](news, { namespace, mobileBreakpoint: this.mobileBreakpoint })
+        const newsEle = new child[0].constructorClass(news, { namespace, mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
         newsEle.setAttribute('news-url', this.getAttribute('news-url'))
         if (this.getAttribute('is-on-home') !== null) {
           newsEle.setAttribute('is-on-home', this.getAttribute('is-on-home'))
@@ -143,22 +154,5 @@ export default class NewsList extends Shadow() {
     }).catch(e => {
       this.html = 'Error'
     })
-  }
-
-  loadChildComponents () {
-    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
-      import('../../contentful/newsPreview/NewsPreview.js').then(
-        module => ['m-news-preview', module.default]
-      ),
-      import('../../atoms/picture/Picture.js').then(
-        module => ['a-picture', module.default]
-      )
-    ]).then(elements => {
-      elements.forEach(element => {
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
   }
 }

@@ -1,8 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global MenuIcon */
-/* global customElements */
 /* global self */
 /* global MutationObserver */
 /* global CustomEvent */
@@ -441,61 +439,38 @@ export default class Header extends Shadow() {
       composed: true
     })))
     return this.getAttribute('menu-icon')
-      ? this.loadChildComponents().then(children => {
-        this.MenuIcon = new children[0][1]({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
-        this.MenuIcon.addEventListener('click', event => {
-          this.header.classList.toggle('open')
-          const prop = this.header.classList.contains('open') ? 'add' : 'remove'
-          if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', this.header.classList.contains('open') ? 'true' : 'false')
-          this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-            detail: {
-              hasNoScroll: this.header.classList.contains('open'),
-              origEvent: event,
-              this: this
-            },
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
+      ? this.fetchModules([
+          {
+            path: `${this.importMetaUrl}'../../../../atoms/menuIcon/MenuIcon.js`,
+            name: 'a-menu-icon'
+          }
+        ]).then(children => {
+          this.MenuIcon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
+          this.MenuIcon.addEventListener('click', event => {
+            this.header.classList.toggle('open')
+            const prop = this.header.classList.contains('open') ? 'add' : 'remove'
+            if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', this.header.classList.contains('open') ? 'true' : 'false')
+            this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+              detail: {
+                hasNoScroll: this.header.classList.contains('open'),
+                origEvent: event,
+                this: this
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
 
-          Array.from(this.header.children).forEach(node => {
-            node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
+            Array.from(this.header.children).forEach(node => {
+              node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
+            })
           })
+          this.header.appendChild(this.MenuIcon)
+          this.html = this.style
+          this.html = this.styleTwo
+          this.adjustLogoPos(true)
         })
-        this.header.appendChild(this.MenuIcon)
-        this.html = this.style
-        this.html = this.styleTwo
-        this.adjustLogoPos(true)
-      })
       : Promise.resolve()
-  }
-
-  /**
-   * fetch children when first needed
-   *
-   * @returns {Promise<[string, CustomElementConstructor][]>}
-   */
-  loadChildComponents () {
-    if (this.childComponentsPromise) return this.childComponentsPromise
-    let menuIconPromise
-    try {
-      menuIconPromise = Promise.resolve({ default: MenuIcon })
-    } catch (error) {
-      menuIconPromise = import('../../atoms/menuIcon/MenuIcon.js')
-    }
-    return (this.childComponentsPromise = Promise.all([
-      menuIconPromise.then(
-        /** @returns {[string, CustomElementConstructor]} */
-        module => ['a-menu-icon', module.default]
-      )
-    ]).then(elements => {
-      elements.forEach(element => {
-        // don't define already existing customElements
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
   }
 
   get mNavigation () {

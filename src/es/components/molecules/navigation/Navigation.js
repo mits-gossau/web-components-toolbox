@@ -1,13 +1,8 @@
 // @ts-check
 import { Mutation } from '../../prototypes/Mutation.js'
-import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
-/* global Link */
-/* global Arrow */
-/* global customElements */
 /* global CustomEvent */
-/* global Wrapper */
 
 /**
  * Navigation hosts uls
@@ -690,19 +685,32 @@ export default class Navigation extends Mutation() {
       this.nav.appendChild(node)
     })
     this.html = this.nav
-    return this.loadChildComponents().then(children => {
+    return this.fetchModules([
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/link/Link.js`,
+        name: 'a-link'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/arrow/Arrow.js`,
+        name: 'a-arrow'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
+        name: this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'
+      }
+    ]).then(children => {
       Array.from(this.root.querySelectorAll('a')).forEach(a => {
         const li = a.parentElement
         if (li.querySelector('section')) li.setAttribute('aria-expanded', 'false')
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
-        const aLink = new children[0][1](a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
+        const aLink = new children[0].constructorClass(a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
         aLink.setAttribute('hit-area', this.getAttribute('hit-area') || 'true')
         if (this.hasAttribute('set-active')) aLink.setAttribute('set-active', this.getAttribute('set-active'))
         if (a.classList.contains('active')) {
           aLink.classList.add('active')
           li.classList.add('active')
         }
-        const arrow = new children[1][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
+        const arrow = new children[1].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
         arrow.setAttribute('direction', arrowDirections[1])
         const arrowClickListener = event => {
           if (this.hasAttribute('focus-lost-close-mobile')) this.adjustArrowDirections(event, arrowDirections)
@@ -786,7 +794,7 @@ export default class Navigation extends Mutation() {
         li.prepend(aLink)
       })
       Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
-        const wrapper = new children[2][1]({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
+        const wrapper = new children[2].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node, i) => {
@@ -800,54 +808,6 @@ export default class Navigation extends Mutation() {
       this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.addEventListener('click', this.liClickListener))
       this.html = this.style
     })
-  }
-
-  /**
-   * fetch children when first needed
-   *
-   * @param {Promise<[string, CustomElementConstructor]>[]} [promises=[]]
-   * @returns {Promise<[string, CustomElementConstructor][]>}
-   */
-  loadChildComponents (promises = []) {
-    if (this.childComponentsPromise) return this.childComponentsPromise
-    let linkPromise, arrowPromise, wrapperPromise
-    try {
-      linkPromise = Promise.resolve({ default: Link })
-    } catch (error) {
-      linkPromise = import('../../atoms/link/Link.js')
-    }
-    try {
-      arrowPromise = Promise.resolve({ default: Arrow })
-    } catch (error) {
-      arrowPromise = import('../../atoms/arrow/Arrow.js')
-    }
-    try {
-      wrapperPromise = Promise.resolve({ Wrapper })
-    } catch (error) {
-      wrapperPromise = import('../../organisms/wrapper/Wrapper.js')
-    }
-    return (this.childComponentsPromise = Promise.all([
-      linkPromise.then(
-        /** @returns {[string, CustomElementConstructor]} */
-        module => ['a-link', module.default]
-      ),
-      arrowPromise.then(
-        /** @returns {[string, CustomElementConstructor]} */
-        module => ['a-arrow', module.default]
-      ),
-      wrapperPromise.then(
-        /** @returns {[string, any]} */
-        module => [this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper', module.Wrapper(Shadow())]
-      ),
-      ...promises
-    ]).then(elements => {
-      elements.forEach(element => {
-        // don't define already existing customElements
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
   }
 
   get focusLostClose () {

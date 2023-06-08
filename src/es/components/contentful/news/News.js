@@ -1,5 +1,4 @@
 // @ts-check
-/* global customElements */
 /* global CustomEvent */
 /* global DocumentFragment */
 /* global location */
@@ -102,7 +101,16 @@ export default class News extends Shadow() {
       this.getAttribute('namespace') === 'news-alnatura-'
         ? this.fetchHTML([this.importMetaUrl + './alnatura-/alnatura-.html'])
         : this.fetchHTML([this.importMetaUrl + './default-/default-.html']),
-      this.loadChildComponents(),
+      this.fetchModules([
+        {
+          path: `${this.importMetaUrl}../../atoms/picture/Picture.js`,
+          name: 'a-picture'
+        },
+        {
+          path: `${this.importMetaUrl}../../atoms/button/Button.js`,
+          name: 'a-button'
+        }
+      ]),
       this.loadScriptDependency(),
       this.loadDependency()
     ]).then((htmls) => {
@@ -116,6 +124,7 @@ export default class News extends Shadow() {
       }
       this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
       // make template ${code} accessible aka. set the variables in the literal string
+      console.log('html', htmls[0])
       this.newsWrapper.innerHTML = eval('`' + htmls[0] + '`')// eslint-disable-line no-eval
 
       this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {
@@ -260,23 +269,6 @@ export default class News extends Shadow() {
       } catch (e) {
         return reject(e)
       }
-    }))
-  }
-
-  loadChildComponents () {
-    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
-      import('../../atoms/picture/Picture.js').then(
-        module => ['a-picture', module.default]
-      ),
-      import('../../atoms/button/Button.js').then(
-        module => ['a-button', module.default]
-      )
-    ]).then(elements => {
-      elements.forEach(element => {
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
     }))
   }
 

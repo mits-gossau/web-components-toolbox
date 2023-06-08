@@ -11,10 +11,6 @@ import { Hover } from '../../prototypes/Hover.js'
  * @type {CustomElementConstructor}
  */
 export default class IconPaperclip extends Hover() {
-  constructor (...args) {
-    super(...args)
-  }
-
   connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
@@ -94,5 +90,4 @@ export default class IconPaperclip extends Hover() {
   get svg () {
     return this.root.querySelector('svg')
   }
-
 }

@@ -91,6 +91,11 @@ export default class FormZadb extends Form {
     this.streetSelectedListener = (event) => {
       this.street.setAttribute('value-from-list', 'true')
     }
+
+    this.checkFieldsIfValueFromList = () => {
+      if (this.zip.getAttribute('value-from-list') !== 'true') this.zip.value = ''
+      if (this.street.getAttribute('value-from-list') !== 'true') this.street.value = ''
+    }
   }
 
   connectedCallback () {
@@ -112,11 +117,6 @@ export default class FormZadb extends Form {
     this.removeEventListener(this.inputFields.street.listId, this.streetSelectedListener)
     this.zip.removeEventListener('focusout', this.checkFieldsIfValueFromList)
     this.street.removeEventListener('focusout', this.checkFieldsIfValueFromList)
-  }
-
-  checkFieldsIfValueFromList = () => {
-    if (this.zip.getAttribute('value-from-list') !== 'true') this.zip.value = ''
-    if (this.street.getAttribute('value-from-list') !== 'true') this.street.value = ''
   }
 
   initForm () {
@@ -201,8 +201,6 @@ export default class FormZadb extends Form {
   async searchCities (str) {
     if (str.length > 4) return
     const allCities = await this.getCities(str)
-    if (!allCities.length && str.length === 4) {
-    }
     return allCities.filter(city => city.zip.startsWith(str))
   }
 

@@ -1,12 +1,10 @@
 // @ts-check
 import { Mutation } from '../../prototypes/Mutation.js'
 
-/* global Arrow */
-/* global customElements */
-/* global CustomEvent */
 /* global self */
 /* global location */
 /* global history */
+/* global CustomEvent */
 
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
@@ -575,7 +573,12 @@ export default class CarouselTwo extends Mutation() {
       this.arrowNav = this.root.querySelector(this.cssSelector + ' > .arrow-nav') || document.createElement('span')
       this.arrowNav.classList.add('arrow-nav')
     }
-    return this.loadChildComponents().then(children => {
+    return this.fetchModules([
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/arrow/Arrow.js`,
+        name: 'a-arrow'
+      }
+    ]).then(children => {
       // check item correlation between slides and navigation
       if (!this.hasAttribute('no-default-nav') && (this.section.children.length !== this.nav.children.length || this.classList.contains('has-default-nav'))) {
         this.classList.add('has-default-nav')
@@ -602,7 +605,7 @@ export default class CarouselTwo extends Mutation() {
           const a = document.createElement('a')
           a.setAttribute('href', i === 0 ? '#previous' : '#next')
           a.setAttribute('aria-label', i === 0 ? 'previous slide' : 'next slide')
-          const arrow = new children[0][1]({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
+          const arrow = new children[0].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
           arrow.setAttribute('direction', i === 0 ? 'left' : 'right')
           a.appendChild(arrow)
           this.arrowNav.appendChild(a)
@@ -703,36 +706,6 @@ export default class CarouselTwo extends Mutation() {
 
   clearInterval () {
     if (this.hasAttribute('interval')) clearInterval(this.interval)
-  }
-
-  /**
-   * fetch children when first needed
-   *
-   * @param {Promise<[string, CustomElementConstructor]>[]} [promises=[]]
-   * @returns {Promise<[string, CustomElementConstructor][]>}
-   */
-  loadChildComponents (promises = []) {
-    if (this.childComponentsPromise) return this.childComponentsPromise
-    let arrowPromise
-    try {
-      arrowPromise = Promise.resolve({ default: Arrow })
-    } catch (error) {
-      arrowPromise = import('../../atoms/arrow/Arrow.js')
-    }
-    return (this.childComponentsPromise = Promise.all([
-      arrowPromise.then(
-        /** @returns {[string, CustomElementConstructor]} */
-        module => ['a-arrow', module.default]
-      ),
-      ...promises
-    ]).then(elements => {
-      elements.forEach(element => {
-        // don't define already existing customElements
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
   }
 
   getRandomString () {
