@@ -85,8 +85,25 @@ export default class RecipeList extends Shadow() {
     }
     let recipeListHeight = this.offsetHeight
     this.html = ''
+    const fetchModules = this.fetchModules([
+      {
+        path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
+        name: 'o-wrapper'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../molecules/teaser/Teaser.js`,
+        name: 'm-teaser'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/picture/Picture.js`,
+        name: 'a-picture'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/loading/Loading.js`,
+        name: 'a-loading'
+      }
+    ])
     if (recipeList === 'loading') {
-      this.loadChildComponents()
       this.html = '<a-loading></a-loading>'
       const setStyleTextContent = () => {
         this.style.textContent = /* css */`
@@ -115,7 +132,7 @@ export default class RecipeList extends Shadow() {
       }))
       return
     }
-    Promise.all([recipeList, this.loadChildComponents()]).then(() => {
+    Promise.all([recipeList, fetchModules]).then(() => {
       let row = ''
       recipeList.forEach((recipe, index) => {
         const teaser = `
@@ -143,29 +160,6 @@ export default class RecipeList extends Shadow() {
       })
       this.html = row
     })
-  }
-
-  loadChildComponents () {
-    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
-      import('../../organisms/wrapper/Wrapper.js').then(
-        module => ['o-wrapper', module.Wrapper()]
-      ),
-      import('../../molecules/teaser/Teaser.js').then(
-        module => ['m-teaser', module.default]
-      ),
-      import('../../atoms/picture/Picture.js').then(
-        module => ['a-picture', module.default]
-      ),
-      import('../../atoms/loading/Loading.js').then(
-        module => ['a-loading', module.default]
-      )
-    ]).then(elements => {
-      elements.forEach(element => {
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
   }
 
   get style () {

@@ -111,7 +111,12 @@ export default class TagFilter extends Mutation() {
    */
   renderHTML (tagList, event = null) {
     if (!tagList || !tagList.length) return
-    this.loadChildComponents()
+    this.fetchModules([
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/button/Button.js`,
+        name: 'a-button'
+      }
+    ])
     this.html = ''
     tagList.forEach(tagItem => {
       // TODO: fix attribute naming to harmonize with api
@@ -123,20 +128,6 @@ export default class TagFilter extends Mutation() {
           active-detail-property-name="${this.getAttribute('active-detail-property-name') || ''}"
         >${tagItem.name}</a-button>`
     })
-  }
-
-  loadChildComponents () {
-    return this.childComponentsPromise || (this.childComponentsPromise = Promise.all([
-      import('../../atoms/button/Button.js').then(
-        module => ['a-button', module.default]
-      )
-    ]).then(elements => {
-      elements.forEach(element => {
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
   }
 
   /**

@@ -44,9 +44,14 @@ export default class Footer extends Shadow() {
       const wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
       Footer.recalcWrappers(wrappers) // make sure that the wrapper has all the variables just set and recalc
       this.injectCssIntoWrappers(wrappers)
-      this.loadChildComponents().then(modules => {
+      this.fetchModules([
+        {
+          path: `${this.importMetaUrl}'../../../../molecules/details/Details.js`,
+          name: 'm-details'
+        }
+      ]).then(modules => {
         let moduleDetails
-        if ((moduleDetails = modules.find(element => element[0] === 'm-details'))) this.injectCssIntoDetails(this.autoAddDetails(wrappers, moduleDetails).details)
+        if ((moduleDetails = modules.find(element => element.name === 'm-details'))) this.injectCssIntoDetails(this.autoAddDetails(wrappers, moduleDetails).details)
       })
       this.hidden = false
     })
@@ -261,33 +266,10 @@ export default class Footer extends Shadow() {
   }
 
   /**
-   * fetch children when first needed
-   *
-   * @returns {Promise<[string, CustomElementConstructor][]>}
-   */
-  loadChildComponents () {
-    return this._loadChildComponentsPromise || (this._loadChildComponentsPromise = Promise.all([
-      import('../../molecules/details/Details.js').then(
-        /**
-         * @param {any} module
-         * @returns {[string, any]}
-         */
-        module => ['m-details', module.Details()]
-      )
-    ]).then(elements => {
-      elements.forEach(element => {
-        // @ts-ignore
-        if (!customElements.get(element[0])) customElements.define(...element)
-      })
-      return elements
-    }))
-  }
-
-  /**
    * replaces by CSS resp. clones "o-wrapper > section > *" into a "div > m-details" structure for certain view ports
    *
    * @param {HTMLElement[] & any} wrappers
-   * @param {[string, CustomElementConstructor]} moduleDetails
+   * @param {import("../../prototypes/Shadow.js").fetchModulesParams} moduleDetails
    * @returns {{wrappers: HTMLElement[], details: HTMLElement[]}}
    */
   autoAddDetails (wrappers, moduleDetails) {
