@@ -1,5 +1,4 @@
 // @ts-check
-/* global customElements */
 /* global CustomEvent */
 /* global DocumentFragment */
 /* global location */
@@ -125,7 +124,7 @@ export default class News extends Shadow() {
       }
       this.newsWrapper = this.root.querySelector('div') || document.createElement('div')
       // make template ${code} accessible aka. set the variables in the literal string
-      console.log('html', htmls[0]);
+      console.log('html', htmls[0])
       this.newsWrapper.innerHTML = eval('`' + htmls[0] + '`')// eslint-disable-line no-eval
 
       this.setMetaTags({ description: metaDescription, keywords: metaKeywords, title: metaTitle }).then(() => {

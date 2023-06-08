@@ -1,12 +1,10 @@
 // @ts-check
 import { Mutation } from '../../prototypes/Mutation.js'
 
-/* global Arrow */
-/* global customElements */
-/* global CustomEvent */
 /* global self */
 /* global location */
 /* global history */
+/* global CustomEvent */
 
 /**
  * https://css-tricks.com/how-to-make-a-css-only-carousel/
@@ -607,7 +605,7 @@ export default class CarouselTwo extends Mutation() {
           const a = document.createElement('a')
           a.setAttribute('href', i === 0 ? '#previous' : '#next')
           a.setAttribute('aria-label', i === 0 ? 'previous slide' : 'next slide')
-          const arrow = new children[0].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint })
+          const arrow = new children[0].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
           arrow.setAttribute('direction', i === 0 ? 'left' : 'right')
           a.appendChild(arrow)
           this.arrowNav.appendChild(a)

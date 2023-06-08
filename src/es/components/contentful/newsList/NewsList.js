@@ -1,6 +1,5 @@
 // @ts-check
 /* global CustomEvent */
-/* global customElements */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
@@ -138,12 +137,12 @@ export default class NewsList extends Shadow() {
           name: 'a-picture'
         }
       ])
-  ]).then(([news, child]) => {
+    ]).then(([news, child]) => {
       const { items } = news
       const wrapper = document.createElement('div')
       items.forEach(news => {
         // @ts-ignore
-        const newsEle = new child[0].constructorClass(news, { namespace, mobileBreakpoint: this.mobileBreakpoint })
+        const newsEle = new child[0].constructorClass(news, { namespace, mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
         newsEle.setAttribute('news-url', this.getAttribute('news-url'))
         if (this.getAttribute('is-on-home') !== null) {
           newsEle.setAttribute('is-on-home', this.getAttribute('is-on-home'))
@@ -156,6 +155,4 @@ export default class NewsList extends Shadow() {
       this.html = 'Error'
     })
   }
-
-  
 }

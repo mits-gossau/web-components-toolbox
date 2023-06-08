@@ -1,5 +1,4 @@
 // @ts-check
-/* global customElements */
 
 import { Mutation } from '../../prototypes/Mutation.js'
 

@@ -39,7 +39,6 @@ export default class Link extends Hover() {
     this.setAttribute('role', 'link')
     this.removeAttribute('tabindex')
     if (this.a) this.a.setAttribute('tabindex', '0')
-
   }
 
   connectedCallback () {
