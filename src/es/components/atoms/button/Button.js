@@ -161,7 +161,7 @@ export default class Button extends Hover() {
    * @return {Promise<void>}
    */
   renderCSS () {
-    this.css = /* css */ `
+    this.css = /* css */`
       :host {
         cursor: unset !important;
         display: inline-block;
@@ -331,8 +331,7 @@ export default class Button extends Hover() {
           path: `${this.importMetaUrl}./category-/category-.css`,
           namespace: false,
           replaces
-        }
-        ])
+        }])
       case 'button-square-':
         return this.fetchCSS([{
           // @ts-ignore
@@ -351,7 +350,7 @@ export default class Button extends Hover() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    this.html = /* html */ `
+    this.html = /* html */`
       <${this.buttonTagName} 
         ${this.buttonTagName === 'a'
           ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''}`

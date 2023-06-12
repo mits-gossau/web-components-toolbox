@@ -30,7 +30,7 @@ export default class Breadcrumb extends Shadow() {
   /**
    * renders the css
    *
-   * @return { void }
+   * @return {void}
    */
   renderCSS () {
     // extract frequently used value to variables
@@ -38,7 +38,7 @@ export default class Breadcrumb extends Shadow() {
     const color = 'var(--color, pink)'
     const textDecoration = 'var(--text-decoration, none)'
 
-    this.css = /* css */ `
+    this.css = /* css */`
       :host {
         margin: var(--margin, 0) !important;
         width: var(--width, 0) !important;

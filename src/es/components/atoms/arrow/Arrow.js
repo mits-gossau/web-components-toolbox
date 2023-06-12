@@ -53,7 +53,7 @@ export default class Arrow extends Hover() {
    */
   shouldRenderCSS () {
     return !this.root.querySelector(
-            `:host > style[_css], ${this.tagName} > style[_css]`
+      `:host > style[_css], ${this.tagName} > style[_css]`
     )
   }
 
@@ -192,11 +192,11 @@ export default class Arrow extends Hover() {
   get style () {
     return (
       this._style ||
-            (this._style = (() => {
-              const style = document.createElement('style')
-              style.setAttribute('protected', 'true')
-              return style
-            })())
+        (this._style = (() => {
+          const style = document.createElement('style')
+          style.setAttribute('protected', 'true')
+          return style
+        })())
     )
   }
 }
