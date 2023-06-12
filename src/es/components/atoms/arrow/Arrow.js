@@ -47,10 +47,10 @@ export default class Arrow extends Hover() {
   }
 
   /**
-     * evaluates if a render is necessary
-     *
-     * @return {boolean}
-     */
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
   shouldRenderCSS () {
     return !this.root.querySelector(
             `:host > style[_css], ${this.tagName} > style[_css]`
@@ -58,19 +58,19 @@ export default class Arrow extends Hover() {
   }
 
   /**
-     * evaluates if a render is necessary
-     *
-     * @return {boolean}
-     */
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
   shouldRenderHTML () {
     return !this.svg
   }
 
   /**
-     * Renders the CSS.
-     *
-     * @return {void}
-     */
+   * Renders the CSS.
+   *
+   * @return {void}
+   */
   renderCSS () {
     const upKeyframes = /* css */ `
       @keyframes move {
@@ -169,10 +169,10 @@ export default class Arrow extends Hover() {
   }
 
   /**
-     * renders the html
-     *
-     * @return {void}
-     */
+   * @method render * renders the html
+   *
+   * @return { void }
+   */
   renderHTML () {
     // TODO: SVG's should be taken from icons folder but fetch can't use cache and is too slow on loads of requests at once. object, img, etc. does not work for css styling. so most likely it needs a node script copying this stuff on update in the icon folder.
     // TODO: or solve the problem with an icon controller with caching. Send event with Promise.resolve to controller, which then resolves it with the svg

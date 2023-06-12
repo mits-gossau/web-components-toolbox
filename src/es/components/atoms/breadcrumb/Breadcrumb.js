@@ -19,19 +19,19 @@ export default class Breadcrumb extends Shadow() {
   }
 
   /**
-     * evaluates if a render is necessary
-     *
-     * @return {boolean}
-     */
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
   shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
-     * renders the css
-     *
-     * @return {void}
-     */
+   * renders the css
+   *
+   * @return { void }
+   */
   renderCSS () {
     // extract frequently used value to variables
     const icon = this.getAttribute('icon')

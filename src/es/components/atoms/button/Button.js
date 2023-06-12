@@ -17,6 +17,7 @@ export default class Button extends Hover() {
   }
 
   constructor (options = {}, ...args) {
+    // @ts-ignore
     super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
 
     // get the original innerHTML of the component, so that when it rerenders as an a-tag it doesn't loose its content
@@ -50,6 +51,7 @@ export default class Button extends Hover() {
       let tags = event.detail.tags
       if (this.getAttribute('active-detail-property-name')) {
         tags = await this.getAttribute('active-detail-property-name').split(':').reduce(async (accumulator, propertyName) => {
+          // @ts-ignore
           propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
           if (accumulator instanceof Promise) accumulator = await accumulator
           return accumulator[propertyName]
@@ -68,11 +70,14 @@ export default class Button extends Hover() {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
+    // @ts-ignore
     if (this.textContent.length && this.textContent.trim().length) {
+      // @ts-ignore
       this.labelText = this.textContent.trim() // allow its initial textContent to become the label if there are no nodes but only text
       this.textContent = ''
     }
     // request the href which results on a button click from the controller and if answered transfer this button into an a-node to have search engine robots follow the links
+    // @ts-ignore
     this.wcConfigLoadListener = event => new Promise(resolve => this.dispatchEvent(new CustomEvent('request-href-' + this.getAttribute('request-event-name'), {
       detail: this.getEventDetail(null, false, resolve),
       bubbles: true,
@@ -118,6 +123,7 @@ export default class Button extends Hover() {
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
 
+  // @ts-ignore
   attributeChangedCallback (name, oldValue, newValue) {
     if (name === 'label') {
       this.labelText = newValue
@@ -132,28 +138,28 @@ export default class Button extends Hover() {
   }
 
   /**
-     * evaluates if a render is necessary
-     *
-     * @return {boolean}
-     */
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
   shouldRenderCSS () {
     return !this.root.querySelector('style[_css]')
   }
 
   /**
-     * evaluates if a render is necessary
-     *
-     * @return {boolean}
-     */
+   * evaluates if a render is necessary
+   *
+   * @return {boolean}
+   */
   shouldRenderHTML () {
     return !this.button || !this.label
   }
 
   /**
-     * renders the css
-     *
-     * @return {Promise<void>}
-     */
+   * renders the css
+   *
+   * @return {Promise<void>}
+   */
   renderCSS () {
     this.css = /* css */ `
       :host {
@@ -261,10 +267,10 @@ export default class Button extends Hover() {
   }
 
   /**
-     * fetches the template
-     *
-     * @return {Promise<void>}
-     */
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
   fetchTemplate () {
     const replaces = this.buttonTagName === 'a'
       ? [{
@@ -340,10 +346,10 @@ export default class Button extends Hover() {
   }
 
   /**
-     * renders the html
-     *
-     * @return {Promise<void>}
-     */
+   * renders the html
+   *
+   * @return {Promise<void>}
+   */
   renderHTML () {
     this.html = /* html */ `
       <${this.buttonTagName} 
@@ -366,11 +372,11 @@ export default class Button extends Hover() {
   }
 
   /**
-     * @param {Event | null} event
-     * @param {boolean} [pushHistory=undefined]
-     * @param {(value: any)=>void} [resolve=undefined]
-     * @return {{origEvent: Event | null, tags: [string], isActive: boolean, fetchSubTags: boolean, clearSubTags: boolean, this: Button, textContent: string, pushHistory?: boolean, resolve?: (value: any)=>void}}
-     */
+   * @param {Event | null} event
+   * @param {boolean} [pushHistory=undefined]
+   * @param {(value: any)=>void} [resolve=undefined]
+   * @return {{origEvent: Event | null, tags: [string], isActive: boolean, fetchSubTags: boolean, clearSubTags: boolean, this: Button, textContent: string, pushHistory?: boolean, resolve?: (value: any)=>void}}
+   */
   getEventDetail (event, pushHistory, resolve) {
     return {
       origEvent: event,
