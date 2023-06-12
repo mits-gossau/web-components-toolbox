@@ -169,9 +169,9 @@ export default class Arrow extends Hover() {
   }
 
   /**
-   * @method render * renders the html
+   * renders the html
    *
-   * @return { void }
+   * @return {void}
    */
   renderHTML () {
     // TODO: SVG's should be taken from icons folder but fetch can't use cache and is too slow on loads of requests at once. object, img, etc. does not work for css styling. so most likely it needs a node script copying this stuff on update in the icon folder.
