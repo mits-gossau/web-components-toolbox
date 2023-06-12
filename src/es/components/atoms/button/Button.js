@@ -132,30 +132,30 @@ export default class Button extends Hover() {
   }
 
   /**
-   * evaluates if a render is necessary
-   *
-   * @return {boolean}
-   */
+     * evaluates if a render is necessary
+     *
+     * @return {boolean}
+     */
   shouldRenderCSS () {
     return !this.root.querySelector('style[_css]')
   }
 
   /**
-   * evaluates if a render is necessary
-   *
-   * @return {boolean}
-   */
+     * evaluates if a render is necessary
+     *
+     * @return {boolean}
+     */
   shouldRenderHTML () {
     return !this.button || !this.label
   }
 
   /**
-   * renders the css
-   *
-   * @return {Promise<void>}
-   */
+     * renders the css
+     *
+     * @return {Promise<void>}
+     */
   renderCSS () {
-    this.css = /* css */`
+    this.css = /* css */ `
       :host {
         cursor: unset !important;
         display: inline-block;
@@ -185,7 +185,7 @@ export default class Button extends Hover() {
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
       }
-      :host a {
+      a {
         box-sizing: border-box;
         width: var(--width, fit-content);
       }
@@ -199,7 +199,7 @@ export default class Button extends Hover() {
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
-      :host ${this.buttonTagName}[disabled] {
+      ${this.buttonTagName}[disabled] {
         border: var(--border-width-disabled, var(--border-width, 0px)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));
         background-color: var(--background-color-disabled, var(--background-color, #FFDAC2));
         color: var(--color-disabled, var(--color, #FFFFFF));
@@ -207,7 +207,7 @@ export default class Button extends Hover() {
         opacity: var(--opacity-disabled, var(--opacity, 1));
         transition: opacity 0.3s ease-out;
       }
-      :host ${this.buttonTagName}[disabled]:hover, :host(.hover) ${this.buttonTagName}[disabled] {
+      ${this.buttonTagName}[disabled]:hover, :host(.hover) ${this.buttonTagName}[disabled] {
         opacity: var(--opacity-disabled-hover, var(--opacity-disabled, var(--opacity, 1)));
       }
       #label {
@@ -261,10 +261,10 @@ export default class Button extends Hover() {
   }
 
   /**
-   * fetches the template
-   *
-   * @return {Promise<void>}
-   */
+     * fetches the template
+     *
+     * @return {Promise<void>}
+     */
   fetchTemplate () {
     const replaces = this.buttonTagName === 'a'
       ? [{
@@ -325,7 +325,8 @@ export default class Button extends Hover() {
           path: `${this.importMetaUrl}./category-/category-.css`,
           namespace: false,
           replaces
-        }])
+        }
+        ])
       case 'button-square-':
         return this.fetchCSS([{
           // @ts-ignore
@@ -339,12 +340,12 @@ export default class Button extends Hover() {
   }
 
   /**
-   * renders the html
-   *
-   * @return {Promise<void>}
-   */
+     * renders the html
+     *
+     * @return {Promise<void>}
+     */
   renderHTML () {
-    this.html = /* html */`
+    this.html = /* html */ `
       <${this.buttonTagName} 
         ${this.buttonTagName === 'a'
           ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''}`
@@ -365,11 +366,11 @@ export default class Button extends Hover() {
   }
 
   /**
-   * @param {Event | null} event
-   * @param {boolean} [pushHistory=undefined]
-   * @param {(value: any)=>void} [resolve=undefined]
-   * @return {{origEvent: Event | null, tags: [string], isActive: boolean, fetchSubTags: boolean, clearSubTags: boolean, this: Button, textContent: string, pushHistory?: boolean, resolve?: (value: any)=>void}}
-   */
+     * @param {Event | null} event
+     * @param {boolean} [pushHistory=undefined]
+     * @param {(value: any)=>void} [resolve=undefined]
+     * @return {{origEvent: Event | null, tags: [string], isActive: boolean, fetchSubTags: boolean, clearSubTags: boolean, this: Button, textContent: string, pushHistory?: boolean, resolve?: (value: any)=>void}}
+     */
   getEventDetail (event, pushHistory, resolve) {
     return {
       origEvent: event,

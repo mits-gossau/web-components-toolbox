@@ -47,30 +47,30 @@ export default class Arrow extends Hover() {
   }
 
   /**
-   * evaluates if a render is necessary
-   *
-   * @return {boolean}
-   */
+     * evaluates if a render is necessary
+     *
+     * @return {boolean}
+     */
   shouldRenderCSS () {
     return !this.root.querySelector(
-      `:host > style[_css], ${this.tagName} > style[_css]`
+            `:host > style[_css], ${this.tagName} > style[_css]`
     )
   }
 
   /**
-   * evaluates if a render is necessary
-   *
-   * @return {boolean}
-   */
+     * evaluates if a render is necessary
+     *
+     * @return {boolean}
+     */
   shouldRenderHTML () {
     return !this.svg
   }
 
   /**
-   * Renders the CSS.
-   *
-   * @return {void}
-   */
+     * Renders the CSS.
+     *
+     * @return {void}
+     */
   renderCSS () {
     const upKeyframes = /* css */ `
       @keyframes move {
@@ -140,14 +140,14 @@ export default class Arrow extends Hover() {
         width: var(--svg-size, 1.5em);
         vertical-align: middle;
       }
-      :host > svg {
+      svg {
         align-items: center;
         color: var(--color, #777);
         height: var(--svg-size, 1.5em);
         justify-content: center;
         width: var(--svg-size, 1.5em);
       }
-      :host > svg path {
+      svg path {
         stroke: var(--path-color, var(--color, #777));
         transition: var(--path-transition, all 0.3s ease-out);
       }
@@ -169,10 +169,10 @@ export default class Arrow extends Hover() {
   }
 
   /**
-   * renders the html
-   *
-   * @return {void}
-   */
+     * renders the html
+     *
+     * @return {void}
+     */
   renderHTML () {
     // TODO: SVG's should be taken from icons folder but fetch can't use cache and is too slow on loads of requests at once. object, img, etc. does not work for css styling. so most likely it needs a node script copying this stuff on update in the icon folder.
     // TODO: or solve the problem with an icon controller with caching. Send event with Promise.resolve to controller, which then resolves it with the svg
@@ -192,11 +192,11 @@ export default class Arrow extends Hover() {
   get style () {
     return (
       this._style ||
-      (this._style = (() => {
-        const style = document.createElement('style')
-        style.setAttribute('protected', 'true')
-        return style
-      })())
+            (this._style = (() => {
+              const style = document.createElement('style')
+              style.setAttribute('protected', 'true')
+              return style
+            })())
     )
   }
 }
