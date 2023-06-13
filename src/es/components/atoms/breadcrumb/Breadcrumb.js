@@ -43,18 +43,18 @@ export default class Breadcrumb extends Shadow() {
         margin: var(--margin, 0) !important;
         width: var(--width, 0) !important;
       }
-      :host ul {
+      ul {
         display: flex;
         flex-wrap: wrap;
         list-style: var(--list-style, none);
         margin: var(--ul-margin, 0);
         padding: var(--ul-padding, 0);
       }
-      :host > ul > li {
+      ul > li {
         display: flex;
         white-space: nowrap;
       }
-      :host > ul > li > a {
+      ul > li > a {
         color: var(--a-color, var(--color-secondary, ${color})); /* use variable "color" */
         font-weight: var(--a-font-weight, var(--font-weight, normal));
         text-align: var(--a-text-align, unset);
@@ -63,20 +63,20 @@ export default class Breadcrumb extends Shadow() {
         display: var(--a-display, inline);
         margin: var(--a-margin, var(--content-spacing, unset)) auto;
       }
-      :host a:hover, :host a:active, :host a:focus {
+      a:hover, a:active, a:focus {
         color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
         text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, ${textDecoration}))); /* use variable "textDecoration" */
       }
-      :host > ul > li > a {
+      ul > li > a {
         color: var(--a-color, var(--color-secondary, ${color})); /* use variable "color" */
         text-decoration: var(--a-text-decoration, ${textDecoration}); /* use variable "textDecoration" */
         text-underline-offset: var(--a-text-underline-offset, unset);
       }
-      :host > ul > li > a:hover, :host > ul > li > a:active, :host > ul > li > a:focus {
+      ul > li > a:hover, ul > li > a:active, ul > li > a:focus {
         color: var(--a-color-hover, var(--color-hover-secondary, var(--color-hover, var(--color, green))));
         text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, ${textDecoration}))); /* use variable "textDecoration" */
       }
-      :host > ul > li > span {
+      ul > li > span {
         ${icon !== 'false' ? `background-image: var(--background-image, url(${icon || '_import-meta-url_../web-components/src/icons/chevron_right.svg'}));` : ''}
         background-position: center;
         background-repeat: no-repeat;
@@ -89,11 +89,11 @@ export default class Breadcrumb extends Shadow() {
           margin: var(--margin-mobile, var(--margin, 0)) !important;
           width: var(--width-mobile, var(--width, 0)) !important;
         }
-        :host ul {
+        ul {
           margin: var(--ul-margin-mobile, var(--ul-margin, 0));
           padding: var(--ul-padding-mobile, var(--ul-padding, 0));
         }
-        :host > ul > li > a {
+        ul > li > a {
           margin: var(--a-margin-mobile, var(--a-margin, var(--content-spacing-mobile, var(--content-spacing, unset)))) auto;
         }
       }

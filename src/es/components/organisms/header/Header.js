@@ -440,36 +440,36 @@ export default class Header extends Shadow() {
     })))
     return this.getAttribute('menu-icon')
       ? this.fetchModules([
-          {
-            path: `${this.importMetaUrl}'../../../../atoms/menuIcon/MenuIcon.js`,
-            name: 'a-menu-icon'
-          }
-        ]).then(children => {
+        {
+          path: `${this.importMetaUrl}'../../../../atoms/menuIcon/MenuIcon.js`,
+          name: 'a-menu-icon'
+        }
+      ]).then(children => {
           this.MenuIcon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
-          this.MenuIcon.addEventListener('click', event => {
-            this.header.classList.toggle('open')
-            const prop = this.header.classList.contains('open') ? 'add' : 'remove'
-            if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', this.header.classList.contains('open') ? 'true' : 'false')
-            this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-              detail: {
-                hasNoScroll: this.header.classList.contains('open'),
-                origEvent: event,
-                this: this
-              },
-              bubbles: true,
-              cancelable: true,
-              composed: true
-            }))
+        this.MenuIcon.addEventListener('click', event => {
+          this.header.classList.toggle('open')
+          const prop = this.header.classList.contains('open') ? 'add' : 'remove'
+          if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', this.header.classList.contains('open') ? 'true' : 'false')
+          this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+            detail: {
+              hasNoScroll: this.header.classList.contains('open'),
+              origEvent: event,
+              this: this
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
 
-            Array.from(this.header.children).forEach(node => {
-              node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
-            })
+          Array.from(this.header.children).forEach(node => {
+            node.classList[prop](this.getAttribute('no-scroll') || 'no-scroll')
           })
-          this.header.appendChild(this.MenuIcon)
-          this.html = this.style
-          this.html = this.styleTwo
-          this.adjustLogoPos(true)
         })
+        this.header.appendChild(this.MenuIcon)
+        this.html = this.style
+        this.html = this.styleTwo
+        this.adjustLogoPos(true)
+      })
       : Promise.resolve()
   }
 
