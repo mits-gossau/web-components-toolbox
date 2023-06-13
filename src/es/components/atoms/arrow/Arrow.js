@@ -140,14 +140,14 @@ export default class Arrow extends Hover() {
         width: var(--svg-size, 1.5em);
         vertical-align: middle;
       }
-      svg {
+      :host > svg {
         align-items: center;
         color: var(--color, #777);
         height: var(--svg-size, 1.5em);
         justify-content: center;
         width: var(--svg-size, 1.5em);
       }
-      svg path {
+      :host > svg path {
         stroke: var(--path-color, var(--color, #777));
         transition: var(--path-transition, all 0.3s ease-out);
       }

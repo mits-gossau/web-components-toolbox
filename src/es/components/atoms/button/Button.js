@@ -191,7 +191,7 @@ export default class Button extends Hover() {
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
       }
-      a {
+      :host a {
         box-sizing: border-box;
         width: var(--width, fit-content);
       }
@@ -205,7 +205,7 @@ export default class Button extends Hover() {
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
-      ${this.buttonTagName}[disabled] {
+      :host ${this.buttonTagName}[disabled] {
         border: var(--border-width-disabled, var(--border-width, 0px)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));
         background-color: var(--background-color-disabled, var(--background-color, #FFDAC2));
         color: var(--color-disabled, var(--color, #FFFFFF));
@@ -213,7 +213,7 @@ export default class Button extends Hover() {
         opacity: var(--opacity-disabled, var(--opacity, 1));
         transition: opacity 0.3s ease-out;
       }
-      ${this.buttonTagName}[disabled]:hover, :host(.hover) ${this.buttonTagName}[disabled] {
+      :host ${this.buttonTagName}[disabled]:hover, :host(.hover) ${this.buttonTagName}[disabled] {
         opacity: var(--opacity-disabled-hover, var(--opacity-disabled, var(--opacity, 1)));
       }
       #label {
