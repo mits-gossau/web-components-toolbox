@@ -495,11 +495,11 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * at consumer do "eval('`' + html[0] + '`')" to set the variables in the literal string
    *
    * @param {string[]} paths
-   * @param {boolean} [hide = true]
+   * @param {boolean} [hide = false]
    * @param {boolean} [useController = true]
    * @return {Promise<string[]>}
    */
-  fetchHTML (paths, hide = true, useController = true) {
+  fetchHTML (paths, hide = false, useController = true) {
     if (hide) this.hidden = true
     if (!Array.isArray(paths)) paths = [paths]
     if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-html') || 'fetch-html')) {
@@ -597,11 +597,11 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * fetches the modules and defines the custom elements
    *
    * @param {fetchModulesParams[]} fetchModulesParams
-   * @param {boolean} [hide = true]
+   * @param {boolean} [hide = false]
    * @param {boolean} [useController = true]
    * @return {Promise<fetchModulesParams[]>}
    */
-  fetchModules (fetchModulesParams, hide = true, useController = true) {
+  fetchModules (fetchModulesParams, hide = false, useController = true) {
     if (hide) this.hidden = true
     if (!Array.isArray(fetchModulesParams)) fetchModulesParams = [fetchModulesParams]
     if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-modules') || 'fetch-modules')) {
