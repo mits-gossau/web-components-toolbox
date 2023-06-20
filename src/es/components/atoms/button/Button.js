@@ -195,13 +195,13 @@ export default class Button extends Hover() {
         box-sizing: border-box;
         width: var(--width, fit-content);
       }
-      ${this.buttonTagName}:hover, :host(.hover) {
+      ${this.buttonTagName}:hover, :host(.hover) ${this.buttonTagName} {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
         opacity: var(--opacity-hover, var(--opacity, 1));
       }
-      ${this.buttonTagName}:active, ${this.buttonTagName}.active {
+      ${this.buttonTagName}:active, :host ${this.buttonTagName}.active {
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
@@ -243,7 +243,7 @@ export default class Button extends Hover() {
           margin: var(--margin-mobile, var(--margin, auto));
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
-        ${this.buttonTagName}:hover, :host(.hover) {
+        ${this.buttonTagName}:hover, :host(.hover) ${this.buttonTagName} {
           background-color: var(--background-color-hover-mobile, var(--background-color-hover, var(--background-color, #B24800)));
           color: var(--color-hover-mobile, var(--color-hover, var(--color, #FFFFFF)));
         }
