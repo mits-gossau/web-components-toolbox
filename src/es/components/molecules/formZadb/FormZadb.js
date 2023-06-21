@@ -93,8 +93,17 @@ export default class FormZadb extends Form {
     }
 
     this.checkFieldsIfValueFromList = () => {
-      if (this.zip.getAttribute('value-from-list') !== 'true') this.zip.value = ''
-      if (this.street.getAttribute('value-from-list') !== 'true') this.street.value = ''
+      if (this.street.getAttribute('value-from-list') !== 'true' && this.street.value) {
+        var customHintSpanExists = this.street.parentElement.querySelector('span.custom-hint-span') != null
+        if (!customHintSpanExists) {
+          var customHintSpan = document.createElement('span')
+          customHintSpan.classList.add('custom-hint-span')
+          customHintSpan.innerText = this.getAttribute('custom-street-hint-text')
+          this.street.parentElement.appendChild(customHintSpan)
+        }
+      } else if (this.street.getAttribute('value-from-list') === 'true' && this.street.value) {
+        this.street.parentElement.querySelector('span.custom-hint-span').remove()
+      }
     }
   }
 
