@@ -17,6 +17,7 @@ export default class Button extends Hover() {
   }
 
   constructor (options = {}, ...args) {
+    // @ts-ignore
     super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
 
     // get the original innerHTML of the component, so that when it rerenders as an a-tag it doesn't loose its content
@@ -50,6 +51,7 @@ export default class Button extends Hover() {
       let tags = event.detail.tags
       if (this.getAttribute('active-detail-property-name')) {
         tags = await this.getAttribute('active-detail-property-name').split(':').reduce(async (accumulator, propertyName) => {
+          // @ts-ignore
           propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
           if (accumulator instanceof Promise) accumulator = await accumulator
           return accumulator[propertyName]
@@ -68,11 +70,14 @@ export default class Button extends Hover() {
       this.setAttribute('data-href', this.getAttribute('href'))
       this.setAttribute('role', 'link')
     }
+    // @ts-ignore
     if (this.textContent.length && this.textContent.trim().length) {
+      // @ts-ignore
       this.labelText = this.textContent.trim() // allow its initial textContent to become the label if there are no nodes but only text
       this.textContent = ''
     }
     // request the href which results on a button click from the controller and if answered transfer this button into an a-node to have search engine robots follow the links
+    // @ts-ignore
     this.wcConfigLoadListener = event => new Promise(resolve => this.dispatchEvent(new CustomEvent('request-href-' + this.getAttribute('request-event-name'), {
       detail: this.getEventDetail(null, false, resolve),
       bubbles: true,
@@ -118,6 +123,7 @@ export default class Button extends Hover() {
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
 
+  // @ts-ignore
   attributeChangedCallback (name, oldValue, newValue) {
     if (name === 'label') {
       this.labelText = newValue
@@ -189,13 +195,13 @@ export default class Button extends Hover() {
         box-sizing: border-box;
         width: var(--width, fit-content);
       }
-      ${this.buttonTagName}:hover, :host(.hover) {
+      ${this.buttonTagName}:hover, :host(.hover) ${this.buttonTagName} {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
         opacity: var(--opacity-hover, var(--opacity, 1));
       }
-      ${this.buttonTagName}:active, ${this.buttonTagName}.active {
+      ${this.buttonTagName}:active, :host ${this.buttonTagName}.active {
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
@@ -237,7 +243,7 @@ export default class Button extends Hover() {
           margin: var(--margin-mobile, var(--margin, auto));
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
-        ${this.buttonTagName}:hover, :host(.hover) {
+        ${this.buttonTagName}:hover, :host(.hover) ${this.buttonTagName} {
           background-color: var(--background-color-hover-mobile, var(--background-color-hover, var(--background-color, #B24800)));
           color: var(--color-hover-mobile, var(--color-hover, var(--color, #FFFFFF)));
         }

@@ -192,11 +192,11 @@ export default class Arrow extends Hover() {
   get style () {
     return (
       this._style ||
-      (this._style = (() => {
-        const style = document.createElement('style')
-        style.setAttribute('protected', 'true')
-        return style
-      })())
+        (this._style = (() => {
+          const style = document.createElement('style')
+          style.setAttribute('protected', 'true')
+          return style
+        })())
     )
   }
 }
