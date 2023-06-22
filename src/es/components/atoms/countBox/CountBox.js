@@ -1,12 +1,14 @@
 // @ts-check
 import { Intersection } from '../../prototypes/Intersection.js'
 
+/* global self */
+
 /**
  * WORK IN PROGRESS !!!
  * DO NOT USE FOR PRODUCTION !!!
  */
 export default class CountBox extends Intersection() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: { rootMargin: '0px 0px -25% 0px' },
@@ -15,12 +17,12 @@ export default class CountBox extends Intersection() {
     this.requestAnimationFrameID = null
   }
 
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
   }
 
-  intersectionCallback(entries, observer) {
+  intersectionCallback (entries, observer) {
     if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
       this.startCounter(this.root.getElementById(this.tag))
     } else {
@@ -28,10 +30,10 @@ export default class CountBox extends Intersection() {
     }
   }
 
-  startCounter(counter, currentValue, targetValue, duration = Number(this.getAttribute("speed")) || 3300, steps, startTime = Date.now()) {
+  startCounter (counter, currentValue, targetValue, duration = Number(this.getAttribute('speed')) || 3300, steps, startTime = Date.now()) {
     if (currentValue !== undefined && currentValue === targetValue) return // target reached
-    if (currentValue === undefined) currentValue = Number(this.getAttribute("start"))
-    if (targetValue === undefined) targetValue = Number(this.getAttribute("target"))
+    if (currentValue === undefined) currentValue = Number(this.getAttribute('start'))
+    if (targetValue === undefined) targetValue = Number(this.getAttribute('target'))
     if (!steps) {
       // @ts-ignore
       self.cancelAnimationFrame(this.requestAnimationFrameID) // cancel other loops on a new request
@@ -44,7 +46,7 @@ export default class CountBox extends Intersection() {
     if (currentValue !== targetValue) this.requestAnimationFrameID = self.requestAnimationFrame(timeStamp => this.startCounter(counter, currentValue, targetValue, duration, steps, startTime))
   }
 
-  stopCounter() {
+  stopCounter () {
     // @ts-ignore
     self.cancelAnimationFrame(this.requestAnimationFrameID)
   }
@@ -54,7 +56,7 @@ export default class CountBox extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -63,7 +65,7 @@ export default class CountBox extends Intersection() {
    *
    * @return {void}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host .card {
         background:red;
@@ -75,7 +77,7 @@ export default class CountBox extends Intersection() {
     `
   }
 
-  get tag() {
+  get tag () {
     return this.getAttribute('tag')
   }
 }
