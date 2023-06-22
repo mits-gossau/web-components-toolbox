@@ -14,7 +14,7 @@ export default class MetaHeader extends Shadow() {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-  } 
+  }
 
   shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
@@ -32,8 +32,11 @@ export default class MetaHeader extends Shadow() {
   renderCSS() {
     this.css = /* css */ `
       :host {
-        display:flex;
+        display:var(--display,flex);
+        flex-direction:var(--flex-direction, row);
+        justify-content:var(--justify-content, flex-start);
         padding:var(--padding, 0);
+        gap:var(--gap,normal);
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
