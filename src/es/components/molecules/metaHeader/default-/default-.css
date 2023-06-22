@@ -1,0 +1,10 @@
+:host {
+    --button-primary-background-color-custom:#F5F5F5;
+    --button-primary-color-custom:#333333;
+    --button-primary-icon-height:1.6em;
+    --button-primary-padding:12px;
+    --button-primary-border-radius:20px;
+    --button-primary-font-size:0.8em;
+    --metaheader-default-spacer-margin: calc(var(--content-spacing)/2);
+    --metaheader-default-padding:0.5em 32px;
+}
