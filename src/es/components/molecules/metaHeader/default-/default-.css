@@ -10,7 +10,9 @@
     --button-primary-line-height:0;
 
     --metaheader-default-flex-direction:row-reverse;
-    --metaheader-default-padding:0.5em 1em 0 1em;
+    --metaheader-default-padding:0.5em 0 0 0;
+    --metaheader-default-margin:0 auto;
     --metaheader-default-gap:1.5em;
+    --metaheader-default-width:var(--header-default-content-width);
 }
 

@@ -34,9 +34,11 @@ export default class MetaHeader extends Shadow() {
       :host {
         display:var(--display,flex);
         flex-direction:var(--flex-direction, row);
-        justify-content:var(--justify-content, flex-start);
-        padding:var(--padding, 0);
         gap:var(--gap,normal);
+        justify-content:var(--justify-content, flex-start);
+        margin:var(--margin,0);
+        padding:var(--padding, 0);
+        width:var(--width, auto);
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
