@@ -248,6 +248,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           path: `${this.importMetaUrl}./text-picture-cover-/text-picture-cover-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
+      case 'wrapper-category-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./category-/category-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(() => this.calcColumnWidth())
       default:
         if (!this.hasAttribute('namespace')) {
           this.css = /* css */`
