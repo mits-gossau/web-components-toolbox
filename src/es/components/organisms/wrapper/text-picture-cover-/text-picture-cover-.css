@@ -32,7 +32,7 @@
 }
 
 :host .o-wrapper__heading {
-  --wrapper-text-picture-cover-h1-margin: 2rem 0 2rem;
+  --wrapper-text-picture-cover-h1-margin: 1rem 0 1rem;
 }
 
 :host .o-wrapper__text-small {
