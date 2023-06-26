@@ -86,6 +86,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       }
       :host > section {
         display: flex;
+        flex-wrap: wrap;
         align-items: ${this.hasAttribute('align-items')
           ? this.getAttribute('align-items')
           : 'var(--align-items, center)'};
