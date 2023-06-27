@@ -1,6 +1,8 @@
 :host {
     --button-primary-background-color-custom:var(--m-gray-100);
+    --button-primary-background-color-hover-custom:var(--m-gray-300);
     --button-primary-color-custom:var(--m-black);
+
     --button-primary-icon-height:1.25em;
     --button-primary-padding:0.95em;
     --button-primary-border-radius:1.6em;
@@ -15,4 +17,3 @@
     --metaheader-default-gap:1.5em;
     --metaheader-default-width:var(--header-default-content-width);
 }
-
