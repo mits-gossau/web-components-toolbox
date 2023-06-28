@@ -8,7 +8,6 @@
   --wrapper-text-picture-cover-margin-first-child: 0 2.5rem 0 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: flex-start;
 }
 
