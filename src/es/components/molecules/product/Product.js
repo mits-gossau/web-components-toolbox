@@ -7,10 +7,10 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * As a molecule, this component shall hold Atoms
  *
  * @export
- * @class Teaser
+ * @class Product
  * @type {CustomElementConstructor}
  */
-export default class Teaser extends Intersection() {
+export default class Product extends Intersection() {
   constructor (options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
