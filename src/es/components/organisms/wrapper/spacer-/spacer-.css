@@ -1,0 +1,5 @@
+:host {
+    --wrapper-spacer-gap: var(--content-spacing);
+    margin-bottom: var(--wrapper-spacer-gap);
+
+}
