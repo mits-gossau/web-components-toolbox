@@ -40,6 +40,11 @@ export default class MetaHeader extends Shadow() {
         padding:var(--padding, 0);
         width:var(--width, auto);
       }
+      :host div {
+        display:var(--div-display, flex);
+        flex-direction:var(--div-flex-direction, row);
+        align-items:var(--div-align-items, center);
+      }
       @media only screen and (max-width: _max-width_) {
         :host {}
       }
