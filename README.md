@@ -32,6 +32,9 @@ CSS Rules:
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css
 
+Known Issues:
+- wc-config.js: Line 92: String-Includes vs. Regex Fix done
+
 ## Master Branch locked 🙌
 
 Checklist for each component:

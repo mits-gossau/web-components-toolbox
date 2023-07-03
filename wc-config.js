@@ -89,7 +89,7 @@
     // baseUrl is only used if url is relative / does not start with "." nor "/"
     if (!customElements.get(tagName)) {
       /** @type {Directory} */
-      const directory = directories.find(directory => tagName.includes(directory.selector)) || { url: '', selector: '' }
+      const directory = directories.find(directory => (new RegExp(`^${directory.selector}`)).test(tagName)) || { url: '', selector: '' }
       /**
        * urls priority is node.attribute, searchParams.directory, preset adjustable directory
        * @type {string}

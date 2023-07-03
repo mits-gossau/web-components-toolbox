@@ -66,7 +66,7 @@ export default class MetaHeader extends Shadow() {
     ]
 
     switch (this.getAttribute('namespace')) {
-      case 'metaheader-default-':
+      case 'meta-header-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false

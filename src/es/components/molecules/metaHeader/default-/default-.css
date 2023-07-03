@@ -11,9 +11,9 @@
     --button-primary-label-padding:0 0.5em;
     --button-primary-line-height:0;
 
-    --metaheader-default-flex-direction:row-reverse;
-    --metaheader-default-padding:0.5em 0 0 0;
-    --metaheader-default-margin:0 auto;
-    --metaheader-default-gap:1.5em;
-    --metaheader-default-width:var(--header-default-content-width);
+    --meta-header-default-flex-direction:row-reverse;
+    --meta-header-default-padding:0.5em 0 0 0;
+    --meta-header-default-margin:0 auto;
+    --meta-header-default-gap:1.5em;
+    --meta-header-default-width:var(--header-default-content-width);
 }
