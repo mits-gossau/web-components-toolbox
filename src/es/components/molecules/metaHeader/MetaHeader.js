@@ -1,26 +1,22 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
-/* global CustomEvent */
-
-
 export default class MetaHeader extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
   }
 
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.divWrapper
   }
 
@@ -29,7 +25,7 @@ export default class MetaHeader extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */ `
       :host {
         display:var(--display,flex);
@@ -57,7 +53,7 @@ export default class MetaHeader extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -85,7 +81,7 @@ export default class MetaHeader extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML() {
+  renderHTML () {
     this.divWrapper = this.root.querySelector(this.cssSelector + ' > div') || document.createElement('div')
     this.html = this.divWrapper
   }
