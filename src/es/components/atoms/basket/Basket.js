@@ -63,6 +63,7 @@ export default class Basket extends Shadow() {
         display:flex;
       }
       :host div:hover {
+        cursor: pointer;
         background-color:red;
       }
       :host img {
