@@ -1,0 +1,13 @@
+:host {
+    --date-input-secondary-background-color-disabled: transparent;
+    --date-input-secondary-background-color-hover: transparent;
+    --date-input-secondary-background-color: transparent;
+    --date-input-secondary-border-color-disabled: var(--button-secondary-border-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
+    --date-input-secondary-border-color-hover: var(--button-secondary-border-color-hover-custom, var(--color-hover, var(--m-orange-800)));
+    --date-input-secondary-border-color: var(--button-secondary-border-color-custom, var(--color-secondary, var(--m-orange-600)));
+    --date-input-secondary-border-width: 2px;
+    --date-input-secondary-color-disabled: var(--button-secondary-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
+    --date-input-secondary-color-hover: var(--button-secondary-color-hover-custom, var(--color-hover, var(--m-orange-800)));
+    --date-input-secondary-color: var(--button-secondary-color-custom, var(--color-secondary, var(--m-orange-600)));
+    --date-input-secondary-font-family: var(--font-family);
+}
