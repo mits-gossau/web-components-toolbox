@@ -50,9 +50,9 @@ export default class UserProfile extends Shadow() {
   renderCSS() {
     this.css = /* css */`
       :host {
-         display:block;
-         position:relative;
-         width:fit-content;
+         display:var(--display, block);
+         position:var(--position, relative);
+         width:var(--width, fit-content);
       }
       :host a {
         display:flex !important;
@@ -62,22 +62,20 @@ export default class UserProfile extends Shadow() {
         text-decoration:none !important;
       }
       :host span {
-        padding:0 0 0 0.5em;
-      }
-      :host > div {
-        padding:0.8em;
-        background:#f5f5f5;
-        border-radius:1.6em;
+        padding:var(--span-padding, 0);
       }
       :host .profile {
-        display:flex;
+        display:var(--profile-display, block);
+        padding:var(--profile-padding, 0);
+        background-color:var(--div-background-color, black);
+        border-radius:var(--profile-border-radius, 0);
       }
       :host .profile:hover {
-        background-color:#E0E0E0;
+        background-color:var(--profile-background-color-hover, white);
         cursor: pointer;
       }
       :host .profile img {
-        height: 1.2em; 
+        height:var(--profile-img-height, auto); 
       }    
       :host .menu {
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -92,20 +90,20 @@ export default class UserProfile extends Shadow() {
         z-index:9999;
         visibility: hidden;
         opacity: 0;
-        transition: visibility 300ms linear, opacity 300ms linear;
+        transition: visibility 100ms linear, opacity 100ms linear;
       }
       :host .menu.active {
         visibility: visible;
         opacity: 1;
       }
       :host .menu ul {
-        padding:var(--content-spacing) auto;
+        padding:var(--menu-ul-padding, 0);
         margin:0;
       }
       :host .menu ul li {
         list-style: none;
-        padding: calc(var(--content-spacing) / 2) var(--content-spacing);
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        padding:var(--menu-li-padding, 0);
+        border-top:var(--menu-li-border-top, none);
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
