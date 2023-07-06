@@ -1,0 +1,25 @@
+:host > header {
+  flex-direction: row;
+}
+:host > header > a-logo  {
+    left: 2em;
+    right: auto;
+}
+:host > header > m-navigation {
+    animation: closeRight .4s ease-in;
+    left: auto;
+    right: -100vw;
+}
+:host > header.open > m-navigation {
+    animation: openRight .3s ease-out;
+    left: auto;
+    right: 0;
+}
+@keyframes openRight {
+    0% {right: -100vw}
+    100% {right: 0}
+}
+@keyframes closeRight {
+    0% {right: 0}
+    100% {right: -100vw}
+}
