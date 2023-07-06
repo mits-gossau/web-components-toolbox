@@ -72,7 +72,7 @@ export default class UserProfile extends Shadow() {
         display:flex;
       }
       :host .profile:hover {
-        background-color:red;
+        background-color:#E0E0E0;
         cursor: pointer;
       }
       :host .profile img {
