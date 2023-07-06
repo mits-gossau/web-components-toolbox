@@ -55,8 +55,8 @@ export default class UserProfile extends Shadow() {
          width:var(--width, fit-content);
       }
       :host a {
-        display:flex !important;
         align-items: center;
+        display:flex !important;
         flex-direction: row;
         margin:0 !important;
         text-decoration:none !important;
@@ -65,10 +65,10 @@ export default class UserProfile extends Shadow() {
         padding:var(--span-padding, 0);
       }
       :host .profile {
-        display:var(--profile-display, block);
-        padding:var(--profile-padding, 0);
         background-color:var(--div-background-color, black);
         border-radius:var(--profile-border-radius, 0);
+        display:var(--profile-display, block);
+        padding:var(--profile-padding, 0);
       }
       :host .profile:hover {
         background-color:var(--profile-background-color-hover, white);
@@ -78,32 +78,32 @@ export default class UserProfile extends Shadow() {
         height:var(--profile-img-height, auto); 
       }    
       :host .menu {
-        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        background: #FFFFFF;
         border-radius: 8px;
         border: 1px solid  #F5F5F5;
-        position: absolute;
-        top:3em;
-        right: 0;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        opacity: 0;
         padding: 0;
-        background: #FFFFFF;
+        position: absolute;
+        right: 0;
+        top:3em;
+        transition: visibility 100ms linear, opacity 100ms linear;
+        visibility: hidden;
         width: max-content;
         z-index:9999;
-        visibility: hidden;
-        opacity: 0;
-        transition: visibility 100ms linear, opacity 100ms linear;
       }
       :host .menu.active {
-        visibility: visible;
         opacity: 1;
+        visibility: visible;
       }
       :host .menu ul {
-        padding:var(--menu-ul-padding, 0);
         margin:0;
+        padding:var(--menu-ul-padding, 0);
       }
       :host .menu ul li {
+        border-top:var(--menu-li-border-top, none);
         list-style: none;
         padding:var(--menu-li-padding, 0);
-        border-top:var(--menu-li-border-top, none);
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
