@@ -65,7 +65,7 @@ export default class UserProfile extends Shadow() {
         padding:var(--span-padding, 0);
       }
       :host .profile {
-        background-color:var(--div-background-color, black);
+        background-color:var(--profile-background-color, black);
         border-radius:var(--profile-border-radius, 0);
         display:var(--profile-display, block);
         padding:var(--profile-padding, 0);
