@@ -11,7 +11,6 @@ export default class UserProfile extends Shadow() {
   constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.clickListener = event => {
-      console.log("hoi");
       this.menuDiv?.classList.toggle("active");
     }
   }
@@ -52,6 +51,8 @@ export default class UserProfile extends Shadow() {
     this.css = /* css */`
       :host {
          display:block;
+         position:relative;
+         width:fit-content;
       }
       :host a {
         display:flex !important;
@@ -83,11 +84,11 @@ export default class UserProfile extends Shadow() {
         border-radius: 8px;
         border: 1px solid  #F5F5F5;
         position: absolute;
-        top: 3.9em;
-        right: 5vw;
+        top:3em;
+        right: 0;
         padding: 0;
         background: #FFFFFF;
-        width: auto;
+        width: max-content;
         z-index:9999;
         visibility: hidden;
         opacity: 0;
