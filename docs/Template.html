@@ -140,12 +140,14 @@
       return fetch(path).then(res => res.text()).then(innerHTML => {
         // fix relative links
         innerHTML = innerHTML.replace(/([^\.])\.\/([^\.])/g, `$1${path.replace(/(.*\/)(.*)$/, '$1')}$2`)
-        if (append) {
+        if (append === true) {
           const div = document.createElement('div')
           div.innerHTML = innerHTML
           Array.from(div.childNodes).forEach(node => {
             if (node) document.querySelector(selector)[setChild](node)
           })
+        } else if (append === 'outer') {
+          document.querySelector(selector).outerHTML = innerHTML
         } else {
           document.querySelector(selector).innerHTML = innerHTML
         }
@@ -174,6 +176,9 @@
     Promise.all([
       loadCSS(url.searchParams.get('css'), url.searchParams.get('rootFolder')),
       loadHTML(url.searchParams.get('login'), 'p-general', true, url.searchParams.get('rootFolder'), 'prepend'),
+      url.searchParams.get('header')
+       ? loadHTML(url.searchParams.get('header'), 'o-header', 'outer', url.searchParams.get('rootFolder'))
+       : null,
       loadHTML(url.searchParams.get('logo'), 'o-header', true, url.searchParams.get('rootFolder')),
       loadHTML(url.searchParams.get('nav'), 'o-header', true, url.searchParams.get('rootFolder')),
       loadHTML(url.searchParams.get('content'), 'o-body', undefined, url.searchParams.get('rootFolder')),
