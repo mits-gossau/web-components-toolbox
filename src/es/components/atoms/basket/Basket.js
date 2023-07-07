@@ -7,33 +7,32 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Basket extends Shadow() {
-
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
-    
+
     this.answerEventNameListener = event => {
-      
       // WIP!!!
-      console.log("event", event.detail)
+      console.log('event', event.detail)
       this.count.innerHTML = Number(this.count.innerHTML) + 1
     }
   }
 
-
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
-  disconnectedCallback() {
+
+  disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
+
   /**
    * evaluates if a render is necessary
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -42,7 +41,7 @@ export default class Basket extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.img
   }
 
@@ -51,7 +50,7 @@ export default class Basket extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         display:block;
@@ -87,7 +86,7 @@ export default class Basket extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate() {
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'basket-default-':
         return this.fetchCSS([{
@@ -104,9 +103,9 @@ export default class Basket extends Shadow() {
    *
    * @return {void}
    */
-  renderHTML() {
-    this.wrapper = this.root.querySelector('div') || document.createElement('div');
-    this.count = this.root.querySelector('span') || document.createElement('span');
+  renderHTML () {
+    this.wrapper = this.root.querySelector('div') || document.createElement('div')
+    this.count = this.root.querySelector('span') || document.createElement('span')
     this.count.innerHTML = '0'
     this.wrapper.appendChild(this.count)
     this.img = this.root.querySelector('img') || document.createElement('img')
@@ -115,7 +114,7 @@ export default class Basket extends Shadow() {
     this.html = this.wrapper
   }
 
-  get icon() {
+  get icon () {
     return this.getAttribute('icon')
   }
 }

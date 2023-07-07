@@ -7,21 +7,26 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class UserProfile extends Shadow() {
-
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.clickListener = event => {
-      this.menuDiv?.classList.toggle("active");
+      const isInside = event.composedPath().includes(this)
+      const isActive = this.menuDiv?.classList.contains('active')
+      if (isInside || isActive) {
+        this.menuDiv?.classList.toggle('active')
+        this.profileImgDiv?.classList.toggle('active') 
+      }
     }
   }
 
-
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-    this.profileImgDiv?.addEventListener('click', this.clickListener)
+    document.body.addEventListener('click', this.clickListener)
   }
-  disconnectedCallback() {
+
+  disconnectedCallback () {
+    document.body.removeEventListener('click', this.clickListener)
   }
 
   /**
@@ -29,7 +34,7 @@ export default class UserProfile extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -38,7 +43,7 @@ export default class UserProfile extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.profileImgDiv
   }
 
@@ -47,7 +52,7 @@ export default class UserProfile extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
          display:var(--display, block);
@@ -73,6 +78,9 @@ export default class UserProfile extends Shadow() {
       :host .profile:hover {
         background-color:var(--profile-background-color-hover, white);
         cursor: pointer;
+      }
+      :host .profile.active {
+        background-color:var(--profile-background-color-active, red);
       }
       :host .profile img {
         height:var(--profile-img-height, auto); 
@@ -117,7 +125,7 @@ export default class UserProfile extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -145,34 +153,28 @@ export default class UserProfile extends Shadow() {
    *
    * @return {void}
    */
-  renderHTML() {
-    this.menuDiv = document.createElement('div');
+  renderHTML () {
+    this.menuDiv = this.root.querySelector('.menu') || document.createElement('div')
     this.menuDiv.setAttribute('class', 'menu')
     const menuUL = document.createElement('ul')
     const linkNodes = [...this.root.childNodes].filter(c => c.nodeName === 'A')
     this.html = ''
     linkNodes.forEach(node => {
-      const li = document.createElement('li');
+      const li = document.createElement('li')
       li.innerHTML = node.outerHTML
       menuUL.appendChild(li)
     })
     this.menuDiv.appendChild(menuUL)
-    //
-    this.profileImgDiv = document.createElement('div');
+    this.profileImgDiv = this.root.querySelector('.profile') || document.createElement('div')
     this.profileImgDiv.setAttribute('class', 'profile')
     const profileImg = document.createElement('img')
     profileImg.setAttribute('src', this.icon)
     this.profileImgDiv.appendChild(profileImg)
-    //
-    //this.wrapper = this.root.querySelector('div') || document.createElement('div');
-    //this.wrapper.appendChild(profileImgDiv)
-    //this.wrapper.appendChild(menuDiv)
-    //this.html = this.wrapper
     this.html = this.profileImgDiv
     this.html = this.menuDiv
   }
 
-  get icon() {
+  get icon () {
     return this.getAttribute('icon')
   }
 }

@@ -3,6 +3,7 @@
     --user-profile-default-menu-li-border-top:1px solid var(--m-gray-100);
     --user-profile-default-menu-li-padding:calc(var(--content-spacing) / 2) var(--content-spacing);
     --user-profile-default-menu-ul-padding:var(--content-spacing) auto;
+    --user-profile-default-profile-background-color-active:var(--user-profile-default-profile-background-color-active-custom, var(--color-secondary));
     --user-profile-default-profile-background-color-hover:var(--m-gray-300);
     --user-profile-default-profile-background-color:var(--m-gray-100);
     --user-profile-default-profile-border-radius:var(--user-profile-default-profile-border-radius-custom, 1.6em); 
