@@ -7,7 +7,6 @@ export default class MetaHeader extends Shadow() {
   }
 
   connectedCallback () {
-    super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
   }

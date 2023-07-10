@@ -41,7 +41,9 @@ export default class NewsList extends Shadow() {
     :host {
       display:flex:
     }
-    @media only screen and (max-width: _max-width_) {}
+    @media only screen and (max-width: _max-width_) {
+      :host {}
+    }
     `
     return this.fetchTemplate()
   }
@@ -75,8 +77,20 @@ export default class NewsList extends Shadow() {
   }
 
   renderHTML(productData) {
+    const fetchModules = this.fetchModules([
+      {
+        path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
+        name: 'o-wrapper'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../molecules/product/Product.js`,
+        name: 'm-product'
+      }
+    ])
     this.listWrapper = document.querySelector('div') || document.createElement('div')
-    this.listWrapper.innerText = JSON.stringify(productData, null, 2)
-    this.html = this.listWrapper
+    const dummyProductItem = '<m-product></m-product>'
+    const dummyProductListItems = JSON.stringify(productData, null, 2)
+    this.html = dummyProductItem
+    this.html = dummyProductListItems
   }
 }
