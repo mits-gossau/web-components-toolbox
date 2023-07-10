@@ -410,6 +410,19 @@ export default class Header extends Shadow() {
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }], false)
+      case 'header-nav-right-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--header-default-',
+            flags: 'g',
+            replacement: '--header-nav-right-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./nav-right-/nav-right-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
       default:
         return Promise.resolve()
     }

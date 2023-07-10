@@ -457,7 +457,7 @@ export default class Navigation extends Mutation() {
           --a-link-font-size-no-scroll-mobile: 1.1429rem;
           --a-link-font-weight: normal;
           --a-link-second-level-font-size-mobile: 1.2857rem;
-          --a-link-text-align-mobile: left;
+          --a-link-text-align-mobile: var(--a-link-text-align-mobile-custom, left);
           --height: auto;
           --li-padding: 0;
           --margin: 0;
