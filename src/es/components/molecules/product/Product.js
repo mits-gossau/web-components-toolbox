@@ -1,8 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
-
 /**
  * As a molecule, this component shall hold Atoms
  *
@@ -11,20 +9,16 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Product extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
   }
 
-  disconnectedCallback() {
-   
-  }
-
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.productImage
   }
 
@@ -33,7 +27,7 @@ export default class Product extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -42,7 +36,7 @@ export default class Product extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         display:flex;
@@ -67,7 +61,7 @@ export default class Product extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -94,16 +88,20 @@ export default class Product extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML() {
+  renderHTML () {
     this.basketUtils = this.root.querySelector('.basket-utils') || document.createElement('div')
     this.basketUtils.innerText = 'Basket Add, etc.'
     this.productImage = this.root.querySelector('.product-image') || document.createElement('div')
-    this.productImage.innerText = 'Product Image'
+    this.productImage.innerHTML = `<a-picture defaultSource='${this.pd.transparent_image.src}' alt=''></a-picture>`
     this.productData = this.root.querySelector('.product-data') || document.createElement('div')
-    this.productData.innerText = 'Brand Brandline - Name - Versioning'
+    this.productData.innerText = `${this.pd.price_info?.price}\n${this.pd.name}`
     this.html = this.basketUtils
     this.html = this.productImage
     this.html = this.productData
   }
 
+  get pd () {
+    const pd = this.getAttribute('data') || ''
+    return JSON.parse(pd)
+  }
 }

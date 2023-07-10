@@ -14,7 +14,7 @@ export default class UserProfile extends Shadow() {
       const isActive = this.menuDiv?.classList.contains('active')
       if (isInside || isActive) {
         this.menuDiv?.classList.toggle('active')
-        this.profileImgDiv?.classList.toggle('active') 
+        this.profileImgDiv?.classList.toggle('active')
       }
     }
   }

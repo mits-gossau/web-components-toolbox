@@ -1,33 +1,29 @@
 // @ts-check
-/* global CustomEvent */
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class NewsList extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
-        console.log(productData["products"])
-        this.renderHTML(productData["products"].map(p => p.name))
+        // remove the shitty html mui stuff
+        const products = productData.products.map(({ html, ...keepAttrs }) => keepAttrs)
+        this.renderHTML(products)
       })
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  shouldRenderHTML() {
-    return !this.listWrapper
-  }
-
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -36,10 +32,14 @@ export default class NewsList extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */ `
     :host {
-      display:flex:
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: space-between;
+      gap:1em;
     }
     @media only screen and (max-width: _max-width_) {
       :host {}
@@ -53,7 +53,7 @@ export default class NewsList extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -76,8 +76,8 @@ export default class NewsList extends Shadow() {
     }
   }
 
-  renderHTML(productData) {
-    const fetchModules = this.fetchModules([
+  renderHTML (productData) {
+    this.fetchModules([
       {
         path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
         name: 'o-wrapper'
@@ -87,10 +87,7 @@ export default class NewsList extends Shadow() {
         name: 'm-product'
       }
     ])
-    this.listWrapper = document.querySelector('div') || document.createElement('div')
-    const dummyProductItem = '<m-product></m-product>'
-    const dummyProductListItems = JSON.stringify(productData, null, 2)
-    this.html = dummyProductItem
-    this.html = dummyProductListItems
+    const products = productData.map(p => `<m-product data='${JSON.stringify(p)}'></m-product>`)
+    this.html = products.join('')
   }
 }
