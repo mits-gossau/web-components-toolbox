@@ -168,8 +168,10 @@ export default class DateInput extends Shadow() {
             touch-action: manipulation;
             transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
             width: var(--width, auto);
+            min-width: var(--min-width, 240px);
         }
         :host .date-input:hover, :host(.hover) .date-input {
+            cursor: pointer;
             background-color: var(--background-color-hover, var(--background-color, #B24800));
             border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
             color: var(--color-hover, var(--color, #FFFFFF));
@@ -198,9 +200,7 @@ export default class DateInput extends Shadow() {
             opacity: var(--opacity-disabled, var(--opacity, 0.5));
         }
         :host .date-input::-webkit-calendar-picker-indicator {
-            color: transparent;
-            background: none;
-            z-index: 1;
+            display: none;
         }
         @media only screen and (max-width: _max-width_) {
             :host .date-input {
@@ -260,7 +260,7 @@ export default class DateInput extends Shadow() {
     dateInput.name = dateInput.id
     dateInput.type = 'text'
 
-    dateInput.onfocus = () => {
+    const showDatePicker = () => {
       if (dateInput.value) {
         const dateValue = dateInput.value.replace(calendarIndicator, '')
         const parts = dateValue.split('.')
@@ -274,9 +274,41 @@ export default class DateInput extends Shadow() {
       dateInput.showPicker()
     }
 
+    // dateInput.onclick = () => {
+    //   showDatePicker();
+    // }
+
+    // dateInput.onmouseenter = () => {
+    //   showDatePicker();
+    // }
+
+    // dateInput.onmousedown = () => {
+    //   showDatePicker();
+    // }
+
+    // dateInput.ontouchstart = () => {
+    //   showDatePicker();
+    // }
+
+    dateInput.onfocus = () => {
+      showDatePicker();
+    }
+
     dateInput.onblur = () => {
       dateInput.type = 'text'
     }
+
+    // dateInput.onmouseleave = () => {
+    //   dateInput.type = 'text'
+    // }
+
+    // dateInput.onmouseout = () => {
+    //   dateInput.type = 'text'
+    // }
+
+    // dateInput.ontouchend = () => {
+    //   dateInput.type = 'text'
+    // }
 
     dateInput.onchange = () => {
       if (dateInput.value) {
