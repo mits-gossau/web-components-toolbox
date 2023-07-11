@@ -21,15 +21,16 @@ export default class DateInput extends Shadow() {
       ...args
     )
 
-    this.clickListener = (event) => {
+    this.inputEventListener = (event) => {
+      console.log('changed');
       if (this.hasAttribute('disabled')) event.preventDefault()
       if (this.getAttribute('request-event-name')) {
         event.preventDefault()
-        this.dateInput.classList.toggle('active')
+        /*this.dateInput.classList.toggle('active')
         this.dateInput.setAttribute(
           'aria-pressed',
-          this.dateInput.classList.contains('active')
-        )
+          String(this.dateInput.classList.contains('active'))
+        )*/
         this.dispatchEvent(
           new CustomEvent(this.getAttribute('request-event-name'), {
             detail: this.getEventDetail(event),
@@ -39,6 +40,10 @@ export default class DateInput extends Shadow() {
           })
         )
       }
+    }
+
+    this.clickEventListener = event => {
+      this.root.querySelector('input').showPicker()
     }
 
     this.answerEventListener = async (event) => {
@@ -59,12 +64,14 @@ export default class DateInput extends Shadow() {
         const tagsIncludesTag = this.hasAttribute('tag-search')
           ? tags.some((tag) => tag.includes(this.getAttribute('tag-search')))
           : tags.includes(this.getAttribute('tag'))
-        this.dateInput.classList[tagsIncludesTag ? 'add' : 'remove']('active')
+        //this.dateInput.classList[tagsIncludesTag ? 'add' : 'remove']('active')
       }
+      /*
       this.dateInput.setAttribute(
         'aria-pressed',
-        this.dateInput.classList.contains('active')
+        String(this.dateInput.classList.contains('active'))
       )
+      */
     }
   }
 
@@ -76,32 +83,19 @@ export default class DateInput extends Shadow() {
     if (this.shouldRenderHTML()) {
       this.renderHTML()
     }
-    this.dateInput.addEventListener('click', this.clickListener)
+    this.addEventListener('input', this.inputEventListener)
+    this.addEventListener('click', this.clickEventListener)
     if (this.getAttribute('answer-event-name')) {
       document.body.addEventListener(
         this.getAttribute('answer-event-name'),
         this.answerEventListener
       )
     }
-    this.attributeChangedCallback()
-    this.connectedCallbackOnce()
-  }
-
-  connectedCallbackOnce () {
-    if (document.body.hasAttribute('wc-config-load')) {
-      this.wcConfigLoadListener()
-    } else {
-      document.body.addEventListener(
-        this.getAttribute('wc-config-load') || 'wc-config-load',
-        this.wcConfigLoadListener,
-        { once: true }
-      )
-    }
-    this.connectedCallbackOnce = () => {}
   }
 
   disconnectedCallback () {
-    this.dateInput.removeEventListener('click', this.clickListener)
+    this.removeEventListener('input', this.inputEventListener)
+    this.removeEventListener('click', this.clickEventListener)
     if (this.getAttribute('answer-event-name')) {
       document.body.removeEventListener(
         this.getAttribute('answer-event-name'),
@@ -112,12 +106,16 @@ export default class DateInput extends Shadow() {
 
   // @ts-ignore
   attributeChangedCallback () {
-    this.hasAttribute('disabled')
-        ? this.dateInput.setAttribute('disabled', '')
-        : this.dateInput.removeAttribute('disabled')
-    this.hasAttribute('aria-disabled')
-        ? this.dateInput.setAttribute('aria-disabled', 'true')
-        : this.dateInput.removeAttribute('aria-disabled')
+    /*
+    if (this.dateInput) {
+      this.hasAttribute('disabled')
+          ? this.dateInput.setAttribute('disabled', '')
+          : this.dateInput.removeAttribute('disabled')
+      this.hasAttribute('aria-disabled')
+          ? this.dateInput.setAttribute('aria-disabled', 'true')
+          : this.dateInput.removeAttribute('aria-disabled')
+    }
+    */
   }
 
   /**
@@ -135,7 +133,7 @@ export default class DateInput extends Shadow() {
    * @return {boolean}
    */
   shouldRenderHTML () {
-    return !this.dateInput
+    return !this.root.querySelector('input')
   }
 
   renderCSS () {
@@ -200,7 +198,7 @@ export default class DateInput extends Shadow() {
             opacity: var(--opacity-disabled, var(--opacity, 0.5));
         }
         :host .date-input::-webkit-calendar-picker-indicator {
-            display: none;
+            opacity: 0;
         }
         @media only screen and (max-width: _max-width_) {
             :host .date-input {
@@ -250,6 +248,19 @@ export default class DateInput extends Shadow() {
   }
 
   renderHTML () {
+    //this.html = this.dateInput
+
+    const calendarIndicator = this.hasAttribute('calendarIndicator')
+      ? this.getAttribute('calendarIndicator')
+      : ''
+    const input = /* HTML */`
+      <label for="date-picker">${new Date(Date.now()).toLocaleDateString('de-CH')}${calendarIndicator}</label>
+      <input id="date-picker" name="date-picker" class="date-input" type="date" min="2024-08-20" max="2024-09-12" />
+    `
+    this.html = input
+  }
+/*
+  get dateInput () {
     const dateInput = document.createElement('input')
     const calendarIndicator = this.hasAttribute('calendarIndicator')
       ? this.getAttribute('calendarIndicator')
@@ -259,7 +270,7 @@ export default class DateInput extends Shadow() {
     dateInput.className = 'date-input'
     dateInput.name = dateInput.id
     dateInput.type = 'text'
-
+    
     const showDatePicker = () => {
       if (dateInput.value) {
         const dateValue = dateInput.value.replace(calendarIndicator, '')
@@ -274,22 +285,6 @@ export default class DateInput extends Shadow() {
       dateInput.showPicker()
     }
 
-    // dateInput.onclick = () => {
-    //   showDatePicker();
-    // }
-
-    // dateInput.onmouseenter = () => {
-    //   showDatePicker();
-    // }
-
-    // dateInput.onmousedown = () => {
-    //   showDatePicker();
-    // }
-
-    // dateInput.ontouchstart = () => {
-    //   showDatePicker();
-    // }
-
     dateInput.onfocus = () => {
       showDatePicker();
     }
@@ -297,18 +292,6 @@ export default class DateInput extends Shadow() {
     dateInput.onblur = () => {
       dateInput.type = 'text'
     }
-
-    // dateInput.onmouseleave = () => {
-    //   dateInput.type = 'text'
-    // }
-
-    // dateInput.onmouseout = () => {
-    //   dateInput.type = 'text'
-    // }
-
-    // dateInput.ontouchend = () => {
-    //   dateInput.type = 'text'
-    // }
 
     dateInput.onchange = () => {
       if (dateInput.value) {
@@ -339,7 +322,7 @@ export default class DateInput extends Shadow() {
     if (this.hasAttribute('disabled')) {
         dateInput.setAttribute('disabled', this.getAttribute('disabled'))
     }
-
-    this.html = dateInput
+    return dateInput
   }
+  */
 }
