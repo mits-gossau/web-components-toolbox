@@ -44,10 +44,10 @@ export default class Product extends Shadow() {
         justify-content: space-between;
         align-items: flex-start;
         background-color:var(--m-white);
-        width: 210px;
-        height: 310px;
+        width: 17vw;
         border-radius: 8px;
         box-shadow: 0px 0px 12px 0px rgba(51, 51, 51, 0.10);
+        margin:0 0 var(--content-spacing) 0;
       }
       @media only screen and (max-width: _max-width_) {
         :host {}

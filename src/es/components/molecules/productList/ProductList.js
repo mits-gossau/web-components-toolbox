@@ -39,7 +39,7 @@ export default class NewsList extends Shadow() {
       flex-wrap: wrap;
       flex-direction: row;
       justify-content: space-between;
-      gap:1em;
+      gap:var(--content-spacing);
     }
     @media only screen and (max-width: _max-width_) {
       :host {}
