@@ -39,15 +39,37 @@ export default class Product extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        display:flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: flex-start;
+        --img-height:10vw;
+        align-items:flex-start;
         background-color:var(--m-white);
-        width: 17vw;
-        border-radius: 8px;
-        box-shadow: 0px 0px 12px 0px rgba(51, 51, 51, 0.10);
+        border-radius:8px;
+        box-shadow:0px 0px 12px 0px rgba(51, 51, 51, 0.10);
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
         margin:0 0 var(--content-spacing) 0;
+        width:13vw;
+      }
+      :host .basket-utils {
+       padding:calc(var(--content-spacing) / 2); 
+      }
+      :host .product-image {
+        padding:0 var(--content-spacing);
+        align-self:center;
+      }
+      :host .product-price{
+        display:block;
+        font-size:1.25em;
+        font-weight: bold;
+      }
+      :host .product-name{
+        display:block;
+        font-size:0.85em;
+        font-weight: bold;
+      }
+      :host .product-data {
+        min-height:5em;
+        padding:calc(var(--content-spacing) / 2); 
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
@@ -88,20 +110,43 @@ export default class Product extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML () {
-    this.basketUtils = this.root.querySelector('.basket-utils') || document.createElement('div')
-    this.basketUtils.innerText = 'Basket Add, etc.'
-    this.productImage = this.root.querySelector('.product-image') || document.createElement('div')
-    this.productImage.innerHTML = `<a-picture defaultSource='${this.pd.transparent_image.src}' alt=''></a-picture>`
-    this.productData = this.root.querySelector('.product-data') || document.createElement('div')
-    this.productData.innerText = `${this.pd.price_info?.price}\n${this.pd.name}`
-    this.html = this.basketUtils
-    this.html = this.productImage
-    this.html = this.productData
+  renderHTML () { 
+    this.html = this.createBasketUtilsElement()
+    this.html = this.createProductImageElement(this.productData.image.retina_src, this.productData.accessible_information_text)
+    this.html = this.createProductDataElement(this.productData.price_info?.price, this.productData.name)
   }
 
-  get pd () {
+  createBasketUtilsElement(){
+    const div = document.createElement('div')
+    div.classList.add('basket-utils');
+    div.innerText = 'Basket Add, etc.' 
+    return div
+  }
+
+  createProductImageElement(imageSrc, alt){
+    const div = document.createElement('div')
+    div.classList.add('product-image');
+    div.innerHTML = `<a-picture defaultSource='${imageSrc}' alt='${alt}'></a-picture>`
+    return div
+  }
+
+  createProductDataElement(price, name){
+    const div = document.createElement('div')
+    div.classList.add('product-data');
+    const priceSpan = document.createElement('span')
+    priceSpan.classList.add('product-price');
+    priceSpan.innerText = price
+    div.appendChild(priceSpan)
+    const nameSpan = document.createElement('span')
+    nameSpan.classList.add('product-name');
+    nameSpan.innerText = name
+    div.appendChild(nameSpan)
+    return div
+  }
+
+  get productData () {
     const pd = this.getAttribute('data') || ''
+    console.log(JSON.parse(pd))
     return JSON.parse(pd)
   }
 }
