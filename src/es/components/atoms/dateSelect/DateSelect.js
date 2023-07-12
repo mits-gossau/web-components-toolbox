@@ -315,14 +315,13 @@ export default class DateSelect extends Shadow() {
       const selectedYear = parseInt(yearSelect.value);
       let minMonth = 0;
       let maxMonth = 11;
-      console.log(selectedYear, minMonth, maxMonth);
+
       if (selectedYear === minYear) {
         minMonth = minDate.getMonth();
       }
       if (selectedYear === maxYear) {
         maxMonth = maxDate.getMonth();
       }
-      console.log(minMonth, maxMonth);
 
       // Generate options for month select element
       const monthOptions = [];
