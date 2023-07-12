@@ -275,8 +275,12 @@ export default class DateSelect extends Shadow() {
     dateSelectPicker.setAttribute("class", "date-select");
 
 
+
+
 // Function to generate the options for a select element
 function generateOptions(selectElement, options) {
+  console.log({selectElement})
+  console.log({options})
   options.forEach((option) => {
     const { value, text, disabled } = option;
     const optionElement = document.createElement('option');
@@ -290,6 +294,7 @@ function generateOptions(selectElement, options) {
       selectElement.appendChild(optionElement);
     }
   });
+  console.log({selectElement})
 }
 
 // Get the minimum and maximum dates
@@ -316,17 +321,23 @@ generateOptions(yearSelect, yearOptions);
 
 // Function to generate options for month select element
 function generateMonthOptions() {
-  const monthSelect = document.getElementById('monthSelect');
+  const monthSelect = document.createElement('select');
+  monthSelect.setAttribute("id", "monthSelect");
   const selectedYear = parseInt(yearSelect.value);
+  console.log({selectedYear});
 
   // Get the minimum and maximum months based on the selected year
-  let minMonth = 0;
-  let maxMonth = 11;
+  console.log({minDate})
+  console.log({maxDate})
+  let minMonth = 1;
+  let maxMonth = 12;
   if (selectedYear === minYear) {
     minMonth = minDate.getMonth();
   } else if (selectedYear === maxYear) {
     maxMonth = maxDate.getMonth();
   }
+  console.log({minMonth})
+  console.log({maxMonth})
 
   // Generate options for month select element
   const monthOptions = [];
