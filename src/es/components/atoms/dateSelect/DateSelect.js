@@ -248,8 +248,14 @@ export default class DateSelect extends Shadow() {
   }
 
   renderHTML() {
-    const dateMin = this.hasAttribute("min") ? new Date(this.getAttribute("min")) : new Date();
-    const dateMax = this.hasAttribute("max") ? new Date(this.getAttribute("max")) : new Date();
+    const minDate = this.hasAttribute("min")
+      ? new Date(this.getAttribute("min"))
+      : new Date();
+    const maxDate = this.hasAttribute("max")
+      ? new Date(this.getAttribute("max"))
+      : new Date();
+    const minYear = minDate.getFullYear();
+    const maxYear = maxDate.getFullYear();
     const calendarIndicator = this.hasAttribute("calendarIndicator")
       ? this.getAttribute("calendarIndicator")
       : "";
@@ -257,233 +263,128 @@ export default class DateSelect extends Shadow() {
       ? this.getAttribute("placeholder")
       : "";
 
-    const yearMin = dateMin.getFullYear();
-    const yearMax = dateMax.getFullYear();
-    console.log(yearMin, yearMax)
-
-    const monthMin = String(dateMin.getMonth() + 1).padStart(2, '0');
-    const monthMax = String(dateMax.getMonth() + 1).padStart(2, '0');
-    console.log(monthMin, monthMax)
-
-    const dayMin = String(dateMin.getDate()).padStart(2, '0');
-    const dayMax = String(dateMax.getDate()).padStart(2, '0');
-    console.log(dayMin, dayMax)
-
     const dateSelectPicker = document.createElement("label");
     dateSelectPicker.setAttribute("for", "monthSelect");
     dateSelectPicker.setAttribute("id", "dateSelectPicker");
     dateSelectPicker.setAttribute("class", "date-select");
 
-
-
-
-// Function to generate the options for a select element
-function generateOptions(selectElement, options) {
-  console.log({selectElement})
-  console.log({options})
-  options.forEach((option) => {
-    const { value, text, disabled } = option;
-    const optionElement = document.createElement('option');
-    optionElement.value = value;
-    optionElement.textContent = text;
-    if (disabled) {
-      optionElement.disabled = true;
-      optionElement.selected = true;
+    // Function to remove all options for a select element
+    function removeOptions(selectElement) {
+      for (let i = selectElement.options.length - 1; i >= 0; i--) {
+        selectElement.remove(i);
+      }
     }
-    if (selectElement) {
-      selectElement.appendChild(optionElement);
+
+    // Function to generate the options for a select element
+    function generateOptions(selectElement, options) {
+      removeOptions(selectElement);
+
+      options.forEach((option) => {
+        const { value, text, disabled } = option;
+        const optionElement = document.createElement("option");
+        optionElement.value = value;
+        optionElement.textContent = text;
+        if (disabled) {
+          optionElement.disabled = true;
+          optionElement.selected = true;
+        }
+        if (selectElement) {
+          selectElement.appendChild(optionElement);
+        }
+      });
     }
-  });
-  console.log({selectElement})
-}
 
-// Get the minimum and maximum dates
-const minDate = dateMin;
-const maxDate = dateMax;
+    // Generate options for year select element
+    const yearSelect = document.createElement("select");
+    yearSelect.setAttribute("id", "yearSelect");
+    const yearOptions = [];
+    for (let year = minYear; year <= maxYear; year++) {
+      yearOptions.push({
+        value: year,
+        text: year,
+        disabled: minYear === maxYear,
+      });
+    }
+    generateOptions(yearSelect, yearOptions);
 
-// Get the minimum and maximum years
-const minYear = minDate.getFullYear();
-const maxYear = maxDate.getFullYear();
+    const monthSelect = document.createElement("select");
+    monthSelect.setAttribute("id", "monthSelect");
 
-// Generate options for year select element
-// const yearSelect = document.getElementById('yearSelect');
-const yearSelect = document.createElement('select');
-yearSelect.setAttribute("id", "yearSelect");
-const yearOptions = [];
-for (let year = minYear; year <= maxYear; year++) {
-  yearOptions.push({
-    value: year,
-    text: year,
-    disabled: year === minYear || year === maxYear
-  });
-}
-generateOptions(yearSelect, yearOptions);
+    // Function to generate options for month select element
+    function generateMonthOptions() {
+      const selectedYear = parseInt(yearSelect.value);
+      let minMonth = 0;
+      let maxMonth = 11;
+      console.log(selectedYear, minMonth, maxMonth);
+      if (selectedYear === minYear) {
+        minMonth = minDate.getMonth();
+      }
+      if (selectedYear === maxYear) {
+        maxMonth = maxDate.getMonth();
+      }
+      console.log(minMonth, maxMonth);
 
-// Function to generate options for month select element
-function generateMonthOptions() {
-  const monthSelect = document.createElement('select');
-  monthSelect.setAttribute("id", "monthSelect");
-  const selectedYear = parseInt(yearSelect.value);
-  console.log({selectedYear});
+      // Generate options for month select element
+      const monthOptions = [];
+      for (let month = minMonth; month <= maxMonth; month++) {
+        const monthName = new Date(selectedYear, month).toLocaleString(
+          "default",
+          { month: "long" }
+        );
+        monthOptions.push({
+          value: month,
+          text: monthName,
+        });
+      }
+      generateOptions(monthSelect, monthOptions);
+    }
 
-  // Get the minimum and maximum months based on the selected year
-  console.log({minDate})
-  console.log({maxDate})
-  let minMonth = 1;
-  let maxMonth = 12;
-  if (selectedYear === minYear) {
-    minMonth = minDate.getMonth();
-  } else if (selectedYear === maxYear) {
-    maxMonth = maxDate.getMonth();
-  }
-  console.log({minMonth})
-  console.log({maxMonth})
+    // Generate options for day select element
+    const daySelect = document.createElement("select");
+    daySelect.setAttribute("id", "daySelect");
 
-  // Generate options for month select element
-  const monthOptions = [];
-  for (let month = minMonth; month <= maxMonth; month++) {
-    const monthName = new Date(selectedYear, month).toLocaleString('default', { month: 'long' });
-    monthOptions.push({
-      value: month,
-      text: monthName,
-      disabled: month === minMonth || month === maxMonth
+    function generateDayOptions() {
+      // Get the minimum and maximum days based on the selected year and month
+      const selectedYear = parseInt(yearSelect.value);
+      const selectedMonth = parseInt(monthSelect.value);
+      let minDay = 1;
+      let maxDay = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+
+      if (selectedYear === minYear && selectedMonth === minDate.getMonth()) {
+        minDay = minDate.getDate();
+      } else if (
+        selectedYear === maxYear &&
+        selectedMonth === maxDate.getMonth()
+      ) {
+        maxDay = maxDate.getDate();
+      }
+
+      // Generate options for day select element
+      const dayOptions = [];
+      for (let day = minDay; day <= maxDay; day++) {
+        dayOptions.push({
+          value: day,
+          text: day,
+        });
+      }
+      generateOptions(daySelect, dayOptions);
+    }
+
+    // Add event listeners to year and month select elements
+    yearSelect.addEventListener("change", () => {
+      generateMonthOptions();
+      generateDayOptions();
     });
-  }
-  generateOptions(monthSelect, monthOptions);
-}
+    monthSelect.addEventListener("change", generateDayOptions);
 
-const monthSelect = document.createElement('select');
-monthSelect.setAttribute("id", "monthSelect");
-// generateMonthOptions();
+    // Generate initial options for month and day select elements
+    generateMonthOptions();
+    generateDayOptions();
 
-// Generate options for day select element
-function generateDayOptions() {
-  const daySelect = document.getElementById('daySelect');
-  const selectedYear = parseInt(yearSelect.value);
-  const selectedMonth = parseInt(monthSelect.value);
+    dateSelectPicker.append(daySelect);
+    dateSelectPicker.append(monthSelect);
+    dateSelectPicker.append(yearSelect);
 
-  // Get the minimum and maximum days based on the selected year and month
-  let minDay = 1;
-  let maxDay = new Date(selectedYear, selectedMonth + 1, 0).getDate();
-  if (selectedYear === minYear && selectedMonth === minDate.getMonth()) {
-    minDay = minDate.getDate();
-  } else if (selectedYear === maxYear && selectedMonth === maxDate.getMonth()) {
-    maxDay = maxDate.getDate();
-  }
-
-  // Generate options for day select element
-  const dayOptions = [];
-  for (let day = minDay; day <= maxDay; day++) {
-    dayOptions.push({
-      value: day,
-      text: day,
-      disabled: day === minDay || day === maxDay
-    });
-  }
-  generateOptions(daySelect, dayOptions);
-}
-
-const daySelect = document.createElement('select');
-daySelect.setAttribute("id", "daySelect");
-// generateDayOptions();
-
-// Add event listeners to year and month select elements
-yearSelect.addEventListener('change', generateMonthOptions);
-monthSelect.addEventListener('change', generateDayOptions);
-
-// Generate initial options for month and day select elements
-generateMonthOptions();
-generateDayOptions();
-
-dateSelectPicker.append(daySelect);
-dateSelectPicker.append(monthSelect);
-dateSelectPicker.append(yearSelect);
-
-
-
-    // function getPossibleMonthsAndDays(minDate, maxDate) {
-    //   const possibleMonthsAndDays = [];
-    
-    //   const startDate = new Date(minDate);
-    //   const endDate = new Date(maxDate);
-    
-    //   let currentDate = startDate;
-    
-    //   while (currentDate <= endDate) {
-    //     const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
-    //     const currentDay = currentDate.getDate();
-    
-    //     possibleMonthsAndDays.push({ month: currentMonth, day: currentDay });
-    
-    //     currentDate.setDate(currentDate.getDate() + 1);
-    //   }
-    
-    //   return possibleMonthsAndDays;
-    // }
-
-    // const monthsAndDays = getPossibleMonthsAndDays(dateMin, dateMax);
-    // console.log(JSON.stringify(monthsAndDays));
-
-    // const uniqueMonths = new Set();
-    // const uniqueDays = new Set();
-
-    // monthsAndDays.forEach((item) => {
-    //   const { month, day } = item;
-    //   uniqueMonths.add(month);
-    //   uniqueDays.add(day);
-    // });
-
-    // const sortedMonths = Array.from(uniqueMonths);
-    // const sortedDays = Array.from(uniqueDays);
-
-    // console.log(sortedMonths);
-    // console.log(sortedDays);
-
-    // if (sortedDays.length) {
-    //   const selectElement = document.createElement("select");
-    //   selectElement.setAttribute("id", "daySelect");
-    //   selectElement.setAttribute("class", "select-date");
-    //   for (let i = 0; i < sortedDays.length; i++) {
-    //     const day = sortedDays[i];
-    //     const dayOption = document.createElement("option");
-    //     dayOption.value = day;
-    //     dayOption.textContent = day;
-    //     selectElement.append(dayOption);
-    //   }
-    //   dateSelectPicker.append(selectElement);
-    // }
-
-    // if (sortedMonths.length) {
-    //   const selectElement = document.createElement("select");
-    //   selectElement.setAttribute("id", "monthSelect");
-    //   selectElement.setAttribute("class", "select-date");
-    //   for (let i = 0; i < sortedMonths.length; i++) {
-    //     const month = sortedMonths[i];
-    //     const monthOption = document.createElement("option");
-    //     monthOption.value = month;
-    //     monthOption.textContent = month;
-    //     selectElement.append(monthOption);
-    //   }
-    //   dateSelectPicker.append(selectElement);
-    // }
-
-    // if (yearMin && yearMax) {
-    //   const selectElement = document.createElement("select");
-    //   selectElement.setAttribute("id", "yearSelect");
-    //   selectElement.setAttribute("class", "select-date");
-    //   if (yearMin === yearMax){
-    //     selectElement.setAttribute("disabled", "");
-    //   } 
-    //   for (let value = yearMin; value <= yearMax; value++) {
-    //     const option = document.createElement("option");
-    //     option.value = String(value).padStart(2, '0');
-    //     option.textContent = String(value).padStart(2, '0');
-    //     selectElement.append(option);
-    //   }
-    //   dateSelectPicker.append(selectElement);
-    // }
-
-  
     this.html = dateSelectPicker;
   }
 }
