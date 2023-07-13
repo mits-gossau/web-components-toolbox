@@ -110,35 +110,35 @@ export default class Product extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML () { 
+  renderHTML () {
     this.html = this.createBasketUtilsElement()
     this.html = this.createProductImageElement(this.productData.image.retina_src, this.productData.accessible_information_text)
     this.html = this.createProductDataElement(this.productData.price_info?.price, this.productData.name)
   }
 
-  createBasketUtilsElement(){
+  createBasketUtilsElement () {
     const div = document.createElement('div')
-    div.classList.add('basket-utils');
-    div.innerText = 'Basket Add, etc.' 
+    div.classList.add('basket-utils')
+    div.innerText = 'Basket Add, etc.'
     return div
   }
 
-  createProductImageElement(imageSrc, alt){
+  createProductImageElement (imageSrc, alt) {
     const div = document.createElement('div')
-    div.classList.add('product-image');
+    div.classList.add('product-image')
     div.innerHTML = `<a-picture defaultSource='${imageSrc}' alt='${alt}'></a-picture>`
     return div
   }
 
-  createProductDataElement(price, name){
+  createProductDataElement (price, name) {
     const div = document.createElement('div')
-    div.classList.add('product-data');
+    div.classList.add('product-data')
     const priceSpan = document.createElement('span')
-    priceSpan.classList.add('product-price');
+    priceSpan.classList.add('product-price')
     priceSpan.innerText = price
     div.appendChild(priceSpan)
     const nameSpan = document.createElement('span')
-    nameSpan.classList.add('product-name');
+    nameSpan.classList.add('product-name')
     nameSpan.innerText = name
     div.appendChild(nameSpan)
     return div

@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from "../../prototypes/Shadow.js";
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * DateSelect
@@ -11,59 +11,58 @@ import { Shadow } from "../../prototypes/Shadow.js";
  */
 
 export default class DateSelect extends Shadow() {
-  static get observedAttributes() {
-    return ["label", "disabled"];
+  static get observedAttributes () {
+    return ['label', 'disabled']
   }
 
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super(
       { hoverInit: undefined, importMetaUrl: import.meta.url, ...options },
       ...args
-    );
+    )
 
     this.inputEventListener = (event) => {
-      console.log("changed");
-      if (this.hasAttribute("disabled")) event.preventDefault();
-      if (this.getAttribute("request-event-name")) {
-        event.preventDefault();
-        /*this.dateInput.classList.toggle('active')
+      console.log('changed')
+      if (this.hasAttribute('disabled')) event.preventDefault()
+      if (this.getAttribute('request-event-name')) {
+        event.preventDefault()
+        /* this.dateInput.classList.toggle('active')
         this.dateInput.setAttribute(
           'aria-pressed',
           String(this.dateInput.classList.contains('active'))
-        )*/
+        ) */
         this.dispatchEvent(
-          new CustomEvent(this.getAttribute("request-event-name"), {
+          new CustomEvent(this.getAttribute('request-event-name'), {
             detail: this.getEventDetail(event),
             bubbles: true,
             cancelable: true,
-            composed: true,
+            composed: true
           })
-        );
+        )
       }
-    };
+    }
 
-    this.clickEventListener = (event) => {
-    };
+    this.clickEventListener = (event) => {}
 
     this.answerEventListener = async (event) => {
-      let tags = event.detail.tags;
-      if (this.getAttribute("active-detail-property-name")) {
-        tags = await this.getAttribute("active-detail-property-name")
-          .split(":")
+      let tags = event.detail.tags
+      if (this.getAttribute('active-detail-property-name')) {
+        tags = await this.getAttribute('active-detail-property-name')
+          .split(':')
           .reduce(async (accumulator, propertyName) => {
             // @ts-ignore
             propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) =>
               p1.toUpperCase()
-            );
-            if (accumulator instanceof Promise) accumulator = await accumulator;
-            return accumulator[propertyName];
-          }, event.detail);
+            )
+            if (accumulator instanceof Promise) accumulator = await accumulator
+            return accumulator[propertyName]
+          }, event.detail)
       }
       if (tags) {
-        const tagsIncludesTag = this.hasAttribute("tag-search")
-          ? tags.some((tag) => tag.includes(this.getAttribute("tag-search")))
-          : tags.includes(this.getAttribute("tag"));
-        //this.dateInput.classList[tagsIncludesTag ? 'add' : 'remove']('active')
+        const tagsIncludesTag = this.hasAttribute('tag-search')
+          ? tags.some((tag) => tag.includes(this.getAttribute('tag-search')))
+          : tags.includes(this.getAttribute('tag'))
+        // this.dateInput.classList[tagsIncludesTag ? 'add' : 'remove']('active')
       }
       /*
       this.dateInput.setAttribute(
@@ -71,40 +70,40 @@ export default class DateSelect extends Shadow() {
         String(this.dateInput.classList.contains('active'))
       )
       */
-    };
+    }
   }
 
-  connectedCallback() {
-    super.connectedCallback();
+  connectedCallback () {
+    super.connectedCallback()
     if (this.shouldRenderCSS()) {
-      this.renderCSS();
+      this.renderCSS()
     }
     if (this.shouldRenderHTML()) {
-      this.renderHTML();
+      this.renderHTML()
     }
     // this.addEventListener("input", this.inputEventListener);
-    this.addEventListener("click", this.clickEventListener);
-    if (this.getAttribute("answer-event-name")) {
+    this.addEventListener('click', this.clickEventListener)
+    if (this.getAttribute('answer-event-name')) {
       document.body.addEventListener(
-        this.getAttribute("answer-event-name"),
+        this.getAttribute('answer-event-name'),
         this.answerEventListener
-      );
+      )
     }
   }
 
-  disconnectedCallback() {
-    this.removeEventListener("input", this.inputEventListener);
-    this.removeEventListener("click", this.clickEventListener);
-    if (this.getAttribute("answer-event-name")) {
+  disconnectedCallback () {
+    this.removeEventListener('input', this.inputEventListener)
+    this.removeEventListener('click', this.clickEventListener)
+    if (this.getAttribute('answer-event-name')) {
       document.body.removeEventListener(
-        this.getAttribute("answer-event-name"),
+        this.getAttribute('answer-event-name'),
         this.answerEventListener
-      );
+      )
     }
   }
 
   // @ts-ignore
-  attributeChangedCallback() {
+  attributeChangedCallback () {
     /*
     if (this.dateInput) {
       this.hasAttribute('disabled')
@@ -122,8 +121,8 @@ export default class DateSelect extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
-    return !this.root.querySelector("style[_css]");
+  shouldRenderCSS () {
+    return !this.root.querySelector('style[_css]')
   }
 
   /**
@@ -131,11 +130,11 @@ export default class DateSelect extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
-    return !this.root.querySelector("select");
+  shouldRenderHTML () {
+    return !this.root.querySelector('select')
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */ `
         :host {
             cursor: unset !important;
@@ -186,6 +185,9 @@ export default class DateSelect extends Shadow() {
             opacity: var(--opacity-disabled, var(--opacity, 1));
             transition: opacity 0.3s ease-out;
         }
+        :host .date-select[disabled] #datePlaceholder {
+          opacity: var(--opacity-disabled, var(--opacity, 0.7));
+        }
         :host .date-select[disabled]:hover, :host(.hover) .date-select[disabled]  {
             opacity: var(--opacity-disabled-hover, var(--opacity-disabled, var(--opacity, 1)));
         }
@@ -223,8 +225,8 @@ export default class DateSelect extends Shadow() {
                 color: var(--color-active-mobile, var(--color-active, var(--color-hover, var(--color, #FFFFFF))));
             }
         }
-    `;
-    return this.fetchTemplate();
+    `
+    return this.fetchTemplate()
   }
 
   /**
@@ -232,204 +234,219 @@ export default class DateSelect extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate() {
-    switch (this.getAttribute("namespace")) {
-      case "date-select-primary-":
+  fetchTemplate () {
+    switch (this.getAttribute('namespace')) {
+      case 'date-select-primary-':
         return this.fetchCSS([
           {
             // @ts-ignore
             path: `${this.importMetaUrl}./primary-/primary-.css`,
-            namespace: false,
-          },
-        ]);
-      case "date-select-secondary-":
+            namespace: false
+          }
+        ])
+      case 'date-select-secondary-':
         return this.fetchCSS([
           {
             // @ts-ignore
             path: `${this.importMetaUrl}./secondary-/secondary-.css`,
-            namespace: false,
-          },
-        ]);
+            namespace: false
+          }
+        ])
       default:
-        return Promise.resolve();
+        return Promise.resolve()
     }
   }
 
-  renderHTML() {
-    const minDate = this.hasAttribute("min")
-      ? new Date(this.getAttribute("min"))
-      : new Date();
-    const maxDate = this.hasAttribute("max")
-      ? new Date(this.getAttribute("max"))
-      : new Date();
-    const minYear = minDate.getFullYear();
-    const maxYear = maxDate.getFullYear();
-    const calendarIndicator = this.hasAttribute("calendarIndicator")
-      ? this.getAttribute("calendarIndicator")
-      : "";
-    const placeholder = this.hasAttribute("placeholder")
-      ? this.getAttribute("placeholder")
-      : "";
-    const locale = this.hasAttribute("locale")
-      ? this.getAttribute("locale")
-      : "default";
+  renderHTML () {
+    const minDate = this.hasAttribute('min')
+      ? new Date(this.getAttribute('min'))
+      : new Date()
+    const maxDate = this.hasAttribute('max')
+      ? new Date(this.getAttribute('max'))
+      : new Date()
+    const minYear = minDate.getFullYear()
+    const maxYear = maxDate.getFullYear()
+    const calendarIndicator = this.hasAttribute('calendarIndicator')
+      ? this.getAttribute('calendarIndicator')
+      : ''
+    const placeholder = this.hasAttribute('placeholder')
+      ? this.getAttribute('placeholder')
+      : ''
+    const locale = this.hasAttribute('locale')
+      ? this.getAttribute('locale')
+      : 'default'
+    const disabled = this.hasAttribute('disabled')
+    const required = this.hasAttribute('required')
 
+    const dateSelectPicker = document.createElement('label')
+    dateSelectPicker.setAttribute(
+      'for',
+      minYear !== maxYear ? 'yearSelect' : 'monthSelect'
+    )
+    dateSelectPicker.setAttribute('id', 'dateSelectPicker')
+    dateSelectPicker.setAttribute('class', 'date-select')
+    if (disabled) {
+      dateSelectPicker.setAttribute('disabled', '')
+    }
 
-    const dateSelectPicker = document.createElement("label");
-    dateSelectPicker.setAttribute("for", minYear !== maxYear ? "yearSelect" : "monthSelect");
-    dateSelectPicker.setAttribute("id", "dateSelectPicker");
-    dateSelectPicker.setAttribute("class", "date-select");
-
-    const dateSelectPlaceholder = document.createElement("span");
-    dateSelectPlaceholder.setAttribute("id", "datePlaceholder");
-    dateSelectPlaceholder.append(placeholder + ' ' + calendarIndicator);
+    const dateSelectPlaceholder = document.createElement('span')
+    dateSelectPlaceholder.setAttribute('id', 'datePlaceholder')
+    dateSelectPlaceholder.append(placeholder + ' ' + calendarIndicator)
     dateSelectPicker.append(dateSelectPlaceholder)
 
-    const dateSelectWrapper = document.createElement("div");
-    dateSelectWrapper.setAttribute("id", "dateSelectWrapper");
+    const dateSelectWrapper = document.createElement('div')
+    dateSelectWrapper.setAttribute('id', 'dateSelectWrapper')
 
     // Function to remove all options for a select element
-    function removeOptions(selectElement) {
+    function removeOptions (selectElement) {
       for (let i = selectElement.options.length - 1; i >= 0; i--) {
-        selectElement.remove(i);
+        selectElement.remove(i)
       }
     }
 
     // Function to generate the options for a select element
-    function generateOptions(selectElement, options) {
-      removeOptions(selectElement);
+    function generateOptions (selectElement, options) {
+      removeOptions(selectElement)
 
       options.forEach((option) => {
-        const { value, text, disabled } = option;
-        const optionElement = document.createElement("option");
-        optionElement.value = value;
-        optionElement.textContent = text;
+        const { value, text, disabled } = option
+        const optionElement = document.createElement('option')
+        optionElement.value = value
+        optionElement.textContent = text
         if (disabled) {
-          optionElement.disabled = true;
-          optionElement.selected = true;
+          optionElement.disabled = true
+          optionElement.selected = true
         }
         if (selectElement) {
-          selectElement.appendChild(optionElement);
+          selectElement.appendChild(optionElement)
         }
-      });
+      })
     }
 
     // Generate options for year select element
-    const yearSelect = document.createElement("select");
-    yearSelect.setAttribute("id", "yearSelect");
-    const yearOptions = [];
+    const yearSelect = document.createElement('select')
+    yearSelect.setAttribute('id', 'yearSelect')
+    if (minYear !== maxYear && required) {
+      yearSelect.setAttribute('required', '')
+    }
+
+    const yearOptions = []
     for (let year = minYear; year <= maxYear; year++) {
       yearOptions.push({
         value: year,
         text: year,
-        disabled: minYear === maxYear,
-      });
+        disabled: minYear === maxYear
+      })
     }
-    generateOptions(yearSelect, yearOptions);
+    generateOptions(yearSelect, yearOptions)
 
-    const monthSelect = document.createElement("select");
-    monthSelect.setAttribute("id", "monthSelect");
+    const monthSelect = document.createElement('select')
+    monthSelect.setAttribute('id', 'monthSelect')
+    if (minYear === maxYear && required) {
+      monthSelect.setAttribute('required', '')
+    }
 
     // Function to generate options for month select element
-    function generateMonthOptions() {
-      const selectedYear = parseInt(yearSelect.value);
-      let minMonth = 0;
-      let maxMonth = 11;
+    function generateMonthOptions () {
+      const selectedYear = parseInt(yearSelect.value)
+      let minMonth = 0
+      let maxMonth = 11
 
       if (selectedYear === minYear) {
-        minMonth = minDate.getMonth();
+        minMonth = minDate.getMonth()
       }
       if (selectedYear === maxYear) {
-        maxMonth = maxDate.getMonth();
+        maxMonth = maxDate.getMonth()
       }
 
       // Generate options for month select element
-      const monthOptions = [];
+      const monthOptions = []
       for (let month = minMonth; month <= maxMonth; month++) {
-        const monthName = new Date(selectedYear, month).toLocaleString(
-          locale,
-          { month: "long" }
-        );
+        const monthName = new Date(selectedYear, month).toLocaleString(locale, {
+          month: 'long'
+        })
         monthOptions.push({
           value: month,
-          text: monthName,
-        });
+          text: monthName
+        })
       }
-      generateOptions(monthSelect, monthOptions);
+      generateOptions(monthSelect, monthOptions)
     }
 
     // Generate options for day select element
-    const daySelect = document.createElement("select");
-    daySelect.setAttribute("id", "daySelect");
+    const daySelect = document.createElement('select')
+    daySelect.setAttribute('id', 'daySelect')
 
-    function generateDayOptions() {
+    function generateDayOptions () {
       // Get the minimum and maximum days based on the selected year and month
-      const selectedYear = parseInt(yearSelect.value);
-      const selectedMonth = parseInt(monthSelect.value);
-      let minDay = 1;
-      let maxDay = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+      const selectedYear = parseInt(yearSelect.value)
+      const selectedMonth = parseInt(monthSelect.value)
+      let minDay = 1
+      let maxDay = new Date(selectedYear, selectedMonth + 1, 0).getDate()
 
       if (selectedYear === minYear && selectedMonth === minDate.getMonth()) {
-        minDay = minDate.getDate();
+        minDay = minDate.getDate()
       } else if (
         selectedYear === maxYear &&
         selectedMonth === maxDate.getMonth()
       ) {
-        maxDay = maxDate.getDate();
+        maxDay = maxDate.getDate()
       }
 
       // Generate options for day select element
-      const dayOptions = [];
+      const dayOptions = []
       for (let day = minDay; day <= maxDay; day++) {
         dayOptions.push({
           value: day,
-          text: day,
-        });
+          text: day
+        })
       }
-      generateOptions(daySelect, dayOptions);
+      generateOptions(daySelect, dayOptions)
     }
 
     // Add event listeners to year and month select elements
-    yearSelect.addEventListener("change", () => {
-      generateMonthOptions();
-      generateDayOptions();
-    });
-    monthSelect.addEventListener("change", generateDayOptions);
+    yearSelect.addEventListener('change', () => {
+      generateMonthOptions()
+      generateDayOptions()
+    })
+    monthSelect.addEventListener('change', generateDayOptions)
 
     // Generate initial options for month and day select elements
-    generateMonthOptions();
-    generateDayOptions();
+    generateMonthOptions()
+    generateDayOptions()
 
-    dateSelectWrapper.append(daySelect);
-    dateSelectWrapper.append(monthSelect);
-    dateSelectWrapper.append(yearSelect);
+    dateSelectWrapper.append(daySelect)
+    dateSelectWrapper.append(monthSelect)
+    dateSelectWrapper.append(yearSelect)
 
-    const closeIcon = document.createElement("span")
+    const closeIcon = document.createElement('span')
     closeIcon.setAttribute('id', 'close-icon')
-    closeIcon.innerHTML = "&#x2715;"
+    closeIcon.innerHTML = '&#x2715;'
     dateSelectWrapper.append(closeIcon)
 
-    dateSelectPicker.addEventListener("click", (event) => {
-      event.stopPropagation();
-      event.preventDefault();
+    if (!disabled) {
+      dateSelectPicker.addEventListener('click', (event) => {
+        event.stopPropagation()
+        event.preventDefault()
 
-      if(dateSelectPicker.children[0] === dateSelectPlaceholder) {
-        dateSelectPicker.removeChild(dateSelectPlaceholder)
-        dateSelectPicker.appendChild(dateSelectWrapper)
-        minYear !== maxYear ? yearSelect.focus() : monthSelect.focus()
-      }
-    })
+        if (dateSelectPicker.children[0] === dateSelectPlaceholder) {
+          dateSelectPicker.removeChild(dateSelectPlaceholder)
+          dateSelectPicker.appendChild(dateSelectWrapper)
+          minYear !== maxYear ? yearSelect.focus() : monthSelect.focus()
+        }
+      })
 
-    closeIcon.addEventListener("click", (event) => {
-      event.stopPropagation();
-      event.preventDefault();
-      
-      if(dateSelectPicker.children[0] === dateSelectWrapper) {
-        dateSelectPicker.removeChild(dateSelectWrapper)
-        dateSelectPicker.appendChild(dateSelectPlaceholder)
-      }
-    })
+      closeIcon.addEventListener('click', (event) => {
+        event.stopPropagation()
+        event.preventDefault()
 
-    this.html = dateSelectPicker;
+        if (dateSelectPicker.children[0] === dateSelectWrapper) {
+          dateSelectPicker.removeChild(dateSelectWrapper)
+          dateSelectPicker.appendChild(dateSelectPlaceholder)
+        }
+      })
+    }
+
+    this.html = dateSelectPicker
   }
 }
