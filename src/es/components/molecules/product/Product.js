@@ -127,7 +127,7 @@ export default class Product extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML () { 
+  renderHTML () {
     this.fetchModules([
       {
         path: `${this.importMetaUrl}'../../../../atoms/Button/Button.js`,
@@ -139,16 +139,16 @@ export default class Product extends Shadow() {
     this.html = this.createProductDataElement(this.productData.price_info?.price, this.productData.name)
   }
 
-  createBasketUtilsElement(productInfo){
-    //`<a-button namespace="button-primary-" request-event-name="request-basket" tag="add">+</a-button>
-    //<a-button namespace="button-primary-" request-event-name="request-basket" tag="remove">-</a-button>
+  createBasketUtilsElement (productInfo) {
+    // `<a-button namespace="button-primary-" request-event-name="request-basket" tag="add">+</a-button>
+    // <a-button namespace="button-primary-" request-event-name="request-basket" tag="remove">-</a-button>
     const div = document.createElement('div')
-    div.classList.add('basket-utils');
+    div.classList.add('basket-utils')
     div.innerHTML = `
       <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>+</a-button>
         <div class="quantity">0</div>
       <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>-</a-button>`
-    //div.innerText = 'Basket Add, etc.' 
+    // div.innerText = 'Basket Add, etc.'
     return div
   }
 
