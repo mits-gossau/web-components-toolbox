@@ -43,7 +43,6 @@ export default class DateSelect extends Shadow() {
     };
 
     this.clickEventListener = (event) => {
-      // this.root.querySelector('input').showPicker()
     };
 
     this.answerEventListener = async (event) => {
@@ -83,7 +82,7 @@ export default class DateSelect extends Shadow() {
     if (this.shouldRenderHTML()) {
       this.renderHTML();
     }
-    this.addEventListener("input", this.inputEventListener);
+    // this.addEventListener("input", this.inputEventListener);
     this.addEventListener("click", this.clickEventListener);
     if (this.getAttribute("answer-event-name")) {
       document.body.addEventListener(
@@ -200,6 +199,9 @@ export default class DateSelect extends Shadow() {
         :host .date-select::-webkit-calendar-picker-indicator {
             opacity: 0;
         }
+        :host select {
+          padding: 3px;
+        }
         @media only screen and (max-width: _max-width_) {
             :host .date-select {
                 font-size: var(--font-size-mobile, var(--font-size, 1em));
@@ -262,11 +264,23 @@ export default class DateSelect extends Shadow() {
     const placeholder = this.hasAttribute("placeholder")
       ? this.getAttribute("placeholder")
       : "";
+    const locale = this.hasAttribute("locale")
+      ? this.getAttribute("locale")
+      : "default";
+
 
     const dateSelectPicker = document.createElement("label");
-    dateSelectPicker.setAttribute("for", "monthSelect");
+    dateSelectPicker.setAttribute("for", minYear !== maxYear ? "yearSelect" : "monthSelect");
     dateSelectPicker.setAttribute("id", "dateSelectPicker");
     dateSelectPicker.setAttribute("class", "date-select");
+
+    const dateSelectPlaceholder = document.createElement("span");
+    dateSelectPlaceholder.setAttribute("id", "datePlaceholder");
+    dateSelectPlaceholder.append(placeholder + ' ' + calendarIndicator);
+    dateSelectPicker.append(dateSelectPlaceholder)
+
+    const dateSelectWrapper = document.createElement("div");
+    dateSelectWrapper.setAttribute("id", "dateSelectWrapper");
 
     // Function to remove all options for a select element
     function removeOptions(selectElement) {
@@ -327,7 +341,7 @@ export default class DateSelect extends Shadow() {
       const monthOptions = [];
       for (let month = minMonth; month <= maxMonth; month++) {
         const monthName = new Date(selectedYear, month).toLocaleString(
-          "default",
+          locale,
           { month: "long" }
         );
         monthOptions.push({
@@ -380,9 +394,20 @@ export default class DateSelect extends Shadow() {
     generateMonthOptions();
     generateDayOptions();
 
-    dateSelectPicker.append(daySelect);
-    dateSelectPicker.append(monthSelect);
-    dateSelectPicker.append(yearSelect);
+    dateSelectWrapper.append(daySelect);
+    dateSelectWrapper.append(monthSelect);
+    dateSelectWrapper.append(yearSelect);
+
+    dateSelectPicker.addEventListener("click", (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      if(dateSelectPicker.children[0] === dateSelectPlaceholder) {
+        dateSelectPicker.removeChild(dateSelectPlaceholder)
+        dateSelectPicker.appendChild(dateSelectWrapper)
+        minYear !== maxYear ? yearSelect.focus() : monthSelect.focus()
+      }
+    })
 
     this.html = dateSelectPicker;
   }
