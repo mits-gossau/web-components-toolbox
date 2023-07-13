@@ -1,11 +1,11 @@
 :host {
     --meta-header-default-a-color:var(--color);
     --meta-header-default-a-font-size:var(--meta-header-default-a-font-size-custom, 0.85em);
-    --meta-header-default-a-margin:0 0.5em;
+    --meta-header-default-a-margin:var(--meta-header-default-a-margin-custom, 0 0.5em);
     --meta-header-default-a-text-decoration:none;
     --meta-header-default-flex-direction:row-reverse;
-    --meta-header-default-gap:1.5em;
-    --meta-header-default-margin:0 auto;
-    --meta-header-default-padding:0.5em 0 0 0;
+    --meta-header-default-gap:var(--meta-header-default-gap-custom, 1.5em);
+    --meta-header-default-margin:var(--meta-header-default-margin-custom, 0 auto);
+    --meta-header-default-padding:var(--meta-header-default-padding-custom, 0.5em 0 0 0);
     --meta-header-default-width:var(--header-default-content-width);
 }

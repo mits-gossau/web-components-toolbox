@@ -51,7 +51,24 @@ export default class Product extends Shadow() {
         width:13vw;
       }
       :host .basket-utils {
-       padding:calc(var(--content-spacing) / 2); 
+        align-items: center;
+        display:flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding:calc(var(--content-spacing) / 2); 
+        width:100%;
+      }
+      :host .quantity {
+        align-items: center;
+        border-radius: 4px;
+        border: 2px solid  #333;
+        display: flex;
+        flex-shrink: 0;
+        font-size: 14px;
+        height: 24px;
+        justify-content: center;
+        padding: 1px;
+        width: 24px;
       }
       :host .product-image {
         padding:0 var(--content-spacing);
@@ -110,16 +127,28 @@ export default class Product extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML () {
-    this.html = this.createBasketUtilsElement()
+  renderHTML () { 
+    this.fetchModules([
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/Button/Button.js`,
+        name: 'a-button'
+      }
+    ])
+    this.html = this.createBasketUtilsElement(this.productData.tracking_information)
     this.html = this.createProductImageElement(this.productData.image.retina_src, this.productData.accessible_information_text)
     this.html = this.createProductDataElement(this.productData.price_info?.price, this.productData.name)
   }
 
-  createBasketUtilsElement () {
+  createBasketUtilsElement(productInfo){
+    //`<a-button namespace="button-primary-" request-event-name="request-basket" tag="add">+</a-button>
+    //<a-button namespace="button-primary-" request-event-name="request-basket" tag="remove">-</a-button>
     const div = document.createElement('div')
-    div.classList.add('basket-utils')
-    div.innerText = 'Basket Add, etc.'
+    div.classList.add('basket-utils');
+    div.innerHTML = `
+      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>+</a-button>
+        <div class="quantity">0</div>
+      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>-</a-button>`
+    //div.innerText = 'Basket Add, etc.' 
     return div
   }
 
