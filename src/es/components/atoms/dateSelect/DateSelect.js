@@ -202,6 +202,12 @@ export default class DateSelect extends Shadow() {
         :host select {
           padding: 3px;
         }
+        :host #close-icon {
+          display: inline-block;
+          height: 25px;
+          width: 25px;
+          text-align: center;
+        }
         @media only screen and (max-width: _max-width_) {
             :host .date-select {
                 font-size: var(--font-size-mobile, var(--font-size, 1em));
@@ -398,6 +404,11 @@ export default class DateSelect extends Shadow() {
     dateSelectWrapper.append(monthSelect);
     dateSelectWrapper.append(yearSelect);
 
+    const closeIcon = document.createElement("span")
+    closeIcon.setAttribute('id', 'close-icon')
+    closeIcon.innerHTML = "&#x2715;"
+    dateSelectWrapper.append(closeIcon)
+
     dateSelectPicker.addEventListener("click", (event) => {
       event.stopPropagation();
       event.preventDefault();
@@ -406,6 +417,16 @@ export default class DateSelect extends Shadow() {
         dateSelectPicker.removeChild(dateSelectPlaceholder)
         dateSelectPicker.appendChild(dateSelectWrapper)
         minYear !== maxYear ? yearSelect.focus() : monthSelect.focus()
+      }
+    })
+
+    closeIcon.addEventListener("click", (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+      
+      if(dateSelectPicker.children[0] === dateSelectWrapper) {
+        dateSelectPicker.removeChild(dateSelectWrapper)
+        dateSelectPicker.appendChild(dateSelectPlaceholder)
       }
     })
 
