@@ -44,6 +44,7 @@ Checklist for each component:
 - [x] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
 
 TODO:
+- [ ] mdx icons pull dynamically from main repo https://git.intern.migros.net/mdx/mdx/-/tree/main/packages/icons/dist/svg
 - [ ] playwright single component tests
 - [ ] documenter.js / automatic story book documentation by comments
 - [ ] Template.html api call to fetch page content for previews (playwright or https://github.com/Rob--W/cors-anywhere)
