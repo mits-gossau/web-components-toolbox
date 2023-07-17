@@ -4,7 +4,8 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 ## [organize components](https://wiki.migros.net/display/OCC/Web+Components+CMS+Template)
 
 Install:
-- git submodule update --init --recursive --remote --force
+- git submodule update --init --recursive --force
+  (don't use the --remote flag, https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 - npm install
 
 Previews:
@@ -31,9 +32,6 @@ CSS Rules:
 
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css
-
-Known Issues:
-- wc-config.js: Line 92: String-Includes vs. Regex Fix done
 
 ## Master Branch locked 🙌
 
