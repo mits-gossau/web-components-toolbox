@@ -49,6 +49,7 @@ TODO:
 - [ ] documenter.js / automatic story book documentation by comments
 - [ ] Template.html api call to fetch page content for previews (playwright or https://github.com/Rob--W/cors-anywhere)
 - [ ] redo header and navigation /\drem/, then eliminate all rem values (tbd @miduca)
+- [ ] incorporate container query, grouping styles in layers, user preferences, dvh... https://www.smashingmagazine.com/2023/07/writing-css-2023/?utm_source=changelog-news
 - [ ] rework the reset.css with the new learnings from https://medium.com/appwrite-io/css-layers-for-css-resets-f60f270aa1cd
 - [ ] print.css and some ideas from here https://alvaromontoro.hashnode.dev/css-tip-style-your-radio-buttons-and-checkboxes-for-printing?utm_source=newsletter&utm_medium=email&utm_campaign=wdrl-309
 - [ ] scroll timeout solutions replaced by scrollend https://developer.chrome.com/blog/scrollend-a-new-javascript-event/?utm_source=newsletter&utm_medium=email&utm_campaign=wdrl-310
