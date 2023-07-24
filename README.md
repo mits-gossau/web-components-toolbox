@@ -4,7 +4,8 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 ## [organize components](https://wiki.migros.net/display/OCC/Web+Components+CMS+Template)
 
 Install:
-- git submodule update --init --recursive --remote --force
+- git submodule update --init --recursive --force
+  (don't use the --remote flag, https://git-scm.com/book/en/v2/Git-Tools-Submodules)
 - npm install
 
 Previews:
@@ -32,9 +33,6 @@ CSS Rules:
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css
 
-Known Issues:
-- wc-config.js: Line 92: String-Includes vs. Regex Fix done
-
 ## Master Branch locked 🙌
 
 Checklist for each component:
@@ -46,10 +44,13 @@ Checklist for each component:
 - [x] transform all import.meta.url.replace(/(.*\/)(.*)$/, '$1') to this.importMetaUrl
 
 TODO:
+- [ ] mdx icons pull dynamically from main repo https://git.intern.migros.net/mdx/mdx/-/tree/main/packages/icons/dist/svg
+- [ ] mdx compatibility use scss from here: https://git.intern.migros.net/mdx/mdx/-/blob/main/packages/web-components/src/components/button/button.scss , etc. to transcend the styles here: https://github.com/mits-gossau/web-components-toolbox-mdx and extend the component in this toolbox if anything is missing.
 - [ ] playwright single component tests
 - [ ] documenter.js / automatic story book documentation by comments
 - [ ] Template.html api call to fetch page content for previews (playwright or https://github.com/Rob--W/cors-anywhere)
 - [ ] redo header and navigation /\drem/, then eliminate all rem values (tbd @miduca)
+- [ ] incorporate container query, grouping styles in layers, user preferences, dvh... https://www.smashingmagazine.com/2023/07/writing-css-2023/?utm_source=changelog-news
 - [ ] rework the reset.css with the new learnings from https://medium.com/appwrite-io/css-layers-for-css-resets-f60f270aa1cd
 - [ ] print.css and some ideas from here https://alvaromontoro.hashnode.dev/css-tip-style-your-radio-buttons-and-checkboxes-for-printing?utm_source=newsletter&utm_medium=email&utm_campaign=wdrl-309
 - [ ] scroll timeout solutions replaced by scrollend https://developer.chrome.com/blog/scrollend-a-new-javascript-event/?utm_source=newsletter&utm_medium=email&utm_campaign=wdrl-310

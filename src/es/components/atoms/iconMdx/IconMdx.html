@@ -1,0 +1,68 @@
+<div id=preview style="display:flex;justify-content: center;">
+  <div style="border-right: 1px solid black; padding: 1em">
+    <h3>rotate="0"</h3>
+    <a-icon-mdx disabled icon-name="ArrowLeft" size="5em" rotate="0"></a-icon-mdx>
+    <a-icon-mdx icon-name="ArrowLeft" size="5em" rotate="0" no-hover></a-icon-mdx>
+  </div>
+  <div style="border-right: 1px solid black; padding: 1em">
+    <h3>rotate="90deg"</h3>
+    <a-icon-mdx icon-name="ArrowLeft" size="5em" rotate="90deg"></a-icon-mdx>
+    <a-icon-mdx icon-name="ArrowLeft" size="5em" rotate="90deg" no-hover></a-icon-mdx>
+  </div>
+  <div style="border-right: 1px solid black; padding: 1em">
+    <h3>rotate="180deg"</h3>
+    <a-icon-mdx  icon-name="ArrowLeft" size="5em" rotate="180deg"></a-icon-mdx>
+    <a-icon-mdx icon-name="ArrowLeft" size="5em" rotate="180deg" no-hover></a-icon-mdx>
+  </div>
+  <div style="border-right: 1px solid black; padding: 1em">
+    <h3>rotate="270deg"</h3>
+    <a-icon-mdx icon-name="ArrowLeft" size="5em" rotate="270deg"></a-icon-mdx>
+    <a-icon-mdx icon-name="ArrowLeft" size="5em" rotate="270deg" no-hover></a-icon-mdx>
+  </div>
+</div>
+<div id="icons"></div>
+<script>
+  document.querySelector('#icons').innerHTML = ['AddedToList', 'AddToList', 'AlertCircle', 'AlertTriangle', 'ArrangeAndroid', 'ArrangeIos', 'ArrowDown', 'ArrowDownRight', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowUpRight', 'At', 'Bell', 'BellOff', 'Bluetooth', 'Bookmark', 'Box', 'Bulb', 'Calendar', 'Camera', 'CameraOff', 'Car', 'Cast', 'Check', 'CheckCircle', 'ChevronDown', 'ChevronLeft', 'ChevronRight', 'ChevronUp', 'Circle', 'Clock', 'Cloud', 'CloudOff', 'Compass', 'Copy', 'CreditCard', 'Crop', 'Cumulus', 'Database', 'Delivery', 'DeliveryPass', 'Download', 'DownloadCloud', 'Edit', 'Edit_2', 'ExternalLink', 'Eye', 'EyeOff', 'Facebook', 'File', 'FileMinus', 'FilePlus', 'FileText', 'FilledStar', 'Filter', 'Flag', 'Folder', 'FolderMinus', 'FolderPlus', 'Gift', 'Globe', 'Grid', 'Happy', 'Headphones', 'Heart', 'HeartFilled', 'Help', 'Home', 'Image', 'Info', 'Instagram', 'Layers', 'Link', 'Linkedin', 'List', 'Location', 'Lock', 'LogIn', 'LogOut', 'Mail', 'Map', 'Maximize', 'Menu', 'MessageCircle', 'MessageSquare', 'MicOff', 'MicOn', 'Migros', 'Minus', 'MinusCircle', 'Monitor', 'Moon', 'MoreHorizontal', 'MoreVertical', 'Music', 'Navigation', 'Neutral', 'NoLocation', 'Package', 'Paperclip', 'Percent', 'Phone', 'PiggyBank', 'Pinterest', 'PlayCircle', 'Plus', 'PlusCircle', 'Power', 'Printer', 'QrCode', 'Receipt', 'Refresh', 'Repeat', 'RotateLeft', 'RotateRight', 'Rss', 'Scan_1', 'Scan_2', 'Search', 'Send', 'Server', 'Settings', 'ShareAndroid', 'ShareIos', 'ShoppingBag', 'ShoppingBasket', 'ShoppingCart', 'ShoppingList', 'Slash', 'Sliders', 'Smartphone', 'Star', 'Sun', 'Tag', 'ThumbsDown', 'ThumbsUp', 'Tiktok', 'Trash', 'Twitter', 'Type', 'Unhappy', 'Unlock', 'Upload', 'UploadCloud', 'User', 'UserCheck', 'UserMinus', 'UserPlus', 'Users', 'UserX', 'ValidUntil', 'Video', 'VideoOff', 'Volume', 'VolumeHigh', 'VolumeLow', 'VolumeX', 'Wallet', 'Watch', 'Wifi', 'WifiOff', 'X', 'Youtube', 'ZoomIn', 'ZoomOut'].reduce((acc, iconName) => {
+    return acc + `
+      <figure>
+        <a-icon-mdx icon-name="${iconName}" size="2em"></a-icon-mdx>
+        <figcaption>${iconName}</figcaption>
+      </figure>
+    `
+  }, /* css */`
+    <style>
+      #icons {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      figure {
+        border: thin #c0c0c0 solid;
+        display: flex;
+        flex-flow: column;
+        padding: 5px;
+        max-width: 220px;
+        margin: auto;
+        text-align: center;
+      }
+      a-icon-mdx {
+        max-width: 220px;
+        max-height: 150px;
+      }
+      figcaption {
+        background-color: #222;
+        color: #fff;
+        font: italic smaller sans-serif;
+        padding: 3px;
+        text-align: center;
+      }
+    </style>
+  `)
+  document.querySelector('#icons').addEventListener('click', event => {
+    if (event.target.hasAttribute('icon-name')) {
+      Array.from(document.querySelector('#preview').querySelectorAll('a-icon-mdx')).forEach(icon => icon.setAttribute('icon-name', event.target.getAttribute('icon-name')))
+    }
+  })
+</script>
+<!-- load web components for Demo Purposes Only -->
+<script type="text/javascript" src="../../../../../docs/es/loader.js"></script>
+<!--<script type="text/javascript" src="../../../../../docs/es/documenter.js?component=IconMdx.js"></script>-->

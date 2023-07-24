@@ -7,7 +7,7 @@
     --button-category-color-hover-mobile: var(--button-category-color-hover-mobile-custom, var(--color-secondary, black));
     --button-category-color-hover: var(--button-category-color-hover-custom, var(--background-color, transparent));
     --button-category-color:var(--button-category-color-custom, var(--color-secondary, black));
-    --button-category-color-active: var(--button-category-color-active-custom, var(--color));
+    --button-category-color-active: var(--button-category-color-active-custom, var(--button-category-color-hover, var(--color-active)));
     --button-category-icon-height-mobile: var(--button-category-icon-height-mobile-custom, 2.5em);
     --button-category-icon-left-margin-mobile: 0 0 0.5em 0;
     --button-category-icon-width-mobile: var(--button-category-icon-width-mobile-custom, min(auto, 100%));
