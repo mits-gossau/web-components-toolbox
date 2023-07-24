@@ -26,10 +26,10 @@ export default class DateSelect extends Shadow() {
       if (this.hasAttribute('disabled')) event.preventDefault()
       if (this.getAttribute('request-event-name')) {
         event.preventDefault()
-        /* this.dateInput.classList.toggle('active')
-        this.dateInput.setAttribute(
+        /* this.dateSelect.classList.toggle('active')
+        this.dateSelect.setAttribute(
           'aria-pressed',
-          String(this.dateInput.classList.contains('active'))
+          String(this.dateSelect.classList.contains('active'))
         ) */
         this.dispatchEvent(
           new CustomEvent(this.getAttribute('request-event-name'), {
@@ -62,12 +62,12 @@ export default class DateSelect extends Shadow() {
         const tagsIncludesTag = this.hasAttribute('tag-search')
           ? tags.some((tag) => tag.includes(this.getAttribute('tag-search')))
           : tags.includes(this.getAttribute('tag'))
-        // this.dateInput.classList[tagsIncludesTag ? 'add' : 'remove']('active')
+        // this.dateSelect.classList[tagsIncludesTag ? 'add' : 'remove']('active')
       }
       /*
-      this.dateInput.setAttribute(
+      this.dateSelect.setAttribute(
         'aria-pressed',
-        String(this.dateInput.classList.contains('active'))
+        String(this.dateSelect.classList.contains('active'))
       )
       */
     }
@@ -105,13 +105,13 @@ export default class DateSelect extends Shadow() {
   // @ts-ignore
   attributeChangedCallback () {
     /*
-    if (this.dateInput) {
+    if (this.dateSelect) {
       this.hasAttribute('disabled')
-          ? this.dateInput.setAttribute('disabled', '')
-          : this.dateInput.removeAttribute('disabled')
+          ? this.dateSelect.setAttribute('disabled', '')
+          : this.dateSelect.removeAttribute('disabled')
       this.hasAttribute('aria-disabled')
-          ? this.dateInput.setAttribute('aria-disabled', 'true')
-          : this.dateInput.removeAttribute('aria-disabled')
+          ? this.dateSelect.setAttribute('aria-disabled', 'true')
+          : this.dateSelect.removeAttribute('aria-disabled')
     }
     */
   }
