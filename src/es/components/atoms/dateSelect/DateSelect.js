@@ -271,6 +271,7 @@ export default class DateSelect extends Shadow() {
     const locale = this.getAttribute('locale') || 'default'
     const disabled = this.hasAttribute('disabled')
     const required = this.hasAttribute('required')
+    const closeTooltip =  this.getAttribute('closeTooltip') || ''
 
     const dateSelectPicker = document.createElement('label')
     dateSelectPicker.setAttribute('for', minYear !== maxYear ? 'yearSelect' : 'monthSelect')
@@ -401,6 +402,9 @@ export default class DateSelect extends Shadow() {
 
     const closeIcon = document.createElement('span')
     closeIcon.setAttribute('id', 'close-icon')
+    if (closeTooltip) {
+      closeIcon.setAttribute('title', closeTooltip)
+    }
     closeIcon.innerHTML = '&#x2715;'
     dateSelectWrapper.append(closeIcon)
 
