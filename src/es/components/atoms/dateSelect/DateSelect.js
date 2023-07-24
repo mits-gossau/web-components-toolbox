@@ -326,6 +326,7 @@ export default class DateSelect extends Shadow() {
     // Generate options for year select element
     const yearSelect = document.createElement('select')
     yearSelect.setAttribute('id', 'yearSelect')
+    yearSelect.setAttribute('name', 'yearSelect')
     if (minYear !== maxYear && required) {
       yearSelect.setAttribute('required', '')
     }
@@ -342,6 +343,7 @@ export default class DateSelect extends Shadow() {
 
     const monthSelect = document.createElement('select')
     monthSelect.setAttribute('id', 'monthSelect')
+    monthSelect.setAttribute('name', 'monthSelect')
     if (minYear === maxYear && required) {
       monthSelect.setAttribute('required', '')
     }
@@ -376,6 +378,7 @@ export default class DateSelect extends Shadow() {
     // Generate options for day select element
     const daySelect = document.createElement('select')
     daySelect.setAttribute('id', 'daySelect')
+    daySelect.setAttribute('name', 'daySelect')
 
     function generateDayOptions () {
       // Get the minimum and maximum days based on the selected year and month
