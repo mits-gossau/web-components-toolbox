@@ -266,23 +266,14 @@ export default class DateSelect extends Shadow() {
       : new Date()
     const minYear = minDate.getFullYear()
     const maxYear = maxDate.getFullYear()
-    const calendarIndicator = this.hasAttribute('calendarIndicator')
-      ? this.getAttribute('calendarIndicator')
-      : ''
-    const placeholder = this.hasAttribute('placeholder')
-      ? this.getAttribute('placeholder')
-      : ''
-    const locale = this.hasAttribute('locale')
-      ? this.getAttribute('locale')
-      : 'default'
+    const calendarIndicator = this.getAttribute('calendarIndicator') || ''
+    const placeholder = this.getAttribute('placeholder') || ''
+    const locale = this.getAttribute('locale') || 'default'
     const disabled = this.hasAttribute('disabled')
     const required = this.hasAttribute('required')
 
     const dateSelectPicker = document.createElement('label')
-    dateSelectPicker.setAttribute(
-      'for',
-      minYear !== maxYear ? 'yearSelect' : 'monthSelect'
-    )
+    dateSelectPicker.setAttribute('for', minYear !== maxYear ? 'yearSelect' : 'monthSelect')
     dateSelectPicker.setAttribute('id', 'dateSelectPicker')
     dateSelectPicker.setAttribute('class', 'date-select')
     if (disabled) {
@@ -297,14 +288,10 @@ export default class DateSelect extends Shadow() {
     const dateSelectWrapper = document.createElement('div')
     dateSelectWrapper.setAttribute('id', 'dateSelectWrapper')
 
-    // Function to remove all options for a select element
     function removeOptions (selectElement) {
-      for (let i = selectElement.options.length - 1; i >= 0; i--) {
-        selectElement.remove(i)
-      }
+      selectElement.innerHTML = ''
     }
 
-    // Function to generate the options for a select element
     function generateOptions (selectElement, options) {
       removeOptions(selectElement)
 
@@ -317,13 +304,10 @@ export default class DateSelect extends Shadow() {
           optionElement.disabled = true
           optionElement.selected = true
         }
-        if (selectElement) {
-          selectElement.appendChild(optionElement)
-        }
+        selectElement.appendChild(optionElement)
       })
     }
 
-    // Generate options for year select element
     const yearSelect = document.createElement('select')
     yearSelect.setAttribute('id', 'yearSelect')
     yearSelect.setAttribute('name', 'yearSelect')
@@ -348,7 +332,6 @@ export default class DateSelect extends Shadow() {
       monthSelect.setAttribute('required', '')
     }
 
-    // Function to generate options for month select element
     function generateMonthOptions () {
       const selectedYear = parseInt(yearSelect.value)
       let minMonth = 0
@@ -361,7 +344,6 @@ export default class DateSelect extends Shadow() {
         maxMonth = maxDate.getMonth()
       }
 
-      // Generate options for month select element
       const monthOptions = []
       for (let month = minMonth; month <= maxMonth; month++) {
         const monthName = new Date(selectedYear, month).toLocaleString(locale, {
@@ -375,13 +357,11 @@ export default class DateSelect extends Shadow() {
       generateOptions(monthSelect, monthOptions)
     }
 
-    // Generate options for day select element
     const daySelect = document.createElement('select')
     daySelect.setAttribute('id', 'daySelect')
     daySelect.setAttribute('name', 'daySelect')
 
     function generateDayOptions () {
-      // Get the minimum and maximum days based on the selected year and month
       const selectedYear = parseInt(yearSelect.value)
       const selectedMonth = parseInt(monthSelect.value)
       let minDay = 1
@@ -396,7 +376,6 @@ export default class DateSelect extends Shadow() {
         maxDay = maxDate.getDate()
       }
 
-      // Generate options for day select element
       const dayOptions = []
       for (let day = minDay; day <= maxDay; day++) {
         dayOptions.push({
@@ -407,14 +386,12 @@ export default class DateSelect extends Shadow() {
       generateOptions(daySelect, dayOptions)
     }
 
-    // Add event listeners to year and month select elements
     yearSelect.addEventListener('change', () => {
       generateMonthOptions()
       generateDayOptions()
     })
     monthSelect.addEventListener('change', generateDayOptions)
 
-    // Generate initial options for month and day select elements
     generateMonthOptions()
     generateDayOptions()
 
