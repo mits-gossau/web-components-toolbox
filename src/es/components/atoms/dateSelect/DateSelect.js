@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Shadow } from "../../prototypes/Shadow.js";
 
 /**
  * DateSelect
@@ -11,57 +11,67 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 
 export default class DateSelect extends Shadow() {
-  static get observedAttributes () {
-    return ['label', 'disabled']
+  static get observedAttributes() {
+    return ["label", "disabled"];
   }
 
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super(
       { hoverInit: undefined, importMetaUrl: import.meta.url, ...options },
       ...args
-    )
+    );
 
-    this.inputEventListener = (event) => {
-      console.log('changed')
-      if (this.hasAttribute('disabled')) event.preventDefault()
-      if (this.getAttribute('request-event-name')) {
-        event.preventDefault()
-        /* this.dateSelect.classList.toggle('active')
-        this.dateSelect.setAttribute(
-          'aria-pressed',
-          String(this.dateSelect.classList.contains('active'))
-        ) */
+    this.changeEventListener = (event) => {
+      if (this.hasAttribute("disabled")) {
+        event.preventDefault();
+        return;
+      }
+      if (this.getAttribute("request-event-name")) {
+        const day = this.root
+          .querySelector("#day-select")
+          .value.padStart(2, "0");
+        const month = (
+          parseInt(this.root.querySelector("#month-select").value) + 1
+        )
+          .toString()
+          .padStart(2, "0");
+        const year = this.root.querySelector("#year-select").value;
+        const date = `${day}.${month}.${year}`;
+
         this.dispatchEvent(
-          new CustomEvent(this.getAttribute('request-event-name'), {
-            detail: this.getEventDetail(event),
+          new CustomEvent(this.getAttribute("request-event-name"), {
+            detail: {
+              day,
+              month,
+              year,
+              date,
+            },
             bubbles: true,
             cancelable: true,
-            composed: true
+            composed: true,
           })
-        )
+        );
       }
-    }
-
-    this.clickEventListener = (event) => {}
+    };
 
     this.answerEventListener = async (event) => {
-      let tags = event.detail.tags
-      if (this.getAttribute('active-detail-property-name')) {
-        tags = await this.getAttribute('active-detail-property-name')
-          .split(':')
+      let tags = event.detail.tags;
+      if (this.getAttribute("active-detail-property-name")) {
+        tags = await this.getAttribute("active-detail-property-name")
+          .split(":")
           .reduce(async (accumulator, propertyName) => {
             // @ts-ignore
             propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) =>
               p1.toUpperCase()
-            )
-            if (accumulator instanceof Promise) accumulator = await accumulator
-            return accumulator[propertyName]
-          }, event.detail)
+            );
+            if (accumulator instanceof Promise) accumulator = await accumulator;
+            return accumulator[propertyName];
+          }, event.detail);
       }
       if (tags) {
-        const tagsIncludesTag = this.hasAttribute('tag-search')
-          ? tags.some((tag) => tag.includes(this.getAttribute('tag-search')))
-          : tags.includes(this.getAttribute('tag'))
+        const tagsIncludesTag = this.hasAttribute("tag-search")
+          ? tags.some((tag) => tag.includes(this.getAttribute("tag-search")))
+          : tags.includes(this.getAttribute("tag"));
         // this.dateSelect.classList[tagsIncludesTag ? 'add' : 'remove']('active')
       }
       /*
@@ -70,40 +80,36 @@ export default class DateSelect extends Shadow() {
         String(this.dateSelect.classList.contains('active'))
       )
       */
-    }
+    };
   }
 
-  connectedCallback () {
-    super.connectedCallback()
+  connectedCallback() {
+    super.connectedCallback();
     if (this.shouldRenderCSS()) {
-      this.renderCSS()
+      this.renderCSS();
     }
     if (this.shouldRenderHTML()) {
-      this.renderHTML()
+      this.renderHTML();
     }
-    // this.addEventListener("input", this.inputEventListener);
-    this.addEventListener('click', this.clickEventListener)
-    if (this.getAttribute('answer-event-name')) {
+    if (this.getAttribute("answer-event-name")) {
       document.body.addEventListener(
-        this.getAttribute('answer-event-name'),
+        this.getAttribute("answer-event-name"),
         this.answerEventListener
-      )
+      );
     }
   }
 
-  disconnectedCallback () {
-    this.removeEventListener('input', this.inputEventListener)
-    this.removeEventListener('click', this.clickEventListener)
-    if (this.getAttribute('answer-event-name')) {
+  disconnectedCallback() {
+    if (this.getAttribute("answer-event-name")) {
       document.body.removeEventListener(
-        this.getAttribute('answer-event-name'),
+        this.getAttribute("answer-event-name"),
         this.answerEventListener
-      )
+      );
     }
   }
 
   // @ts-ignore
-  attributeChangedCallback () {
+  attributeChangedCallback() {
     /*
     if (this.dateSelect) {
       this.hasAttribute('disabled')
@@ -121,8 +127,8 @@ export default class DateSelect extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
-    return !this.root.querySelector('style[_css]')
+  shouldRenderCSS() {
+    return !this.root.querySelector("style[_css]");
   }
 
   /**
@@ -130,11 +136,11 @@ export default class DateSelect extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
-    return !this.root.querySelector('select')
+  shouldRenderHTML() {
+    return !this.root.querySelector("select");
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
         :host {
             cursor: unset !important;
@@ -225,8 +231,8 @@ export default class DateSelect extends Shadow() {
                 color: var(--color-active-mobile, var(--color-active, var(--color-hover, var(--color, #FFFFFF))));
             }
         }
-    `
-    return this.fetchTemplate()
+    `;
+    return this.fetchTemplate();
   }
 
   /**
@@ -234,203 +240,212 @@ export default class DateSelect extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
-    switch (this.getAttribute('namespace')) {
-      case 'date-select-primary-':
+  fetchTemplate() {
+    switch (this.getAttribute("namespace")) {
+      case "date-select-primary-":
         return this.fetchCSS([
           {
             // @ts-ignore
             path: `${this.importMetaUrl}./primary-/primary-.css`,
-            namespace: false
-          }
-        ])
-      case 'date-select-secondary-':
+            namespace: false,
+          },
+        ]);
+      case "date-select-secondary-":
         return this.fetchCSS([
           {
             // @ts-ignore
             path: `${this.importMetaUrl}./secondary-/secondary-.css`,
-            namespace: false
-          }
-        ])
+            namespace: false,
+          },
+        ]);
       default:
-        return Promise.resolve()
+        return Promise.resolve();
     }
   }
 
-  renderHTML () {
-    const minDate = this.hasAttribute('min')
-      ? new Date(this.getAttribute('min'))
-      : new Date()
-    const maxDate = this.hasAttribute('max')
-      ? new Date(this.getAttribute('max'))
-      : new Date()
-    const minYear = minDate.getFullYear()
-    const maxYear = maxDate.getFullYear()
-    const calendarIndicator = this.getAttribute('calendarIndicator') || ''
-    const placeholder = this.getAttribute('placeholder') || ''
-    const locale = this.getAttribute('locale') || 'default'
-    const disabled = this.hasAttribute('disabled')
-    const required = this.hasAttribute('required')
-    const closeTooltip =  this.getAttribute('closeTooltip') || ''
+  renderHTML() {
+    const minDate = this.hasAttribute("min")
+      ? new Date(this.getAttribute("min"))
+      : new Date();
+    const maxDate = this.hasAttribute("max")
+      ? new Date(this.getAttribute("max"))
+      : new Date();
+    const minYear = minDate.getFullYear();
+    const maxYear = maxDate.getFullYear();
+    const calendarIndicator = this.getAttribute("calendarIndicator") || "";
+    const placeholder = this.getAttribute("placeholder") || "";
+    const locale = this.getAttribute("locale") || "default";
+    const disabled = this.hasAttribute("disabled");
+    const required = this.hasAttribute("required");
+    const closeTooltip = this.getAttribute("closeTooltip") || "";
 
-    const dateSelectPicker = document.createElement('label')
-    dateSelectPicker.setAttribute('for', minYear !== maxYear ? 'yearSelect' : 'monthSelect')
-    dateSelectPicker.setAttribute('id', 'dateSelectPicker')
-    dateSelectPicker.setAttribute('class', 'date-select')
+    const dateSelectPicker = document.createElement("label");
+    dateSelectPicker.addEventListener("change", this.changeEventListener);
+    dateSelectPicker.setAttribute(
+      "for",
+      minYear !== maxYear ? "year-select" : "month-select"
+    );
+    dateSelectPicker.setAttribute("id", "dateSelectPicker");
+    dateSelectPicker.setAttribute("class", "date-select");
     if (disabled) {
-      dateSelectPicker.setAttribute('disabled', '')
+      dateSelectPicker.setAttribute("disabled", "");
+      dateSelectPicker.removeEventListener("change", this.changeEventListener);
     }
 
-    const dateSelectPlaceholder = document.createElement('span')
-    dateSelectPlaceholder.setAttribute('id', 'datePlaceholder')
-    dateSelectPlaceholder.append(placeholder + ' ' + calendarIndicator)
-    dateSelectPicker.append(dateSelectPlaceholder)
+    const dateSelectPlaceholder = document.createElement("span");
+    dateSelectPlaceholder.setAttribute("id", "datePlaceholder");
+    dateSelectPlaceholder.append(placeholder + " " + calendarIndicator);
+    dateSelectPicker.append(dateSelectPlaceholder);
 
-    const dateSelectWrapper = document.createElement('div')
-    dateSelectWrapper.setAttribute('id', 'dateSelectWrapper')
+    const dateSelectWrapper = document.createElement("div");
+    dateSelectWrapper.setAttribute("id", "dateSelectWrapper");
 
-    function removeOptions (selectElement) {
-      selectElement.innerHTML = ''
+    function removeOptions(selectElement) {
+      selectElement.innerHTML = "";
     }
 
-    function generateOptions (selectElement, options) {
-      removeOptions(selectElement)
+    function generateOptions(selectElement, options) {
+      removeOptions(selectElement);
 
       options.forEach((option) => {
-        const { value, text, disabled } = option
-        const optionElement = document.createElement('option')
-        optionElement.value = value
-        optionElement.textContent = text
+        const { value, text, disabled } = option;
+        const optionElement = document.createElement("option");
+        optionElement.value = value;
+        optionElement.textContent = text;
         if (disabled) {
-          optionElement.disabled = true
-          optionElement.selected = true
+          optionElement.disabled = true;
+          optionElement.selected = true;
         }
-        selectElement.appendChild(optionElement)
-      })
+        selectElement.appendChild(optionElement);
+      });
     }
 
-    const yearSelect = document.createElement('select')
-    yearSelect.setAttribute('id', 'yearSelect')
-    yearSelect.setAttribute('name', 'yearSelect')
+    const yearSelect = document.createElement("select");
+    yearSelect.setAttribute("id", "year-select");
+    yearSelect.setAttribute("name", "year-select");
     if (minYear !== maxYear && required) {
-      yearSelect.setAttribute('required', '')
+      yearSelect.setAttribute("required", "");
     }
 
-    const yearOptions = []
+    const yearOptions = [];
     for (let year = minYear; year <= maxYear; year++) {
       yearOptions.push({
         value: year,
         text: year,
-        disabled: minYear === maxYear
-      })
+        disabled: minYear === maxYear,
+      });
     }
-    generateOptions(yearSelect, yearOptions)
+    generateOptions(yearSelect, yearOptions);
 
-    const monthSelect = document.createElement('select')
-    monthSelect.setAttribute('id', 'monthSelect')
-    monthSelect.setAttribute('name', 'monthSelect')
+    const monthSelect = document.createElement("select");
+    monthSelect.setAttribute("id", "month-select");
+    monthSelect.setAttribute("name", "month-select");
     if (minYear === maxYear && required) {
-      monthSelect.setAttribute('required', '')
+      monthSelect.setAttribute("required", "");
     }
 
-    function generateMonthOptions () {
-      const selectedYear = parseInt(yearSelect.value)
-      let minMonth = 0
-      let maxMonth = 11
+    function generateMonthOptions() {
+      const selectedYear = parseInt(yearSelect.value);
+      let minMonth = 0;
+      let maxMonth = 11;
 
       if (selectedYear === minYear) {
-        minMonth = minDate.getMonth()
+        minMonth = minDate.getMonth();
       }
       if (selectedYear === maxYear) {
-        maxMonth = maxDate.getMonth()
+        maxMonth = maxDate.getMonth();
       }
 
-      const monthOptions = []
+      const monthOptions = [];
       for (let month = minMonth; month <= maxMonth; month++) {
         const monthName = new Date(selectedYear, month).toLocaleString(locale, {
-          month: 'long'
-        })
+          month: "long",
+        });
         monthOptions.push({
           value: month,
-          text: monthName
-        })
+          text: monthName,
+        });
       }
-      generateOptions(monthSelect, monthOptions)
+      generateOptions(monthSelect, monthOptions);
     }
 
-    const daySelect = document.createElement('select')
-    daySelect.setAttribute('id', 'daySelect')
-    daySelect.setAttribute('name', 'daySelect')
+    const daySelect = document.createElement("select");
+    daySelect.setAttribute("id", "day-select");
+    daySelect.setAttribute("name", "day-select");
 
-    function generateDayOptions () {
-      const selectedYear = parseInt(yearSelect.value)
-      const selectedMonth = parseInt(monthSelect.value)
-      let minDay = 1
-      let maxDay = new Date(selectedYear, selectedMonth + 1, 0).getDate()
+    function generateDayOptions() {
+      const selectedYear = parseInt(yearSelect.value);
+      const selectedMonth = parseInt(monthSelect.value);
+      let minDay = 1;
+      let maxDay = new Date(selectedYear, selectedMonth + 1, 0).getDate();
 
       if (selectedYear === minYear && selectedMonth === minDate.getMonth()) {
-        minDay = minDate.getDate()
+        minDay = minDate.getDate();
       } else if (
         selectedYear === maxYear &&
         selectedMonth === maxDate.getMonth()
       ) {
-        maxDay = maxDate.getDate()
+        maxDay = maxDate.getDate();
       }
 
-      const dayOptions = []
+      const dayOptions = [];
       for (let day = minDay; day <= maxDay; day++) {
         dayOptions.push({
           value: day,
-          text: day
-        })
+          text: day,
+        });
       }
-      generateOptions(daySelect, dayOptions)
+      generateOptions(daySelect, dayOptions);
     }
 
-    yearSelect.addEventListener('change', () => {
-      generateMonthOptions()
-      generateDayOptions()
-    })
-    monthSelect.addEventListener('change', generateDayOptions)
+    yearSelect.addEventListener("change", () => {
+      generateMonthOptions();
+      generateDayOptions();
+    });
+    monthSelect.addEventListener("change", generateDayOptions);
 
-    generateMonthOptions()
-    generateDayOptions()
+    generateMonthOptions();
+    generateDayOptions();
 
-    dateSelectWrapper.append(daySelect)
-    dateSelectWrapper.append(monthSelect)
-    dateSelectWrapper.append(yearSelect)
+    dateSelectWrapper.append(daySelect);
+    dateSelectWrapper.append(monthSelect);
+    dateSelectWrapper.append(yearSelect);
 
-    const closeIcon = document.createElement('span')
-    closeIcon.setAttribute('id', 'close-icon')
+    const closeIcon = document.createElement("span");
+    closeIcon.setAttribute("id", "close-icon");
     if (closeTooltip) {
-      closeIcon.setAttribute('title', closeTooltip)
+      closeIcon.setAttribute("title", closeTooltip);
     }
-    closeIcon.innerHTML = '&#x2715;'
-    dateSelectWrapper.append(closeIcon)
+    closeIcon.innerHTML = "&#x2715;";
+    dateSelectWrapper.append(closeIcon);
 
     if (!disabled) {
-      dateSelectPicker.addEventListener('click', (event) => {
-        event.stopPropagation()
-        event.preventDefault()
+      dateSelectPicker.addEventListener("click", (event) => {
+        event.stopPropagation();
+        event.preventDefault();
 
         if (dateSelectPicker.children[0] === dateSelectPlaceholder) {
-          dateSelectPicker.removeChild(dateSelectPlaceholder)
-          dateSelectPicker.appendChild(dateSelectWrapper)
-          minYear !== maxYear ? yearSelect.focus() : monthSelect.focus()
+          dateSelectPicker.removeChild(dateSelectPlaceholder);
+          dateSelectPicker.appendChild(dateSelectWrapper);
+          minYear !== maxYear ? yearSelect.focus() : monthSelect.focus();
         }
-      })
+      });
 
-      closeIcon.addEventListener('click', (event) => {
-        event.stopPropagation()
-        event.preventDefault()
+      closeIcon.addEventListener("click", (event) => {
+        event.stopPropagation();
+        event.preventDefault();
 
         if (dateSelectPicker.children[0] === dateSelectWrapper) {
-          dateSelectPicker.removeChild(dateSelectWrapper)
-          dateSelectPicker.appendChild(dateSelectPlaceholder)
+          dateSelectPicker.removeEventListener(
+            "change",
+            this.changeEventListener
+          );
+          dateSelectPicker.removeChild(dateSelectWrapper);
+          dateSelectPicker.appendChild(dateSelectPlaceholder);
         }
-      })
+      });
     }
 
-    this.html = dateSelectPicker
+    this.html = dateSelectPicker;
   }
 }
