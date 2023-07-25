@@ -75,6 +75,10 @@ export default class DateSelect extends Shadow() {
       )
       */
     }
+
+    this.closeEventListener = (event) => {
+      
+    }
   }
 
   connectedCallback () {
@@ -185,7 +189,7 @@ export default class DateSelect extends Shadow() {
             opacity: var(--opacity-disabled, var(--opacity, 1));
             transition: opacity 0.3s ease-out;
         }
-        :host .date-select[disabled] #datePlaceholder {
+        :host .date-select[disabled] #date-placeholder {
           opacity: var(--opacity-disabled, var(--opacity, 0.7));
         }
         :host .date-select[disabled]:hover, :host(.hover) .date-select[disabled]  {
@@ -272,7 +276,7 @@ export default class DateSelect extends Shadow() {
     const dateSelectPicker = document.createElement('label')
     dateSelectPicker.addEventListener('change', this.changeEventListener)
     dateSelectPicker.setAttribute('for', minYear !== maxYear ? 'year-select' : 'month-select')
-    dateSelectPicker.setAttribute('id', 'dateSelectPicker')
+    dateSelectPicker.setAttribute('id', 'date-select-picker')
     dateSelectPicker.setAttribute('class', 'date-select')
     if (disabled) {
       dateSelectPicker.setAttribute('disabled', '')
@@ -280,12 +284,12 @@ export default class DateSelect extends Shadow() {
     }
 
     const dateSelectPlaceholder = document.createElement('span')
-    dateSelectPlaceholder.setAttribute('id', 'datePlaceholder')
+    dateSelectPlaceholder.setAttribute('id', 'date-placeholder')
     dateSelectPlaceholder.append(placeholder + ' ' + calendarIndicator)
     dateSelectPicker.append(dateSelectPlaceholder)
 
     const dateSelectWrapper = document.createElement('div')
-    dateSelectWrapper.setAttribute('id', 'dateSelectWrapper')
+    dateSelectWrapper.setAttribute('id', 'date-select-wrapper')
 
     function generateOptions (selectElement, options) {
       selectElement.innerHTML = ''
