@@ -51,7 +51,7 @@ export default class DateSelect extends Shadow() {
     this.selectableDates = {}
     this.answerEventListener = async (event) => {
       event.detail.fetch.then(data => {
-        const {min, max} = data
+        const { min, max } = data
         this.setAttribute('min', min || '')
         this.setAttribute('max', max || '')
         this.selectableDates = data
@@ -100,7 +100,6 @@ export default class DateSelect extends Shadow() {
         this.answerEventListener
       )
     }
-  
   }
 
   // @ts-ignore
@@ -253,7 +252,6 @@ export default class DateSelect extends Shadow() {
   }
 
   renderHTML () {
-    console.log('renderHTML');
     const calendarIndicator = this.getAttribute('calendarIndicator') || ''
     const placeholder = this.getAttribute('placeholder') || ''
     const locale = this.getAttribute('locale') || 'default'
@@ -283,23 +281,27 @@ export default class DateSelect extends Shadow() {
       const oldSelectElementChildren = Array.from(selectElement.children)
       selectElement.innerHTML = ''
 
-      options.forEach((option) => {
-        const { value, text, disabled } = option
+      const newOptionElements = options.map(({ value, text, disabled }) => {
         const optionElement = document.createElement('option')
         optionElement.value = value
         optionElement.textContent = text
+
         if (keepSelections) {
-          let oldOptionElement
-          if ((oldOptionElement = oldSelectElementChildren.find(oldOptionElement => Number(oldOptionElement.value) === Number(value)))) {
+          const oldOptionElement = oldSelectElementChildren.find(oldOption => Number(oldOption.value) === Number(value))
+          if (oldOptionElement) {
             optionElement.selected = oldOptionElement.selected
           }
         }
+
         if (disabled) {
           optionElement.disabled = true
           optionElement.selected = true
         }
-        selectElement.appendChild(optionElement)
+
+        return optionElement
       })
+
+      newOptionElements.forEach(optionEl => selectElement.appendChild(optionEl))
     }
 
     const yearSelect = document.createElement('select')
@@ -310,14 +312,15 @@ export default class DateSelect extends Shadow() {
     }
 
     const generateYearOptions = (event, keepSelections = true) => {
-      const yearOptions = []
-      for (let year = this.minYear; year <= this.maxYear; year++) {
-        yearOptions.push({
+      const totalYears = this.maxYear - this.minYear + 1
+      const yearOptions = Array.from({ length: totalYears }, (_, i) => {
+        const year = this.minYear + i
+        return {
           value: year,
           text: year,
           disabled: this.minYear === this.maxYear
-        })
-      }
+        }
+      })
       generateOptions(yearSelect, yearOptions, keepSelections)
     }
 
@@ -364,29 +367,21 @@ export default class DateSelect extends Shadow() {
       const selectedMonth = parseInt(monthSelect.value)
       let minDay = 1
       let maxDay = new Date(selectedYear, selectedMonth + 1, 0).getDate()
+      const isMinDate = selectedYear === this.minYear && selectedMonth === this.minDate.getMonth()
+      const isMaxDate = selectedYear === this.maxYear && selectedMonth === this.maxDate.getMonth()
 
-      if (selectedYear === this.minYear && selectedMonth === this.minDate.getMonth()) {
-        minDay = this.minDate.getDate()
-      } else if (
-        selectedYear === this.maxYear &&
-        selectedMonth === this.maxDate.getMonth()
-      ) {
-        maxDay = this.maxDate.getDate()
-      }
+      minDay = isMinDate ? this.minDate.getDate() : minDay
+      maxDay = isMaxDate ? this.maxDate.getDate() : maxDay
+
       let dayOptions = []
-      if (this.selectableDates && Array.isArray(this.selectableDates.days)) {
-        dayOptions = this.selectableDates.days.map(day => ({
-          value: day,
-          text: day
-        }))
+      const { selectableDates } = this
+      if (selectableDates && Array.isArray(selectableDates.days)) {
+        dayOptions = selectableDates.days.map(day => ({ value: day, text: day }))
       } else {
-        for (let day = minDay; day <= maxDay; day++) {
-          dayOptions.push({
-            value: day,
-            text: day
-          })
-        }
+        const daysArray = Array.from({ length: maxDay - minDay + 1 }, (_, i) => minDay + i)
+        dayOptions = daysArray.map(day => ({ value: day, text: day }))
       }
+
       generateOptions(daySelect, dayOptions, keepSelections)
     }
 
@@ -414,27 +409,25 @@ export default class DateSelect extends Shadow() {
     closeIcon.innerHTML = '&#x2715;'
     dateSelectWrapper.append(closeIcon)
 
+    const toggleChildNode = (event, childToRemove, childToAdd, nextFocus) => {
+      event.stopPropagation()
+      event.preventDefault()
+
+      if (dateSelectPicker.children[0] === childToRemove) {
+        dateSelectPicker.removeChild(childToRemove)
+        dateSelectPicker.appendChild(childToAdd)
+        if (nextFocus) nextFocus.focus()
+      }
+    }
+
     if (!disabled) {
       dateSelectPicker.addEventListener('click', (event) => {
-        event.stopPropagation()
-        event.preventDefault()
-
-        if (dateSelectPicker.children[0] === dateSelectPlaceholder) {
-          dateSelectPicker.removeChild(dateSelectPlaceholder)
-          dateSelectPicker.appendChild(dateSelectWrapper)
-          this.minYear !== this.maxYear ? yearSelect.focus() : monthSelect.focus()
-        }
+        const nextFocus = this.minYear !== this.maxYear ? yearSelect : monthSelect
+        toggleChildNode(event, dateSelectPlaceholder, dateSelectWrapper, nextFocus)
       })
 
       closeIcon.addEventListener('click', (event) => {
-        event.stopPropagation()
-        event.preventDefault()
-
-        if (dateSelectPicker.children[0] === dateSelectWrapper) {
-          dateSelectPicker.removeChild(dateSelectWrapper)
-          dateSelectPicker.appendChild(dateSelectPlaceholder)
-        }
-
+        toggleChildNode(event, dateSelectWrapper, dateSelectPlaceholder)
         this.closeEventListener()
       })
     }
@@ -442,8 +435,8 @@ export default class DateSelect extends Shadow() {
     this.html = dateSelectPicker
   }
 
-  get minDate () { return new Date(this.getAttribute('min'))}
-  get maxDate () { return new Date(this.getAttribute('max'))}
-  get minYear () { return this.minDate.getFullYear()}
-  get maxYear () { return this.maxDate.getFullYear()}
+  get minDate () { return new Date(this.getAttribute('min')) }
+  get maxDate () { return new Date(this.getAttribute('max')) }
+  get minYear () { return this.minDate.getFullYear() }
+  get maxYear () { return this.maxDate.getFullYear() }
 }
