@@ -12,7 +12,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class DateSelect extends Shadow() {
   static get observedAttributes () {
-    return ['label', 'disabled']
+    return ['min', 'max']
   }
 
   constructor (options = {}, ...args) {
@@ -48,36 +48,24 @@ export default class DateSelect extends Shadow() {
       }
     }
 
+    this.selectableDates = {}
     this.answerEventListener = async (event) => {
-      let tags = event.detail.tags
-      if (this.getAttribute('active-detail-property-name')) {
-        tags = await this.getAttribute('active-detail-property-name')
-          .split(':')
-          .reduce(async (accumulator, propertyName) => {
-            // @ts-ignore
-            propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) =>
-              p1.toUpperCase()
-            )
-            if (accumulator instanceof Promise) accumulator = await accumulator
-            return accumulator[propertyName]
-          }, event.detail)
-      }
-      if (tags) {
-        const tagsIncludesTag = this.hasAttribute('tag-search')
-          ? tags.some((tag) => tag.includes(this.getAttribute('tag-search')))
-          : tags.includes(this.getAttribute('tag'))
-        // this.dateSelect.classList[tagsIncludesTag ? 'add' : 'remove']('active')
-      }
-      /*
-      this.dateSelect.setAttribute(
-        'aria-pressed',
-        String(this.dateSelect.classList.contains('active'))
-      )
-      */
+      event.detail.fetch.then(data => {
+        const {min, max} = data
+        this.setAttribute('min', min || '')
+        this.setAttribute('max', max || '')
+        this.selectableDates = data
+      })
     }
 
     this.closeEventListener = (event) => {
-      
+      this.dispatchEvent(
+        new CustomEvent(this.getAttribute('request-event-name'), {
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        })
+      )
     }
   }
 
@@ -95,6 +83,14 @@ export default class DateSelect extends Shadow() {
         this.answerEventListener
       )
     }
+
+    this.dispatchEvent(
+      new CustomEvent(this.getAttribute('request-event-name'), {
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      })
+    )
   }
 
   disconnectedCallback () {
@@ -104,20 +100,15 @@ export default class DateSelect extends Shadow() {
         this.answerEventListener
       )
     }
+  
   }
 
   // @ts-ignore
-  attributeChangedCallback () {
-    /*
-    if (this.dateSelect) {
-      this.hasAttribute('disabled')
-          ? this.dateSelect.setAttribute('disabled', '')
-          : this.dateSelect.removeAttribute('disabled')
-      this.hasAttribute('aria-disabled')
-          ? this.dateSelect.setAttribute('aria-disabled', 'true')
-          : this.dateSelect.removeAttribute('aria-disabled')
-    }
-    */
+  attributeChangedCallback (name, oldValue, newValue) {
+    clearTimeout(this.attributeChangedTimeout)
+    this.attributeChangedTimeout = setTimeout(() => {
+      this.generateAllOptions && this.generateAllOptions(null, this.root.querySelector('#date-select-wrapper'))
+    }, 50)
   }
 
   /**
@@ -262,10 +253,7 @@ export default class DateSelect extends Shadow() {
   }
 
   renderHTML () {
-    const minDate = new Date(this.getAttribute('min')) || new Date()
-    const maxDate = new Date(this.getAttribute('max')) || new Date()
-    const minYear = minDate.getFullYear()
-    const maxYear = maxDate.getFullYear()
+    console.log('renderHTML');
     const calendarIndicator = this.getAttribute('calendarIndicator') || ''
     const placeholder = this.getAttribute('placeholder') || ''
     const locale = this.getAttribute('locale') || 'default'
@@ -275,7 +263,7 @@ export default class DateSelect extends Shadow() {
 
     const dateSelectPicker = document.createElement('label')
     dateSelectPicker.addEventListener('change', this.changeEventListener)
-    dateSelectPicker.setAttribute('for', minYear !== maxYear ? 'year-select' : 'month-select')
+    dateSelectPicker.setAttribute('for', this.minYear !== this.maxYear ? 'year-select' : 'month-select')
     dateSelectPicker.setAttribute('id', 'date-select-picker')
     dateSelectPicker.setAttribute('class', 'date-select')
     if (disabled) {
@@ -291,7 +279,8 @@ export default class DateSelect extends Shadow() {
     const dateSelectWrapper = document.createElement('div')
     dateSelectWrapper.setAttribute('id', 'date-select-wrapper')
 
-    function generateOptions (selectElement, options) {
+    const generateOptions = (selectElement, options, keepSelections) => {
+      const oldSelectElementChildren = Array.from(selectElement.children)
       selectElement.innerHTML = ''
 
       options.forEach((option) => {
@@ -299,6 +288,12 @@ export default class DateSelect extends Shadow() {
         const optionElement = document.createElement('option')
         optionElement.value = value
         optionElement.textContent = text
+        if (keepSelections) {
+          let oldOptionElement
+          if ((oldOptionElement = oldSelectElementChildren.find(oldOptionElement => Number(oldOptionElement.value) === Number(value)))) {
+            optionElement.selected = oldOptionElement.selected
+          }
+        }
         if (disabled) {
           optionElement.disabled = true
           optionElement.selected = true
@@ -310,37 +305,41 @@ export default class DateSelect extends Shadow() {
     const yearSelect = document.createElement('select')
     yearSelect.setAttribute('id', 'year-select')
     yearSelect.setAttribute('name', 'year-select')
-    if (minYear !== maxYear && required) {
+    if (this.minYear !== this.maxYear && required) {
       yearSelect.setAttribute('required', '')
     }
 
-    const yearOptions = []
-    for (let year = minYear; year <= maxYear; year++) {
-      yearOptions.push({
-        value: year,
-        text: year,
-        disabled: minYear === maxYear
-      })
+    const generateYearOptions = (event, keepSelections = true) => {
+      const yearOptions = []
+      for (let year = this.minYear; year <= this.maxYear; year++) {
+        yearOptions.push({
+          value: year,
+          text: year,
+          disabled: this.minYear === this.maxYear
+        })
+      }
+      generateOptions(yearSelect, yearOptions, keepSelections)
     }
-    generateOptions(yearSelect, yearOptions)
+
+    generateYearOptions()
 
     const monthSelect = document.createElement('select')
     monthSelect.setAttribute('id', 'month-select')
     monthSelect.setAttribute('name', 'month-select')
-    if (minYear === maxYear && required) {
+    if (this.minYear === this.maxYear && required) {
       monthSelect.setAttribute('required', '')
     }
 
-    function generateMonthOptions () {
+    const generateMonthOptions = (event, keepSelections = true) => {
       const selectedYear = parseInt(yearSelect.value)
       let minMonth = 0
       let maxMonth = 11
 
-      if (selectedYear === minYear) {
-        minMonth = minDate.getMonth()
+      if (selectedYear === this.minYear) {
+        minMonth = this.minDate.getMonth()
       }
-      if (selectedYear === maxYear) {
-        maxMonth = maxDate.getMonth()
+      if (selectedYear === this.maxYear) {
+        maxMonth = this.maxDate.getMonth()
       }
 
       const monthOptions = []
@@ -353,42 +352,51 @@ export default class DateSelect extends Shadow() {
           text: monthName
         })
       }
-      generateOptions(monthSelect, monthOptions)
+      generateOptions(monthSelect, monthOptions, keepSelections)
     }
 
     const daySelect = document.createElement('select')
     daySelect.setAttribute('id', 'day-select')
     daySelect.setAttribute('name', 'day-select')
 
-    function generateDayOptions () {
+    const generateDayOptions = (event, keepSelections = true) => {
       const selectedYear = parseInt(yearSelect.value)
       const selectedMonth = parseInt(monthSelect.value)
       let minDay = 1
       let maxDay = new Date(selectedYear, selectedMonth + 1, 0).getDate()
 
-      if (selectedYear === minYear && selectedMonth === minDate.getMonth()) {
-        minDay = minDate.getDate()
+      if (selectedYear === this.minYear && selectedMonth === this.minDate.getMonth()) {
+        minDay = this.minDate.getDate()
       } else if (
-        selectedYear === maxYear &&
-        selectedMonth === maxDate.getMonth()
+        selectedYear === this.maxYear &&
+        selectedMonth === this.maxDate.getMonth()
       ) {
-        maxDay = maxDate.getDate()
+        maxDay = this.maxDate.getDate()
       }
-
-      const dayOptions = []
-      for (let day = minDay; day <= maxDay; day++) {
-        dayOptions.push({
+      let dayOptions = []
+      if (this.selectableDates && Array.isArray(this.selectableDates.days)) {
+        dayOptions = this.selectableDates.days.map(day => ({
           value: day,
           text: day
-        })
+        }))
+      } else {
+        for (let day = minDay; day <= maxDay; day++) {
+          dayOptions.push({
+            value: day,
+            text: day
+          })
+        }
       }
-      generateOptions(daySelect, dayOptions)
+      generateOptions(daySelect, dayOptions, keepSelections)
     }
 
-    yearSelect.addEventListener('change', () => {
-      generateMonthOptions()
-      generateDayOptions()
-    })
+    this.generateAllOptions = (event, keepSelections) => {
+      generateYearOptions(event, keepSelections)
+      generateMonthOptions(event, keepSelections)
+      generateDayOptions(event, keepSelections)
+    }
+
+    yearSelect.addEventListener('change', this.generateAllOptions)
     monthSelect.addEventListener('change', generateDayOptions)
 
     generateMonthOptions()
@@ -414,7 +422,7 @@ export default class DateSelect extends Shadow() {
         if (dateSelectPicker.children[0] === dateSelectPlaceholder) {
           dateSelectPicker.removeChild(dateSelectPlaceholder)
           dateSelectPicker.appendChild(dateSelectWrapper)
-          minYear !== maxYear ? yearSelect.focus() : monthSelect.focus()
+          this.minYear !== this.maxYear ? yearSelect.focus() : monthSelect.focus()
         }
       })
 
@@ -423,16 +431,19 @@ export default class DateSelect extends Shadow() {
         event.preventDefault()
 
         if (dateSelectPicker.children[0] === dateSelectWrapper) {
-          dateSelectPicker.removeEventListener(
-            'change',
-            this.changeEventListener
-          )
           dateSelectPicker.removeChild(dateSelectWrapper)
           dateSelectPicker.appendChild(dateSelectPlaceholder)
         }
+
+        this.closeEventListener()
       })
     }
 
     this.html = dateSelectPicker
   }
+
+  get minDate () { return new Date(this.getAttribute('min'))}
+  get maxDate () { return new Date(this.getAttribute('max'))}
+  get minYear () { return this.minDate.getFullYear()}
+  get maxYear () { return this.maxDate.getFullYear()}
 }
