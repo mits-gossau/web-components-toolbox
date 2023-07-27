@@ -127,7 +127,7 @@ export default class Product extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML () { 
+  renderHTML () {
     this.fetchModules([
       {
         path: `${this.importMetaUrl}'../../../../atoms/Button/Button.js`,
@@ -139,35 +139,35 @@ export default class Product extends Shadow() {
     this.html = this.createProductDataElement(this.productData.price_info?.price, this.productData.name)
   }
 
-  createBasketUtilsElement(productInfo){
-    //`<a-button namespace="button-primary-" request-event-name="request-basket" tag="add">+</a-button>
-    //<a-button namespace="button-primary-" request-event-name="request-basket" tag="remove">-</a-button>
+  createBasketUtilsElement (productInfo) {
+    // `<a-button namespace="button-primary-" request-event-name="request-basket" tag="add">+</a-button>
+    // <a-button namespace="button-primary-" request-event-name="request-basket" tag="remove">-</a-button>
     const div = document.createElement('div')
-    div.classList.add('basket-utils');
+    div.classList.add('basket-utils')
     div.innerHTML = `
       <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>+</a-button>
         <div class="quantity">0</div>
       <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>-</a-button>`
-    //div.innerText = 'Basket Add, etc.' 
+    // div.innerText = 'Basket Add, etc.'
     return div
   }
 
-  createProductImageElement(imageSrc, alt){
+  createProductImageElement (imageSrc, alt) {
     const div = document.createElement('div')
-    div.classList.add('product-image');
+    div.classList.add('product-image')
     div.innerHTML = `<a-picture defaultSource='${imageSrc}' alt='${alt}'></a-picture>`
     return div
   }
 
-  createProductDataElement(price, name){
+  createProductDataElement (price, name) {
     const div = document.createElement('div')
-    div.classList.add('product-data');
+    div.classList.add('product-data')
     const priceSpan = document.createElement('span')
-    priceSpan.classList.add('product-price');
+    priceSpan.classList.add('product-price')
     priceSpan.innerText = price
     div.appendChild(priceSpan)
     const nameSpan = document.createElement('span')
-    nameSpan.classList.add('product-name');
+    nameSpan.classList.add('product-name')
     nameSpan.innerText = name
     div.appendChild(nameSpan)
     return div
