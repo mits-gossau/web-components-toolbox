@@ -157,8 +157,6 @@ export default class DateSelect extends Shadow() {
             text-transform: var(--text-transform, none);
             touch-action: manipulation;
             transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
-            width: var(--width, auto);
-            min-width: var(--min-width, 240px);
         }
         :host .date-select:hover, :host(.hover) .date-select {
             cursor: pointer;
