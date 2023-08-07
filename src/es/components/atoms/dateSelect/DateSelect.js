@@ -1,6 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global CustomEvent */
+
 /**
  * DateSelect
  * An example at: default-/default-.html
