@@ -10,6 +10,8 @@ export default class NewsList extends Shadow() {
         // remove the shitty html mui stuff
         const products = productData.products.map(({ html, ...keepAttrs }) => keepAttrs)
         this.renderHTML(products)
+      }).catch(error => {
+        this.html = `Error: ${error}`
       })
     }
   }

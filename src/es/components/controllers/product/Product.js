@@ -28,15 +28,15 @@ export default class Product extends Shadow() {
   }
 
   connectedCallback () {
-    this.addEventListener(this.getAttribute('request-list-product') || 'request-list-product', this.requestListProductListener)
     // @ts-ignore
     if (!this.hasAttribute('no-popstate')) self.addEventListener('popstate', this.updatePopState)
+    this.addEventListener(this.getAttribute('request-list-product') || 'request-list-product', this.requestListProductListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener(this.getAttribute('request-list-product') || 'request-list-products', this.requestListProductListener)
     // @ts-ignore
     if (!this.hasAttribute('no-popstate')) self.removeEventListener('popstate', this.updatePopState)
+    this.removeEventListener(this.getAttribute('request-list-product') || 'request-list-products', this.requestListProductListener)
   }
 
   /**
