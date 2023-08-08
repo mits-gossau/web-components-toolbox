@@ -1,9 +1,7 @@
 // @ts-check
 /* global fetch */
 /* global AbortController */
-/* global location */
 /* global CustomEvent */
-/* global history */
 /* global self */
 
 import { Shadow } from '../../prototypes/Shadow.js'
@@ -17,7 +15,7 @@ export default class Product extends Shadow() {
   /**
    * @param {any} args
    */
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       mode: 'false',
@@ -29,13 +27,13 @@ export default class Product extends Shadow() {
     this.updatePopState = this.updatePopStateEvent
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.addEventListener(this.getAttribute('request-list-product') || 'request-list-product', this.requestListProductListener)
     // @ts-ignore
     if (!this.hasAttribute('no-popstate')) self.addEventListener('popstate', this.updatePopState)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-list-product') || 'request-list-products', this.requestListProductListener)
     // @ts-ignore
     if (!this.hasAttribute('no-popstate')) self.removeEventListener('popstate', this.updatePopState)
@@ -45,7 +43,7 @@ export default class Product extends Shadow() {
    * Fetch products
    * @param {{ detail: any; }} event
    */
-  async requestListProductListenerEvent(event) {
+  async requestListProductListenerEvent (event) {
     console.log('PRODUCTS', event.detail)
     if (this.abortController) this.abortController.abort()
     this.abortController = new AbortController()
@@ -53,7 +51,7 @@ export default class Product extends Shadow() {
       method: 'GET',
       signal: this.abortController.signal
     }
-    const endpoint = this.getAttribute('endpoint') + `MigrosProProductApi/GetProductsByCategory?categoryCode=BeSS_0101&limit=100`
+    const endpoint = this.getAttribute('endpoint') + 'MigrosProProductApi/GetProductsByCategory?categoryCode=BeSS_0101&limit=100'
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-products') || 'list-products', {
       detail: {
         fetch: (this._fetch || (this._fetch = fetch(endpoint, fetchOptions))).then(response => {
@@ -73,11 +71,10 @@ export default class Product extends Shadow() {
    * Update pop state when navigating back/forward
    * @param {{ detail: { pushHistory: boolean; }; state: any; }} event
    */
-  updatePopStateEvent(event) {
-    console.log("UPDATE_POP_STATE:", event);
+  updatePopStateEvent (event) {
+    console.log('UPDATE_POP_STATE:', event)
     if (!event.detail) event.detail = { ...event.state }
     event.detail.pushHistory = false
     this.requestListProductListener(event)
   }
-
 }
