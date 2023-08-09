@@ -2,7 +2,10 @@
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
-export default class NewsList extends Shadow() {
+export default class ProductList extends Shadow() {
+  /**
+   * @param {any} args
+   */
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
@@ -89,7 +92,7 @@ export default class NewsList extends Shadow() {
         name: 'm-product'
       }
     ])
-    const products = productData.map(p => `<m-product data='${JSON.stringify(p)}'></m-product>`)
+    const products = productData.map((/** @type {any} */ product) => `<m-product data='${JSON.stringify(product)}'></m-product>`)
     this.html = products.join('')
   }
 }

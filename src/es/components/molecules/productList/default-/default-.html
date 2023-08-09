@@ -1,8 +1,13 @@
-<m-product-list
-  answer-event-name="list-products"
-  request-event-name="request-list-products"
-  namespace="product-list-default-">
-</m-product-list>
+<o-grid namespace="grid-2colums2rows-" first-container-vertical first-column-with="20%">
+  <m-tag-filter namespace="tag-filter-vertical-">
+    <a-button namespace="button-category-" tag="BeSS_97" request-event-name="request-list-product">
+      List Products
+    </a-button>
+  </m-tag-filter>
+  <m-product-list answer-event-name="list-products" request-event-name="request-list-products"
+    namespace="product-list-default-">
+  </m-product-list>
+</o-grid>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./default-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
