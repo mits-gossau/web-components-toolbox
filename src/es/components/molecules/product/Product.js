@@ -140,15 +140,12 @@ export default class Product extends Shadow() {
   }
 
   createBasketUtilsElement (productInfo) {
-    // `<a-button namespace="button-primary-" request-event-name="request-basket" tag="add">+</a-button>
-    // <a-button namespace="button-primary-" request-event-name="request-basket" tag="remove">-</a-button>
     const div = document.createElement('div')
     div.classList.add('basket-utils')
     div.innerHTML = `
       <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>+</a-button>
-        <div class="quantity">0</div>
+        <div class="quantity">10</div>
       <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>-</a-button>`
-    // div.innerText = 'Basket Add, etc.'
     return div
   }
 
