@@ -14,6 +14,7 @@ export default class ProductList extends Shadow() {
         const products = productData.products.map(({ html, ...keepAttrs }) => keepAttrs)
         this.renderHTML(products)
       }).catch(error => {
+        this.html = '' 
         this.html = `Error: ${error}`
       })
     }
