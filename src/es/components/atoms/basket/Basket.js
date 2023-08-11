@@ -1,4 +1,5 @@
 // @ts-check
+/* global CustomEvent */
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
@@ -9,12 +10,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Basket extends Shadow() {
   constructor (...args) {
     super(...args)
-
-    this.answerEventNameListener = event => {
-      // WIP!!!
-      console.log('event', event.detail)
-      this.count.innerHTML = Number(this.count.innerHTML) + 1
-    }
+    this.answerEventNameListener = this.answerEventNameListenerEvent
   }
 
   connectedCallback () {
@@ -25,6 +21,24 @@ export default class Basket extends Shadow() {
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+  }
+
+  answerEventNameListenerEvent = event => {
+    // WIP!!!
+    console.log('event', event.detail)
+    console.log('type', JSON.parse(event.detail.tags))
+    const eventData = JSON.parse(event.detail.tags)
+    console.log('type', eventData[0])
+    const counter = eventData[0] === 'add' ? Number(this.count.innerHTML) + 1 : Number(this.count.innerHTML) - 1
+    this.count.innerHTML = counter
+    this.dispatchEvent(new CustomEvent(this.getAttribute('update-product') || 'update-product', {
+      detail: {
+        count: '20'
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
   }
 
   /**
@@ -42,7 +56,7 @@ export default class Basket extends Shadow() {
    * @return {boolean}
    */
   shouldRenderHTML () {
-    return !this.img
+    return !this.basketIcon
   }
 
   /**
@@ -108,9 +122,9 @@ export default class Basket extends Shadow() {
     this.count = this.root.querySelector('span') || document.createElement('span')
     this.count.innerHTML = '0'
     this.wrapper.appendChild(this.count)
-    this.img = this.root.querySelector('img') || document.createElement('img')
-    this.img.setAttribute('src', this.icon)
-    this.wrapper.appendChild(this.img)
+    this.basketIcon = this.root.querySelector('img') || document.createElement('img')
+    this.basketIcon.setAttribute('src', this.icon)
+    this.wrapper.appendChild(this.basketIcon)
     this.html = this.wrapper
   }
 

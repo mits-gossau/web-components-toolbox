@@ -11,11 +11,20 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Product extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+
+    this.answerEventNameListener = event => {
+      console.log('ok')
+    }
   }
 
   connectedCallback () {
+    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+  }
+
+  disconnectedCallback () {
+    document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
   shouldRenderHTML () {
@@ -140,12 +149,13 @@ export default class Product extends Shadow() {
   }
 
   createBasketUtilsElement (productInfo) {
+    console.log('pi', productInfo)
     const div = document.createElement('div')
     div.classList.add('basket-utils')
     div.innerHTML = `
-      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>+</a-button>
+      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='["add",${productInfo}]'>+</a-button>
         <div class="quantity">10</div>
-      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='${productInfo}'>-</a-button>`
+      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='["remove",${productInfo}]'>-</a-button>`
     return div
   }
 
@@ -172,7 +182,7 @@ export default class Product extends Shadow() {
 
   get productData () {
     const pd = this.getAttribute('data') || ''
-    console.log(JSON.parse(pd))
+    console.log('pd', JSON.parse(pd))
     return JSON.parse(pd)
   }
 }

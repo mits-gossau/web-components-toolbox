@@ -14,7 +14,7 @@ export default class ProductList extends Shadow() {
         const products = productData.products.map(({ html, ...keepAttrs }) => keepAttrs)
         this.renderHTML(products)
       }).catch(error => {
-        this.html = '' 
+        this.html = ''
         this.html = `Error: ${error}`
       })
     }
@@ -93,7 +93,7 @@ export default class ProductList extends Shadow() {
         name: 'm-product'
       }
     ])
-    const products = productData.map((/** @type {any} */ product) => `<m-product data='${JSON.stringify(product)}'></m-product>`)
+    const products = productData.map((/** @type {any} */ product) => `<m-product answer-event-name="update-product" data='${JSON.stringify(product)}'></m-product>`)
     this.html = products.join('')
   }
 }
