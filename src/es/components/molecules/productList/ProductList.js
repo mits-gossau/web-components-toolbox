@@ -93,7 +93,15 @@ export default class ProductList extends Shadow() {
         name: 'm-product'
       }
     ])
-    const products = productData.map((/** @type {any} */ product) => `<m-product answer-event-name="update-product" data='${JSON.stringify(product)}'></m-product>`)
+    const escapeForHtml = (htmlString) => {
+      return htmlString
+        .replaceAll(/&/g, '&amp;')
+        .replaceAll(/</g, '&lt;')
+        .replaceAll(/>/g, '&gt;')
+        .replaceAll(/"/g, '&quot;')
+        .replaceAll(/'/g, '&#39;');
+    };
+    const products = productData.map((/** @type {any} */ product) =>`<m-product answer-event-name="update-product" data="${escapeForHtml(JSON.stringify(product))}"></m-product>`)
     this.html = products.join('')
   }
 }
