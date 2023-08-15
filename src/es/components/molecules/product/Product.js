@@ -153,9 +153,9 @@ export default class Product extends Shadow() {
     const div = document.createElement('div')
     div.classList.add('basket-utils')
     div.innerHTML = `
-      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='["add",${productInfo}]'>+</a-button>
+      <a-button namespace="button-tertiary-" request-event-name="add-basket" tag='${productInfo}'>+</a-button>
         <div class="quantity">10</div>
-      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='["remove",${productInfo}]'>-</a-button>`
+      <a-button namespace="button-tertiary-" request-event-name="remove-basket" tag='${productInfo}'>-</a-button>`
     return div
   }
 

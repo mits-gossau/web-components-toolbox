@@ -35,7 +35,7 @@ export default class Product extends Shadow() {
   disconnectedCallback () {
     // @ts-ignore
     if (!this.hasAttribute('no-popstate')) self.removeEventListener('popstate', this.updatePopState)
-    this.removeEventListener(this.getAttribute('request-list-product') || 'request-list-products', this.requestListProductListener)
+    this.removeEventListener(this.getAttribute('request-list-product') || 'request-list-product', this.requestListProductListener)
     this.removeEventListener('request-href-' + (this.getAttribute('request-list-product') || 'request-list-product'), this.requestHrefEventListener)
   }
 
