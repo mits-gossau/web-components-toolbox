@@ -139,7 +139,7 @@ export default class Product extends Shadow() {
   renderHTML () {
     this.fetchModules([
       {
-        path: `${this.importMetaUrl}'../../../../atoms/Button/Button.js`,
+        path: `${this.importMetaUrl}'../../../../atoms/button/Button.js`,
         name: 'a-button'
       }
     ])
