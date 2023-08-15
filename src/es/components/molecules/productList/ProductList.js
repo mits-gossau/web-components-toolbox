@@ -24,6 +24,13 @@ export default class ProductList extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.renderHTML('loading')
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
+      {  
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }
+    ))
   }
 
   disconnectedCallback () {
@@ -47,6 +54,11 @@ export default class ProductList extends Shadow() {
       flex-direction: row;
       justify-content: space-between;
       gap:var(--content-spacing);
+    }
+    /* TODO: a-picture needs aspect ratio to lazy load after the fold */
+    :host > * {
+      min-height: 15em;
+      min-width: 7em;
     }
     @media only screen and (max-width: _max-width_) {
       :host {}
@@ -83,11 +95,17 @@ export default class ProductList extends Shadow() {
     }
   }
 
+  /**
+   * renderHTML
+   *
+   * @param {any[] | 'loading'} productData
+   * @return {Promise<void>}
+   */
   renderHTML (productData) {
-    if (Array.isArray(productData) && !productData.length) {
+    if (!productData || (productData !== 'loading' && (!Array.isArray(productData) || !productData.length))) {
       this.html = ''
       this.html = `${this.getAttribute('no-products-found-translation') || 'Leider haben wir keine Produkte zu diesem Suchbegriff gefunden.'}`
-      return
+      return Promise.resolve()
     }
     let productListHeight = this.offsetHeight
     this.html = ''
@@ -107,17 +125,21 @@ export default class ProductList extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../atoms/loading/Loading.js`,
         name: 'a-loading'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../molecules/loadTemplateTag/LoadTemplateTag.js`,
+        name: 'm-load-template-tag'
       }
     ])
-    
+    // @ts-ignore
     if (productData === 'loading') {
-      this.html = '<a-loading></a-loading>'
+      this.html = '<a-loading z-index="1"></a-loading>'
       const setStyleTextContent = () => {
         this.style.textContent = /* css */`
-        :host {
-          min-height: ${productListHeight}px;
-        }
-      `
+          :host {
+            min-height: ${productListHeight}px;
+          }
+        `
       }
       let initialTimeoutId = null
       if (!productListHeight) {
@@ -137,11 +159,24 @@ export default class ProductList extends Shadow() {
           this.removeEventListener('picture-load', pictureLoadEventListener)
         }, 200)
       }))
-      return
+      return Promise.resolve()
     }
-    Promise.all([productData, fetchModules]).then(() => {
-      const products = productData.map((/** @type {any} */ product) => `<m-product answer-event-name="update-product" data='${JSON.stringify(product)}'></m-product>`)
+    return Promise.all([productData, fetchModules]).then(() => {
+      const products = productData.map((/** @type {any} */ product, i) => /* html */`
+        <m-load-template-tag>
+          <template>
+            <m-product answer-event-name="update-product" data='${JSON.stringify(product)}'></m-product>
+          </template>
+        </m-load-template-tag>`)
       this.html = products.join('')
     })
+  }
+
+  get style () {
+    return this._style || (this._style = (() => {
+      const style = document.createElement('style')
+      style.setAttribute('protected', 'true')
+      return style
+    })())
   }
 }

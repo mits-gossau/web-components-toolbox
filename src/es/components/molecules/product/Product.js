@@ -162,7 +162,7 @@ export default class Product extends Shadow() {
   createProductImageElement (imageSrc, alt) {
     const div = document.createElement('div')
     div.classList.add('product-image')
-    div.innerHTML = `<a-picture defaultSource='${imageSrc}' alt='${alt}'></a-picture>`
+    div.innerHTML = `<a-picture picture-load defaultSource='${imageSrc}' alt='${alt}'></a-picture>`
     return div
   }
 
