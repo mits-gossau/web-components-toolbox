@@ -2,6 +2,8 @@
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global CustomEvent */
+
 export default class ProductList extends Shadow() {
   /**
    * @param {any} args
@@ -15,6 +17,7 @@ export default class ProductList extends Shadow() {
         const products = productData.products.map(({ html, ...keepAttrs }) => keepAttrs)
         this.renderHTML(products)
       }).catch(error => {
+        this.html = ''
         this.html = `Error: ${error}`
       })
     }
@@ -25,7 +28,7 @@ export default class ProductList extends Shadow() {
     this.renderHTML('loading')
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
-      {  
+      {
         bubbles: true,
         cancelable: true,
         composed: true

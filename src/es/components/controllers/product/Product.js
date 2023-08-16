@@ -1,10 +1,12 @@
 // @ts-check
+import { Shadow } from '../../prototypes/Shadow.js'
+
 /* global fetch */
 /* global AbortController */
 /* global CustomEvent */
 /* global self */
-
-import { Shadow } from '../../prototypes/Shadow.js'
+/* global location */
+/* global history */
 
 /**
  * @export
@@ -58,13 +60,13 @@ export default class Product extends Shadow() {
     const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {
-         fetch: fetch(endpoint, fetchOptions).then(async response => {
+        fetch: fetch(endpoint, fetchOptions).then(async response => {
           if (response.status >= 200 && response.status <= 299) {
             const data = await response.json()
-              return {
-                tag: [categoryCode],
-                ...data
-              }
+            return {
+              tag: [categoryCode],
+              ...data
+            }
           }
           throw new Error(response.statusText)
         })
@@ -96,10 +98,10 @@ export default class Product extends Shadow() {
    * @param {boolean} [pushHistory = true]
    * @return {URL}
    */
-  setCategoryCode(categoryCode, pushHistory = true) {
+  setCategoryCode (categoryCode, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
     url.searchParams.set('category-code', categoryCode)
-    if (pushHistory) history.pushState({ ...history.state, categoryCode}, document.title, url.href)
+    if (pushHistory) history.pushState({ ...history.state, categoryCode }, document.title, url.href)
     return url
   }
 
@@ -107,7 +109,7 @@ export default class Product extends Shadow() {
    * Get categoryCode
    * @return {string}
    */
-  getCategoryCode() {
+  getCategoryCode () {
     const urlParams = new URLSearchParams(location.search)
     return urlParams.get('category-code') || 'all'
   }

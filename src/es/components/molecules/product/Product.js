@@ -12,8 +12,11 @@ export default class Product extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
+    this.quantity = null
+
     this.answerEventNameListener = event => {
-      console.log('ok')
+      console.log('update product', event.detail.products.length, this.quantity)
+      this.quantity.innerText = event.detail.products.length.toString()
     }
   }
 
@@ -146,15 +149,16 @@ export default class Product extends Shadow() {
     this.html = this.createBasketUtilsElement(this.productData.tracking_information)
     this.html = this.createProductImageElement(this.productData.image.retina_src, this.productData.accessible_information_text)
     this.html = this.createProductDataElement(this.productData.price_info?.price, this.productData.name)
+    this.quantity = this.root.querySelector('.quantity')
+    this.quantity.innerText = '0'
   }
 
   createBasketUtilsElement (productInfo) {
-    console.log('pi', productInfo)
     const div = document.createElement('div')
     div.classList.add('basket-utils')
     div.innerHTML = `
       <a-button namespace="button-tertiary-" request-event-name="add-basket" tag='${productInfo}'>+</a-button>
-        <div class="quantity">10</div>
+        <div class="quantity"></div>
       <a-button namespace="button-tertiary-" request-event-name="remove-basket" tag='${productInfo}'>-</a-button>`
     return div
   }
@@ -182,7 +186,6 @@ export default class Product extends Shadow() {
 
   get productData () {
     const pd = this.getAttribute('data') || ''
-    console.log('pd', JSON.parse(pd))
     return JSON.parse(pd)
   }
 }

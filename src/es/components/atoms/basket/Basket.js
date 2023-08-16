@@ -1,6 +1,7 @@
 // @ts-check
-/* global CustomEvent */
 import { Shadow } from '../../prototypes/Shadow.js'
+
+/* global CustomEvent */
 
 /**
  * @export
@@ -10,7 +11,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Basket extends Shadow() {
   constructor (...args) {
     super(...args)
-    this.answerEventNameListener = this.answerEventNameListenerEvent
+    this.count = this.root.querySelector('span') || document.createElement('span')
+    this.count.innerHTML = '0'
+    // this.answerEventNameListener = this.answerEventNameListenerEvent
   }
 
   connectedCallback () {
@@ -23,17 +26,26 @@ export default class Basket extends Shadow() {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  answerEventNameListenerEvent = event => {
+  answerEventNameListener = event => {
     // WIP!!!
     console.log('event', event.detail)
-    console.log('type', JSON.parse(event.detail.tags))
-    const eventData = JSON.parse(event.detail.tags)
-    console.log('type', eventData[0])
-    const counter = eventData[0] === 'add' ? Number(this.count.innerHTML) + 1 : Number(this.count.innerHTML) - 1
-    this.count.innerHTML = counter
+    this.count.innerHTML = Number(this.count.innerHTML) + event.detail.length
+    // console.log('type', JSON.parse(event.detail.tags))
+    // const eventData = JSON.parse(event.detail.tags)
+    // console.log('type', eventData[0])
+    // const counter = eventData[0] === 'add' ? Number(this.count.innerHTML) + 1 : Number(this.count.innerHTML) - 1
+    // this.count.innerHTML = counter
+    // this.dispatchEvent(new CustomEvent(this.getAttribute('update-product') || 'update-product', {
+    //   detail: {
+    //     count: '20'
+    //   },
+    //   bubbles: true,
+    //   cancelable: true,
+    //   composed: true
+    // }))
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-product') || 'update-product', {
       detail: {
-        count: '20'
+        products: event.detail
       },
       bubbles: true,
       cancelable: true,
@@ -119,8 +131,8 @@ export default class Basket extends Shadow() {
    */
   renderHTML () {
     this.wrapper = this.root.querySelector('div') || document.createElement('div')
-    this.count = this.root.querySelector('span') || document.createElement('span')
-    this.count.innerHTML = '0'
+    // this.count = this.root.querySelector('span') || document.createElement('span')
+    // this.count.innerHTML = '0'
     this.wrapper.appendChild(this.count)
     this.basketIcon = this.root.querySelector('img') || document.createElement('img')
     this.basketIcon.setAttribute('src', this.icon)

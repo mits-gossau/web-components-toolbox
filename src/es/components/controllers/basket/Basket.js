@@ -1,10 +1,10 @@
 // @ts-check
+import { Shadow } from '../../prototypes/Shadow.js'
+
 /* global fetch */
 /* global AbortController */
 /* global CustomEvent */
 /* global self */
-
-import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * @export
@@ -26,13 +26,13 @@ export default class Basket extends Shadow() {
   }
 
   connectedCallback () {
-    this.addEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
+    // this.addEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
     this.addEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.addEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
+    // this.removeEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
     this.removeEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.removeEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
   }
@@ -41,15 +41,38 @@ export default class Basket extends Shadow() {
    * Fetch basket
    * @param {{ detail: any; }} event
    */
-  requestListBasketListener = async (event) => {
-    console.log('Basket', event.detail)
-    if (this.abortController) this.abortController.abort()
-    this.abortController = new AbortController()
+  // requestListBasketListener = async (event) => {
+  //   console.log('Basket', event.detail)
+  //   if (this.abortController) this.abortController.abort()
+  //   this.abortController = new AbortController()
+  //   const fetchOptions = {
+  //     method: 'GET',
+  //     signal: this.abortController.signal
+  //   }
+  //   const endpoint = this.getAttribute('endpoint')
+  //   this.dispatchEvent(new CustomEvent(this.getAttribute('basket') || 'basket', {
+  //     detail: {
+  //        fetch: fetch(endpoint, fetchOptions).then(async response => {
+  //         if (response.status >= 200 && response.status <= 299) return await response.json()
+  //         throw new Error(response.statusText)
+  //       })
+  //     },
+  //     bubbles: true,
+  //     cancelable: true,
+  //     composed: true
+  //   }))
+  // }
+
+  /**
+   * add to basket
+   * @param {{ detail: any; }} event
+   */
+  addBasketListener = async (event) => {
+    console.log('add to Basket', event.detail)
     const fetchOptions = {
-      method: 'GET',
-      signal: this.abortController.signal
+      method: 'PUT'
     }
-    const endpoint = this.getAttribute('endpoint')
+    /* const endpoint = this.getAttribute('endpoint')
     this.dispatchEvent(new CustomEvent(this.getAttribute('basket') || 'basket', {
       detail: {
          fetch: fetch(endpoint, fetchOptions).then(async response => {
@@ -60,26 +83,16 @@ export default class Basket extends Shadow() {
       bubbles: true,
       cancelable: true,
       composed: true
-    }))
-  }
+    })) */
 
-  /**
-   * add to basket
-   * @param {{ detail: any; }} event
-   */
-  addBasketListener = async (event) => {
-    return console.log('add to Basket', event.detail)
-    const fetchOptions = {
-      method: 'PUT'
-    }
-    const endpoint = this.getAttribute('endpoint')
     this.dispatchEvent(new CustomEvent(this.getAttribute('basket') || 'basket', {
-      detail: {
-         fetch: fetch(endpoint, fetchOptions).then(async response => {
-          if (response.status >= 200 && response.status <= 299) return await response.json()
-          throw new Error(response.statusText)
-        })
-      },
+      detail:
+        [
+          { 1223123: 'Tomaten' },
+          { 234: 'Tomaten' },
+          { 13123: 'Tomaten' },
+          { 12223: 'Tomaten' }
+        ],
       bubbles: true,
       cancelable: true,
       composed: true
@@ -92,20 +105,5 @@ export default class Basket extends Shadow() {
    */
   removeBasketListener = async (event) => {
     return console.log('remove to Basket', event.detail)
-    const fetchOptions = {
-      method: 'PUT'
-    }
-    const endpoint = this.getAttribute('endpoint')
-    this.dispatchEvent(new CustomEvent(this.getAttribute('basket') || 'basket', {
-      detail: {
-         fetch: fetch(endpoint, fetchOptions).then(async response => {
-          if (response.status >= 200 && response.status <= 299) return await response.json()
-          throw new Error(response.statusText)
-        })
-      },
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
   }
 }
