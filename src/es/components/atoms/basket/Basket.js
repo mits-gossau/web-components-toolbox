@@ -13,7 +13,6 @@ export default class Basket extends Shadow() {
     super(...args)
     this.count = this.root.querySelector('span') || document.createElement('span')
     this.count.innerHTML = '0'
-    // this.answerEventNameListener = this.answerEventNameListenerEvent
   }
 
   connectedCallback () {

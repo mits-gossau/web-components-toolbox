@@ -10,8 +10,10 @@ export default class ProductList extends Shadow() {
    */
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    this.productNamespace = "product-default-"
     this.answerEventNameListener = event => {
       this.renderHTML('loading')
+      this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
         // remove the shitty html mui stuff
         const products = productData.products.map(({ html, ...keepAttrs }) => keepAttrs)
@@ -54,7 +56,7 @@ export default class ProductList extends Shadow() {
     :host {
       display: flex;
       flex-wrap: wrap;
-      flex-direction: row;
+      flex-direction:var(--flex-direction, row);
       justify-content: space-between;
       gap:var(--content-spacing);
     }
@@ -91,6 +93,11 @@ export default class ProductList extends Shadow() {
       case 'product-list-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
+        case 'product-list-checkout-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./checkout-/checkout-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
       default:
@@ -168,7 +175,7 @@ export default class ProductList extends Shadow() {
       const products = productData.map((/** @type {any} */ product, i) => /* html */`
         <m-load-template-tag>
           <template>
-            <m-product answer-event-name="update-product" data='${JSON.stringify(product)}'></m-product>
+            <m-product answer-event-name="update-product" namespace=${this.productNamespace} data='${JSON.stringify(product)}'></m-product>
           </template>
         </m-load-template-tag>`)
       this.html = products.join('')
