@@ -62,7 +62,7 @@ export default class ProductList extends Shadow() {
     }
     /* TODO: a-picture needs aspect ratio to lazy load after the fold */
     :host > * {
-      min-height: 15em;
+      min-height: 10em;
       min-width: 7em;
     }
     @media only screen and (max-width: _max-width_) {
@@ -150,7 +150,7 @@ export default class ProductList extends Shadow() {
         .replaceAll(/"/g, '&quot;')
         .replaceAll(/'/g, '&#39;');
     };
-        
+    
     // @ts-ignore
     if (productData === 'loading') {
       this.html = '<a-loading z-index="1"></a-loading>'
@@ -198,6 +198,5 @@ export default class ProductList extends Shadow() {
       style.setAttribute('protected', 'true')
       return style
     })())
-
   }
 }
