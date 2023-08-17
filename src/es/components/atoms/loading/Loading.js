@@ -53,7 +53,7 @@ export default class Loading extends Shadow() {
       opacity: 1;
       overflow: hidden;
       width: 100%;
-      z-index: -1000;
+      z-index: ${this.getAttribute('z-index') || '-1000'};
     }
     :host>div {
       background-repeat: repeat-x;
