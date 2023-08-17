@@ -135,6 +135,7 @@ export default class Product extends Shadow() {
     }
   }
 
+  
   /**
    * Render HTML
    * @returns void
@@ -147,11 +148,11 @@ export default class Product extends Shadow() {
       }
     ])
     this.html = this.createBasketUtilsElement(this.productData.tracking_information)
-    this.html = this.createProductImageElement(this.productData.image.retina_src, this.productData.accessible_information_text)
-    this.html = this.createProductDataElement(this.productData.price_info?.price, this.productData.name)
+    this.html = this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)
+    this.html = this.createProductDataElement(this.productData.price?.item.price, this.productData.name)
     this.quantity = this.root.querySelector('.quantity')
     this.quantity.innerText = '0'
-  }
+ }
 
   createBasketUtilsElement (productInfo) {
     const div = document.createElement('div')

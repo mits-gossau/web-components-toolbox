@@ -141,6 +141,16 @@ export default class ProductList extends Shadow() {
         name: 'm-load-template-tag'
       }
     ])
+
+    const escapeForHtml = (htmlString) => {
+      return htmlString
+        .replaceAll(/&/g, '&amp;')
+        .replaceAll(/</g, '&lt;')
+        .replaceAll(/>/g, '&gt;')
+        .replaceAll(/"/g, '&quot;')
+        .replaceAll(/'/g, '&#39;');
+    };
+        
     // @ts-ignore
     if (productData === 'loading') {
       this.html = '<a-loading z-index="1"></a-loading>'
@@ -175,7 +185,7 @@ export default class ProductList extends Shadow() {
       const products = productData.map((/** @type {any} */ product, i) => /* html */`
         <m-load-template-tag>
           <template>
-            <m-product answer-event-name="update-product" namespace=${this.productNamespace} data='${JSON.stringify(product)}'></m-product>
+            <m-product answer-event-name="update-product" namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}'></m-product>
           </template>
         </m-load-template-tag>`)
       this.html = products.join('')
@@ -188,5 +198,6 @@ export default class ProductList extends Shadow() {
       style.setAttribute('protected', 'true')
       return style
     })())
+
   }
 }
