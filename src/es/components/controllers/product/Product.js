@@ -15,6 +15,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Product extends Shadow() {
   /**
+   * @param options
    * @param {any} args
    */
   constructor (options = {}, ...args) {
@@ -57,7 +58,7 @@ export default class Product extends Shadow() {
     }
     const limit = 100
     const categoryCode = this.getCategoryCode()
-    const minPercentage = 50;
+    const minPercentage = event.detail?.this.getAttribute('min-percentage') || 100;
     const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}&min-percentage=${minPercentage}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {

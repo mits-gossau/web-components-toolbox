@@ -22,7 +22,7 @@ export default class Button extends Hover() {
 
     // get the original innerHTML of the component, so that when it rerenders as an a-tag it doesn't loose its content
     let button
-    // incase there is already a button, grab the buttons innerHTML, since renderHTML is going to create a new button resp. a-tag instead of the button
+    // in case there is already a button, grab the buttons innerHTML, since renderHTML is going to create a new button resp. a-tag instead of the button
     if ((button = this.root.querySelector('button'))) {
       if (this.label) {
         if (this.label.textContent.length && this.label.textContent.trim().length) this.labelText = this.label.textContent.trim()
