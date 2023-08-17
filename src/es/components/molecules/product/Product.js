@@ -132,6 +132,7 @@ export default class Product extends Shadow() {
     }
   }
 
+  
   /**
    * Render HTML
    * @returns void
