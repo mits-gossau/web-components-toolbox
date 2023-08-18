@@ -26,6 +26,7 @@ export default class Product extends Shadow() {
     }, ...args)
 
     this.abortController = null
+    this.subCategoryList = Array.from(document.querySelectorAll('[data-id]'))
   }
 
   connectedCallback () {
@@ -58,7 +59,8 @@ export default class Product extends Shadow() {
     }
     const limit = 100
     const categoryCode = this.getCategoryCode()
-    const minPercentage = event?.detail?.this.getAttribute('min-percentage') || 100;
+    const minPercentage = event?.detail?.this.getAttribute('min-percentage') || 100
+    this.showSubCategory(this.subCategoryList, categoryCode)
     const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}&min-percentage=${minPercentage}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {
@@ -115,5 +117,12 @@ export default class Product extends Shadow() {
   getCategoryCode () {
     const urlParams = new URLSearchParams(location.search)
     return urlParams.get('category-code') || 'all'
+  }
+
+  showSubCategory (categories, activeSubCategory) {
+    const category = activeSubCategory.split(',')[0]
+    categories.forEach(c => {
+      c.classList.toggle('hide-sub-category', c.getAttribute('data-id') === category)
+    })
   }
 }

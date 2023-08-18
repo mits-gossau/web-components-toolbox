@@ -10,7 +10,7 @@ export default class ProductList extends Shadow() {
    */
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-    this.productNamespace = "product-default-"
+    this.productNamespace = 'product-default-'
     this.answerEventNameListener = event => {
       this.renderHTML('loading')
       this.productNamespace = event.detail.namespace || this.productNamespace
@@ -95,7 +95,7 @@ export default class ProductList extends Shadow() {
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
-        case 'product-list-checkout-':
+      case 'product-list-checkout-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./checkout-/checkout-.css`, // apply namespace since it is specific and no fallback
           namespace: false
@@ -121,10 +121,6 @@ export default class ProductList extends Shadow() {
     this.html = ''
     const fetchModules = this.fetchModules([
       {
-        path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
-        name: 'o-wrapper'
-      },
-      {
         path: `${this.importMetaUrl}'../../../../molecules/product/Product.js`,
         name: 'm-product'
       },
@@ -148,9 +144,9 @@ export default class ProductList extends Shadow() {
         .replaceAll(/</g, '&lt;')
         .replaceAll(/>/g, '&gt;')
         .replaceAll(/"/g, '&quot;')
-        .replaceAll(/'/g, '&#39;');
-    };
-    
+        .replaceAll(/'/g, '&#39;')
+    }
+
     // @ts-ignore
     if (productData === 'loading') {
       this.html = '<a-loading z-index="1"></a-loading>'

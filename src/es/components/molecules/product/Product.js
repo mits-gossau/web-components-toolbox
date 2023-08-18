@@ -152,7 +152,7 @@ export default class Product extends Shadow() {
     this.html = this.createProductDataElement(this.productData.price, this.productData.name)
     this.quantity = this.root.querySelector('.quantity')
     this.quantity.innerText = '0'
- }
+  }
 
   createBasketUtilsElement (productInfo) {
     const div = document.createElement('div')
