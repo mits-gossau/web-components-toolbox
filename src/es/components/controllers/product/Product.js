@@ -48,7 +48,6 @@ export default class Product extends Shadow() {
    * @param {{ detail: any; }} event
    */
   requestListProductListener = async (event) => {
-    console.log('PRODUCTS', event.detail)
     if (event.detail && event.detail.tags) this.setCategoryCode(event.detail.tags[0], event.detail.pushHistory)
 
     if (this.abortController) this.abortController.abort()
@@ -60,7 +59,7 @@ export default class Product extends Shadow() {
     const limit = 100
     const categoryCode = this.getCategoryCode()
     const minPercentage = event?.detail?.this.getAttribute('min-percentage') || 100
-    this.showSubCategory(this.subCategoryList, categoryCode)
+    this.showSubCategories(this.subCategoryList, categoryCode)
     const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}&min-percentage=${minPercentage}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {
@@ -119,7 +118,14 @@ export default class Product extends Shadow() {
     return urlParams.get('category-code') || 'all'
   }
 
-  showSubCategory (categories, activeSubCategory) {
+  /**
+   * Displays o-wrapper according to data-id attribute
+   * Only the first (string)element is considered for css class toggle
+   * TODO: Make css class as param
+   * @param {any[]} categories List list of all o-wrapper elements
+   * @param {string} activeSubCategory Active sub category id
+   */
+  showSubCategories (categories, activeSubCategory) {
     const category = activeSubCategory.split(',')[0]
     categories.forEach(c => {
       c.classList.toggle('hide-sub-category', c.getAttribute('data-id') === category)
