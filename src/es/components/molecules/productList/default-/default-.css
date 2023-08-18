@@ -1,1 +1,3 @@
-:host{}
+:host{
+    --product-list-default-content-spacing: var(--product-list-default-content-spacing-custom, var(--content-spacing));
+}

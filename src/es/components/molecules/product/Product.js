@@ -50,17 +50,22 @@ export default class Product extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host {
-        --img-height:10vw;
+    :host {
+        --img-max-height:8vw;
+        --img-min-height:10vw;
+        --img-max-width:10vw;
+        --img-min-width:10vw;
         align-items:flex-start;
         background-color:var(--m-white);
+        border-left:.5em solid transparent;
         border-radius:8px;
+        border-right:.5em solid transparent;
         box-shadow:0px 0px 12px 0px rgba(51, 51, 51, 0.10);
         display:flex;
         flex-direction:column;
         justify-content:space-between;
         margin:0 0 var(--content-spacing) 0;
-        width:13vw;
+        
       }
       :host .basket-utils {
         align-items: center;
@@ -98,7 +103,7 @@ export default class Product extends Shadow() {
       }
       :host .product-data {
         min-height:5em;
-        padding:calc(var(--content-spacing) / 2); 
+
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
@@ -167,7 +172,7 @@ export default class Product extends Shadow() {
   createProductImageElement (imageSrc, alt) {
     const div = document.createElement('div')
     div.classList.add('product-image')
-    div.innerHTML = `<a-picture picture-load defaultSource='${imageSrc}' alt='${alt}'></a-picture>`
+    div.innerHTML = `<a-picture namespace="product-default-" picture-load defaultSource='${imageSrc}' alt='${alt}'></a-picture>`
     return div
   }
 

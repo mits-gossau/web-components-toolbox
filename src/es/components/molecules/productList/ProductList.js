@@ -61,10 +61,10 @@ export default class ProductList extends Shadow() {
       gap:var(--content-spacing);
     }
     /* TODO: a-picture needs aspect ratio to lazy load after the fold */
-    :host > * {
+    /*:host > * {
       min-height: 10em;
       min-width: 7em;
-    }
+    }*/
     @media only screen and (max-width: _max-width_) {
       :host {}
     }
