@@ -52,7 +52,7 @@ export default class Product extends Shadow() {
     this.css = /* css */`
     :host {
         --img-max-height:10vw;
-        --img-max-width:5vw; 
+        --img-max-width:60%; 
         align-items:flex-start;
         background-color:var(--m-white);
         border-left:.5em solid transparent;
@@ -220,8 +220,7 @@ export default class Product extends Shadow() {
    * @param {string} name - The name parameter is a string that represents the name of the product.
    * @returns {HTMLElement} a div element with two child span elements. The first span element has a class of
    * "product-price" and its inner text is set to the value of the "price" parameter. The second span
-   * element has a class of "product-name" and its inner text is set to the value of the "name"
-   * parameter.
+   * element has a class of "product-name" and its inner text is set to the value of the "name" parameter.
    */
   createProductDataElement (price, name) {
     const div = document.createElement('div')

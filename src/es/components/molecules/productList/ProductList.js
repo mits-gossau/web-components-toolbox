@@ -60,10 +60,10 @@ export default class ProductList extends Shadow() {
       justify-content: space-between;
     }
     /* TODO: a-picture needs aspect ratio to lazy load after the fold */
-    /*:host > * {
+    :host > * {
       min-height: 10em;
       min-width: 7em;
-    }*/
+    }
     @media only screen and (max-width: _max-width_) {
       :host {}
     }
@@ -190,7 +190,7 @@ export default class ProductList extends Shadow() {
   /**
    * The function returns a style element if it exists, otherwise it creates a new style element and
    * returns it.
-   * @returns The code is returning the value of `this._style` if it exists, otherwise it is creating a
+   * @returns {HTMLElement} The code is returning the value of `this._style` if it exists, otherwise it is creating a
    * new `<style>` element, setting its `protected` attribute to `true`, and returning it.
    */
   get style () {
