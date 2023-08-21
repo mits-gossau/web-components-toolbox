@@ -1,1 +1,5 @@
-:host {}
+:host {
+    --product-default-aspect-ratio:1;
+    --product-default-unit-price-color:var(--product-default-unit-price-color-custom, var(--m-gray-600));
+    --product-default-content-spacing:var(--content-spacing, 0);
+}
