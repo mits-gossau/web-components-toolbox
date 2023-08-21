@@ -188,6 +188,12 @@ export default class ProductList extends Shadow() {
     })
   }
 
+  /**
+   * The function returns a style element if it exists, otherwise it creates a new style element and
+   * returns it.
+   * @returns The code is returning the value of `this._style` if it exists, otherwise it is creating a
+   * new `<style>` element, setting its `protected` attribute to `true`, and returning it.
+   */
   get style () {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')

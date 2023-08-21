@@ -140,7 +140,6 @@ export default class Product extends Shadow() {
     }
   }
 
-  
   /**
    * Render HTML
    * @returns void
@@ -159,6 +158,15 @@ export default class Product extends Shadow() {
     this.quantity.innerText = '0'
   }
 
+  /**
+   * The function creates a div element with buttons for adding and removing items from a basket, along
+   * with a quantity display.
+   * @param productInfo - The `productInfo` parameter is a variable that contains information about a
+   * product. It could include details such as the product name, price, and any other relevant
+   * information that you want to display in the basket utils element.
+   * @returns a div element with the class "basket-utils" and inner HTML that includes two buttons and a
+   * div with the class "quantity".
+   */
   createBasketUtilsElement (productInfo) {
     const div = document.createElement('div')
     div.classList.add('basket-utils')
@@ -169,6 +177,16 @@ export default class Product extends Shadow() {
     return div
   }
 
+  /**
+   * The function creates a div element with a product image inside, using the provided image source and
+   * alt text.
+   * @param imageSrc - The image source URL for the product image.
+   * @param alt - The "alt" parameter is a string that represents the alternative text for the image. It
+   * is used to provide a textual description of the image for users who are visually impaired or when
+   * the image cannot be displayed.
+   * @returns a div element with a class of "product-image" and an innerHTML that includes an "a-picture"
+   * element with the specified image source and alt text.
+   */
   createProductImageElement (imageSrc, alt) {
     const div = document.createElement('div')
     div.classList.add('product-image')
@@ -176,6 +194,17 @@ export default class Product extends Shadow() {
     return div
   }
 
+  /**
+   * The function creates a div element with two spans inside,
+   * one for the price and one for the name, and returns the div element.
+   * @param price - The price parameter is the price of the product.
+   * It can be a number or a string representing the price value.
+   * @param name - The name parameter is a string that represents the name of the product.
+   * @returns a div element with two child span elements. The first span element has a class of
+   * "product-price" and its inner text is set to the value of the "price" parameter. The second span
+   * element has a class of "product-name" and its inner text is set to the value of the "name"
+   * parameter.
+   */
   createProductDataElement (price, name) {
     const div = document.createElement('div')
     div.classList.add('product-data')
@@ -190,6 +219,10 @@ export default class Product extends Shadow() {
     return div
   }
 
+  /**
+   * The function retrieves and parses the value of the 'data' attribute of an element.
+   * @returns the parsed JSON data from the 'data' attribute.
+   */
   get productData () {
     const pd = this.getAttribute('data') || ''
     return JSON.parse(pd)
