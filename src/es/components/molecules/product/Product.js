@@ -11,12 +11,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Product extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-
-    this.quantity = null
-
     this.answerEventNameListener = event => {
       console.log('update product', event.detail.products.length, this.quantity)
-      this.quantity.innerText = event.detail.products.length.toString()
+      this.quantity = (Number(this.quantity.innerText) + event.detail.products.length).toString()
     }
   }
 
@@ -166,105 +163,92 @@ export default class Product extends Shadow() {
         name: 'a-button'
       }
     ])
-    this.html = this.createBasketUtilsElement(this.productData.tracking_information)
-    this.html = this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)
-    this.html = this.createProductDataElement(this.productData.price, this.productData.name)
-    if (this.productData.isWeighable){
-      this.html = this.createFooterLabels(this.productData.unit_price)
-    }
-    this.quantity = this.root.querySelector('.quantity')
-    this.quantity.innerText = '0'
+
+    this.html = /* html */ `
+      ${this.createBasketUtilsElement(this.productData.tracking_information)}
+      ${this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)}
+      ${this.createProductDataElement(this.productData.price, this.productData.name)}
+      ${this.createFooterLabels(this.productData.unit_price, this.productData.isWeighable)}
+    `
+    this.quantity = '0'
+  }
+
+  get quantity(){
+    return this.root.querySelector('.quantity') 
+  }
+
+  set quantity(quantity){
+    if(this.quantity) this.quantity.innerText = quantity
   }
 
   /**
-   * The function creates a div element with buttons for adding and removing items from a basket, along
-   * with a quantity display.
+   * The function creates a HTML element for a basket utility with buttons to add and remove items.
    * @param {string} productInfo - The `productInfo` parameter is a variable that contains information about a
-   * product. It could include details such as the product name, price, and any other relevant
-   * information that you want to display in the basket utils element.
-   * @returns {HTMLElement} a div element with the class "basket-utils" and inner HTML that includes two buttons and a
-   * div with the class "quantity".
+   * product. It could include details such as the product name, price, image, and any other relevant
+   * information.
+   * @returns {string} an HTML element as a string. The returned element is a div with the class "basket-utils"
+   * containing two buttons and a div with the class "quantity". The buttons have different request event
+   * names and tags based on the provided productInfo.
    */
   createBasketUtilsElement (productInfo) {
-    const div = document.createElement('div')
-    div.classList.add('basket-utils')
-    div.innerHTML = `
-      <a-button namespace="button-tertiary-" request-event-name="add-basket" tag='${productInfo}'>+</a-button>
+    return /* html */ `
+      <div class="basket-utils">
+        <a-button namespace="button-tertiary-" request-event-name="add-basket" tag='${productInfo}'>+</a-button>
         <div class="quantity"></div>
-      <a-button namespace="button-tertiary-" request-event-name="remove-basket" tag='${productInfo}'>-</a-button>`
-    return div
+        <a-button namespace="button-tertiary-" request-event-name="remove-basket" tag='${productInfo}'>-</a-button>
+      </div>`
   }
 
   /**
-   * The function creates a div element with a product image inside, using the provided image source and
-   * alt text.
-   * @param {string} imageSrc - The image source URL for the product image.
-   * @param {string} alt - The "alt" parameter is a string that represents the alternative text for the image. It
-   * is used to provide a textual description of the image for users who are visually impaired or when
-   * the image cannot be displayed.
-   * @returns {HTMLElement} a div element with a class of "product-image" and an innerHTML that includes an "a-picture"
-   * element with the specified image source and alt text.
+   * The function creates a product image element with the specified image source and alt text.
+   * @param {string} imageSrc - The image source URL or path. This is the location of the image file that will
+   * be displayed.
+   * @param {string} alt - The "alt" parameter is used to specify the alternative text for the image. This text
+   * is displayed if the image cannot be loaded or if the user is using a screen reader. It should
+   * provide a concise description of the image.
+   * @returns an HTML string that represents a product image element.
    */
   createProductImageElement (imageSrc, alt) {
-    const div = document.createElement('div')
-    div.classList.add('product-image')
-    div.innerHTML = `<a-picture namespace="product-default-" picture-load defaultSource='${imageSrc}' alt='${alt}'></a-picture>`
-    return div
+    return /* html */ `
+      <div class="product-image">
+        <a-picture namespace="product-default-" picture-load defaultSource='${imageSrc}' alt='${alt}'></a-picture>
+      </div>`
   }
 
   /**
-   * The function creates a div element with two spans inside,
-   * one for the price and one for the name, and returns the div element.
-   * @param {string} price - The price parameter is the price of the product.
-   * It can be a number or a string representing the price value.
-   * @param {string} name - The name parameter is a string that represents the name of the product.
-   * @returns {HTMLElement} a div element with two child span elements. The first span element has a class of
-   * "product-price" and its inner text is set to the value of the "price" parameter. The second span
-   * element has a class of "product-name" and its inner text is set to the value of the "name" parameter.
-   */
+ * The function creates an HTML element with price and name data for a product.
+ * @param {string} price - The price parameter is the price of the product. It could be a number or a string
+ * representing the price value.
+ * @param {string} name - The name parameter is a string that represents the name of the product.
+ * @returns an HTML string that represents a product data element. It includes the price and name of
+ * the product within span elements.
+ */
   createProductDataElement (price, name) {
-    const div = document.createElement('div')
-    div.classList.add('product-data')
-    const priceSpan = document.createElement('span')
-    priceSpan.classList.add('product-price')
-    priceSpan.innerText = price
-    div.appendChild(priceSpan)
-    const nameSpan = document.createElement('span')
-    nameSpan.classList.add('product-name')
-    nameSpan.innerText = name
-    div.appendChild(nameSpan)
-    return div
+    return /* html */ `
+      <div class="product-data">
+        <span class="product-price">${price}</span>
+        <span class="product-name">${name}</span>
+      <div>
+    `
+  }
+
+  createFooterLabels (unitPrice, waightable) {
+    if (!waightable) return
+
+    return /* html */ `
+      <div class="footer-label-data">
+        <span>${unitPrice}</span>
+        ${this.createFooterIcons()}
+      </div>`
   }
 
   /**
-   * The function creates a footer label with a unit price and icons.
-   * @param {string} unitPrice - The `unitPrice` parameter is the price of a single unit of a product or item.
-   * @returns {HTMLElement} a div element with a class of 'footer-label-data'. Inside the div, there is a span
-   * element with a class of 'unit-price' and inner text set to the value of the unitPrice parameter.
-   * Additionally, the function is calling another function called createFooterIcons() and appending
-   * the returned value to the div element.
+   * The function creates a footer icon by returning an HTML image tag.
+   * @returns an HTML string that includes an image tag with the source attribute set to
+   * "../../src/img/migrospro/label-balance.svg" and an empty alt attribute.
    */
-  createFooterLabels(unitPrice){
-    const div = document.createElement('div')
-    div.classList.add('footer-label-data')
-    const price = document.createElement('span')
-    price.classList.add('unit-price')
-    price.innerText = unitPrice
-    div.appendChild(price)
-    div.appendChild(this.createFooterIcons())
-    return div
-  }
-
-  /**
-   * The function creates and returns an image element with a specific source and alt attribute.
-   * @returns an HTML `img` element with the `src` attribute set to
-   * `'../../src/img/migrospro/label-balance.svg'` and the `alt` attribute set to an empty string.
-   */
-  createFooterIcons(){
-    const img = document.createElement('img')
-    img.setAttribute('src', '../../src/img/migrospro/label-balance.svg')
-    img.setAttribute('alt', '')
-    return img
+  createFooterIcons () {
+    return `<img src="../../src/img/migrospro/label-balance.svg" alt="" />`
   }
 
   /**
