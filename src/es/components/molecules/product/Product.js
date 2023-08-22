@@ -48,13 +48,13 @@ export default class Product extends Shadow() {
   renderCSS () {
     this.css = /* css */`
     :host {
-        --img-max-height:6vw;
+        --img-height:6vw;
         box-shadow:0px 0px 12px 0px rgba(51, 51, 51, 0.10);
         display:flex;
         flex-direction:column;
         justify-content: flex-start;
-        min-height:max(20em,19vw);
-        min-width:max(10em,10vw);
+        height:max(20em,18vw);
+        width:max(10em,10vw);
         padding:0 1vw;
       }
       /*:host(:hover){
@@ -182,7 +182,7 @@ export default class Product extends Shadow() {
 
     const a = document.createElement('a')
     a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slugs.fr}`
-    a.append(productCard)
+    a.appendChild(productCard)
     this.html = a
 
     /* setting the initial value. This property is used to keep track of the quantity of the product */
