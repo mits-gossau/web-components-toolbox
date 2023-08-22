@@ -49,9 +49,9 @@ export default class Product extends Shadow() {
     this.css = /* css */`
     :host {
         --img-max-height:10vw;
-        --img-max-width:60%; 
+        --img-max-width:80%; 
         /*border-left:.5em solid transparent;
-        /*padding:0 0 var(--content-spacing) 0;
+        padding:0 0 var(--content-spacing) 0;
         align-items:flex-start;
         background-color:var(--m-white);
         border-radius:8px;
@@ -60,14 +60,23 @@ export default class Product extends Shadow() {
         display:flex;
         flex-direction:column;
         justify-content:space-between;
-        margin:0 0 var(--content-spacing) 0;
-        transition: box-shadow .2s ease-in-out;*/
+        margin:0;
+        padding:1em;
+        gap:1em;
+        /*transition: box-shadow .2s ease-in-out;*/
       }
       /*:host(:hover){
         box-shadow: 0 2px 4px 0 rgba(0,0,0,.16), 0 0 4px 0 rgba(0,0,0,.08);
       }*/
       :host > a {
-        padding:var(--content-spacing); 
+        /*padding:var(--content-spacing);*/ 
+      }
+      :host > a > div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        min-height: 15vw;
       }
       :host .basket-utils {
         align-items: center;
@@ -91,7 +100,7 @@ export default class Product extends Shadow() {
       }
       :host .product-image {
         align-self:center;
-        padding:0 var(--content-spacing);
+        /*padding:0 var(--content-spacing);*/
       }
       :host .product-price{
         display:block;
@@ -104,7 +113,7 @@ export default class Product extends Shadow() {
         font-weight: bold;
       }
       :host .product-data {
-        min-height:5em;
+        /*width:80%;*/
       }
       :host .footer-label-data {
         display:flex;
@@ -172,16 +181,18 @@ export default class Product extends Shadow() {
     const productCard = document.createElement('div') 
 
     productCard.innerHTML = /* html */ `
-      ${this.createBasketUtilsElement(this.productData.tracking_information)}
+      ${this.createBasketUtilsElement(this.productData.id)}
       ${this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)}
       ${this.createProductDataElement(this.productData.price, this.productData.name)}
-      ${this.productData.isWeighable ? this.createFooterLabels(this.productData.unit_price) : ''}
-      `
-    console.log(this.getAttribute('detail-product-link'), this.productData);
+      ${this.createFooterLabels(this.productData.price, this.productData.isWeighable)}
+    `
+
     const a = document.createElement('a')
     a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slugs.fr}`
-    a.appendChild(productCard)
+    a.append(productCard)
     this.html = a
+
+    /* setting the initial value. This property is used to keep track of the quantity of the product */
     this.quantity = '0'
   }
 
@@ -252,7 +263,8 @@ export default class Product extends Shadow() {
    * variable. Additionally, the function calls another function called createFooterIcons() and includes
    * its return value inside the div.
    */
-  createFooterLabels (unitPrice) {
+  createFooterLabels(unitPrice, isWeighable) {
+    if(!isWeighable) return ''
     return /* html */ `
       <div class="footer-label-data">
         <span class="unit-price">${unitPrice}</span>
