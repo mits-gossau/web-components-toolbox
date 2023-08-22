@@ -114,6 +114,7 @@ export default class Product extends Shadow() {
       }
       :host .product-data {
         /*width:80%;*/
+        padding-top:0.5em;
       }
       :host .footer-label-data {
         display:flex;
@@ -207,8 +208,7 @@ export default class Product extends Shadow() {
   /**
    * The function creates a HTML element for a basket utility with buttons to add and remove items.
    * @param {string} productInfo - The `productInfo` parameter is a variable that contains information about a
-   * product. It could include details such as the product name, price, image, and any other relevant
-   * information.
+   * product. It could include details such as the product name, price, image, and any other relevant information.
    * @returns {string} an HTML element as a string. The returned element is a div with the class "basket-utils"
    * containing two buttons and a div with the class "quantity". The buttons have different request event
    * names and tags based on the provided productInfo.
@@ -248,9 +248,9 @@ export default class Product extends Shadow() {
   createProductDataElement (price, brand, name) {
     return /* html */ `
       <div class="product-data">
+      <span class="product-price">${price}</span>
         <span class="product-brand">${brand}</span>
         <span class="product-name">${this.deleteBrandFromName(name, brand)}</span>
-        <span class="product-price">${price}</span>
       <div>
     `
   }
