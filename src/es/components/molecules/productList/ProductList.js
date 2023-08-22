@@ -58,7 +58,8 @@ export default class ProductList extends Shadow() {
       flex-wrap: wrap;
       flex-direction:var(--flex-direction, row);
       justify-content: space-between;
-      gap:1em;
+      align-items: flex-start;
+      gap:1vw;
     }
     /* TODO: a-picture needs aspect ratio to lazy load after the fold */
     :host > * {

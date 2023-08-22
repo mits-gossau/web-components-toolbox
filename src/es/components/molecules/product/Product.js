@@ -48,22 +48,14 @@ export default class Product extends Shadow() {
   renderCSS () {
     this.css = /* css */`
     :host {
-        --img-max-height:10vw;
-        --img-max-width:80%; 
-        /*border-left:.5em solid transparent;
-        padding:0 0 var(--content-spacing) 0;
-        align-items:flex-start;
-        background-color:var(--m-white);
-        border-radius:8px;
-        border-right:.5em solid transparent;*/
+        --img-max-height:6vw;
         box-shadow:0px 0px 12px 0px rgba(51, 51, 51, 0.10);
         display:flex;
         flex-direction:column;
-        justify-content:space-between;
-        margin:0;
-        padding:1em;
-        gap:1em;
-        /*transition: box-shadow .2s ease-in-out;*/
+        justify-content: flex-start;
+        min-height:max(20em,19vw);
+        min-width:max(10em,10vw);
+        padding:0 1vw;
       }
       /*:host(:hover){
         box-shadow: 0 2px 4px 0 rgba(0,0,0,.16), 0 0 4px 0 rgba(0,0,0,.08);
@@ -76,7 +68,6 @@ export default class Product extends Shadow() {
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        min-height: 15vw;
       }
       :host .basket-utils {
         align-items: center;
@@ -113,8 +104,8 @@ export default class Product extends Shadow() {
         font-weight: bold;
       }
       :host .product-data {
-        /*width:80%;*/
-        padding-top:0.5em;
+        max-width:90%;
+        padding-top:1em;
       }
       :host .footer-label-data {
         display:flex;
@@ -129,7 +120,8 @@ export default class Product extends Shadow() {
         text-overflow: ellipsis;
       }
       :host .footer-label-data > img{
-        height:1.45em;
+        margin:1em 0;
+        height:1.5em;
 
       }
       @media only screen and (max-width: _max-width_) {
@@ -185,7 +177,7 @@ export default class Product extends Shadow() {
       ${this.createBasketUtilsElement(this.productData.id)}
       ${this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)}
       ${this.createProductDataElement(this.productData.price, this.productData.brand?.name, this.productData.name)}
-      ${this.createFooterLabels(this.productData.price, this.productData.isWeighable)}
+      ${this.createFooterLabels(this.productData.unit_price, this.productData.isWeighable)}
     `
 
     const a = document.createElement('a')
