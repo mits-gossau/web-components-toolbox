@@ -237,7 +237,7 @@ export default class Product extends Shadow() {
 
     return /* html */ `
       <div class="footer-label-data">
-        <span>${unitPrice}</span>
+        <span class="unit-price">${unitPrice}</span>
         ${this.createFooterIcons()}
       </div>`
   }
