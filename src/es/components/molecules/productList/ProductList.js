@@ -180,7 +180,7 @@ export default class ProductList extends Shadow() {
       const products = productData.map((/** @type {any} */ product, i) => /* html */`
         <m-load-template-tag>
           <template>
-            <m-product answer-event-name="update-product" namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}'></m-product>
+            <m-product detail-product-link=${this.getAttribute('detail-product-link') || ''} answer-event-name="update-product" namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}'></m-product>
           </template>
         </m-load-template-tag>`)
       this.html = products.join('')

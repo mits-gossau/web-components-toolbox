@@ -50,26 +50,31 @@ export default class Product extends Shadow() {
     :host {
         --img-max-height:10vw;
         --img-max-width:60%; 
+        /*border-left:.5em solid transparent;
+        /*padding:0 0 var(--content-spacing) 0;
         align-items:flex-start;
         background-color:var(--m-white);
-        border-left:.5em solid transparent;
         border-radius:8px;
-        border-right:.5em solid transparent;
+        border-right:.5em solid transparent;*/
         box-shadow:0px 0px 12px 0px rgba(51, 51, 51, 0.10);
         display:flex;
         flex-direction:column;
         justify-content:space-between;
         margin:0 0 var(--content-spacing) 0;
-        padding:0 0 var(--content-spacing) 0;
-        
-        
+        transition: box-shadow .2s ease-in-out;*/
+      }
+      /*:host(:hover){
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,.16), 0 0 4px 0 rgba(0,0,0,.08);
+      }*/
+      :host > a {
+        padding:var(--content-spacing); 
       }
       :host .basket-utils {
         align-items: center;
         display:flex;
         flex-direction: row;
         justify-content: space-between;
-        padding:calc(var(--content-spacing) / 2); 
+        padding-bottom:calc(var(--content-spacing) / 2);
         width:100%;
       }
       :host .quantity {
@@ -85,8 +90,8 @@ export default class Product extends Shadow() {
         width: 24px;
       }
       :host .product-image {
-        padding:0 var(--content-spacing);
         align-self:center;
+        padding:0 var(--content-spacing);
       }
       :host .product-price{
         display:block;
@@ -107,11 +112,11 @@ export default class Product extends Shadow() {
         align-items: flex-start;
       }
       :host .unit-price {
-        overflow: hidden;
         color: var(--unit-price-color, black);
-        text-overflow: ellipsis;
         font-size: 0.75em;
         line-height: 1.5em;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       :host .footer-label-data > img{
         height:1.45em;
@@ -164,12 +169,19 @@ export default class Product extends Shadow() {
       }
     ])
 
-    this.html = /* html */ `
+    const productCard = document.createElement('div') 
+
+    productCard.innerHTML = /* html */ `
       ${this.createBasketUtilsElement(this.productData.tracking_information)}
       ${this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)}
       ${this.createProductDataElement(this.productData.price, this.productData.name)}
-      ${this.createFooterLabels(this.productData.unit_price, this.productData.isWeighable)}
-    `
+      ${this.productData.isWeighable ? this.createFooterLabels(this.productData.unit_price) : ''}
+      `
+    console.log(this.getAttribute('detail-product-link'), this.productData);
+    const a = document.createElement('a')
+    a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slugs.fr}`
+    a.appendChild(productCard)
+    this.html = a
     this.quantity = '0'
   }
 
@@ -232,9 +244,15 @@ export default class Product extends Shadow() {
     `
   }
 
-  createFooterLabels (unitPrice, waightable) {
-    if (!waightable) return
-
+  /**
+   * The function `createFooterLabels` returns an HTML string that includes a unit price and some footer icons.
+   * @param {string} unitPrice - The `unitPrice` parameter is the price of a single unit of a product.
+   * @returns {string} an HTML string that contains a div element with the class "footer-label-data". Inside the
+   * div, there is a span element with the class "unit-price" that displays the value of the unitPrice
+   * variable. Additionally, the function calls another function called createFooterIcons() and includes
+   * its return value inside the div.
+   */
+  createFooterLabels (unitPrice) {
     return /* html */ `
       <div class="footer-label-data">
         <span class="unit-price">${unitPrice}</span>
