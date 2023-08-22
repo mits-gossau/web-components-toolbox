@@ -178,12 +178,12 @@ export default class Product extends Shadow() {
       }
     ])
 
-    const productCard = document.createElement('div') 
+    const productCard = document.createElement('div')
 
     productCard.innerHTML = /* html */ `
       ${this.createBasketUtilsElement(this.productData.id)}
       ${this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)}
-      ${this.createProductDataElement(this.productData.price, this.productData.name)}
+      ${this.createProductDataElement(this.productData.price, this.productData.brand?.name, this.productData.name)}
       ${this.createFooterLabels(this.productData.price, this.productData.isWeighable)}
     `
 
@@ -196,12 +196,12 @@ export default class Product extends Shadow() {
     this.quantity = '0'
   }
 
-  get quantity(){
-    return this.root.querySelector('.quantity') 
+  get quantity () {
+    return this.root.querySelector('.quantity')
   }
 
-  set quantity(quantity){
-    if(this.quantity) this.quantity.innerText = quantity
+  set quantity (quantity) {
+    if (this.quantity) this.quantity.innerText = quantity
   }
 
   /**
@@ -239,32 +239,31 @@ export default class Product extends Shadow() {
   }
 
   /**
- * The function creates an HTML element with price and name data for a product.
- * @param {string} price - The price parameter is the price of the product. It could be a number or a string
- * representing the price value.
- * @param {string} name - The name parameter is a string that represents the name of the product.
- * @returns an HTML string that represents a product data element. It includes the price and name of
- * the product within span elements.
- */
-  createProductDataElement (price, name) {
+   * The function creates an HTML element with product data, including price, brand, and name.
+   * @param {string} price - The price parameter is the price of the product. It is a numerical value representing the cost of the product.
+   * @param {string} brand - The brand parameter represents the brand name of the product.
+   * @param {string} name - The name parameter is a string that represents the name of the product.
+   * @returns an HTML string that represents a product data element.
+   */
+  createProductDataElement (price, brand, name) {
     return /* html */ `
       <div class="product-data">
+        <span class="product-brand">${brand}</span>
+        <span class="product-name">${this.deleteBrandFromName(name, brand)}</span>
         <span class="product-price">${price}</span>
-        <span class="product-name">${name}</span>
       <div>
     `
   }
 
   /**
-   * The function `createFooterLabels` returns an HTML string that includes a unit price and some footer icons.
-   * @param {string} unitPrice - The `unitPrice` parameter is the price of a single unit of a product.
-   * @returns {string} an HTML string that contains a div element with the class "footer-label-data". Inside the
-   * div, there is a span element with the class "unit-price" that displays the value of the unitPrice
-   * variable. Additionally, the function calls another function called createFooterIcons() and includes
-   * its return value inside the div.
+   * The function `createFooterLabels` returns a string of HTML code that includes the unit price and
+   * some icons, if the product is weighable.
+   * @param {string} unitPrice - The `unitPrice` parameter is the price of a single unit of the product.
+   * @param {string} isWeighable - A boolean value indicating whether the item is weighable or not.
+   * @returns a string of HTML code.
    */
-  createFooterLabels(unitPrice, isWeighable) {
-    if(!isWeighable) return ''
+  createFooterLabels (unitPrice, isWeighable) {
+    if (!isWeighable) return ''
     return /* html */ `
       <div class="footer-label-data">
         <span class="unit-price">${unitPrice}</span>
@@ -278,7 +277,7 @@ export default class Product extends Shadow() {
    * "../../src/img/migrospro/label-balance.svg" and an empty alt attribute.
    */
   createFooterIcons () {
-    return `<img src="../../src/img/migrospro/label-balance.svg" alt="" />`
+    return '<img src="../../src/img/migrospro/label-balance.svg" alt="" />'
   }
 
   /**
@@ -288,5 +287,17 @@ export default class Product extends Shadow() {
   get productData () {
     const pd = this.getAttribute('data') || ''
     return JSON.parse(pd)
+  }
+
+  /**
+   * The function removes the brand-name from a given full product name string.
+   * @param {string} name - The name parameter is a string that represents a full product name.
+   * @param {string} brand - The `brand` parameter is the name of the brand that you want to delete from the `name` string.
+   * @returns {string} the modified name after removing the brand from it.
+   */
+  deleteBrandFromName (name, brand) {
+    const index = name.indexOf(brand)
+    if (index === -1) return name
+    return name.slice(index + brand.length).trim()
   }
 }
