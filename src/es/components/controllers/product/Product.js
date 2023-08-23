@@ -51,8 +51,12 @@ export default class Product extends Shadow() {
       method: 'GET',
       signal: this.abortController.signal
     }
-    const endpoint = this.getAttribute('endpoint') + '/MigrosProProductApi/GetProductsByCategory?categoryCode=BeSS_0101&limit=100'
-    this.dispatchEvent(new CustomEvent(this.getAttribute('list-products') || 'list-products', {
+    const limit = 100
+    const categoryCode = this.getCategoryCode()
+    const minPercentage = event?.detail?.this.getAttribute('min-percentage') || 0
+    this.showSubCategories(this.subCategoryList, categoryCode)
+    const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}&min_percentage=${minPercentage}`
+    this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {
         fetch: (this._fetch || (this._fetch = fetch(endpoint, fetchOptions))).then(response => {
           if (response.status >= 200 && response.status <= 299) {
