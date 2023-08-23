@@ -11,9 +11,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Product extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-
     this.answerEventNameListener = event => {
-      console.log('ok')
+      console.log('update product', event.detail.products.length, this.quantity)
+      this.quantity = (Number(this.quantity.innerText) + event.detail.products.length).toString()
     }
   }
 
@@ -47,24 +47,34 @@ export default class Product extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host {
-        --img-height:10vw;
-        align-items:flex-start;
-        background-color:var(--m-white);
-        border-radius:8px;
+    :host {
+        --img-height:6vw;
         box-shadow:0px 0px 12px 0px rgba(51, 51, 51, 0.10);
         display:flex;
         flex-direction:column;
-        justify-content:space-between;
-        margin:0 0 var(--content-spacing) 0;
-        width:13vw;
+        justify-content: flex-start;
+        height:max(20em,18vw);
+        width:max(10em,10vw);
+        padding:0 1vw;
+      }
+      /*:host(:hover){
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,.16), 0 0 4px 0 rgba(0,0,0,.08);
+      }*/
+      :host > a {
+        /*padding:var(--content-spacing);*/ 
+      }
+      :host > a > div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
       }
       :host .basket-utils {
         align-items: center;
         display:flex;
         flex-direction: row;
         justify-content: space-between;
-        padding:calc(var(--content-spacing) / 2); 
+        padding-bottom:calc(var(--content-spacing) / 2);
         width:100%;
       }
       :host .quantity {
@@ -80,8 +90,8 @@ export default class Product extends Shadow() {
         width: 24px;
       }
       :host .product-image {
-        padding:0 var(--content-spacing);
         align-self:center;
+        /*padding:0 var(--content-spacing);*/
       }
       :host .product-price{
         display:block;
@@ -94,8 +104,25 @@ export default class Product extends Shadow() {
         font-weight: bold;
       }
       :host .product-data {
-        min-height:5em;
-        padding:calc(var(--content-spacing) / 2); 
+        max-width:90%;
+        padding-top:1em;
+      }
+      :host .footer-label-data {
+        display:flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      :host .unit-price {
+        color: var(--unit-price-color, black);
+        font-size: 0.75em;
+        line-height: 1.5em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      :host .footer-label-data > img{
+        margin:1em 0;
+        height:1.5em;
+
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
@@ -132,7 +159,6 @@ export default class Product extends Shadow() {
     }
   }
 
-  
   /**
    * Render HTML
    * @returns void
@@ -140,50 +166,130 @@ export default class Product extends Shadow() {
   renderHTML () {
     this.fetchModules([
       {
-        path: `${this.importMetaUrl}'../../../../atoms/Button/Button.js`,
+        path: `${this.importMetaUrl}'../../../../atoms/button/Button.js`,
         name: 'a-button'
       }
     ])
-    this.html = this.createBasketUtilsElement(this.productData.tracking_information)
-    this.html = this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)
-    this.html = this.createProductDataElement(this.productData.price?.item.price, this.productData.name)
+
+    const productCard = document.createElement('div')
+
+    productCard.innerHTML = /* html */ `
+      ${this.createBasketUtilsElement(this.productData.id)}
+      ${this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)}
+      ${this.createProductDataElement(this.productData.price, this.productData.brand?.name, this.productData.name)}
+      ${this.createFooterLabels(this.productData.unit_price, this.productData.isWeighable)}
+    `
+
+    const a = document.createElement('a')
+    a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slugs.fr}`
+    a.appendChild(productCard)
+    this.html = a
+
+    /* setting the initial value. This property is used to keep track of the quantity of the product */
+    this.quantity = '0'
   }
 
+  get quantity () {
+    return this.root.querySelector('.quantity')
+  }
+
+  set quantity (quantity) {
+    if (this.quantity) this.quantity.innerText = quantity
+  }
+
+  /**
+   * The function creates a HTML element for a basket utility with buttons to add and remove items.
+   * @param {string} productInfo - The `productInfo` parameter is a variable that contains information about a
+   * product. It could include details such as the product name, price, image, and any other relevant information.
+   * @returns {string} an HTML element as a string. The returned element is a div with the class "basket-utils"
+   * containing two buttons and a div with the class "quantity". The buttons have different request event
+   * names and tags based on the provided productInfo.
+   */
   createBasketUtilsElement (productInfo) {
-    console.log('pi', productInfo)
-    const div = document.createElement('div')
-    div.classList.add('basket-utils')
-    div.innerHTML = `
-      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='["add",${productInfo}]'>+</a-button>
-        <div class="quantity">10</div>
-      <a-button namespace="button-tertiary-" request-event-name="request-basket" tag='["remove",${productInfo}]'>-</a-button>`
-    return div
+    return /* html */ `
+      <div class="basket-utils">
+        <a-button namespace="button-tertiary-" request-event-name="add-basket" tag='${productInfo}'>+</a-button>
+        <div class="quantity"></div>
+        <a-button namespace="button-tertiary-" request-event-name="remove-basket" tag='${productInfo}'>-</a-button>
+      </div>`
   }
 
+  /**
+   * The function creates a product image element with the specified image source and alt text.
+   * @param {string} imageSrc - The image source URL or path. This is the location of the image file that will
+   * be displayed.
+   * @param {string} alt - The "alt" parameter is used to specify the alternative text for the image. This text
+   * is displayed if the image cannot be loaded or if the user is using a screen reader. It should
+   * provide a concise description of the image.
+   * @returns an HTML string that represents a product image element.
+   */
   createProductImageElement (imageSrc, alt) {
-    const div = document.createElement('div')
-    div.classList.add('product-image')
-    div.innerHTML = `<a-picture defaultSource='${imageSrc}' alt='${alt}'></a-picture>`
-    return div
+    return /* html */ `
+      <div class="product-image">
+        <a-picture namespace="product-default-" picture-load defaultSource='${imageSrc}' alt='${alt}'></a-picture>
+      </div>`
   }
 
-  createProductDataElement (price, name) {
-    const div = document.createElement('div')
-    div.classList.add('product-data')
-    const priceSpan = document.createElement('span')
-    priceSpan.classList.add('product-price')
-    priceSpan.innerText = price
-    div.appendChild(priceSpan)
-    const nameSpan = document.createElement('span')
-    nameSpan.classList.add('product-name')
-    nameSpan.innerText = name
-    div.appendChild(nameSpan)
-    return div
+  /**
+   * The function creates an HTML element with product data, including price, brand, and name.
+   * @param {string} price - The price parameter is the price of the product. It is a numerical value representing the cost of the product.
+   * @param {string} brand - The brand parameter represents the brand name of the product.
+   * @param {string} name - The name parameter is a string that represents the name of the product.
+   * @returns an HTML string that represents a product data element.
+   */
+  createProductDataElement (price, brand, name) {
+    return /* html */ `
+      <div class="product-data">
+      <span class="product-price">${price}</span>
+        <span class="product-brand">${brand}</span>
+        <span class="product-name">${this.deleteBrandFromName(name, brand)}</span>
+      <div>
+    `
   }
 
+  /**
+   * The function `createFooterLabels` returns a string of HTML code that includes the unit price and
+   * some icons, if the product is weighable.
+   * @param {string} unitPrice - The `unitPrice` parameter is the price of a single unit of the product.
+   * @param {string} isWeighable - A boolean value indicating whether the item is weighable or not.
+   * @returns a string of HTML code.
+   */
+  createFooterLabels (unitPrice, isWeighable) {
+    if (!isWeighable) return ''
+    return /* html */ `
+      <div class="footer-label-data">
+        <span class="unit-price">${unitPrice}</span>
+        ${this.createFooterIcons()}
+      </div>`
+  }
+
+  /**
+   * The function creates a footer icon by returning an HTML image tag.
+   * @returns an HTML string that includes an image tag with the source attribute set to
+   * "../../src/img/migrospro/label-balance.svg" and an empty alt attribute.
+   */
+  createFooterIcons () {
+    return '<img src="../../src/img/migrospro/label-balance.svg" alt="" />'
+  }
+
+  /**
+   * The function retrieves and parses the value of the 'data' attribute of an element.
+   * @returns the parsed JSON data from the 'data' attribute.
+   */
   get productData () {
     const pd = this.getAttribute('data') || ''
-    console.log('pd', JSON.parse(pd))
     return JSON.parse(pd)
+  }
+
+  /**
+   * The function removes the brand-name from a given full product name string.
+   * @param {string} name - The name parameter is a string that represents a full product name.
+   * @param {string} brand - The `brand` parameter is the name of the brand that you want to delete from the `name` string.
+   * @returns {string} the modified name after removing the brand from it.
+   */
+  deleteBrandFromName (name, brand) {
+    const index = name.indexOf(brand)
+    if (index === -1) return name
+    return name.slice(index + brand.length).trim()
   }
 }

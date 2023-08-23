@@ -1,0 +1,9 @@
+:host {
+    --product-default-a-color-hover:none;
+    --product-default-a-color:var(--color, black);
+    --product-default-a-margin:0;
+    --product-default-a-text-decoration:none;
+    --product-default-aspect-ratio:1;
+    --product-default-content-spacing:var(--content-spacing, 0);
+    --product-default-unit-price-color:var(--product-default-unit-price-color-custom, var(--m-gray-600));
+}
