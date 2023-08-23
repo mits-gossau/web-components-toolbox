@@ -74,7 +74,7 @@ export default class Product extends Shadow() {
         display:flex;
         flex-direction: row;
         justify-content: space-between;
-        padding-bottom:calc(var(--content-spacing) / 2);
+        padding:calc(var(--content-spacing) / 2) 0;
         width:100%;
       }
       :host .quantity {
