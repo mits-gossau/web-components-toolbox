@@ -35,6 +35,7 @@ export default class Breadcrumb extends Shadow() {
   renderCSS () {
     // extract frequently used value to variables
     const icon = this.getAttribute('icon')
+    const iconWidth = this.getAttribute('iconWidth')
     const color = 'var(--color, pink)'
     const textDecoration = 'var(--text-decoration, none)'
 
@@ -82,7 +83,8 @@ export default class Breadcrumb extends Shadow() {
         background-repeat: no-repeat;
         background-size: 1em;
         ${icon !== 'false' ? 'color: transparent;' : ''}
-        min-width: 1em;
+        min-width: ${iconWidth ? `${iconWidth}` : `var(--breadcrumb-icon-width, 1em)`};
+
       }
       @media only screen and (max-width: _max-width_) {
         :host {
