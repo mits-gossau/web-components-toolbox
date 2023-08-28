@@ -128,7 +128,7 @@ export default class Product extends Shadow() {
   showSubCategories (categories, activeSubCategory) {
     categories.forEach(c => {
       c.classList.add('hide-sub-category')
-      if(c.getAttribute('data-id') === activeSubCategory) c.classList.remove('hide-sub-category')
+      if (c.getAttribute('data-id') === activeSubCategory) c.classList.remove('hide-sub-category')
     })
   }
 }
