@@ -17,7 +17,7 @@
   --navigation-default-color-open: var(--color-hover);
   --navigation-default-color: var(--navigation-default-color-custom, var(--background-color));
   --navigation-default-flex-wrap: wrap;
-  --navigation-default-font-family: var(--font-family-bold);
+  --navigation-default-font-family: var(--navigation-default-font-family-custom ,var(--font-family-bold));
   --navigation-default-li-padding: 0;
   --navigation-default-margin: 0;
   --navigation-default-padding: 0;
