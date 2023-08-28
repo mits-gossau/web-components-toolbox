@@ -9,7 +9,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Product extends Shadow() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       console.log('update product', event.detail.products.length, this.quantity)
@@ -17,17 +17,17 @@ export default class Product extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.productImage
   }
 
@@ -36,7 +36,7 @@ export default class Product extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -45,7 +45,7 @@ export default class Product extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host {
         --img-height:6vw;
@@ -53,9 +53,10 @@ export default class Product extends Shadow() {
         display:flex;
         flex-direction:column;
         justify-content: flex-start;
-        height:max(20em,18vw);
+        min-height:max(20em,20vw);
         width:max(10em,10vw);
         padding:0 1vw;
+        height:100%;
       }
       /*:host(:hover){
         box-shadow: 0 2px 4px 0 rgba(0,0,0,.16), 0 0 4px 0 rgba(0,0,0,.08);
@@ -120,7 +121,7 @@ export default class Product extends Shadow() {
         text-overflow: ellipsis;
       }
       :host .footer-label-data > img{
-        margin:1em 0;
+        margin:1em 0 0 0;
         height:1.5em;
 
       }
@@ -136,7 +137,7 @@ export default class Product extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -163,7 +164,7 @@ export default class Product extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML () {
+  renderHTML() {
     this.fetchModules([
       {
         path: `${this.importMetaUrl}'../../../../atoms/button/Button.js`,
@@ -176,24 +177,24 @@ export default class Product extends Shadow() {
     productCard.innerHTML = /* html */ `
       ${this.createBasketUtilsElement(this.productData.id)}
       ${this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)}
-      ${this.createProductDataElement(this.productData.price, this.productData.brand?.name, this.productData.name)}
-      ${this.createFooterLabels(this.productData.unit_price, this.productData.isWeighable)}
-    `
-
+      ${this.createProductDataElement(this.productData.price, this.productData.brand?.name, this.productData.name)}`
+    productCard.innerHTML += `${this.createFooterLabels(this.productData.unit_price, this.productData.isWeighable)}`
+    
     const a = document.createElement('a')
     a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slugs.fr}`
     a.appendChild(productCard)
+    
     this.html = a
 
     /* setting the initial value. This property is used to keep track of the quantity of the product */
     this.quantity = '0'
   }
 
-  get quantity () {
+  get quantity() {
     return this.root.querySelector('.quantity')
   }
 
-  set quantity (quantity) {
+  set quantity(quantity) {
     if (this.quantity) this.quantity.innerText = quantity
   }
 
@@ -205,7 +206,7 @@ export default class Product extends Shadow() {
    * containing two buttons and a div with the class "quantity". The buttons have different request event
    * names and tags based on the provided productInfo.
    */
-  createBasketUtilsElement (productInfo) {
+  createBasketUtilsElement(productInfo) {
     return /* html */ `
       <div class="basket-utils">
         <a-button namespace="button-tertiary-" request-event-name="add-basket" tag='${productInfo}'>+</a-button>
@@ -223,7 +224,7 @@ export default class Product extends Shadow() {
    * provide a concise description of the image.
    * @returns an HTML string that represents a product image element.
    */
-  createProductImageElement (imageSrc, alt) {
+  createProductImageElement(imageSrc, alt) {
     return /* html */ `
       <div class="product-image">
         <a-picture namespace="product-default-" picture-load defaultSource='${imageSrc}' alt='${alt}'></a-picture>
@@ -237,10 +238,10 @@ export default class Product extends Shadow() {
    * @param {string} name - The name parameter is a string that represents the name of the product.
    * @returns an HTML string that represents a product data element.
    */
-  createProductDataElement (price, brand, name) {
+  createProductDataElement(price, brand, name) {
     return /* html */ `
       <div class="product-data">
-      <span class="product-price">${price}</span>
+        <span class="product-price">${price}</span>
         <span class="product-brand">${brand}</span>
         <span class="product-name">${this.deleteBrandFromName(name, brand)}</span>
       <div>
@@ -254,7 +255,7 @@ export default class Product extends Shadow() {
    * @param {string} isWeighable - A boolean value indicating whether the item is weighable or not.
    * @returns a string of HTML code.
    */
-  createFooterLabels (unitPrice, isWeighable) {
+  createFooterLabels(unitPrice, isWeighable) {
     if (!isWeighable) return ''
     return /* html */ `
       <div class="footer-label-data">
@@ -268,7 +269,7 @@ export default class Product extends Shadow() {
    * @returns an HTML string that includes an image tag with the source attribute set to
    * "../../src/img/migrospro/label-balance.svg" and an empty alt attribute.
    */
-  createFooterIcons () {
+  createFooterIcons() {
     return '<img src="../../src/img/migrospro/label-balance.svg" alt="" />'
   }
 
@@ -276,7 +277,7 @@ export default class Product extends Shadow() {
    * The function retrieves and parses the value of the 'data' attribute of an element.
    * @returns the parsed JSON data from the 'data' attribute.
    */
-  get productData () {
+  get productData() {
     const pd = this.getAttribute('data') || ''
     return JSON.parse(pd)
   }
@@ -287,7 +288,7 @@ export default class Product extends Shadow() {
    * @param {string} brand - The `brand` parameter is the name of the brand that you want to delete from the `name` string.
    * @returns {string} the modified name after removing the brand from it.
    */
-  deleteBrandFromName (name, brand) {
+  deleteBrandFromName(name, brand) {
     const index = name.indexOf(brand)
     if (index === -1) return name
     return name.slice(index + brand.length).trim()
