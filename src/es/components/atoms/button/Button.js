@@ -20,6 +20,7 @@ export default class Button extends Hover() {
     // @ts-ignore
     super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
 
+    this.removeAttribute('tabindex')
     // get the original innerHTML of the component, so that when it rerenders as an a-tag it doesn't loose its content
     let button
     // in case there is already a button, grab the buttons innerHTML, since renderHTML is going to create a new button resp. a-tag instead of the button
@@ -190,6 +191,13 @@ export default class Button extends Hover() {
         touch-action: manipulation;
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
+      }
+      ${this.buttonTagName}:focus-visible {
+        border-radius: var(--border-radius, 0.125em);
+        outline-color: var(--outline-color, var(--background-color, var(--color, transparent)));
+        outline-style: var(--outline-style, solid);
+        outline-width: var(--outline-width, 0.125em);
+        outline-offset: var(--outline-offset, 2px);
       }
       :host a {
         box-sizing: border-box;

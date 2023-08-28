@@ -3,8 +3,9 @@
   --button-download-background-color: none;
   --button-download-color: var(--button-download-color-custom, var(--color-secondary));
   --button-download-color-hover: var(--button-download-color-hover-custom, var(--color-hover));
-  --button-download-font-family: var(--font-family);
+  --button-download-font-family: var(--button-download-font-family-custom, var(--font-family));
   --button-download-padding: 10px 10px 10px 0;
+  --button-download-transition: var(--button-download-transition-custom, var(--transition));
 }
 
 button:hover{
@@ -12,6 +13,6 @@ button:hover{
 }
 
 button:hover > span {
-  transition: text-decoration 0.3s ease-out;
+  transition: var(--button-download-transition-custom, var(--transition, text-decoration 0.3s ease-out));
   text-decoration: underline;
 }

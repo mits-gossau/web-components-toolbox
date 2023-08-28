@@ -11,6 +11,7 @@
   --color-error: var(--m-red-600);
   --color-hover: var(--m-orange-800);
   --color-secondary: var(--m-orange-600);
+  --color-tertiary: var(--color-secondary);
   --color: var(--m-black);
   --content-spacing-mobile: 1rem;
   --content-spacing: 1.143rem;
@@ -24,6 +25,7 @@
   --header-default-content-width: max(calc(1200px - var(--content-spacing) * 2), 55%); /* Environment.js mobileBreakpoint must correspond to the calc 1200px */
   --line-height: 1.5;
   --navigation-default-content-width: var(--header-default-content-width);
+  --outline-color: var(--color-hover);
 }
 /*
 @media (prefers-color-scheme: dark) {
