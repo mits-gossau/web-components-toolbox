@@ -83,7 +83,7 @@ export default class Breadcrumb extends Shadow() {
         background-repeat: no-repeat;
         background-size: 1em;
         ${icon !== 'false' ? 'color: transparent;' : ''}
-        min-width: ${iconWidth ? `${iconWidth}` : `var(--breadcrumb-icon-width, 1em)`};
+        min-width: ${iconWidth ? `${iconWidth}` : 'var(--breadcrumb-icon-width, 1em)'};
 
       }
       @media only screen and (max-width: _max-width_) {

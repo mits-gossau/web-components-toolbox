@@ -126,9 +126,9 @@ export default class Product extends Shadow() {
    * @param {string} activeSubCategory Active sub category id
    */
   showSubCategories (categories, activeSubCategory) {
-    const category = activeSubCategory.split(',')[0]
     categories.forEach(c => {
-      c.classList.toggle('hide-sub-category', c.getAttribute('data-id') === category)
+      c.classList.add('hide-sub-category')
+      if (c.getAttribute('data-id') === activeSubCategory) c.classList.remove('hide-sub-category')
     })
   }
 }
