@@ -452,7 +452,7 @@ export default class Navigation extends Mutation() {
       }
       @media only screen and (max-width: _max-width_) {
         :host {
-          --a-link-content-spacing-no-scroll: 1.1429rem 1.2143rem;
+          --a-link-content-spacing-no-scroll: var(--a-link-content-spacing-custom-no-scroll, 1.1429rem 1.2143rem);
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: var(--a-link-font-size-no-scroll-mobile);
           --a-link-font-size-no-scroll-mobile: var(--a-link-font-size-no-scroll-mobile-custom, 1.1429rem);
