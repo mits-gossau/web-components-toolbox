@@ -455,7 +455,7 @@ export default class Navigation extends Mutation() {
           --a-link-content-spacing-no-scroll: 1.1429rem 1.2143rem;
           --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
           --a-link-font-size-mobile: var(--a-link-font-size-no-scroll-mobile);
-          --a-link-font-size-no-scroll-mobile: 1.1429rem;
+          --a-link-font-size-no-scroll-mobile: var(--a-link-font-size-no-scroll-mobile-custom, 1.1429rem);
           --a-link-font-weight: normal;
           --a-link-second-level-font-size-mobile: 1.2857rem;
           --a-link-text-align-mobile: var(--a-link-text-align-mobile-custom, left);
