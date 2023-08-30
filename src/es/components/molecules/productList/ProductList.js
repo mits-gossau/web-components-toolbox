@@ -15,12 +15,13 @@ export default class ProductList extends Shadow() {
       this.renderHTML('loading')
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
+        if(!productData?.products) throw new Error("No Products found")
         // remove the shitty html mui stuff
         const products = productData.products.map(({ html, ...keepAttrs }) => keepAttrs)
         this.renderHTML(products)
       }).catch(error => {
         this.html = ''
-        this.html = `Error: ${error}`
+        this.html = `${error}`
       })
     }
   }
