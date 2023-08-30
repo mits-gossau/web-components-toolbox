@@ -15,7 +15,7 @@ export default class ProductList extends Shadow() {
       this.renderHTML('loading')
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
-        if(!productData?.products) throw new Error("No Products found")
+        if (!productData?.products) throw new Error('No Products found')
         // remove the shitty html mui stuff
         const products = productData.products.map(({ html, ...keepAttrs }) => keepAttrs)
         this.renderHTML(products)
@@ -60,12 +60,15 @@ export default class ProductList extends Shadow() {
       flex-direction:var(--flex-direction, row);
       justify-content: space-between;
       align-items: flex-start;
-      gap:1vw;
+      align-items: stretch;
+      gap:1em;
     }
     /* TODO: a-picture needs aspect ratio to lazy load after the fold */
     :host > * {
-      min-height: 10em;
-      min-width: 7em;
+      min-height: 12em;
+      min-width: 13vw;
+      flex:1 0 13vw;
+      width:13vw;
     }
     @media only screen and (max-width: _max-width_) {
       :host {}

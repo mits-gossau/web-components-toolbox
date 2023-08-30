@@ -443,9 +443,9 @@ export default class Navigation extends Mutation() {
         --search-input-border-color: transparent;
         --search-input-padding-mobile: var(--a-link-content-spacing);
       }
-      @media only screen and (max-width: ${self.
+      @media only screen and (max-width: ${self
       // @ts-ignore
-      Environment.mobileBreakpoint()}) {
+      .Environment.mobileBreakpoint()}) {
         :host {
           --input-line-height: 1.5;
         }
