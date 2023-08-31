@@ -181,7 +181,7 @@ export default class Product extends Shadow() {
     `
 
     const a = document.createElement('a')
-    a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slugs.fr}`
+    a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slug}`
     a.appendChild(productCard)
     this.html = a
 
