@@ -196,7 +196,7 @@ export default class Product extends Shadow() {
     productCard.innerHTML += `${this.createFooterLabels(this.productData.isWeighable)}`
 
     const a = document.createElement('a')
-    a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slugs.fr}`
+    a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slug}`
     a.appendChild(productCard)
 
     this.html = a
