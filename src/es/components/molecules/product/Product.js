@@ -96,9 +96,8 @@ export default class Product extends Shadow() {
         width: 24px;
       }
       :host .product-image {
-        min-height: 7em;
         margin:0;
-        padding: 0 calc(var(--content-spacing)/2);
+        padding: 0 calc(var(--content-spacing)*2);
       }
 
       :host .product-price {
