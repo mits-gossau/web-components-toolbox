@@ -224,9 +224,9 @@ export default class Product extends Shadow() {
   createBasketUtilsElement(productInfo) {
     return /* html */ `
       <div class="basket-utils">
-        <a-button namespace="button-tertiary-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
-        <div class="quantity"></div>
-        <a-button namespace="button-tertiary-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
+      <a-button namespace="button-tertiary-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
+      <div class="quantity"></div>
+      <a-button namespace="button-tertiary-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
       </div>`
   }
 
@@ -287,7 +287,7 @@ export default class Product extends Shadow() {
    * "../../src/img/migrospro/label-balance.svg" and an empty alt attribute.
    */
   createFooterIcons() {
-    return '<img src="../../src/img/migrospro/label-balance.svg" alt="" />'
+    return `<img src="${this.importMetaUrl}./../../../../img/migrospro/label-balance.svg" alt="" />`
   }
 
   /**
