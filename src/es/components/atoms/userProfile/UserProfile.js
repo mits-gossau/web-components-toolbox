@@ -86,15 +86,15 @@ export default class UserProfile extends Shadow() {
         height:var(--profile-img-height, auto); 
       }    
       :host .menu {
-        background: #FFFFFF;
-        border-radius: 8px;
-        border: 1px solid  #F5F5F5;
+        background: var(--menu-background, white);
+        border-radius: var(--menu-border-radius, 0);
+        border: 1px solid  var(--menu-border-color, black);
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
         opacity: 0;
         padding: 0;
         position: absolute;
         right: 0;
-        top:3em;
+        top: var(--menu-top, 0);
         transition: visibility 100ms linear, opacity 100ms linear;
         visibility: hidden;
         width: max-content;

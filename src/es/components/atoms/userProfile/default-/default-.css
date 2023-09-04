@@ -1,7 +1,10 @@
 :host {
     --user-profile-default-img-height:var(--user-profile-default-img-height-custom, 1.2em);
+    --user-profile-default-menu-border-color:var(--user-profile-default-menu-border-color-custom, var(--m-gray-100,red));
+    --user-profile-default-menu-border-radius:var(--user-profile-default-menu-border-radius-custom, 0);
     --user-profile-default-menu-li-border-top:1px solid var(--m-gray-100);
     --user-profile-default-menu-li-padding:calc(var(--content-spacing) / 2) var(--content-spacing);
+    --user-profile-default-menu-top:var(--user-profile-default-menu-top-custom, 0);
     --user-profile-default-menu-ul-padding:var(--content-spacing) auto;
     --user-profile-default-profile-background-color-active:var(--user-profile-default-profile-background-color-active-custom, var(--color-secondary));
     --user-profile-default-profile-background-color-hover:var(--m-gray-300);
