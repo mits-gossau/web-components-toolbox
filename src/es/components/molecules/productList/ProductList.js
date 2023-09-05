@@ -12,14 +12,14 @@ export default class ProductList extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.productNamespace = 'product-default-'
     this.answerEventNameListener = event => {
-      this.renderHTML('loading',null)
+      this.renderHTML('loading', null)
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
-        const { products, total_hits } = productData
+        const { products, total_hits: totalHits } = productData
         if (!products) throw new Error('No Products found')
         // remove the shitty html mui stuff
         const mApiProducts = products.map(({ html, ...keepAttrs }) => keepAttrs)
-        this.renderHTML(mApiProducts,total_hits)
+        this.renderHTML(mApiProducts, totalHits)
       }).catch(error => {
         this.html = ''
         this.html = `${error}`
@@ -29,7 +29,7 @@ export default class ProductList extends Shadow() {
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
-    this.renderHTML('loading',null)
+    this.renderHTML('loading', null)
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
       {
@@ -125,7 +125,7 @@ export default class ProductList extends Shadow() {
    * @param {any[] | 'loading'} productData
    * @return {Promise<void>}
    */
-  renderHTML (productData,total_hits) {
+  renderHTML (productData, totalHits) {
     if (!productData || (productData !== 'loading' && (!Array.isArray(productData) || !productData.length))) {
       this.html = ''
       this.html = `${this.getAttribute('no-products-found-translation') || 'Leider haben wir keine Produkte zu diesem Suchbegriff gefunden.'}`
@@ -198,7 +198,7 @@ export default class ProductList extends Shadow() {
             <m-product detail-product-link=${this.getAttribute('detail-product-link') || ''} answer-event-name="update-product" namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}'></m-product>
           </template>
         </m-load-template-tag>`)
-      products.unshift(`<div class="filter">${total_hits} produits trouvés</div>`)
+      products.unshift(`<div class="filter">${totalHits} produits trouvés</div>`)
       this.html = products.join('')
     })
   }
