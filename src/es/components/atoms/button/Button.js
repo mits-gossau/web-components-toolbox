@@ -191,6 +191,9 @@ export default class Button extends Hover() {
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
       }
+      ${this.buttonTagName} > *:not(#label) {
+        flex-grow: 1;
+      }
       :host a {
         box-sizing: border-box;
         width: var(--width, fit-content);
