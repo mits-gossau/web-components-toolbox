@@ -351,6 +351,7 @@ export default class Button extends Hover() {
    * @return {Promise<void>}
    */
   renderHTML () {
+    const alreadyIncludedNodes = Array.from(this.root.querySelectorAll(`${this.cssSelector} > :not(style)`))
     this.html = /* html */`
       <${this.buttonTagName} 
         ${this.buttonTagName === 'a'
@@ -360,6 +361,7 @@ export default class Button extends Hover() {
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </${this.buttonTagName}>
     `
+    alreadyIncludedNodes.forEach(node => this.button.appendChild(node))
     if (this.getAttribute('namespace') === 'button-download-') {
       this.button.prepend(this.downloadIcon)
     }
