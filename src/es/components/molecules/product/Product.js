@@ -134,6 +134,13 @@ export default class Product extends Shadow() {
         text-overflow: ellipsis;
       }
 
+      :host .estimated-piece-weight{
+        display: block;
+        color: var(--unit-price-color, black);
+        font-size: 0.75em;
+        line-height: 1.5em;
+      }
+
       :host .footer-label-data > img {
         height: 1.5em;
       }
@@ -190,7 +197,7 @@ export default class Product extends Shadow() {
     productCard.innerHTML = /* html */ `
       ${this.createBasketUtilsElement(this.productData.id)}
       ${this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)}
-      ${this.createProductDataElement(this.productData.price, this.productData.brand?.name, this.productData.name, this.productData.unit_price, this.productData.isWeighable)}`
+      ${this.createProductDataElement(this.productData.price, this.productData.brand?.name, this.productData.name, this.productData.unit_price, this.productData.isWeighable, this.productData?.estimated_piece_weight)}`
 
     productCard.innerHTML += `${this.createFooterLabels(this.productData.isWeighable)}`
 
@@ -244,23 +251,27 @@ export default class Product extends Shadow() {
       </div>`
   }
 
+
   /**
-   * The function creates an HTML element for displaying product data, including price, brand, name, and
-   * unit price if applicable.
+   * The function creates an HTML element with product data, including price, brand, name, unit price,
+   * and estimated piece weight if applicable.
    * @param {string} price - The price of the product.
-   * @param {string} brand - The `brand` parameter represents the brand of the product.
+   * @param {string} brand - The brand parameter represents the brand of the product.
    * @param {string} name - The name parameter represents the name of the product.
-   * @param {string} unitPrice - The `unitPrice` parameter represents the price per unit of the product.
-   * @param {string} isWeighable - A boolean value indicating whether the product is weighable or not.
+   * @param {string} unitPrice - The `unitPrice` parameter represents the price of a single unit of the product.
+   * @param {boolean} isWeighable - A boolean value indicating whether the product is weighable or not.
+   * @param {string} estimatedPieceWeight - The `estimatedPieceWeight` parameter is used to specify the estimated
+   * weight of a single piece of the product. This parameter is only applicable if the product is weighable.
    * @returns an HTML string that represents a product data element.
    */
-  createProductDataElement (price, brand, name, unitPrice, isWeighable) {
+  createProductDataElement(price, brand, name, unitPrice, isWeighable, estimatedPieceWeight) {
     return /* html */ `
       <div class="product-data">
         <span class="product-price">${price}</span>
         <span class="product-brand">${brand}</span>
         <span class="product-name">${this.deleteBrandFromName(name, brand)}</span>
         <span class="unit-price">${isWeighable ? unitPrice : ''}</span>
+        <span class="estimated-piece-weight">${isWeighable ? estimatedPieceWeight : ''}</span>
       <div>
     `
   }
