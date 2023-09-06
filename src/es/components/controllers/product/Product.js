@@ -65,7 +65,7 @@ export default class Product extends Shadow() {
     const categoryCode = this.getCategoryCode()
     const minPercentage = this.getMinPercentage()
     this.showSubCategories(this.subCategoryList, categoryCode)
-    const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}&min_percentage=${minPercentage}`
+    const endpoint = this.getAttribute('endpoint') + `?category=${categoryCode}&limit=${limit}&min_percentage=${minPercentage}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
@@ -112,7 +112,7 @@ export default class Product extends Shadow() {
    */
   setCategoryCode (categoryCode, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
-    url.searchParams.set('category-code', categoryCode)
+    url.searchParams.set('category', categoryCode)
     if (pushHistory) history.pushState({ ...history.state, categoryCode }, document.title, url.href)
     return url
   }
@@ -123,7 +123,7 @@ export default class Product extends Shadow() {
    */
   getCategoryCode () {
     const urlParams = new URLSearchParams(location.search)
-    return urlParams.get('category-code') || 'all'
+    return urlParams.get('category') || 'all'
   }
 
   /**
