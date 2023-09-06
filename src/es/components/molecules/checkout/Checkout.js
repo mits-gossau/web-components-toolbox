@@ -73,6 +73,14 @@ export default class Checkout extends Shadow() {
         display:block;
       }
 
+      :host span.name {
+        font-size:1.25em;
+      }
+
+      :host span.additional-info{
+        font-size:0.75em;
+      }
+
       :host .product-image {
         align-items: center;
         display: flex;
@@ -84,6 +92,7 @@ export default class Checkout extends Shadow() {
       :host .product-info{
         display:flex;
         justify-content: space-between;
+        padding:0 0 1em 0;
       }
 
       :host .product-footer {
@@ -97,10 +106,10 @@ export default class Checkout extends Shadow() {
         align-items: center;
       }
 
-      :host .quantity {
+      /*:host .quantity {
         align-items: center;
         border-radius: 4px;
-        border: 1px solid #333;
+        border: 1px solid var(--quantity-border, black);
         display: flex;
         font-size: 14px;
         height: 24px;
@@ -108,6 +117,22 @@ export default class Checkout extends Shadow() {
         padding: 4px 24px;
         width: 24px;
         margin:1em;
+      }*/
+
+      :host #quantity {
+        align-items: center;
+        background-color: var(--input-quantity-background-color, transparent);
+        border-radius: var(--input-quantity-border-radius, 0.5em);
+        border: 1px solid var(--input-quantity-border, red);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        font-family: var(--input-quantity-font-family, inherit);
+        font-size: var(--input-quantity-font-size, inherit);
+        justify-content: center;
+        margin: 0 0.5em;
+        padding: 0.5em;
+        width: 4em;
       }
     @media only screen and (max-width: _max-width_) {
       :host {}
@@ -180,13 +205,13 @@ export default class Checkout extends Shadow() {
         </div>
         <div class="product-data">
           <div class="product-info">
-            <div><span>3.23</span><span>Happy Bread IP-SUISSE · Dunkles Brot · Geschnitten</span><span>350 g 6.86/kg</span></div>
-            <div> <a-icon-mdx icon-name="ShoppingBasket" size="1em"></a-icon-mdx></div>
+            <div><span>3.23</span><span class="name">Happy Bread IP-SUISSE · Dunkles Brot · Geschnitten</span><span class="additional-info">350 g 6.86/kg</span></div>
+            <div><a-button namespace="button-checkout-delete-article-"  request-event-name="remove-basket" tag="1"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button> </div>
           </div>
           <div class="product-footer">
             <div class="basket">
               <a-button namespace="button-checkout-" request-event-name="remove-basket" tag="1" label="-"></a-button>
-                <div class="quantity"></div>
+              <input id="quantity" name="quantity" type="text">
               <a-button namespace="button-checkout-" request-event-name="add-basket" tag="2" label="+"></a-button>
             </div>
             <div>4.434</div>
