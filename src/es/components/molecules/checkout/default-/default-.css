@@ -1,0 +1,8 @@
+:host{
+    --checkout-default-item-border-bottom: var(--m-gray-300, white);
+    --button-checkout-background-color:var(--m-gray-100, white);
+    --button-checkout-border-radius:50%/50%;
+    --button-checkout-padding: 0.25em 0.75em;
+    --product-checkout-img-max-height:6vw;
+    --product-checkout-img-max-width:6vw;
+}

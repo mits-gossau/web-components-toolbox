@@ -52,7 +52,6 @@ export default class Product extends Shadow() {
         display:block;
         height:100%;
         margin:0 0 calc(var(--content-spacing)/2) 0;
-        /*padding:0 1em;*/
       }
 
       :host > a {
