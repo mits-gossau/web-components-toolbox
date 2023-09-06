@@ -195,7 +195,7 @@ export default class Product extends Shadow() {
 
     productCard.innerHTML = /* html */ `
       ${this.createBasketUtilsElement(this.productData.id)}
-      ${this.createProductImageElement(this.productData.image.original, this.productData.accessible_information_text)}
+      ${this.createProductImageElement(this.productData.image, this.productData.accessible_information_text)}
       ${this.createProductDataElement(this.productData.price, this.productData.brand?.name, this.productData.name, this.productData.unit_price, this.productData.isWeighable, this.productData?.estimated_piece_weight)}`
 
     productCard.innerHTML += `${this.createFooterLabels(this.productData.isWeighable)}`
