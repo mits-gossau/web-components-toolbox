@@ -79,6 +79,7 @@ export default class Checkout extends Shadow() {
 
       :host span.additional-info{
         font-size:0.75em;
+        color:var(--additional-info-color, black);
       }
 
       :host .product-image {
