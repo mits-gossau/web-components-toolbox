@@ -118,7 +118,6 @@ export default class Product extends Shadow() {
     return url
   }
 
-
   /**
    * The function retrieves the value of the 'category' parameter from the URL query
    * string, or returns 'all' if the parameter is not present.

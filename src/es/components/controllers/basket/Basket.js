@@ -2,9 +2,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global fetch */
-/* global AbortController */
 /* global CustomEvent */
-/* global self */
 
 /**
  * @export

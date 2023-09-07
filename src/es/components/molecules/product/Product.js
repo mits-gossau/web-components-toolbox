@@ -305,7 +305,7 @@ export default class Product extends Shadow() {
    * @returns the parsed JSON data from the 'data' attribute.
    */
   get productData () {
-    const pd = this.getAttribute('data') || "{}"
+    const pd = this.getAttribute('data') || '{}'
     return JSON.parse(pd)
   }
 

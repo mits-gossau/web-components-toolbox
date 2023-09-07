@@ -2,7 +2,6 @@
 
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global CustomEvent */
 
 export default class BasketControl extends Shadow() {
   /**
@@ -91,6 +90,5 @@ export default class BasketControl extends Shadow() {
     const buttons = Array.from(this.root.querySelectorAll('a-button'))
     const quantityField = this.root.querySelector('input')
     this.html = `${buttons[0]}`
-
   }
 }
