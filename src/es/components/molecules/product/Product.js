@@ -305,7 +305,7 @@ export default class Product extends Shadow() {
    * @returns the parsed JSON data from the 'data' attribute.
    */
   get productData () {
-    const pd = this.getAttribute('data') || ''
+    const pd = this.getAttribute('data') || "{}"
     return JSON.parse(pd)
   }
 
@@ -316,6 +316,7 @@ export default class Product extends Shadow() {
    * @returns the modified name after removing the brand from it.
    */
   deleteBrandFromName (name, brand) {
+    if (!name) return ''
     const index = name.indexOf(brand)
     if (index === -1) return name
     return name.slice(index + brand.length).trim()
