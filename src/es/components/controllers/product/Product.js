@@ -51,9 +51,6 @@ export default class Product extends Shadow() {
     if (event.detail && event.detail.tags) {
       this.setCategory(event.detail.tags[0], event.detail.pushHistory)
     }
-    if (event.detail && event?.detail?.this.getAttribute('min-percentage')) {
-      this.setMinPercentage(event?.detail?.this.getAttribute('min-percentage'), event.detail.pushHistory)
-    }
 
     if (this.abortController) this.abortController.abort()
     this.abortController = new AbortController()
