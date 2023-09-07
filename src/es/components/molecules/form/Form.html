@@ -1,5 +1,5 @@
-<h1>Umbraco Form Test (true)</h1>
-<m-form umbraco-form="true">
+<h1>with <code>.umbraco-forms-field</code></h1>
+<m-form>
     <div class="umbraco-forms-field" >
         <label for="firma" class="umbraco-forms-label">Firma</label>
         <div><input name="firma" type="text" ></div>
@@ -7,7 +7,7 @@
 </m-form>
 <hr />
 
-<h1>Umbraco Form Test (false, without &lt;form&gt;)</h1>
+<h1>without <code>form</code> and <code>.umbraco-forms-field</code></h1>
 <m-form>
     <div>
         <label for="firma" class="umbraco-forms-label">Firma</label>
@@ -16,7 +16,7 @@
 </m-form>
 <hr />
 
-<h1>Umbraco Form Test (false, with &lt;form&gt;)</h1>
+<h1>with <code>form</code> and without <code>.umbraco-forms-field</code></h1>
 <m-form>
     <form>
         <div class="umbraco-forms-field" >

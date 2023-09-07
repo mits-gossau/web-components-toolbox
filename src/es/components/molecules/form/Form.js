@@ -26,8 +26,6 @@ export default class Form extends Shadow() {
       ...options
     }, ...args)
 
-    this.isUmbracoForm = this.getAttribute('umbraco-form') === 'true' ? true : false
-
     this.setAttribute('role', 'form')
     // scroll to first error
     // @ts-ignore
@@ -165,10 +163,6 @@ export default class Form extends Shadow() {
     `
     this.css = buttonSecondary.css.replace(/\sbutton/g, ' *:has(> input[type=file])').replace(/\s#label/g, ' *:has(> input[type=file])')
     buttonSecondary.remove()
-
-    // form padding, if umbraco form or not
-    const formFieldSelector = this.isUmbracoForm ? ':host form > div' : '.umbraco-forms-field'
-
     this.css = /* css */`
       :host {
         width:100%;
@@ -219,7 +213,7 @@ export default class Form extends Shadow() {
       .umbraco-forms-indicator {
         color: var(--color-secondary);
       }
-      ${formFieldSelector} {
+      :host form > div, .umbraco-forms-field {
         padding-bottom: var(--content-spacing);
       }
       .umbraco-forms-field.checkbox .umbraco-forms-field-wrapper {
