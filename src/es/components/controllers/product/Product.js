@@ -103,11 +103,15 @@ export default class Product extends Shadow() {
     this.requestListProductListener(event)
   }
 
+
   /**
-   * Set category
-   * @param {string} category
-   * @param {boolean} [pushHistory = true]
-   * @return {URL}
+   * The function sets the category parameter in the URL and optionally pushes the new URL
+   * to the browser history.
+   * @param {string} category - The category parameter is the value that you want to set for the category in the URL.
+   * @param [pushHistory=true] - The `pushHistory` parameter is a boolean value that determines whether
+   * to push the new URL with the updated category to the browser's history. If `pushHistory` is set to
+   * `true`, the new URL will be added to the browser's history. If `pushHistory` is set to `
+   * @returns the updated URL object.
    */
   setCategory (category, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
@@ -116,9 +120,12 @@ export default class Product extends Shadow() {
     return url
   }
 
+
   /**
-   * Get category
-   * @return {string}
+   * The function retrieves the value of the 'category' parameter from the URL query
+   * string, or returns 'all' if the parameter is not present.
+   * @returns the value of the 'category' parameter from the URL query string. If the 'category'
+   * parameter is not present in the URL, it will return 'all' as the default value.
    */
   getCategory () {
     const urlParams = new URLSearchParams(location.search)
