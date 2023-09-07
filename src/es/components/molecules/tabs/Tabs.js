@@ -1,57 +1,90 @@
 // @ts-check
-import { Hover } from '../../prototypes/Hover.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
-export default class Tabs extends Hover() {
-
-  connectedCallback () {
-    super.connectedCallback()
-    if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
+export default class Tabs extends Shadow() {
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    this.tabs = []
+    this.activeTab = 0
+    this.tabList = document.createElement('div')
+    this.tabList.setAttribute('role', 'tablist')
+    this.tabContent = document.createElement('div')
+    this.tabContent.className = 'tab-content'
   }
 
-  /**
-   * evaluates if a render is necessary
-   *
-   * @return {boolean}
-   */
+  connectedCallback () {
+    if (this.shouldRenderCSS()) this.renderCSS()
+    this.tabs = Array.from(this.root.children).map(child => child.getAttribute('tab-title'))
+    this.renderHTML()
+  }
+
+  updateTabs () {
+    this.tabList.innerHTML = ''
+    this.tabContent.innerHTML = ''
+
+    this.tabs.forEach((tab, index) => {
+      const tabButton = document.createElement('button')
+      tabButton.dataset.bsTarget = `#nav-${tab && tab.toLowerCase()}`
+      tabButton.type = 'button'
+      tabButton.role = 'tab'
+      tabButton.textContent = tab
+      tabButton.addEventListener('click', () => this.showTab(index))
+      this.tabList.appendChild(tabButton)
+
+      const tabPane = document.createElement('div')
+      tabPane.id = `nav-${tab && tab.toLowerCase()}`
+      tabPane.classList.add('tab-pane')
+      tabPane.innerHTML = this.root.children[index].innerHTML
+      this.tabContent.appendChild(tabPane)
+    })
+
+    this.showTab(this.activeTab)
+  }
+
+  showTab (index) {
+    if (index >= 0 && index < this.tabs.length) {
+      this.activeTab = index
+      const tabPanes = this.tabContent.querySelectorAll('.tab-pane')
+
+      tabPanes.forEach((pane, i) => {
+        if (i === index) {
+          // @ts-ignore
+          pane.style.display = 'block'
+        } else {
+          // @ts-ignore
+          pane.style.display = 'none'
+        }
+      })
+    }
+  }
+
   shouldRenderCSS () {
-    return !this.root.querySelector(
+    return !this.shadowRoot.querySelector(
       `:host > style[_css], ${this.tagName} > style[_css]`
     )
   }
 
-  /**
-   * evaluates if a render is necessary
-   *
-   * @return {boolean}
-   */
-  shouldRenderHTML () {
-    return !this.svg
-  }
-
-  /**
-   * Renders the CSS.
-   *
-   * @return {void}
-   */
   renderCSS () {
     this.css = /* css */ `
       :host {
       }`
   }
 
-  /**
-   * renders the html
-   *
-   * @return {void}
-   */
   renderHTML () {
-    // TODO: SVG's should be taken from icons folder but fetch can't use cache and is too slow on loads of requests at once. object, img, etc. does not work for css styling. so most likely it needs a node script copying this stuff on update in the icon folder.
-    // TODO: or solve the problem with an icon controller with caching. Send event with Promise.resolve to controller, which then resolves it with the svg
-    // src/es/components/web-components-toolbox/src/icons/chevron_right.svg
-    this.html = /* html */ `
-      <div>Tabs</div>
-    `
-    this.html = this.style
+    this.updateTabs()
+
+    this.html = /* html */`
+        <div>
+            <nav>
+                <div role="tablist">
+                    ${this.tabList.innerHTML}
+                </div>
+            </nav>
+            <div class="tab-content">
+                ${this.tabContent.innerHTML}
+            </div>
+        </div>`
+
+    
   }
 }
