@@ -4,58 +4,27 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Tabs extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-    this.tabs = []
-    this.activeTab = 0
-    this.tabList = document.createElement('div')
-    this.tabList.setAttribute('role', 'tablist')
-    this.tabContent = document.createElement('div')
-    this.tabContent.className = 'tab-content'
+    const tabs = this.root.querySelectorAll('.tab-navigation li');
+    const sections = this.root.querySelectorAll('section.tab-content');
+
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+            tabs.forEach((tab) => {
+                tab.classList.remove('active');
+            });
+
+            sections.forEach((section) => {
+                section.classList.remove('active');
+            });
+
+            tab.classList.add('active');
+            sections[index].classList.add('active');
+        });
+    });
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
-    this.tabs = Array.from(this.root.children).map(child => child.getAttribute('tab-title'))
-    this.renderHTML()
-  }
-
-  updateTabs () {
-    this.tabList.innerHTML = ''
-    this.tabContent.innerHTML = ''
-
-    this.tabs.forEach((tab, index) => {
-      const tabButton = document.createElement('button')
-      tabButton.dataset.bsTarget = `#nav-${tab && tab.toLowerCase()}`
-      tabButton.type = 'button'
-      tabButton.role = 'tab'
-      tabButton.textContent = tab
-      tabButton.addEventListener('click', () => this.showTab(index))
-      this.tabList.appendChild(tabButton)
-
-      const tabPane = document.createElement('div')
-      tabPane.id = `nav-${tab && tab.toLowerCase()}`
-      tabPane.classList.add('tab-pane')
-      tabPane.innerHTML = this.root.children[index].innerHTML
-      this.tabContent.appendChild(tabPane)
-    })
-
-    this.showTab(this.activeTab)
-  }
-
-  showTab (index) {
-    if (index >= 0 && index < this.tabs.length) {
-      this.activeTab = index
-      const tabPanes = this.tabContent.querySelectorAll('.tab-pane')
-
-      tabPanes.forEach((pane, i) => {
-        if (i === index) {
-          // @ts-ignore
-          pane.style.display = 'block'
-        } else {
-          // @ts-ignore
-          pane.style.display = 'none'
-        }
-      })
-    }
   }
 
   shouldRenderCSS () {
@@ -66,25 +35,56 @@ export default class Tabs extends Shadow() {
 
   renderCSS () {
     this.css = /* css */ `
-      :host {
-      }`
-  }
-
-  renderHTML () {
-    this.updateTabs()
-
-    this.html = /* html */`
-        <div>
-            <nav>
-                <div role="tablist">
-                    ${this.tabList.innerHTML}
-                </div>
-            </nav>
-            <div class="tab-content">
-                ${this.tabContent.innerHTML}
-            </div>
-        </div>`
-
-    
+        :host {
+            font-family: var(--font-family);
+        }
+        :host .tab-navigation {
+            border-bottom: 1px solid var(--m-gray-300);
+            list-style: none;
+            display: flex;
+            padding: 0;
+            gap: 1.5em;
+        }
+        :host .tab-navigation li {
+            border-top-left-radius: 0.5em;
+            border-top-right-radius: 0.5em;
+            color: var(--m-black);
+            cursor: pointer;
+            padding: 10px;
+            position: relative;
+        }
+        :host .tab-navigation li::after {
+            content: '';
+            width: 100%;
+            height: 3px;
+            background-color: var(--m-orange-300);
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+        :host .tab-navigation li:hover {
+            background-color: var(--m-orange-100);
+        }
+        :host .tab-navigation li:hover::after {
+            display: block;
+        }
+        :host .tab-navigation li.active {
+            color: var(--m-orange-600);
+            font-family: var(--font-family-bold)
+        }
+        :host .tab-navigation li.active::after {
+            background-color: var(--m-orange-600);
+            display: block;
+        }
+        :host .tab-content {
+            display: none;
+        }
+        :host .tab-content.active {
+            display: block;
+        }
+    `
   }
 }
