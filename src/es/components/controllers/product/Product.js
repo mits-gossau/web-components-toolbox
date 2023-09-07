@@ -49,7 +49,7 @@ export default class Product extends Shadow() {
    */
   requestListProductListener = async (event) => {
     if (event.detail && event.detail.tags) {
-      this.setCategoryCode(event.detail.tags[0], event.detail.pushHistory)
+      this.setCategory(event.detail.tags[0], event.detail.pushHistory)
     }
     if (event.detail && event?.detail?.this.getAttribute('min-percentage')) {
       this.setMinPercentage(event?.detail?.this.getAttribute('min-percentage'), event.detail.pushHistory)
@@ -62,19 +62,19 @@ export default class Product extends Shadow() {
       signal: this.abortController.signal
     }
     const limit = 100
-    const categoryCode = this.getCategoryCode()
-    this.showSubCategories(this.subCategoryList, categoryCode)
-    const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}`
+    const category = this.getCategory()
+    this.showSubCategories(this.subCategoryList, category)
+    const endpoint = this.getAttribute('endpoint') + `?category=${category}&limit=${limit}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
           if (response.status >= 200 && response.status <= 299) {
             const data = await response.json()
             if (event.detail && event.detail.tags && data && data.tags && event.detail.tags !== data.tags) {
-              this.setCategoryCode(data.tags[0], true)
+              this.setCategory(data.tags[0], true)
             }
             return {
-              tag: [categoryCode],
+              tag: [category],
               ...data
             }
           }
@@ -89,7 +89,7 @@ export default class Product extends Shadow() {
 
   requestHrefEventListener = event => {
     if (event.detail && event.detail.resolve) {
-      event.detail.resolve(this.setCategoryCode(event.detail.tags[0], event.detail.pushHistory).href, this.setMinPercentage(event?.detail?.this.getAttribute('min-percentage'), event.detail.pushHistory))
+      event.detail.resolve(this.setCategory(event.detail.tags[0], event.detail.pushHistory).href, event.detail.pushHistory)
     }
   }
 
@@ -104,23 +104,23 @@ export default class Product extends Shadow() {
   }
 
   /**
-   * Set categoryCode
-   * @param {string} categoryCode
+   * Set category
+   * @param {string} category
    * @param {boolean} [pushHistory = true]
    * @return {URL}
    */
-  setCategoryCode (categoryCode, pushHistory = true) {
+  setCategory (category, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
-    url.searchParams.set('category', categoryCode)
-    if (pushHistory) history.pushState({ ...history.state, categoryCode }, document.title, url.href)
+    url.searchParams.set('category', category)
+    if (pushHistory) history.pushState({ ...history.state, category }, document.title, url.href)
     return url
   }
 
   /**
-   * Get categoryCode
+   * Get category
    * @return {string}
    */
-  getCategoryCode () {
+  getCategory () {
     const urlParams = new URLSearchParams(location.search)
     return urlParams.get('category') || 'all'
   }
