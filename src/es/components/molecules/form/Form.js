@@ -213,7 +213,7 @@ export default class Form extends Shadow() {
       .umbraco-forms-indicator {
         color: var(--color-secondary);
       }
-      .umbraco-forms-field {
+      :host form > div {
         padding-bottom: var(--content-spacing);
       }
       .umbraco-forms-field.checkbox .umbraco-forms-field-wrapper {
