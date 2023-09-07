@@ -62,30 +62,31 @@ export default class Product extends Shadow() {
       signal: this.abortController.signal
     }
     const limit = 100
-    const categoryCode = this.getCategoryCode()
-    const minPercentage = this.getMinPercentage()
-    this.showSubCategories(this.subCategoryList, categoryCode)
-    const endpoint = this.getAttribute('endpoint') + `?category=${categoryCode}&limit=${limit}&min_percentage=${minPercentage}`
-    this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
-      detail: {
-        fetch: fetch(endpoint, fetchOptions).then(async response => {
-          if (response.status >= 200 && response.status <= 299) {
-            const data = await response.json()
-            if (event.detail && event.detail.tags && data && data.tags && event.detail.tags !== data.tags) {
-              this.setCategoryCode(data.tags[0], true)
+    const category = this.getCategory()
+    this.showSubCategories(this.subCategoryList, category)
+    if (category !== null) {
+      const endpoint = this.getAttribute('endpoint') + `?category=${category}&limit=${limit}`
+      this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
+        detail: {
+          fetch: fetch(endpoint, fetchOptions).then(async response => {
+            if (response.status >= 200 && response.status <= 299) {
+              const data = await response.json()
+              if (event.detail && event.detail.tags && data && data.tags && event.detail.tags !== data.tags) {
+                this.setCategory(data.tags[0], true)
+              }
+              return {
+                tag: [category],
+                ...data
+              }
             }
-            return {
-              tag: [categoryCode],
-              ...data
-            }
-          }
-          throw new Error(response.statusText)
-        })
-      },
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
+            throw new Error(response.statusText)
+          })
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   requestHrefEventListener = event => {
@@ -123,7 +124,7 @@ export default class Product extends Shadow() {
    */
   getCategoryCode () {
     const urlParams = new URLSearchParams(location.search)
-    return urlParams.get('category') || 'all'
+    return urlParams.get('category')
   }
 
   /**
@@ -161,7 +162,7 @@ export default class Product extends Shadow() {
    * @param {any[]} categories List list of all o-wrapper elements
    * @param {string} activeSubCategory Active sub category id
    */
-  showSubCategories (categories, activeSubCategory) {
+  showSubCategories (categories, activeSubCategory = '') {
     categories.forEach(c => {
       c.classList.add('hide-sub-category')
       if (c.getAttribute('data-id') === activeSubCategory) c.classList.remove('hide-sub-category')
