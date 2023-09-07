@@ -103,28 +103,6 @@ export default class Product extends Shadow() {
   }
 
   /**
-   * Set categoryCode
-   * @param {string} categoryCode
-   * @param {boolean} [pushHistory = true]
-   * @return {URL}
-   */
-  setCategoryCode (categoryCode, pushHistory = true) {
-    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
-    url.searchParams.set('category', categoryCode)
-    if (pushHistory) history.pushState({ ...history.state, categoryCode }, document.title, url.href)
-    return url
-  }
-
-  /**
-   * Get categoryCode
-   * @return {string}
-   */
-  getCategoryCode () {
-    const urlParams = new URLSearchParams(location.search)
-    return urlParams.get('category')
-  }
-
-  /**
    * The function sets the category parameter in the URL and optionally pushes the new URL
    * to the browser history.
    * @param {string} category - The category parameter is the value that you want to set for the category in the URL.
@@ -149,7 +127,7 @@ export default class Product extends Shadow() {
    */
   getCategory () {
     const urlParams = new URLSearchParams(location.search)
-    return urlParams.get('category') || 'all'
+    return urlParams.get('category') || null
   }
 
   /**
@@ -157,7 +135,7 @@ export default class Product extends Shadow() {
    * Only the first (string)element is considered for css class toggle
    * TODO: Make css class as param
    * @param {any[]} categories List list of all o-wrapper elements
-   * @param {string} activeSubCategory Active sub category id
+   * @param {string | null} activeSubCategory Active sub category id
    */
   showSubCategories (categories, activeSubCategory = '') {
     categories.forEach(c => {
