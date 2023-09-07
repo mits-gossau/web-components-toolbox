@@ -1,3 +1,33 @@
+<h1>Umbraco Form Test (true)</h1>
+<m-form umbraco-form="true">
+    <div class="umbraco-forms-field" >
+        <label for="firma" class="umbraco-forms-label">Firma</label>
+        <div><input name="firma" type="text" ></div>
+    </div>
+</m-form>
+<hr />
+
+<h1>Umbraco Form Test (false, without &lt;form&gt;)</h1>
+<m-form>
+    <div>
+        <label for="firma" class="umbraco-forms-label">Firma</label>
+        <div><input name="firma" type="text" ></div>
+    </div>
+</m-form>
+<hr />
+
+<h1>Umbraco Form Test (false, with &lt;form&gt;)</h1>
+<m-form>
+    <form>
+        <div class="umbraco-forms-field" >
+            <label for="firma" class="umbraco-forms-label">Firma</label>
+            <div><input name="firma" type="text" ></div>
+        </div>
+    </form>
+</m-form>
+<hr />
+
+<h1>Default</h1>
 <m-form>
 
 
