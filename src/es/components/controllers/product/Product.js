@@ -63,9 +63,8 @@ export default class Product extends Shadow() {
     }
     const limit = 100
     const categoryCode = this.getCategoryCode()
-    const minPercentage = this.getMinPercentage()
     this.showSubCategories(this.subCategoryList, categoryCode)
-    const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}&min_percentage=${minPercentage}`
+    const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
@@ -124,34 +123,6 @@ export default class Product extends Shadow() {
   getCategoryCode () {
     const urlParams = new URLSearchParams(location.search)
     return urlParams.get('category') || 'all'
-  }
-
-  /**
-   * The function `setMinPercentage` sets the minimum percentage value in the URL and optionally pushes
-   * the new URL to the browser history.
-   * @param {string} percentage - The percentage value to set as the minimum percentage.
-   * @param {boolean} [pushHistory=true] - The `pushHistory` parameter is a boolean value that determines whether
-   * to push the updated URL to the browser's history. If `pushHistory` is set to `true`, the updated URL
-   * will be added to the browser's history, allowing the user to navigate back to the previous state
-   * using the browser
-   * @returns the updated URL object.
-   */
-  setMinPercentage (percentage, pushHistory = true) {
-    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
-    url.searchParams.set('min-percentage', percentage)
-    if (pushHistory) history.pushState({ ...history.state, percentage }, document.title, url.href)
-    return url
-  }
-
-  /**
-   * The function `getMinPercentage` retrieves the value of the query parameter `min-percentage` from the
-   * URL, or returns '100' if the parameter is not present.
-   * @returns {string} the value of the 'min-percentage' query parameter from the current URL, or '100' if the
-   * query parameter is not present.
-   */
-  getMinPercentage () {
-    const urlParams = new URLSearchParams(location.search)
-    return urlParams.get('min-percentage') || '100'
   }
 
   /**
