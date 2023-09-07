@@ -49,7 +49,7 @@ export default class Product extends Shadow() {
    */
   requestListProductListener = async (event) => {
     if (event.detail && event.detail.tags) {
-      this.setCategoryCode(event.detail.tags[0], event.detail.pushHistory)
+      this.setCategory(event.detail.tags[0], event.detail.pushHistory)
     }
     if (event.detail && event?.detail?.this.getAttribute('min-percentage')) {
       this.setMinPercentage(event?.detail?.this.getAttribute('min-percentage'), event.detail.pushHistory)
@@ -62,20 +62,19 @@ export default class Product extends Shadow() {
       signal: this.abortController.signal
     }
     const limit = 100
-    const categoryCode = this.getCategoryCode()
-    const minPercentage = this.getMinPercentage()
-    this.showSubCategories(this.subCategoryList, categoryCode)
-    const endpoint = this.getAttribute('endpoint') + `?category=${categoryCode}&limit=${limit}&min_percentage=${minPercentage}`
+    const category = this.getCategory()
+    this.showSubCategories(this.subCategoryList, category)
+    const endpoint = this.getAttribute('endpoint') + `?category=${category}&limit=${limit}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
           if (response.status >= 200 && response.status <= 299) {
             const data = await response.json()
             if (event.detail && event.detail.tags && data && data.tags && event.detail.tags !== data.tags) {
-              this.setCategoryCode(data.tags[0], true)
+              this.setCategory(data.tags[0], true)
             }
             return {
-              tag: [categoryCode],
+              tag: [category],
               ...data
             }
           }
@@ -90,7 +89,7 @@ export default class Product extends Shadow() {
 
   requestHrefEventListener = event => {
     if (event.detail && event.detail.resolve) {
-      event.detail.resolve(this.setCategoryCode(event.detail.tags[0], event.detail.pushHistory).href, this.setMinPercentage(event?.detail?.this.getAttribute('min-percentage'), event.detail.pushHistory))
+      event.detail.resolve(this.setCategory(event.detail.tags[0], event.detail.pushHistory).href, event.detail.pushHistory)
     }
   }
 
@@ -105,53 +104,25 @@ export default class Product extends Shadow() {
   }
 
   /**
-   * Set categoryCode
-   * @param {string} categoryCode
+   * Set category
+   * @param {string} category
    * @param {boolean} [pushHistory = true]
    * @return {URL}
    */
-  setCategoryCode (categoryCode, pushHistory = true) {
+  setCategory (category, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
-    url.searchParams.set('category', categoryCode)
-    if (pushHistory) history.pushState({ ...history.state, categoryCode }, document.title, url.href)
+    url.searchParams.set('category', category)
+    if (pushHistory) history.pushState({ ...history.state, category }, document.title, url.href)
     return url
   }
 
   /**
-   * Get categoryCode
+   * Get category
    * @return {string}
    */
-  getCategoryCode () {
+  getCategory () {
     const urlParams = new URLSearchParams(location.search)
     return urlParams.get('category') || 'all'
-  }
-
-  /**
-   * The function `setMinPercentage` sets the minimum percentage value in the URL and optionally pushes
-   * the new URL to the browser history.
-   * @param {string} percentage - The percentage value to set as the minimum percentage.
-   * @param {boolean} [pushHistory=true] - The `pushHistory` parameter is a boolean value that determines whether
-   * to push the updated URL to the browser's history. If `pushHistory` is set to `true`, the updated URL
-   * will be added to the browser's history, allowing the user to navigate back to the previous state
-   * using the browser
-   * @returns the updated URL object.
-   */
-  setMinPercentage (percentage, pushHistory = true) {
-    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
-    url.searchParams.set('min-percentage', percentage)
-    if (pushHistory) history.pushState({ ...history.state, percentage }, document.title, url.href)
-    return url
-  }
-
-  /**
-   * The function `getMinPercentage` retrieves the value of the query parameter `min-percentage` from the
-   * URL, or returns '100' if the parameter is not present.
-   * @returns {string} the value of the 'min-percentage' query parameter from the current URL, or '100' if the
-   * query parameter is not present.
-   */
-  getMinPercentage () {
-    const urlParams = new URLSearchParams(location.search)
-    return urlParams.get('min-percentage') || '100'
   }
 
   /**
