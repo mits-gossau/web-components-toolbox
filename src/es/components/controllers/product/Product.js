@@ -65,7 +65,7 @@ export default class Product extends Shadow() {
     const categoryCode = this.getCategoryCode()
     const minPercentage = this.getMinPercentage()
     this.showSubCategories(this.subCategoryList, categoryCode)
-    const endpoint = this.getAttribute('endpoint') + `?category=${categoryCode}&limit=${limit}&min_percentage=${minPercentage}`
+    const endpoint = this.getAttribute('endpoint') + `?categoryCode=${categoryCode}&limit=${limit}&min_percentage=${minPercentage}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
