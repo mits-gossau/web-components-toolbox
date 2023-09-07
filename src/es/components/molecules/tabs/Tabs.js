@@ -4,23 +4,23 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Tabs extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-    const tabs = this.root.querySelectorAll('.tab-navigation li');
-    const sections = this.root.querySelectorAll('section.tab-content');
+    const tabs = this.root.querySelectorAll('.tab-navigation li')
+    const sections = this.root.querySelectorAll('section.tab-content')
 
     tabs.forEach((tab, index) => {
-        tab.addEventListener('click', () => {
-            tabs.forEach((tab) => {
-                tab.classList.remove('active');
-            });
+      tab.addEventListener('click', () => {
+        tabs.forEach((tab) => {
+          tab.classList.remove('active')
+        })
 
-            sections.forEach((section) => {
-                section.classList.remove('active');
-            });
+        sections.forEach((section) => {
+          section.classList.remove('active')
+        })
 
-            tab.classList.add('active');
-            sections[index].classList.add('active');
-        });
-    });
+        tab.classList.add('active')
+        sections[index].classList.add('active')
+      })
+    })
   }
 
   connectedCallback () {
