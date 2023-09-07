@@ -52,7 +52,6 @@ export default class Product extends Shadow() {
         display:block;
         height:100%;
         margin:0 0 calc(var(--content-spacing)/2) 0;
-        /*padding:0 1em;*/
       }
 
       :host > a {
@@ -194,10 +193,12 @@ export default class Product extends Shadow() {
 
     const productCard = document.createElement('div')
 
+    const { id, image, accessible_information_text: accessibleInformationText, price, brand, name, unit_price: unitPrice, isWeighable, estimated_piece_weight: estimatedPieceWeight } = this.productData
+
     productCard.innerHTML = /* html */ `
-      ${this.createBasketUtilsElement(this.productData.id)}
-      ${this.createProductImageElement(this.productData.image, this.productData.accessible_information_text)}
-      ${this.createProductDataElement(this.productData.price, this.productData.brand?.name, this.productData.name, this.productData.unit_price, this.productData.isWeighable, this.productData?.estimated_piece_weight)}`
+      ${this.createBasketUtilsElement(id)}
+      ${this.createProductImageElement(image, accessibleInformationText)}
+      ${this.createProductDataElement(price, brand || '', name, unitPrice, isWeighable, estimatedPieceWeight)}`
 
     productCard.innerHTML += `${this.createFooterLabels(this.productData.isWeighable)}`
 
@@ -251,7 +252,6 @@ export default class Product extends Shadow() {
       </div>`
   }
 
-
   /**
    * The function creates an HTML element with product data, including price, brand, name, unit price,
    * and estimated piece weight if applicable.
@@ -264,7 +264,7 @@ export default class Product extends Shadow() {
    * weight of a single piece of the product. This parameter is only applicable if the product is weighable.
    * @returns an HTML string that represents a product data element.
    */
-  createProductDataElement(price, brand, name, unitPrice, isWeighable, estimatedPieceWeight) {
+  createProductDataElement (price, brand, name, unitPrice, isWeighable, estimatedPieceWeight) {
     return /* html */ `
       <div class="product-data">
         <span class="product-price">${price}</span>
@@ -305,7 +305,7 @@ export default class Product extends Shadow() {
    * @returns the parsed JSON data from the 'data' attribute.
    */
   get productData () {
-    const pd = this.getAttribute('data') || ''
+    const pd = this.getAttribute('data') || "{}"
     return JSON.parse(pd)
   }
 
@@ -316,6 +316,7 @@ export default class Product extends Shadow() {
    * @returns the modified name after removing the brand from it.
    */
   deleteBrandFromName (name, brand) {
+    if (!name) return ''
     const index = name.indexOf(brand)
     if (index === -1) return name
     return name.slice(index + brand.length).trim()

@@ -1,21 +1,14 @@
 :host {
-  --button-category-label-text-align: center !important;
-  --img-width:100%;
-  box-shadow: 0px 0px 12px 0px rgba(51, 51, 51, 0.10);
+  --teaser-plainer-img-margin:0;
+  --teaser-plainer-img-width:100%;
+  --teaser-plainer-p-text-align:center;
 }
 :host :hover {
   cursor: pointer;
 }
 
-:host figure > figcaption {
-  text-align: center;
-  padding:0;
-}
-
-:host a-button {
-  width: 100%;
-  position: relative;
-  height: 100%;
+:host figure > figcaption p {
+  margin:0;
 }
 
 
