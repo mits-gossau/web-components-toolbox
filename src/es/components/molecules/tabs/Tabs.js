@@ -44,6 +44,7 @@ export default class Tabs extends Shadow() {
             display: flex;
             padding: 0;
             gap: 1.5em;
+            margin-bottom: 3em;
         }
         :host .tab-navigation li {
             border-top-left-radius: 0.5em;
