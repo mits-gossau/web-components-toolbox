@@ -1,4 +1,8 @@
-:host {}
+:host {
+  --teaser-plainer-img-margin:0;
+  --teaser-plainer-img-width:100%;
+  --teaser-plainer-p-text-align:center;
+}
 :host :hover {
   cursor: pointer;
 }
