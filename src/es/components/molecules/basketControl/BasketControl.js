@@ -88,6 +88,9 @@ export default class BasketControl extends Shadow() {
         name: 'a-button'
       }
     ])
-    this.html = 'Basket Control'
+    const buttons = Array.from(this.root.querySelectorAll('a-button'))
+    const quantityField = this.root.querySelector('input')
+    this.html = `${buttons[0]}`
+
   }
 }
