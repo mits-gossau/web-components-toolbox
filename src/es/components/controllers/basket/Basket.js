@@ -95,10 +95,13 @@ export default class Basket extends Shadow() {
       composed: true
     })) */
 
+    const dummyReturnCount = event.detail.count || 1
+    const dummyReturnProductId = event.detail.id || event.detail.tags[0]
+
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail:
         [
-          { id: '464831100000', count: 5 }
+          { id: dummyReturnProductId, count: dummyReturnCount }
         ],
       bubbles: true,
       cancelable: true,

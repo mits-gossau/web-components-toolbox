@@ -11,10 +11,16 @@ export default class BasketControl extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
+    this.quantityField = this.root.querySelector('input')
+    this.currentProductId = this.quantityField?.getAttribute('id') || 0
+    this.addButton = this.root.querySelector('#add')
+    this.removeButton = this.root.querySelector('#remove')
+
     this.answerEventNameListener = event => {
       console.log('update product', event.detail)
       const currentProduct = event.detail.find((/** @type {{ id: any; }} */ product) => product.id === this.currentProductId)
       if (currentProduct) {
+        this.setVisibility(event.detail.count, this.quantityField, this.removeButton)
         this.quantityField.value = currentProduct.count
       }
     }
@@ -23,11 +29,13 @@ export default class BasketControl extends Shadow() {
     }
 
     this.inputListener = event => {
+      const inputValue = event.target.value
+      if (isNaN(inputValue)) return
       this.dispatchEvent(new CustomEvent(this.quantityField.getAttribute('request-event-name') || 'request-event-name',
         {
           detail: {
             this: this,
-            count: event.target.value,
+            count: Number(event.target.value),
             id: event.target.getAttribute('tag')
           },
           bubbles: true,
@@ -41,9 +49,9 @@ export default class BasketControl extends Shadow() {
   connectedCallback () {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
     this.quantityField?.addEventListener('click', this.clickListener)
     this.quantityField?.addEventListener('input', this.inputListener)
+    this.setVisibility(this.quantityField?.value, this.quantityField, this.removeButton)
   }
 
   disconnectedCallback () {
@@ -54,10 +62,6 @@ export default class BasketControl extends Shadow() {
 
   shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
-  }
-
-  shouldRenderHTML () {
-    return !this.quantityField
   }
 
   /**
@@ -122,17 +126,13 @@ export default class BasketControl extends Shadow() {
     }
   }
 
-  /**
-   * renderHTML
-   */
-  renderHTML () {
-    this.fetchModules([
-      {
-        path: `${this.importMetaUrl}'../../../../atoms/button/Button.js`,
-        name: 'a-button'
+  setVisibility (value, ...nodes) {
+    nodes.forEach(node => {
+      if (value === '0') {
+        node.style.visibility = 'hidden'
+      } else {
+        node.style.visibility = 'visible'
       }
-    ])
-    this.quantityField = this.root.querySelector('input')
-    this.currentProductId = this.quantityField.getAttribute('id')
+    })
   }
 }
