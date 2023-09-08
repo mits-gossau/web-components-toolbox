@@ -1,4 +1,3 @@
-
 // @ts-check
 import { Intersection } from '../../prototypes/Intersection.js'
 
