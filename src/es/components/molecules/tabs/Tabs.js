@@ -74,7 +74,7 @@ export default class Tabs extends Shadow() {
         }
         :host .tab-navigation li.active {
             color: var(--tab-navigation-color-active, var(--color-secondary));
-            font-family: var(--font-family-bold)
+            font-family: var(--font-family-bold);
         }
         :host .tab-navigation li.active::after {
             background-color: var(--tab-navigation-background-color-active, var(--color-secondary));
