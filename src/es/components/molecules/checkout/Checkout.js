@@ -12,7 +12,7 @@ export default class Checkout extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
-        console.log("productData",productData)
+        console.log('productData', productData)
         this.renderHTML(productData.products)
       }).catch(error => {
         this.html = ''

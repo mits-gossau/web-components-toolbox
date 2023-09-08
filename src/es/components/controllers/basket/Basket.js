@@ -98,10 +98,7 @@ export default class Basket extends Shadow() {
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail:
         [
-          { 1223123: 'Tomaten' },
-          { 234: 'Tomaten' },
-          { 13123: 'Tomaten' },
-          { 12223: 'Tomaten' }
+          { id: '464831100000', count: 5 }
         ],
       bubbles: true,
       cancelable: true,

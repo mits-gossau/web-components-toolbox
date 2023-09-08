@@ -58,11 +58,10 @@ export default class Product extends Shadow() {
       method: 'GET',
       signal: this.abortController.signal
     }
-    const limit = 100
     const category = this.getCategory()
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null) {
-      const endpoint = this.getAttribute('endpoint') + `?category=${category}&limit=${limit}`
+      const endpoint = this.getAttribute('endpoint') + `?category=${category}`
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
         detail: {
           fetch: fetch(endpoint, fetchOptions).then(async response => {

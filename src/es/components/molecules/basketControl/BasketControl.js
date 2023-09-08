@@ -1,7 +1,7 @@
 // @ts-check
-
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global CustomEvent */
 
 export default class BasketControl extends Shadow() {
   /**
@@ -13,6 +13,10 @@ export default class BasketControl extends Shadow() {
 
     this.answerEventNameListener = event => {
       console.log('update product', event.detail)
+      const currentProduct = event.detail.find((/** @type {{ id: any; }} */ product) => product.id === this.currentProductId)
+      if (currentProduct) {
+        this.quantityField.value = currentProduct.count
+      }
     }
     this.clickListener = event => {
       event.preventDefault()
@@ -22,8 +26,9 @@ export default class BasketControl extends Shadow() {
       this.dispatchEvent(new CustomEvent(this.quantityField.getAttribute('request-event-name') || 'request-event-name',
         {
           detail: {
+            this: this,
             count: event.target.value,
-            id: event.target.id 
+            id: event.target.getAttribute('tag')
           },
           bubbles: true,
           cancelable: true,
@@ -128,5 +133,6 @@ export default class BasketControl extends Shadow() {
       }
     ])
     this.quantityField = this.root.querySelector('input')
+    this.currentProductId = this.quantityField.getAttribute('id')
   }
 }

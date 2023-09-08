@@ -179,9 +179,7 @@ export default class Product extends Shadow() {
     a.appendChild(productCard)
 
     this.html = a
-
   }
-
 
   /**
    * Creates a HTML element for a basket utility with buttons to add or remove items from the basket.
@@ -194,7 +192,7 @@ export default class Product extends Shadow() {
       <div class="basket-utils">
         <m-basket-control namespace=basket-control-product- answer-event-name="update-basket">
           <a-button namespace="basket-control-product-button-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
-          <input id="${productInfo}" name="quantity" type="text" value="1" request-event-name="add-basket">
+          <input id="${productInfo}" name="quantity" type="text" value="1" request-event-name="add-basket" tag='${productInfo}'>
           <a-button namespace="basket-control-product-button-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
         </m-basket-control>
       </div>`
