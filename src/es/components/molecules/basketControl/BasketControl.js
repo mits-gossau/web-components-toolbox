@@ -13,7 +13,7 @@ export default class BasketControl extends Shadow() {
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
+    //if (this.shouldRenderHTML()) this.renderHTML()
   }
 
   disconnectedCallback () {
@@ -89,6 +89,5 @@ export default class BasketControl extends Shadow() {
     ])
     const buttons = Array.from(this.root.querySelectorAll('a-button'))
     const quantityField = this.root.querySelector('input')
-    this.html = `${buttons[0]}`
   }
 }
