@@ -43,8 +43,8 @@ export default class BasketControl extends Shadow() {
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
-    this.quantityField.removeEventListener('click', this.clickListener)
-    this.quantityField.removeEventListener('input', this.inputListener)
+    this.quantityField?.removeEventListener('click', this.clickListener)
+    this.quantityField?.removeEventListener('input', this.inputListener)
   }
 
   shouldRenderCSS () {

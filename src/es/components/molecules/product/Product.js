@@ -11,24 +11,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Product extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-  
-    this.answerEventNameListener = event => {
-      console.log('update product', event.detail.products.length, this.quantity)
-      //this.quantity = (Number(this.quantity.innerText) + event.detail.products.length).toString()
-    }
-   
   }
 
   connectedCallback () {
-    document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
-
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-  }
-
-  disconnectedCallback () {
-    document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
-
   }
 
   shouldRenderHTML () {
@@ -52,22 +39,22 @@ export default class Product extends Shadow() {
   renderCSS () {
     this.css = /* css */`
     :host {
-        box-shadow:0px 0px 12px 0px rgba(51, 51, 51, 0.10);
-        display:block;
-        height:100%;
-        margin:0 0 calc(var(--content-spacing)/2) 0;
+        box-shadow: 0px 0px 12px 0px rgba(51, 51, 51, 0.10);
+        display: block;
+        height: 100%;
+        margin: 0 0 calc(var(--content-spacing)/2) 0;
       }
 
       :host > a {
-        height:100%;
+        height: 100%;
       }
 
       :host > a > div {
         box-sizing: border-box;
         display: flex;
         flex-direction: column; 
-        height:100%;
-        padding:calc(var(--content-spacing)/2);
+        height: 100%;
+        padding: calc(var(--content-spacing)/2);
       }
 
       :host > a > div > div {
@@ -76,30 +63,11 @@ export default class Product extends Shadow() {
       }
 
       :host .basket-utils {
-        /*align-items: center;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        max-height: 3em;
-        min-height: 3em;
-        padding: calc(var(--content-spacing) / 2) 0;*/
         width: 100%;
       }
 
-      /*:host .quantity {
-        align-items: center;
-        border-radius: 4px;
-        border: 2px solid  #333;
-        display: flex;
-        flex-shrink: 0;
-        font-size: 14px;
-        height: 24px;
-        justify-content: center;
-        padding: 1px;
-        width: 24px;
-      }*/
       :host .product-image {
-        margin:0;
+        margin: 0;
         padding: 0 calc(var(--content-spacing)*2);
       }
 
@@ -214,20 +182,19 @@ export default class Product extends Shadow() {
 
   }
 
+
   /**
-   * The function creates a HTML element for a basket utility with buttons to add and remove items.
-   * @param {string} productInfo - The `productInfo` parameter is a variable that contains information about a
+   * Creates a HTML element for a basket utility with buttons to add or remove items from the basket.
+   * @param {string} productInfo - The `productInfo` parameter is a variable that represents information about a
    * product. It could include details such as the product name, price, image, and any other relevant information.
-   * @returns {string} an HTML element as a string. The returned element is a div with the class "basket-utils"
-   * containing two buttons and a div with the class "quantity". The buttons have different request event
-   * names and tags based on the provided productInfo.
+   * @returns an HTML element as a string.
    */
   createBasketUtilsElement (productInfo) {
     return /* html */ `
       <div class="basket-utils">
-        <m-basket-control namespace=basket-control-product- >
+        <m-basket-control namespace=basket-control-product- answer-event-name="update-basket">
           <a-button namespace="basket-control-product-button-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
-          <input id="${productInfo}" name="quantity" type="text" value="1" request-event-name="request-basket">
+          <input id="${productInfo}" name="quantity" type="text" value="1" request-event-name="add-basket">
           <a-button namespace="basket-control-product-button-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
         </m-basket-control>
       </div>`

@@ -40,7 +40,7 @@ export default class Basket extends Shadow() {
    * @param {{ detail: any; }} event
    */
   requestListBasketListener = async (event) => {
-    console.log('Basket', event.detail)
+    console.log('Request Basket', event.detail)
     // if (this.abortController) this.abortController.abort()
     // this.abortController = new AbortController()
     // const fetchOptions = {
@@ -62,7 +62,6 @@ export default class Basket extends Shadow() {
 
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
       detail: {
-        namespace: 'product-basket-',
         fetch: fetch('./dummy_products.json').then(async response => {
           if (response.status >= 200 && response.status <= 299) return await response.json()
           throw new Error(response.statusText)
@@ -96,7 +95,7 @@ export default class Basket extends Shadow() {
       composed: true
     })) */
 
-    this.dispatchEvent(new CustomEvent(this.getAttribute('basket') || 'basket', {
+    this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail:
         [
           { 1223123: 'Tomaten' },
