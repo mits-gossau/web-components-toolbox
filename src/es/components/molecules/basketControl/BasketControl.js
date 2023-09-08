@@ -91,15 +91,12 @@ export default class BasketControl extends Shadow() {
    * renderHTML
    */
   renderHTML () {
-    const fetchModules = this.fetchModules([
+    this.fetchModules([
       {
         path: `${this.importMetaUrl}'../../../../atoms/button/Button.js`,
         name: 'a-button'
       }
     ])
-    const addToBasketBtn = this.root.querySelector('#add')
-    const removeFromBasketBtn = this.root.querySelector('#remove')
     this.quantityField = this.root.querySelector('input')
-    console.log(this.quantityField);
   }
 }

@@ -12,7 +12,7 @@ export default class Checkout extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
-        console.log(productData)
+        console.log("productData",productData)
         this.renderHTML(productData.products)
       }).catch(error => {
         this.html = ''
@@ -86,11 +86,11 @@ export default class Checkout extends Shadow() {
         align-items: center;
         display: flex;
         flex-direction: column;
-        margin: 0.5em;
+        margin: 0 1em;
         min-width: 6em;
       }
 
-      :host .product-info{
+      :host .product-info {
         display:flex;
         justify-content: space-between;
         padding:0 0 1em 0;
@@ -102,10 +102,10 @@ export default class Checkout extends Shadow() {
         justify-content: space-between;
       }
 
-      :host .basket {
+      /*:host .basket {
         display:flex;
         align-items: center;
-      }
+      }*/
 
       /*:host .quantity {
         align-items: center;
@@ -185,6 +185,10 @@ export default class Checkout extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../atoms/button/Button.js`,
         name: 'a-button'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../molecules/basketControl/BasketControl.js`,
+        name: 'm-basket-control'
       }
     ])
 
@@ -210,11 +214,11 @@ export default class Checkout extends Shadow() {
             <div><a-button namespace="checkout-default-delete-article-button-"  request-event-name="remove-basket" tag="1"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button> </div>
           </div>
           <div class="product-footer">
-            <div class="basket">
-              <a-button namespace="button-checkout-" request-event-name="remove-basket" tag="1" label="-"></a-button>
+            <m-basket-control namespace=basket-control-default->
+              <a-button namespace="basket-control-default-button-" request-event-name="remove-basket" tag="1" label="-"></a-button>
               <input id="quantity" name="quantity" type="text">
-              <a-button namespace="button-checkout-" request-event-name="add-basket" tag="2" label="+"></a-button>
-            </div>
+              <a-button namespace="basket-control-default-button-" request-event-name="add-basket" tag="2" label="+"></a-button>
+            </m-basket-control>
             <div>4.434</div>
           </div>
         </div>
