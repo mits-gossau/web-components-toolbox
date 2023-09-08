@@ -9,15 +9,18 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Basket extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.count = this.root.querySelector('span') || document.createElement('span')
     this.count.innerHTML = '0'
   }
 
   connectedCallback () {
-    if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
+    const showPromises = []
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    this.hidden = true
+    Promise.all(showPromises).then(() => (this.hidden = false))
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
@@ -95,7 +98,7 @@ export default class Basket extends Shadow() {
       }
       :host span {
         min-width:1.2em;
-        font-size:0.8em;
+        font-size:0.7em;
         padding:0 0.25em;
       }
       
@@ -126,20 +129,24 @@ export default class Basket extends Shadow() {
   /**
    * renders the html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
-    this.wrapper = this.root.querySelector('div') || document.createElement('div')
-    // this.count = this.root.querySelector('span') || document.createElement('span')
-    // this.count.innerHTML = '0'
-    this.wrapper.appendChild(this.count)
-    this.basketIcon = this.root.querySelector('img') || document.createElement('img')
-    this.basketIcon.setAttribute('src', this.icon)
-    this.wrapper.appendChild(this.basketIcon)
-    this.html = this.wrapper
-  }
-
-  get icon () {
-    return this.getAttribute('icon')
+    return this.fetchModules([
+      {
+        path: `${this.importMetaUrl}../iconMdx/IconMdx.js`,
+        name: 'a-icon-mdx'
+      }
+    ]).then(children => {
+      const icon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
+      icon.setAttribute('icon-name', 'ShoppingBasket')
+      icon.setAttribute('size', '1em')
+      this.wrapper = this.root.querySelector('div') || document.createElement('div')
+      // this.count = this.root.querySelector('span') || document.createElement('span')
+      // this.count.innerHTML = '0'
+      this.wrapper.appendChild(this.count)
+      this.wrapper.appendChild(icon)
+      this.html = this.wrapper
+    })
   }
 }

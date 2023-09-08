@@ -66,7 +66,7 @@ export default class ProductList extends Shadow() {
     :host > * {
       min-height: 12em;
       min-width: 13vw;
-      flex:1 0 13vw;
+      flex:0 0 13vw;
       width:13vw;
     }
 

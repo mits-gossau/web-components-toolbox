@@ -1,17 +1,25 @@
 :host {
-    --user-profile-default-img-height:var(--user-profile-default-img-height-custom, 1.2em);
+    --user-profile-default-color: var(--color);
     --user-profile-default-menu-border-color:var(--user-profile-default-menu-border-color-custom, var(--m-gray-100,red));
     --user-profile-default-menu-border-radius:var(--user-profile-default-menu-border-radius-custom, 0);
     --user-profile-default-menu-li-border-top:1px solid var(--m-gray-100);
     --user-profile-default-menu-li-padding:calc(var(--content-spacing) / 2) var(--content-spacing);
     --user-profile-default-menu-top:var(--user-profile-default-menu-top-custom, 0);
     --user-profile-default-menu-ul-padding:var(--content-spacing) auto;
+    --user-profile-default-profile-background-color-active-hover: var(--user-profile-default-profile-background-color-active-hover-custom, var(--color-hover));
     --user-profile-default-profile-background-color-active:var(--user-profile-default-profile-background-color-active-custom, var(--color-secondary));
     --user-profile-default-profile-background-color-hover:var(--m-gray-300);
     --user-profile-default-profile-background-color:var(--m-gray-100);
     --user-profile-default-profile-border-radius:var(--user-profile-default-profile-border-radius-custom, 1.6em); 
+    --user-profile-default-profile-color-active: var(--user-profile-default-profile-color-active-custom, var(--background-color));
+    --user-profile-default-profile-color: var(--color);
     --user-profile-default-profile-display:flex;
-    --user-profile-default-profile-img-height: var(--user-profile-default-profile-img-height-custom, 1.2em);
+    --user-profile-default-profile-logged-in-background-color-hover:var(--user-profile-default-profile-logged-in-background-color-hover-custom, var(--color-hover));
+    --user-profile-default-profile-logged-in-background-color:var(--user-profile-default-profile-logged-in-background-color-custom, var(--color-secondary));
+    --user-profile-default-profile-logged-in-color:var(--user-profile-default-profile-logged-in-color-custom, var(--background-color));
     --user-profile-default-profile-padding:var(--user-profile-default-profile-padding-custom, 0.8em);
     --user-profile-default-span-padding:0 0 0 0.5em;
+}
+:host([icon-text]) {
+    --user-profile-default-profile-padding-icon-text:var(--user-profile-default-profile-padding-icon-text-custom, 0.6em 0.8em 0.2em);
 }
