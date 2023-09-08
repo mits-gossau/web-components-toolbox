@@ -1,0 +1,10 @@
+:host{
+    --basket-control-product-button-background-color-hover: transparent;
+    --basket-control-product-button-background-color:transparent;
+    --basket-control-product-button-border-radius: 50%;
+    --basket-control-product-button-color-hover: var(--color-secondary, black);
+    --basket-control-product-button-label-padding: 0.25em;
+    --basket-control-product-button-line-height: initial;
+    --basket-control-product-button-padding: 0.25em 0.75em;
+    --basket-control-product-quantity-border-color: var(--m-black, white);
+}

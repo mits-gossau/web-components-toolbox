@@ -11,20 +11,24 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Product extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+  
     this.answerEventNameListener = event => {
       console.log('update product', event.detail.products.length, this.quantity)
-      this.quantity = (Number(this.quantity.innerText) + event.detail.products.length).toString()
+      //this.quantity = (Number(this.quantity.innerText) + event.detail.products.length).toString()
     }
+   
   }
 
   connectedCallback () {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
   }
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+
   }
 
   shouldRenderHTML () {
@@ -72,17 +76,17 @@ export default class Product extends Shadow() {
       }
 
       :host .basket-utils {
-        align-items: center;
+        /*align-items: center;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         max-height: 3em;
         min-height: 3em;
-        padding: calc(var(--content-spacing) / 2) 0;
+        padding: calc(var(--content-spacing) / 2) 0;*/
         width: 100%;
       }
 
-      :host .quantity {
+      /*:host .quantity {
         align-items: center;
         border-radius: 4px;
         border: 2px solid  #333;
@@ -93,7 +97,7 @@ export default class Product extends Shadow() {
         justify-content: center;
         padding: 1px;
         width: 24px;
-      }
+      }*/
       :host .product-image {
         margin:0;
         padding: 0 calc(var(--content-spacing)*2);
@@ -186,8 +190,8 @@ export default class Product extends Shadow() {
   renderHTML () {
     this.fetchModules([
       {
-        path: `${this.importMetaUrl}'../../../../atoms/button/Button.js`,
-        name: 'a-button'
+        path: `${this.importMetaUrl}'../../../../molecules/basketControl/BasketControl.js`,
+        name: 'm-basket-control'
       }
     ])
 
@@ -208,16 +212,6 @@ export default class Product extends Shadow() {
 
     this.html = a
 
-    /* setting the initial value. This property is used to keep track of the quantity of the product */
-    this.quantity = '0'
-  }
-
-  get quantity () {
-    return this.root.querySelector('.quantity')
-  }
-
-  set quantity (quantity) {
-    if (this.quantity) this.quantity.innerText = quantity
   }
 
   /**
@@ -231,9 +225,11 @@ export default class Product extends Shadow() {
   createBasketUtilsElement (productInfo) {
     return /* html */ `
       <div class="basket-utils">
-      <a-button namespace="button-tertiary-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
-      <div class="quantity"></div>
-      <a-button namespace="button-tertiary-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
+        <m-basket-control namespace=basket-control-product- >
+          <a-button namespace="basket-control-product-button-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
+          <input id="${productInfo}" name="quantity" type="text" value="1" request-event-name="request-basket">
+          <a-button namespace="basket-control-product-button-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
+        </m-basket-control>
       </div>`
   }
 

@@ -10,8 +10,26 @@ export default class BasketControl extends Shadow() {
    */
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+
     this.answerEventNameListener = event => {
       console.log('update product', event.detail)
+    }
+    this.clickListener = event => {
+      event.preventDefault()
+    }
+
+    this.inputListener = event => {
+      this.dispatchEvent(new CustomEvent(this.quantityField.getAttribute('request-event-name') || 'request-event-name',
+        {
+          detail: {
+            count: event.target.value,
+            id: event.target.id 
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }
+      ))
     }
   }
 
@@ -19,10 +37,14 @@ export default class BasketControl extends Shadow() {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+    this.quantityField?.addEventListener('click', this.clickListener)
+    this.quantityField?.addEventListener('input', this.inputListener)
   }
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    this.quantityField.removeEventListener('click', this.clickListener)
+    this.quantityField.removeEventListener('input', this.inputListener)
   }
 
   shouldRenderCSS () {
@@ -41,7 +63,9 @@ export default class BasketControl extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-        display:block;
+        display:flex;
+        justify-content: space-between;
+        align-items: center;
       }
       :host input {
         background-color: var(--quantity-background-color, transparent);
@@ -49,6 +73,7 @@ export default class BasketControl extends Shadow() {
         border: 1px solid var(--quantity-border-color, red);
         font-family: var(--quantity-font-family, inherit);
         font-size: var(--quantity-font-size, inherit);
+        height:var(--quantity-height, auto);
         margin: var(--quantity-margin, 0 0.5em);
         padding: var(--quantity-margin, 0.5em);
         text-align:var(--quantity-text-align, center);
@@ -80,6 +105,11 @@ export default class BasketControl extends Shadow() {
       case 'basket-control-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
+      case 'basket-control-product-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./product-/product-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
       default:
