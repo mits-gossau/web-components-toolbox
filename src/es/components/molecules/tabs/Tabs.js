@@ -39,17 +39,17 @@ export default class Tabs extends Shadow() {
             font-family: var(--font-family);
         }
         :host .tab-navigation {
-            border-bottom: 1px solid var(--m-gray-300);
+            border-bottom: var(--border-bottom, 1px solid var(--m-gray-300));
             list-style: none;
             display: flex;
             padding: 0;
             gap: 1.5em;
-            margin-bottom: 3em;
+            margin-bottom: var(--tab-navigation-margin-bottom, 3em);
         }
         :host .tab-navigation li {
-            border-top-left-radius: 0.5em;
-            border-top-right-radius: 0.5em;
-            color: var(--m-black);
+            border-top-left-radius: var(--border-radius, 0.5em);
+            border-top-right-radius: var(--border-radius, 0.5em);
+            color: var(--color);
             cursor: pointer;
             padding: 10px;
             position: relative;
@@ -58,26 +58,26 @@ export default class Tabs extends Shadow() {
             content: '';
             width: 100%;
             height: 3px;
-            background-color: var(--m-orange-300);
+            background-color: var(--tab-navigation-background-color, var(--color-disabled));
             display: none;
             position: absolute;
             bottom: 0;
             left: 0;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
+            border-top-left-radius: var(--border-radius, 0.5em);
+            border-top-right-radius: var(--border-radius, 0.5em);
         }
         :host .tab-navigation li:hover {
-            background-color: var(--m-orange-100);
+            background-color: var(--tab-navigation-background-color-hover, var(--m-orange-100));
         }
         :host .tab-navigation li:hover::after {
             display: block;
         }
         :host .tab-navigation li.active {
-            color: var(--m-orange-600);
+            color: var(--tab-navigation-color-active, var(--color-secondary));
             font-family: var(--font-family-bold)
         }
         :host .tab-navigation li.active::after {
-            background-color: var(--m-orange-600);
+            background-color: var(--tab-navigation-background-color-active, var(--color-secondary));
             display: block;
         }
         :host .tab-content {
