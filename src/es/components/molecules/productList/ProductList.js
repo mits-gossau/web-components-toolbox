@@ -17,9 +17,7 @@ export default class ProductList extends Shadow() {
       event.detail.fetch.then(productData => {
         const { products, total_hits: totalHits } = productData
         if (!products) throw new Error('No Products found')
-        // remove the shitty html mui stuff
-        const mApiProducts = products.map(({ html, ...keepAttrs }) => keepAttrs)
-        this.renderHTML(mApiProducts, totalHits)
+        this.renderHTML(products, totalHits)
       }).catch(error => {
         this.html = ''
         this.html = `${error}`
