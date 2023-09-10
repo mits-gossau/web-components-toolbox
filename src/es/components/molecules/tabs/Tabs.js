@@ -44,7 +44,7 @@ export default class Tabs extends Shadow() {
             display: flex;
             padding: 0;
             gap: 1.5em;
-            margin-bottom: var(--tab-navigation-margin-bottom, 3em);
+            margin-bottom: var(--margin-bottom, 3em);
         }
         :host .tab-navigation li {
             border-top-left-radius: var(--border-radius, 0.5em);
@@ -58,7 +58,7 @@ export default class Tabs extends Shadow() {
             content: '';
             width: 100%;
             height: 3px;
-            background-color: var(--tab-navigation-background-color, var(--color-disabled));
+            background-color: var(--background-color, var(--color-disabled));
             display: none;
             position: absolute;
             bottom: 0;
@@ -67,17 +67,17 @@ export default class Tabs extends Shadow() {
             border-top-right-radius: var(--border-radius, 0.5em);
         }
         :host .tab-navigation li:hover {
-            background-color: var(--tab-navigation-background-color-hover, var(--m-orange-100));
+            background-color: var(--background-color-hover, var(--m-orange-100));
         }
         :host .tab-navigation li:hover::after {
             display: block;
         }
         :host .tab-navigation li.active {
-            color: var(--tab-navigation-color-active, var(--color-secondary));
+            color: var(--color-active, var(--color-secondary));
             font-family: var(--font-family-bold);
         }
         :host .tab-navigation li.active::after {
-            background-color: var(--tab-navigation-background-color-active, var(--color-secondary));
+            background-color: var(--background-color-active, var(--color-secondary));
             display: block;
         }
         :host .tab-content {
