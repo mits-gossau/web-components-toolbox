@@ -65,6 +65,7 @@ export default class IconMdx extends Hover() {
   renderCSS () {
     this.css = /* css */`
       :host {
+        display: contents;
         ${this.getAttribute('size')
           ? `
             --svg-size: ${this.getAttribute('size')};
