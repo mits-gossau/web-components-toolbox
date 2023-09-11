@@ -2,7 +2,7 @@
   --button-primary-background-color-disabled: var(--button-primary-background-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
   --button-primary-background-color-hover: var(--button-primary-background-color-hover-custom, var(--color-hover, var(--m-orange-800)));
   --button-primary-background-color: var(--button-primary-background-color-custom, var(--color-secondary, var(--m-orange-600)));
-  --button-primary-color-hover: var(--button-primary-color-hover-custom, var(--color-hover, var(--color)));
+  --button-primary-color-hover: var(--button-primary-color-hover-custom, var(--background-color, var(--color)));
   --button-primary-color: var(--button-primary-color-custom, var(--background-color, var(--m-white)));
   --button-primary-font-family: var(--button-primary-font-family-custom, var(--font-family));
   --button-primary-transition: var(--button-primary-transition-custom, var(--transition));
