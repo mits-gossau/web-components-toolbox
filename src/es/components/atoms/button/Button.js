@@ -54,10 +54,12 @@ export default class Button extends Hover() {
           // @ts-ignore
           propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
           if (accumulator instanceof Promise) accumulator = await accumulator
-          return accumulator[propertyName]
+          return accumulator
+            ? accumulator[propertyName]
+            : {} // error handling, in case the await on fetch does not resolve
         }, event.detail)
       }
-      if (tags) {
+      if (Array.isArray(tags)) {
         const tagsIncludesTag = this.hasAttribute('tag-search')
           ? tags.some(tag => tag.includes(this.getAttribute('tag-search')))
           : tags.includes(this.getAttribute('tag'))

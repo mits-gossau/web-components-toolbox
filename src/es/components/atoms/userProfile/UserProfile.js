@@ -89,7 +89,7 @@ export default class UserProfile extends Shadow() {
         color: var(--profile-color, var(--color));
       }
       :host([icon-text]) .profile {
-        height: var(--profile-height, 2.75em);
+        height: var(--profile-height, 2.65em);
         padding:var(--profile-padding-icon-text, 0);
       }
       :host(.logged-in) .profile {

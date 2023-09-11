@@ -76,7 +76,8 @@ export default class Product extends Shadow() {
               }
             }
             throw new Error(response.statusText)
-          })
+            // @ts-ignore
+          }).catch(error => console.error(`fetch ${endpoint} failed!`) || `fetch ${endpoint} failed!`)
         },
         bubbles: true,
         cancelable: true,

@@ -11,10 +11,7 @@ export default class BasketControl extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
-    this.quantityField = this.root.querySelector('input')
     this.currentProductId = this.quantityField?.getAttribute('id') || 0
-    this.addButton = this.root.querySelector('#add')
-    this.removeButton = this.root.querySelector('#remove')
 
     this.answerEventNameListener = event => {
       console.log('update product', event.detail)
@@ -26,11 +23,15 @@ export default class BasketControl extends Shadow() {
     }
     this.clickListener = event => {
       event.preventDefault()
+      event.stopPropagation()
     }
 
+    this.addBasketEventListener = event => (this.quantityField.value = Number(this.quantityField.value) + 1)
+    this.removeBasketEventListener = event => (this.quantityField.value = Number(this.quantityField.value) - 1)
+
     this.inputListener = event => {
-      const inputValue = event.target.value
-      if (isNaN(inputValue)) return
+      const inputValue = Number(event.target.value)
+      if (!inputValue || isNaN(inputValue)) return
       this.dispatchEvent(new CustomEvent(this.quantityField.getAttribute('request-event-name') || 'request-event-name',
         {
           detail: {
@@ -51,6 +52,8 @@ export default class BasketControl extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.quantityField?.addEventListener('click', this.clickListener)
     this.quantityField?.addEventListener('input', this.inputListener)
+    this.addEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketEventListener)
+    this.addEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketEventListener)
     this.setVisibility(this.quantityField?.value, this.quantityField, this.removeButton)
   }
 
@@ -58,6 +61,8 @@ export default class BasketControl extends Shadow() {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.quantityField?.removeEventListener('click', this.clickListener)
     this.quantityField?.removeEventListener('input', this.inputListener)
+    this.removeEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketEventListener)
+    this.removeEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketEventListener)
   }
 
   shouldRenderCSS () {
@@ -87,6 +92,21 @@ export default class BasketControl extends Shadow() {
         padding: var(--quantity-margin, 0.5em);
         text-align:var(--quantity-text-align, center);
         width: var(--quantity-margin, 4em);
+      }
+      /* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
+      input[type=number] {
+        appearance: textfield;
+      }
+      /* Chrome, Safari, Edge, Opera */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      input[type=number] {
+        -moz-appearance: textfield;
       }
     @media only screen and (max-width: _max-width_) {}
     `
@@ -129,10 +149,20 @@ export default class BasketControl extends Shadow() {
   setVisibility (value, ...nodes) {
     nodes.forEach(node => {
       if (value === '0') {
-        node.style.visibility = 'hidden'
+        node.style.display = 'none'
       } else {
-        node.style.visibility = 'visible'
+        node.style.display = 'block'
       }
     })
+  }
+
+  get quantityField() {
+    return this.root.querySelector('input')
+  }
+  get addButton() {
+    return this.root.querySelector('#add')
+  }
+  get removeButton() {
+    return this.root.querySelector('#remove')
   }
 }

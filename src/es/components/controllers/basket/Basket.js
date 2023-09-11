@@ -62,7 +62,7 @@ export default class Basket extends Shadow() {
 
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
       detail: {
-        fetch: fetch('./dummy_products.json').then(async response => {
+        fetch: fetch(this.importMetaUrl + './dummy_products.json').then(async response => {
           if (response.status >= 200 && response.status <= 299) return await response.json()
           throw new Error(response.statusText)
         })

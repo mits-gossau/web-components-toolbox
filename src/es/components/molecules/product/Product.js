@@ -190,11 +190,11 @@ export default class Product extends Shadow() {
   createBasketUtilsElement (productInfo) {
     return /* html */ `
       <div class="basket-utils">
-        <m-basket-control namespace=basket-control-product- answer-event-name="update-basket">
-          <a-button id="remove" namespace="basket-control-product-button-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
-          <input id="${productInfo}" name="quantity" type="text" value="0" request-event-name="add-basket" tag='${productInfo}' pattern="\d*" maxlength="9999">
-          <a-button id="add" namespace="basket-control-product-button-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
-        </m-basket-control>
+      <m-basket-control namespace="basket-control-default-" answer-event-name="list-basket">
+          <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag="1" label="-"></a-button>
+          <input id="quantity" name="quantity" type="number" value="0" min=0 max=9999 request-event-name="add-basket">
+          <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag="2" label="+"></a-button>
+      </m-basket-control>
       </div>`
   }
 

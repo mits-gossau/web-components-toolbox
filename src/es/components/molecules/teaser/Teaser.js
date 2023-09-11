@@ -89,6 +89,9 @@ export default class Teaser extends Intersection() {
   renderCSS () {
     if (this.getAttribute('namespace') === 'teaser-overlay-' && this.aArrow) this.aArrow.setAttribute('hover-set-by-outside', '')
     this.css = /* css */`
+      :host {
+        max-width: 100%;
+      }
       :host([href]) {
         cursor: pointer;
       }
