@@ -30,8 +30,14 @@ export default class Basket extends Shadow() {
 
   answerEventNameListener = event => {
     // WIP!!!
-    console.log('basket event', event.detail)
-    this.count.innerHTML = Number(this.count.innerHTML) + event.detail.length
+    console.log('basket event - counting', event.detail)
+    event.detail.fetch.then(productData => {
+      console.log(productData)
+    }).catch(error => {
+      this.html = ''
+      this.html = `${error}`
+    })
+    // this.count.innerHTML = Number(this.count.innerHTML) + event.detail.length
     // console.log('type', JSON.parse(event.detail.tags))
     // const eventData = JSON.parse(event.detail.tags)
     // console.log('type', eventData[0])
@@ -45,14 +51,6 @@ export default class Basket extends Shadow() {
     //   cancelable: true,
     //   composed: true
     // }))
-    this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
-      detail: {
-        products: event.detail
-      },
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
   }
 
   /**

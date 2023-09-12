@@ -14,20 +14,25 @@ export default class BasketControl extends Shadow() {
     this.currentProductId = this.quantityField?.getAttribute('id') || 0
 
     this.answerEventNameListener = event => {
-      console.log('update product', event.detail)
-      const currentProduct = event.detail.find((/** @type {{ id: any; }} */ product) => product.id === this.currentProductId)
-      if (currentProduct) {
-        this.setVisibility(event.detail.count, this.quantityField, this.removeButton)
-        this.quantityField.value = currentProduct.count
-      }
+      console.log('update product', event.detail, event.detail.id)
+      event.detail.fetch.then(productData => {
+        const { orderItems } = productData.response
+        const currentProduct = orderItems.find((/** @type {{ mapiProductId: any; }} */ item) => {
+          return item.mapiProductId === event.detail.id && item.mapiProductId === this.currentProductId
+        })
+        if (currentProduct) {
+          this.setVisibilityAndValue(currentProduct.amount, this.quantityField)
+        }
+      }).catch(error => {
+        this.html = ''
+        this.html = `${error}`
+      })
     }
+
     this.clickListener = event => {
       event.preventDefault()
       event.stopPropagation()
     }
-
-    this.addBasketEventListener = event => (this.quantityField.value = Number(this.quantityField.value) + 1)
-    this.removeBasketEventListener = event => (this.quantityField.value = Number(this.quantityField.value) - 1)
 
     this.inputListener = event => {
       const inputValue = Number(event.target.value)
@@ -52,17 +57,13 @@ export default class BasketControl extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.quantityField?.addEventListener('click', this.clickListener)
     this.quantityField?.addEventListener('input', this.inputListener)
-    this.addEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketEventListener)
-    this.addEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketEventListener)
-    this.setVisibility(this.quantityField?.value, this.quantityField, this.removeButton)
+    this.setVisibilityAndValue(this.quantityField?.value, this.quantityField)
   }
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.quantityField?.removeEventListener('click', this.clickListener)
     this.quantityField?.removeEventListener('input', this.inputListener)
-    this.removeEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketEventListener)
-    this.removeEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketEventListener)
   }
 
   shouldRenderCSS () {
@@ -166,23 +167,24 @@ export default class BasketControl extends Shadow() {
     }
   }
 
-  setVisibility (value, ...nodes) {
-    nodes.forEach(node => {
-      if (value === '0') {
-        this.classList.add('closed')
-      } else {
-        this.classList.remove('closed')
-      }
-    })
+  setVisibilityAndValue (value, inputField) {
+    inputField.value = value
+    if (value === '0') {
+      this.classList.add('closed')
+    } else {
+      this.classList.remove('closed')
+    }
   }
 
-  get quantityField() {
+  get quantityField () {
     return this.root.querySelector('input')
   }
-  get addButton() {
+
+  get addButton () {
     return this.root.querySelector('#add')
   }
-  get removeButton() {
+
+  get removeButton () {
     return this.root.querySelector('#remove')
   }
 }

@@ -78,31 +78,22 @@ export default class Basket extends Shadow() {
    * @param {{ detail: any; }} event
    */
   addBasketListener = async (event) => {
-    console.log('add to Basket', event.detail)
+    if (this.abortController) this.abortController.abort()
+    this.abortController = new AbortController()
     const fetchOptions = {
-      method: 'PUT'
+      method: 'GET',
+      signal: this.abortController.signal
     }
-    /* const endpoint = this.getAttribute('endpoint')
-    this.dispatchEvent(new CustomEvent(this.getAttribute('basket') || 'basket', {
+    const productId = event.detail.tags[0]
+    const endpoint = `https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder?productId=${productId}`
+    this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail: {
-         fetch: fetch(endpoint, fetchOptions).then(async response => {
+        id: productId,
+        fetch: fetch(endpoint, fetchOptions).then(async response => {
           if (response.status >= 200 && response.status <= 299) return await response.json()
           throw new Error(response.statusText)
         })
       },
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    })) */
-
-    const dummyReturnCount = event.detail.count || 1
-    const dummyReturnProductId = event.detail.id || event.detail.tags[0]
-
-    this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
-      detail:
-        [
-          { id: dummyReturnProductId, count: dummyReturnCount }
-        ],
       bubbles: true,
       cancelable: true,
       composed: true
