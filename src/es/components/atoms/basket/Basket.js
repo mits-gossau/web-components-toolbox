@@ -11,16 +11,14 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Basket extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+
     this.count = this.root.querySelector('span') || document.createElement('span')
-    this.count.innerHTML = '0'
+    this.count.textContent = '0'
   }
 
   connectedCallback () {
-    const showPromises = []
-    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    this.hidden = true
-    Promise.all(showPromises).then(() => (this.hidden = false))
+    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) this.renderHTML();
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
@@ -29,28 +27,12 @@ export default class Basket extends Shadow() {
   }
 
   answerEventNameListener = event => {
-    // WIP!!!
-    console.log('basket event - counting', event.detail)
     event.detail.fetch.then(productData => {
-      console.log(productData)
+      this.count.textContent = productData.response.allOrderItemProductTotal
     }).catch(error => {
       this.html = ''
       this.html = `${error}`
     })
-    // this.count.innerHTML = Number(this.count.innerHTML) + event.detail.length
-    // console.log('type', JSON.parse(event.detail.tags))
-    // const eventData = JSON.parse(event.detail.tags)
-    // console.log('type', eventData[0])
-    // const counter = eventData[0] === 'add' ? Number(this.count.innerHTML) + 1 : Number(this.count.innerHTML) - 1
-    // this.count.innerHTML = counter
-    // this.dispatchEvent(new CustomEvent(this.getAttribute('update-product') || 'update-product', {
-    //   detail: {
-    //     count: '20'
-    //   },
-    //   bubbles: true,
-    //   cancelable: true,
-    //   composed: true
-    // }))
   }
 
   /**
@@ -113,14 +95,25 @@ export default class Basket extends Shadow() {
    * @return {Promise<void>}
    */
   fetchTemplate () {
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: false
+      }
+    ]
     switch (this.getAttribute('namespace')) {
       case 'basket-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }])
+        }, ...styles])
       default:
-        return Promise.resolve()
+        return this.fetchCSS(styles)
     }
   }
 
@@ -140,8 +133,6 @@ export default class Basket extends Shadow() {
       icon.setAttribute('icon-name', 'ShoppingBasket')
       icon.setAttribute('size', '1em')
       this.wrapper = this.root.querySelector('div') || document.createElement('div')
-      // this.count = this.root.querySelector('span') || document.createElement('span')
-      // this.count.innerHTML = '0'
       this.wrapper.appendChild(this.count)
       this.wrapper.appendChild(icon)
       this.html = this.wrapper
