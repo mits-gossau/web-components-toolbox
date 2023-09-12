@@ -79,7 +79,22 @@ export default class BasketControl extends Shadow() {
     :host {
         display:flex;
         width:100%;
+        justify-content:flex-start;
+         animation: var(--show, show .3s ease-out);
       }
+
+      :host(.default) {
+        justify-content:space-between;
+      }
+
+      :host(.closed) input, :host(.closed) #remove {
+        display:none;
+      }
+
+      :host(.closed.default) {
+        justify-content:flex-end;
+      }
+
       :host input {
         background-color: var(--quantity-background-color, transparent);
         border-radius: var(--quantity-border-radius, 0.5em);
@@ -107,6 +122,12 @@ export default class BasketControl extends Shadow() {
       input[type=number] {
         -moz-appearance: textfield;
       }
+
+      @keyframes show {
+          0%{opacity: 0}
+          100%{opacity: 1}
+        }
+
       @media only screen and (max-width: _max-width_) {}
       `
     return this.fetchTemplate()
@@ -148,9 +169,9 @@ export default class BasketControl extends Shadow() {
   setVisibility (value, ...nodes) {
     nodes.forEach(node => {
       if (value === '0') {
-        node.style.display = 'none'
+        this.classList.add('closed')
       } else {
-        node.style.display = 'block'
+        this.classList.remove('closed')
       }
     })
   }
