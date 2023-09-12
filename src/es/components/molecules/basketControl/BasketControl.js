@@ -78,8 +78,7 @@ export default class BasketControl extends Shadow() {
     this.css = /* css */ `
     :host {
         display:flex;
-        justify-content: space-between;
-        align-items: center;
+        width:100%;
       }
       :host input {
         background-color: var(--quantity-background-color, transparent);
@@ -108,8 +107,8 @@ export default class BasketControl extends Shadow() {
       input[type=number] {
         -moz-appearance: textfield;
       }
-    @media only screen and (max-width: _max-width_) {}
-    `
+      @media only screen and (max-width: _max-width_) {}
+      `
     return this.fetchTemplate()
   }
 
