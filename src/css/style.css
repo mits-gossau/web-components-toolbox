@@ -521,7 +521,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 /* outline */
 *:focus-visible {
   border-radius: var(--border-radius, 0.125em);
-  outline-color: var(--outline-color, var(--background-color, var(--color, transparent)));
+  outline-color: var(--outline-color, var(--color-secondary, var(--color, transparent)));
   outline-style: var(--outline-style, solid);
   outline-width: var(--outline-width, 0.125em);
   outline-offset: var(--outline-offset, 2px);
