@@ -23,8 +23,8 @@
     <c-fetch-html>
       <c-fetch-css>
         <c-fetch-modules>
-          <c-product endpoint="https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory">
-            <c-basket endpoint="https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetBasket">
+          <c-product endpoint-get-product-by-category="https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory" endpoint-get-active-order-and-order-items="http://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems">
+            <c-basket>
               <p-general>
                 <o-header menu-icon="true" namespace="header-default-" namespace-fallback role="header">
                   <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/atoms/logo/default-/default-.html -->

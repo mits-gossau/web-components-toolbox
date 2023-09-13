@@ -10,14 +10,18 @@ export default class ProductList extends Shadow() {
    */
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+
+    // TODO: Replace with attribute value
     this.productNamespace = 'product-default-'
+
     this.answerEventNameListener = event => {
-      this.renderHTML('loading', null)
+      this.renderHTML('loading', null, null)
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
-        const { products, total_hits: totalHits } = productData
+        const { products, total_hits: totalHits } = productData[0]
+        const { orderItems } = productData[1].response
         if (!products) throw new Error('No Products found')
-        this.renderHTML(products, totalHits)
+        this.renderHTML(products, totalHits, orderItems)
       }).catch(error => {
         this.html = ''
         this.html = `${error}`
@@ -30,6 +34,9 @@ export default class ProductList extends Shadow() {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
       {
+        detail: {
+          type: 'get-active-order-items'
+        },
         bubbles: true,
         cancelable: true,
         composed: true
@@ -117,7 +124,7 @@ export default class ProductList extends Shadow() {
    * @param {any[] | 'loading'} productData
    * @return {Promise<void>}
    */
-  renderHTML (productData, totalHits) {
+  renderHTML (productData, totalHits, orderItems) {
     if (!productData || (productData !== 'loading' && (!Array.isArray(productData) || !productData.length))) {
       this.html = ''
       this.html = `${this.getAttribute('no-products-found-translation') || 'Leider haben wir keine Produkte zu diesem Suchbegriff gefunden.'}`
@@ -184,12 +191,15 @@ export default class ProductList extends Shadow() {
       return Promise.resolve()
     }
     return Promise.all([productData, fetchModules]).then(() => {
-      const products = productData.map((/** @type {any} */ product, i) => /* html */`
+      const products = productData.map((/** @type {any} */ product, i) => {
+        const activeOrderItemAmount = orderItems.find(item => item.mapiProductId === product.id)?.amount || '0'
+        return /* html */`
         <m-load-template-tag>
           <template>
-            <m-product detail-product-link=${this.getAttribute('detail-product-link') || ''}  namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}'></m-product>
+            <m-product detail-product-link=${this.getAttribute('detail-product-link') || ''}  namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}' active-order-item-amount=${activeOrderItemAmount}></m-product>
           </template>
-        </m-load-template-tag>`)
+        </m-load-template-tag>`
+      })
       products.unshift(`<div class="filter">${totalHits} produits trouvés</div>`)
       this.html = products.join('')
     })

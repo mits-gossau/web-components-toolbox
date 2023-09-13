@@ -61,23 +61,33 @@ export default class Product extends Shadow() {
     const category = this.getCategory()
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null) {
-      const endpoint = this.getAttribute('endpoint') + `?category=${category}`
+      const endpointGetProductByCategory = this.getAttribute('endpoint-get-product-by-category') + `?category=${category}`
+      const endpointActiveOrderEndpoint = this.getAttribute('endpoint-get-active-order-and-order-items') + `?category=${category}`
+
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
         detail: {
-          fetch: fetch(endpoint, fetchOptions).then(async response => {
-            if (response.status >= 200 && response.status <= 299) {
-              const data = await response.json()
-              if (event.detail && event.detail.tags && data && data.tags && event.detail.tags !== data.tags) {
-                this.setCategory(data.tags[0], true)
+          fetch: Promise.all([
+            fetch(endpointGetProductByCategory, fetchOptions).then(async response => {
+              if (response.status >= 200 && response.status <= 299) {
+                const data = await response.json()
+                if (event.detail && event.detail.tags && data && data.tags && event.detail.tags !== data.tags) {
+                  this.setCategory(data.tags[0], true)
+                }
+                return {
+                  tag: [category],
+                  ...data
+                }
               }
-              return {
-                tag: [category],
-                ...data
+              throw new Error(response.statusText)
+              // @ts-ignore
+            }).catch(error => console.error(`fetch ${endpointGetProductByCategory} failed! error: ${error}`) || `fetch ${endpointGetProductByCategory} failed!`),
+            fetch(endpointActiveOrderEndpoint, fetchOptions).then(async response => {
+              if (response.status >= 200 && response.status <= 299) {
+                return await response.json()
               }
-            }
-            throw new Error(response.statusText)
-            // @ts-ignore
-          }).catch(error => console.error(`fetch ${endpoint} failed! error: ${error}`) || `fetch ${endpoint} failed!`)
+              // @ts-ignore
+            }).catch(error => console.error(`fetch ${endpointActiveOrderEndpoint} failed! error: ${error}`) || `fetch ${endpointActiveOrderEndpoint} failed!`)
+          ])
         },
         bubbles: true,
         cancelable: true,
