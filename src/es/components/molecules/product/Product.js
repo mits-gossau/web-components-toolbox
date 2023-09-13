@@ -41,19 +41,19 @@ export default class Product extends Shadow() {
     :host {
         box-shadow: 0px 0px 12px 0px rgba(51, 51, 51, 0.10);
         display: block;
-        height: 100%;
+        height: var(--height, 100%);
         margin: 0 0 calc(var(--content-spacing)/2) 0;
       }
 
       :host > a {
-        height: 100%;
+        height: var(--a-height, 100%);
       }
 
       :host > a > div {
         box-sizing: border-box;
-        display: flex;
-        flex-direction: column; 
-        height: 100%;
+        display: var(--div-display, flex);
+        flex-direction: var(--div-flex-direction, column);
+        height: var(--div-height, 100%);
         padding: calc(var(--content-spacing)/2);
       }
 
@@ -63,57 +63,57 @@ export default class Product extends Shadow() {
       }
 
       :host .basket-utils {
-        width: 100%;
+        width: var(--basket-utils-width, 100%);
       }
 
       :host .product-image {
-        margin: 0;
+        margin: var(--product-image-margin, 0);
         padding: 0 calc(var(--content-spacing)*2);
       }
 
       :host .product-price {
-        display: block;
-        font-size: 1.25em;
-        font-weight: bold;
+        display: var(--product-price-display, block);
+        font-size: var(--product-price-font-size, 1.25em);
+        font-weight: var(--product-price-font-weight, bold);
       }
 
       :host .product-name {
-        display: block;
-        font-size: 0.85em;
-        font-weight: bold;
+        display: var(--product-name-display, block);
+        font-size: var(--product-name-font-size, 0.85em);
+        font-weight: var(--product-name-font-weight, bold);
       }
 
       :host .product-data {
-        flex: 1;
-        margin: 0;
+        flex: var(--product-data-flex, 1);
+        margin: var(--product-data-margin, 0);
       }
 
       :host .footer-label-data {
-        align-items: flex-start;
-        align-self: flex-end;
-        display: flex;
-        flex-direction: column;
-        margin: 0;
-        width: 100%;
+        align-items: var(--footer-label-data-align-item, flex-start);
+        align-self: var(--footer-label-data-align-self, flex-end);
+        display: var(--footer-label-data-display, flex);
+        flex-direction: var(--footer-label-data-flex-direction, column);
+        margin: var(--footer-label-data-margin, 0);
+        width: var(--footer-label-data-width, 100%);
       }
 
       :host .unit-price {
         color: var(--unit-price-color, black);
-        font-size: 0.75em;
-        line-height: 1.5em;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        font-size: var(--unit-price-font-size, 0.75em);
+        line-height: var(--unit-price-line-height, 1.5em);
+        overflow: var(--unit-price-overflow, hidden);
+        text-overflow: var(--unit-price-text-overflow, ellipsis);
       }
 
       :host .estimated-piece-weight{
-        display: block;
+        display: var(--estimated-piece-weight-display, block);
         color: var(--unit-price-color, black);
-        font-size: 0.75em;
-        line-height: 1.5em;
+        font-size: var(--estimated-piece-weight-font-size, 0.75em);
+        line-height: var(--estimated-piece-weight-line-height, 1.5em);
       }
 
       :host .footer-label-data > img {
-        height: 1.5em;
+        height: var(--footer-label-data-img-height, 1.5em);
       }
 
       @media only screen and (max-width: _max-width_) {
