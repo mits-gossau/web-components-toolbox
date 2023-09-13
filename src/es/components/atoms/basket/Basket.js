@@ -9,6 +9,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Basket extends Shadow() {
+  /**
+   * @param {any} args
+   */
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
   }
@@ -18,7 +21,6 @@ export default class Basket extends Shadow() {
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     document.body.addEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
-    this.count.textContent = '0'
   }
 
   disconnectedCallback () {
@@ -26,19 +28,19 @@ export default class Basket extends Shadow() {
     document.body.removeEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
   }
 
-  answerEventNameListener = event => {
-    event.detail.fetch.then(productData => {
+  answerEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
+    event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }} */ productData) => {
       this.count.textContent = productData.response.allOrderItemProductTotal
-    }).catch(error => {
+    }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
       this.html = `${error}`
     })
   }
 
-  activeOrderItemEventNameListener = event => {
-    event.detail.fetch.then(activeItems => {
+  activeOrderItemEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
+    event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }[]} */ activeItems) => {
       this.count.textContent = activeItems[1].response.allOrderItemProductTotal
-    }).catch(error => {
+    }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
       this.html = `${error}`
     })
@@ -137,7 +139,7 @@ export default class Basket extends Shadow() {
         path: `${this.importMetaUrl}../iconMdx/IconMdx.js`,
         name: 'a-icon-mdx'
       }
-    ]).then(children => {
+    ]).then((/** @type {{ constructorClass: new (arg0: { namespace: any; namespaceFallback: any; mobileBreakpoint: any; }) => any; }[]} */ children) => {
       const icon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
       icon.setAttribute('icon-name', 'ShoppingBasket')
       icon.setAttribute('size', '1em')
@@ -148,7 +150,13 @@ export default class Basket extends Shadow() {
     })
   }
 
+  /**
+   * The function returns a span element with a text content of '0'.
+   * @returns The `count` method is returning an HTML `span` element.
+   */
   get count(){
-    return this.root.querySelector('span') || document.createElement('span') 
+    const element = this.root.querySelector('span') || document.createElement('span') 
+    element.textContent = '0'
+    return element
   }
 }
