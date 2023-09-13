@@ -172,7 +172,12 @@ export default class Product extends Shadow() {
       ${this.createProductImageElement(image, accessibleInformationText)}
       ${this.createProductDataElement(price, brand || '', name, unitPrice, isWeighable, estimatedPieceWeight)}`
 
-    productCard.innerHTML += `${this.createFooterLabels(this.productData.isWeighable)}`
+    const div = document.createElement('div')
+    div.innerHTML = `${this.createFooterLabels(this.productData.isWeighable)}` 
+    
+    Array.from(div.children).forEach(node => {
+       productCard.appendChild(node)
+    })
 
     const a = document.createElement('a')
     a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slug}`
