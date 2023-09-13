@@ -20,17 +20,28 @@ export default class Basket extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    document.body.addEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
   }
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    document.body.removeEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
   }
 
   answerEventNameListener = event => {
     event.detail.fetch.then(productData => {
       this.count.textContent = productData.response.allOrderItemProductTotal
     }).catch(error => {
-      this.html = ''
+      this.count.textContent = '0'
+      this.html = `${error}`
+    })
+  }
+
+  activeOrderItemEventNameListener = event => {
+    event.detail.fetch.then(activeItems => {
+      this.count.textContent = activeItems[1].response.allOrderItemProductTotal
+    }).catch(error => {
+      this.count.textContent = '0'
       this.html = `${error}`
     })
   }
