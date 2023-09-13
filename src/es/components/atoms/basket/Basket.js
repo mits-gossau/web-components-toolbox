@@ -11,9 +11,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Basket extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-
-    this.count = this.root.querySelector('span') || document.createElement('span')
-    this.count.textContent = '0'
   }
 
   connectedCallback () {
@@ -21,6 +18,7 @@ export default class Basket extends Shadow() {
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     document.body.addEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
+    this.count.textContent = '0'
   }
 
   disconnectedCallback () {
@@ -148,5 +146,9 @@ export default class Basket extends Shadow() {
       this.wrapper.appendChild(icon)
       this.html = this.wrapper
     })
+  }
+
+  get count(){
+    return this.root.querySelector('span') || document.createElement('span') 
   }
 }
