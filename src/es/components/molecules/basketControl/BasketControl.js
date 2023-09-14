@@ -14,7 +14,6 @@ export default class BasketControl extends Shadow() {
     this.currentProductId = this.quantityField?.getAttribute('id') || 0
 
     this.answerEventNameListener = event => {
-      console.log('update product', event.detail, event.detail.id)
       event.detail.fetch.then(productData => {
         const { orderItems } = productData.response
         const currentProduct = orderItems.find((/** @type {{ mapiProductId: any; }} */ item) => {

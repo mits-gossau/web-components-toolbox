@@ -102,7 +102,6 @@ export default class Basket extends Shadow() {
    * @param {{ detail: any; }} event
    */
   removeBasketListener = async (event) => {
-    console.log('remove to Basket', event.detail)
     if (this.removeAbortController) this.removeAbortController.abort()
     this.removeAbortController = new AbortController()
     const fetchOptions = {

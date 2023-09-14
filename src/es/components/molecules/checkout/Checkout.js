@@ -12,8 +12,7 @@ export default class Checkout extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
-        console.log('productData', productData)
-        this.renderHTML(productData.response.orderItems)
+        this.renderHTML(productData.response)
       }).catch(error => {
         this.html = ''
         this.html = `${error}`
@@ -203,7 +202,7 @@ export default class Checkout extends Shadow() {
 
     return Promise.all([productData, fetchModules]).then(() => {
       // @ts-ignore
-      const products = productData.map(product => {
+      const products = productData.orderItems.map(product => {
         console.log(product)
         return /* html */`
       <div class="product-item">
