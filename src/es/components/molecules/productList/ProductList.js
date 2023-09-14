@@ -19,8 +19,8 @@ export default class ProductList extends Shadow() {
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
         const { products, total_hits: totalHits } = productData[0]
-        const { orderItems } = productData[1].response
-        if (!products) throw new Error('No Products found')
+        const { orderItems } = productData && productData[1]?.response || {}
+        if (!products || !orderItems) throw new Error('No Products found')
         this.renderHTML(products, totalHits, orderItems)
       }).catch(error => {
         this.html = ''

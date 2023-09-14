@@ -31,7 +31,7 @@ export default class Basket extends Shadow() {
       this.count.textContent = productData.response.allOrderItemProductTotal
     }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
-      this.html = `${error}`
+      console.warn(error)
     })
   }
 
@@ -40,7 +40,7 @@ export default class Basket extends Shadow() {
       this.count.textContent = activeItems[1].response.allOrderItemProductTotal
     }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
-      this.html = `${error}`
+      console.warn(error)
     })
   }
 
