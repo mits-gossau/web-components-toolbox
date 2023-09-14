@@ -170,7 +170,7 @@ export default class Button extends Hover() {
         display: inline-block;
       }
       ${this.buttonTagName} {
-        align-items: center;
+        align-items: var(--align-items, center);
         background-color: var(--background-color, transparent);
         border-radius: var(--border-radius, 0.5em);
         border: var(--border-width, 0px) solid var(--border-color, transparent);
@@ -180,6 +180,7 @@ export default class Button extends Hover() {
         font-family: var(--font-family, unset);
         font-size: var(--font-size, 1em);
         font-weight: var(--font-weight, 400);
+        height: var(--height, auto);
         justify-content: var(--justify-content, center);
         letter-spacing: var(--letter-spacing, normal);
         line-height: var(--line-height, 1.5em);
@@ -194,7 +195,6 @@ export default class Button extends Hover() {
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
       }
-
       ${this.buttonTagName}:focus-visible {
         border-radius: var(--border-radius, 0.125em);
         outline-color: var(--outline-color, var(--background-color, var(--color, transparent)));
@@ -344,6 +344,33 @@ export default class Button extends Hover() {
         {
           // @ts-ignore
           path: `${this.importMetaUrl}./category-/category-.css`,
+          namespace: false,
+          replaces
+        }])
+      case 'button-category-teaser-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./primary-/primary-.css`,
+          namespace: false,
+          replaces: replaces.concat([{
+            pattern: '--button-primary-',
+            flags: 'g',
+            replacement: '--button-category-teaser-'
+          }])
+        },
+        {
+          // @ts-ignore
+          path: `${this.importMetaUrl}./category-/category-.css`,
+          namespace: false,
+          replaces: replaces.concat([{
+            pattern: '--button-category-',
+            flags: 'g',
+            replacement: '--button-category-teaser-'
+          }])
+        },
+        {
+          // @ts-ignore
+          path: `${this.importMetaUrl}./category-teaser-/category-teaser-.css`,
           namespace: false,
           replaces
         }])
