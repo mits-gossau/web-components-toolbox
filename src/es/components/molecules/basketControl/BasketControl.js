@@ -178,11 +178,4 @@ export default class BasketControl extends Shadow() {
     return this.root.querySelector('input')
   }
 
-  get addButton () {
-    return this.root.querySelector('#add')
-  }
-
-  get removeButton () {
-    return this.root.querySelector('#remove')
-  }
 }

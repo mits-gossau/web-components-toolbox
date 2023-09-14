@@ -165,7 +165,18 @@ export default class Product extends Shadow() {
 
     const productCard = document.createElement('div')
 
-    const { id, image, accessible_information_text: accessibleInformationText, price, brand, name, unit_price: unitPrice, isWeighable, estimated_piece_weight: estimatedPieceWeight } = this.productData
+    const { 
+      id, 
+      image, 
+      accessible_information_text: accessibleInformationText, 
+      price, 
+      brand, 
+      name, unit_price: 
+      unitPrice, 
+      isWeighable, 
+      estimated_piece_weight: estimatedPieceWeight, 
+      slug 
+    } = this.productData
 
     productCard.innerHTML = /* html */ `
       ${this.createBasketUtilsElement(id)}
@@ -173,21 +184,21 @@ export default class Product extends Shadow() {
       ${this.createProductDataElement(price, brand || '', name, unitPrice, isWeighable, estimatedPieceWeight)}`
 
     const div = document.createElement('div')
-    div.innerHTML = `${this.createFooterLabels(this.productData.isWeighable)}`
+    div.innerHTML = `${this.createFooterLabels(isWeighable)}`
 
     Array.from(div.children).forEach(node => {
       productCard.appendChild(node)
     })
 
     const a = document.createElement('a')
-    a.href = `${this.getAttribute('detail-product-link') || ''}?${this.productData.slug}`
+    a.href = `${this.getAttribute('detail-product-link') || ''}?${slug}`
     a.appendChild(productCard)
 
     this.html = a
   }
 
   /**
-   * Creates a HTML element for a basket utility with buttons to add or remove items from the basket.
+   * Creates an HTML element for a basket utility with buttons to add or remove items from the basket.
    * @param {string} productInfo - The `productInfo` parameter is a variable that represents information about a
    * product. It could include details such as the product name, price, image, and any other relevant information.
    * @returns an HTML element as a string.

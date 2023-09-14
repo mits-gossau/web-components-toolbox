@@ -120,11 +120,14 @@ export default class ProductList extends Shadow() {
 
   /**
    * renderHTML
-   *
-   * @param {any[] | 'loading'} productData
-   * @return {Promise<void>}
+   * @param {string | any[]} productData - An array of product data objects.
+   * @param {null} totalHits - The total number of products found in the search.
+   * @param {any[] | null} orderItems - The `orderItems` parameter is an array that contains information about the 
+   * items that have been ordered. Each item in the array is an object with properties such as 
+   * `mapiProductId` (the ID of the product) and `amount` (the quantity of the product ordered).
+   * @returns {Promise<void>} The function `renderHTML` returns a Promise.
    */
-  renderHTML (productData, totalHits, orderItems) {
+  async renderHTML (productData, totalHits, orderItems) {
     if (!productData || (productData !== 'loading' && (!Array.isArray(productData) || !productData.length))) {
       this.html = ''
       this.html = `${this.getAttribute('no-products-found-translation') || 'Leider haben wir keine Produkte zu diesem Suchbegriff gefunden.'}`
@@ -191,8 +194,8 @@ export default class ProductList extends Shadow() {
       return Promise.resolve()
     }
     return Promise.all([productData, fetchModules]).then(() => {
-      const products = productData.map((/** @type {any} */ product, i) => {
-        const activeOrderItemAmount = orderItems.find(item => item.mapiProductId === product.id)?.amount || '0'
+      const products = productData.map((/** @type {any} */ product) => {
+        const activeOrderItemAmount = orderItems?.find(item => item.mapiProductId === product.id)?.amount || '0'
         return /* html */`
         <m-load-template-tag>
           <template>
@@ -200,7 +203,7 @@ export default class ProductList extends Shadow() {
           </template>
         </m-load-template-tag>`
       })
-      products.unshift(`<div class="filter">${totalHits} produits trouvés</div>`)
+      products.unshift(`<div class="filter">${totalHits} ${this.totalArticlesText}</div>`)
       this.html = products.join('')
     })
   }
@@ -217,5 +220,9 @@ export default class ProductList extends Shadow() {
       style.setAttribute('protected', 'true')
       return style
     })())
+  }
+
+  get totalArticlesText(){
+    return this.getAttribute('total-articles-text') || ''
   }
 }
