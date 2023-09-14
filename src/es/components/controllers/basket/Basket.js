@@ -73,8 +73,14 @@ export default class Basket extends Shadow() {
       method: 'GET',
       signal: this.addAbortController.signal
     }
-    const productId = event.detail.tags[0]
-    const endpoint = `https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder?productId=${productId}`
+    // id from 'event.detail.tags': returned by default button behaviour
+    // id from 'event.detail.id'  : returned from quantity field input event
+    const productId = event.detail.tags && event.detail.tags[0] || event.detail.id
+
+    // amount returned from quantity field input value
+    const amount = event.detail.amount ? `&amount=${event.detail.amount}` : ''  
+    
+    const endpoint = `https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder?productId=${productId}${amount}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail: {
         id: productId,

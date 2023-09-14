@@ -40,8 +40,7 @@ export default class BasketControl extends Shadow() {
       this.dispatchEvent(new CustomEvent(this.quantityField.getAttribute('request-event-name') || 'request-event-name',
         {
           detail: {
-            this: this,
-            count: Number(event.target.value),
+            amount: Number(event.target.value),
             id: event.target.getAttribute('tag')
           },
           bubbles: true,
