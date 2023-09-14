@@ -89,6 +89,7 @@ export default class UserProfile extends Shadow() {
         flex-direction: column;
         padding:var(--profile-padding, 0);
         color: var(--profile-color, var(--color));
+        line-height: var(--profile-line-height, 1em);
       }
       :host([icon-text]) .profile {
         height: var(--profile-height, 2.65em);
