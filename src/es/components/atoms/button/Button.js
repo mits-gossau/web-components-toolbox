@@ -196,7 +196,7 @@ export default class Button extends Hover() {
         width: var(--width, auto);
       }
       ${this.buttonTagName}:focus-visible {
-        border-radius: var(--border-radius, 0.125em);
+        border-radius: var(--outline-border-radius, 0.125em);
         outline-color: var(--outline-color, var(--background-color, var(--color, transparent)));
         outline-style: var(--outline-style, solid);
         outline-width: var(--outline-width, 0.125em);
