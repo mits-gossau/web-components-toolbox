@@ -518,6 +518,14 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 .spacer-four {
   height: var(--spacer-four-height, calc(4 * var(--content-spacing)));
 }
+/* outline */
+*:focus-visible {
+  border-radius: var(--border-radius, 0.125em);
+  outline-color: var(--outline-color, var(--color-secondary, var(--color, transparent)));
+  outline-style: var(--outline-style, solid);
+  outline-width: var(--outline-width, 0.125em);
+  outline-offset: var(--outline-offset, 2px);
+}
 @media only screen and (min-width: calc(_max-width_ + 1px)) {
   /* text stylings */
   :host .font-size-big-desktop {

@@ -5,6 +5,7 @@
   --button-square-color: white;
   --button-square-background-color: #232323;
   --button-square-font-size: 0.75rem;
+  --button-square-transition: var(--button-square-transition-custom, var(--transition));
 }
 
 @media only screen and (max-width: _max-width_) {
