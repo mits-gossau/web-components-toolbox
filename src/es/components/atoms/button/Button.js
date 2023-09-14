@@ -398,8 +398,8 @@ export default class Button extends Hover() {
         ${this.buttonTagName === 'a'
           ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''}`
           : ''}
-        type="${this.hasAttribute('type') ? this.getAttribute('type') : 'button'}">
-        <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
+        type="${this.hasAttribute('type') ? this.getAttribute('type') : 'button'}" part="${this.buttonTagName}">
+        <span id="label"${!this.labelText ? ' class="hide"' : ''} part="label">${this.labelText || ''}</span>
       </${this.buttonTagName}>
     `
     alreadyIncludedNodes.forEach(node => this.button.appendChild(node))
