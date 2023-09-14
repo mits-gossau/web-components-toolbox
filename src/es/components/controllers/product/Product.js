@@ -26,7 +26,9 @@ export default class Product extends Shadow() {
     }, ...args)
 
     this.abortController = null
-    this.subCategoryList = Array.from(document.querySelectorAll('[data-id]'))
+    // TODO
+    this.subCategoryList = Array.from(this.root.querySelectorAll('[data-id]'))
+    
   }
 
   connectedCallback () {

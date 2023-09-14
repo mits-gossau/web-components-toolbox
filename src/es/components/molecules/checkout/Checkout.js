@@ -8,12 +8,12 @@ export default class Checkout extends Shadow() {
   /**
    * @param {any} args
    */
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
         console.log('productData', productData)
-        this.renderHTML(productData.products)
+        this.renderHTML(productData.response.orderItems)
       }).catch(error => {
         this.html = ''
         this.html = `${error}`
@@ -21,7 +21,7 @@ export default class Checkout extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
@@ -33,11 +33,11 @@ export default class Checkout extends Shadow() {
     ))
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -46,7 +46,7 @@ export default class Checkout extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
       :host {
         align-items: flex-start;
@@ -147,7 +147,7 @@ export default class Checkout extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -176,7 +176,7 @@ export default class Checkout extends Shadow() {
    * @param {any[] | 'loading'} productData
    * @return {Promise<void>}
    */
-  renderHTML (productData) {
+  renderHTML(productData) {
     const fetchModules = this.fetchModules([
       {
         path: `${this.importMetaUrl}'../../../../atoms/picture/Picture.js`,
@@ -203,7 +203,9 @@ export default class Checkout extends Shadow() {
 
     return Promise.all([productData, fetchModules]).then(() => {
       // @ts-ignore
-      const products = productData.map(product => /* html */`
+      const products = productData.map(product => {
+        console.log(product)
+        return /* html */`
       <div class="product-item">
         <div class="product-image">
           <a-picture namespace="product-checkout-" picture-load defaultSource='${product.image.original}' alt='${product.accessible_information_text}'></a-picture>
@@ -223,7 +225,8 @@ export default class Checkout extends Shadow() {
           </div>
         </div>
       </div>    
-      `)
+      `
+      })
       this.html = products.join('')
     })
   }

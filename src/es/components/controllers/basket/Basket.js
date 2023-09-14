@@ -22,6 +22,7 @@ export default class Basket extends Shadow() {
 
     this.addAbortController = null
     this.removeAbortController = null
+    this.requestAbortController = null
   }
 
   connectedCallback () {
@@ -41,29 +42,16 @@ export default class Basket extends Shadow() {
    * @param {{ detail: any; }} event
    */
   requestListBasketListener = async (event) => {
-    console.log('Request Basket', event.detail)
-    // if (this.abortController) this.abortController.abort()
-    // this.abortController = new AbortController()
-    // const fetchOptions = {
-    //   method: 'GET',
-    //   signal: this.abortController.signal
-    // }
-    // const endpoint = this.getAttribute('endpoint')
-    // this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
-    //   detail: {
-    //      fetch: fetch(endpoint, fetchOptions).then(async response => {
-    //       if (response.status >= 200 && response.status <= 299) return await response.json()
-    //       throw new Error(response.statusText)
-    //     })
-    //   },
-    //   bubbles: true,
-    //   cancelable: true,
-    //   composed: true
-    // }))
-
+    if (this.requestAbortController) this.requestAbortController.abort()
+    this.requestAbortController = new AbortController()
+    const fetchOptions = {
+      method: 'GET',
+      signal: this.requestAbortController.signal
+    }
+    const endpoint = 'http://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems'
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
       detail: {
-        fetch: fetch(this.importMetaUrl + './dummy_products.json').then(async response => {
+        fetch: fetch(endpoint, fetchOptions).then(async response => {
           if (response.status >= 200 && response.status <= 299) return await response.json()
           throw new Error(response.statusText)
         })
