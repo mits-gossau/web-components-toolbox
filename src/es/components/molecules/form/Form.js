@@ -175,6 +175,25 @@ export default class Form extends Shadow() {
         line-height: 1em;
         pointer-events: none;
       }
+      .validation-errors {
+        background-color: var(--m-orange-100);
+        color: var(--color-error);
+        padding: 1em;
+        margin-bottom: var(--content-spacing);
+      }
+      .validation-errors ul{
+        list-style: none;
+        text-align:center;
+        padding:0;
+        margin:0;
+      }
+      .form-radio-group label{
+        display: flex;
+      }
+      .form-radio-group label input{
+        margin: 0 0.25em 0 0;
+        cursor: pointer;
+      }
       legend {
         font-family: var(--font-family-bold, var(--font-family, inherit));
       }

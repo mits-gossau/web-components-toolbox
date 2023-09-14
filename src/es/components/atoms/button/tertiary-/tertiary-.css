@@ -4,12 +4,11 @@
   --button-tertiary-background-color: transparent;
   --button-tertiary-border-color-hover: transparent;
   --button-tertiary-border-color: transparent;
-  --button-tertiary-border-width: 2px;
+  --button-tertiary-border-width: var(--button-tertiary-border-width-custom, 2px);
   --button-tertiary-color-disabled:var(--button-tertiary-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
   --button-tertiary-color-hover: var(--button-tertiary-color-hover-custom, var(--color-secondary, var(--m-orange-600)));
   --button-tertiary-color: var(--button-tertiary-color-custom, var(--color-secondary, var(--m-orange-600)));
-  --button-tertiary-font-family: var(--font-family);
-  --button-tertiary-padding: 0.75em;
-
-
+  --button-tertiary-font-family: var(--button-tertiary-font-family-custom, var(--font-family));
+  --button-tertiary-padding: var(--button-tertiary-padding-custom, 0.75em);
+  --button-tertiary-transition: var(--button-tertiary-transition-custom, var(--transition));
 }
