@@ -1,8 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global CustomEvent */
-
 /**
  * @export
  * @class Basket
@@ -154,8 +152,8 @@ export default class Basket extends Shadow() {
    * The function returns a span element with a text content of '0'.
    * @returns The `count` method is returning an HTML `span` element.
    */
-  get count(){
-    const element = this.root.querySelector('span') || document.createElement('span') 
+  get count () {
+    const element = this.root.querySelector('span') || document.createElement('span')
     element.textContent = '0'
     return element
   }

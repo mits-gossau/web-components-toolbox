@@ -31,7 +31,6 @@ export default class Product extends Shadow() {
     // show/hide o-wrapper, based on the data-id tag
     // example: src/es/components/pages/ProductList.html
     this.subCategoryList = Array.from(this.root.querySelectorAll('[data-id]'))
-    
   }
 
   connectedCallback () {

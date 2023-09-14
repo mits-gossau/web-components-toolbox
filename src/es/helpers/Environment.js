@@ -35,6 +35,14 @@ self.Environment = {
     switch (type) {
       case 'zadb':
         return currentScriptUrl.searchParams.get('zadbEndpoint') || this.isTestingEnv ? 'https://testadmin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi' : 'https://admin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi'
+      case 'migrospro':{
+        return {
+          apiRemoveFromOrder: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/RemoveFromOrder',
+          apiAddToOrder: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder',
+          apiGetActiveOrderAndOrderItems: 'http://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems',
+          apiGetProductByCategory: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory'
+        }
+      }
       default:
         return ''
     }

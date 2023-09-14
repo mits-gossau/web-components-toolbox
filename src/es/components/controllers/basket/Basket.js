@@ -3,6 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global fetch */
 /* global CustomEvent */
+/* global self */
 
 /**
  * @export
@@ -75,12 +76,13 @@ export default class Basket extends Shadow() {
     }
     // id from 'event.detail.tags': returned by default button behaviour
     // id from 'event.detail.id'  : returned from quantity field input event
-    const productId = event.detail.tags && event.detail.tags[0] || event.detail.id
+    const productId = event.detail.tags && (event.detail.tags[0] || event.detail.id)
 
     // amount returned from quantity field input value
-    const amount = event.detail.amount ? `&amount=${event.detail.amount}` : ''  
-    
-    const endpoint = `https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder?productId=${productId}${amount}`
+    const amount = event.detail.amount ? `&amount=${event.detail.amount}` : ''
+
+    // @ts-ignore
+    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiAddToOrder}?productId=${productId}${amount}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail: {
         id: productId,
@@ -108,7 +110,9 @@ export default class Basket extends Shadow() {
       signal: this.removeAbortController.signal
     }
     const productId = event.detail.tags[0]
-    const endpoint = `https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/RemoveFromOrder?productId=${productId}`
+
+    // @ts-ignore
+    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiRemoveFromOrder}?productId=${productId}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail: {
         id: productId,
