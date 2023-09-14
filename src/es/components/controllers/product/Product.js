@@ -26,7 +26,10 @@ export default class Product extends Shadow() {
     }, ...args)
 
     this.abortController = null
-    // TODO
+
+    // TODO - Refactor
+    // show/hide o-wrapper, based on the data-id tag
+    // example: src/es/components/pages/ProductList.html
     this.subCategoryList = Array.from(this.root.querySelectorAll('[data-id]'))
     
   }
