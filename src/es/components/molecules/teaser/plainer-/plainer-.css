@@ -1,17 +1,14 @@
 :host {
-  box-shadow: 0px 0px 12px 0px rgba(51, 51, 51, 0.10);
+  --teaser-plainer-img-margin:0;
+  --teaser-plainer-img-width:100%;
+  --teaser-plainer-p-text-align:center;
 }
 :host :hover {
   cursor: pointer;
 }
-:host a {
-  --teaser-plainer-figcaption-color: var(--a-color, var(--color-secondary, var(--color, pink)));
-}
-:host figure figcaption {
-  text-align: center;
+
+:host figure > figcaption p {
+  margin:0;
 }
 
-:host a-link {
-  --padding:0;
-  --text-align:center;
-}
+

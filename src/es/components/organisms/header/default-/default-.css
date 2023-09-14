@@ -1,6 +1,6 @@
 :host {
-  --header-default-a-color-hover: var(--color-secondary);
-  --header-default-a-color: var(--color);
+  --header-default-a-color-hover: var(--header-default-a-color-hover-custom, var(--color-secondary));
+  --header-default-a-color: var(--header-default-a-color-custom, var(--color));
   --header-default-a-font-size: var(--h4-font-size);
   --header-default-a-line-height: 2rem;
   --header-default-a-logo-top-mobile: var(--header-default-a-logo-top-mobile-custom, -1em);

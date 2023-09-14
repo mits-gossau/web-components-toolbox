@@ -19,6 +19,21 @@
   <img class="icon-left" src="../../../../../../src/icons/car.svg">
   <img class="icon-right" src="../../../../../../src/icons/car.svg">
 </a-button>
+<h2>button with html-nodes/wc-nodes as content</h2>
+<a-button namespace="button-primary-" label="icon-mdx">
+  <a-icon-mdx icon-name="ShoppingBasket" size="1em" rotate="0" class="icon-left" namespace="button-primary-"></a-icon-mdx>
+</a-button>
+<a-button namespace="button-primary-">
+  <m-teaser namespace=teaser-plain->
+    <figure>
+      <a-picture namespace="picture-teaser-" picture-load defaultSource="./img/stadler.jpg" alt="randomized image"></a-picture>
+      <figcaption>
+        <h5>Personalrestaurant Stadler Bussnang</h5>
+        <p>Ernst-Stadler-Strasse 1<br>9565 Bussnang<br>Schweiz</p>
+      </figcaption>
+    </figure>
+  </m-teaser>
+</a-button>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./primary-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>

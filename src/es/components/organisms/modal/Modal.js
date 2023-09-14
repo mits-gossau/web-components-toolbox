@@ -21,6 +21,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  {boolean} [open=undefined]
  *  {querySelector string} [listen-at=body]
  *  {string} [open-modal=open-modal] event name to which to listen to
+ *  {bool} [no-click] if set, the Modal won't close at onclick
  * }
  * @css {
  * --background-color, rgba(0, 0, 0, 0.8)
@@ -181,8 +182,10 @@ export default class Modal extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML();
     (this.getAttribute('listen-at') ? document.querySelector(this.getAttribute('listen-at')) : document.body).addEventListener(this.getAttribute('open-modal') || 'open-modal', this.openModalListener)
-    this.addEventListener('click', this.clickListener)
-    this.addEventListener('click', this.anyCloseModalListener)
+    if (!this.hasAttribute('no-click')) {
+      this.addEventListener('click', this.clickListener)
+      this.addEventListener('click', this.anyCloseModalListener)
+    }
     if (this.closeBtn) this.closeBtn.addEventListener('click', this.closeModalListener)
     self.addEventListener('resize', this.resizeListener)
     document.addEventListener('keyup', this.keyupListener)
@@ -190,8 +193,10 @@ export default class Modal extends Shadow() {
 
   disconnectedCallback () {
     (this.getAttribute('listen-at') ? document.querySelector(this.getAttribute('listen-at')) : document.body).removeEventListener(this.getAttribute('open-modal') || 'open-modal', this.openModalListener)
-    this.removeEventListener('click', this.clickListener)
-    this.removeEventListener('click', this.anyCloseModalListener)
+    if (!this.hasAttribute('no-click')) {
+      this.removeEventListener('click', this.clickListener)
+      this.removeEventListener('click', this.anyCloseModalListener)
+    }
     if (this.closeBtn) this.closeBtn.removeEventListener('click', this.closeModalListener)
     self.removeEventListener('resize', this.resizeListener)
     document.removeEventListener('keyup', this.keyupListener)
@@ -256,6 +261,7 @@ export default class Modal extends Shadow() {
         z-index: var(--z-index, 9999);
       }
       :host([open]) > section > div {
+        position: var(--div-position, static);
         align-items: var(--align-items, end);
         display: var(--display, flex);
         flex-direction: var(--flex-direction, column-reverse);

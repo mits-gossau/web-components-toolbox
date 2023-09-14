@@ -9,47 +9,41 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Basket extends Shadow() {
-  constructor (...args) {
-    super(...args)
-    this.count = this.root.querySelector('span') || document.createElement('span')
-    this.count.innerHTML = '0'
+  /**
+   * @param {any} args
+   */
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    document.body.addEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
   }
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    document.body.removeEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
   }
 
-  answerEventNameListener = event => {
-    // WIP!!!
-    console.log('event', event.detail)
-    this.count.innerHTML = Number(this.count.innerHTML) + event.detail.length
-    // console.log('type', JSON.parse(event.detail.tags))
-    // const eventData = JSON.parse(event.detail.tags)
-    // console.log('type', eventData[0])
-    // const counter = eventData[0] === 'add' ? Number(this.count.innerHTML) + 1 : Number(this.count.innerHTML) - 1
-    // this.count.innerHTML = counter
-    // this.dispatchEvent(new CustomEvent(this.getAttribute('update-product') || 'update-product', {
-    //   detail: {
-    //     count: '20'
-    //   },
-    //   bubbles: true,
-    //   cancelable: true,
-    //   composed: true
-    // }))
-    this.dispatchEvent(new CustomEvent(this.getAttribute('update-product') || 'update-product', {
-      detail: {
-        products: event.detail
-      },
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
+  answerEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
+    event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }} */ productData) => {
+      this.count.textContent = productData.response.allOrderItemProductTotal
+    }).catch((/** @type {any} */ error) => {
+      this.count.textContent = '0'
+      this.html = `${error}`
+    })
+  }
+
+  activeOrderItemEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
+    event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }[]} */ activeItems) => {
+      this.count.textContent = activeItems[1].response.allOrderItemProductTotal
+    }).catch((/** @type {any} */ error) => {
+      this.count.textContent = '0'
+      this.html = `${error}`
+    })
   }
 
   /**
@@ -95,7 +89,7 @@ export default class Basket extends Shadow() {
       }
       :host span {
         min-width:1.2em;
-        font-size:0.8em;
+        font-size:0.7em;
         padding:0 0.25em;
       }
       
@@ -112,34 +106,57 @@ export default class Basket extends Shadow() {
    * @return {Promise<void>}
    */
   fetchTemplate () {
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: false
+      }
+    ]
     switch (this.getAttribute('namespace')) {
       case 'basket-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }])
+        }, ...styles])
       default:
-        return Promise.resolve()
+        return this.fetchCSS(styles)
     }
   }
 
   /**
    * renders the html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
-    this.wrapper = this.root.querySelector('div') || document.createElement('div')
-    // this.count = this.root.querySelector('span') || document.createElement('span')
-    // this.count.innerHTML = '0'
-    this.wrapper.appendChild(this.count)
-    this.basketIcon = this.root.querySelector('img') || document.createElement('img')
-    this.basketIcon.setAttribute('src', this.icon)
-    this.wrapper.appendChild(this.basketIcon)
-    this.html = this.wrapper
+    return this.fetchModules([
+      {
+        path: `${this.importMetaUrl}../iconMdx/IconMdx.js`,
+        name: 'a-icon-mdx'
+      }
+    ]).then((/** @type {{ constructorClass: new (arg0: { namespace: any; namespaceFallback: any; mobileBreakpoint: any; }) => any; }[]} */ children) => {
+      const icon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
+      icon.setAttribute('icon-name', 'ShoppingBasket')
+      icon.setAttribute('size', '1em')
+      this.wrapper = this.root.querySelector('div') || document.createElement('div')
+      this.wrapper.appendChild(this.count)
+      this.wrapper.appendChild(icon)
+      this.html = this.wrapper
+    })
   }
 
-  get icon () {
-    return this.getAttribute('icon')
+  /**
+   * The function returns a span element with a text content of '0'.
+   * @returns The `count` method is returning an HTML `span` element.
+   */
+  get count(){
+    const element = this.root.querySelector('span') || document.createElement('span') 
+    element.textContent = '0'
+    return element
   }
 }

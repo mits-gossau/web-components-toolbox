@@ -1,6 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global self */
+
 /**
  * @export
  * @class UserProfile
@@ -11,17 +13,24 @@ export default class UserProfile extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.clickListener = event => {
       const isInside = event.composedPath().includes(this)
-      const isActive = this.menuDiv?.classList.contains('active')
+      const isActive = this.classList.contains('active')
       if (isInside || isActive) {
-        this.menuDiv?.classList.toggle('active')
-        this.profileImgDiv?.classList.toggle('active')
+        if (this.hasAttribute('href')) {
+          event.stopPropagation()
+          self.open(this.getAttribute('href'), this.getAttribute('target') || '_self', this.hasAttribute('rel') ? `rel=${this.getAttribute('rel')}` : '')
+          return
+        }
+        this.classList.toggle('active')
       }
     }
   }
 
   connectedCallback () {
-    if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
+    const showPromises = []
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    this.hidden = true
+    Promise.all(showPromises).then(() => (this.hidden = false))
     document.body.addEventListener('click', this.clickListener)
   }
 
@@ -66,41 +75,64 @@ export default class UserProfile extends Shadow() {
         margin:0 !important;
         text-decoration:none !important;
       }
+      :host a.sub {
+        padding-left: 1em;
+      }
       :host span {
         padding:var(--span-padding, 0);
       }
       :host .profile {
+        --transition: none;
         background-color:var(--profile-background-color, black);
         border-radius:var(--profile-border-radius, 0);
-        display:var(--profile-display, block);
+        display:var(--profile-display, flex);
+        flex-direction: column;
         padding:var(--profile-padding, 0);
+        color: var(--profile-color, var(--color));
+      }
+      :host([icon-text]) .profile {
+        height: var(--profile-height, 2.65em);
+        padding:var(--profile-padding-icon-text, 0);
+      }
+      :host(.logged-in) .profile {
+        --color: var(--profile-logged-in-color, var(--profile-color, black));
+        color: var(--profile-logged-in-color, var(--profile-color, black));
+        background-color:var(--profile-logged-in-background-color, black);
+      }
+      :host(.logged-in) .profile:hover {
+        background-color:var(--profile-logged-in-background-color-hover, black);
+      }
+      :host(.active) .profile {
+        --color:var(--profile-color-active, var(--profile-color, black));
+        color:var(--profile-color-active, var(--profile-color, black));
+        background-color:var(--profile-background-color-active, var(--profile-background-color, black));
+      }
+      :host(.active) .profile:hover {
+        background-color:var(--profile-background-color-active-hover, white);
       }
       :host .profile:hover {
         background-color:var(--profile-background-color-hover, white);
         cursor: pointer;
       }
-      :host .profile.active {
-        background-color:var(--profile-background-color-active, red);
+      :host .profile > .icon-text {
+        font-size: 0.5em;
       }
-      :host .profile img {
-        height:var(--profile-img-height, auto); 
-      }    
       :host .menu {
-        background: #FFFFFF;
-        border-radius: 8px;
-        border: 1px solid  #F5F5F5;
+        background: var(--menu-background, white);
+        border-radius: var(--menu-border-radius, 0);
+        border: 1px solid  var(--menu-border-color, black);
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
         opacity: 0;
         padding: 0;
         position: absolute;
         right: 0;
-        top:3em;
+        top: var(--menu-top, 0);
         transition: visibility 100ms linear, opacity 100ms linear;
         visibility: hidden;
         width: max-content;
         z-index:9999;
       }
-      :host .menu.active {
+      :host(.active) .menu {
         opacity: 1;
         visibility: visible;
       }
@@ -151,30 +183,40 @@ export default class UserProfile extends Shadow() {
   /**
    * renders the html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
-    this.menuDiv = this.root.querySelector('.menu') || document.createElement('div')
-    this.menuDiv.setAttribute('class', 'menu')
-    const menuUL = document.createElement('ul')
-    const linkNodes = [...this.root.childNodes].filter(c => c.nodeName === 'A')
-    this.html = ''
-    linkNodes.forEach(node => {
-      const li = document.createElement('li')
-      li.innerHTML = node.outerHTML
-      menuUL.appendChild(li)
+    return this.fetchModules([
+      {
+        path: `${this.importMetaUrl}../iconMdx/IconMdx.js`,
+        name: 'a-icon-mdx'
+      }
+    ]).then(children => {
+      const icon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
+      icon.setAttribute('icon-name', this.classList.contains('logged-in') ? 'User' : 'LogIn')
+      icon.setAttribute('size', '1em')
+      const iconText = document.createElement('div')
+      if (this.hasAttribute('icon-text')) {
+        iconText.classList.add('icon-text')
+        iconText.textContent = this.getAttribute('icon-text')
+      }
+      this.menuDiv = this.root.querySelector('.menu') || document.createElement('div')
+      this.menuDiv.setAttribute('class', 'menu')
+      const menuUL = document.createElement('ul')
+      const linkNodes = [...this.root.childNodes].filter(c => c.nodeName === 'A')
+      this.html = ''
+      linkNodes.forEach(node => {
+        const li = document.createElement('li')
+        li.innerHTML = node.outerHTML
+        menuUL.appendChild(li)
+      })
+      this.menuDiv.appendChild(menuUL)
+      this.profileImgDiv = this.root.querySelector('.profile') || document.createElement('div')
+      this.profileImgDiv.setAttribute('class', 'profile')
+      this.profileImgDiv.appendChild(icon)
+      if (this.hasAttribute('icon-text')) this.profileImgDiv.appendChild(iconText)
+      this.html = this.profileImgDiv
+      this.html = this.menuDiv
     })
-    this.menuDiv.appendChild(menuUL)
-    this.profileImgDiv = this.root.querySelector('.profile') || document.createElement('div')
-    this.profileImgDiv.setAttribute('class', 'profile')
-    const profileImg = document.createElement('img')
-    profileImg.setAttribute('src', this.icon)
-    this.profileImgDiv.appendChild(profileImg)
-    this.html = this.profileImgDiv
-    this.html = this.menuDiv
-  }
-
-  get icon () {
-    return this.getAttribute('icon')
   }
 }

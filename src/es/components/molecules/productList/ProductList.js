@@ -10,27 +10,33 @@ export default class ProductList extends Shadow() {
    */
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+
+    // TODO: Replace with attribute value
     this.productNamespace = 'product-default-'
+
     this.answerEventNameListener = event => {
-      this.renderHTML('loading')
+      this.renderHTML('loading', null, null)
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
-        // remove the shitty html mui stuff
-        const products = productData.products.map(({ html, ...keepAttrs }) => keepAttrs)
-        this.renderHTML(products)
+        const { products, total_hits: totalHits } = productData[0]
+        const { orderItems } = productData[1].response
+        if (!products) throw new Error('No Products found')
+        this.renderHTML(products, totalHits, orderItems)
       }).catch(error => {
         this.html = ''
-        this.html = `Error: ${error}`
+        this.html = `${error}`
       })
     }
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
-    this.renderHTML('loading')
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
       {
+        detail: {
+          type: 'get-active-order-items'
+        },
         bubbles: true,
         cancelable: true,
         composed: true
@@ -59,12 +65,23 @@ export default class ProductList extends Shadow() {
       flex-direction:var(--flex-direction, row);
       justify-content: space-between;
       align-items: flex-start;
-      gap:1vw;
+      align-items: stretch;
+      gap:1em;
     }
+
     /* TODO: a-picture needs aspect ratio to lazy load after the fold */
     :host > * {
-      min-height: 10em;
-      min-width: 7em;
+      min-height: 12em;
+      min-width: 13vw;
+      flex:0 0 13vw;
+      width:13vw;
+    }
+
+    :host .filter {
+      align-self: center;
+      width: 100%;
+      flex: inherit;
+      min-height: 1em;
     }
     @media only screen and (max-width: _max-width_) {
       :host {}
@@ -96,11 +113,6 @@ export default class ProductList extends Shadow() {
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
-      case 'product-list-checkout-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./checkout-/checkout-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles])
       default:
         return this.fetchCSS(styles)
     }
@@ -112,7 +124,7 @@ export default class ProductList extends Shadow() {
    * @param {any[] | 'loading'} productData
    * @return {Promise<void>}
    */
-  renderHTML (productData) {
+  renderHTML (productData, totalHits, orderItems) {
     if (!productData || (productData !== 'loading' && (!Array.isArray(productData) || !productData.length))) {
       this.html = ''
       this.html = `${this.getAttribute('no-products-found-translation') || 'Leider haben wir keine Produkte zu diesem Suchbegriff gefunden.'}`
@@ -179,12 +191,16 @@ export default class ProductList extends Shadow() {
       return Promise.resolve()
     }
     return Promise.all([productData, fetchModules]).then(() => {
-      const products = productData.map((/** @type {any} */ product, i) => /* html */`
+      const products = productData.map((/** @type {any} */ product, i) => {
+        const activeOrderItemAmount = orderItems.find(item => item.mapiProductId === product.id)?.amount || '0'
+        return /* html */`
         <m-load-template-tag>
           <template>
-            <m-product detail-product-link=${this.getAttribute('detail-product-link') || ''} answer-event-name="update-product" namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}'></m-product>
+            <m-product detail-product-link=${this.getAttribute('detail-product-link') || ''}  namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}' active-order-item-amount=${activeOrderItemAmount}></m-product>
           </template>
-        </m-load-template-tag>`)
+        </m-load-template-tag>`
+      })
+      products.unshift(`<div class="filter">${totalHits} produits trouvés</div>`)
       this.html = products.join('')
     })
   }

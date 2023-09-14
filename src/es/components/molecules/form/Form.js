@@ -28,6 +28,7 @@ export default class Form extends Shadow() {
 
     this.setAttribute('role', 'form')
     // scroll to first error
+    // @ts-ignore
     this.clickListener = event => {
       setTimeout(() => {
         let fieldValidationError
@@ -117,12 +118,15 @@ export default class Form extends Shadow() {
     const button = new Button({ namespace: 'button-primary-' })
     button.hidden = true
     this.html = button
+    // @ts-ignore
     button.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
+    // @ts-ignore
     this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
     button.remove()
     const buttonSecondary = new Button({ namespace: 'button-secondary-' })
     buttonSecondary.hidden = true
     this.html = buttonSecondary
+    // @ts-ignore
     buttonSecondary.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
     // make browser default file button look nicer
     buttonSecondary.css = /* css */ `
@@ -171,6 +175,25 @@ export default class Form extends Shadow() {
         line-height: 1em;
         pointer-events: none;
       }
+      .validation-errors {
+        background-color: var(--m-orange-100);
+        color: var(--color-error);
+        padding: 1em;
+        margin-bottom: var(--content-spacing);
+      }
+      .validation-errors ul{
+        list-style: none;
+        text-align:center;
+        padding:0;
+        margin:0;
+      }
+      .form-radio-group label{
+        display: flex;
+      }
+      .form-radio-group label input{
+        margin: 0 0.25em 0 0;
+        cursor: pointer;
+      }
       legend {
         font-family: var(--font-family-bold, var(--font-family, inherit));
       }
@@ -209,7 +232,7 @@ export default class Form extends Shadow() {
       .umbraco-forms-indicator {
         color: var(--color-secondary);
       }
-      .umbraco-forms-field {
+      :host form > div, .umbraco-forms-field {
         padding-bottom: var(--content-spacing);
       }
       .umbraco-forms-field.checkbox .umbraco-forms-field-wrapper {
@@ -265,6 +288,9 @@ export default class Form extends Shadow() {
       }
       textarea[maxlength]{
         grid-area: 1/1 / 2 / span1;
+      }
+      input[type="submit"] {
+          padding: 0.75em 1.5em;
       }
       @media only screen and (max-width: _max-width_) {
         ${this.getInputFieldsWithText()} {
@@ -395,6 +421,7 @@ export default class Form extends Shadow() {
     return this.dependencyPromise || (this.dependencyPromise = new Promise(resolve => {
       // needs markdown
       if ('grecaptcha' in self === true) {
+        // @ts-ignore
         resolve(self.grecaptcha) // eslint-disable-line
       } else {
         const vendorsMainScript = document.createElement('script')
@@ -402,6 +429,7 @@ export default class Form extends Shadow() {
         vendorsMainScript.setAttribute('async', '')
         vendorsMainScript.setAttribute('src', `https://www.google.com/recaptcha/api.js?render=${this.getAttribute('site-key')}`)
         vendorsMainScript.onload = () => {
+          // @ts-ignore
           if ('grecaptcha' in self === true) resolve(self.grecaptcha) // eslint-disable-line
         }
         this.html = [vendorsMainScript]

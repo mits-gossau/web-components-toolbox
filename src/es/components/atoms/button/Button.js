@@ -55,10 +55,12 @@ export default class Button extends Hover() {
           // @ts-ignore
           propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
           if (accumulator instanceof Promise) accumulator = await accumulator
-          return accumulator[propertyName]
+          return accumulator
+            ? accumulator[propertyName]
+            : {} // error handling, in case the await on fetch does not resolve
         }, event.detail)
       }
-      if (tags) {
+      if (Array.isArray(tags)) {
         const tagsIncludesTag = this.hasAttribute('tag-search')
           ? tags.some(tag => tag.includes(this.getAttribute('tag-search')))
           : tags.includes(this.getAttribute('tag'))
@@ -192,12 +194,16 @@ export default class Button extends Hover() {
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
       }
+
       ${this.buttonTagName}:focus-visible {
         border-radius: var(--border-radius, 0.125em);
         outline-color: var(--outline-color, var(--background-color, var(--color, transparent)));
         outline-style: var(--outline-style, solid);
         outline-width: var(--outline-width, 0.125em);
         outline-offset: var(--outline-offset, 2px);
+      }
+      ${this.buttonTagName} > *:not(#label) {
+        flex-grow: 1;
       }
       :host a {
         box-sizing: border-box;
@@ -359,6 +365,7 @@ export default class Button extends Hover() {
    * @return {Promise<void>}
    */
   renderHTML () {
+    const alreadyIncludedNodes = Array.from(this.root.querySelectorAll(`${this.cssSelector} > :not(style)`))
     this.html = /* html */`
       <${this.buttonTagName} 
         ${this.buttonTagName === 'a'
@@ -368,6 +375,7 @@ export default class Button extends Hover() {
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </${this.buttonTagName}>
     `
+    alreadyIncludedNodes.forEach(node => this.button.appendChild(node))
     if (this.getAttribute('namespace') === 'button-download-') {
       this.button.prepend(this.downloadIcon)
     }
