@@ -40,7 +40,8 @@ self.Environment = {
           apiRemoveFromOrder: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/RemoveFromOrder',
           apiAddToOrder: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder',
           apiGetActiveOrderAndOrderItems: 'http://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems',
-          apiGetProductByCategory: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory'
+          apiGetProductByCategory: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory',
+          apiGetActiveOrderAndOrderItems: 'http://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems'
         }
       }
       default:

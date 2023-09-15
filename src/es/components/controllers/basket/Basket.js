@@ -77,7 +77,8 @@ export default class Basket extends Shadow() {
       method: 'GET',
       signal: this.requestAbortController.signal
     }
-    const endpoint = 'http://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems'
+    // @ts-ignore
+    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiGetActiveOrderAndOrderItems}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
