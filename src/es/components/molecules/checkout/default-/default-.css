@@ -1,9 +1,8 @@
 :host{
-    --checkout-default-additional-info-color:var(--m-gray-800, black);
+    --checkout-default-span-additional-info-color:var(--m-gray-800, black);
     --checkout-default-delete-article-button-background-color-hover: transparent;
     --checkout-default-delete-article-button-padding: 0;
     --checkout-default-item-border-bottom: var(--m-gray-300, white);
-    --checkout-default-table-margin:var(--content-spacing, 0) 0;
     --product-checkout-img-max-height:6vw;
     --product-checkout-img-max-width:6vw;
 }

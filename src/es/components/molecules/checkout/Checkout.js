@@ -56,8 +56,12 @@ export default class Checkout extends Shadow() {
       :host .product-item {
         border-bottom: var(--product-item-border-bottom, 1px) solid var(--item-border-bottom, black);
         display: var(--product-item-display, flex);
-        padding: var(--product-item-padding, 1em 0);
+        padding: var(--product-item-padding, 2em 0);
         width: var(--product-item-width, 100%);
+      }
+
+      :host .product-item:last-of-type {
+        padding-bottom:var(--product-item-last-padding-bottom, 4em);
       }
 
       :host .product-data {
@@ -214,7 +218,7 @@ export default class Checkout extends Shadow() {
                     <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket">
                     <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+"></a-button>
                   </m-basket-control>
-                  <div>${product.productDetail.price}</div>
+                  <div class="bold">${product.productDetail.price}</div>
                 </div>
              </div>
              </div>` 
