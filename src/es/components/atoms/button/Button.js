@@ -232,7 +232,8 @@ export default class Button extends Hover() {
       }
       #label {
         display: inline-block;
-        padding:var(--label-padding, 0);
+        padding: var(--label-padding, 0);
+        margin: var(--label-margin, 0);
         position: relative;
         text-align: var(--label-text-align, center);
       }
