@@ -1,5 +1,4 @@
 // @ts-check
-
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global CustomEvent */
@@ -48,92 +47,81 @@ export default class Checkout extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
       :host {
-        align-items: flex-start;
-        display:flex;
-        flex-direction: column;
-        gap:1em; 
+        align-items: var(--flex-start);
+        display: var(--display, flex);
+        flex-direction:var(--flex-direction, column);
+        gap: var(--gap, 1em);
       }
-      
+
       :host .product-item {
-        border-bottom:1px solid var(--item-border-bottom, black); 
-        display:flex;
-        padding:1em 0;
-        width:100%;
+        border-bottom: var(--product-item-border-bottom, 1px) solid var(--item-border-bottom, black);
+        display: var(--product-item-display, flex);
+        padding: var(--product-item-padding, 1em 0);
+        width: var(--product-item-width, 100%);
       }
 
       :host .product-data {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width:100%;
+        display: var(--product-data-display, flex);
+        flex-direction: var(--product-data-flex-direction, column);
+        justify-content: var(--product-data-justify-content, space-between);
+        width: var(--product-data-width, 100%);
       }
 
       :host .product-data  span {
-        display:block;
+        display: var(--product-data-span-display, block);
+        line-height: var(--product-data-span-line-height, 1.75em);
       }
 
       :host span.name {
-        font-size:1.25em;
+        font-size: var(--span-name-font-size, 1.25em);
       }
 
       :host span.additional-info{
-        font-size:0.75em;
-        color:var(--additional-info-color, black);
+        color: var(--span-additional-info-color, black);
+        font-size: var(--span-additional-info-font-size, 0.75em);
       }
 
       :host .product-image {
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        margin: 0 1em;
-        min-width: 6em;
+        align-items: var(--product-image-align-items, center);
+        display: var(--product-image-display, flex);
+        flex-direction: var(--product-image-flex-direction, column);
+        margin: var(--product-image-margin, 0 1em);
+        min-width: var(--product-image-min-width, 6em);
       }
 
       :host .product-info {
-        display:flex;
-        justify-content: space-between;
-        padding:0 0 1em 0;
+        display: var(--product-info-display, flex);
+        justify-content: var(--product-info-justify-content, space-between);
+        padding: var(--product-info-padding, 0 0 1em 0);
       }
 
       :host .product-footer {
-        align-items: center;
-        display:flex;
-        justify-content: space-between;
+        align-items: var(--product-footer-align-items, center);
+        display: var(--product-footer-display, flex);
+        justify-content: var(--product-footer-justify-content, space-between);
       }
 
-      /*:host .basket {
-        display:flex;
-        align-items: center;
-      }*/
+      :host table {
+        border-top: 3px solid var(--table-border-bottom-color, #E0E0E0);
+      }
 
-      /*:host .quantity {
-        align-items: center;
-        border-radius: 4px;
-        border: 1px solid var(--quantity-border, black);
-        display: flex;
-        font-size: 14px;
-        height: 24px;
-        justify-content: center;
-        padding: 4px 24px;
-        width: 24px;
-        margin:1em;
-      }*/
+      :host table tr {
+        border-bottom: 1px solid var(--table-tr-border-bottom-color, #E0E0E0);
+      }
 
-      /*:host #quantity {
-        align-items: center;
-        background-color: var(--input-quantity-background-color, transparent);
-        border-radius: var(--input-quantity-border-radius, 0.5em);
-        border: 1px solid var(--input-quantity-border, red);
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        font-family: var(--input-quantity-font-family, inherit);
-        font-size: var(--input-quantity-font-size, inherit);
-        justify-content: center;
-        margin: 0 0.5em;
-        padding: 0.5em;
-        width: 4em;
-      }*/
+      :host table tr.important {
+       border-bottom: 3px solid var(--table-tr-important-border-bottom-color, #E0E0E0);
+      }
+
+      :host table tr.with-background {
+        background-color: var(--tr-with-background-background-color, #F5F5F5);
+      }
+
+      :host table td {
+        text-align: var(--td-text-align, right);
+        padding: var(--td-padding, 0.5em);
+      }
+
     @media only screen and (max-width: _max-width_) {
       :host {}
     }
@@ -203,7 +191,6 @@ export default class Checkout extends Shadow() {
     return Promise.all([productData, fetchModules]).then(() => {
       // @ts-ignore
       const products = productData.orderItems.map(product => {
-        console.log(product.productDetail)
         if (product.productDetail) {
           return /* html */ `
             <div class="product-item">
@@ -214,7 +201,7 @@ export default class Checkout extends Shadow() {
                 <div class="product-info">
                   <div>
                     <span>${product.productDetail.price}</span>
-                    <span class="name">${product.productDetail.brand}<br/>${product.productDetail.name}</span>
+                    <span class="name">${product.productDetail.name}</span>
                     <span class="additional-info">350 g 6.86/kg</span>
                   </div>
                   <div>
@@ -223,19 +210,58 @@ export default class Checkout extends Shadow() {
                 </div>
                 <div class="product-footer">
                   <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket">
-                    <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag="464831100000" label="-"></a-button>
-                    <input id="464831100000" name="quantity" type="number" value="0" min=0 max=9999 request-event-name="add-basket">
-                    <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag="464831100000" label="+"></a-button>
+                    <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-"></a-button>
+                    <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket">
+                    <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+"></a-button>
                   </m-basket-control>
                   <div>${product.productDetail.price}</div>
                 </div>
              </div>
-            </div>`
+             </div>` 
         } else {
           return null
         }
       })
       this.html = products.join('')
+      this.html = this.totalAndTaxes(productData)
     })
+  }
+
+  /**
+   * Takes in a data object and returns an HTML table with various totals and taxes calculated from the data.
+   * @param {object} data - The `data` parameter is an object that contains the following properties:
+   * @returns {string} an HTML table with the following information:
+   */
+  totalAndTaxes(data){
+    // TODO Get values from translation-attribute
+    const { totalTtc, totalHt, totalTva1, totalTva2 } = data;
+    return /* html */ `
+      <table>
+        <tr class="bold">
+          <td>Total TTC</td>
+          <td>${totalTtc}</td>
+        </tr>
+        <tr>
+          <td>Montant Rabais TTC (XX %)</td>
+          <td>${totalTtc}</td>
+        </tr>
+        <tr>
+          <td>Total TVA 2.5%</td>
+          <td>${totalTva1}</td>
+        </tr>
+        <tr>
+          <td>Total TVA 7.7%</td>
+          <td>${totalTva2}</td>
+        </tr>
+        <tr class="bold important">
+          <td>Total HT avec rabais</td>
+          <td>${totalHt}</td>
+        </tr>
+        <tr class="bold important with-background">
+          <td>Total TTC avec rabais</td>
+          <td>${totalTtc}</td>
+        </tr>
+      </table>
+    `
   }
 }
