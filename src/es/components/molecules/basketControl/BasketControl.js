@@ -84,31 +84,31 @@ export default class BasketControl extends Shadow() {
         container: productList / inline-size;
       }
 
-      @container productList (max-width: 150px) {
-        a-button::part(button){
-          padding: 0;
-          height: 1.2em;
-          width: 1.2em;
+      @container productList (max-width: 10em) {
+        a-button{
+          --button-padding: 0;
+          --button-height: 1.2em;
+          --button-width: 1.2em;
         }
 
-        a-button::part(label){
-          padding: 0;
-          margin-top: -3px;
+        a-button {
+          --button-label-padding: 0;
+          --button-label-margin: -3px 0 0 0;
         }
 
         :host .basket-control-input {
-          height: 1.6em;
-          font-size: 0.8em;
+          height: 1.9em;
+          font-size: 0.85em;
         }
       }
 
-      @container productList (max-width: 110px) {
-        a-button#remove::part(button) {
-          margin-left:-0.85em;
+      @container productList (max-width: 7em) {
+        a-button#remove{
+          --button-margin: 0 0 0 -0.85em;
         }
 
-        a-button#add::part(button) {
-          margin-right:-0.85em;
+        a-button#add{
+          --button-margin: 0 -0.85em 0 0;
         }
 
         :host .basket-control-input {
