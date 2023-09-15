@@ -65,8 +65,10 @@ export default class Product extends Shadow() {
     const category = this.getCategory()
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null) {
-      const endpointGetProductByCategory = this.getAttribute('endpoint-get-product-by-category') + `?category=${category}`
-      const endpointActiveOrderEndpoint = this.getAttribute('endpoint-get-active-order-and-order-items') + `?category=${category}`
+      // @ts-ignore
+      const endpointGetProductByCategory = `${self.Environment.getApiBaseUrl('migrospro').apiGetProductByCategory}?category=${category}`
+      // @ts-ignore
+      const endpointActiveOrderEndpoint = `${self.Environment.getApiBaseUrl('migrospro').apiGetActiveOrderAndOrderItems}`
 
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
         detail: {
