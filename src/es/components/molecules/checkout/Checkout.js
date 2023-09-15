@@ -183,19 +183,11 @@ export default class Checkout extends Shadow() {
       }
     ])
 
-    // const escapeForHtml = (htmlString) => {
-    //   return htmlString
-    //     .replaceAll(/&/g, '&amp;')
-    //     .replaceAll(/</g, '&lt;')
-    //     .replaceAll(/>/g, '&gt;')
-    //     .replaceAll(/"/g, '&quot;')
-    //     .replaceAll(/'/g, '&#39;')
-    // }
-
     return Promise.all([productData, fetchModules]).then(() => {
       // @ts-ignore
       const products = productData.orderItems.map(product => {
         if (product.productDetail) {
+          const isWeighable = product.productDetail.isWeighable ? product.productDetail.estimatedPieceWeight : ''
           return /* html */ `
             <div class="product-item">
               <div class="product-image">
@@ -206,7 +198,7 @@ export default class Checkout extends Shadow() {
                   <div>
                     <span>${product.productDetail.price}</span>
                     <span class="name">${product.productDetail.name}</span>
-                    <span class="additional-info">350 g 6.86/kg</span>
+                    <span class="additional-info">${isWeighable}</span>
                   </div>
                   <div>
                     <a-button namespace="checkout-default-delete-article-button-"  request-event-name="remove-basket" tag="1"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
@@ -218,10 +210,10 @@ export default class Checkout extends Shadow() {
                     <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket">
                     <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+"></a-button>
                   </m-basket-control>
-                  <div class="bold">${product.productDetail.price}</div>
+                  <div class="bold">${product.productTotal}</div>
                 </div>
              </div>
-             </div>` 
+             </div>`
         } else {
           return null
         }
@@ -236,9 +228,9 @@ export default class Checkout extends Shadow() {
    * @param {object} data - The `data` parameter is an object that contains the following properties:
    * @returns {string} an HTML table with the following information:
    */
-  totalAndTaxes(data){
+  totalAndTaxes (data) {
     // TODO Get values from translation-attribute
-    const { totalTtc, totalHt, totalTva1, totalTva2 } = data;
+    const { totalTtc, totalHt, totalTva1, totalTva2 } = data
     return /* html */ `
       <table>
         <tr class="bold">
