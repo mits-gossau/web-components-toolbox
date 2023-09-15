@@ -165,17 +165,17 @@ export default class Product extends Shadow() {
 
     const productCard = document.createElement('div')
 
-    const { 
-      id, 
-      image, 
-      accessible_information_text: accessibleInformationText, 
-      price, 
-      brand, 
-      name, unit_price: 
-      unitPrice, 
-      isWeighable, 
-      estimated_piece_weight: estimatedPieceWeight, 
-      slug 
+    const {
+      id,
+      image,
+      accessible_information_text: accessibleInformationText,
+      price,
+      brand,
+      name, unit_price:
+      unitPrice,
+      isWeighable,
+      estimated_piece_weight: estimatedPieceWeight,
+      slug
     } = this.productData
 
     productCard.innerHTML = /* html */ `

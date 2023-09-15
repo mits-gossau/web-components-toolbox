@@ -19,7 +19,7 @@ export default class ProductList extends Shadow() {
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
         const { products, total_hits: totalHits } = productData[0]
-        const { orderItems } = productData && productData[1]?.response || {}
+        const { orderItems } = (productData && productData[1]?.response) || {}
         if (!products || !orderItems) throw new Error('No Products found')
         this.renderHTML(products, totalHits, orderItems)
       }).catch(error => {
@@ -122,8 +122,8 @@ export default class ProductList extends Shadow() {
    * renderHTML
    * @param {string | any[]} productData - An array of product data objects.
    * @param {null} totalHits - The total number of products found in the search.
-   * @param {any[] | null} orderItems - The `orderItems` parameter is an array that contains information about the 
-   * items that have been ordered. Each item in the array is an object with properties such as 
+   * @param {any[] | null} orderItems - The `orderItems` parameter is an array that contains information about the
+   * items that have been ordered. Each item in the array is an object with properties such as
    * `mapiProductId` (the ID of the product) and `amount` (the quantity of the product ordered).
    * @returns {Promise<void>} The function `renderHTML` returns a Promise.
    */
@@ -222,7 +222,7 @@ export default class ProductList extends Shadow() {
     })())
   }
 
-  get totalArticlesText(){
+  get totalArticlesText () {
     return this.getAttribute('total-articles-text') || ''
   }
 }

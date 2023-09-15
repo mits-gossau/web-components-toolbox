@@ -214,5 +214,4 @@ export default class BasketControl extends Shadow() {
   get quantityField () {
     return this.root.querySelector('input')
   }
-
 }

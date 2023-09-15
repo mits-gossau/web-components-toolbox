@@ -24,18 +24,46 @@ export default class Basket extends Shadow() {
     this.addAbortController = null
     this.removeAbortController = null
     this.requestAbortController = null
+    this.requestActiveOrderAbortController = null
   }
 
   connectedCallback () {
+    this.addEventListener(this.getAttribute('request-active-order') || 'request-active-order', this.requestActiveOrderListener)
     this.addEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
     this.addEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.addEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
   }
 
   disconnectedCallback () {
+    this.removeEventListener(this.getAttribute('request-active-order') || 'request-active-order', this.requestActiveOrderListener)
     this.removeEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
     this.removeEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.removeEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
+  }
+
+  /**
+   * Fetch basket
+   * @param {{ detail: any; }} event
+   */
+  requestActiveOrderListener = async (event) => {
+    if (this.requestActiveOrderAbortController) this.requestActiveOrderAbortController.abort()
+    this.requestActiveOrderAbortController = new AbortController()
+    const fetchOptions = {
+      method: 'GET',
+      signal: this.requestActiveOrderAbortController.signal
+    }
+    const endpoint = 'http://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData'
+    this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
+      detail: {
+        fetch: fetch(endpoint, fetchOptions).then(async response => {
+          if (response.status >= 200 && response.status <= 299) return await response.json()
+          throw new Error(response.statusText)
+        })
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
   }
 
   /**
