@@ -22,10 +22,7 @@ export default class BasketControl extends Shadow() {
         if (currentProduct) {
           this.setVisibilityAndValue(currentProduct.amount, this.quantityField)
         }
-      }).catch(error => {
-        this.html = ''
-        this.html = `${error}`
-      })
+      }).catch(error => console.warn(error))
     }
 
     this.clickListener = event => {
@@ -117,8 +114,6 @@ export default class BasketControl extends Shadow() {
         }
       }
 
-
-
       :host(.default) {
         justify-content:space-between;
       }
@@ -143,10 +138,11 @@ export default class BasketControl extends Shadow() {
         text-align:var(--quantity-text-align, center);
         width: var(--quantity-margin, 4em);
       }
-      /* https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
+
       input[type=number] {
         appearance: textfield;
       }
+
       /* Chrome, Safari, Edge, Opera */
       input::-webkit-outer-spin-button,
       input::-webkit-inner-spin-button {
@@ -202,6 +198,11 @@ export default class BasketControl extends Shadow() {
     }
   }
 
+  /**
+   * Sets the value of an input field and adds or removes a class based on the value.
+   * @param {string} value - The value parameter is the value that will be set to the input field.
+   * @param {HTMLInputElement} inputField - The inputField parameter is a reference to the quantity HTML input element.
+   */
   setVisibilityAndValue (value, inputField) {
     inputField.value = value
     if (value === '0') {
