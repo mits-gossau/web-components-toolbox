@@ -72,9 +72,7 @@ export default class ProductList extends Shadow() {
     /* TODO: a-picture needs aspect ratio to lazy load after the fold */
     :host > * {
       min-height: 12em;
-      min-width: 13vw;
-      flex:0 0 13vw;
-      width:13vw;
+      flex: 1 1 12em;
     }
 
     :host .filter {
