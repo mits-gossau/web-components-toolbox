@@ -468,7 +468,12 @@ export default class Navigation extends Mutation() {
         }
         /* fix: mobile url address bar covers the footer part of the navigation */
         :host > nav {
-          height: calc(100% + 300px)
+          height: calc(100% + 300px);
+        }
+        @supports(height: 100dvh) {
+          :host > nav {
+            height: 100dvh;
+          }
         }
         :host > nav {
           background-color: var(--background-color, black);
