@@ -36,6 +36,8 @@ export default class Tabs extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
         :host {
+            --background-color: var(--m-orange-300);
+            --color-active: var(--m-orange-600);
             font-family: var(--font-family);
         }
         :host .tab-navigation {
