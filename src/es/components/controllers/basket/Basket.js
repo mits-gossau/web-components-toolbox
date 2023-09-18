@@ -106,7 +106,7 @@ export default class Basket extends Shadow() {
     }
     // id from 'event.detail.tags': returned by default button behaviour
     // id from 'event.detail.id'  : returned from quantity field input event
-    const productId = event.detail.tags && (event.detail.tags[0] || event.detail.id)
+    const productId = (event.detail.tags && event.detail.tags[0]) || event.detail.id
 
     // amount returned from quantity field input value
     const amount = event.detail.amount ? `&amount=${event.detail.amount}` : ''
