@@ -216,7 +216,7 @@ export default class Input extends Shadow() {
         border-color: var(--search-input-border-color, var(--m-gray-300));
         padding: var(--search-input-padding, 0.75em var(--content-spacing));
         padding-right: max(2.5em, 35px);
-        border-radius: var(--border-radius, 0.5em);
+        border-radius: var(--search-input-border-radius, var(--border-radius, 0.5em));
         width: var(--search-input-width-big, var(--search-input-width, 100%));
         min-width: 9.7em;
       }
@@ -291,7 +291,7 @@ export default class Input extends Shadow() {
       @media only screen and (max-width: _max-width_) {
         :host([search]) input {
           padding: var(--search-input-padding-mobile, var(--search-input-padding, 0.75em var(--content-spacing-mobile)));
-          border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
+          border-radius: var(--search-input-border-radius-mobile, var(--search-input-border-radius, var(--border-radius-mobile, var(--border-radius, 0.571em))));
         }
         :host([search]) button {
           right: var(--content-spacing-mobile);

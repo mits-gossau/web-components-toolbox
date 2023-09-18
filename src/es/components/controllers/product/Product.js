@@ -26,7 +26,11 @@ export default class Product extends Shadow() {
     }, ...args)
 
     this.abortController = null
-    this.subCategoryList = Array.from(document.querySelectorAll('[data-id]'))
+
+    // TODO - Refactor
+    // show/hide o-wrapper, based on the data-id tag
+    // example: src/es/components/pages/ProductList.html
+    this.subCategoryList = Array.from(this.root.querySelectorAll('[data-id]'))
   }
 
   connectedCallback () {
@@ -58,26 +62,38 @@ export default class Product extends Shadow() {
       method: 'GET',
       signal: this.abortController.signal
     }
-    const limit = 100
     const category = this.getCategory()
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null) {
-      const endpoint = this.getAttribute('endpoint') + `?category=${category}&limit=${limit}`
+      // @ts-ignore
+      const endpointGetProductByCategory = `${self.Environment.getApiBaseUrl('migrospro').apiGetProductByCategory}?category=${category}`
+      // @ts-ignore
+      const endpointActiveOrderEndpoint = `${self.Environment.getApiBaseUrl('migrospro').apiGetActiveOrderAndOrderItems}`
+
       this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
         detail: {
-          fetch: fetch(endpoint, fetchOptions).then(async response => {
-            if (response.status >= 200 && response.status <= 299) {
-              const data = await response.json()
-              if (event.detail && event.detail.tags && data && data.tags && event.detail.tags !== data.tags) {
-                this.setCategory(data.tags[0], true)
+          fetch: Promise.all([
+            fetch(endpointGetProductByCategory, fetchOptions).then(async response => {
+              if (response.status >= 200 && response.status <= 299) {
+                const data = await response.json()
+                if (event.detail && event.detail.tags && data && data.tags && event.detail.tags !== data.tags) {
+                  this.setCategory(data.tags[0], true)
+                }
+                return {
+                  tag: [category],
+                  ...data
+                }
               }
-              return {
-                tag: [category],
-                ...data
+              throw new Error(response.statusText)
+              // @ts-ignore
+            }).catch(error => console.error(`fetch ${endpointGetProductByCategory} failed! error: ${error}`) || `fetch ${endpointGetProductByCategory} failed!`),
+            fetch(endpointActiveOrderEndpoint, fetchOptions).then(async response => {
+              if (response.status >= 200 && response.status <= 299) {
+                return await response.json()
               }
-            }
-            throw new Error(response.statusText)
-          })
+              // @ts-ignore
+            }).catch(error => console.error(`fetch ${endpointActiveOrderEndpoint} failed! error: ${error}`) || `fetch ${endpointActiveOrderEndpoint} failed!`)
+          ])
         },
         bubbles: true,
         cancelable: true,

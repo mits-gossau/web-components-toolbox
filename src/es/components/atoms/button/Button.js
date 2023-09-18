@@ -20,6 +20,7 @@ export default class Button extends Hover() {
     // @ts-ignore
     super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
 
+    this.removeAttribute('tabindex')
     // get the original innerHTML of the component, so that when it rerenders as an a-tag it doesn't loose its content
     let button
     // in case there is already a button, grab the buttons innerHTML, since renderHTML is going to create a new button resp. a-tag instead of the button
@@ -54,10 +55,12 @@ export default class Button extends Hover() {
           // @ts-ignore
           propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
           if (accumulator instanceof Promise) accumulator = await accumulator
-          return accumulator[propertyName]
+          return accumulator
+            ? accumulator[propertyName]
+            : {} // error handling, in case the await on fetch does not resolve
         }, event.detail)
       }
-      if (tags) {
+      if (Array.isArray(tags)) {
         const tagsIncludesTag = this.hasAttribute('tag-search')
           ? tags.some(tag => tag.includes(this.getAttribute('tag-search')))
           : tags.includes(this.getAttribute('tag'))
@@ -167,7 +170,7 @@ export default class Button extends Hover() {
         display: inline-block;
       }
       ${this.buttonTagName} {
-        align-items: center;
+        align-items: var(--align-items, center);
         background-color: var(--background-color, transparent);
         border-radius: var(--border-radius, 0.5em);
         border: var(--border-width, 0px) solid var(--border-color, transparent);
@@ -177,6 +180,7 @@ export default class Button extends Hover() {
         font-family: var(--font-family, unset);
         font-size: var(--font-size, 1em);
         font-weight: var(--font-weight, 400);
+        height: var(--height, auto);
         justify-content: var(--justify-content, center);
         letter-spacing: var(--letter-spacing, normal);
         line-height: var(--line-height, 1.5em);
@@ -190,6 +194,13 @@ export default class Button extends Hover() {
         touch-action: manipulation;
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
+      }
+      ${this.buttonTagName}:focus-visible {
+        border-radius: var(--outline-border-radius, 0.125em);
+        outline-color: var(--outline-color, var(--background-color, var(--color, transparent)));
+        outline-style: var(--outline-style, solid);
+        outline-width: var(--outline-width, 0.125em);
+        outline-offset: var(--outline-offset, 2px);
       }
       ${this.buttonTagName} > *:not(#label) {
         flex-grow: 1;
@@ -221,7 +232,8 @@ export default class Button extends Hover() {
       }
       #label {
         display: inline-block;
-        padding:var(--label-padding, 0);
+        padding: var(--label-padding, 0);
+        margin: var(--label-margin, 0);
         position: relative;
         text-align: var(--label-text-align, center);
       }
@@ -333,6 +345,33 @@ export default class Button extends Hover() {
         {
           // @ts-ignore
           path: `${this.importMetaUrl}./category-/category-.css`,
+          namespace: false,
+          replaces
+        }])
+      case 'button-category-teaser-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./primary-/primary-.css`,
+          namespace: false,
+          replaces: replaces.concat([{
+            pattern: '--button-primary-',
+            flags: 'g',
+            replacement: '--button-category-teaser-'
+          }])
+        },
+        {
+          // @ts-ignore
+          path: `${this.importMetaUrl}./category-/category-.css`,
+          namespace: false,
+          replaces: replaces.concat([{
+            pattern: '--button-category-',
+            flags: 'g',
+            replacement: '--button-category-teaser-'
+          }])
+        },
+        {
+          // @ts-ignore
+          path: `${this.importMetaUrl}./category-teaser-/category-teaser-.css`,
           namespace: false,
           replaces
         }])

@@ -10,14 +10,18 @@ export default class ProductList extends Shadow() {
    */
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+
+    // TODO: Replace with attribute value
     this.productNamespace = 'product-default-'
+
     this.answerEventNameListener = event => {
-      this.renderHTML('loading', null)
+      this.renderHTML('loading', null, null)
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
-        const { products, total_hits: totalHits } = productData
-        if (!products) throw new Error('No Products found')
-        this.renderHTML(products, totalHits)
+        const { products, total_hits: totalHits } = productData[0]
+        const { orderItems } = (productData && productData[1]?.response) || {}
+        if (!products || !orderItems) throw new Error('No Products found')
+        this.renderHTML(products, totalHits, orderItems)
       }).catch(error => {
         this.html = ''
         this.html = `${error}`
@@ -30,6 +34,9 @@ export default class ProductList extends Shadow() {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
       {
+        detail: {
+          type: 'get-active-order-items'
+        },
         bubbles: true,
         cancelable: true,
         composed: true
@@ -66,7 +73,7 @@ export default class ProductList extends Shadow() {
     :host > * {
       min-height: 12em;
       min-width: 13vw;
-      flex:1 0 13vw;
+      flex:0 0 13vw;
       width:13vw;
     }
 
@@ -113,11 +120,14 @@ export default class ProductList extends Shadow() {
 
   /**
    * renderHTML
-   *
-   * @param {any[] | 'loading'} productData
-   * @return {Promise<void>}
+   * @param {string | any[]} productData - An array of product data objects.
+   * @param {null} totalHits - The total number of products found in the search.
+   * @param {any[] | null} orderItems - The `orderItems` parameter is an array that contains information about the
+   * items that have been ordered. Each item in the array is an object with properties such as
+   * `mapiProductId` (the ID of the product) and `amount` (the quantity of the product ordered).
+   * @returns {Promise<void>} The function `renderHTML` returns a Promise.
    */
-  renderHTML (productData, totalHits) {
+  async renderHTML (productData, totalHits, orderItems) {
     if (!productData || (productData !== 'loading' && (!Array.isArray(productData) || !productData.length))) {
       this.html = ''
       this.html = `${this.getAttribute('no-products-found-translation') || 'Leider haben wir keine Produkte zu diesem Suchbegriff gefunden.'}`
@@ -184,13 +194,16 @@ export default class ProductList extends Shadow() {
       return Promise.resolve()
     }
     return Promise.all([productData, fetchModules]).then(() => {
-      const products = productData.map((/** @type {any} */ product, i) => /* html */`
+      const products = productData.map((/** @type {any} */ product) => {
+        const activeOrderItemAmount = orderItems?.find(item => item.mapiProductId === product.id)?.amount || '0'
+        return /* html */`
         <m-load-template-tag>
           <template>
-            <m-product detail-product-link=${this.getAttribute('detail-product-link') || ''} answer-event-name="update-product" namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}'></m-product>
+            <m-product detail-product-link=${this.getAttribute('detail-product-link') || ''}  namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}' active-order-item-amount=${activeOrderItemAmount}></m-product>
           </template>
-        </m-load-template-tag>`)
-      products.unshift(`<div class="filter">${totalHits} produits trouvés</div>`)
+        </m-load-template-tag>`
+      })
+      products.unshift(`<div class="filter">${totalHits} ${this.totalArticlesText}</div>`)
       this.html = products.join('')
     })
   }
@@ -207,5 +220,9 @@ export default class ProductList extends Shadow() {
       style.setAttribute('protected', 'true')
       return style
     })())
+  }
+
+  get totalArticlesText () {
+    return this.getAttribute('total-articles-text') || ''
   }
 }

@@ -4,10 +4,11 @@
   --button-quaternary-background-color: transparent;
   --button-quaternary-border-color-hover: transparent;
   --button-quaternary-border-color: transparent;
-  --button-quaternary-border-width: 2px;
+  --button-quaternary-border-width: var(--button-quaternary-border-width-custom, 2px);
   --button-quaternary-color-disabled:var(--button-quaternary-color-disabled-custom, var(--m-gray-300));
   --button-quaternary-color-hover: var(--button-quaternary-color-hover-custom, var(--m-gray-600));
   --button-quaternary-color: var(--button-quaternary-color-custom, var(--m-gray-600));
-  --button-quaternary-font-family: var(--font-family);
-  --button-quaternary-padding: 0.75em;
+  --button-quaternary-font-family: var(--button-quaternary-font-family-custom, var(--font-family));
+  --button-quaternary-padding: var(--button-quaternary-padding-custom, 0.75em);
+  --button-quaternary-transition: var(--button-quaternary-transition-custom, var(--transition));
 }
