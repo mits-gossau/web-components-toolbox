@@ -189,8 +189,8 @@ export default class BasketControl extends Shadow() {
     inputField.value = value
     if (value === '0') {
       this.classList.add('closed')
-    } else if (value === this.disableMinimum){
-      this.removeButton.setAttribute('disabled', '')     
+    } else if (value === this.disableMinimum) {
+      this.removeButton.setAttribute('disabled', '')
     } else {
       this.classList.remove('closed')
       this.removeButton.removeAttribute('disabled')
@@ -201,11 +201,11 @@ export default class BasketControl extends Shadow() {
     return this.root.querySelector('input')
   }
 
-  get disableMinimum (){
+  get disableMinimum () {
     return this.getAttribute('disable-minimum') || 0
   }
 
-  get removeButton(){
+  get removeButton () {
     return this.root.querySelector('#remove')
   }
 }

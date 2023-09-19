@@ -307,8 +307,7 @@ export default class Product extends Shadow() {
     return name.slice(index + brand.length).trim()
   }
 
-  get tooltipBalanceText() {
+  get tooltipBalanceText () {
     return this.getAttribute('tooltip-text-balance') || ''
   }
-
 }

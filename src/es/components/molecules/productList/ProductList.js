@@ -223,7 +223,7 @@ export default class ProductList extends Shadow() {
     return this.getAttribute('total-articles-text') || ''
   }
 
-  get tooltipBalanceText() {
+  get tooltipBalanceText () {
     return this.getAttribute('tooltip-translation-balance') || ''
   }
 }
