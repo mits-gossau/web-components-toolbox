@@ -24,7 +24,7 @@ export default class ProductList extends Shadow() {
         this.renderHTML(products, totalHits, orderItems)
       }).catch(error => {
         this.html = ''
-        this.html = `${error}`
+        this.html = `<span style="color:var(--color-error);">${error}</span>`
       })
     }
   }
