@@ -54,7 +54,7 @@ export default class Tooltip extends Shadow() {
     }
     :host .tooltip {
       --width: ${this.tooltipWidth}em;
-      --half: ${0 - this.tooltipWidth/2}em;
+      --half: ${0 - this.tooltipWidth / 2}em;
       display: var(--tooltip-display, inline-block);
       position: var(--tooltip-position, relative);
     }
@@ -88,6 +88,10 @@ export default class Tooltip extends Shadow() {
     }
     :host .tooltip-text-icon {
       margin-bottom: var(--tooltip-text-icon-margin-bottom, 0.4em);
+    }
+    :host .icon-img {
+      width: var(--icon-img-width, 100%);
+      height: var(--icon-img-height, 1.5em);
     }
     @media only screen and (max-width: _max-width_) {
       :host {}
@@ -134,10 +138,10 @@ export default class Tooltip extends Shadow() {
 
   /**
    * Returns the width attribute of the root element as a number, or 10 if the attribute is not present or not a valid number.
-   * @returns The value of the `width` attribute of the element as a number. 
+   * @returns The value of the `width` attribute of the element as a number.
    * If the `width` attribute is not present or cannot be converted to a number, it will return 10
    */
-  get tooltipWidth(){
+  get tooltipWidth () {
     return Number(this.getAttribute('width')) || 10
   }
 }

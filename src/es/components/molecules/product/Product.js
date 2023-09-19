@@ -112,10 +112,6 @@ export default class Product extends Shadow() {
         line-height: var(--estimated-piece-weight-line-height, 1.5em);
       }
 
-      :host .footer-label-data > img {
-        height: var(--footer-label-data-img-height, 1.5em);
-      }
-
       @media only screen and (max-width: _max-width_) {
         :host {}
       }
@@ -160,6 +156,10 @@ export default class Product extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../molecules/basketControl/BasketControl.js`,
         name: 'm-basket-control'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/tooltip/Tooltip.js`,
+        name: 'a-tooltip'
       }
     ])
 
@@ -255,17 +255,20 @@ export default class Product extends Shadow() {
   }
 
   /**
-   * The function `createFooterLabels` returns a string of HTML code that includes footer icons, based on
-   * the value of the `isWeighable` parameter.
-   * @param {string} isWeighable - A boolean value indicating whether the item is weighable or not.
-   * @returns an HTML string that includes a div element with the class "footer-label-data" and the
-   * result of calling the "createFooterIcons" function.
+   * Returns a string of HTML code for a tooltip that explains the concept of a weighable product.
+   * @param {boolean} isWeighable - A boolean value indicating whether the product is weighable or not.
+   * @returns a string of HTML code.
    */
   createFooterLabels (isWeighable) {
     if (!isWeighable) return ''
     return /* html */ `
       <div class="footer-label-data">
-        ${this.createFooterIcons()}
+        <a-tooltip>
+          <div class="tooltip">
+            ${this.createFooterIcons()}
+            <span class="tooltip-text tooltip-text-icon">Product mit variablem Gewicht: beim Packen wiegen wir es und verrechnen dir den genauen Preis</span>
+          </div>
+        </a-tooltip>
       </div>`
   }
 
@@ -275,7 +278,7 @@ export default class Product extends Shadow() {
    * "../../src/img/migrospro/label-balance.svg" and an empty alt attribute.
    */
   createFooterIcons () {
-    return `<img src="${this.importMetaUrl}./../../../../img/migrospro/label-balance.svg" alt="" />`
+    return `<img class="icon-img" src="${this.importMetaUrl}./../../../../img/migrospro/label-balance.svg" alt="" />`
   }
 
   /**
