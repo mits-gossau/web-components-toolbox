@@ -68,15 +68,12 @@ export default class ProductList extends Shadow() {
       align-items: stretch;
       gap:1em;
     }
-
-    /* TODO: a-picture needs aspect ratio to lazy load after the fold */
-    :host > * {
+    :host > m-load-template-tag {
       min-height: 12em;
       min-width: 13vw;
       flex:0 0 13vw;
       width:13vw;
     }
-
     :host .filter {
       align-self: center;
       width: 100%;
