@@ -1,8 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
-
 /**
  * @export
  * @class Tooltip
@@ -12,18 +10,13 @@ export default class Tooltip extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.clickListener = event => {
-      console.log(this, this.tooltipContent);
-      console.log(event) 
-      this.tooltipContent.classList.toggle("show");
+      this.tooltipContent.classList.toggle('show')
     }
   }
-  
+
   connectedCallback () {
-    if (this.shouldRenderHTML()) this.renderHTML()
     if (this.shouldRenderCSS()) this.renderCSS()
     this.root.addEventListener('click', this.clickListener)
-   
-
   }
 
   disconnectedCallback () {
@@ -53,50 +46,52 @@ export default class Tooltip extends Shadow() {
    *
    * @return {Promise<void>}
   */
- renderCSS () {
-   console.log("..", this.tooltipContent.offsetWidth)
-   this.css = /* css */`
-   :host .tooltip {
-        --width: ${this.tooltipContent.offsetWidth/2}px;
-        --half: ${0 - this.tooltipContent.offsetWidth/4}px;
-        background:red;
-        display: inline-block;
-        position: relative;
-      }
-      :host .tooltip-text {
-        border-radius: 0.25em;
-        bottom: 100%;
-        color: #fff;
-        font-size:0.85em;
-        left: 50%;
-        margin-left: var(--half);
-        padding: 0.25em 0;
-        position: absolute;
-        text-align: center;
-        visibility: hidden;
-        width: var(--width);
-        z-index: 1;
-      }
-
-      :host .tooltip:hover .tooltip-text{
-        background-color:var(--m-gray-800, black);
-        visibility: visible;
-      }
-
-      :host .tooltip .tooltip-text::after {
-        content: " ";
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -0.25em;
-        border-width: 0.25em;
-        border-style: solid;
-        border-color: var(--m-gray-800, black) transparent transparent transparent;
-      }
-
-     @media only screen and (max-width: _max-width_) {
-        :host {}
-      }
+  renderCSS () {
+    this.css = /* css */`
+    :host {
+      display: var(--display, block);
+      width: var(--width, auto);
+    }
+    :host .tooltip {
+      --width: ${this.tooltipWidth}em;
+      --half: ${0 - this.tooltipWidth/2}em;
+      display: var(--tooltip-display, inline-block);
+      position: var(--tooltip-position, relative);
+    }
+    :host .tooltip-text {
+      border-radius:var(--tooltip-text-border-radius, 0.25em);
+      bottom: var(--tooltip-text-bottom, 100%);
+      color: var(--tooltip-text-color, #FFFFFF);
+      font-size:var(--tooltip-text-font-size, 0.85em);
+      left: var(--tooltip-text-left, 50%);
+      margin-left: var(--half);
+      padding: var(--tooltip-text-padding, 0.25em);
+      position: var(--tooltip-text-position, absolute);
+      text-align: var(--tooltip-text-text-align, center);
+      visibility: var(--tooltip-text-visibility, hidden);
+      width: var(--width);
+      z-index: var(--tooltip-text-z-index, 1);
+    }
+    :host .tooltip:hover .tooltip-text{
+      background-color: var(--m-gray-800, black);
+      visibility: var(--tooltip-hover-visibility, visible);
+    }
+    :host .tooltip .tooltip-text::after {
+      border-color: var(--m-gray-800, black) transparent transparent transparent;
+      border-style: solid;
+      border-width: 0.25em;
+      content: " ";
+      left: 50%;
+      margin-left: -0.25em;
+      position: absolute;
+      top: 100%;
+    }
+    :host .tooltip-text-icon {
+      margin-bottom: var(--tooltip-text-icon-margin-bottom, 0.4em);
+    }
+    @media only screen and (max-width: _max-width_) {
+      :host {}
+    }
     `
     return this.fetchTemplate()
   }
@@ -125,24 +120,24 @@ export default class Tooltip extends Shadow() {
           namespace: false
         }, ...styles], false)
       default:
-        return this.fetchCSS(styles, false)
+        return this.fetchCSS(styles)
     }
   }
 
   /**
-   * renders the html
-   *
-   * @return {Promise<void>}
+   * Returns the element with the class "tooltip" that is a child of the root element.
+   * @returns The method is returning the element with the class "tooltip" that is found within the root element.
    */
-  renderHTML () {
-    //this.html = "tool"
-    Array.from(this.root.children).forEach(node => {
-      console.log(node)
-      this.elementWidth = node.offsetWidth
-    })
+  get tooltipContent () {
+    return this.root.querySelector('.tooltip')
   }
 
-  get tooltipContent(){
-    return this.root.querySelector('.tooltip')
+  /**
+   * Returns the width attribute of the root element as a number, or 10 if the attribute is not present or not a valid number.
+   * @returns The value of the `width` attribute of the element as a number. 
+   * If the `width` attribute is not present or cannot be converted to a number, it will return 10
+   */
+  get tooltipWidth(){
+    return Number(this.getAttribute('width')) || 10
   }
 }
