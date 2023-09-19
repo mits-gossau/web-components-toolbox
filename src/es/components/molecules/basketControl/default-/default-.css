@@ -1,4 +1,5 @@
 :host{
+    --basket-control-default-button-background-color-active:var(--basket-control-default-button-background-color, black);
     --basket-control-default-button-background-color-hover: var(--m-gray-300, black);
     --basket-control-default-button-background-color:var(--m-gray-100, white);
     --basket-control-default-button-border-radius: 50%;

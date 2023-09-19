@@ -209,7 +209,7 @@ export default class Checkout extends Shadow() {
                   </div>
                 </div>
                 <div class="product-footer">
-                  <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" hide-minimum="1">
+                  <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1">
                     <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-"></a-button>
                     <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket">
                     <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+"></a-button>

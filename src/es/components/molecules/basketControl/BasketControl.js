@@ -20,7 +20,7 @@ export default class BasketControl extends Shadow() {
           return item.mapiProductId === event.detail.id && item.mapiProductId === this.currentProductId
         })
         if (currentProduct) {
-          this.setVisibilityAndValue(currentProduct.amount, this.quantityField)
+          this.setVisibilityAndValue(currentProduct.amount.toString(), this.quantityField)
         }
       }).catch(error => console.warn(error))
     }
@@ -207,8 +207,11 @@ export default class BasketControl extends Shadow() {
     inputField.value = value
     if (value === '0') {
       this.classList.add('closed')
+    } else if (value === this.disableMinimum){
+      this.removeButton.setAttribute('disabled', '')     
     } else {
       this.classList.remove('closed')
+      this.removeButton.removeAttribute('disabled')
     }
   }
 
@@ -216,7 +219,11 @@ export default class BasketControl extends Shadow() {
     return this.root.querySelector('input')
   }
 
-  get hideMinimum (){
-    return this.getAttribute('hide-minimum') || 0
+  get disableMinimum (){
+    return this.getAttribute('disable-minimum') || 0
+  }
+
+  get removeButton(){
+    return this.root.querySelector('#remove')
   }
 }
