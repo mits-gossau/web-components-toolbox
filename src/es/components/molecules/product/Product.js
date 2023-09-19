@@ -248,7 +248,7 @@ export default class Product extends Shadow() {
         <span class="product-price">${price}</span>
         <span class="product-brand">${brand}</span>
         <span class="product-name">${this.deleteBrandFromName(name, brand)}</span>
-        <span class="unit-price">${isWeighable ? unitPrice : ''}</span>
+        <span class="unit-price">${unitPrice || ''}</span>
         <span class="estimated-piece-weight">${isWeighable ? estimatedPieceWeight : ''}</span>
       <div>
     `

@@ -65,9 +65,9 @@ export default class Tooltip extends Shadow() {
       font-size:var(--tooltip-text-font-size, 0.85em);
       left: var(--tooltip-text-left, 50%);
       margin-left: var(--half);
-      padding: var(--tooltip-text-padding, 0.25em);
+      padding: var(--tooltip-text-padding, 0.5em);
       position: var(--tooltip-text-position, absolute);
-      text-align: var(--tooltip-text-text-align, center);
+      text-align: var(--tooltip-text-text-align, left);
       visibility: var(--tooltip-text-visibility, hidden);
       width: var(--width);
       z-index: var(--tooltip-text-z-index, 1);
