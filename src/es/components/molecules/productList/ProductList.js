@@ -199,7 +199,7 @@ export default class ProductList extends Shadow() {
         return /* html */`
         <m-load-template-tag>
           <template>
-            <m-product detail-product-link=${this.getAttribute('detail-product-link') || ''}  namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}' active-order-item-amount=${activeOrderItemAmount}></m-product>
+            <m-product tooltip-text-balance="${this.tooltipBalanceText}" detail-product-link=${this.getAttribute('detail-product-link') || ''}  namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}' active-order-item-amount=${activeOrderItemAmount}></m-product>
           </template>
         </m-load-template-tag>`
       })
@@ -224,5 +224,9 @@ export default class ProductList extends Shadow() {
 
   get totalArticlesText () {
     return this.getAttribute('total-articles-text') || ''
+  }
+
+  get tooltipBalanceText() {
+    return this.getAttribute('tooltip-translation-balance') || ''
   }
 }

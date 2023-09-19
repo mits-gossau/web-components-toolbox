@@ -266,7 +266,7 @@ export default class Product extends Shadow() {
         <a-tooltip>
           <div class="tooltip">
             ${this.createFooterIcons()}
-            <span class="tooltip-text tooltip-text-icon">Product mit variablem Gewicht: beim Packen wiegen wir es und verrechnen dir den genauen Preis</span>
+            <span class="tooltip-text tooltip-text-icon">${this.tooltipBalanceText}</span>
           </div>
         </a-tooltip>
       </div>`
@@ -306,4 +306,9 @@ export default class Product extends Shadow() {
     if (index === -1) return name
     return name.slice(index + brand.length).trim()
   }
+
+  get tooltipBalanceText() {
+    return this.getAttribute('tooltip-text-balance') || ''
+  }
+
 }
