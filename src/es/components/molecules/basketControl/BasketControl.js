@@ -73,59 +73,46 @@ export default class BasketControl extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-        display:flex;
-        width:100%;
-        justify-content:flex-start;
         align-items: center;
         animation: var(--show, show .3s ease-out);
         container: productList / inline-size;
+        display:flex;
+        justify-content:flex-start;
+        min-height:var(--min-height, 3em);
+        width:100%;
       }
-
       @container productList (max-width: 10em) {
         a-button{
           --button-padding: 0;
           --button-height: 1.2em;
           --button-width: 1.2em;
         }
-
         a-button {
           --button-label-padding: 0;
           --button-label-margin: -3px 0 0 0;
         }
-
-        :host .basket-control-input {
-          height: 1.9em;
-          font-size: 0.85em;
-        }
       }
-
       @container productList (max-width: 7em) {
         a-button#remove{
           --button-margin: 0 0 0 -0.85em;
         }
-
         a-button#add{
           --button-margin: 0 -0.85em 0 0;
         }
-
         :host .basket-control-input {
           padding:0;
-          margin: 0 3px;
+          margin: 0 0.25em;
         }
       }
-
       :host(.default) {
         justify-content:space-between;
       }
-
       :host(.closed) input, :host(.closed) #remove {
         display:none;
       }
-
       :host(.closed.default) {
         justify-content:flex-end;
       }
-
       :host input {
         background-color: var(--quantity-background-color, transparent);
         border-radius: var(--quantity-border-radius, 0.5em);
@@ -138,28 +125,23 @@ export default class BasketControl extends Shadow() {
         text-align:var(--quantity-text-align, center);
         width: var(--quantity-margin, 4em);
       }
-
       input[type=number] {
         appearance: textfield;
       }
-
       /* Chrome, Safari, Edge, Opera */
       input::-webkit-outer-spin-button,
       input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
       }
-
       /* Firefox */
       input[type=number] {
         -moz-appearance: textfield;
       }
-
       @keyframes show {
           0%{opacity: 0}
           100%{opacity: 1}
         }
-
       @media only screen and (max-width: _max-width_) {}
       `
     return this.fetchTemplate()
