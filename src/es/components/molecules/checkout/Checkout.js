@@ -191,7 +191,6 @@ export default class Checkout extends Shadow() {
       // @ts-ignore
       const products = productData.orderItems.map(product => {
         if (product.productDetail) {
-          const isWeighable = product.productDetail.isWeighable ? product.productDetail.estimatedPieceWeight : ''
           return /* html */ `
             <div class="product-item">
               <div class="product-image">
@@ -202,7 +201,7 @@ export default class Checkout extends Shadow() {
                   <div>
                     <span>${product.productDetail.price}</span>
                     <span class="name">${product.productDetail.name}</span>
-                    <span class="additional-info">${isWeighable}</span>
+                    <span class="additional-info">${product.productDetail.estimatedPieceWeight || ''}</span>
                   </div>
                   <div>
                     <a-button namespace="checkout-default-delete-article-button-"  request-event-name="remove-basket" tag="1"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
