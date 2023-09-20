@@ -15,12 +15,16 @@ export default class BasketControl extends Shadow() {
 
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
-        const { orderItems } = productData.response
-        const currentProduct = orderItems.find((/** @type {{ mapiProductId: any; }} */ item) => {
-          return item.mapiProductId === event.detail.id && item.mapiProductId === this.currentProductId
-        })
-        if (currentProduct) {
-          this.setVisibilityAndValue(currentProduct.amount.toString(), this.quantityField)
+        if (!event.detail.id || this.currentProductId === event.detail.id) {
+          const { orderItems } = productData.response
+          const currentProduct = orderItems.find((/** @type {{ mapiProductId: any; }} */ item) => {
+            return item.mapiProductId === event.detail.id && item.mapiProductId === this.currentProductId
+          })
+          if (currentProduct) {
+            this.setVisibilityAndValue(currentProduct.amount.toString(), this.quantityField)
+          } else {
+            this.setVisibilityAndValue('0', this.quantityField)
+          }
         }
       }).catch(error => console.warn(error))
     }
@@ -122,10 +126,10 @@ export default class BasketControl extends Shadow() {
         border: 1px solid var(--quantity-border-color, red);
         font-family: var(--quantity-font-family, inherit);
         font-size: var(--quantity-font-size, inherit);
-        height:var(--quantity-height, auto);
+        height: var(--quantity-height, auto);
         margin: var(--quantity-margin, 0 0.5em);
-        padding: var(--quantity-margin, 0.5em);
-        text-align:var(--quantity-text-align, center);
+        padding: var(--quantity-padding, 0.25em);
+        text-align: var(--quantity-text-align, center);
         width: var(--quantity-margin, 4em);
       }
       input[type=number] {
