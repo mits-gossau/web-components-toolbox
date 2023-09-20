@@ -194,6 +194,15 @@ export default class Form extends Shadow() {
         margin: 0 0.25em 0 0;
         cursor: pointer;
       }
+      .form-radio-group {
+        display: flex;
+        gap: 2rem;
+      }
+      .form-radio-group span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
       legend {
         font-family: var(--font-family-bold, var(--font-family, inherit));
       }
