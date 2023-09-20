@@ -57,6 +57,7 @@ export default class BasketControl extends Shadow() {
     this.quantityField?.addEventListener('click', this.clickListener)
     this.quantityField?.addEventListener('input', this.inputListener)
     this.setVisibilityAndValue(this.quantityField?.value, this.quantityField)
+    this.disableElements(this.disableAllElements, this.removeButton, this.addButton, this.quantityField)
   }
 
   disconnectedCallback () {
@@ -204,6 +205,22 @@ export default class BasketControl extends Shadow() {
     }
   }
 
+  /**
+   * Disables or enables a list of elements based on the value of the `disableState` parameter.
+   * @param {string} disableState - The `disableState` parameter is a string that represents the state of whether
+   * the elements should be disabled or not. It can have two possible values: "true" or "false".
+   * @param {HTMLElement[]} elements - The `elements` parameter is a rest parameter that allows you to pass in multiple
+   * elements as arguments to the function. It can be any number of elements that you want to disable.
+   */
+  disableElements (disableState, ...elements) {
+    const disableElements = (disableState.toLowerCase() === 'true')
+    if (!disableElements) {
+      Array.from(elements).forEach(element => {
+        element.setAttribute('disabled', '')
+      })
+    }
+  }
+
   get quantityField () {
     return this.root.querySelector('input')
   }
@@ -214,5 +231,13 @@ export default class BasketControl extends Shadow() {
 
   get removeButton () {
     return this.root.querySelector('#remove')
+  }
+
+  get addButton () {
+    return this.root.querySelector('#add')
+  }
+
+  get disableAllElements () {
+    return this.getAttribute('disable-all-elements') || 'false'
   }
 }

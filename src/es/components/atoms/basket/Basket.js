@@ -145,8 +145,8 @@ export default class Basket extends Shadow() {
       this.wrapper = this.root.querySelector('div') || document.createElement('div')
       this.wrapper.appendChild(this.count)
       this.wrapper.appendChild(icon)
-      const linkToCheckout = document.createElement('a');
-      linkToCheckout.setAttribute('href', this.getAttribute('href') || '');
+      const linkToCheckout = document.createElement('a')
+      linkToCheckout.setAttribute('href', this.getAttribute('href') || '')
       linkToCheckout.appendChild(this.wrapper)
       this.html = linkToCheckout
     })

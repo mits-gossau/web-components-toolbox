@@ -207,7 +207,7 @@ export default class Product extends Shadow() {
   createBasketUtilsElement (productInfo) {
     return /* html */ `
       <div class="basket-utils">
-      <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" class="default">
+      <m-basket-control disable-all-elements="${this.disable}" namespace="basket-control-default-" answer-event-name="update-basket" class="default">
          <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
          <input id="${productInfo}" class="basket-control-input" tag=${productInfo} name="quantity" type="number" value="${this.activeOrderItemAmount}" min=0 max=9999 request-event-name="add-basket">
          <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
@@ -309,5 +309,9 @@ export default class Product extends Shadow() {
 
   get tooltipBalanceText () {
     return this.getAttribute('tooltip-text-balance') || ''
+  }
+
+  get disable () {
+    return this.getAttribute('disable') || 'false'
   }
 }

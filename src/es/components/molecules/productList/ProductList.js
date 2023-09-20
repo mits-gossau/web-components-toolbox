@@ -196,7 +196,8 @@ export default class ProductList extends Shadow() {
         return /* html */`
         <m-load-template-tag>
           <template>
-            <m-product 
+            <m-product
+              disable="${this.isLoggedIn}"
               tooltip-text-balance="${this.tooltipBalanceText}" 
               detail-product-link=${this.getAttribute('detail-product-link') || ''}  
               namespace=${this.productNamespace} 
@@ -231,5 +232,9 @@ export default class ProductList extends Shadow() {
 
   get tooltipBalanceText () {
     return this.getAttribute('tooltip-translation-balance') || ''
+  }
+
+  get isLoggedIn () {
+    return this.getAttribute('is-logged-in') || 'false'
   }
 }
