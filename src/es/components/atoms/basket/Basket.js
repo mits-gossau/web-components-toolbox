@@ -70,26 +70,26 @@ export default class Basket extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        display:block;
+        display: var(--display, block);
       }
       :host div {
-        background-color:#f5f5f5;
-        border-radius:1.6em;
-        padding:0.8em;
-        display:flex;
-        line-height: 1em;
+        background-color: var(--div-background-color, black);
+        border-radius: var(--div-border-radius, 1.6em);
+        padding: var(--div-padding, 0.8em);
+        display: var(--div-display, flex);
+        line-height: var(--div-line-height, 1em);
       }
       :host div:hover {
         cursor: pointer;
-        background-color:#E0E0E0;
+        background-color: var(--div-hover-background-color, white);
       }
       :host img {
-        height:1.2em;
+        height: var(--img-height, 1.2em);
       }
       :host span {
-        min-width:1.2em;
-        font-size:0.7em;
-        padding:0 0.25em;
+        min-width: var(--span-min-width, 1.2em);
+        font-size: var(--span-font-size, 0.7em);
+        padding: var(--span-padding, 0 0.25em);
       }
       
       @media only screen and (max-width: _max-width_) {
