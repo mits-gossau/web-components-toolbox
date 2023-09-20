@@ -196,7 +196,13 @@ export default class ProductList extends Shadow() {
         return /* html */`
         <m-load-template-tag>
           <template>
-            <m-product tooltip-text-balance="${this.tooltipBalanceText}" detail-product-link=${this.getAttribute('detail-product-link') || ''}  namespace=${this.productNamespace} data='${escapeForHtml(JSON.stringify(product))}' active-order-item-amount=${activeOrderItemAmount}></m-product>
+            <m-product 
+              tooltip-text-balance="${this.tooltipBalanceText}" 
+              detail-product-link=${this.getAttribute('detail-product-link') || ''}  
+              namespace=${this.productNamespace} 
+              data='${escapeForHtml(JSON.stringify(product))}' 
+              active-order-item-amount=${activeOrderItemAmount}>
+            </m-product>
           </template>
         </m-load-template-tag>`
       })

@@ -73,19 +73,22 @@ export default class BasketControl extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-        align-items: center;
+        align-items: var(--align-items, center);
         animation: var(--show, show .3s ease-out);
         container: productList / inline-size;
-        display:flex;
-        justify-content:flex-start;
-        min-height:var(--min-height, 3em);
-        width:100%;
+        display: flex;
+        justify-content: flex-start;
+        min-height: var(--min-height, 3em);
+        width: var(--width, 100%);
       }
       @container productList (max-width: 10em) {
+        :host input {
+          margin:0;
+        }
         a-button{
           --button-padding: 0;
-          --button-height: 1.2em;
-          --button-width: 1.2em;
+          --button-height: 2em;
+          --button-width: 2em;
         }
         a-button {
           --button-label-padding: 0;
