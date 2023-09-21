@@ -90,7 +90,7 @@ export default class Checkout extends Shadow() {
         display: var(--product-image-display, flex);
         flex-direction: var(--product-image-flex-direction, column);
         margin: var(--product-image-margin, 0 1em);
-        min-width: var(--product-image-min-width, 6em);
+        min-width: var(--product-image-min-width, 10em);
       }
 
       :host .product-info {
