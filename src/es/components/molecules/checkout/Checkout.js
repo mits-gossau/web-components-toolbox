@@ -233,7 +233,7 @@ export default class Checkout extends Shadow() {
    */
   totalAndTaxes (data) {
     // TODO Get values from translation-attribute
-    const { totalTtc, totalHt, totalTva1, totalTva2 } = data
+    const { totalTtc, montantRabais, totalTva1, totalTva2, totalHt, totalTtcAvecRabais } = data
     return /* html */ `
       <table>
         <tr class="bold">
@@ -242,7 +242,7 @@ export default class Checkout extends Shadow() {
         </tr>
         <tr>
           <td>Montant Rabais TTC (XX %)</td>
-          <td>${totalTtc}</td>
+          <td>${montantRabais}</td>
         </tr>
         <tr>
           <td>Total TVA 2.5%</td>
@@ -258,7 +258,7 @@ export default class Checkout extends Shadow() {
         </tr>
         <tr class="bold important with-background">
           <td>Total TTC avec rabais</td>
-          <td>${totalTtc}</td>
+          <td>${totalTtcAvecRabais}</td>
         </tr>
       </table>
     `

@@ -64,7 +64,7 @@ export default class ProductList extends Shadow() {
       display: var(--display, flex);
       flex-direction:var(--flex-direction, row);
       flex-wrap: var(--flex-wrap, wrap);
-      gap:var(--gap, 1em);
+      gap:var(--gap, 0.75em);
     }
     :host > m-load-template-tag {
       flex: var(--m-load-template-tag-flex, 0 0 13vw);

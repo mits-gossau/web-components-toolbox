@@ -25,7 +25,7 @@ export default class Basket extends Shadow() {
     this.removeAbortController = null
     this.requestAbortController = null
     this.requestActiveOrderAbortController = null
-    this.removeFromOrderAbortController= null
+    this.removeFromOrderAbortController = null
   }
 
   connectedCallback () {
