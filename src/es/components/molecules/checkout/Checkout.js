@@ -11,6 +11,7 @@ export default class Checkout extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
+        this.html = ""
         this.renderHTML(productData.response)
       }).catch(error => {
         this.html = ''
@@ -22,6 +23,7 @@ export default class Checkout extends Shadow() {
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    document.body.addEventListener('update-basket', this.answerEventNameListener)
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
       {
         bubbles: true,
@@ -33,6 +35,7 @@ export default class Checkout extends Shadow() {
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    document.body.removeEventListener('update-basket', this.answerEventNameListener)
   }
 
   shouldRenderCSS () {
