@@ -52,39 +52,33 @@ export default class Checkout extends Shadow() {
         flex-direction:var(--flex-direction, column);
         gap: var(--gap, 1em);
       }
-
       :host .product-item {
         border-bottom: var(--product-item-border-bottom, 1px) solid var(--item-border-bottom, black);
         display: var(--product-item-display, flex);
         padding: var(--product-item-padding, 2em 0);
         width: var(--product-item-width, 100%);
       }
-
       :host .product-item:last-of-type {
+        border-bottom: var(--product-item-last-border-bottom, none);
         padding-bottom:var(--product-item-last-padding-bottom, 4em);
       }
-
       :host .product-data {
         display: var(--product-data-display, flex);
         flex-direction: var(--product-data-flex-direction, column);
         justify-content: var(--product-data-justify-content, space-between);
         width: var(--product-data-width, 100%);
       }
-
       :host .product-data  span {
         display: var(--product-data-span-display, block);
         line-height: var(--product-data-span-line-height, 1.75em);
       }
-
       :host span.name {
         font-size: var(--span-name-font-size, 1.25em);
       }
-
       :host span.additional-info{
         color: var(--span-additional-info-color, black);
         font-size: var(--span-additional-info-font-size, 0.75em);
       }
-
       :host .product-image {
         align-items: var(--product-image-align-items, center);
         display: var(--product-image-display, flex);
@@ -92,40 +86,32 @@ export default class Checkout extends Shadow() {
         margin: var(--product-image-margin, 0 1em);
         min-width: var(--product-image-min-width, 10em);
       }
-
       :host .product-info {
         display: var(--product-info-display, flex);
         justify-content: var(--product-info-justify-content, space-between);
         padding: var(--product-info-padding, 0 0 1em 0);
       }
-
       :host .product-footer {
         align-items: var(--product-footer-align-items, center);
         display: var(--product-footer-display, flex);
         justify-content: var(--product-footer-justify-content, space-between);
       }
-
       :host table {
         border-top: 3px solid var(--table-border-bottom-color, #E0E0E0);
       }
-
       :host table tr {
         border-bottom: 1px solid var(--table-tr-border-bottom-color, #E0E0E0);
       }
-
       :host table tr.important {
        border-bottom: 3px solid var(--table-tr-important-border-bottom-color, #E0E0E0);
       }
-
       :host table tr.with-background {
-        background-color: var(--tr-with-background-background-color, #F5F5F5);
+        background-color: var(--table-tr-with-background-background-color, #F5F5F5);
       }
-
       :host table td {
-        text-align: var(--td-text-align, right);
-        padding: var(--td-padding, 0.5em);
+        text-align: var(--table-td-text-align, right);
+        padding: var(--table-td-padding, 0.5em);
       }
-
     @media only screen and (max-width: _max-width_) {
       :host {}
     }
