@@ -25,6 +25,7 @@ export default class Basket extends Shadow() {
     this.removeAbortController = null
     this.requestAbortController = null
     this.requestActiveOrderAbortController = null
+    this.removeFromOrderAbortController= null
   }
 
   connectedCallback () {
@@ -32,6 +33,7 @@ export default class Basket extends Shadow() {
     this.addEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
     this.addEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.addEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
+    this.addEventListener(this.getAttribute('remove-from-order') || 'remove-from-order', this.removeFromOrderListener)
   }
 
   disconnectedCallback () {
@@ -39,6 +41,7 @@ export default class Basket extends Shadow() {
     this.removeEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
     this.removeEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.removeEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
+    this.removeEventListener(this.getAttribute('remove-from-order') || 'remove-from-order', this.removeFromOrderListener)
   }
 
   /**
@@ -143,6 +146,35 @@ export default class Basket extends Shadow() {
     // @ts-ignore
     const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiRemoveFromOrder}?productId=${productId}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
+      detail: {
+        id: productId,
+        fetch: fetch(endpoint, fetchOptions).then(async response => {
+          if (response.status >= 200 && response.status <= 299) return await response.json()
+          throw new Error(response.statusText)
+        })
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
+  }
+
+  /**
+   * remove from order
+   * @param {{ detail: any; }} event
+   */
+  removeFromOrderListener = async (event) => {
+    if (this.removeFromOrderAbortController) this.removeFromOrderAbortController.abort()
+    this.removeFromOrderAbortController = new AbortController()
+    const fetchOptions = {
+      method: 'GET',
+      signal: this.removeFromOrderAbortController.signal
+    }
+    const productId = event.detail.tags[0]
+
+    // @ts-ignore
+    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiRemoveFromOrder}?productId=${productId}`
+    this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
       detail: {
         id: productId,
         fetch: fetch(endpoint, fetchOptions).then(async response => {

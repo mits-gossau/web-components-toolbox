@@ -204,11 +204,11 @@ export default class Checkout extends Shadow() {
                     <span class="additional-info">${product.productDetail.estimatedPieceWeight || ''}</span>
                   </div>
                   <div>
-                    <a-button namespace="checkout-default-delete-article-button-"  request-event-name="remove-basket" tag="1"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
+                    <a-button namespace="checkout-default-delete-article-button-"  request-event-name="remove-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
                   </div>
                 </div>
                 <div class="product-footer">
-                  <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1">
+                  <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1" disable-all-elements="${this.isLoggedIn}">
                     <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-"></a-button>
                     <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket">
                     <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+"></a-button>
@@ -262,5 +262,9 @@ export default class Checkout extends Shadow() {
         </tr>
       </table>
     `
+  }
+
+  get isLoggedIn () {
+    return this.getAttribute('is-logged-in') || 'false'
   }
 }
