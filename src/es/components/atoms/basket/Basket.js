@@ -83,15 +83,11 @@ export default class Basket extends Shadow() {
         cursor: pointer;
         background-color: var(--div-hover-background-color, white);
       }
-      :host img {
-        height: var(--img-height, 1.2em);
-      }
       :host span {
         min-width: var(--span-min-width, 1.2em);
         font-size: var(--span-font-size, 0.7em);
         padding: var(--span-padding, 0 0.25em);
       }
-      
       @media only screen and (max-width: _max-width_) {
         :host {}
       }
@@ -132,7 +128,7 @@ export default class Basket extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderHTML () {
+  async renderHTML () {
     return this.fetchModules([
       {
         path: `${this.importMetaUrl}../iconMdx/IconMdx.js`,
@@ -140,8 +136,8 @@ export default class Basket extends Shadow() {
       }
     ]).then((/** @type {{ constructorClass: new (arg0: { namespace: any; namespaceFallback: any; mobileBreakpoint: any; }) => any; }[]} */ children) => {
       const icon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
-      icon.setAttribute('icon-name', 'ShoppingBasket')
-      icon.setAttribute('size', '1em')
+      icon.setAttribute('icon-name', this.iconName)
+      icon.setAttribute('size', this.iconSize)
       this.wrapper = this.root.querySelector('div') || document.createElement('div')
       this.wrapper.appendChild(this.count)
       this.wrapper.appendChild(icon)
@@ -153,12 +149,20 @@ export default class Basket extends Shadow() {
   }
 
   /**
-   * The function returns a span element with a text content of '0'.
+   * Returns a span element with a text content of '0'.
    * @returns The `count` method is returning an HTML `span` element.
    */
   get count () {
     const element = this.root.querySelector('span') || document.createElement('span')
     element.textContent = '0'
     return element
+  }
+
+  get iconName () {
+    return this.getAttribute('icon-name') || ''
+  }
+
+  get iconSize () {
+    return this.getAttribute('icon-size') || '1em'
   }
 }
