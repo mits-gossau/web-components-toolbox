@@ -113,7 +113,16 @@ export default class Product extends Shadow() {
       }
 
       @media only screen and (max-width: _max-width_) {
-        :host {}
+        :host > a > div {
+          padding: 1em;
+        }
+        :host .product-image {
+          padding: 0;
+        }
+        :host > a > div > div {
+          margin-bottom: 0;
+          padding: var(--content-spacing-mobile, 0);
+        }
       }
     `
     return this.fetchTemplate()

@@ -193,7 +193,7 @@ export default class Checkout extends Shadow() {
                     <span class="additional-info">${product.productDetail.estimatedPieceWeight || ''}</span>
                   </div>
                   <div>
-                    <a-button namespace="checkout-default-delete-article-button-"  request-event-name="remove-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
+                    <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
                   </div>
                 </div>
                 <div class="product-footer">

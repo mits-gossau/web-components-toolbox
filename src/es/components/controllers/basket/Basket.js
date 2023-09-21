@@ -33,7 +33,7 @@ export default class Basket extends Shadow() {
     this.addEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
     this.addEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.addEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
-    this.addEventListener(this.getAttribute('remove-from-order') || 'remove-from-order', this.removeFromOrderListener)
+    this.addEventListener(this.getAttribute('delete-from-order') || 'delete-from-order', this.deleteFromOrderListener)
   }
 
   disconnectedCallback () {
@@ -41,7 +41,7 @@ export default class Basket extends Shadow() {
     this.removeEventListener(this.getAttribute('request-basket') || 'request-basket', this.requestListBasketListener)
     this.removeEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.removeEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
-    this.removeEventListener(this.getAttribute('remove-from-order') || 'remove-from-order', this.removeFromOrderListener)
+    this.removeEventListener(this.getAttribute('delete-from-order') || 'delete-from-order', this.deleteFromOrderListener)
   }
 
   /**
@@ -160,10 +160,10 @@ export default class Basket extends Shadow() {
   }
 
   /**
-   * remove from order
+   * delete from order
    * @param {{ detail: any; }} event
    */
-  removeFromOrderListener = async (event) => {
+  deleteFromOrderListener = async (event) => {
     if (this.removeFromOrderAbortController) this.removeFromOrderAbortController.abort()
     this.removeFromOrderAbortController = new AbortController()
     const fetchOptions = {
@@ -173,7 +173,7 @@ export default class Basket extends Shadow() {
     const productId = event.detail.tags[0]
 
     // @ts-ignore
-    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiRemoveFromOrder}?productId=${productId}`
+    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiDeleteFromOrder}?orderItemId=${productId}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
       detail: {
         id: productId,
