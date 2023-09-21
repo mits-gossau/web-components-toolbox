@@ -60,7 +60,7 @@ export default class ProductList extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-      align-items: var(--, stretch);
+      align-items: var(--align, stretch);
       display: var(--display, flex);
       flex-direction:var(--flex-direction, row);
       flex-wrap: var(--flex-wrap, wrap);
@@ -80,7 +80,13 @@ export default class ProductList extends Shadow() {
       width: var(--filter-width, 100%);
     }
     @media only screen and (max-width: _max-width_) {
-      :host {}
+      :host {
+        flex-direction:var(--flex-direction-mobile, column);
+      }
+      :host > m-load-template-tag {
+        width: var(--m-load-template-tag-width-mobile, 100%);
+        min-height: var(--m-load-template-tag-min-height, 12em);
+      }
     }
     `
     return this.fetchTemplate()
