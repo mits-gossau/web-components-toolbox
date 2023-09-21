@@ -8,18 +8,22 @@ export default class Tabs extends Shadow() {
     const sections = this.root.querySelectorAll('section.tab-content')
 
     tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => {
-        tabs.forEach((tab) => {
-          tab.classList.remove('active')
-        })
+      const anchorTag = tab.querySelector('a')
 
-        sections.forEach((section) => {
-          section.classList.remove('active')
-        })
+      if (!anchorTag) {
+        tab.addEventListener('click', () => {
+          tabs.forEach((tab) => {
+            tab.classList.remove('active')
+          })
 
-        tab.classList.add('active')
-        sections[index].classList.add('active')
-      })
+          sections.forEach((section) => {
+            section.classList.remove('active')
+          })
+
+          tab.classList.add('active')
+          sections[index].classList.add('active')
+        })
+      }
     })
   }
 
@@ -81,6 +85,10 @@ export default class Tabs extends Shadow() {
         :host .tab-navigation li.active::after {
             background-color: var(--background-color-active, var(--color-secondary));
             display: block;
+        }
+        :host .tab-navigation li a {
+          color: inherit;
+          text-decoration: none;
         }
         :host .tab-content {
             display: none;
