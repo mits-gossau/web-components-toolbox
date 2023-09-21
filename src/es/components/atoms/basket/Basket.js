@@ -71,6 +71,7 @@ export default class Basket extends Shadow() {
     this.css = /* css */`
       :host {
         display: var(--display, block);
+        width: var(--width, max-content);
       }
       :host div {
         background-color: var(--div-background-color, black);
