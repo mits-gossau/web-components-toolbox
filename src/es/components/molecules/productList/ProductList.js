@@ -60,25 +60,23 @@ export default class ProductList extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-      display: flex;
-      flex-wrap: wrap;
+      align-items: var(--, stretch);
+      display: var(--display, flex);
       flex-direction:var(--flex-direction, row);
-      justify-content: space-between;
-      align-items: flex-start;
-      align-items: stretch;
-      gap:1em;
+      flex-wrap: var(--flex-wrap, wrap);
+      gap:var(--gap, 1em);
     }
     :host > m-load-template-tag {
-      min-height: 12em;
-      min-width: 13vw;
-      flex:0 0 13vw;
-      width:13vw;
+      flex: var(--m-load-template-tag-flex, 0 0 13vw);
+      min-height: var(--m-load-template-tag-min-height, 12em);
+      min-width: var(--m-load-template-tag-min-width, 13vw);
+      width: var(--m-load-template-tag-width, 13vw);
     }
     :host .filter {
-      align-self: center;
-      width: 100%;
-      flex: inherit;
-      min-height: 1em;
+      align-self: var(--filter-align-self, center);
+      flex: var(--filter-flex, inherit);
+      min-height: var(--filter-min-height, 1em);
+      width: var(--filter-width, 100%);
     }
     @media only screen and (max-width: _max-width_) {
       :host {}
