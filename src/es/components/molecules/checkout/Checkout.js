@@ -222,31 +222,31 @@ export default class Checkout extends Shadow() {
    */
   totalAndTaxes (data) {
     // TODO Get values from translation-attribute
-    const { totalTtc, montantRabais, totalTva1, totalTva2, totalHt, totalTtcAvecRabais } = data
+    const { totalTtc, montantRabais, totalTva1, totalTva2, totalHt, totalTtcAvecRabais, totalTtcTranslation, montantRabaisTtcTranslation, totalTvaTranslation, totalTva2Translation, totalHtAvecRebaisTranslation, totalTtcAvecRebaisTranslation  } = data
     return /* html */ `
       <table>
         <tr class="bold">
-          <td>Total TTC</td>
+          <td>${totalTtcTranslation}</td>
           <td>${totalTtc}</td>
         </tr>
         <tr>
-          <td>Montant Rabais TTC (XX %)</td>
+          <td>${montantRabaisTtcTranslation}</td>
           <td>${montantRabais}</td>
         </tr>
         <tr>
-          <td>Total TVA 2.5%</td>
+          <td>${totalTvaTranslation}</td>
           <td>${totalTva1}</td>
         </tr>
         <tr>
-          <td>Total TVA 7.7%</td>
+          <td>${totalTva2Translation}</td>
           <td>${totalTva2}</td>
         </tr>
         <tr class="bold important">
-          <td>Total HT avec rabais</td>
+          <td>${totalHtAvecRebaisTranslation}</td>
           <td>${totalHt}</td>
         </tr>
         <tr class="bold important with-background">
-          <td>Total TTC avec rabais</td>
+          <td>${totalTtcAvecRebaisTranslation}</td>
           <td>${totalTtcAvecRabais}</td>
         </tr>
       </table>
