@@ -221,7 +221,6 @@ export default class Checkout extends Shadow() {
    * @returns {string} an HTML table with the following information:
    */
   totalAndTaxes (data) {
-    // TODO Get values from translation-attribute
     const { totalTtc, montantRabais, totalTva1, totalTva2, totalHt, totalTtcAvecRabais, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation  } = data
     return /* html */ `
       <table>
