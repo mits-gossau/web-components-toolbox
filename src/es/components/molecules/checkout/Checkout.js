@@ -174,7 +174,7 @@ export default class Checkout extends Shadow() {
 
     return Promise.all([productData, fetchModules]).then(() => {
       if (!productData) {
-        this.html = '<span style="color:var(--color-error);">A error has occurred. Data cannot be display</span>'
+        this.html = '<span style="color:var(--color-error);">Une erreur est survenue. Les données ne peuvent pas être affichées.</span>'
         return
       }
       // @ts-ignore
