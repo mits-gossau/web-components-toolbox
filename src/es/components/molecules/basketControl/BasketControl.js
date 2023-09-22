@@ -150,7 +150,11 @@ export default class BasketControl extends Shadow() {
           0%{opacity: 0}
           100%{opacity: 1}
         }
-      @media only screen and (max-width: _max-width_) {}
+      @media only screen and (max-width: _max-width_) {
+        :host {
+          padding-bottom:var(--content-spacing-mobile, 1em);
+        }
+      }
       `
     return this.fetchTemplate()
   }

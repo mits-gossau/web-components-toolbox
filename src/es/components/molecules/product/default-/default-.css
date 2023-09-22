@@ -5,8 +5,8 @@
     --product-default-a-text-decoration: none;
     --product-default-aspect-ratio: 1;
     --product-default-content-spacing: var(--content-spacing-mobile, 0);
-    --product-default-img-height-mobile: 10em;
-    --product-default-img-width-mobile: 18em;
+    --product-default-img-height-mobile: 7em;
+  
     --product-default-unit-price-color: var(--product-default-unit-price-color-custom, var(--m-gray-600));
 }
 

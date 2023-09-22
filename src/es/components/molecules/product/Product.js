@@ -105,7 +105,7 @@ export default class Product extends Shadow() {
         text-overflow: var(--unit-price-text-overflow, ellipsis);
       }
 
-      :host .estimated-piece-weight{
+      :host .estimated-piece-weight {
         display: var(--estimated-piece-weight-display, block);
         color: var(--unit-price-color, black);
         font-size: var(--estimated-piece-weight-font-size, 0.75em);
@@ -114,15 +114,10 @@ export default class Product extends Shadow() {
 
       @media only screen and (max-width: _max-width_) {
         :host > a > div {
-          padding: 1em;
-        }
-        :host .product-image {
           padding: 0;
         }
-        :host > a > div > div {
-          margin-bottom: 0;
-          padding: var(--content-spacing-mobile, 0);
-        }
+       
+        
       }
     `
     return this.fetchTemplate()

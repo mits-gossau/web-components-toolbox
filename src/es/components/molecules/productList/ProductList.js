@@ -82,9 +82,11 @@ export default class ProductList extends Shadow() {
     @media only screen and (max-width: _max-width_) {
       :host {
         flex-direction:var(--flex-direction-mobile, row);
+        gap:var(--gap-mobile, 0.5em);
       }
       :host > m-load-template-tag {
-        min-height: var(--m-load-template-tag-min-height, auto);
+        min-height: var(--m-load-template-tag-min-height-mobile, auto);
+        min-width: var(--m-load-template-tag-min-width-mobile, 12em);
       }
     }
     `
