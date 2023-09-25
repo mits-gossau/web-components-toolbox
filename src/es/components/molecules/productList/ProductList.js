@@ -6,6 +6,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ProductList extends Shadow() {
   /**
+   * @param options
    * @param {any} args
    */
   constructor (options = {}, ...args) {
@@ -60,28 +61,34 @@ export default class ProductList extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
     :host {
-      display: flex;
-      flex-wrap: wrap;
+      align-items: var(--align, stretch);
+      display: var(--display, flex);
       flex-direction:var(--flex-direction, row);
-      justify-content: space-between;
-      align-items: flex-start;
-      align-items: stretch;
-      gap:1em;
+      flex-wrap: var(--flex-wrap, wrap);
+      gap:var(--gap, 0.75em);
+      justify-content: var(--justify-content, space-between);
     }
     :host > m-load-template-tag {
-      min-height: 12em;
-      min-width: 13vw;
-      flex:0 0 13vw;
-      width:13vw;
+      flex: var(--m-load-template-tag-flex, 0 0 13vw);
+      min-height: var(--m-load-template-tag-min-height, 12em);
+      min-width: var(--m-load-template-tag-min-width, 13vw);
+      width: var(--m-load-template-tag-width, 13vw);
     }
     :host .filter {
-      align-self: center;
-      width: 100%;
-      flex: inherit;
-      min-height: 1em;
+      align-self: var(--filter-align-self, center);
+      flex: var(--filter-flex, inherit);
+      min-height: var(--filter-min-height, 1em);
+      width: var(--filter-width, 100%);
     }
     @media only screen and (max-width: _max-width_) {
-      :host {}
+      :host {
+        flex-direction:var(--flex-direction-mobile, row);
+        gap:var(--gap-mobile, 0.5em);
+      }
+      :host > m-load-template-tag {
+        min-height: var(--m-load-template-tag-min-height-mobile, auto);
+        min-width: var(--m-load-template-tag-min-width-mobile, 12em);
+      }
     }
     `
     return this.fetchTemplate()
@@ -196,7 +203,8 @@ export default class ProductList extends Shadow() {
         return /* html */`
         <m-load-template-tag>
           <template>
-            <m-product 
+            <m-product
+              disable="${this.isLoggedIn}"
               tooltip-text-balance="${this.tooltipBalanceText}" 
               detail-product-link=${this.getAttribute('detail-product-link') || ''}  
               namespace=${this.productNamespace} 
@@ -231,5 +239,9 @@ export default class ProductList extends Shadow() {
 
   get tooltipBalanceText () {
     return this.getAttribute('tooltip-translation-balance') || ''
+  }
+
+  get isLoggedIn () {
+    return this.getAttribute('is-logged-in') || 'false'
   }
 }

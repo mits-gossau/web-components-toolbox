@@ -3,6 +3,6 @@
     --checkout-default-delete-article-button-background-color-hover: transparent;
     --checkout-default-delete-article-button-padding: 0;
     --checkout-default-item-border-bottom: var(--m-gray-300, white);
-    --product-checkout-img-max-height:6vw;
-    --product-checkout-img-max-width:6vw;
+    --product-checkout-img-max-height:7vw;
+    --product-checkout-img-max-width:10vw;
 }

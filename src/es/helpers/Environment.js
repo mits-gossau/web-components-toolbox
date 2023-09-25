@@ -5,7 +5,7 @@ const currentScriptUrl = new URL(document.currentScript.src)
 
 // @ts-ignore
 self.Environment = {
-  isTestingEnv: location.hostname === 'localhost' || location.hostname.includes('.local') || location.hostname.includes('test.') || location.hostname.includes('testadmin.'),
+  isTestingEnv: location.hostname === 'localhost' || location.hostname.includes('.local') || location.hostname.includes('umb.') || location.hostname.includes('test.') || location.hostname.includes('testadmin.'),
   language: currentScriptUrl.searchParams.get('language') || document.documentElement.getAttribute('lang') || 'de',
   contentfulEndpoint: currentScriptUrl.searchParams.get('contentfulEndpoint') || 'https://graphql.contentful.com/content/v1/spaces/',
   msrcBaseUrl: currentScriptUrl.searchParams.get('msrcBaseUrl') || 'https://cdn.migros.ch',
@@ -37,11 +37,12 @@ self.Environment = {
         return currentScriptUrl.searchParams.get('zadbEndpoint') || this.isTestingEnv ? 'https://testadmin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi' : 'https://admin.betriebsrestaurants-migros.ch/umbraco/api/ZadbApi'
       case 'migrospro':{
         return {
-          apiRemoveFromOrder: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/RemoveFromOrder',
-          apiAddToOrder: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder',
-          apiGetActiveOrderAndOrderItems: 'http://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems',
-          apiGetProductByCategory: 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory',
-          apiGetActiveOrderAndOrderItemsEnrichedProductData: 'http://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData'
+          apiRemoveFromOrder: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/RemoveFromOrder' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/RemoveFromOrder',
+          apiAddToOrder: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder',
+          apiDeleteFromOrder: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/DeleteFromOrder' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/DeleteFromOrder',
+          apiGetActiveOrderAndOrderItems: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems',
+          apiGetProductByCategory: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory' : 'https://admin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory',
+          apiGetActiveOrderAndOrderItemsEnrichedProductData: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData' 
         }
       }
       default:

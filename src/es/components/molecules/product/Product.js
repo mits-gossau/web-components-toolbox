@@ -105,7 +105,7 @@ export default class Product extends Shadow() {
         text-overflow: var(--unit-price-text-overflow, ellipsis);
       }
 
-      :host .estimated-piece-weight{
+      :host .estimated-piece-weight {
         display: var(--estimated-piece-weight-display, block);
         color: var(--unit-price-color, black);
         font-size: var(--estimated-piece-weight-font-size, 0.75em);
@@ -113,7 +113,11 @@ export default class Product extends Shadow() {
       }
 
       @media only screen and (max-width: _max-width_) {
-        :host {}
+        :host > a > div {
+          padding: 0;
+        }
+       
+        
       }
     `
     return this.fetchTemplate()
@@ -207,7 +211,7 @@ export default class Product extends Shadow() {
   createBasketUtilsElement (productInfo) {
     return /* html */ `
       <div class="basket-utils">
-      <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" class="default">
+      <m-basket-control disable-all-elements="${this.disable}" namespace="basket-control-default-" answer-event-name="update-basket" class="default">
          <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
          <input id="${productInfo}" class="basket-control-input" tag=${productInfo} name="quantity" type="number" value="${this.activeOrderItemAmount}" min=0 max=9999 request-event-name="add-basket">
          <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
@@ -221,7 +225,7 @@ export default class Product extends Shadow() {
    * @param {string} alt - The "alt" parameter is used to specify the alternative text for the image. This text
    * is displayed if the image cannot be loaded or if the user is using a screen reader. It should
    * provide a concise description of the image.
-   * @returns an HTML string that represents a product image element.
+   * @returns string HTML string that represents a product image element.
    */
   createProductImageElement (imageSrc, alt) {
     return /* html */ `
@@ -274,7 +278,7 @@ export default class Product extends Shadow() {
 
   /**
    * The function creates a footer icon by returning an HTML image tag.
-   * @returns an HTML string that includes an image tag with the source attribute set to
+   * @returns string HTML string that includes an image tag with the source attribute set to
    * "../../src/img/migrospro/label-balance.svg" and an empty alt attribute.
    */
   createFooterIcons () {
@@ -298,7 +302,7 @@ export default class Product extends Shadow() {
    * The function removes the brand-name from a given full product name string.
    * @param {string} name - The name parameter is a string that represents a full product name.
    * @param {string} brand - The `brand` parameter is the name of the brand that you want to delete from the `name` string.
-   * @returns the modified name after removing the brand from it.
+   * @returns string modified name after removing the brand from it.
    */
   deleteBrandFromName (name, brand) {
     if (!name) return ''
@@ -309,5 +313,9 @@ export default class Product extends Shadow() {
 
   get tooltipBalanceText () {
     return this.getAttribute('tooltip-text-balance') || ''
+  }
+
+  get disable () {
+    return this.getAttribute('disable') || 'false'
   }
 }

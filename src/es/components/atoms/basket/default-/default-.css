@@ -1,1 +1,9 @@
-:host {}
+:host {
+    --basket-default-a-color-hover: var(--basket-default-a-color-hover-custom, var(--basket-default-a-color, black));
+    --basket-default-a-color: var(--basket-default-a-color-custom, var(--color, black));
+    --basket-default-a-text-decoration:var(--basket-default-a-text-decoration-custom, none);
+    --basket-default-color-hover:var(--basket-default-color-hover-custom, var(--basket-default-a-color, black));
+    --basket-default-color:var(--basket-default-color-custom, var(--color, black));
+    --basket-default-div-background-color: var(--m-gray-100, black);
+    --basket-default-div-hover-background-color:var(--m-gray-300, white);
+}

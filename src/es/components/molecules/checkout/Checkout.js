@@ -11,6 +11,7 @@ export default class Checkout extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
+        this.html = ""
         this.renderHTML(productData.response)
       }).catch(error => {
         this.html = ''
@@ -22,6 +23,7 @@ export default class Checkout extends Shadow() {
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    document.body.addEventListener('update-basket', this.answerEventNameListener)
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
       {
         bubbles: true,
@@ -33,6 +35,7 @@ export default class Checkout extends Shadow() {
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    document.body.removeEventListener('update-basket', this.answerEventNameListener)
   }
 
   shouldRenderCSS () {
@@ -52,80 +55,66 @@ export default class Checkout extends Shadow() {
         flex-direction:var(--flex-direction, column);
         gap: var(--gap, 1em);
       }
-
       :host .product-item {
         border-bottom: var(--product-item-border-bottom, 1px) solid var(--item-border-bottom, black);
         display: var(--product-item-display, flex);
         padding: var(--product-item-padding, 2em 0);
         width: var(--product-item-width, 100%);
       }
-
       :host .product-item:last-of-type {
+        border-bottom: var(--product-item-last-border-bottom, none);
         padding-bottom:var(--product-item-last-padding-bottom, 4em);
       }
-
       :host .product-data {
         display: var(--product-data-display, flex);
         flex-direction: var(--product-data-flex-direction, column);
         justify-content: var(--product-data-justify-content, space-between);
         width: var(--product-data-width, 100%);
       }
-
       :host .product-data  span {
         display: var(--product-data-span-display, block);
         line-height: var(--product-data-span-line-height, 1.75em);
       }
-
       :host span.name {
         font-size: var(--span-name-font-size, 1.25em);
       }
-
       :host span.additional-info{
         color: var(--span-additional-info-color, black);
         font-size: var(--span-additional-info-font-size, 0.75em);
       }
-
       :host .product-image {
         align-items: var(--product-image-align-items, center);
         display: var(--product-image-display, flex);
         flex-direction: var(--product-image-flex-direction, column);
         margin: var(--product-image-margin, 0 1em);
-        min-width: var(--product-image-min-width, 6em);
+        min-width: var(--product-image-min-width, 10em);
       }
-
       :host .product-info {
         display: var(--product-info-display, flex);
         justify-content: var(--product-info-justify-content, space-between);
         padding: var(--product-info-padding, 0 0 1em 0);
       }
-
       :host .product-footer {
         align-items: var(--product-footer-align-items, center);
         display: var(--product-footer-display, flex);
         justify-content: var(--product-footer-justify-content, space-between);
       }
-
       :host table {
         border-top: 3px solid var(--table-border-bottom-color, #E0E0E0);
       }
-
       :host table tr {
         border-bottom: 1px solid var(--table-tr-border-bottom-color, #E0E0E0);
       }
-
       :host table tr.important {
        border-bottom: 3px solid var(--table-tr-important-border-bottom-color, #E0E0E0);
       }
-
       :host table tr.with-background {
-        background-color: var(--tr-with-background-background-color, #F5F5F5);
+        background-color: var(--table-tr-with-background-background-color, #F5F5F5);
       }
-
       :host table td {
-        text-align: var(--td-text-align, right);
-        padding: var(--td-padding, 0.5em);
+        text-align: var(--table-td-text-align, right);
+        padding: var(--table-td-padding, 0.5em);
       }
-
     @media only screen and (max-width: _max-width_) {
       :host {}
     }
@@ -185,7 +174,7 @@ export default class Checkout extends Shadow() {
 
     return Promise.all([productData, fetchModules]).then(() => {
       if (!productData) {
-        this.html = '<span style="color:var(--color-error);">A error has occurred. Data cannot be display</span>'
+        this.html = '<span style="color:var(--color-error);">Une erreur est survenue. Les données ne peuvent pas être affichées.</span>'
         return
       }
       // @ts-ignore
@@ -204,11 +193,11 @@ export default class Checkout extends Shadow() {
                     <span class="additional-info">${product.productDetail.estimatedPieceWeight || ''}</span>
                   </div>
                   <div>
-                    <a-button namespace="checkout-default-delete-article-button-"  request-event-name="remove-basket" tag="1"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
+                    <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
                   </div>
                 </div>
                 <div class="product-footer">
-                  <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1">
+                  <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1" disable-all-elements="${this.isLoggedIn}">
                     <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-"></a-button>
                     <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket">
                     <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+"></a-button>
@@ -232,35 +221,38 @@ export default class Checkout extends Shadow() {
    * @returns {string} an HTML table with the following information:
    */
   totalAndTaxes (data) {
-    // TODO Get values from translation-attribute
-    const { totalTtc, totalHt, totalTva1, totalTva2 } = data
+    const { totalTtc, montantRabais, totalTva1, totalTva2, totalHt, totalTtcAvecRabais, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation  } = data
     return /* html */ `
       <table>
         <tr class="bold">
-          <td>Total TTC</td>
+          <td>${totalTtcTranslation}</td>
           <td>${totalTtc}</td>
         </tr>
         <tr>
-          <td>Montant Rabais TTC (XX %)</td>
-          <td>${totalTtc}</td>
+          <td>${montantRabaisTranslation}</td>
+          <td>${montantRabais}</td>
         </tr>
         <tr>
-          <td>Total TVA 2.5%</td>
+          <td>${totalTva1Translation}</td>
           <td>${totalTva1}</td>
         </tr>
         <tr>
-          <td>Total TVA 7.7%</td>
+          <td>${totalTva2Translation}</td>
           <td>${totalTva2}</td>
         </tr>
         <tr class="bold important">
-          <td>Total HT avec rabais</td>
+          <td>${totalHtAvecRabaisTranslation}</td>
           <td>${totalHt}</td>
         </tr>
         <tr class="bold important with-background">
-          <td>Total TTC avec rabais</td>
-          <td>${totalTtc}</td>
+          <td>${totalTtcAvecRabaisTranslation}</td>
+          <td>${totalTtcAvecRabais}</td>
         </tr>
       </table>
     `
+  }
+
+  get isLoggedIn () {
+    return this.getAttribute('is-logged-in') || 'false'
   }
 }

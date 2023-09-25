@@ -70,28 +70,25 @@ export default class Basket extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        display:block;
+        display: var(--display, block);
+        width: var(--width, max-content);
       }
       :host div {
-        background-color:#f5f5f5;
-        border-radius:1.6em;
-        padding:0.8em;
-        display:flex;
-        line-height: 1em;
+        background-color: var(--div-background-color, black);
+        border-radius: var(--div-border-radius, 1.6em);
+        padding: var(--div-padding, 0.8em);
+        display: var(--div-display, flex);
+        line-height: var(--div-line-height, 1em);
       }
       :host div:hover {
         cursor: pointer;
-        background-color:#E0E0E0;
-      }
-      :host img {
-        height:1.2em;
+        background-color: var(--div-hover-background-color, white);
       }
       :host span {
-        min-width:1.2em;
-        font-size:0.7em;
-        padding:0 0.25em;
+        min-width: var(--span-min-width, 1.2em);
+        font-size: var(--span-font-size, 0.7em);
+        padding: var(--span-padding, 0 0.25em);
       }
-      
       @media only screen and (max-width: _max-width_) {
         :host {}
       }
@@ -132,7 +129,7 @@ export default class Basket extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderHTML () {
+  async renderHTML () {
     return this.fetchModules([
       {
         path: `${this.importMetaUrl}../iconMdx/IconMdx.js`,
@@ -140,22 +137,33 @@ export default class Basket extends Shadow() {
       }
     ]).then((/** @type {{ constructorClass: new (arg0: { namespace: any; namespaceFallback: any; mobileBreakpoint: any; }) => any; }[]} */ children) => {
       const icon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
-      icon.setAttribute('icon-name', 'ShoppingBasket')
-      icon.setAttribute('size', '1em')
+      icon.setAttribute('icon-name', this.iconName)
+      icon.setAttribute('size', this.iconSize)
       this.wrapper = this.root.querySelector('div') || document.createElement('div')
       this.wrapper.appendChild(this.count)
       this.wrapper.appendChild(icon)
-      this.html = this.wrapper
+      const linkToCheckout = document.createElement('a')
+      linkToCheckout.setAttribute('href', this.getAttribute('href') || '')
+      linkToCheckout.appendChild(this.wrapper)
+      this.html = linkToCheckout
     })
   }
 
   /**
-   * The function returns a span element with a text content of '0'.
+   * Returns a span element with a text content of '0'.
    * @returns The `count` method is returning an HTML `span` element.
    */
   get count () {
     const element = this.root.querySelector('span') || document.createElement('span')
     element.textContent = '0'
     return element
+  }
+
+  get iconName () {
+    return this.getAttribute('icon-name') || ''
+  }
+
+  get iconSize () {
+    return this.getAttribute('icon-size') || '1em'
   }
 }

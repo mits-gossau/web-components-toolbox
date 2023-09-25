@@ -15,12 +15,16 @@ export default class BasketControl extends Shadow() {
 
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
-        const { orderItems } = productData.response
-        const currentProduct = orderItems.find((/** @type {{ mapiProductId: any; }} */ item) => {
-          return item.mapiProductId === event.detail.id && item.mapiProductId === this.currentProductId
-        })
-        if (currentProduct) {
-          this.setVisibilityAndValue(currentProduct.amount.toString(), this.quantityField)
+        if (!event.detail.id || this.currentProductId === event.detail.id) {
+          const { orderItems } = productData.response
+          const currentProduct = orderItems.find((/** @type {{ mapiProductId: any; }} */ item) => {
+            return item.mapiProductId === event.detail.id && item.mapiProductId === this.currentProductId
+          })
+          if (currentProduct) {
+            this.setVisibilityAndValue(currentProduct.amount.toString(), this.quantityField)
+          } else {
+            this.setVisibilityAndValue('0', this.quantityField)
+          }
         }
       }).catch(error => console.warn(error))
     }
@@ -53,6 +57,7 @@ export default class BasketControl extends Shadow() {
     this.quantityField?.addEventListener('click', this.clickListener)
     this.quantityField?.addEventListener('input', this.inputListener)
     this.setVisibilityAndValue(this.quantityField?.value, this.quantityField)
+    this.disableElements(this.disableAllElements, this.removeButton, this.addButton, this.quantityField)
   }
 
   disconnectedCallback () {
@@ -122,10 +127,10 @@ export default class BasketControl extends Shadow() {
         border: 1px solid var(--quantity-border-color, red);
         font-family: var(--quantity-font-family, inherit);
         font-size: var(--quantity-font-size, inherit);
-        height:var(--quantity-height, auto);
+        height: var(--quantity-height, auto);
         margin: var(--quantity-margin, 0 0.5em);
-        padding: var(--quantity-margin, 0.5em);
-        text-align:var(--quantity-text-align, center);
+        padding: var(--quantity-padding, 0.25em);
+        text-align: var(--quantity-text-align, center);
         width: var(--quantity-margin, 4em);
       }
       input[type=number] {
@@ -145,7 +150,11 @@ export default class BasketControl extends Shadow() {
           0%{opacity: 0}
           100%{opacity: 1}
         }
-      @media only screen and (max-width: _max-width_) {}
+      @media only screen and (max-width: _max-width_) {
+        :host {
+          padding-bottom:var(--content-spacing-mobile, 1em);
+        }
+      }
       `
     return this.fetchTemplate()
   }
@@ -200,6 +209,22 @@ export default class BasketControl extends Shadow() {
     }
   }
 
+  /**
+   * Disables or enables a list of elements based on the value of the `disableState` parameter.
+   * @param {string} disableState - The `disableState` parameter is a string that represents the state of whether
+   * the elements should be disabled or not. It can have two possible values: "true" or "false".
+   * @param {HTMLElement[]} elements - The `elements` parameter is a rest parameter that allows you to pass in multiple
+   * elements as arguments to the function. It can be any number of elements that you want to disable.
+   */
+  disableElements (disableState, ...elements) {
+    const disableElements = (disableState.toLowerCase() === 'true')
+    if (!disableElements) {
+      Array.from(elements).forEach(element => {
+        element.setAttribute('disabled', '')
+      })
+    }
+  }
+
   get quantityField () {
     return this.root.querySelector('input')
   }
@@ -210,5 +235,13 @@ export default class BasketControl extends Shadow() {
 
   get removeButton () {
     return this.root.querySelector('#remove')
+  }
+
+  get addButton () {
+    return this.root.querySelector('#add')
+  }
+
+  get disableAllElements () {
+    return this.getAttribute('disable-all-elements') || 'false'
   }
 }

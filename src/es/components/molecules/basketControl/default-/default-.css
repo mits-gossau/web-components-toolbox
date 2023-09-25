@@ -3,7 +3,7 @@
     --basket-control-default-button-background-color-hover: var(--m-gray-300, black);
     --basket-control-default-button-background-color:var(--m-gray-100, white);
     --basket-control-default-button-border-radius: 50%;
-    --basket-control-default-button-color-disabled: var(--m-gray-500, gray);
+    --basket-control-default-button-color-disabled: var(--m-gray-500, rgb(128, 128, 128));
     --basket-control-default-button-color-hover: var(--m-black, black);
     --basket-control-default-button-label-padding: 0.25em;
     --basket-control-default-button-line-height: initial;

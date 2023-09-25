@@ -6,6 +6,6 @@
     --meta-header-default-flex-direction:row-reverse;
     --meta-header-default-gap:var(--meta-header-default-gap-custom, 1.5em);
     --meta-header-default-margin:var(--meta-header-default-margin-custom, 0 auto);
-    --meta-header-default-padding:var(--meta-header-default-padding-custom, 0.5em 0 0 0);
+    --meta-header-default-padding:var(--meta-header-default-padding-custom, 0.75em 0 0 0);
     --meta-header-default-width:var(--header-default-content-width);
 }
