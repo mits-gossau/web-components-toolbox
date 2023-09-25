@@ -78,7 +78,7 @@ export default class Basket extends Shadow() {
         border-radius: var(--div-border-radius, 1.6em);
         padding: var(--div-padding, 0.8em);
         display: var(--div-display, flex);
-        line-height: var(--div-line-height, 1em);
+        line-height: var(--div-line-height, inherit);
       }
       :host div:hover {
         cursor: pointer;
