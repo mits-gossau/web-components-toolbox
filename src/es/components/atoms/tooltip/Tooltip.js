@@ -138,7 +138,7 @@ export default class Tooltip extends Shadow() {
 
   /**
    * Returns the width attribute of the root element as a number, or 10 if the attribute is not present or not a valid number.
-   * @returns The value of the `width` attribute of the element as a number.
+   * @returns number|number value of the `width` attribute of the element as a number.
    * If the `width` attribute is not present or cannot be converted to a number, it will return 10
    */
   get tooltipWidth () {

@@ -125,7 +125,7 @@ export default class Product extends Shadow() {
    * @param [pushHistory=true] - The `pushHistory` parameter is a boolean value that determines whether
    * to push the new URL with the updated category to the browser's history. If `pushHistory` is set to
    * `true`, the new URL will be added to the browser's history. If `pushHistory` is set to `
-   * @returns the updated URL object.
+   * @returns module:url.URL updated URL object.
    */
   setCategory (category, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)

@@ -6,6 +6,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class ProductList extends Shadow() {
   /**
+   * @param options
    * @param {any} args
    */
   constructor (options = {}, ...args) {

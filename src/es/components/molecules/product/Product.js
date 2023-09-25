@@ -225,7 +225,7 @@ export default class Product extends Shadow() {
    * @param {string} alt - The "alt" parameter is used to specify the alternative text for the image. This text
    * is displayed if the image cannot be loaded or if the user is using a screen reader. It should
    * provide a concise description of the image.
-   * @returns an HTML string that represents a product image element.
+   * @returns string HTML string that represents a product image element.
    */
   createProductImageElement (imageSrc, alt) {
     return /* html */ `
@@ -278,7 +278,7 @@ export default class Product extends Shadow() {
 
   /**
    * The function creates a footer icon by returning an HTML image tag.
-   * @returns an HTML string that includes an image tag with the source attribute set to
+   * @returns string HTML string that includes an image tag with the source attribute set to
    * "../../src/img/migrospro/label-balance.svg" and an empty alt attribute.
    */
   createFooterIcons () {
@@ -302,7 +302,7 @@ export default class Product extends Shadow() {
    * The function removes the brand-name from a given full product name string.
    * @param {string} name - The name parameter is a string that represents a full product name.
    * @param {string} brand - The `brand` parameter is the name of the brand that you want to delete from the `name` string.
-   * @returns the modified name after removing the brand from it.
+   * @returns string modified name after removing the brand from it.
    */
   deleteBrandFromName (name, brand) {
     if (!name) return ''
