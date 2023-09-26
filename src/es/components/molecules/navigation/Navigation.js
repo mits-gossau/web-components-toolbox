@@ -38,7 +38,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * }
  */
 export default class Navigation extends Mutation() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
@@ -108,7 +108,7 @@ export default class Navigation extends Mutation() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -138,7 +138,7 @@ export default class Navigation extends Mutation() {
     super.connectedCallback()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
     this.root.querySelectorAll('a-link').forEach(link => link.removeEventListener('click', this.clickListener))
@@ -146,7 +146,7 @@ export default class Navigation extends Mutation() {
     super.disconnectedCallback()
   }
 
-  mutationCallback (mutationList, observer) {
+  mutationCallback(mutationList, observer) {
     // TODO: It takes too long to find out why certain behaviors happen, for this reason we patch it with this mutation observer
     mutationList.forEach(mutation => {
       if (!mutation.target) return
@@ -173,7 +173,7 @@ export default class Navigation extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -182,7 +182,7 @@ export default class Navigation extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.nav
   }
 
@@ -191,7 +191,7 @@ export default class Navigation extends Mutation() {
    *
    * @return {Promise<void>|void}
    */
-  renderCSS () {
+  renderCSS() {
     const firstLevelCount = this.root.querySelectorAll('nav > ul > li').length
     this.css = /* css */`
       :host{
@@ -222,7 +222,7 @@ export default class Navigation extends Mutation() {
         font-weight: var(--a-font-weight, var(--font-weight, normal));
       }
       ${(this.getAttribute('hover') === 'true' &&
-      `:host > nav > ul li:hover ul a-link,
+        `:host > nav > ul li:hover ul a-link,
       :host > nav > ul li ul:hover a-link,`) || ''}
       :host > nav > ul li a-link.open ~ ul a-link {
         --font-size: var(--a-link-second-level-font-size-${this.getAttribute('no-scroll') || 'no-scroll'}, 1rem);
@@ -259,7 +259,7 @@ export default class Navigation extends Mutation() {
         left: var(--li-ul-left-second-half, unset);
       }
       ${(this.getAttribute('hover') === 'true' &&
-      `:host > nav > ul li:hover ul,
+        `:host > nav > ul li:hover ul,
       :host > nav > ul li ul:hover,`) || ''}
       :host > nav > ul li a-link.open ~ ul {
         display: block;
@@ -444,8 +444,8 @@ export default class Navigation extends Mutation() {
         --search-input-padding-mobile: var(--a-link-content-spacing);
       }
       @media only screen and (max-width: ${self
-      // @ts-ignore
-      .Environment.mobileBreakpoint()}) {
+        // @ts-ignore
+        .Environment.mobileBreakpoint()}) {
         :host {
           --input-line-height: 1.5;
         }
@@ -606,7 +606,7 @@ export default class Navigation extends Mutation() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -671,6 +671,27 @@ export default class Navigation extends Mutation() {
           path: `${this.importMetaUrl}./yearbooks-/yearbooks-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
+      case 'navigation-migrospro-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--navigation-default-',
+            flags: 'g',
+            replacement: '--navigation-migrospro-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--navigation-alnatura-',
+            flags: 'g',
+            replacement: '--navigation-migrospro-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./migrospro-/migrospro-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
       default:
         return Promise.resolve()
     }
@@ -682,7 +703,7 @@ export default class Navigation extends Mutation() {
    * @param {string[]} [arrowDirections=['up', 'down']]
    * @return {Promise<void>}
    */
-  renderHTML (arrowDirections = ['left', 'right']) {
+  renderHTML(arrowDirections = ['left', 'right']) {
     this.nav = this.root.querySelector('nav') || document.createElement('nav')
     this.nav.setAttribute('aria-labelledby', 'hamburger')
     this.nav.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
@@ -816,17 +837,17 @@ export default class Navigation extends Mutation() {
     })
   }
 
-  get focusLostClose () {
+  get focusLostClose() {
     return this.hasAttribute('focus-lost-close') && this.getAttribute('focus-lost-close') !== 'false'
   }
 
-  getBackground () {
+  getBackground() {
     const background = document.createElement('div')
     background.classList.add('background')
     return background
   }
 
-  setFocusLostClickBehavior () {
+  setFocusLostClickBehavior() {
     clearTimeout(this._focusLostClickBehaviorTimeout)
     this._focusLostClickBehaviorTimeout = setTimeout(() => {
       // the checkMedia is used to hack the click behavior of BaseNavigation to remove on desktop all li.open when  clicked away or in an other menu point. This because we need to indicate the active menu point with a border under the list
@@ -838,7 +859,7 @@ export default class Navigation extends Mutation() {
     }, 50)
   }
 
-  adjustArrowDirections (event, arrowDirections = ['left', 'right'], selector = 'li.open') {
+  adjustArrowDirections(event, arrowDirections = ['left', 'right'], selector = 'li.open') {
     if (!event) return
     Array.from(this.root.querySelectorAll(selector)).forEach(link => {
       let arrow
@@ -846,7 +867,7 @@ export default class Navigation extends Mutation() {
     })
   }
 
-  backgroundAdjust () {
+  backgroundAdjust() {
     if (this.checkMedia('desktop')) {
       let section
       if (!(section = this.root.querySelector('li.open section'))) return
@@ -859,7 +880,7 @@ export default class Navigation extends Mutation() {
     }
   }
 
-  openClose (open = true) {
+  openClose(open = true) {
     // mobile has an extra height: calc(100% + 300px) url workaround, but scroll back when closed
     if (!open && this.getMedia() !== 'desktop') {
       this.scroll({
@@ -891,12 +912,12 @@ export default class Navigation extends Mutation() {
    * @returns {boolean}
    * @memberof IntersectionScrollEffect
    */
-  checkMedia (media = this.getAttribute('media')) {
+  checkMedia(media = this.getAttribute('media')) {
     const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
     return (isMobile ? 'mobile' : 'desktop') === media
   }
 
-  get style () {
+  get style() {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
@@ -904,12 +925,12 @@ export default class Navigation extends Mutation() {
     })())
   }
 
-  get liSearch () {
+  get liSearch() {
     return this.root.querySelector('li.search') || this.root.querySelector('li')
   }
 
   // adjust logo top position
-  checkIfWrapped (resetCouter) {
+  checkIfWrapped(resetCouter) {
     if (this.getMedia() !== 'desktop') return
     this._checkIfWrappedCounter = resetCouter ? 1 : !this._checkIfWrappedCounter ? 1 : this._checkIfWrappedCounter + 1
     self.requestAnimationFrame(timeStamp => {
@@ -925,7 +946,7 @@ export default class Navigation extends Mutation() {
     })
   }
 
-  getMedia () {
+  getMedia() {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 }

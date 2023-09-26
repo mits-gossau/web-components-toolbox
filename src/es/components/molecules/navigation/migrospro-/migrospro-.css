@@ -1,0 +1,35 @@
+:host {
+  --menu-color: var(--menu-color-custom, var(--color-secondary, black));
+  --navigation-migrospro-color: var(--navigation-migrospro-color-custom, var(--menu-color));
+}
+:host > nav > ul li.open > o-nav-wrapper > section {
+  --navigation-migrospro-background-color-hover: transparent;
+}
+:host > nav > ul > li > a-link {
+  --navigation-migrospro-color-active: var(--background-color);
+}
+:host > nav > ul > li.open > a-link {
+  --navigation-migrospro-background-color-active: var(--menu-color);
+  --navigation-migrospro-color: var(--menu-background-color);
+  --navigation-migrospro-color-active: var(--menu-background-color);
+}
+:host > nav > ul > li:not(.open) > a-link {
+  --navigation-migrospro-color-active: var(--color-hover);
+  --navigation-migrospro-color-hover: var(--color-color);
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --navigation-migrospro-background-color-hover: transparent;
+    --navigation-migrospro-background-color-active: transparent;
+  }
+  :host > nav > ul > li:not(.open) > a-link {
+    --navigation-migrospro-color-hover: var(--color-hover);
+  }
+  :host > nav > ul > li > a-link, :host(.no-scroll) > nav > ul > li > a-link {
+    --navigation-migrospro-color: var(--menu-color);
+    --navigation-migrospro-color-active: var(--color-hover);
+  }
+  :host > nav > ul.language-switcher li, :host(:not(.no-scroll)) > nav > ul.language-switcher li, :host > nav > ul:not(.open).language-switcher li, :host(:not(.no-scroll)) > nav > ul:not(.open).language-switcher li {
+    --navigation-migrospro-color-mobile: var(--menu-color);
+  }
+}
