@@ -189,12 +189,12 @@ export default class Form extends Shadow() {
       }
       .form-radio-group {
         display: flex;
-        gap: 2rem;
+        gap: var(--radio-group-gap, 2rem);
       }
       .form-radio-group span {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: var(--radio-group-span-gap, 0.5rem);
       }
       .form-radio-group label{
         display: flex;
