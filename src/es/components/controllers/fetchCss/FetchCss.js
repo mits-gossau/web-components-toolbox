@@ -9,6 +9,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 import { WebWorker } from '../../prototypes/WebWorker.js'
 
 /* global fetch */
+/* global self */
 
 /**
  * FetchCss is a caching mechanism for src/es/components/prototypes/Shadow.js:fetchCSS L:347 and can just be set as an ancestor which listens to the fetch-css events
@@ -65,18 +66,21 @@ export default class FetchCss extends Shadow(WebWorker()) {
           } else {
             this.fetchStyleCache.set(fetchCSSParamWithDefaultValues.path, (fetchStyle = FetchCss.fetchStyle(fetchCSSParamWithDefaultValues.path, event.detail.node)))
           }
+          // @ts-ignore
           fetchStyle.catch(
             error => {
               fetchCSSParamWithDefaultValues.error = error
               return fetchCSSParamWithDefaultValues
             }
           )
+          // @ts-ignore
           const processedStyle = this.processStyle(fetchCSSParamWithDefaultValues, fetchStyle)
           this.processedStyleCache.set(processedStyleCacheKey, processedStyle)
           return Promise.resolve(fetchCSSParamWithDefaultValues)
         }
       )).then(fetchCSSParams => {
         // wait for styles to load and set them fetchCSSParam.style = style in order
+        // @ts-ignore
         Promise.all(fetchCSSParams.map(fetchCSSParam => this.processedStyleCache.get(FetchCss.cacheKeyGenerator(fetchCSSParam)).then(style => {
           fetchCSSParam.style = style
           return fetchCSSParam
@@ -179,9 +183,11 @@ export default class FetchCss extends Shadow(WebWorker()) {
       /** @type {HTMLStyleElement} */
       fetchCSSParam.styleNode = document.createElement('style')
       fetchCSSParam.styleNode.setAttribute('_css', fetchCSSParam.path)
+      // @ts-ignore
       fetchCSSParam.styleNode.setAttribute('mobile-breakpoint', fetchCSSParam.maxWidth)
       fetchCSSParam.styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
-      if (fetchCSSParam.node.hasShadowRoot && fetchCSSParam.node.root.querySelector(fetchCSSParam.node.cssSelector + ` > [_css="${fetchCSSParam.path}"]`)) console.warn(`${fetchCSSParam.path} got imported more than once!!!`, fetchCSSParam.node)
+      // @ts-ignore
+      if (self.Environment && self.Environment.isTestingEnv && fetchCSSParam.node.root.querySelector(fetchCSSParam.node.cssSelector + ` > [_css="${fetchCSSParam.path}"]`)) console.warn(`${fetchCSSParam.path} got imported more than once!!!`, fetchCSSParam.node)
     }
     if (fetchCSSParam.appendStyleNode) fetchCSSParam.node.root.appendChild(fetchCSSParam.styleNode) // append the style tag in order to which promise.all resolves
     return fetchCSSParam

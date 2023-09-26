@@ -11,7 +11,7 @@ export default class Checkout extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
-        this.html = ""
+        this.html = ''
         this.renderHTML(productData.response)
       }).catch(error => {
         this.html = ''
@@ -221,7 +221,7 @@ export default class Checkout extends Shadow() {
    * @returns {string} an HTML table with the following information:
    */
   totalAndTaxes (data) {
-    const { totalTtc, montantRabais, totalTva1, totalTva2, totalHt, totalTtcAvecRabais, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation  } = data
+    const { totalTtc, montantRabais, totalTva1, totalTva2, totalHt, totalTtcAvecRabais, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
     return /* html */ `
       <table>
         <tr class="bold">
