@@ -187,6 +187,15 @@ export default class Form extends Shadow() {
         padding:0;
         margin:0;
       }
+      .form-radio-group {
+        display: flex;
+        gap: var(--radio-group-gap, 2rem);
+      }
+      .form-radio-group span {
+        display: flex;
+        align-items: center;
+        gap: var(--radio-group-span-gap, 0.5rem);
+      }
       .form-radio-group label{
         display: flex;
       }
