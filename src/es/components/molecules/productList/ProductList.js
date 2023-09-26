@@ -69,10 +69,7 @@ export default class ProductList extends Shadow() {
       justify-content: var(--justify-content, space-between);
     }
     :host > m-load-template-tag {
-      flex: var(--m-load-template-tag-flex, 0 0 13vw);
-      min-height: var(--m-load-template-tag-min-height, 12em);
-      min-width: var(--m-load-template-tag-min-width, 13vw);
-      width: var(--m-load-template-tag-width, 13vw);
+      flex: var(--m-load-template-tag-flex, 1 1 12em);
     }
     :host .filter {
       align-self: var(--filter-align-self, center);
