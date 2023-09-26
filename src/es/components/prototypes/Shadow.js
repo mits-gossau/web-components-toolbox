@@ -206,7 +206,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {string} [cssSelector = this.cssSelector]
    * @param {string|false} [namespace = this.namespace]
    * @param {boolean} [namespaceFallback = this.namespaceFallback]
-   * @param {HTMLStyleElement} [styleNode = this._css]
+   * @param {HTMLStyleElement | *} [styleNode = this._css]
    * @param {boolean} [appendStyleNode = true]
    * @param {string} [maxWidth = this.mobileBreakpoint]
    * @param {HTMLElement & Shadow} [node = this]

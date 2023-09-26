@@ -27,6 +27,7 @@ export default class MetaHeader extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
       :host {
+        align-items: var(--align-items, stretch);
         display:var(--display,flex);
         flex-direction:var(--flex-direction, row);
         gap:var(--gap,normal);
@@ -41,7 +42,12 @@ export default class MetaHeader extends Shadow() {
         align-items:var(--div-align-items, center);
       }
       @media only screen and (max-width: _max-width_) {
-        :host {}
+        :host {
+          justify-content: var(--justify-content-mobile, space-between);
+        }
+        :host div {
+          flex: var(--div-flex-mobile, 1);
+        }
       }
     `
     return this.fetchTemplate()
