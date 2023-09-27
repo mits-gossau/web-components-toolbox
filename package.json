@@ -6,7 +6,8 @@
   "scripts": {
     "fix": "standard --fix",
     "serve": "live-server --port=4200 --host=localhost",
-    "generate": "node generator/bk-generate.js"
+    "generate": "node generator/bk-generate.js",
+    "make": "node generator/templates/component/index.js --dummy --atoms"
   },
   "author": "weedshaker@gmail.com, edx.mgb@gmail.com",
   "license": "MIT",
@@ -14,7 +15,10 @@
     "@playwright/test": "^1.20.2",
     "live-server": "*",
     "shelljs": "^0.8.5",
-    "standard": "*"
+    "standard": "*",
+    "ejs": "^3.1.9",
+    "fs-extra": "^11.1.1",
+    "yargs-parser": "^21.1.1"
   },
   "standard": {
     "ignore": [
