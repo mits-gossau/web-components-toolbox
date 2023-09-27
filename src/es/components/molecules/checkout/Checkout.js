@@ -116,7 +116,16 @@ export default class Checkout extends Shadow() {
         padding: var(--table-td-padding, 0.5em);
       }
     @media only screen and (max-width: _max-width_) {
-      :host {}
+      :host .product-item {
+        padding: var(--product-item-padding-mobile, 1em 0);
+      }
+      :host .product-item:last-of-type {
+        padding-bottom: var(--product-item-last-padding-bottom-mobile, 1em);
+      }
+      :host .product-image {
+        margin: var(--product-image-margin-mobile, 0 0.5em);
+        min-width: var(--product-image-min-width-mobile, 5em);
+      }
     }
     `
     return this.fetchTemplate()
