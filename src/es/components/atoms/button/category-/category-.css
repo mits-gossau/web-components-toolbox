@@ -25,6 +25,7 @@
 @media only screen and (max-width: _max-width_) {
     :host {
         --button-category-label-text-align: center;
+        --button-category-justify-content: var(--button-category-justify-content-mobile-custom, flex-start);
     }
     button {
         flex-direction: column;
