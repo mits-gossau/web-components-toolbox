@@ -88,7 +88,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
           fetchCSSParams.forEach(fetchCSSParam => {
             // append styles in order, since this is important for overwrite
             FetchCss.appendStyle(fetchCSSParam)
-            fetchCSSParam.styleNode.textContent = fetchCSSParam.style
+            fetchCSSParam.styleNode.textContent += fetchCSSParam.style
           })
           event.detail.resolve(fetchCSSParams)
         }).catch(error => error)
