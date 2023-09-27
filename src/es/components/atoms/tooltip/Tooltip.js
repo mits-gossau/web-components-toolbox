@@ -72,7 +72,7 @@ export default class Tooltip extends Shadow() {
       width: var(--width);
       z-index: var(--tooltip-text-z-index, 1);
     }
-    :host .tooltip:hover .tooltip-text{
+    :host .tooltip:hover .tooltip-text {
       background-color: var(--m-gray-800, black);
       visibility: var(--tooltip-hover-visibility, visible);
     }
@@ -90,11 +90,13 @@ export default class Tooltip extends Shadow() {
       margin-bottom: var(--tooltip-text-icon-margin-bottom, 0.4em);
     }
     :host .icon-img {
-      width: var(--icon-img-width, 100%);
       height: var(--icon-img-height, 1.5em);
+      width: var(--icon-img-width, 100%);
     }
     @media only screen and (max-width: _max-width_) {
-      :host {}
+      :host .tooltip:hover .tooltip-text {
+        visibility: var(--tooltip-hover-visibility-mobile, hidden);
+      }
     }
     `
     return this.fetchTemplate()
