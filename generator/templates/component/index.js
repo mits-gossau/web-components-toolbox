@@ -34,9 +34,10 @@ const defaultTemplates = (data, templatePath) => {
 }
 
 const main = () => {
-  console.log('Generating template...')
   try {
+    console.log('Generating template...')
     const { _: rest, name, type } = argv
+    console.log(name,type)
     console.log(argv)
     const data = {
       name: name.charAt(0).toUpperCase() + name.slice(1),
@@ -57,7 +58,7 @@ const main = () => {
 
     ejs.renderFile(filename, data, options, (err, str) => {
       if (err) console.error(err)
-      const directoryPath = `../../../src/es/components/${data.type}/${data.folderName}/`
+      const directoryPath = `./src/es/components/${data.type}/${data.folderName}/`
       const templatePath = `${directoryPath}/default-/` 
       try {
         fs.mkdirSync(directoryPath)

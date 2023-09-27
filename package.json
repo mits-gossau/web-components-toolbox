@@ -7,7 +7,7 @@
     "fix": "standard --fix",
     "serve": "live-server --port=4200 --host=localhost",
     "generate": "node generator/bk-generate.js",
-    "make": "node generator/templates/component/index.js --dummy --atoms"
+    "make": "node generator/templates/component/index.js --name=$npm_config_name --type=$npm_config_type"
   },
   "author": "weedshaker@gmail.com, edx.mgb@gmail.com",
   "license": "MIT",
