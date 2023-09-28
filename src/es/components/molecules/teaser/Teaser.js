@@ -52,7 +52,6 @@ export default class Teaser extends Intersection() {
       this.checkIfLink()
       this.hidden = false
     })
-    this.addEventListener('click', this.clickListener)
     if (this.getAttribute('namespace') === 'teaser-overlay-') {
       this.addEventListener('mouseover', this.mouseoverListener)
       this.addEventListener('mouseout', this.mouseoutListener)
@@ -61,7 +60,6 @@ export default class Teaser extends Intersection() {
 
   disconnectedCallback () {
     super.disconnectedCallback()
-    this.removeEventListener('click', this.clickListener)
     if (this.getAttribute('namespace') === 'teaser-overlay-') {
       this.removeEventListener('mouseover', this.mouseoverListener)
       this.removeEventListener('mouseout', this.mouseoutListener)
