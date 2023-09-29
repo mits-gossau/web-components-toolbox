@@ -26,9 +26,30 @@ export default class Basket extends Shadow() {
     document.body.removeEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
   }
 
-  answerEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
-    event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }} */ productData) => {
-      this.count.textContent = productData.response.allOrderItemProductTotal
+  answerEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => { 
+    event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }} */ data) => {
+      console.log(data)
+      let counter = '0'
+      if (this.getAttribute('counter-detail-property-name')) {
+        const words = this.getAttribute('counter-detail-property-name').split(':')
+        const lastWord = words.reduce((accumulator, currentWord) => {
+          if (currentWord === words[words.length - 1]) {
+            return currentWord;
+          }
+          return accumulator;
+        }, "");
+        console.log("--",lastWord);
+        // counter = this.getAttribute('counter-detail-property-name').split(':').reduce((acc, prop) => {
+        //   // @ts-ignore
+        //   console.log("acc", prop)
+        //   prop = prop.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
+        //   if (acc instanceof Promise) acc = acc
+        //   return acc
+        //     ? acc[prop]
+        //     : {} // error handling, in case the await on fetch does not resolve
+        // }, event.detail)
+      }
+      this.count.textContent = data.response.allOrderItemProductTotal
     }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
       console.warn(error)
