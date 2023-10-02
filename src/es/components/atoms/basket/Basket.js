@@ -28,28 +28,17 @@ export default class Basket extends Shadow() {
 
   answerEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => { 
     event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }} */ data) => {
-      console.log(data)
       let counter = '0'
       if (this.getAttribute('counter-detail-property-name')) {
-        const words = this.getAttribute('counter-detail-property-name').split(':')
-        const lastWord = words.reduce((accumulator, currentWord) => {
-          if (currentWord === words[words.length - 1]) {
-            return currentWord;
+        const propertyNamePath = this.getAttribute('counter-detail-property-name').split(':')
+        counter = propertyNamePath.reduce((/** @type {{ [x: string]: any; }} */ acc, /** @type {string | number} */ currentPath) => {
+          if (currentPath === propertyNamePath[propertyNamePath.length - 1]) {
+            return acc[currentPath].toString();
           }
-          return accumulator;
-        }, "");
-        console.log("--",lastWord);
-        // counter = this.getAttribute('counter-detail-property-name').split(':').reduce((acc, prop) => {
-        //   // @ts-ignore
-        //   console.log("acc", prop)
-        //   prop = prop.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
-        //   if (acc instanceof Promise) acc = acc
-        //   return acc
-        //     ? acc[prop]
-        //     : {} // error handling, in case the await on fetch does not resolve
-        // }, event.detail)
+          return acc[currentPath];
+        }, data);
       }
-      this.count.textContent = data.response.allOrderItemProductTotal
+      this.count.textContent = counter
     }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
       console.warn(error)
