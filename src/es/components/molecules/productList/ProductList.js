@@ -68,8 +68,14 @@ export default class ProductList extends Shadow() {
       gap:var(--gap, 0.75em);
       justify-content: var(--justify-content, space-between);
     }
+    /* TODO clarify with Dino:
+    - needs to be space between?
+    - where we still use this template => can the @media 1145px change something else on the website?*/
     :host > m-load-template-tag {
-      flex: var(--m-load-template-tag-flex, 1 1 12em);
+      flex: var(--m-load-template-tag-flex, 0 0 13vw);
+      min-height: var(--m-load-template-tag-min-height, 12em);
+      min-width: var(--m-load-template-tag-min-width, 13vw);
+      width: var(--m-load-template-tag-width, 13vw);
     }
     :host .filter {
       align-self: var(--filter-align-self, center);
@@ -77,14 +83,22 @@ export default class ProductList extends Shadow() {
       min-height: var(--filter-min-height, 1em);
       width: var(--filter-width, 100%);
     }
-    @media only screen and (max-width: _max-width_) {
+
+    @media only screen and (max-width:1145px) {
       :host {
         flex-direction:var(--flex-direction-mobile, row);
         gap:var(--gap-mobile, 0.5em);
       }
       :host > m-load-template-tag {
         min-height: var(--m-load-template-tag-min-height-mobile, auto);
-        min-width: var(--m-load-template-tag-min-width-mobile, 12em);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(33% - 0.5em)));
+      }
+    }
+
+    @media only screen and (max-width: _max-width_) {
+      :host > m-load-template-tag {
+        min-height: var(--m-load-template-tag-min-height-mobile, auto);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(50% - 0.5em)));
       }
     }
     `
