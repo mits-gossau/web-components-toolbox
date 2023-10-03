@@ -382,6 +382,13 @@ export default class Button extends Hover() {
           namespace: false,
           replaces
         }])
+      case 'button-action-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./action-/action-.css`,
+          namespace: false,
+          replaces
+        }])
       default:
         return Promise.resolve()
     }
