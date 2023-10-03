@@ -88,7 +88,6 @@ export default class Header extends Shadow() {
     this.resizeListener = event => {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
-        this.adjustLogoPos(true)
         this.setStickyOffsetHeight()
       }, 200)
     }
@@ -113,8 +112,6 @@ export default class Header extends Shadow() {
     Promise.all(showPromises).then(() => {
       this.hidden = false
       this.setStickyOffsetHeight()
-      this.adjustLogoPos(true)
-      setTimeout(() => this.adjustLogoPos(true), 1000)
     })
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
@@ -272,7 +269,8 @@ export default class Header extends Shadow() {
         position: absolute;
         left: calc((100% - var(--content-width, 55%)) / 2);
         z-index: 1001;
-        top: var(--a-logo-top, 0);
+        transform: translate(0, -50%);
+        top: 50%;
         transition: top 0.2s ease-out;
       }
       @keyframes backgroundAnimation {
@@ -388,7 +386,6 @@ export default class Header extends Shadow() {
           flex-grow: 1;
           left: auto;
           right: var(--content-spacing-mobile, var(--content-spacing));
-          top: var(--a-logo-top-mobile, -1em);
         }
         :host > header::before {
           order: 1;
@@ -480,8 +477,6 @@ export default class Header extends Shadow() {
         })
         this.header.appendChild(this.MenuIcon)
         this.html = this.style
-        this.html = this.styleTwo
-        this.adjustLogoPos(true)
       })
       : Promise.resolve()
   }
@@ -511,23 +506,6 @@ export default class Header extends Shadow() {
     })
   }
 
-  // adjust logo top position
-  adjustLogoPos (resetCouter) {
-    this.styleTwo.textContent = ''
-    if (this.getMedia() !== 'desktop') return
-    this._adjustLogoPosCounter = resetCouter ? 1 : !this._adjustLogoPosCounter ? 1 : this._adjustLogoPosCounter + 1
-    self.requestAnimationFrame(timeStamp => {
-      const navHeight = this.mNavigation ? this.mNavigation.offsetHeight : 200
-      const logoHeight = this.aLogo.offsetHeight
-      if (this._adjustLogoPosCounter < 30 && (!navHeight || !logoHeight)) return setTimeout(() => this.adjustLogoPos(false), 1000)
-      this.setCss(/* CSS */`
-        :host > header > a-logo {
-          top: calc(${navHeight}px / 2 - ${logoHeight}px / 2);
-        }
-      `, undefined, undefined, undefined, this.styleTwo)
-    })
-  }
-
   getMedia () {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
@@ -538,15 +516,6 @@ export default class Header extends Shadow() {
       style.setAttribute('protected', 'true')
       style.setAttribute('_csssetStickyOffsetHeight', '')
       return style
-    })())
-  }
-
-  get styleTwo () {
-    return this._styleTwo || (this._styleTwo = (() => {
-      const styleTwo = document.createElement('style')
-      styleTwo.setAttribute('protected', 'true')
-      styleTwo.setAttribute('_cssadjustLogoPos', '')
-      return styleTwo
     })())
   }
 }
