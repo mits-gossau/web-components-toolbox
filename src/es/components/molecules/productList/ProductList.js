@@ -9,7 +9,7 @@ export default class ProductList extends Shadow() {
    * @param options
    * @param {any} args
    */
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     // TODO: Replace with attribute value
@@ -30,7 +30,7 @@ export default class ProductList extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
@@ -45,11 +45,11 @@ export default class ProductList extends Shadow() {
     ))
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -58,7 +58,7 @@ export default class ProductList extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host {
       align-items: var(--align, stretch);
@@ -67,10 +67,9 @@ export default class ProductList extends Shadow() {
       flex-wrap: var(--flex-wrap, wrap);
       gap:var(--gap, 0.75em);
       justify-content: var(--justify-content, space-between);
+      container: products / inline-size;
     }
-    /* TODO clarify with Dino:
-    - needs to be space between?
-    - where we still use this template => can the @media 1145px change something else on the website?*/
+
     :host > m-load-template-tag {
       flex: var(--m-load-template-tag-flex, 0 0 13vw);
       min-height: var(--m-load-template-tag-min-height, 12em);
@@ -84,18 +83,20 @@ export default class ProductList extends Shadow() {
       width: var(--filter-width, 100%);
     }
 
-    @media only screen and (max-width:1145px) {
+    @media only screen and (max-width: _max-width_){
       :host {
-        flex-direction:var(--flex-direction-mobile, row);
         gap:var(--gap-mobile, 0.5em);
       }
+    }
+
+    @container products (max-width: 51em){
       :host > m-load-template-tag {
         min-height: var(--m-load-template-tag-min-height-mobile, auto);
         min-width: var(--m-load-template-tag-min-width-mobile, min(calc(33% - 0.5em)));
       }
     }
 
-    @media only screen and (max-width: _max-width_) {
+    @container products (max-width: 30em){
       :host > m-load-template-tag {
         min-height: var(--m-load-template-tag-min-height-mobile, auto);
         min-width: var(--m-load-template-tag-min-width-mobile, min(calc(50% - 0.5em)));
@@ -110,7 +111,7 @@ export default class ProductList extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -142,7 +143,7 @@ export default class ProductList extends Shadow() {
    * `mapiProductId` (the ID of the product) and `amount` (the quantity of the product ordered).
    * @returns {Promise<void>} The function `renderHTML` returns a Promise.
    */
-  async renderHTML (productData, totalHits, orderItems) {
+  async renderHTML(productData, totalHits, orderItems) {
     if (!productData || (productData !== 'loading' && (!Array.isArray(productData) || !productData.length))) {
       this.html = ''
       this.html = `${this.getAttribute('no-products-found-translation') || 'Leider haben wir keine Produkte zu diesem Suchbegriff gefunden.'}`
@@ -236,7 +237,7 @@ export default class ProductList extends Shadow() {
    * @returns {HTMLElement} The code is returning the value of `this._style` if it exists, otherwise it is creating a
    * new `<style>` element, setting its `protected` attribute to `true`, and returning it.
    */
-  get style () {
+  get style() {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
@@ -244,15 +245,15 @@ export default class ProductList extends Shadow() {
     })())
   }
 
-  get totalArticlesText () {
+  get totalArticlesText() {
     return this.getAttribute('total-articles-text') || ''
   }
 
-  get tooltipBalanceText () {
+  get tooltipBalanceText() {
     return this.getAttribute('tooltip-translation-balance') || ''
   }
 
-  get isLoggedIn () {
+  get isLoggedIn() {
     return this.getAttribute('is-logged-in') || 'false'
   }
 }
