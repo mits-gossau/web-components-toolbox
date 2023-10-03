@@ -113,8 +113,7 @@ export default class Basket extends Shadow() {
 
     // amount returned from quantity field input value
     const amount = event.detail.amount ? `&amount=${event.detail.amount}` : ''
-    const productName = event.detail.this ? `&name=${event.detail.this.hasAttribute('product-name') && event.detail.this.getAttribute('product-name')}` : '' 
-    
+    const productName = event.detail.this ? `&name=${event.detail.this.hasAttribute('product-name') && event.detail.this.getAttribute('product-name')}` : ''
 
     // @ts-ignore
     const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiAddToOrder}?productId=${productId}${amount}${productName}`

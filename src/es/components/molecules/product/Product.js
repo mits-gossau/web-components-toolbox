@@ -202,7 +202,6 @@ export default class Product extends Shadow() {
     this.html = a
   }
 
-
   /**
    * Creates an HTML element for a basket utility with buttons to add or remove items from the basket.
    * @param {string} id - The `id` parameter is used to identify the basket element. It could be a unique
