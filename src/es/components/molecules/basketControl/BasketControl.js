@@ -21,9 +21,9 @@ export default class BasketControl extends Shadow() {
             return item.mapiProductId === event.detail.id && item.mapiProductId === this.currentProductId
           })
           if (currentProduct) {
-            this.setVisibilityAndValue(currentProduct.amount.toString(), this.quantityField)
+            this.setVisibilityAndValue(currentProduct.amount.toString(), this.quantityField, this.addButton, this.removeButton)
           } else {
-            this.setVisibilityAndValue('0', this.quantityField)
+            this.setVisibilityAndValue('0', this.quantityField, this.addButton, this.removeButton)
           }
         }
       }).catch(error => console.warn(error))
@@ -40,8 +40,9 @@ export default class BasketControl extends Shadow() {
       this.dispatchEvent(new CustomEvent(this.quantityField.getAttribute('request-event-name') || 'request-event-name',
         {
           detail: {
-            amount: Number(event.target.value),
-            id: event.target.getAttribute('tag')
+            amount: inputValue,
+            id: event.target.getAttribute('tag'),
+            productName: event.target.getAttribute('product-name')
           },
           bubbles: true,
           cancelable: true,
@@ -56,7 +57,7 @@ export default class BasketControl extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.quantityField?.addEventListener('click', this.clickListener)
     this.quantityField?.addEventListener('input', this.inputListener)
-    this.setVisibilityAndValue(this.quantityField?.value, this.quantityField)
+    this.setVisibilityAndValue(this.quantityField?.value, this.quantityField, this.addButton, this.removeButton)
     this.disableElements(this.disableAllElements, this.removeButton, this.addButton, this.quantityField)
   }
 
@@ -193,12 +194,16 @@ export default class BasketControl extends Shadow() {
   }
 
   /**
-   * Sets the value of an input field and adds or removes a class based on the value.
-   * @param {string} value - The value parameter is the value that will be set to the input field.
-   * @param {HTMLInputElement} inputField - The inputField parameter is a reference to the quantity HTML input element.
+   * Sets the visibility and value of certain elements based on a given value.
+   * @param {string} value - The value is the value that will be set in the input field and used as the attribute value for the addButton and removeButton elements.
+   * @param inputField - The inputField parameter is the HTML input element where the value will be displayed or set.
+   * @param addButton - The addButton parameter is the button element that is used to add a value to the input field.
+   * @param removeButton - The `removeButton` parameter is a reference to a button element that is used to remove an item or perform a similar action.
    */
-  setVisibilityAndValue (value, inputField) {
-    inputField.value = value
+  setVisibilityAndValue (value, inputField, addButton, removeButton) {
+    inputField.value = value.toString()
+    addButton.setAttribute('amount', value.toString())
+    removeButton.setAttribute('amount', value.toString())
     if (value === '0') {
       this.classList.add('closed')
     } else if (value === this.disableMinimum) {
