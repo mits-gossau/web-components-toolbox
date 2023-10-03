@@ -67,24 +67,40 @@ export default class ProductList extends Shadow() {
       flex-wrap: var(--flex-wrap, wrap);
       gap:var(--gap, 0.75em);
       justify-content: var(--justify-content, space-between);
+      container: products / inline-size;
     }
+    
     :host > m-load-template-tag {
-      flex: var(--m-load-template-tag-flex, 1 1 12em);
+      flex: var(--m-load-template-tag-flex, 0 0 13vw);
+      min-height: var(--m-load-template-tag-min-height, 12em);
+      min-width: var(--m-load-template-tag-min-width, 13vw);
+      width: var(--m-load-template-tag-width, 13vw);
     }
+
     :host .filter {
       align-self: var(--filter-align-self, center);
       flex: var(--filter-flex, inherit);
       min-height: var(--filter-min-height, 1em);
       width: var(--filter-width, 100%);
     }
-    @media only screen and (max-width: _max-width_) {
+   
+    @media only screen and (max-width: _max-width_){
       :host {
-        flex-direction:var(--flex-direction-mobile, row);
         gap:var(--gap-mobile, 0.5em);
       }
+    }
+
+    @container products (max-width: 51em){
       :host > m-load-template-tag {
         min-height: var(--m-load-template-tag-min-height-mobile, auto);
-        min-width: var(--m-load-template-tag-min-width-mobile, 12em);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(33% - 0.5em)));
+      }
+    }
+
+    @container products (max-width: 30em){
+      :host > m-load-template-tag {
+        min-height: var(--m-load-template-tag-min-height-mobile, auto);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(50% - 0.5em)));
       }
     }
     `
