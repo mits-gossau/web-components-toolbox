@@ -83,6 +83,7 @@ export default class ProductList extends Shadow() {
       flex: var(--filter-flex, inherit);
       min-height: var(--filter-min-height, 1em);
       width: var(--filter-width, 100%);
+      margin: var(--filter-margin, 0 0 1em 0);
     }
 
     @container products (max-width: 52em){
