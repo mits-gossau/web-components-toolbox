@@ -65,8 +65,8 @@ export default class ProductList extends Shadow() {
       display: var(--display, flex);
       flex-direction:var(--flex-direction, row);
       flex-wrap: var(--flex-wrap, wrap);
-      gap:var(--gap, 0.75em);
-      justify-content: var(--justify-content, space-between);
+      justify-content: var(--justify-content, start);
+      width: 100%;
       container: products / inline-size;
     }
     
@@ -75,6 +75,7 @@ export default class ProductList extends Shadow() {
       min-height: var(--m-load-template-tag-min-height, 12em);
       min-width: var(--m-load-template-tag-min-width, 13vw);
       width: var(--m-load-template-tag-width, 13vw);
+      margin: var(--m-load-template-tag-margin, 0 0.5em 0.5em 0);
     }
 
     :host .filter {
@@ -83,14 +84,8 @@ export default class ProductList extends Shadow() {
       min-height: var(--filter-min-height, 1em);
       width: var(--filter-width, 100%);
     }
-   
-    @media only screen and (max-width: _max-width_){
-      :host {
-        gap:var(--gap-mobile, 0.5em);
-      }
-    }
 
-    @container products (max-width: 51em){
+    @container products (max-width: 52em){
       :host > m-load-template-tag {
         min-height: var(--m-load-template-tag-min-height-mobile, auto);
         min-width: var(--m-load-template-tag-min-width-mobile, min(calc(33% - 0.5em)));
