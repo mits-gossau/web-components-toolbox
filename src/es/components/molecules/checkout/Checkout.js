@@ -182,12 +182,13 @@ export default class Checkout extends Shadow() {
     ])
 
     return Promise.all([productData, fetchModules]).then(() => {
+      console.log(productData);
       if (!productData) {
         this.html = '<span style="color:var(--color-error);">Une erreur est survenue. Les données ne peuvent pas être affichées.</span>'
         return
       }
       // @ts-ignore
-      const products = productData.orderItems.map(product => {
+      const products = productData.OrderItems.map(product => {
         if (product.productDetail) {
           return /* html */ `
             <div class="product-item">
@@ -208,10 +209,10 @@ export default class Checkout extends Shadow() {
                 <div class="product-footer">
                   <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1" disable-all-elements="${this.isLoggedIn}">
                     <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-"></a-button>
-                    <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket">
+                    <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.Amount}" min=0 max=9999 request-event-name="add-basket">
                     <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+"></a-button>
                   </m-basket-control>
-                  <div class="bold">${product.productTotal}</div>
+                  <div class="bold">${product.ProductTotal}</div>
                 </div>
              </div>
              </div>`
@@ -230,32 +231,32 @@ export default class Checkout extends Shadow() {
    * @returns {string} an HTML table with the following information:
    */
   totalAndTaxes (data) {
-    const { totalTtc, montantRabais, totalTva1, totalTva2, totalHt, totalTtcAvecRabais, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
+    const { TotalTtc, CompanyDiscountValue, TotalTva1, TotalTva2, TotalHt, TotalTtcAvecRabais, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
     return /* html */ `
       <table>
         <tr class="bold">
           <td>${totalTtcTranslation}</td>
-          <td>${totalTtc}</td>
+          <td>${TotalTtc}</td>
         </tr>
         <tr>
           <td>${montantRabaisTranslation}</td>
-          <td>${montantRabais}</td>
+          <td>${CompanyDiscountValue}</td>
         </tr>
         <tr>
           <td>${totalTva1Translation}</td>
-          <td>${totalTva1}</td>
+          <td>${TotalTva1}</td>
         </tr>
         <tr>
           <td>${totalTva2Translation}</td>
-          <td>${totalTva2}</td>
+          <td>${TotalTva2}</td>
         </tr>
         <tr class="bold important">
           <td>${totalHtAvecRabaisTranslation}</td>
-          <td>${totalHt}</td>
+          <td>${TotalHt}</td>
         </tr>
         <tr class="bold important with-background">
           <td>${totalTtcAvecRabaisTranslation}</td>
-          <td>${totalTtcAvecRabais}</td>
+          <td>${TotalTtcAvecRabais}</td>
         </tr>
       </table>
     `
