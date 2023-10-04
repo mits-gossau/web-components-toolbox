@@ -23,6 +23,7 @@ export default class Basket extends Shadow() {
 
     this.addAbortController = null
     this.removeAbortController = null
+    this.deleteFromOrderAbortController = null
     this.requestAbortController = null
     this.requestActiveOrderAbortController = null
     this.removeFromOrderAbortController = null
@@ -145,7 +146,12 @@ export default class Basket extends Shadow() {
     const amount = this.getProductAmount(event.detail, 'remove')
 
     // @ts-ignore
-    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiUpdateOrderItem}?productId=${productId}&amount=${amount}&name=${productName}`
+    let endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiUpdateOrderItem}?productId=${productId}&amount=${amount}&name=${productName}`
+    if(amount === '0'){
+      // @ts-ignore
+      endpoint =  `${self.Environment.getApiBaseUrl('migrospro').apiDeleteFromOrder}?orderItemId=${productId}`
+    }
+
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail: {
         id: productId,
@@ -165,11 +171,11 @@ export default class Basket extends Shadow() {
    * @param {{ detail: any; }} event
    */
   deleteFromOrderListener = async (event) => {
-    if (this.removeFromOrderAbortController) this.removeFromOrderAbortController.abort()
-    this.removeFromOrderAbortController = new AbortController()
+    if (this.deleteFromOrderAbortController) this.deleteFromOrderAbortController.abort()
+    this.deleteFromOrderAbortController = new AbortController()
     const fetchOptions = {
       method: 'GET',
-      signal: this.removeFromOrderAbortController.signal
+      signal: this.deleteFromOrderAbortController.signal
     }
     const productId = event.detail.tags[0]
 
