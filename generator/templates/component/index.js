@@ -4,6 +4,7 @@ const fs = require('fs-extra')
 const ejs = require('ejs')
 const argv = require('yargs-parser')(process.argv.slice(2))
 const path = require('path')
+const inquirer = require('inquirer');
 
 /**
  * Takes in data and a template path, and renders default HTML, JavaScript, and CSS templates using the provided data.
@@ -106,4 +107,51 @@ const main = () => {
   }
 }
 
-main()
+const main2 = () => {
+  inquirer.prompt(
+    [
+      {
+        name: 'type',
+        message: 'What would you like to generate?',
+        type: 'list',
+        choices: ['atom', 'molecule', 'organism'],
+      },
+      {
+        name: 'name',
+        message: 'What is the component name?',
+        type: 'input',
+        validate: (firstName) => {
+          if (!firstName.length) {
+            return 'Please provide a component name';
+          }
+          return true;
+        },
+
+      }
+    ]).then((answers) => {
+      try {
+        console.log('Generating template...')
+        const { name, type } = answers
+        const data = {
+          name: name.charAt(0).toUpperCase() + name.slice(1),
+          folderName: name.charAt(0).toLowerCase() + name.slice(1),
+          nameSpace: name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
+          type: type +'s',
+          typeShort: type.charAt(0)
+        }
+        
+        const directoryPath = `./src/es/components/${data.type}/${data.folderName}/`
+        const templatePath = `${directoryPath}/default-/`
+        const filename = path.join(__dirname, './component.ejs')
+
+        makeFolder(directoryPath, templatePath)
+        renderFile(directoryPath, filename, data)
+        renderTemplates(data, templatePath)
+        console.log('Done. Reload File Explorer.')
+      } catch (err) {
+        console.error(err)
+      }
+    });
+}
+
+main2()
