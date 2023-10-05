@@ -91,6 +91,7 @@ export default class Product extends Shadow() {
               if (response.status >= 200 && response.status <= 299) {
                 return await response.json()
               }
+              return true
               // @ts-ignore
             }).catch(error => console.error(`fetch ${endpointActiveOrderEndpoint} failed! error: ${error}`) || `fetch ${endpointActiveOrderEndpoint} failed!`)
           ])
