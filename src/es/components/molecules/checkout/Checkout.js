@@ -207,9 +207,9 @@ export default class Checkout extends Shadow() {
                 </div>
                 <div class="product-footer">
                   <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1" disable-all-elements="${this.isLoggedIn}">
-                    <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-"></a-button>
-                    <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket">
-                    <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+"></a-button>
+                    <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-" product-name="${product.productDetail.name}"></a-button>
+                    <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.productDetail.name}">
+                    <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+" product-name="${product.productDetail.name}"></a-button>
                   </m-basket-control>
                   <div class="bold">${product.productTotal}</div>
                 </div>
@@ -230,7 +230,7 @@ export default class Checkout extends Shadow() {
    * @returns {string} an HTML table with the following information:
    */
   totalAndTaxes (data) {
-    const { totalTtc, companyDiscountValue, totalTva1, totalTva2, totalHt, totalTtcAvecRabais, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
+    const { totalTtc, companyDiscountValue, totalTva1, totalTva2, totalHt, totalTtcDiscount, totalTtcWithDiscount, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
     return /* html */ `
       <table>
         <tr class="bold">
@@ -239,23 +239,29 @@ export default class Checkout extends Shadow() {
         </tr>
         <tr>
           <td>${montantRabaisTranslation}</td>
-          <td>${companyDiscountValue}</td>
+          <td>${totalTtcDiscount}</td>
         </tr>
-        <tr>
-          <td>${totalTva1Translation}</td>
-          <td>${totalTva1}</td>
-        </tr>
-        <tr>
-          <td>${totalTva2Translation}</td>
-          <td>${totalTva2}</td>
-        </tr>
+        ${totalTva1 !== "0.00" ?
+          `<tr>
+              <td>${totalTva1Translation}</td>
+              <td>${totalTva1}</td>
+            </tr>
+            <tr>`
+          : ``}
+          ${totalTva2 !== "0.00" ?
+            `<tr>
+                <td>${totalTva2Translation}</td>
+                <td>${totalTva2}</td>
+              </tr>
+              <tr>`
+            : ``}
         <tr class="bold important">
           <td>${totalHtAvecRabaisTranslation}</td>
           <td>${totalHt}</td>
         </tr>
         <tr class="bold important with-background">
           <td>${totalTtcAvecRabaisTranslation}</td>
-          <td>${totalTtcAvecRabais}</td>
+          <td>${totalTtcWithDiscount}</td>
         </tr>
       </table>
     `
