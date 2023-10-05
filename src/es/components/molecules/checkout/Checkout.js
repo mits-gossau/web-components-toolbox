@@ -230,7 +230,7 @@ export default class Checkout extends Shadow() {
    * @returns {string} an HTML table with the following information:
    */
   totalAndTaxes (data) {
-    const { totalTtc, companyDiscountValue, totalTva1, totalTva2, totalHt, totalTtcAvecRabais, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
+    const { totalTtc, companyDiscountValue, totalTva1, totalTva2, totalHt, totalTtcDiscount, totalTtcWithDiscount, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
     return /* html */ `
       <table>
         <tr class="bold">
@@ -239,23 +239,29 @@ export default class Checkout extends Shadow() {
         </tr>
         <tr>
           <td>${montantRabaisTranslation}</td>
-          <td>${companyDiscountValue}</td>
+          <td>${totalTtcDiscount}</td>
         </tr>
-        <tr>
-          <td>${totalTva1Translation}</td>
-          <td>${totalTva1}</td>
-        </tr>
-        <tr>
-          <td>${totalTva2Translation}</td>
-          <td>${totalTva2}</td>
-        </tr>
+        ${totalTva1 !== "0.00" ?
+          `<tr>
+              <td>${totalTva1Translation}</td>
+              <td>${totalTva1}</td>
+            </tr>
+            <tr>`
+          : ``}
+          ${totalTva2 !== "0.00" ?
+            `<tr>
+                <td>${totalTva2Translation}</td>
+                <td>${totalTva2}</td>
+              </tr>
+              <tr>`
+            : ``}
         <tr class="bold important">
           <td>${totalHtAvecRabaisTranslation}</td>
           <td>${totalHt}</td>
         </tr>
         <tr class="bold important with-background">
           <td>${totalTtcAvecRabaisTranslation}</td>
-          <td>${totalTtcAvecRabais}</td>
+          <td>${totalTtcWithDiscount}</td>
         </tr>
       </table>
     `
