@@ -562,7 +562,7 @@ export default class Navigation extends Mutation() {
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li:first-child, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul > li.bold {
           --a-link-content-spacing-no-scroll: var(--a-link-content-spacing-no-scroll-custom, 0.5rem 0.5rem 0.5rem min(30vw, 50px));
           --a-link-content-spacing: var(--a-link-content-spacing-custom, var(--a-link-content-spacing-no-scroll));
-          --a-link-font-size-mobile: 1.2857rem;
+          --a-link-font-size-mobile: var(--a-link-font-size-mobile-custom, 1.2857rem);
           --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
           padding-bottom: 0;
         }
