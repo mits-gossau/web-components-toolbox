@@ -46,7 +46,8 @@ self.Environment = {
           apiGetActiveOrderAndOrderItemsEnrichedProductData: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData',
           apiOrderCheckoutSubmit: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/OrderCheckoutSubmit' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/OrderCheckoutSubmit',
           apiOrderCheckoutSaveForLater: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/OrderCheckoutSaveForLater' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/OrderCheckoutSaveForLater',
-          apiGetAllStores: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetAllStores' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetAllStores'
+          apiGetAllStores: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetAllStores' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetAllStores',
+          apiGetActiveOrderId: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderId' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderId'
         }
       }
       default:
