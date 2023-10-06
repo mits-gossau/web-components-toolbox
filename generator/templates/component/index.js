@@ -2,7 +2,6 @@
 
 const fs = require('fs-extra')
 const ejs = require('ejs')
-const argv = require('yargs-parser')(process.argv.slice(2))
 const path = require('path')
 const inquirer = require('inquirer');
 
