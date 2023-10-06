@@ -147,9 +147,9 @@ export default class Basket extends Shadow() {
 
     // @ts-ignore
     let endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiUpdateOrderItem}?productId=${productId}&amount=${amount}&name=${productName}`
-    if(amount === '0'){
+    if (amount === '0') {
       // @ts-ignore
-      endpoint =  `${self.Environment.getApiBaseUrl('migrospro').apiDeleteFromOrder}?orderItemId=${productId}`
+      endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiDeleteFromOrder}?orderItemId=${productId}`
     }
 
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {

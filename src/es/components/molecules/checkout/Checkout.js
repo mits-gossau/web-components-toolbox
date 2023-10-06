@@ -68,7 +68,7 @@ export default class Checkout extends Shadow() {
       :host .product-data {
         display: var(--product-data-display, flex);
         flex-direction: var(--product-data-flex-direction, column);
-        justify-content: var(--product-data-justify-content, space-between);
+        justify-content: var(--product-data-justify-content, flex-start);
         width: var(--product-data-width, 100%);
       }
       :host .product-data  span {
@@ -199,7 +199,7 @@ export default class Checkout extends Shadow() {
                   <div>
                     <span>${product.productDetail.price}</span>
                     <span class="name">${product.productDetail.name}</span>
-                    <span class="additional-info">${product.productDetail.estimatedPieceWeight || ''}</span>
+                    ${product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''}
                   </div>
                   <div>
                     <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
@@ -230,7 +230,7 @@ export default class Checkout extends Shadow() {
    * @returns {string} an HTML table with the following information:
    */
   totalAndTaxes (data) {
-    const { totalTtc, companyDiscountValue, totalTva1, totalTva2, totalHt, totalTtcDiscount, totalTtcWithDiscount, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
+    const { totalTtc, totalTva1, totalTva2, totalHt, totalTtcDiscount, totalTtcWithDiscount, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
     return /* html */ `
       <table>
         <tr class="bold">
@@ -241,20 +241,20 @@ export default class Checkout extends Shadow() {
           <td>${montantRabaisTranslation}</td>
           <td>${totalTtcDiscount}</td>
         </tr>
-        ${totalTva1 !== "0.00" ?
-          `<tr>
+        ${totalTva1 !== '0.00'
+          ? `<tr>
               <td>${totalTva1Translation}</td>
               <td>${totalTva1}</td>
             </tr>
             <tr>`
-          : ``}
-          ${totalTva2 !== "0.00" ?
-            `<tr>
+          : ''}
+          ${totalTva2 !== '0.00'
+            ? `<tr>
                 <td>${totalTva2Translation}</td>
                 <td>${totalTva2}</td>
               </tr>
               <tr>`
-            : ``}
+            : ''}
         <tr class="bold important">
           <td>${totalHtAvecRabaisTranslation}</td>
           <td>${totalHt}</td>
