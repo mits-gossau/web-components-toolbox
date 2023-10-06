@@ -84,7 +84,7 @@ export default class Basket extends Shadow() {
     }
     // @ts-ignore
     const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiGetActiveOrderAndOrderItems}`
-    this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
+    this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
           if (response.status >= 200 && response.status <= 299) return await response.json()
