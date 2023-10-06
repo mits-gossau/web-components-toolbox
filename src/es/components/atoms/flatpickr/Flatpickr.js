@@ -116,6 +116,19 @@ export default class Flatpickr extends Shadow() {
         mode: 'range',
         onChange: (selectedDates, dateStr, instance) => {
           div.textContent = dateStr
+          if (this.getAttribute('request-event-name')) {
+            this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+              detail: {
+                origEvent: {selectedDates, dateStr, instance},
+                tags: [dateStr],
+                this: this,
+                pushHistory: true
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          }
         }
       })
       this.html = div
