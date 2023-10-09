@@ -116,7 +116,7 @@ export default class Flatpickr extends Shadow() {
         mode: 'range',
         dateFormat: 'd.n.Y',
         onChange: (selectedDates, dateStr, instance) => {
-          div.textContent = dateStr
+          div.textContent = dateStr.replace('to', '—')
           if (this.getAttribute('request-event-name')) {
             this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
               detail: {
