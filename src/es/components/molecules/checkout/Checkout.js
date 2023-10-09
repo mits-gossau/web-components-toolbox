@@ -178,12 +178,22 @@ export default class Checkout extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../molecules/basketControl/BasketControl.js`,
         name: 'm-basket-control'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../molecules/systemNotification/SystemNotification.js`,
+        name: 'm-system-notification'
       }
     ])
 
     return Promise.all([productData, fetchModules]).then(() => {
       if (!productData) {
-        this.html = '<span style="color:var(--color-error);">Une erreur est survenue. Les données ne peuvent pas être affichées.</span>'
+        this.html = /* html */ `
+          <m-system-notification type="error">
+              <div slot="description">
+                  <p>Une erreur est survenue. Les données ne peuvent pas être affichées.</p>
+              </div>
+          </m-system-notification>
+        `
         return
       }
       // @ts-ignore
