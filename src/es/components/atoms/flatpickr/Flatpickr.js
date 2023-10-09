@@ -114,6 +114,7 @@ export default class Flatpickr extends Shadow() {
       div.textContent = 'pickr'
       flatpickr(div, {
         mode: 'range',
+        dateFormat: 'd.n.Y',
         onChange: (selectedDates, dateStr, instance) => {
           div.textContent = dateStr
           if (this.getAttribute('request-event-name')) {
