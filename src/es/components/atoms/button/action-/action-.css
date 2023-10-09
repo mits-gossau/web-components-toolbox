@@ -1,5 +1,7 @@
 :host {
+  --button-action-background-color: var(--button-action-background-color-custom, transparent);
+  --button-action-background-color-hover: var(--button-action-background-color-hover-custom, var(--m-gray-100));
   --button-action-color: var(--button-action-color-custom, var(--color-secondary));
-  --button-action-color-hover: var(--button-action-color-hover-custom, var(--m-white));
+  --button-action-color-hover: var(--button-action-color-hover-custom, var(--m-orange-800));
   --button-action-padding: var(--button-action-padding-custom, 0.5rem 1rem);
 }
