@@ -114,7 +114,7 @@ export default class Flatpickr extends Shadow() {
       div.textContent = 'Datum auswählen → 📅'
       flatpickr(div, {
         mode: 'range',
-        dateFormat: 'd.n.Y',
+        dateFormat: 'd.m.Y',
         onChange: (selectedDates, dateStr, instance) => {
           div.textContent = dateStr.replace('to', '—')
           if (this.getAttribute('request-event-name')) {
