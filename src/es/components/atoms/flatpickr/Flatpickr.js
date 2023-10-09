@@ -111,7 +111,7 @@ export default class Flatpickr extends Shadow() {
   renderHTML () {
     return this.loadDependency().then(([flatpickr]) => {
       const div = document.createElement('div')
-      div.textContent = 'pickr'
+      div.textContent = 'Datum auswählen → 📅'
       flatpickr(div, {
         mode: 'range',
         dateFormat: 'd.n.Y',
