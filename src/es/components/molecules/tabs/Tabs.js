@@ -29,6 +29,12 @@ export default class Tabs extends Shadow() {
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
+    const tabs = this.root.querySelectorAll('.tab-navigation li')
+    tabs.forEach(tab => {
+      if (tab.classList.contains('active')){
+        tab.click(); // set initial tab
+      }
+    })
   }
 
   shouldRenderCSS () {
