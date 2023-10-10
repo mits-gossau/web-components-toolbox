@@ -186,7 +186,7 @@ export default class Checkout extends Shadow() {
     ])
 
     return Promise.all([productData, fetchModules]).then(() => {
-      if (!productData) {
+      if (!productData || !productData.orderItems || productData.orderItems.length === 0) {
         this.html = /* html */ `
           <m-system-notification 
               icon-src="/web-components-toolbox-migrospro/src/icons/shopping_basket.svg" 
