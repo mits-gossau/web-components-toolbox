@@ -188,10 +188,15 @@ export default class Checkout extends Shadow() {
     return Promise.all([productData, fetchModules]).then(() => {
       if (!productData) {
         this.html = /* html */ `
-          <m-system-notification type="error">
-              <div slot="description">
-                  <p>Une erreur est survenue. Les données ne peuvent pas être affichées.</p>
-              </div>
+          <m-system-notification 
+              icon-src="/web-components-toolbox-migrospro/src/icons/shopping_basket.svg" 
+              icon-badge="0"
+              title="Panier vide"
+              type="error"
+          >
+            <div slot="description">
+                <p>Une erreur est survenue. Les données ne peuvent pas être affichées.</p>
+            </div>
           </m-system-notification>
         `
         return
