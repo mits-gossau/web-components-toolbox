@@ -192,12 +192,14 @@ export default class Checkout extends Shadow() {
               icon-src="/web-components-toolbox-migrospro/src/icons/shopping_basket.svg" 
               icon-badge="0"
               title="Panier vide"
-              type="error"
           >
-            <div slot="description">
-                <p>Une erreur est survenue. Les données ne peuvent pas être affichées.</p>
+              <div slot="description">
+              <ul>
+                  <li>Ajoutez des produits à votre sélection en parcourant notre catalogue.</li>
+                  <li>Vous ne trouvez pas l'offre qui vous convient? Faites nous parvenir votre demande en remplissant les champs "Votre demande sur mesure" ci-dessous.</li>
+              </ul>
             </div>
-          </m-system-notification>
+        </m-system-notification>
         `
         return
       }
