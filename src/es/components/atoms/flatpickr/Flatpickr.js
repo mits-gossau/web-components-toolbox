@@ -14,6 +14,29 @@ export default class Flatpickr extends Shadow() {
   constructor (options = {}, ...args) {
     // @ts-ignore
     super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options, mode: 'false' }, ...args)
+
+    this.label = this.getAttribute('label') || 'Datum auswählen → 📅'
+    this.gotCleared = false
+
+    this.resetEventListener = async event => {
+      let dateReset = event.detail.dateReset
+      if (this.getAttribute('reset-detail-property-name')) {
+        dateReset = await this.getAttribute('reset-detail-property-name').split(':').reduce(async (accumulator, propertyName) => {
+          // @ts-ignore
+          propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
+          if (accumulator instanceof Promise) accumulator = await accumulator
+          if (!accumulator) return false // error handling, in case the await on fetch does not resolve
+          if (accumulator[propertyName]) return accumulator[propertyName]
+          if (Array.isArray(accumulator)) return accumulator.map(obj => obj[propertyName])
+          return false // error handling, in case the await on fetch does not resolve
+        }, event.detail)
+      }
+      if (dateReset) {
+        this.gotCleared = true
+        if (this.flatpickrInstance) this.flatpickrInstance.clear()
+        this.labelNode.textContent = this.label
+      }
+    }
   }
 
   connectedCallback () {
@@ -21,10 +44,12 @@ export default class Flatpickr extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.getAttribute('reset-event-name')) document.body.addEventListener(this.getAttribute('reset-event-name'), this.resetEventListener)
     Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
   disconnectedCallback () {
+    if (this.getAttribute('reset-event-name')) document.body.removeEventListener(this.getAttribute('reset-event-name'), this.resetEventListener)
   }
 
   /**
@@ -51,6 +76,11 @@ export default class Flatpickr extends Shadow() {
    * @return {Promise<void>}
    */
   renderCSS () {
+    this.css = /* css */`
+      :host, host * {
+        cursor: var(--cursor, pointer);
+      }
+    `
     // TODO: https://npmcdn.com/flatpickr@4.6.13/dist/themes/material_orange.css
     this.setCss(/* css */`
       .flatpickr-day.selected,
@@ -71,13 +101,16 @@ export default class Flatpickr extends Shadow() {
       .flatpickr-day.selected.nextMonthDay,
       .flatpickr-day.startRange.nextMonthDay,
       .flatpickr-day.endRange.nextMonthDay {
-        background: var(--background);
-        box-shadow: none;
-        color: #fff;
-        border-color: #80cbc4;
+        background: var(--background, gray);
+        box-shadow: var(--box-shadow, none);
+        color: var(--color, black);
+        border-color: var(--border-color, darkgray);
       }
-      @media only screen and (max-width: _max-width_) {
-        
+      .flatpickr-day.startRange, .flatpickr-day.startRange:hover, .flatpickr-day.endRange, .flatpickr-day.endRange:hover {
+        color: var(--color-start-end-range, var(--color, white)) !important;
+      }
+      .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+        box-shadow: -10px 0 0 var(--box-shadow-color, gray);
       }
     `, undefined, undefined, undefined, this.style, false)
     return this.fetchTemplate()
@@ -109,33 +142,48 @@ export default class Flatpickr extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    return this.loadDependency().then(([flatpickr]) => {
-      const div = document.createElement('div')
-      div.textContent = 'Datum auswählen → 📅'
-      flatpickr(div, {
-        mode: 'range',
-        dateFormat: 'd.m.Y',
-        onChange: (selectedDates, dateStr, instance) => {
-          div.textContent = dateStr.replace('to', '—')
-          if (this.getAttribute('request-event-name')) {
-            this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
-              detail: {
-                origEvent: {selectedDates, dateStr, instance},
-                tags: [dateStr],
-                this: this,
-                pushHistory: true
-              },
-              bubbles: true,
-              cancelable: true,
-              composed: true
-            }))
+    return Promise.all([this.loadDependency(), this.getAttribute('get-date-option-event-name')
+      ? new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('get-date-option-event-name'), {
+        detail: {
+          resolve
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      })))
+      : Promise.resolve({})]).then(([dependencies, options]) => {
+        this.labelNode.textContent = this.label
+        this.flatpickrInstance = dependencies[0](this.labelNode, {
+          ...options, // see all possible options: https://flatpickr.js.org/options/
+          mode: 'range',
+          dateFormat: 'd.m.Y',
+          onChange: (selectedDates, dateStr, instance) => {
+            if (this.getAttribute('request-event-name') && !this.gotCleared) {
+              this.labelNode.textContent = dateStr = dateStr.replace('to', '—')
+              this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+                detail: {
+                  origEvent: {selectedDates, dateStr, instance},
+                  tags: [dateStr],
+                  dateStrSeparator: ' — ',
+                  this: this,
+                  pushHistory: undefined
+                },
+                bubbles: true,
+                cancelable: true,
+                composed: true
+              }))
+            }
+            this.gotCleared = false
           }
-        }
-      })
-      this.html = div
-      document.head.appendChild(this.style)
+          ,
+          onOpen: (selectedDates, dateStr, instance) => {
+            this.gotCleared = false
+          }
+        })
+        this.html = this.labelNode
+        document.head.appendChild(this.style)
       // https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.css
-    })
+      })
   }
 
   /**
@@ -178,5 +226,9 @@ export default class Flatpickr extends Shadow() {
       style.setAttribute('_css', 'components/atoms/flatpickr/Flatpickr.js')
       return style
     })())
+  }
+
+  get labelNode () {
+    return this._labelNode || (this._labelNode = document.createElement('div'))
   }
 }

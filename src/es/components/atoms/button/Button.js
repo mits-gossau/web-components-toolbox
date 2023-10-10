@@ -66,6 +66,8 @@ export default class Button extends Hover() {
           ? tags.some(tag => tag.includes(this.getAttribute('tag-search')))
           : tags.includes(this.getAttribute('tag'))
         this.button.classList[tagsIncludesTag ? 'add' : 'remove']('active')
+      } else {
+        this.button.classList[tags === this.getAttribute('tag') || tags === this.getAttribute('tag-search') ? 'add' : 'remove']('active')
       }
       this.button.setAttribute('aria-pressed', this.button.classList.contains('active')) // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-pressed
     }
@@ -195,6 +197,7 @@ export default class Button extends Hover() {
         touch-action: manipulation;
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
+        visibility: var(--visibility, inherit);
       }
       ${this.buttonTagName}:focus-visible {
         border-radius: var(--outline-border-radius, 0.125em);
@@ -219,6 +222,7 @@ export default class Button extends Hover() {
       ${this.buttonTagName}:active, :host ${this.buttonTagName}.active {
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
+        visibility: var(--visibility-active, var(--visibility, inherit));
       }
       :host ${this.buttonTagName}[disabled] {
         border: var(--border-width-disabled, var(--border-width, 0px)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));

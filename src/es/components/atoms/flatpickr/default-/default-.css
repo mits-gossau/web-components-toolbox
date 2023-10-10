@@ -1,3 +1,4 @@
 body {
-    --flatpickr-default-background: red;
+    --flatpickr-default-background: var(--flatpickr-default-background-custom, var(--color-secondary, red));
+    --flatpickr-default-color-start-end-range: var(--flatpickr-default-color-start-end-range-custom, var(--background-color, white));;
 }
