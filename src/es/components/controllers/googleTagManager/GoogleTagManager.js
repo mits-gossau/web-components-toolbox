@@ -13,14 +13,14 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  {head|body} [position=head] position of the web component
  * }
  * @examples {
- *   <head>
- *    ...
- *     <c-google-tag-manager gtm-id="GTM-PNK6BD2V"></c-google-tag-manager>
- *   </head>
- *   <body>
- *     <c-google-tag-manager gtm-id="GTM-PNK6BD2V" position="body"></c-google-tag-manager>
- *     ...
- *   </body>
+    <head>
+     ...
+      <c-google-tag-manager gtm-id="GTM-PNK6BD2V"></c-google-tag-manager>
+    </head>
+    <body>
+      <c-google-tag-manager gtm-id="GTM-PNK6BD2V" position="body"></c-google-tag-manager>
+      ...
+    </body>
  * }
  */
 
