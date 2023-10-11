@@ -407,7 +407,8 @@ export default class Button extends Hover() {
   renderHTML () {
     const alreadyIncludedNodes = Array.from(this.root.querySelectorAll(`${this.cssSelector} > :not(style)`))
     this.html = /* html */`
-      <${this.buttonTagName} 
+      <${this.buttonTagName}
+        ${this.classList.contains('active') ? 'class="active"' : ''}
         ${this.buttonTagName === 'a'
           ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''}`
           : ''}

@@ -17,6 +17,7 @@ export default class Flatpickr extends Shadow() {
 
     this.label = this.getAttribute('label') || 'Datum auswählen → 📅'
     this.gotCleared = false
+    this.dateStrSeparator = ' — '
 
     this.resetEventListener = async event => {
       let dateReset = event.detail.dateReset
@@ -37,6 +38,11 @@ export default class Flatpickr extends Shadow() {
         this.labelNode.textContent = this.label
       }
     }
+
+    this.setDateEventListener = event => {
+      this.labelNode.textContent = event.detail.dateStr || this.label
+      if (event.detail.defaultDate) this.flatpickrInstance.setDate(event.detail.defaultDate)
+    }
   }
 
   connectedCallback () {
@@ -44,11 +50,13 @@ export default class Flatpickr extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.getAttribute('set-date-event-name')) document.body.addEventListener(this.getAttribute('set-date-event-name'), this.setDateEventListener)
     if (this.getAttribute('reset-event-name')) document.body.addEventListener(this.getAttribute('reset-event-name'), this.resetEventListener)
     Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
   disconnectedCallback () {
+    if (this.getAttribute('set-date-event-name')) document.body.removeEventListener(this.getAttribute('set-date-event-name'), this.setDateEventListener)
     if (this.getAttribute('reset-event-name')) document.body.removeEventListener(this.getAttribute('reset-event-name'), this.resetEventListener)
   }
 
@@ -145,26 +153,28 @@ export default class Flatpickr extends Shadow() {
     return Promise.all([this.loadDependency(), this.getAttribute('get-date-option-event-name')
       ? new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('get-date-option-event-name'), {
         detail: {
-          resolve
+          resolve,
+          dateStrSeparator: this.dateStrSeparator
         },
         bubbles: true,
         cancelable: true,
         composed: true
       })))
       : Promise.resolve({})]).then(([dependencies, options]) => {
-        this.labelNode.textContent = this.label
+        this.labelNode.textContent = options.dateStr || this.label
+        delete options.dateStr
         this.flatpickrInstance = dependencies[0](this.labelNode, {
           ...options, // see all possible options: https://flatpickr.js.org/options/
           mode: 'range',
           dateFormat: 'd.m.Y',
           onChange: (selectedDates, dateStr, instance) => {
             if (this.getAttribute('request-event-name') && !this.gotCleared) {
-              this.labelNode.textContent = dateStr = dateStr.replace('to', '—')
+              this.labelNode.textContent = dateStr = dateStr.replace(' to ', this.dateStrSeparator)
               this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
                 detail: {
                   origEvent: {selectedDates, dateStr, instance},
                   tags: [dateStr],
-                  dateStrSeparator: ' — ',
+                  dateStrSeparator: this.dateStrSeparator,
                   this: this,
                   pushHistory: undefined
                 },
