@@ -3,7 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * GoogleTagManager
- * An example at: src/es/components/pages/TrackingTest.html
+ * An example at: docs/TemplateMigrosPro.html
  *
  * @export
  * @class GoogleTagManager
