@@ -36,11 +36,9 @@ export default class GTMEvent extends Shadow() {
     }
 
     sendEvent(event) {
-        console.log('sendEvent', event)
         // @ts-ignore
         if (window.dataLayer) {
             const eventData = this.getAttribute('event-data');
-            console.log("eventData", eventData)
             if (eventData) {
                 try {
                     const parsedData = JSON.parse(eventData);
