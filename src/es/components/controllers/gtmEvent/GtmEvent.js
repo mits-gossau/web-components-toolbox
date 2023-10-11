@@ -12,13 +12,13 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  {event-data} {...} object to be pushed to the dataLayer
  * }
  * @example {
- * <c-migrospro-gtm-event event-data='{
+ * <c-gtm-event event-data='{
  *    "event": "register",
  *    "action": "started",
  *    "step": "1"
  *  }'>
  *    <a-button namespace="button-primary-">Register started</a-button>
- * </c-migrospro-gtm-event>
+ * </c-gtm-event>
  * }
  */
 
