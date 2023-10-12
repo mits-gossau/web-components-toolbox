@@ -161,39 +161,38 @@ export default class Flatpickr extends Shadow() {
         composed: true
       })))
       : Promise.resolve({})]).then(([dependencies, options]) => {
-        this.labelNode.textContent = options.dateStr || this.label
-        delete options.dateStr
-        this.flatpickrInstance = dependencies[0](this.labelNode, {
-          ...options, // see all possible options: https://flatpickr.js.org/options/
-          mode: 'range',
-          dateFormat: 'd.m.Y',
-          onChange: (selectedDates, dateStr, instance) => {
-            if (this.getAttribute('request-event-name') && !this.gotCleared) {
-              this.labelNode.textContent = dateStr = dateStr.replace(' to ', this.dateStrSeparator)
-              this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
-                detail: {
-                  origEvent: {selectedDates, dateStr, instance},
-                  tags: [dateStr],
-                  dateStrSeparator: this.dateStrSeparator,
-                  this: this,
-                  pushHistory: undefined
-                },
-                bubbles: true,
-                cancelable: true,
-                composed: true
-              }))
-            }
-            this.gotCleared = false
+      this.labelNode.textContent = options.dateStr || this.label
+      delete options.dateStr
+      this.flatpickrInstance = dependencies[0](this.labelNode, {
+        ...options, // see all possible options: https://flatpickr.js.org/options/
+        mode: 'range',
+        dateFormat: 'd.m.Y',
+        onChange: (selectedDates, dateStr, instance) => {
+          if (this.getAttribute('request-event-name') && !this.gotCleared) {
+            this.labelNode.textContent = dateStr = dateStr.replace(' to ', this.dateStrSeparator)
+            this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+              detail: {
+                origEvent: { selectedDates, dateStr, instance },
+                tags: [dateStr],
+                dateStrSeparator: this.dateStrSeparator,
+                this: this,
+                pushHistory: undefined
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
           }
-          ,
-          onOpen: (selectedDates, dateStr, instance) => {
-            this.gotCleared = false
-          }
-        })
-        this.html = this.labelNode
-        document.head.appendChild(this.style)
-      // https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.css
+          this.gotCleared = false
+        },
+        onOpen: (selectedDates, dateStr, instance) => {
+          this.gotCleared = false
+        }
       })
+      this.html = this.labelNode
+      document.head.appendChild(this.style)
+      // https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.css
+    })
   }
 
   /**

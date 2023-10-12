@@ -68,7 +68,7 @@ export default class TagManager extends Shadow() {
    * @param {string} [gtmId=this.getAttribute('id') || 'GTM-XXXXXX']
    * @return {HTMLScriptElement|false}
    */
-  setup (gtmId = this.getAttribute('id') || 'GTM-XXXXXX') {
+  setup (gtmId = this.getAttribute('id') || 'GTM-XXXXXX', testMode = this.getAttribute('test-mode') || false) {
     // prefetch or pre connect o the iframes src
     if (this.hasAttribute('prefetch')) {
       const linkAnalytics = document.createElement('link')
@@ -83,7 +83,7 @@ export default class TagManager extends Shadow() {
     // @ts-ignore
     self.dataLayer = self.dataLayer || []
     // cookie domain error when only localhost in url bar (only for local debugging)
-    if (self.location.hostname !== 'localhost') {
+    if (self.location.hostname !== 'localhost' || testMode) {
       const script = document.createElement('script')
       script.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`
       return script
