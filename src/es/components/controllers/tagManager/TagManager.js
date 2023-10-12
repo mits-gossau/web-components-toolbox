@@ -11,11 +11,12 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  * @attribute {
  *  {string} id
+ *  {boolean} test-mode
  *  {has} [wc-config-load=n.a.] trigger the render
  *  {number} [timeout=n.a.] timeout to trigger the render
  * }
  * @example {
-    <c-tag-manager id="GTM-XXXXXX" wc-config-load>
+    <c-tag-manager id="GTM-XXXXXX" test-mode="true" wc-config-load>
       <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </c-tag-manager>
  * }
