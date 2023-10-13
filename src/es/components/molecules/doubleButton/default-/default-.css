@@ -1,0 +1,3 @@
+:host {
+  --double-button-default-border-radius: var(--button-primary-border-radius);
+}

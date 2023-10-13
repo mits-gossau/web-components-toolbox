@@ -33,10 +33,17 @@ export default class DoubleButton extends Shadow() {
   /**
    * renders the css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
+      :host {
+        --justify-content: flex-start;
+        display: flex;
+      }
+      :host > *:first-of-type {
+        flex-grow: 1;
+      }
       :host > *:first-of-type::part(button) {
         border-radius: var(--border-radius, 0.5em) 0 0 var(--border-radius, 0.5em);
       }
@@ -45,5 +52,32 @@ export default class DoubleButton extends Shadow() {
         margin-left: 1px;
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
+    const replaces = this.buttonTagName === 'a'
+      ? [{
+          pattern: '([^-]{1})button',
+          flags: 'g',
+          replacement: '$1a'
+        }]
+      : []
+    switch (this.getAttribute('namespace')) {
+      case 'double-button-default-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./default-/default-.css`,
+          namespace: false,
+          replaces
+        }])
+      default:
+        return Promise.resolve()
+    }
   }
 }
