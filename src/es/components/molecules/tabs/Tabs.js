@@ -7,6 +7,29 @@ export default class Tabs extends Shadow() {
     const tabs = this.root.querySelectorAll('.tab-navigation li')
     const sections = this.root.querySelectorAll('section.tab-content')
 
+    // get parameter from url and set tab active
+    const urlParams = new URLSearchParams(window.location.search)
+    const tabParam = urlParams.get('tab')
+
+    if (tabParam) {
+      tabs.forEach((tab, index) => {
+        tab.classList.remove('active')
+        const dataTab = tab.getAttribute('data-tab') ? tab.getAttribute('data-tab').toString() : ''
+
+        if (tabParam === dataTab) {
+          tab.classList.add('active')
+          sections[index].classList.add('active')
+        }
+      })
+    }
+
+    // set first tab active by default
+    if (!tabParam) {
+      tabs[0].classList.add('active')
+      sections[0].classList.add('active')
+    }
+
+    // add click event to tabs
     tabs.forEach((tab, index) => {
       const anchorTag = tab.querySelector('a')
 
