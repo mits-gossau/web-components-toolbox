@@ -179,7 +179,7 @@ export default class Button extends Hover() {
         border: var(--border-width, 0px) solid var(--border-color, transparent);
         color: var(--color, black);
         cursor: pointer;
-        display: flex;
+        display: var(--display, flex);
         font-family: var(--font-family, unset);
         font-size: var(--font-size, 1em);
         font-weight: var(--font-weight, 400);
@@ -220,6 +220,7 @@ export default class Button extends Hover() {
         opacity: var(--opacity-hover, var(--opacity, 1));
       }
       ${this.buttonTagName}:active, :host ${this.buttonTagName}.active {
+        display: var(--display-active, flex);
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
         visibility: var(--visibility-active, var(--visibility, inherit));
