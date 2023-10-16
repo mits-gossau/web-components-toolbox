@@ -35,7 +35,7 @@ export default class Basket extends Shadow() {
 
   answerEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
     event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }} */ productData) => {
-      this.count.textContent = productData.response.allOrderItemProductTotal
+      this.count.textContent = productData.response?.allOrderItemProductTotal
     }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
       console.warn(error)
