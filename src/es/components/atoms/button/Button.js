@@ -216,6 +216,7 @@ export default class Button extends Hover() {
       ${this.buttonTagName}:active, ${this.buttonTagName}.active {
         display: var(--display-active, flex);
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
+        border: var(--border-width-active, var(--border-width, 0px)) solid var(--border-color-active, var(--border-color, #FFFFFF));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
         visibility: var(--visibility-active, var(--visibility, inherit));
       }

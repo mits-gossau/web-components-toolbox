@@ -40,6 +40,7 @@ export default class DoubleButton extends Shadow() {
       :host {
         --justify-content: flex-start;
         display: flex;
+        width: fit-content;
       }
       :host > *:first-of-type {
         flex-grow: 1;

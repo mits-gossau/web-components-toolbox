@@ -1,3 +1,4 @@
 :host {
   --double-button-default-border-radius: var(--button-primary-border-radius);
+  --button-primary-width: 100%;
 }
