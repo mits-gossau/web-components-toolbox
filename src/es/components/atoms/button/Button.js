@@ -55,9 +55,10 @@ export default class Button extends Hover() {
           // @ts-ignore
           propertyName = propertyName.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
           if (accumulator instanceof Promise) accumulator = await accumulator
-          return accumulator
-            ? accumulator[propertyName]
-            : {} // error handling, in case the await on fetch does not resolve
+          if (!accumulator) return {} // error handling, in case the await on fetch does not resolve
+          if (accumulator[propertyName]) return accumulator[propertyName]
+          if (Array.isArray(accumulator)) return accumulator.map(obj => obj[propertyName])
+          return {} // error handling, in case the await on fetch does not resolve
         }, event.detail)
       }
       if (Array.isArray(tags)) {
@@ -65,6 +66,8 @@ export default class Button extends Hover() {
           ? tags.some(tag => tag.includes(this.getAttribute('tag-search')))
           : tags.includes(this.getAttribute('tag'))
         this.button.classList[tagsIncludesTag ? 'add' : 'remove']('active')
+      } else {
+        this.button.classList[tags === this.getAttribute('tag') || tags === this.getAttribute('tag-search') ? 'add' : 'remove']('active')
       }
       this.button.setAttribute('aria-pressed', this.button.classList.contains('active')) // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-pressed
     }
@@ -176,7 +179,7 @@ export default class Button extends Hover() {
         border: var(--border-width, 0px) solid var(--border-color, transparent);
         color: var(--color, black);
         cursor: pointer;
-        display: flex;
+        display: var(--display, flex);
         font-family: var(--font-family, unset);
         font-size: var(--font-size, 1em);
         font-weight: var(--font-weight, 400);
@@ -194,6 +197,7 @@ export default class Button extends Hover() {
         touch-action: manipulation;
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
+        visibility: var(--visibility, inherit);
       }
       ${this.buttonTagName}:focus-visible {
         border-radius: var(--outline-border-radius, 0.125em);
@@ -216,8 +220,10 @@ export default class Button extends Hover() {
         opacity: var(--opacity-hover, var(--opacity, 1));
       }
       ${this.buttonTagName}:active, :host ${this.buttonTagName}.active {
+        display: var(--display-active, flex);
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
+        visibility: var(--visibility-active, var(--visibility, inherit));
       }
       :host ${this.buttonTagName}[disabled] {
         border: var(--border-width-disabled, var(--border-width, 0px)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));
@@ -404,6 +410,7 @@ export default class Button extends Hover() {
     this.html = /* html */`
       <${this.buttonTagName}
         part="button"
+        ${this.classList.contains('active') ? 'class="active"' : ''}
         ${this.buttonTagName === 'a'
           ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''}`
           : ''}

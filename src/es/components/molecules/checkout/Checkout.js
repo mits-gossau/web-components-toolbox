@@ -178,12 +178,29 @@ export default class Checkout extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../molecules/basketControl/BasketControl.js`,
         name: 'm-basket-control'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../molecules/systemNotification/SystemNotification.js`,
+        name: 'm-system-notification'
       }
     ])
 
     return Promise.all([productData, fetchModules]).then(() => {
-      if (!productData) {
-        this.html = '<span style="color:var(--color-error);">Une erreur est survenue. Les données ne peuvent pas être affichées.</span>'
+      if (!productData || !productData.orderItems || productData.orderItems.length === 0) {
+        this.html = /* html */ `
+          <m-system-notification 
+              icon-src="/web-components-toolbox-migrospro/src/icons/shopping_basket.svg" 
+              icon-badge="0"
+              title="Panier vide"
+          >
+              <div slot="description">
+              <ul>
+                  <li>Ajoutez des produits à votre sélection en parcourant notre catalogue.</li>
+                  <li>Vous ne trouvez pas l'offre qui vous convient? Faites nous parvenir votre demande en remplissant les champs "Votre demande sur mesure" ci-dessous.</li>
+              </ul>
+            </div>
+        </m-system-notification>
+        `
         return
       }
       // @ts-ignore
