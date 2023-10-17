@@ -38,6 +38,7 @@ export default class Product extends Shadow() {
     if (!this.hasAttribute('no-popstate')) self.addEventListener('popstate', this.updatePopState)
     this.addEventListener(this.getAttribute('request-list-product') || 'request-list-product', this.requestListProductListener)
     this.addEventListener('request-href-' + (this.getAttribute('request-list-product') || 'request-list-product'), this.requestHrefEventListener)
+    this.addEventListener(this.getAttribute('request-submit-search') || 'submit-search', this.requestSubmitSearchListener)
   }
 
   disconnectedCallback () {
@@ -45,6 +46,12 @@ export default class Product extends Shadow() {
     if (!this.hasAttribute('no-popstate')) self.removeEventListener('popstate', this.updatePopState)
     this.removeEventListener(this.getAttribute('request-list-product') || 'request-list-product', this.requestListProductListener)
     this.removeEventListener('request-href-' + (this.getAttribute('request-list-product') || 'request-list-product'), this.requestHrefEventListener)
+    this.removeEventListener(this.getAttribute('request-submit-search') || 'submit-search', this.requestSubmitSearchListener)
+  }
+
+  // TODO: Check if this is necessary
+  requestSubmitSearchListener = (event) => {
+    console.log('search', event)
   }
 
   /**
