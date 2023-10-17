@@ -45,6 +45,9 @@ export default class DoubleButton extends Shadow() {
       :host > *:first-of-type {
         flex-grow: 1;
       }
+      :host > *::part(button) {
+        height: 100%;
+      }
       :host > *:first-of-type::part(button) {
         border-radius: var(--border-radius, 0.5em) 0 0 var(--border-radius, 0.5em);
       }

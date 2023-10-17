@@ -243,6 +243,7 @@ export default class Button extends Hover() {
         margin: var(--label-margin, 0);
         position: relative;
         text-align: var(--label-text-align, center);
+        white-space: var(--label-white-space, inherit);
       }
       #label.hide {
         display: none;
