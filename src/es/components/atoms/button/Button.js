@@ -213,17 +213,18 @@ export default class Button extends Hover() {
         box-sizing: border-box;
         width: var(--width, fit-content);
       }
+      ${this.buttonTagName}:active, ${this.buttonTagName}.active {
+        display: var(--display-active, flex);
+        background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
+        border: var(--border-width-active, var(--border-width, 0px)) solid var(--border-color-active, var(--border-color, #FFFFFF));
+        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
+        visibility: var(--visibility-active, var(--visibility, inherit));
+      }
       ${this.buttonTagName}:hover, :host(.hover) ${this.buttonTagName} {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
         opacity: var(--opacity-hover, var(--opacity, 1));
-      }
-      ${this.buttonTagName}:active, :host ${this.buttonTagName}.active {
-        display: var(--display-active, flex);
-        background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
-        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
-        visibility: var(--visibility-active, var(--visibility, inherit));
       }
       :host ${this.buttonTagName}[disabled] {
         border: var(--border-width-disabled, var(--border-width, 0px)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));
@@ -409,6 +410,7 @@ export default class Button extends Hover() {
     const alreadyIncludedNodes = Array.from(this.root.querySelectorAll(`${this.cssSelector} > :not(style)`))
     this.html = /* html */`
       <${this.buttonTagName}
+        part="button"
         ${this.classList.contains('active') ? 'class="active"' : ''}
         ${this.buttonTagName === 'a'
           ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''}`
