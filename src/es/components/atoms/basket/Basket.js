@@ -19,6 +19,13 @@ export default class Basket extends Shadow() {
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     document.body.addEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
+      {
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }
+    ))
   }
 
   disconnectedCallback () {
@@ -26,7 +33,7 @@ export default class Basket extends Shadow() {
     document.body.removeEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
   }
 
-  answerEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => { 
+  answerEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
     event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }} */ data) => {
       let counter = '0'
       if (this.getAttribute('counter-detail-property-name')) {

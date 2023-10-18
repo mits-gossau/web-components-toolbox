@@ -11,6 +11,9 @@ Install:
 Previews:
 - https://mits-gossau.github.io/web-components-toolbox/
 
+Component generation:   
+- To generate a new plain component use: `npm run make`
+
 JS Rules:
 - use as little JS as possible. First think, if your problem could be solved with CSS before using JS
 - Component should share its breakpoint with children

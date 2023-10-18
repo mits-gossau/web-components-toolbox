@@ -23,6 +23,7 @@ export default class Basket extends Shadow() {
 
     this.addAbortController = null
     this.removeAbortController = null
+    this.deleteFromOrderAbortController = null
     this.requestAbortController = null
     this.requestActiveOrderAbortController = null
     this.removeFromOrderAbortController = null
@@ -83,7 +84,7 @@ export default class Basket extends Shadow() {
     }
     // @ts-ignore
     const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiGetActiveOrderAndOrderItems}`
-    this.dispatchEvent(new CustomEvent(this.getAttribute('list-basket') || 'list-basket', {
+    this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
           if (response.status >= 200 && response.status <= 299) return await response.json()
@@ -110,12 +111,11 @@ export default class Basket extends Shadow() {
     // id from 'event.detail.tags': returned by default button behaviour
     // id from 'event.detail.id'  : returned from quantity field input event
     const productId = (event.detail.tags && event.detail.tags[0]) || event.detail.id
-
-    // amount returned from quantity field input value
-    const amount = event.detail.amount ? `&amount=${event.detail.amount}` : ''
+    const productName = this.getProductName(event.detail)
+    const amount = this.getProductAmount(event.detail, 'add')
 
     // @ts-ignore
-    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiAddToOrder}?productId=${productId}${amount}`
+    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiUpdateOrderItem}?productId=${productId}&amount=${amount}&name=${productName}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail: {
         id: productId,
@@ -142,9 +142,16 @@ export default class Basket extends Shadow() {
       signal: this.removeAbortController.signal
     }
     const productId = event.detail.tags[0]
+    const productName = this.getProductName(event.detail)
+    const amount = this.getProductAmount(event.detail, 'remove')
 
     // @ts-ignore
-    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiRemoveFromOrder}?productId=${productId}`
+    let endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiUpdateOrderItem}?productId=${productId}&amount=${amount}&name=${productName}`
+    if (amount === '0') {
+      // @ts-ignore
+      endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiDeleteFromOrder}?orderItemId=${productId}`
+    }
+
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
       detail: {
         id: productId,
@@ -164,11 +171,11 @@ export default class Basket extends Shadow() {
    * @param {{ detail: any; }} event
    */
   deleteFromOrderListener = async (event) => {
-    if (this.removeFromOrderAbortController) this.removeFromOrderAbortController.abort()
-    this.removeFromOrderAbortController = new AbortController()
+    if (this.deleteFromOrderAbortController) this.deleteFromOrderAbortController.abort()
+    this.deleteFromOrderAbortController = new AbortController()
     const fetchOptions = {
       method: 'GET',
-      signal: this.removeFromOrderAbortController.signal
+      signal: this.deleteFromOrderAbortController.signal
     }
     const productId = event.detail.tags[0]
 
@@ -186,5 +193,31 @@ export default class Basket extends Shadow() {
       cancelable: true,
       composed: true
     }))
+  }
+
+  /**
+   * Returns the value of the attribute 'product-name' if it exists,
+   * otherwise it returns the value of the property 'productName'.
+   * @param {object} data - The `data` parameter is an object that contains information about a product.
+   * @returns {string} the value of the "product-name" attribute if it exists in the "data.this" object, otherwise
+   * it is returning the value of the "productName" property in the "data" object.
+   */
+  getProductName (data) {
+    return data.this?.hasAttribute('product-name') ? data.this.getAttribute('product-name') : data?.productName
+  }
+
+  /**
+   * Takes in two parameters, `data` and `calc`, and returns the updated amount based on the value of `calc`.
+   * @param {object} data - The `data` parameter is an object that contains information about a product. It may
+   * have an attribute called "amount" that represents the quantity of the product.
+   * @param {string} calc - The `calc` parameter is a string that determines whether to add or subtract from the
+   * product amount. It can have two possible values: 'add' or 'subtract'.
+   * @returns the updated value of the "amount" attribute in the "data" object. If the "calc" parameter
+   * is set to 'add', it will increment the value by 1. If the "calc" parameter is set to any other
+   * value, it will decrement the value by 1. If the "data" object has a property called "this" and it has an
+   */
+  getProductAmount (data, calc) {
+    const amountCalc = calc === 'add' ? +1 : -1
+    return data.this?.hasAttribute('amount') ? `${Number(data?.this.getAttribute('amount')) + amountCalc}` : data?.amount
   }
 }

@@ -21,7 +21,7 @@ export default class ProductList extends Shadow() {
       event.detail.fetch.then(productData => {
         const { products, total_hits: totalHits } = productData[0]
         const { orderItems } = (productData && productData[1]?.response) || {}
-        if (!products || !orderItems) throw new Error('No Products found')
+        if (!products) throw new Error('No Products found')
         this.renderHTML(products, totalHits, orderItems)
       }).catch(error => {
         this.html = ''
@@ -65,26 +65,38 @@ export default class ProductList extends Shadow() {
       display: var(--display, flex);
       flex-direction:var(--flex-direction, row);
       flex-wrap: var(--flex-wrap, wrap);
-      gap:var(--gap, 0.75em);
-      justify-content: var(--justify-content, space-between);
+      justify-content: var(--justify-content, start);
+      width: 100%;
+      container: products / inline-size;
     }
+    
     :host > m-load-template-tag {
-      flex: var(--m-load-template-tag-flex, 1 1 12em);
+      flex: var(--m-load-template-tag-flex, 0 0 13vw);
+      min-height: var(--m-load-template-tag-min-height, 12em);
+      min-width: var(--m-load-template-tag-min-width, 13vw);
+      width: var(--m-load-template-tag-width, 13vw);
+      margin: var(--m-load-template-tag-margin, 0 0.5em 0.5em 0);
     }
+
     :host .filter {
       align-self: var(--filter-align-self, center);
       flex: var(--filter-flex, inherit);
       min-height: var(--filter-min-height, 1em);
       width: var(--filter-width, 100%);
+      margin: var(--filter-margin, 0 0 1em 0);
     }
-    @media only screen and (max-width: _max-width_) {
-      :host {
-        flex-direction:var(--flex-direction-mobile, row);
-        gap:var(--gap-mobile, 0.5em);
-      }
+
+    @container products (max-width: 52em){
       :host > m-load-template-tag {
         min-height: var(--m-load-template-tag-min-height-mobile, auto);
-        min-width: var(--m-load-template-tag-min-width-mobile, 12em);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(33% - 0.5em)));
+      }
+    }
+
+    @container products (max-width: 30em){
+      :host > m-load-template-tag {
+        min-height: var(--m-load-template-tag-min-height-mobile, auto);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(50% - 0.5em)));
       }
     }
     `

@@ -40,9 +40,16 @@ self.Environment = {
           apiRemoveFromOrder: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/RemoveFromOrder' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/RemoveFromOrder',
           apiAddToOrder: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/AddToOrder',
           apiDeleteFromOrder: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/DeleteFromOrder' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/DeleteFromOrder',
+          apiUpdateOrderItem: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/UpdateOrderItem' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/UpdateOrderItem',
           apiGetActiveOrderAndOrderItems: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItems',
           apiGetProductByCategory: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory' : 'https://admin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsByCategory',
-          apiGetActiveOrderAndOrderItemsEnrichedProductData: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData'
+          apiGetActiveOrderAndOrderItemsEnrichedProductData: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderAndOrderItemsEnrichedProductData',
+          apiOrderCheckoutSubmit: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/OrderCheckoutSubmit' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/OrderCheckoutSubmit',
+          apiOrderCheckoutSaveForLater: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/OrderCheckoutSaveForLater' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/OrderCheckoutSaveForLater',
+          apiGetAllStores: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetAllStores' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetAllStores',
+          apiGetActiveOrderId: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderId' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderId',
+          apiToggleDefaultOrder: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/ToggleDefaultOrder' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/ToggleDefaultOrder',
+          apiGetProductsBySearch: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsBySearch' : 'https://admin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsBySearch'
         }
       }
       default:

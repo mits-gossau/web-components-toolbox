@@ -4,7 +4,7 @@
     --checkout-default-item-border-bottom: var(--m-gray-300, white);
     --checkout-default-span-additional-info-color: var(--m-gray-800, black);
     --product-checkout-img-max-height: var(--product-checkout-img-max-height-custom, 7vw);
-    --product-checkout-img-max-width: var(--product-checkout-img-max-width-custom, 10vw);
+    --product-checkout-img-max-width: var(--product-checkout-img-max-width-custom, 8vw);
 }
 
 @media only screen and (max-width: _max-width_) {

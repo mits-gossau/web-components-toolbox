@@ -3,13 +3,11 @@
   --header-default-a-color: var(--header-default-a-color-custom, var(--color));
   --header-default-a-font-size: var(--h4-font-size);
   --header-default-a-line-height: 2rem;
-  --header-default-a-logo-top-mobile: var(--header-default-a-logo-top-mobile-custom, -1em);
-  --header-default-a-logo-top: var(--header-default-a-logo-top-custom, calc(62px / 2 - 90px / 2)); /* gets calculated by adjustLogoPos but preset here for desktop with these values: "calc(${navHeight}px / 2 - ${logoHeight}px / 2)" to avoid visible adjustment at load */
   --header-default-a-margin-mobile: 0 5% 0 0;
   --header-default-a-margin: 0 max(4.5625rem, 3vw) 0 0;
   --header-default-a-menu-icon-align-self-mobile: baseline;
   --header-default-a-menu-icon-background-color: var(--header-default-a-menu-icon-background-color-custom, var(--background-color));
-  --header-default-a-menu-icon-border-radius: 25%;
+  --header-default-a-menu-icon-border-radius: var(--header-default-a-menu-icon-border-radius-custom, 25%);
   --header-default-a-menu-icon-height-open-mobile: var(--header-default-a-menu-icon-height);
   --header-default-a-menu-icon-height: 3px;
   --header-default-a-menu-icon-margin: 0;

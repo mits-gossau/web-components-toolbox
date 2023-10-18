@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href=../../../../css/initial.css rel=stylesheet type="text/css">
+  <link href=../../../../css/reset.css rel=stylesheet type="text/css">
+  <link href=../../../../css/colors.css rel=stylesheet type="text/css">
+  <link href=../../../../css/fonts.css rel=stylesheet type="text/css">
+  <link href=../../../../css/variables.css rel=stylesheet type="text/css">
+  <title>Plain Button Example</title>
+</head>
+<body>
+  <m-double-button namespace="button-primary-">
+      <a-button namespace="button-primary-">Filter</a-button>
+      <a-button namespace="button-primary-">x</a-button>
+  </m-double-button>
+  <script>
+    import('./Button.js').then(module => self.customElements.define('a-button', module.default))
+  </script>
+</body>
+</html>

@@ -68,7 +68,7 @@ export default class Checkout extends Shadow() {
       :host .product-data {
         display: var(--product-data-display, flex);
         flex-direction: var(--product-data-flex-direction, column);
-        justify-content: var(--product-data-justify-content, space-between);
+        justify-content: var(--product-data-justify-content, flex-start);
         width: var(--product-data-width, 100%);
       }
       :host .product-data  span {
@@ -178,12 +178,29 @@ export default class Checkout extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../molecules/basketControl/BasketControl.js`,
         name: 'm-basket-control'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../molecules/systemNotification/SystemNotification.js`,
+        name: 'm-system-notification'
       }
     ])
 
     return Promise.all([productData, fetchModules]).then(() => {
-      if (!productData) {
-        this.html = '<span style="color:var(--color-error);">Une erreur est survenue. Les données ne peuvent pas être affichées.</span>'
+      if (!productData || !productData.orderItems || productData.orderItems.length === 0) {
+        this.html = /* html */ `
+          <m-system-notification 
+              icon-src="/web-components-toolbox-migrospro/src/icons/shopping_basket.svg" 
+              icon-badge="0"
+              title="Panier vide"
+          >
+              <div slot="description">
+              <ul>
+                  <li>Ajoutez des produits à votre sélection en parcourant notre catalogue.</li>
+                  <li>Vous ne trouvez pas l'offre qui vous convient? Faites nous parvenir votre demande en remplissant les champs "Votre demande sur mesure" ci-dessous.</li>
+              </ul>
+            </div>
+        </m-system-notification>
+        `
         return
       }
       // @ts-ignore
@@ -199,19 +216,19 @@ export default class Checkout extends Shadow() {
                   <div>
                     <span>${product.productDetail.price}</span>
                     <span class="name">${product.productDetail.name}</span>
-                    <span class="additional-info">${product.productDetail.estimatedPieceWeight || ''}</span>
+                    ${product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''}
                   </div>
                   <div>
-                    <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
+                    <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
                   </div>
                 </div>
                 <div class="product-footer">
                   <m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1" disable-all-elements="${this.isLoggedIn}">
-                    <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-"></a-button>
-                    <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket">
-                    <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+"></a-button>
+                    <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-" product-name="${product.productDetail.name}"></a-button>
+                    <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.productDetail.name}">
+                    <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+" product-name="${product.productDetail.name}"></a-button>
                   </m-basket-control>
-                  <div class="bold">${product.productTotal}</div>
+                  <div class="bold">${product.totalTcc}</div>
                 </div>
              </div>
              </div>`
@@ -230,7 +247,7 @@ export default class Checkout extends Shadow() {
    * @returns {string} an HTML table with the following information:
    */
   totalAndTaxes (data) {
-    const { totalTtc, montantRabais, totalTva1, totalTva2, totalHt, totalTtcAvecRabais, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
+    const { totalTtc, totalTva1, totalTva2, totalHt, totalTtcDiscount, totalTtcWithDiscount, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
     return /* html */ `
       <table>
         <tr class="bold">
@@ -239,23 +256,29 @@ export default class Checkout extends Shadow() {
         </tr>
         <tr>
           <td>${montantRabaisTranslation}</td>
-          <td>${montantRabais}</td>
+          <td>${totalTtcDiscount}</td>
         </tr>
-        <tr>
-          <td>${totalTva1Translation}</td>
-          <td>${totalTva1}</td>
-        </tr>
-        <tr>
-          <td>${totalTva2Translation}</td>
-          <td>${totalTva2}</td>
-        </tr>
+        ${totalTva1 !== '0.00'
+          ? `<tr>
+              <td>${totalTva1Translation}</td>
+              <td>${totalTva1}</td>
+            </tr>
+            <tr>`
+          : ''}
+          ${totalTva2 !== '0.00'
+            ? `<tr>
+                <td>${totalTva2Translation}</td>
+                <td>${totalTva2}</td>
+              </tr>
+              <tr>`
+            : ''}
         <tr class="bold important">
           <td>${totalHtAvecRabaisTranslation}</td>
           <td>${totalHt}</td>
         </tr>
         <tr class="bold important with-background">
           <td>${totalTtcAvecRabaisTranslation}</td>
-          <td>${totalTtcAvecRabais}</td>
+          <td>${totalTtcWithDiscount}</td>
         </tr>
       </table>
     `

@@ -179,13 +179,14 @@ export default class Product extends Shadow() {
       unitPrice,
       isWeighable,
       estimated_piece_weight: estimatedPieceWeight,
-      slug
+      slug,
+      package_size: packageSize
     } = this.productData
 
     productCard.innerHTML = /* html */ `
-      ${this.createBasketUtilsElement(id)}
+      ${this.createBasketUtilsElement(id, name)}
       ${this.createProductImageElement(image, accessibleInformationText)}
-      ${this.createProductDataElement(price, brand || '', name, unitPrice, isWeighable, estimatedPieceWeight)}
+      ${this.createProductDataElement(price, brand || '', name, unitPrice, isWeighable, estimatedPieceWeight, packageSize)}
       `
 
     const div = document.createElement('div')
@@ -204,17 +205,18 @@ export default class Product extends Shadow() {
 
   /**
    * Creates an HTML element for a basket utility with buttons to add or remove items from the basket.
-   * @param {string} productInfo - The `productInfo` parameter is a variable that represents information about a
-   * product. It could include details such as the product name, price, image, and any other relevant information.
+   * @param {string} id - The `id` parameter is used to identify the basket element. It could be a unique
+   * identifier for the element, such as a product ID or a generated UUID.
+   * @param {string} name - The name parameter is a string that represents the name of the basket element.
    * @returns an HTML element as a string.
    */
-  createBasketUtilsElement (productInfo) {
+  createBasketUtilsElement (id, name) {
     return /* html */ `
       <div class="basket-utils">
       <m-basket-control disable-all-elements="${this.disable}" namespace="basket-control-default-" answer-event-name="update-basket" class="default">
-         <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${productInfo}' label="-"></a-button>
-         <input id="${productInfo}" class="basket-control-input" tag=${productInfo} name="quantity" type="number" value="${this.activeOrderItemAmount}" min=0 max=9999 request-event-name="add-basket">
-         <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${productInfo}' label="+"></a-button>
+         <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${id}' product-name="${name}" label="-" amount="${this.activeOrderItemAmount}"></a-button>
+         <input id="${id}" class="basket-control-input" tag=${id} name="quantity" type="number" value="${this.activeOrderItemAmount}" min=0 max=9999 request-event-name="add-basket" product-name="${name}">
+         <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${id}' label="+" product-name="${name}" amount="${this.activeOrderItemAmount}"></a-button>
       </m-basket-control>
       </div>`
   }
@@ -246,13 +248,13 @@ export default class Product extends Shadow() {
    * weight of a single piece of the product. This parameter is only applicable if the product is weighable.
    * @returns an HTML string that represents a product data element.
    */
-  createProductDataElement (price, brand, name, unitPrice, isWeighable, estimatedPieceWeight) {
+  createProductDataElement (price, brand, name, unitPrice, isWeighable, estimatedPieceWeight, packageSize) {
     return /* html */ `
       <div class="product-data">
         <span class="product-price">${price}</span>
         <span class="product-brand">${brand}</span>
         <span class="product-name">${this.deleteBrandFromName(name, brand)}</span>
-        <span class="unit-price">${unitPrice || ''}</span>
+        <span class="unit-price">${packageSize ? `${packageSize} &nbsp; ` : ''}${unitPrice || ''}</span>
         <span class="estimated-piece-weight">${isWeighable ? estimatedPieceWeight : ''}</span>
       <div>
     `
