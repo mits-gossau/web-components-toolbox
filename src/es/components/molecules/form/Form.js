@@ -229,8 +229,8 @@ export default class Form extends Shadow() {
         width: 100%;
       }
       ${this.getInputFieldsWithText('::placeholder')} {
-        color: var(--m-gray-600);
-        opacity: 1;
+        color: var(--placeholder-color, var(--m-gray-600));
+        opacity: var(--placeholder-opacity, 1);
       }
       ${this.getInputFieldsWithText(':hover')} {
         border-color: var(--m-gray-600);
@@ -370,8 +370,6 @@ export default class Form extends Shadow() {
         animation: around 0.7s ease-in-out 0.1s infinite;
         background: transparent;
       }
-    
-       
     `
     return this.fetchTemplate()
   }
