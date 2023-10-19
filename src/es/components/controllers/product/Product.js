@@ -50,7 +50,7 @@ export default class Product extends Shadow() {
     this.removeEventListener(this.getAttribute('request-submit-search') || 'submit-search', this.requestSubmitSearchListener)
   }
 
-  // TODO: 
+  // TODO:
   // Check if this is necessary
   requestSubmitSearchListener = (event) => {
     console.log('search', event)
