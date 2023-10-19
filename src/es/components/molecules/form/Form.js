@@ -319,12 +319,12 @@ export default class Form extends Shadow() {
         overflow-y: auto;
       }
       
-      option {
+      :host option {
         background-color: var(--background-color);
         padding: 0.3em var(--content-spacing-mobile, 0.3em) 0.3em var(--content-spacing-mobile, 0.3em) ;
         cursor: pointer;
       }
-      option:hover, .active{
+      :host option:hover, :host .active {
         background-color: var(--color-secondary);
         color: var(--background-color);
       }
