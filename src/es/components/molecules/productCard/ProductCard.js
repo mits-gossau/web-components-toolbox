@@ -39,6 +39,7 @@ export default class ProductCard extends Shadow() {
     :host .product-item {
         border-bottom: var(--product-item-border-bottom, 1px) solid var(--item-border-bottom, black);
         display: var(--product-item-display, flex);
+        font-family: var(--font-family, inherit);
         padding: var(--product-item-padding, 2em 0);
         width: var(--product-item-width, 100%);
       }
