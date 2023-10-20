@@ -248,10 +248,10 @@ export default class Button extends Hover() {
       #label.hide {
         display: none;
       }
-      .icon-left {
+      :not(a-icon-mdx).icon-left, a-icon-mdx.icon-left::part(svg) {
         margin: var(--icon-left-margin, 0 0.5em 0 0);
       }
-      .icon-right {
+      :not(a-icon-mdx).icon-right, a-icon-mdx.icon-right::part(svg) {
         margin: var(--icon-right-margin, 0 0 0 0.5em);
       }
       .icon-left, .icon-right {
