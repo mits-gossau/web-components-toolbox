@@ -370,6 +370,26 @@ export default class Form extends Shadow() {
         animation: around 0.7s ease-in-out 0.1s infinite;
         background: transparent;
       }
+      :host .two-column-align-bottom {
+        display: flex;
+        gap: var(--content-spacing, 1em);
+        flex-wrap: nowrap;
+      }
+      :host .two-column-align-bottom > * {
+        align-items: baseline;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: end;
+      }
+      :host .two-column-align-bottom input[type="submit"] {
+        margin: 0;
+      }
+      @media only screen and (max-width: _max-width_) {
+        :host .two-column-align-bottom {
+          flex-direction: column
+        }
+      }
     `
     return this.fetchTemplate()
   }
