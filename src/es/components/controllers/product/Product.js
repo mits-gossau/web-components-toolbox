@@ -60,6 +60,7 @@ export default class Product extends Shadow() {
       method: 'GET',
       signal: this.abortProductSearchController.signal
     }
+    const search = ''
     // @ts-ignore
     const endpointProductSearch = `${self.Environment.getApiBaseUrl('migrospro').apiGetProductsBySearch}?searchterm=${search}`
     // todo
@@ -82,7 +83,7 @@ export default class Product extends Shadow() {
             }
             return true
             // @ts-ignore
-          }).catch(error => console.error(`fetch ${endpointProductSearch} failed! error: ${error}`) || `fetch ${endpointActiveOrderEndpoint} failed!`)
+          }).catch(error => console.error(`fetch ${endpointProductSearch} failed! error: ${error}`) || `fetch ${endpointProductSearch} failed!`)
         ])
       },
       bubbles: true,

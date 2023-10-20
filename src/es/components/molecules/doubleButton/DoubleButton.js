@@ -1,8 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global CustomEvent */
-
 /**
  * Creates an DoubleButton
  * https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=2866%3A55901

@@ -28,6 +28,9 @@ export default class ProductList extends Shadow() {
         this.html = `<span style="color:var(--color-error);">${error}</span>`
       })
     }
+    this.sortEventListener = event => {
+      console.log(event.target.value)
+    }
   }
 
   connectedCallback () {
@@ -62,29 +65,33 @@ export default class ProductList extends Shadow() {
     this.css = /* css */ `
     :host {
       align-items: var(--align, stretch);
+      container: products / inline-size;
       display: var(--display, flex);
       flex-direction:var(--flex-direction, row);
       flex-wrap: var(--flex-wrap, wrap);
       justify-content: var(--justify-content, start);
       width: 100%;
-      container: products / inline-size;
     }
-    
+
     :host > m-load-template-tag {
       flex: var(--m-load-template-tag-flex, 0 0 13vw);
+      margin: var(--m-load-template-tag-margin, 0 0.5em 0.5em 0);
       min-height: var(--m-load-template-tag-min-height, 12em);
       min-width: var(--m-load-template-tag-min-width, 13vw);
       width: var(--m-load-template-tag-width, 13vw);
-      margin: var(--m-load-template-tag-margin, 0 0.5em 0.5em 0);
     }
 
     :host .filter {
+      align-items: var(--filter-align-items, center);
       align-self: var(--filter-align-self, center);
-      flex: var(--filter-flex, inherit);
+      display: var(--filter-display, inherit);
+      justify-content: var(--filter-justify-content, space-between);
+      margin: var(--filter-margin, 0 0 1em 0);
       min-height: var(--filter-min-height, 1em);
       width: var(--filter-width, 100%);
-      margin: var(--filter-margin, 0 0 1em 0);
     }
+
+    :host select {}
 
     @container products (max-width: 52em){
       :host > m-load-template-tag {
@@ -164,6 +171,10 @@ export default class ProductList extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../molecules/loadTemplateTag/LoadTemplateTag.js`,
         name: 'm-load-template-tag'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../molecules/form/Form.js`,
+        name: 'm-form'
       }
     ])
 
@@ -223,9 +234,47 @@ export default class ProductList extends Shadow() {
           </template>
         </m-load-template-tag>`
       })
-      products.unshift(`<div class="filter">${totalHits} ${this.totalArticlesText}</div>`)
+      const divHeaderWrapper = document.createElement('div')
+      divHeaderWrapper.classList.add('filter')
+      const totalElement = document.createElement('div')
+      totalElement.innerHTML = `${totalHits}  ${this.totalArticlesText}` || ''
+      divHeaderWrapper.appendChild(totalElement)
+      const showSort = this.showSort
+      if (showSort) {
+        const select = this.renderSort()
+        divHeaderWrapper.appendChild(select)
+      }
+      products.unshift(divHeaderWrapper.outerHTML)
       this.html = products.join('')
+
+      if (showSort) {
+        this.sortSelect = this.root.querySelector('select')
+        console.log(this.sortSelect)
+        this.sortSelect.addEventListener('change', this.sortEventListener)
+      }
     })
+  }
+
+  /**
+   * Creates a div element with a select dropdown menu for sorting options.
+   * @returns The `renderSort()` function returns a div element containing a select element with various sorting options.
+   */
+  renderSort () {
+    const sortWrapper = document.createElement('div')
+    this.sortSelect = `
+      <m-form role="form">
+        <div class="form-group">
+          <select class="form-control" id="sort">
+            <option value="" selected disabled>Trier par</option>
+            <option value="asc">Prix le plus élevé</option>
+            <option value="desc">Prix le plus bas</option>
+            <option value="a">A-Z</option>
+            <option value="z">Z-A</option>
+          </select>
+        </div>
+      </m-form>`
+    sortWrapper.innerHTML = this.sortSelect
+    return sortWrapper
   }
 
   /**
@@ -252,5 +301,9 @@ export default class ProductList extends Shadow() {
 
   get isLoggedIn () {
     return this.getAttribute('is-logged-in') || 'false'
+  }
+
+  get showSort () {
+    return this.getAttribute('show-sort') || 'false'
   }
 }
