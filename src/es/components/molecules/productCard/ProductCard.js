@@ -163,7 +163,7 @@ export default class ProductCard extends Shadow() {
       totalTcc: 12.90
     }
     /** @type {Product} */
-    const product = JSON.parse(this.getAttribute('product')) || defaultProduct
+    const product = JSON.parse(this.getAttribute('data')) || defaultProduct
 
     return Promise.all([fetchModules]).then(() => {
       const productSelect = this.isSelectable ? `<div class="product-select"><input type="checkbox" /></div>` : ''
