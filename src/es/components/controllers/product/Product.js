@@ -101,6 +101,12 @@ export default class Product extends Shadow() {
       this.setCategory(event.detail.tags[0], event.detail.pushHistory)
     }
 
+    let sortOrder = ''
+    if (event.detail?.type === 'sort-articles') {
+      sortOrder = event.detail.sortOrder
+      // TODO: Finish, when API is available
+    }
+
     if (this.abortController) this.abortController.abort()
     this.abortController = new AbortController()
     const fetchOptions = {
@@ -111,7 +117,7 @@ export default class Product extends Shadow() {
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null) {
       // @ts-ignore
-      const endpointGetProductByCategory = `${self.Environment.getApiBaseUrl('migrospro').apiGetProductByCategory}?category=${category}`
+      const endpointGetProductByCategory = `${self.Environment.getApiBaseUrl('migrospro').apiGetProductByCategory}?category=${category}&sort=${sortOrder}`
       // @ts-ignore
       const endpointActiveOrderEndpoint = `${self.Environment.getApiBaseUrl('migrospro').apiGetActiveOrderAndOrderItems}`
 

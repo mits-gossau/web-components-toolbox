@@ -28,8 +28,19 @@ export default class ProductList extends Shadow() {
         this.html = `<span style="color:var(--color-error);">${error}</span>`
       })
     }
+
     this.sortEventListener = event => {
-      console.log(event.target.value)
+      this.dispatchEvent(new CustomEvent('request-list-product',
+        {
+          detail: {
+            type: 'sort-articles',
+            sortOrder: event.target.value
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }
+      ))
     }
   }
 
@@ -304,6 +315,6 @@ export default class ProductList extends Shadow() {
   }
 
   get showSort () {
-    return this.getAttribute('show-sort') || 'false'
+    return this.getAttribute('show-sort') || false
   }
 }
