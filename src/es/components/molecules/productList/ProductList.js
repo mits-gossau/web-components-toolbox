@@ -50,6 +50,7 @@ export default class ProductList extends Shadow() {
 
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
+    if (this.showSort) this.sortSelect.removeEventListener('change', this.sortEventListener)
   }
 
   shouldRenderCSS () {
@@ -249,7 +250,6 @@ export default class ProductList extends Shadow() {
 
       if (showSort) {
         this.sortSelect = this.root.querySelector('select')
-        console.log(this.sortSelect)
         this.sortSelect.addEventListener('change', this.sortEventListener)
       }
     })
@@ -265,11 +265,11 @@ export default class ProductList extends Shadow() {
       <m-form role="form">
         <div class="form-group">
           <select class="form-control" id="sort">
-            <option value="" selected disabled>Trier par</option>
+            <option disabled selected value>Trier par</option>
             <option value="asc">Prix le plus élevé</option>
             <option value="desc">Prix le plus bas</option>
-            <option value="a">A-Z</option>
-            <option value="z">Z-A</option>
+            <option value="az">A-Z</option>
+            <option value="za">Z-A</option>
           </select>
         </div>
       </m-form>`
