@@ -50,7 +50,7 @@ export default class ProductCard extends Shadow() {
       }
       :host .product-item:last-of-type {
         border-bottom: var(--product-item-last-border-bottom, none);
-        padding-bottom:var(--product-item-last-padding-bottom, 4em);
+        padding-bottom:var(--product-item-last-padding-bottom, 2em);
       }
       :host .product-select {
         align-items: var(--product-select-align-items, center);
