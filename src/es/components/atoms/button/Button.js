@@ -172,6 +172,17 @@ export default class Button extends Hover() {
         cursor: unset !important;
         display: inline-block;
       }
+      #label {
+        display: inline-block;
+        padding: var(--label-padding, 0);
+        margin: var(--label-margin, 0);
+        position: relative;
+        text-align: var(--label-text-align, center);
+        white-space: var(--label-white-space, inherit);
+      }
+      #label.hide {
+        display: none;
+      }
       ${this.buttonTagName} {
         align-items: var(--align-items, center);
         background-color: var(--background-color, transparent);
@@ -237,21 +248,10 @@ export default class Button extends Hover() {
       :host ${this.buttonTagName}[disabled]:hover, :host(.hover) ${this.buttonTagName}[disabled] {
         opacity: var(--opacity-disabled-hover, var(--opacity-disabled, var(--opacity, 1)));
       }
-      #label {
-        display: inline-block;
-        padding: var(--label-padding, 0);
-        margin: var(--label-margin, 0);
-        position: relative;
-        text-align: var(--label-text-align, center);
-        white-space: var(--label-white-space, inherit);
-      }
-      #label.hide {
-        display: none;
-      }
-      .icon-left {
+      :not(a-icon-mdx).icon-left, a-icon-mdx.icon-left::part(svg) {
         margin: var(--icon-left-margin, 0 0.5em 0 0);
       }
-      .icon-right {
+      :not(a-icon-mdx).icon-right, a-icon-mdx.icon-right::part(svg) {
         margin: var(--icon-right-margin, 0 0 0 0.5em);
       }
       .icon-left, .icon-right {

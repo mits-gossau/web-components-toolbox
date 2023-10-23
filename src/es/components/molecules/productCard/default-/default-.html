@@ -1,0 +1,23 @@
+<div style="margin:40px auto; max-width:480px;"><!-- DEMO only -->
+    <m-product-card 
+        is-logged-in="true"
+        is-deletable="false"
+        is-selectable="true" 
+        data='{
+            "productDetail": {
+              "id": "000000000001",
+              "image": "https://placehold.co/400",
+              "name": "Happy Bread IP-SUISSE · Dunkles Brot · Geschnitten",
+              "estimatedPieceWeight": "350g 6.86/kg"
+            },
+            "totalTcc": 2.4
+          }'
+    ></m-product-card>
+    <m-product-card is-selectable="true" is-logged-in="true"></m-product-card>
+    <m-product-card is-selectable="true" is-logged-in="true"></m-product-card>
+    <m-product-card></m-product-card>
+</div>
+<!-- load web components for Demo Purposes Only -->
+<script class=template-script type="text/javascript" src="./default-.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=ProductList.js"></script>

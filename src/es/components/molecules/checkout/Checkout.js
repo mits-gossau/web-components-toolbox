@@ -186,6 +186,7 @@ export default class Checkout extends Shadow() {
     ])
 
     return Promise.all([productData, fetchModules]).then(() => {
+      // @ts-ignore
       if (!productData || !productData.orderItems || productData.orderItems.length === 0) {
         this.html = /* html */ `
           <m-system-notification 

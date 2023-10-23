@@ -26,6 +26,7 @@ export default class Product extends Shadow() {
     }, ...args)
 
     this.abortController = null
+    this.abortProductSearchController = null
 
     // TODO - Refactor
     // show/hide o-wrapper, based on the data-id tag
@@ -49,9 +50,46 @@ export default class Product extends Shadow() {
     this.removeEventListener(this.getAttribute('request-submit-search') || 'submit-search', this.requestSubmitSearchListener)
   }
 
-  // TODO: Check if this is necessary
+  // TODO:
+  // Check if this is necessary
   requestSubmitSearchListener = (event) => {
     console.log('search', event)
+    if (this.abortProductSearchController) this.abortProductSearchController.abort()
+    this.abortProductSearchController = new AbortController()
+    const fetchOptions = {
+      method: 'GET',
+      signal: this.abortProductSearchController.signal
+    }
+    const search = ''
+    // @ts-ignore
+    const endpointProductSearch = `${self.Environment.getApiBaseUrl('migrospro').apiGetProductsBySearch}?searchterm=${search}`
+    // todo
+    this.dispatchEvent(new CustomEvent(this.getAttribute('list-product') || 'list-product', {
+      detail: {
+        fetch: Promise.all([
+          fetch(endpointProductSearch, fetchOptions).then(async response => {
+            if (response.status >= 200 && response.status <= 299) {
+              const data = await response.json()
+              return {
+                data
+              }
+            }
+            throw new Error(response.statusText)
+            // @ts-ignore
+          }).catch(error => console.error(`fetch ${endpointProductSearch} failed! error: ${error}`) || `fetch ${endpointProductSearch} failed!`),
+          fetch(endpointProductSearch, fetchOptions).then(async response => {
+            if (response.status >= 200 && response.status <= 299) {
+              return await response.json()
+            }
+            return true
+            // @ts-ignore
+          }).catch(error => console.error(`fetch ${endpointProductSearch} failed! error: ${error}`) || `fetch ${endpointProductSearch} failed!`)
+        ])
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
   }
 
   /**
@@ -61,6 +99,12 @@ export default class Product extends Shadow() {
   requestListProductListener = async (event) => {
     if (event.detail && event.detail.tags) {
       this.setCategory(event.detail.tags[0], event.detail.pushHistory)
+    }
+
+    let sortOrder = ''
+    if (event.detail?.type === 'sort-articles') {
+      sortOrder = event.detail.sortOrder
+      // TODO: Finish, when API is available
     }
 
     if (this.abortController) this.abortController.abort()
@@ -73,7 +117,7 @@ export default class Product extends Shadow() {
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null) {
       // @ts-ignore
-      const endpointGetProductByCategory = `${self.Environment.getApiBaseUrl('migrospro').apiGetProductByCategory}?category=${category}`
+      const endpointGetProductByCategory = `${self.Environment.getApiBaseUrl('migrospro').apiGetProductByCategory}?category=${category}&sort=${sortOrder}`
       // @ts-ignore
       const endpointActiveOrderEndpoint = `${self.Environment.getApiBaseUrl('migrospro').apiGetActiveOrderAndOrderItems}`
 
