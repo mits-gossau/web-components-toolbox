@@ -59,10 +59,7 @@ export default class Product extends Shadow() {
       this.setCategory(event.detail.tags[0], event.detail.pushHistory)
     }
 
-    let sortOrder = ''
-    if (event.detail?.type === 'sort-articles') {
-      sortOrder = event.detail.sortOrder
-    }
+    this.updateSortParam(event.detail.sortOrder)
 
     if (this.abortController) this.abortController.abort()
     this.abortController = new AbortController()
@@ -70,6 +67,7 @@ export default class Product extends Shadow() {
       method: 'GET',
       signal: this.abortController.signal
     }
+    const sortOrder = this.getSort()
     const category = this.getCategory()
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null || event.detail.searchterm) {
@@ -89,6 +87,7 @@ export default class Product extends Shadow() {
                 }
                 return {
                   tags: [category],
+                  sort: this.getSort(),
                   ...data
                 }
               }
@@ -152,6 +151,32 @@ export default class Product extends Shadow() {
   getCategory () {
     const urlParams = new URLSearchParams(location.search)
     return urlParams.get('category') || null
+  }
+
+  /**
+   * Updates the sort parameter in the URL and optionally pushes the updated URL to the browser history.
+   * @param {string} sortOrder - Used to specify the sorting order.
+   * @param [pushHistory=true] - Boolean value that determines whether to push the updated URL to the browser history.
+   * @returns the updated URL object.
+   */
+  updateSortParam (sortOrder, pushHistory = true) {
+    const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
+    if (sortOrder) {
+      url.searchParams.set('sort', sortOrder)
+    } else {
+      url.searchParams.delete('sort')
+    }
+    if (pushHistory) history.pushState({ ...history.state, sortOrder }, document.title, url.href)
+    return url
+  }
+
+  /**
+   * Retrieves the value of the 'sort' parameter from the URL query string, or returns null if it is not present.
+   * @returns the value of the 'sort' parameter from the URL query string.
+   */
+  getSort () {
+    const urlParams = new URLSearchParams(location.search)
+    return urlParams.get('sort') || ''
   }
 
   /**

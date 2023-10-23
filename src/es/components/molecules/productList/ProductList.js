@@ -19,10 +19,10 @@ export default class ProductList extends Shadow() {
       this.renderHTML('loading', null, null)
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
-        const { products, total_hits: totalHits } = productData[0]
+        const { products, total_hits: totalHits, sort } = productData[0]
         const { orderItems } = (productData && productData[1]?.response) || {}
         if (!products) throw new Error('No Products found')
-        this.renderHTML(products, totalHits, orderItems)
+        this.renderHTML(products, totalHits, orderItems, sort)
       }).catch(error => {
         this.html = ''
         this.html = `<span style="color:var(--color-error);">${error}</span>`
@@ -160,7 +160,7 @@ export default class ProductList extends Shadow() {
    * `mapiProductId` (the ID of the product) and `amount` (the quantity of the product ordered).
    * @returns {Promise<void>} The function `renderHTML` returns a Promise.
    */
-  async renderHTML (productData, totalHits, orderItems) {
+  async renderHTML (productData, totalHits, orderItems, sort) {
     if (!productData || (productData !== 'loading' && (!Array.isArray(productData) || !productData.length))) {
       this.html = ''
       this.html = `${this.getAttribute('no-products-found-translation') || 'Leider haben wir keine Produkte zu diesem Suchbegriff gefunden.'}`
@@ -258,7 +258,7 @@ export default class ProductList extends Shadow() {
       divHeaderWrapper.appendChild(totalElement)
       const showSort = this.showSort
       if (showSort) {
-        const select = this.renderSort()
+        const select = this.renderSort(sort)
         divHeaderWrapper.appendChild(select)
       }
 
@@ -288,6 +288,7 @@ export default class ProductList extends Shadow() {
     <m-system-notification type="${type}">
       <style>
         :host {
+          --svg-color:var(--m-red-600);
           width:100%;
           margin:0 1em;
         }
@@ -302,7 +303,15 @@ export default class ProductList extends Shadow() {
       </style>
       <div slot="description">
         <div>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.9998 9.00002V13M11.9998 17H12.0098M10.2898 3.86002L1.81978 18C1.64514 18.3024 1.55274 18.6453 1.55177 18.9945C1.55079 19.3438 1.64127 19.6872 1.8142 19.9905C1.98714 20.2939 2.2365 20.5468 2.53748 20.7239C2.83847 20.901 3.18058 20.9962 3.52978 21H20.4698C20.819 20.9962 21.1611 20.901 21.4621 20.7239C21.7631 20.5468 22.0124 20.2939 22.1854 19.9905C22.3583 19.6872 22.4488 19.3438 22.4478 18.9945C22.4468 18.6453 22.3544 18.3024 22.1798 18L13.7098 3.86002C13.5315 3.56613 13.2805 3.32314 12.981 3.15451C12.6814 2.98587 12.3435 2.89728 11.9998 2.89728C11.656 2.89728 11.3181 2.98587 11.0186 3.15451C10.7191 3.32314 10.468 3.56613 10.2898 3.86002Z" stroke="var(--m-red-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path 
+              d="M11.9998 9.00002V13M11.9998 17H12.0098M10.2898 3.86002L1.81978 18C1.64514 18.3024 1.55274 18.6453 1.55177 18.9945C1.55079 19.3438 1.64127 19.6872 1.8142 19.9905C1.98714 20.2939 2.2365 20.5468 2.53748 20.7239C2.83847 20.901 3.18058 20.9962 3.52978 21H20.4698C20.819 20.9962 21.1611 20.901 21.4621 20.7239C21.7631 20.5468 22.0124 20.2939 22.1854 19.9905C22.3583 19.6872 22.4488 19.3438 22.4478 18.9945C22.4468 18.6453 22.3544 18.3024 22.1798 18L13.7098 3.86002C13.5315 3.56613 13.2805 3.32314 12.981 3.15451C12.6814 2.98587 12.3435 2.89728 11.9998 2.89728C11.656 2.89728 11.3181 2.98587 11.0186 3.15451C10.7191 3.32314 10.468 3.56613 10.2898 3.86002Z" 
+              stroke="var(--svg-color)" 
+              stroke-width="2" 
+              stroke-linecap="round" 
+              stroke-linejoin="round"
+            />
+          </svg>
         </div>
         <div>
           <p>Utilisation possible uniquement avec un compte d'utilisateur valide. <a href="/login">Login/registre</a></p>
@@ -312,23 +321,43 @@ export default class ProductList extends Shadow() {
   }
 
   /**
-   * Creates a div element with a select dropdown menu for sorting options.
-   * @returns The `renderSort()` function returns a div element containing a select element with various sorting options.
+   * Creates a select element with options for sorting and returns it wrapped in a div.
+   * @param {string} sortValue - The current selected value for sorting. It can be
+   * one of the following values: 'default', 'asc', 'desc', 'az', or 'za'.
+   * @returns a div element containing a select element with options for sorting values.
    */
-  renderSort () {
-    const sortWrapper = document.createElement('div')
+  renderSort (sortValue) {
+    // TODO: Refactor - Use translation attribute
+    const options = {
+      default: 'Trier par',
+      asc: 'Prix le plus élevé',
+      desc: 'Prix le plus bas',
+      az: 'Marque de A à Z',
+      za: 'Marque de Z à A'
+    }
+
+    const selected = Object.keys(options).find(key => key === sortValue)
+
+    const sortList = document.createElement('select')
+    sortList.classList.add('form-control')
+    sortList.id = 'sort'
+
+    for (const key in options) {
+      const option = document.createElement('option')
+      option.value = key
+      option.text = options[key]
+      if (key === selected) option.setAttribute('selected', 'selected')
+      sortList.appendChild(option)
+    }
+
     this.sortSelect = `
       <m-form role="form">
         <div class="form-group">
-          <select class="form-control" id="sort">
-            <option disabled selected value>Trier par</option>
-            <option value="asc">Prix le plus élevé</option>
-            <option value="desc">Prix le plus bas</option>
-            <option value="az">A-Z</option>
-            <option value="za">Z-A</option>
-          </select>
+          ${sortList.outerHTML} 
         </div>
-      </m-form>`
+      </m-form>
+    `
+    const sortWrapper = document.createElement('div')
     sortWrapper.innerHTML = this.sortSelect
     return sortWrapper
   }
