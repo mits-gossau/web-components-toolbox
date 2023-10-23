@@ -50,7 +50,8 @@ export default class ProductList extends Shadow() {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
       {
         detail: {
-          type: 'get-active-order-items'
+          type: 'get-active-order-items',
+          searchterm: this.getAttribute('searchterm')
         },
         bubbles: true,
         cancelable: true,
