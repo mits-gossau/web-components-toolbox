@@ -185,6 +185,10 @@ export default class ProductList extends Shadow() {
         name: 'm-load-template-tag'
       },
       {
+        path: `${this.importMetaUrl}'../../../../molecules/systemNotification/SystemNotification.js`,
+        name: 'm-system-notification'
+      },
+      {
         path: `${this.importMetaUrl}'../../../../molecules/form/Form.js`,
         name: 'm-form'
       }
@@ -256,6 +260,9 @@ export default class ProductList extends Shadow() {
         const select = this.renderSort()
         divHeaderWrapper.appendChild(select)
       }
+
+      if (!this.isLoggedIn) this.html = this.renderNotification('error')
+
       products.unshift(divHeaderWrapper.outerHTML)
       this.html = products.join('')
 
@@ -264,6 +271,33 @@ export default class ProductList extends Shadow() {
         this.sortSelect.addEventListener('change', this.sortEventListener)
       }
     })
+  }
+
+  /**
+   * Return a system notification component with a description
+   * containing a message and a link.
+   * @param {string} type - The "type" parameter is used to specify the type of notification to be rendered. It
+   * is passed as an argument to the "renderNotification" function.
+   * @returns a string that represents an HTML template for a system notification. The template
+   * includes a slot for the description and a link to the login/registration page. The type of the
+   * notification is determined by the "type" parameter passed to the function.
+   */
+  renderNotification (type) {
+    return `
+    <m-system-notification type="${type}">
+      <style>
+        :host {
+          width: 100%;
+          margin: 0 1em;
+        }
+        :host a {
+          color: var(--a-color, var(--color-secondary, var(--color, pink)));
+        }
+      </style>
+      <div slot="description">
+        <p>Utilisation possible uniquement avec un compte d'utilisateur valide. <a href="/login">Login/registre</a></p>
+      </div>
+    </m-system-notification>`
   }
 
   /**
@@ -311,7 +345,7 @@ export default class ProductList extends Shadow() {
   }
 
   get isLoggedIn () {
-    return this.getAttribute('is-logged-in') || 'false'
+    return (this.getAttribute('is-logged-in').toLowerCase() === 'true') || false
   }
 
   get showSort () {

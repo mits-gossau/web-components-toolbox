@@ -14,7 +14,7 @@ export default class ProductCard extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.isLoggedIn = this.getAttribute('is-logged-in') || 'false'
     this.isSelectable = this.getAttribute('is-selectable') === 'true' || false
-    this.isDeletable = this.getAttribute('is-deletable') === 'false' ? false : true // to be backwards compatible
+    this.isDeletable = this.getAttribute('is-deletable') !== 'false' // to be backwards compatible
   }
 
   connectedCallback () {
@@ -166,7 +166,7 @@ export default class ProductCard extends Shadow() {
     const product = JSON.parse(this.getAttribute('data')) || defaultProduct
 
     return Promise.all([fetchModules]).then(() => {
-      const productSelect = this.isSelectable ? `<div class="product-select"><input type="checkbox" /></div>` : ''
+      const productSelect = this.isSelectable ? '<div class="product-select"><input type="checkbox" /></div>' : ''
       const productPrice = product.productDetail.price ? `<span>${product.productDetail.price}</span>` : ''
       const productName = product.productDetail.name ? `<span class="name">${product.productDetail.name}</span>` : ''
       const productEstimatedPieceWeight = product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''
@@ -177,7 +177,7 @@ export default class ProductCard extends Shadow() {
             <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.productDetail.name}">
             <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+" product-name="${product.productDetail.name}"></a-button>
           </m-basket-control>`
-        : `<div></div>`;
+        : '<div></div>'
       const productTotalTcc = product.totalTcc ? `<div class="bold">${product.totalTcc.toFixed(2)}</div>` : ''
 
       this.html = /* html */`
