@@ -67,7 +67,7 @@ export default class Product extends Shadow() {
       method: 'GET',
       signal: this.abortController.signal
     }
-    const sortOrder = this.getSort() || ''
+    const sortOrder = this.getSort() || ''
     const category = this.getCategory()
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null || event.detail.searchterm) {
