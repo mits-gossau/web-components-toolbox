@@ -123,7 +123,6 @@ export default class Favorite extends Shadow() {
         />
       </svg>
       `
-    console.log(this.icon)
   }
 
   get icon () {
