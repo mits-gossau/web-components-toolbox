@@ -59,7 +59,7 @@ export default class Product extends Shadow() {
       this.setCategory(event.detail.tags[0], event.detail.pushHistory)
     }
 
-    this.updateSortParam(event.detail.sortOrder)
+    this.updateSortParam(event.detail)
 
     if (this.abortController) this.abortController.abort()
     this.abortController = new AbortController()
@@ -67,7 +67,7 @@ export default class Product extends Shadow() {
       method: 'GET',
       signal: this.abortController.signal
     }
-    const sortOrder = this.getSort()
+    const sortOrder = this.getSort() || ''
     const category = this.getCategory()
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null || event.detail.searchterm) {
@@ -155,17 +155,17 @@ export default class Product extends Shadow() {
 
   /**
    * Updates the sort parameter in the URL and optionally pushes the updated URL to the browser history.
-   * @param {string} sortOrder - Used to specify the sorting order.
-   * @param [pushHistory=true] - Boolean value that determines whether to push the updated URL to the browser history.
+   * @param {object} eventDetail - An object containing the details of the event.
+   * @param [pushHistory=true] - A boolean value indicating whether to push the updated URL to the
+   * browser history. If set to true, it will add a new entry to the browser history with the updated
+   * URL. If set to false, it will not modify the browser history.
    * @returns the updated URL object.
    */
-  updateSortParam (sortOrder, pushHistory = true) {
+  updateSortParam (eventDetail, pushHistory = true) {
+    const { tags, sortOrder } = eventDetail
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
-    if (sortOrder) {
-      url.searchParams.set('sort', sortOrder)
-    } else {
-      url.searchParams.delete('sort')
-    }
+    if (sortOrder) url.searchParams.set('sort', sortOrder)
+    if (tags) url.searchParams.delete('sort')
     if (pushHistory) history.pushState({ ...history.state, sortOrder }, document.title, url.href)
     return url
   }
