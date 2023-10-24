@@ -123,7 +123,7 @@ export default class Product extends Shadow() {
   updatePopState = async (event) => {
     if (!event.detail) event.detail = { ...event.state }
     event.detail.pushHistory = false
-    this.requestListProductListener(event)
+    await this.requestListProductListener(event)
   }
 
   /**
