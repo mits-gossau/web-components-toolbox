@@ -86,7 +86,7 @@ export default class Product extends Shadow() {
                   this.setCategory(data.tags[0], true)
                 }
                 return {
-                  tags: [category],
+                  tags: [category?.split("_")[0]],
                   sort: this.getSort(),
                   ...data
                 }
