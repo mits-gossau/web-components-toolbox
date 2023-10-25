@@ -331,8 +331,8 @@ export default class ProductList extends Shadow() {
     // TODO: Refactor - Use translation attribute
     const options = {
       default: 'Trier par',
-      asc: 'Prix le plus élevé',
-      desc: 'Prix le plus bas',
+      asc: 'Prix le plus bas',
+      desc: 'Prix le plus élevé',
       az: 'Marque de A à Z',
       za: 'Marque de Z à A'
     }
