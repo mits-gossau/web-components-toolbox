@@ -16,7 +16,7 @@ export default class ProductList extends Shadow() {
     this.productNamespace = 'product-default-'
 
     this.answerEventNameListener = event => {
-      this.renderHTML('loading', null, null)
+      this.renderHTML('loading', null, null, '')
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
         const { products, total_hits: totalHits, sort } = productData[0]
@@ -158,6 +158,7 @@ export default class ProductList extends Shadow() {
    * @param {any[] | null} orderItems - The `orderItems` parameter is an array that contains information about the
    * items that have been ordered. Each item in the array is an object with properties such as
    * `mapiProductId` (the ID of the product) and `amount` (the quantity of the product ordered).
+   * @param {string} sort - Sort order
    * @returns {Promise<void>} The function `renderHTML` returns a Promise.
    */
   async renderHTML (productData, totalHits, orderItems, sort) {
