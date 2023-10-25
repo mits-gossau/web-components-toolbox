@@ -261,6 +261,19 @@ export default class Button extends Hover() {
       .icon-left, .icon-right {
         flex-shrink: 0;
       }
+      /* a-icon-mdx */
+      ${this.buttonTagName} > a-icon-mdx {
+        color: var(--color, black);
+      }
+      ${this.buttonTagName}:active > a-icon-mdx, ${this.buttonTagName}.active > a-icon-mdx {
+        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
+      }
+      ${this.buttonTagName}:hover > a-icon-mdx, :host(.hover) ${this.buttonTagName} > a-icon-mdx {
+        color: var(--color-hover, var(--color, #FFFFFF));
+      }
+      :host ${this.buttonTagName}[disabled] {
+        color: var(--color-disabled, var(--color, #FFFFFF));
+      }
       @media only screen and (max-width: _max-width_) {
         ${this.buttonTagName} {
           font-size: var(--font-size-mobile, var(--font-size, 1em));
