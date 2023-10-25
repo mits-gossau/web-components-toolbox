@@ -50,7 +50,7 @@ self.Environment = {
           apiGetActiveOrderId: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderId' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/GetActiveOrderId',
           apiToggleDefaultOrder: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/ToggleDefaultOrder' : 'https://admin.migrospro.ch/umbraco/api/MigrosProOrderApi/ToggleDefaultOrder',
           apiGetProductsBySearch: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsBySearch' : 'https://admin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsBySearch',
-          apiUpdateFavorite: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsBySearch' : 'https://admin.migrospro.ch/umbraco/api/MigrosProProductApi/GetProductsBySearch'
+          apiToggleFavorite: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProProductApi/ToggleFavorite' : 'https://admin.migrospro.ch/umbraco/api/MigrosProProductApi/ToggleFavorite'
         }
       }
       default:
