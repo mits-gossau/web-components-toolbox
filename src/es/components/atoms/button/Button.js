@@ -264,6 +264,7 @@ export default class Button extends Hover() {
       /* icon aka. a-icon-mdx support */
       ${this.buttonTagName} > * {
         color: var(--color, black);
+        transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
       }
       ${this.buttonTagName}:active > *, ${this.buttonTagName}.active > * {
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
