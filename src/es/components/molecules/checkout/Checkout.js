@@ -273,7 +273,7 @@ export default class Checkout extends Shadow() {
               </tr>
               <tr>`
             : ''}
-        <tr class="bold important">
+        <tr class="important">
           <td>${totalHtAvecRabaisTranslation}</td>
           <td>${totalHt}</td>
         </tr>
