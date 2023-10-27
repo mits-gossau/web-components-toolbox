@@ -333,8 +333,8 @@ export default class ProductList extends Shadow() {
       default: 'Trier par',
       asc: 'Prix le plus bas',
       desc: 'Prix le plus élevé',
-      az: 'Marque de A à Z',
-      za: 'Marque de Z à A'
+      az: 'Nom A - Z',
+      za: 'Nom Z - A'
     }
 
     const selected = Object.keys(options).find(key => key === sortValue)
