@@ -1,4 +1,9 @@
 :host {
+    --button-category-width-custom: 100%;
+    --button-primary-width: 100%;
+    --button-quaternary-width: 100%;
+    --button-secondary-width: 100%;
+    --button-tertiary-width: 100%;
     flex-direction: column;
 }
 :host a-button {

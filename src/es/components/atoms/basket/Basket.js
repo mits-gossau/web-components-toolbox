@@ -19,6 +19,13 @@ export default class Basket extends Shadow() {
     if (this.shouldRenderHTML()) this.renderHTML()
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     document.body.addEventListener(this.getAttribute('active-order-item-event-name') || 'active-order-item-event-name', this.activeOrderItemEventNameListener)
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
+      {
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }
+    ))
   }
 
   disconnectedCallback () {
@@ -28,7 +35,7 @@ export default class Basket extends Shadow() {
 
   answerEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
     event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }} */ productData) => {
-      this.count.textContent = productData.response.allOrderItemProductTotal
+      this.count.textContent = productData.response?.allOrderItemProductTotal || '0'
     }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
       console.warn(error)
@@ -37,7 +44,7 @@ export default class Basket extends Shadow() {
 
   activeOrderItemEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
     event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }[]} */ activeItems) => {
-      this.count.textContent = activeItems[1].response?.allOrderItemProductTotal
+      this.count.textContent = activeItems[1].response?.allOrderItemProductTotal || 0
     }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
       console.warn(error)

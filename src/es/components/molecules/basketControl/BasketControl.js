@@ -82,23 +82,23 @@ export default class BasketControl extends Shadow() {
         align-items: var(--align-items, center);
         animation: var(--show, show .3s ease-out);
         container: productList / inline-size;
-        display: flex;
-        justify-content: flex-start;
+        display: var(--display, flex);
+        justify-content: var(--justify-content, flex-start);
         min-height: var(--min-height, 3em);
         width: var(--width, 100%);
       }
       @container productList (max-width: 10em) {
         :host input {
-          margin:0;
+          margin: 0;
         }
         a-button{
-          --button-padding: 0;
           --button-height: 2em;
+          --button-padding: 0;
           --button-width: 2em;
         }
         a-button {
-          --button-label-padding: 0;
           --button-label-margin: -3px 0 0 0;
+          --button-label-padding: 0;
         }
       }
       @container productList (max-width: 7em) {
@@ -109,8 +109,8 @@ export default class BasketControl extends Shadow() {
           --button-margin: 0 -0.85em 0 0;
         }
         :host .basket-control-input {
-          padding:0;
           margin: 0 0.25em;
+          padding: 0;
         }
       }
       :host(.default) {

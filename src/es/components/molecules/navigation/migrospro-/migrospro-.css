@@ -1,42 +1,63 @@
 :host {
-  --navigation-migrospro-border-color: var(--color-secondary);
-  --navigation-migrospro-border-width: 3px;
+  --navigation-migrospro-search-li-padding-custom: 0.25rem 0 0.25rem var(--content-spacing);
+  --navigation-migrospro-color-custom: var(--m-white);
+	--navigation-migrospro-color-second-level-custom: var(--m-black);
+	--navigation-migrospro-flex-wrap-custom: nowrap;
+  --navigation-migrospro-border-color: var(--navigation-migrospro-color-custom);
+  --navigation-migrospro-border-width: 0;
   --navigation-migrospro-color: var(--navigation-migrospro-color-custom, var(--menu-color));
   --navigation-migrospro-section-margin-top-desktop: 0px;
+  --navigation-migrospro-color-hover: var(--navigation-migrospro-color-custom);
+  --navigation-migrospro-color-active: var(--navigation-migrospro-color-custom);
+  --navigation-migrospro-text-decoration-hover: underline var(--navigation-migrospro-color-custom) 3px;
+  --navigation-migrospro-text-underline-offset: 0.5em;
+  --navigation-migrospro-text-decoration-focus: var(--navigation-migrospro-text-decoration-hover);
+  --navigation-migrospro-transition: color 0.3s ease-out;
+}
+:host > nav > ul > li.active, :host > nav > ul > li.open {
+  --navigation-migrospro-text-decoration: var(--navigation-migrospro-text-decoration-hover);
+}
 
+:host > nav > ul > li ul > li {
+  --navigation-migrospro-color-hover: var(--color-hover);
+  --navigation-migrospro-color-active: var(--color-active);
+  --navigation-migrospro-text-decoration-hover: none;
+  --navigation-migrospro-text-decoration-focus: none;
 }
 :host > nav > ul li.open > o-nav-wrapper > section {
   --navigation-migrospro-background-color-hover: transparent;
 }
-:host > nav > ul > li > a-link {
-  --navigation-migrospro-color-active: var(--background-color);
-}
 :host > nav > ul > li.open > a-link {
   --navigation-migrospro-background-color-active: var(--menu-color);
-  --navigation-migrospro-color-active: var(--color-secondary);
   --navigation-migrospro-color: var(--menu-background-color);
-}
-:host > nav > ul > li:not(.open) > a-link {
-  --navigation-migrospro-color-active: var(--color-hover);
-  --navigation-migrospro-color-hover: var(--color-color);
 }
 
 :host>nav>ul.open:not(:hover),
 :host>nav>ul>li:hover:not(.active) {
-  --navigation-migrospro-border-color: var(--m-black);
+  /*--navigation-migrospro-border-color: var(--m-black);*/
 }
 
 @media only screen and (max-width: _max-width_) {
   :host {
     --navigation-migrospro-background-color-hover: transparent;
     --navigation-migrospro-background-color-active: transparent;
+    --navigation-migrospro-transition: font-size 0.3s ease-out, color 0.3s ease-out, transform 0.3s ease-out;
+  }
+  :host > nav > ul > li.open > a-link {
+    --navigation-migrospro-color-open-mobile: var(--navigation-migrospro-color-custom);
+    --navigation-migrospro-color-active: var(--navigation-migrospro-color-custom);
+    --navigation-migrospro-text-decoration: none;
+    --navigation-migrospro-text-decoration-hover: none;
+    --navigation-migrospro-text-decoration-focus: none;
+  }
+  :host > nav > ul > li.open > a-arrow {
+    --navigation-migrospro-path-color: var(--navigation-migrospro-color-custom);
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > ul a-link {
+    --navigation-migrospro-font-size: 1rem;
   }
   :host > nav > ul > li:not(.open) > a-link {
     --navigation-migrospro-color-hover: var(--color-hover);
-  }
-  :host > nav > ul > li > a-link, :host(.no-scroll) > nav > ul > li > a-link {
-    --navigation-migrospro-color: var(--menu-color);
-    --navigation-migrospro-color-active: var(--color-hover);
   }
   :host > nav > ul.language-switcher li, :host(:not(.no-scroll)) > nav > ul.language-switcher li, :host > nav > ul:not(.open).language-switcher li, :host(:not(.no-scroll)) > nav > ul:not(.open).language-switcher li {
     --navigation-migrospro-color-mobile: var(--menu-color);

@@ -1,5 +1,21 @@
 :host {
+    --button-category-width-custom: 100%;
+    --button-primary-width: 100%;
+    --button-quaternary-width: 100%;
+    --button-secondary-width: 100%;
+    --button-tertiary-width: 100%;
     flex-direction: row;
+}
+:host([four-per-row]) > * {
+    --button-category-label-white-space: nowrap;
+    --button-primary-label-white-space: nowrap;
+    --button-quaternary-label-white-space: nowrap;
+    --button-secondary-label-white-space: nowrap;
+    --button-tertiary-label-white-space: nowrap;
+    max-width: 33%;
+    min-width: fit-content;
+    flex-basis: calc(25% - var(--tag-filter-horizontal-gap, 0.25em));
+    flex-grow: 0.5;
 }
 @media only screen and (max-width: _max-width_) {
     :host {
