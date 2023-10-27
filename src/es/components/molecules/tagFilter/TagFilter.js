@@ -55,7 +55,7 @@ export default class TagFilter extends Mutation() {
   renderCSS () {
     this.css = /* css */ `
       :host {
-        display: var(--display, flex);
+        display: var(--display, flex) !important;
         flex-wrap:var(--flex-wrap, wrap);
         gap: var(--gap, 0.25em);
         width: 100%;
@@ -119,13 +119,13 @@ export default class TagFilter extends Mutation() {
     this.html = ''
     tagList.forEach(tagItem => {
       // TODO: fix attribute naming to harmonize with api
-      this.html = `<a-button
-          namespace="button-category-"
-          tag="${tagItem.code}"
+      this.html = `<${tagItem.customElementName || 'a-button'}
+          namespace="${tagItem.namespace || 'button-category-'}"
+          tag="${tagItem.code || tagItem.tag}"
           answer-event-name="${this.getAttribute('answer-event-name') || ''}"
           request-event-name="${this.getAttribute('request-event-name') || ''}"
           active-detail-property-name="${this.getAttribute('active-detail-property-name') || ''}"
-        >${tagItem.name}</a-button>`
+        >${tagItem.name}</${tagItem.customElementName || 'a-button'}>`
     })
   }
 

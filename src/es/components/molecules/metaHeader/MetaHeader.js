@@ -35,6 +35,7 @@ export default class MetaHeader extends Shadow() {
         margin:var(--margin,0);
         padding:var(--padding, 0);
         width:var(--width, auto);
+        z-index:var(--z-index, 9999);
       }
       :host div {
         display:var(--div-display, flex);

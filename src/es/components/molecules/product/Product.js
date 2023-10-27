@@ -179,13 +179,14 @@ export default class Product extends Shadow() {
       unitPrice,
       isWeighable,
       estimated_piece_weight: estimatedPieceWeight,
-      slug
+      slug,
+      package_size: packageSize
     } = this.productData
 
     productCard.innerHTML = /* html */ `
       ${this.createBasketUtilsElement(id, name)}
       ${this.createProductImageElement(image, accessibleInformationText)}
-      ${this.createProductDataElement(price, brand || '', name, unitPrice, isWeighable, estimatedPieceWeight)}
+      ${this.createProductDataElement(price, brand || '', name, unitPrice, isWeighable, estimatedPieceWeight, packageSize)}
       `
 
     const div = document.createElement('div')
@@ -247,13 +248,13 @@ export default class Product extends Shadow() {
    * weight of a single piece of the product. This parameter is only applicable if the product is weighable.
    * @returns an HTML string that represents a product data element.
    */
-  createProductDataElement (price, brand, name, unitPrice, isWeighable, estimatedPieceWeight) {
+  createProductDataElement (price, brand, name, unitPrice, isWeighable, estimatedPieceWeight, packageSize) {
     return /* html */ `
       <div class="product-data">
         <span class="product-price">${price}</span>
         <span class="product-brand">${brand}</span>
         <span class="product-name">${this.deleteBrandFromName(name, brand)}</span>
-        <span class="unit-price">${unitPrice || ''}</span>
+        <span class="unit-price">${packageSize ? `${packageSize} &nbsp; ` : ''}${unitPrice || ''}</span>
         <span class="estimated-piece-weight">${isWeighable ? estimatedPieceWeight : ''}</span>
       <div>
     `

@@ -7,7 +7,7 @@
   --header-default-a-margin: 0 max(4.5625rem, 3vw) 0 0;
   --header-default-a-menu-icon-align-self-mobile: baseline;
   --header-default-a-menu-icon-background-color: var(--header-default-a-menu-icon-background-color-custom, var(--background-color));
-  --header-default-a-menu-icon-border-radius: 25%;
+  --header-default-a-menu-icon-border-radius: var(--header-default-a-menu-icon-border-radius-custom, 25%);
   --header-default-a-menu-icon-height-open-mobile: var(--header-default-a-menu-icon-height);
   --header-default-a-menu-icon-height: 3px;
   --header-default-a-menu-icon-margin: 0;

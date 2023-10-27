@@ -2,8 +2,8 @@
 
 const fs = require('fs-extra')
 const ejs = require('ejs')
-const argv = require('yargs-parser')(process.argv.slice(2))
 const path = require('path')
+const inquirer = require('inquirer')
 
 /**
  * Takes in data and a template path, and renders default HTML, JavaScript, and CSS templates using the provided data.
@@ -75,35 +75,53 @@ const makeFolder = (directoryPath, templatePath) => {
  * Generates a template for a component based on the provided name and type.
  */
 const main = () => {
-  try {
-    console.log('Generating template...')
-    const { _: rest, name, type } = argv
+  inquirer.prompt(
+    [
+      {
+        name: 'type',
+        message: 'What would you like to generate?',
+        type: 'list',
+        choices: ['atom', 'molecule', 'organism']
+      },
+      {
+        name: 'name',
+        message: 'What is the component name?',
+        type: 'input',
+        validate: (name) => {
+          if (!name.length) {
+            return 'Please provide a component name'
+          }
+          return true
+        }
 
-    const data = {
-      rest,
-      name: name.charAt(0).toUpperCase() + name.slice(1),
-      folderName: name.charAt(0).toLowerCase() + name.slice(1),
-      nameSpace: name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
-      type,
-      typeShort: type.charAt(0)
+      }
+    ]).then((answers) => {
+    try {
+      console.log('Generating template...')
+
+      const { name, type } = answers
+
+      const data = {
+        name: name.charAt(0).toUpperCase() + name.slice(1),
+        folderName: name.charAt(0).toLowerCase() + name.slice(1),
+        nameSpace: name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
+        type: type + 's',
+        typeShort: type.charAt(0)
+      }
+
+      const directoryPath = `./src/es/components/${data.type}/${data.folderName}/`
+      const templatePath = `${directoryPath}/default-/`
+      const filename = path.join(__dirname, './component.ejs')
+
+      makeFolder(directoryPath, templatePath)
+      renderFile(directoryPath, filename, data)
+      renderTemplates(data, templatePath)
+
+      console.log('Done. Reload File Explorer.')
+    } catch (err) {
+      console.error(err)
     }
-
-    if (!name || !type) {
-      console.error('--name and --type flag required')
-      process.exit(1)
-    }
-
-    const directoryPath = `./src/es/components/${data.type}/${data.folderName}/`
-    const templatePath = `${directoryPath}/default-/`
-    const filename = path.join(__dirname, './component.ejs')
-
-    makeFolder(directoryPath, templatePath)
-    renderFile(directoryPath, filename, data)
-    renderTemplates(data, templatePath)
-    console.log('Done. Reload File Explorer.')
-  } catch (err) {
-    console.error(err)
-  }
+  })
 }
 
 main()
