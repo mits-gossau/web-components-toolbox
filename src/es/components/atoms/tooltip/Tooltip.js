@@ -148,9 +148,7 @@ export default class Tooltip extends Shadow() {
     return Number(this.getAttribute('width')) || 10
   }
 
-
   get textAlign () {
     return this.getAttribute('text-align')
   }
-
 }
