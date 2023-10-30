@@ -434,6 +434,12 @@ export default class Button extends Hover() {
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </${this.buttonTagName}>
     `
+    if (this.classList.contains('active')) this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+      detail: this.getEventDetail(null),
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
     alreadyIncludedNodes.forEach(node => this.button.appendChild(node))
     if (this.getAttribute('namespace') === 'button-download-') {
       this.button.prepend(this.downloadIcon)
