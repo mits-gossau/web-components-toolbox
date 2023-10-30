@@ -170,6 +170,8 @@ export default class GoogleMaps extends Shadow() {
 
   renderHTML() {
     let element = null;
+
+    
     let htmlContent = ''; // Initialize the HTML content as an empty string
   
     if (this.iframeUrl) {
