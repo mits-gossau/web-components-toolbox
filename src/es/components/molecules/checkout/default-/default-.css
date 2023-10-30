@@ -1,4 +1,5 @@
 :host{
+    --checkout-default-delete-article-button-color-hover: black;
     --checkout-default-delete-article-button-background-color-hover: transparent;
     --checkout-default-delete-article-button-padding: var(--checkout-default-delete-article-button-padding-custom, 0);
     --checkout-default-item-border-bottom: var(--m-gray-300, white);

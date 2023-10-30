@@ -229,7 +229,7 @@ export default class Checkout extends Shadow() {
                     <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.productDetail.name}">
                     <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+" product-name="${product.productDetail.name}"></a-button>
                   </m-basket-control>
-                  <div class="bold">${product.totalTcc}</div>
+                  <div class="bold">${product.productTotal}</div>
                 </div>
              </div>
              </div>`
@@ -273,7 +273,7 @@ export default class Checkout extends Shadow() {
               </tr>
               <tr>`
             : ''}
-        <tr class="bold important">
+        <tr class="important">
           <td>${totalHtAvecRabaisTranslation}</td>
           <td>${totalHt}</td>
         </tr>
