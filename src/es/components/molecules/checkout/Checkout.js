@@ -218,6 +218,16 @@ export default class Checkout extends Shadow() {
                     <span>${product.productDetail.price}</span>
                     <span class="name">${product.productDetail.name}</span>
                     ${product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''}
+                    ${product.productDetail.isWeighable ? `
+                      <span>
+                        <a-tooltip>
+                          <div class="tooltip">
+                            <img class="icon-img" src="${this.importMetaUrl}./../../../../img/migrospro/label-balance.svg" alt="" />
+                            <span class="tooltip-text tooltip-text-icon">${this.tooltipBalanceText}</span>
+                          </div>
+                        </a-tooltip>
+                      </span>
+                    ` : ''}
                   </div>
                   <div>
                     <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
@@ -287,5 +297,9 @@ export default class Checkout extends Shadow() {
 
   get isLoggedIn () {
     return this.getAttribute('is-logged-in') || 'false'
+  }
+
+  get tooltipBalanceText() {
+    return this.getAttribute('tooltip-text-balance') || ''
   }
 }
