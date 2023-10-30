@@ -35,6 +35,12 @@ export default class Tabs extends Shadow() {
 
       if (!anchorTag) {
         tab.addEventListener('click', () => {
+          // add parameter to url for active tab
+          const urlParams = new URLSearchParams(window.location.search)
+          const tabParam = tab.getAttribute('data-tab') ? tab.getAttribute('data-tab').toString() : ''
+          urlParams.set('tab', tabParam)
+          window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`)
+
           tabs.forEach((tab) => {
             tab.classList.remove('active')
           })
