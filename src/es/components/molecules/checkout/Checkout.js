@@ -218,6 +218,7 @@ export default class Checkout extends Shadow() {
                     <span>${product.productDetail.price}</span>
                     <span class="name">${product.productDetail.name}</span>
                     ${product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''}
+                    ${product.productDetail.package_size ? `<span class="additional-info">${product.productDetail.package_size}</span>` : ''}
                     ${product.productDetail.isWeighable ? `
                       <span>
                         <a-tooltip>
