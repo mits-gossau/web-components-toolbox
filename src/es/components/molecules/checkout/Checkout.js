@@ -218,6 +218,17 @@ export default class Checkout extends Shadow() {
                     <span>${product.productDetail.price}</span>
                     <span class="name">${product.productDetail.name}</span>
                     ${product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''}
+                    ${product.productDetail.package_size ? `<span class="additional-info">${product.productDetail.package_size}</span>` : ''}
+                    ${product.productDetail.isWeighable ? `
+                      <span>
+                        <a-tooltip>
+                          <div class="tooltip">
+                            <img class="icon-img" src="${this.importMetaUrl}./../../../../img/migrospro/label-balance.svg" alt="" />
+                            <span class="tooltip-text tooltip-text-icon">${this.tooltipBalanceText}</span>
+                          </div>
+                        </a-tooltip>
+                      </span>
+                    ` : ''}
                   </div>
                   <div>
                     <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
@@ -229,7 +240,7 @@ export default class Checkout extends Shadow() {
                     <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.productDetail.name}">
                     <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+" product-name="${product.productDetail.name}"></a-button>
                   </m-basket-control>
-                  <div class="bold">${product.totalTcc}</div>
+                  <div class="bold">${product.productTotal}</div>
                 </div>
              </div>
              </div>`
@@ -273,7 +284,7 @@ export default class Checkout extends Shadow() {
               </tr>
               <tr>`
             : ''}
-        <tr class="bold important">
+        <tr class="important">
           <td>${totalHtAvecRabaisTranslation}</td>
           <td>${totalHt}</td>
         </tr>
@@ -287,5 +298,9 @@ export default class Checkout extends Shadow() {
 
   get isLoggedIn () {
     return this.getAttribute('is-logged-in') || 'false'
+  }
+
+  get tooltipBalanceText() {
+    return this.getAttribute('tooltip-text-balance') || ''
   }
 }

@@ -113,6 +113,14 @@ export default class Button extends Hover() {
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
     this.connectedCallbackOnce()
+    if (this.getAttribute('request-event-name') && this.classList.contains('active')) {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+        detail: this.getEventDetail(null),
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   connectedCallbackOnce () {
@@ -260,6 +268,20 @@ export default class Button extends Hover() {
       }
       .icon-left, .icon-right {
         flex-shrink: 0;
+      }
+      /* icon aka. a-icon-mdx support */
+      ${this.buttonTagName} > * {
+        color: var(--color, black);
+        transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
+      }
+      ${this.buttonTagName}:active > *, ${this.buttonTagName}.active > * {
+        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
+      }
+      ${this.buttonTagName}:hover > *, :host(.hover) ${this.buttonTagName} > * {
+        color: var(--color-hover, var(--color, #FFFFFF));
+      }
+      :host ${this.buttonTagName}[disabled] > * {
+        color: var(--color-disabled, var(--color, #FFFFFF));
       }
       @media only screen and (max-width: _max-width_) {
         ${this.buttonTagName} {
