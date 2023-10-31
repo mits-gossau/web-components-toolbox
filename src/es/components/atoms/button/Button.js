@@ -113,12 +113,14 @@ export default class Button extends Hover() {
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
     this.connectedCallbackOnce()
-    if (this.getAttribute('request-event-name') && this.classList.contains('active')) this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
-      detail: this.getEventDetail(null),
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
+    if (this.getAttribute('request-event-name') && this.classList.contains('active')) {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+        detail: this.getEventDetail(null),
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   connectedCallbackOnce () {

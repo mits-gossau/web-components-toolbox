@@ -167,50 +167,39 @@ export default class GoogleMaps extends Shadow() {
     }
   }
 
+  renderHTML () {
+    let element = null
 
-  renderHTML() {
-    let element = null;
+    let htmlContent = '' // Initialize the HTML content as an empty string
 
-    
-    let htmlContent = ''; // Initialize the HTML content as an empty string
-  
     if (this.iframeUrl) {
-      if (!!this.scrollZoom) {
-        const overlayDiv = document.createElement('div');
-        overlayDiv.setAttribute('class', 'mapOverlay');
-        overlayDiv.setAttribute('onClick', "style.pointerEvents='none'");
-        htmlContent += overlayDiv.outerHTML; // Add the overlayDiv to the HTML content
+      if (this.scrollZoom) {
+        const overlayDiv = document.createElement('div')
+        overlayDiv.setAttribute('class', 'mapOverlay')
+        overlayDiv.setAttribute('onClick', "style.pointerEvents='none'")
+        htmlContent += overlayDiv.outerHTML // Add the overlayDiv to the HTML content
       }
-  
-      const iframe = document.createElement('iframe');
-      iframe.src = this.iframeUrl;
-      iframe.name = 'map';
-      element = iframe;
+
+      const iframe = document.createElement('iframe')
+      iframe.src = this.iframeUrl
+      iframe.name = 'map'
+      element = iframe
     } else {
-      const mapDiv = document.createElement('div');
-      mapDiv.setAttribute('id', 'map');
+      const mapDiv = document.createElement('div')
+      mapDiv.setAttribute('id', 'map')
       this.loadDependency().then(googleMap => {
-        const map = this.createMap(googleMap, mapDiv, this.lat, this.lng);
-        this.setMarker(googleMap, map, this.lat, this.lng);
-      });
-      element = mapDiv;
+        const map = this.createMap(googleMap, mapDiv, this.lat, this.lng)
+        this.setMarker(googleMap, map, this.lat, this.lng)
+      })
+      element = mapDiv
     }
-  
-    htmlContent += element.outerHTML; // Add the iframe or mapDiv to the HTML content
-  
+
+    htmlContent += element.outerHTML // Add the iframe or mapDiv to the HTML content
+
     // Set the final HTML content to the container element
-    this.html = htmlContent;
+    this.html = htmlContent
   }
-  
 
-
-
-
-
-
-
-
- 
   /**
    * fetch dependency
    *
@@ -286,7 +275,6 @@ export default class GoogleMaps extends Shadow() {
     marker.setAnimation(4)
   }
 
-
   get scripts () {
     return this.root.querySelectorAll('script')
   }
@@ -317,7 +305,7 @@ export default class GoogleMaps extends Shadow() {
     return this.getAttribute('iframe-url') || ''
   }
 
-  get scrollZoom (){
-    return this.getAttribute('scrollZoom') || "true"
+  get scrollZoom () {
+    return this.getAttribute('scrollZoom') || 'true'
   }
 }
