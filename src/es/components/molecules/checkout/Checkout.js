@@ -182,6 +182,10 @@ export default class Checkout extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../molecules/systemNotification/SystemNotification.js`,
         name: 'm-system-notification'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/tooltip/Tooltip.js`,
+        name: 'a-tooltip'
       }
     ])
 
@@ -192,13 +196,12 @@ export default class Checkout extends Shadow() {
           <m-system-notification 
               icon-src="/web-components-toolbox-migrospro/src/icons/shopping_basket.svg" 
               icon-badge="0"
-              title="Panier vide"
-          >
+              title="Panier vide">
               <div slot="description">
-              <ul>
+                <ul>
                   <li>Ajoutez des produits à votre sélection en parcourant notre catalogue.</li>
                   <li>Vous ne trouvez pas l'offre qui vous convient? Faites nous parvenir votre demande en remplissant les champs "Votre demande sur mesure" ci-dessous.</li>
-              </ul>
+                </ul>
             </div>
         </m-system-notification>
         `
@@ -219,16 +222,7 @@ export default class Checkout extends Shadow() {
                     <span class="name">${product.productDetail.name}</span>
                     ${product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''}
                     ${product.productDetail.package_size ? `<span class="additional-info">${product.productDetail.package_size}</span>` : ''}
-                    ${product.productDetail.isWeighable ? `
-                      <span>
-                        <a-tooltip>
-                          <div class="tooltip">
-                            <img class="icon-img" src="${this.importMetaUrl}./../../../../img/migrospro/label-balance.svg" alt="" />
-                            <span class="tooltip-text tooltip-text-icon">${this.tooltipBalanceText}</span>
-                          </div>
-                        </a-tooltip>
-                      </span>
-                    ` : ''}
+                    ${product.productDetail.isWeighable ? this.renderBalanceTooltip(this.tooltipBalanceText) : ''}
                   </div>
                   <div>
                     <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
@@ -296,11 +290,33 @@ export default class Checkout extends Shadow() {
     `
   }
 
+  /**
+   * Returns an HTML tooltip element with an icon and text.
+   * @param {string} text - The `text` parameter represents the content of the tooltip.
+   * @returns HTML template string that includes a tooltip element. The tooltip element contains an
+   * image and a span element with the provided text.
+   */
+  renderBalanceTooltip (text) {
+    return /* html */ `
+      <span>
+        <a-tooltip>
+          <div class="tooltip">
+            <img class="icon-img" src="${this.importMetaUrl}./../../../../img/migrospro/label-balance.svg" alt="" />
+            <span class="tooltip-text tooltip-text-icon">${text}</span>
+          </div>
+        </a-tooltip>
+      </span>`
+  }
+
   get isLoggedIn () {
     return this.getAttribute('is-logged-in') || 'false'
   }
 
-  get tooltipBalanceText() {
-    return this.getAttribute('tooltip-text-balance') || ''
+  get tooltipBalanceText () {
+    return this.getAttribute('tooltip-translation-balance') || ''
+  }
+
+  get allowEditPrice () {
+    return this.getAttribute('allow-edit-price') || 'false'
   }
 }
