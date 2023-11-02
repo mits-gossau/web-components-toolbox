@@ -220,8 +220,12 @@ export default class Checkout extends Shadow() {
                   <div>
                     <span>${product.productDetail.price}</span>
                     <span class="name">${product.productDetail.name}</span>
-                    ${product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''}
-                    ${product.productDetail.package_size ? `<span class="additional-info">${product.productDetail.package_size}</span>` : ''}
+                    ${product.productDetail.estimated_piece_weight ? `<span class="additional-info">${product.productDetail.estimated_piece_weight}</span>` : ''}
+                    ${product.productDetail.package_size ? 
+                      `<span class="additional-info">${product.productDetail.package_size}${product.productDetail.unit_price ? ` &nbsp; ${product.productDetail.unit_price}` : ''}</span>` 
+                      : product.productDetail.unit_price ?
+                         `<span class="additional-info">${product.productDetail.unit_price}</span>` 
+                         : ''}
                     ${product.productDetail.isWeighable ? this.renderBalanceTooltip(this.tooltipBalanceText) : ''}
                   </div>
                   <div>
@@ -258,33 +262,33 @@ export default class Checkout extends Shadow() {
       <table>
         <tr class="bold">
           <td>${totalTtcTranslation}</td>
-          <td>${totalTtc}</td>
+          <td>CHF ${totalTtc}</td>
         </tr>
         <tr>
           <td>${montantRabaisTranslation}</td>
-          <td>${totalTtcDiscount}</td>
+          <td>CHF ${totalTtcDiscount}</td>
         </tr>
         ${totalTva1 !== '0.00'
           ? `<tr>
               <td>${totalTva1Translation}</td>
-              <td>${totalTva1}</td>
+              <td>CHF ${totalTva1}</td>
             </tr>
             <tr>`
           : ''}
           ${totalTva2 !== '0.00'
             ? `<tr>
                 <td>${totalTva2Translation}</td>
-                <td>${totalTva2}</td>
+                <td>CHF ${totalTva2}</td>
               </tr>
               <tr>`
             : ''}
         <tr class="important">
           <td>${totalHtAvecRabaisTranslation}</td>
-          <td>${totalHt}</td>
+          <td>CHF ${totalHt}</td>
         </tr>
         <tr class="bold important with-background">
           <td>${totalTtcAvecRabaisTranslation}</td>
-          <td>${totalTtcWithDiscount}</td>
+          <td>CHF ${totalTtcWithDiscount}</td>
         </tr>
       </table>
     `
