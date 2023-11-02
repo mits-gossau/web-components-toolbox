@@ -18,6 +18,27 @@ export default class Checkout extends Shadow() {
         this.html = `${error}`
       })
     }
+    this.clickListener = event => {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    this.inputListener = event => {
+      const inputValue = Number(event.target.value)
+      if (!inputValue || isNaN(inputValue)) return
+      this.dispatchEvent(new CustomEvent(event.target.getAttribute('request-event-name') || 'request-event-name',
+        {
+          detail: {
+            id: event.target.getAttribute('id'),
+            productName: event.target.getAttribute('product-name'),
+            price: inputValue
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }
+      ))
+    }
   }
 
   connectedCallback () {
@@ -36,6 +57,10 @@ export default class Checkout extends Shadow() {
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     document.body.removeEventListener('update-basket', this.answerEventNameListener)
+    Array.from(this.root.querySelectorAll('input')).forEach(input => {
+      input.removeEventListener('click', this.clickListener)
+      input.removeEventListener('input', this.inputListener)
+    })
   }
 
   shouldRenderCSS () {
@@ -218,13 +243,13 @@ export default class Checkout extends Shadow() {
               <div class="product-data">
                 <div class="product-info">
                   <div>
-                    <span>${product.productDetail.price}</span>
+                    ${this.renderPrice(product.productDetail.id, this.allowEditPrice, product.productDetail.price, product.productDetail.name)} 
                     <span class="name">${product.productDetail.name}</span>
                     ${product.productDetail.estimated_piece_weight ? `<span class="additional-info">${product.productDetail.estimated_piece_weight}</span>` : ''}
-                    ${product.productDetail.package_size ? 
-                      `<span class="additional-info">${product.productDetail.package_size}${product.productDetail.unit_price ? ` &nbsp; ${product.productDetail.unit_price}` : ''}</span>` 
-                      : product.productDetail.unit_price ?
-                         `<span class="additional-info">${product.productDetail.unit_price}</span>` 
+                    ${product.productDetail.package_size
+                      ? `<span class="additional-info">${product.productDetail.package_size}${product.productDetail.unit_price ? ` &nbsp; ${product.productDetail.unit_price}` : ''}</span>`
+                      : product.productDetail.unit_price
+                         ? `<span class="additional-info">${product.productDetail.unit_price}</span>`
                          : ''}
                     ${product.productDetail.isWeighable ? this.renderBalanceTooltip(this.tooltipBalanceText) : ''}
                   </div>
@@ -248,6 +273,10 @@ export default class Checkout extends Shadow() {
       })
       this.html = products.join('')
       this.html = this.totalAndTaxes(productData)
+      Array.from(this.root.querySelectorAll('input')).forEach(input => {
+        input.addEventListener('click', this.clickListener)
+        input.addEventListener('input', this.inputListener)
+      })
     })
   }
 
@@ -269,19 +298,19 @@ export default class Checkout extends Shadow() {
           <td>CHF ${totalTtcDiscount}</td>
         </tr>
         ${totalTva1 !== '0.00'
-          ? `<tr>
+        ? `<tr>
               <td>${totalTva1Translation}</td>
               <td>CHF ${totalTva1}</td>
             </tr>
             <tr>`
-          : ''}
+        : ''}
           ${totalTva2 !== '0.00'
-            ? `<tr>
+        ? `<tr>
                 <td>${totalTva2Translation}</td>
                 <td>CHF ${totalTva2}</td>
               </tr>
               <tr>`
-            : ''}
+        : ''}
         <tr class="important">
           <td>${totalHtAvecRabaisTranslation}</td>
           <td>CHF ${totalHt}</td>
@@ -312,6 +341,43 @@ export default class Checkout extends Shadow() {
       </span>`
   }
 
+  renderPrice (id, allowEditPrice, price, productName) {
+    if (allowEditPrice) {
+      return /* html */ `
+          <style>
+            input, *:focus-visible {
+              font-size:1em;
+              margin: 0;
+              padding: 0.25em;
+              background-color: transparent;
+              border-radius: 0.5em;
+              border: 1px solid var(--m-gray-300, white);
+              font-family: inherit;
+              height: auto;
+              text-align: center;
+              width: 4em;
+            }
+            input[type=number] {
+              appearance: textfield;
+            }
+            /* Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            /* Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+          </style>
+          <input id="${id}" name="price" type="number" value="${parseFloat(price).toFixed(2)}" min=0 max=9999 request-event-name="edit-product-price" product-name="${productName}">
+        `
+    } else {
+      return `<span>${price}</span>`
+    }
+  }
+
   get isLoggedIn () {
     return this.getAttribute('is-logged-in') || 'false'
   }
@@ -321,6 +387,6 @@ export default class Checkout extends Shadow() {
   }
 
   get allowEditPrice () {
-    return this.getAttribute('allow-edit-price') || 'false'
+    return this.getAttribute('allow-edit-price') || false
   }
 }

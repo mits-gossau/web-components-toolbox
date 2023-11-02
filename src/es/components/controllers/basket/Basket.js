@@ -27,6 +27,7 @@ export default class Basket extends Shadow() {
     this.requestAbortController = null
     this.requestActiveOrderAbortController = null
     this.removeFromOrderAbortController = null
+    this.editPriceAbortController = null
   }
 
   connectedCallback () {
@@ -35,6 +36,7 @@ export default class Basket extends Shadow() {
     this.addEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.addEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
     this.addEventListener(this.getAttribute('delete-from-order') || 'delete-from-order', this.deleteFromOrderListener)
+    this.addEventListener(this.getAttribute('edit-product-price') || 'edit-product-price', this.requestEditPriceListener)
   }
 
   disconnectedCallback () {
@@ -43,10 +45,38 @@ export default class Basket extends Shadow() {
     this.removeEventListener(this.getAttribute('add-basket') || 'add-basket', this.addBasketListener)
     this.removeEventListener(this.getAttribute('remove-basket') || 'remove-basket', this.removeBasketListener)
     this.removeEventListener(this.getAttribute('delete-from-order') || 'delete-from-order', this.deleteFromOrderListener)
+    this.removeEventListener(this.getAttribute('edit-product-price') || 'edit-product-price', this.requestEditPriceListener)
   }
 
   /**
-   * Fetch basket
+   * Fetch update price
+   * @param {{ detail: any; }} event
+   */
+  requestEditPriceListener = async (event) => {
+    if (this.abortEditPriceController) this.abortEditPriceController.abort()
+    this.abortEditPriceController = new AbortController()
+    const fetchOptions = {
+      method: 'GET',
+      signal: this.abortEditPriceController.signal
+    }
+    const { id, productName, price } = event.detail
+    // @ts-ignore
+    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiUpdateOrderItem}?productId=${id}&price=${price}&name=${productName}`
+    this.dispatchEvent(new CustomEvent(this.getAttribute('update-basket') || 'update-basket', {
+      detail: {
+        fetch: fetch(endpoint, fetchOptions).then(async response => {
+          if (response.status >= 200 && response.status <= 299) return await response.json()
+          throw new Error(response.statusText)
+        })
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
+  }
+
+  /**
+   * Fetch active orders
    * @param {{ detail: any; }} event
    */
   requestActiveOrderListener = async (event) => {
