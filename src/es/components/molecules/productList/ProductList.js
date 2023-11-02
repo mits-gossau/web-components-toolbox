@@ -263,7 +263,7 @@ export default class ProductList extends Shadow() {
         divHeaderWrapper.appendChild(select)
       }
 
-      if (!this.isLoggedIn) this.html = this.renderNotification('error')
+      if (!this.isLoggedIn) this.html = this.renderNotification('info')
 
       products.unshift(divHeaderWrapper.outerHTML)
       this.html = products.join('')
@@ -289,30 +289,26 @@ export default class ProductList extends Shadow() {
     <m-system-notification type="${type}">
       <style>
         :host {
-          --svg-color:var(--m-red-600);
-          width:100%;
-          margin:0 1em;
+          --svg-color:var(--m-blue-800);
+          width: 100%;
+          margin: 0 1em;
         }
         :host a {
-          color:var(--a-color, var(--color-secondary, var(--color, pink)));
+          color: inherit;
         } 
         :host .description > div {
-          display:flex;
-          align-items:center;
-          gap:0.5em;
+          display: flex;
+          align-items: center;
+          gap: 0.5em;
+        }
+        :host .description svg {
+          min-width: var(--svg-min-width, 24px);
+          width: var(--svg-min-width, 24px);
         }
       </style>
       <div slot="description">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path 
-              d="M11.9998 9.00002V13M11.9998 17H12.0098M10.2898 3.86002L1.81978 18C1.64514 18.3024 1.55274 18.6453 1.55177 18.9945C1.55079 19.3438 1.64127 19.6872 1.8142 19.9905C1.98714 20.2939 2.2365 20.5468 2.53748 20.7239C2.83847 20.901 3.18058 20.9962 3.52978 21H20.4698C20.819 20.9962 21.1611 20.901 21.4621 20.7239C21.7631 20.5468 22.0124 20.2939 22.1854 19.9905C22.3583 19.6872 22.4488 19.3438 22.4478 18.9945C22.4468 18.6453 22.3544 18.3024 22.1798 18L13.7098 3.86002C13.5315 3.56613 13.2805 3.32314 12.981 3.15451C12.6814 2.98587 12.3435 2.89728 11.9998 2.89728C11.656 2.89728 11.3181 2.98587 11.0186 3.15451C10.7191 3.32314 10.468 3.56613 10.2898 3.86002Z" 
-              stroke="var(--svg-color)" 
-              stroke-width="2" 
-              stroke-linecap="round" 
-              stroke-linejoin="round"
-            />
-          </svg>
-          <p>Utilisation possible uniquement avec un compte d'utilisateur valide. <a href="/login">Login/registre</a></p>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" part="svg"><path stroke-width="3.5" d="M28 18.667V28m0 9.333h.023M51.333 28c0 12.887-10.446 23.333-23.333 23.333C15.113 51.333 4.667 40.887 4.667 28 4.667 15.113 15.113 4.667 28 4.667c12.887 0 23.333 10.446 23.333 23.333Z"></path></svg>
+          <p>Les fonctionnalités d'ajout au panier et de passation de commande ne sont disponibles que pour les utilisateurs enregistrés. Se connecter / Créer son compte <a href="/login">Login/registre</a></p>
       </div>
     </m-system-notification>`
   }
