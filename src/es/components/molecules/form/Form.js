@@ -326,12 +326,12 @@ export default class Form extends Shadow() {
         overflow-y: auto;
       }
       
-      option {
+      :host option {
         background-color: var(--background-color);
         padding: 0.3em var(--content-spacing-mobile, 0.3em) 0.3em var(--content-spacing-mobile, 0.3em) ;
         cursor: pointer;
       }
-      option:hover, .active{
+      :host option:hover, :host .active {
         background-color: var(--color-secondary);
         color: var(--background-color);
       }
@@ -376,6 +376,26 @@ export default class Form extends Shadow() {
       .loader::after {
         animation: around 0.7s ease-in-out 0.1s infinite;
         background: transparent;
+      }
+      :host .two-column-align-bottom {
+        display: flex;
+        gap: var(--content-spacing, 1em);
+        flex-wrap: nowrap;
+      }
+      :host .two-column-align-bottom > * {
+        align-items: baseline;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: end;
+      }
+      :host .two-column-align-bottom input[type="submit"] {
+        margin: 0;
+      }
+      @media only screen and (max-width: _max-width_) {
+        :host .two-column-align-bottom {
+          flex-direction: column
+        }
       }
     `
     return Promise.all([this.fetchTemplate(), ...buttonPromises])

@@ -18,6 +18,27 @@ export default class Checkout extends Shadow() {
         this.html = `${error}`
       })
     }
+    this.clickListener = event => {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+
+    this.inputListener = event => {
+      const inputValue = Number(event.target.value)
+      if (!inputValue || isNaN(inputValue)) return
+      this.dispatchEvent(new CustomEvent(event.target.getAttribute('request-event-name') || 'request-event-name',
+        {
+          detail: {
+            id: event.target.getAttribute('id'),
+            productName: event.target.getAttribute('product-name'),
+            price: inputValue
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }
+      ))
+    }
   }
 
   connectedCallback () {
@@ -36,6 +57,10 @@ export default class Checkout extends Shadow() {
   disconnectedCallback () {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     document.body.removeEventListener('update-basket', this.answerEventNameListener)
+    Array.from(this.root.querySelectorAll('input')).forEach(input => {
+      input.removeEventListener('click', this.clickListener)
+      input.removeEventListener('input', this.inputListener)
+    })
   }
 
   shouldRenderCSS () {
@@ -182,6 +207,10 @@ export default class Checkout extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../molecules/systemNotification/SystemNotification.js`,
         name: 'm-system-notification'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../atoms/tooltip/Tooltip.js`,
+        name: 'a-tooltip'
       }
     ])
 
@@ -192,13 +221,12 @@ export default class Checkout extends Shadow() {
           <m-system-notification 
               icon-src="/web-components-toolbox-migrospro/src/icons/shopping_basket.svg" 
               icon-badge="0"
-              title="Panier vide"
-          >
+              title="Panier vide">
               <div slot="description">
-              <ul>
+                <ul>
                   <li>Ajoutez des produits à votre sélection en parcourant notre catalogue.</li>
                   <li>Vous ne trouvez pas l'offre qui vous convient? Faites nous parvenir votre demande en remplissant les champs "Votre demande sur mesure" ci-dessous.</li>
-              </ul>
+                </ul>
             </div>
         </m-system-notification>
         `
@@ -215,9 +243,15 @@ export default class Checkout extends Shadow() {
               <div class="product-data">
                 <div class="product-info">
                   <div>
-                    <span>${product.productDetail.price}</span>
+                    ${this.renderPrice(product.productDetail.id, this.allowEditPrice, product.productDetail.price, product.productDetail.name)} 
                     <span class="name">${product.productDetail.name}</span>
-                    ${product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''}
+                    ${product.productDetail.estimated_piece_weight ? `<span class="additional-info">${product.productDetail.estimated_piece_weight}</span>` : ''}
+                    ${product.productDetail.package_size
+                      ? `<span class="additional-info">${product.productDetail.package_size}${product.productDetail.unit_price ? ` &nbsp; ${product.productDetail.unit_price}` : ''}</span>`
+                      : product.productDetail.unit_price
+                         ? `<span class="additional-info">${product.productDetail.unit_price}</span>`
+                         : ''}
+                    ${product.productDetail.isWeighable ? this.renderBalanceTooltip(this.tooltipBalanceText) : ''}
                   </div>
                   <div>
                     <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>
@@ -229,7 +263,7 @@ export default class Checkout extends Shadow() {
                     <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.productDetail.name}">
                     <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+" product-name="${product.productDetail.name}"></a-button>
                   </m-basket-control>
-                  <div class="bold">${product.totalTcc}</div>
+                  <div class="bold">${product.productTotal}</div>
                 </div>
              </div>
              </div>`
@@ -239,6 +273,10 @@ export default class Checkout extends Shadow() {
       })
       this.html = products.join('')
       this.html = this.totalAndTaxes(productData)
+      Array.from(this.root.querySelectorAll('input')).forEach(input => {
+        input.addEventListener('click', this.clickListener)
+        input.addEventListener('input', this.inputListener)
+      })
     })
   }
 
@@ -253,39 +291,102 @@ export default class Checkout extends Shadow() {
       <table>
         <tr class="bold">
           <td>${totalTtcTranslation}</td>
-          <td>${totalTtc}</td>
+          <td>CHF ${totalTtc}</td>
         </tr>
         <tr>
           <td>${montantRabaisTranslation}</td>
-          <td>${totalTtcDiscount}</td>
+          <td>CHF ${totalTtcDiscount}</td>
         </tr>
         ${totalTva1 !== '0.00'
-          ? `<tr>
+        ? `<tr>
               <td>${totalTva1Translation}</td>
-              <td>${totalTva1}</td>
+              <td>CHF ${totalTva1}</td>
             </tr>
             <tr>`
-          : ''}
+        : ''}
           ${totalTva2 !== '0.00'
-            ? `<tr>
+        ? `<tr>
                 <td>${totalTva2Translation}</td>
-                <td>${totalTva2}</td>
+                <td>CHF ${totalTva2}</td>
               </tr>
               <tr>`
-            : ''}
-        <tr class="bold important">
+        : ''}
+        <tr class="important">
           <td>${totalHtAvecRabaisTranslation}</td>
-          <td>${totalHt}</td>
+          <td>CHF ${totalHt}</td>
         </tr>
         <tr class="bold important with-background">
           <td>${totalTtcAvecRabaisTranslation}</td>
-          <td>${totalTtcWithDiscount}</td>
+          <td>CHF ${totalTtcWithDiscount}</td>
         </tr>
       </table>
     `
   }
 
+  /**
+   * Returns an HTML tooltip element with an icon and text.
+   * @param {string} text - The `text` parameter represents the content of the tooltip.
+   * @returns HTML template string that includes a tooltip element. The tooltip element contains an
+   * image and a span element with the provided text.
+   */
+  renderBalanceTooltip (text) {
+    return /* html */ `
+      <span>
+        <a-tooltip>
+          <div class="tooltip">
+            <img class="icon-img" src="${this.importMetaUrl}./../../../../img/migrospro/label-balance.svg" alt="" />
+            <span class="tooltip-text tooltip-text-icon">${text}</span>
+          </div>
+        </a-tooltip>
+      </span>`
+  }
+
+  renderPrice (id, allowEditPrice, price, productName) {
+    if (allowEditPrice) {
+      return /* html */ `
+          <style>
+            input, *:focus-visible {
+              font-size:1em;
+              margin: 0;
+              padding: 0.25em;
+              background-color: transparent;
+              border-radius: 0.5em;
+              border: 1px solid var(--m-gray-300, white);
+              font-family: inherit;
+              height: auto;
+              text-align: center;
+              width: 4em;
+            }
+            input[type=number] {
+              appearance: textfield;
+            }
+            /* Chrome, Safari, Edge, Opera */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            /* Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+          </style>
+          <input id="${id}" name="price" type="number" value="${parseFloat(price).toFixed(2)}" min=0 max=9999 request-event-name="edit-product-price" product-name="${productName}">
+        `
+    } else {
+      return `<span>${price}</span>`
+    }
+  }
+
   get isLoggedIn () {
     return this.getAttribute('is-logged-in') || 'false'
+  }
+
+  get tooltipBalanceText () {
+    return this.getAttribute('tooltip-translation-balance') || ''
+  }
+
+  get allowEditPrice () {
+    return this.getAttribute('allow-edit-price') || false
   }
 }

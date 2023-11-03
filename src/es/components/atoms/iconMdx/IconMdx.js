@@ -123,6 +123,7 @@ export default class IconMdx extends Hover() {
     this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${(this.lastFetchedIconName = this.iconName)}/Size_${this.getAttribute('icon-size') || '56x56'}.svg`], true).then(htmls => htmls.forEach(html => {
       this.html = ''
       this.html = html
+      this.root.querySelector('svg').setAttribute('part', 'svg')
     }))
   }
 
