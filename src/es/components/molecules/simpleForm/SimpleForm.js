@@ -27,53 +27,51 @@ export default class SimpleForm extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
+    // once the form was touched, resp. tried to submit, it is dirty. The dirty attribute signals the css to do the native validation
     this.clickEventListener = event => this.setAttribute('dirty', 'true')
+    // fetch if there is an endpoint attribute, else do the native behavior of form post
+    this.abortController = null
     this.submitEventListener = event => {
-      if (this.getAttribute('api-endpoint')) {
+      if (this.getAttribute('endpoint')) {
         event.preventDefault()
-        // TODO: communication to endpoint
-      }
-      /*
-      if ((!this.emptyInput || !this.emptyInput.value) && this.form && this.inputFields.every(input => input.validity.valid) && this.valids.every(valid => valid.getAttribute('valid') === 'true')) {
-        const method = this.form.getAttribute('method')
-        const action = this.form.getAttribute('action')
-        const body = this.getAllInputValues(this.form)
-
-        if (this.hasAttribute('use-html-submit')) {
-          this.submitByHTML(body, method, action)
-        } else if (this.hasAttribute('use-url-params')) {
-          const headers = {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        if (this.abortController) this.abortController.abort()
+        this.abortController = new AbortController()
+        let body = {}
+        // allow deeper json schemas for the body to be filled and sent
+        if (this.getAttribute('schema')) {
+          const loop = obj => {
+            for (const key in obj) {
+              let input = null
+              if (Object.hasOwnProperty.call(obj, key)) obj[key] = typeof obj[key] === 'object'
+                ? loop(obj[key])
+                : (input = this.inputs.find(input => input.getAttribute('name') === key))
+                  ? this.getInputValue(input)
+                  : obj[key]
+            }
+            return obj
           }
-          const body = this.getAllInputValuesAsUrlParams(this.form)
-          fetch(action, { method, body, headers })
-            .then(response => {
-              return response.ok
-            })
-            .catch(error => {
-              this.submitFailure(error, this.getAttribute('type'))
-            })
+          body = loop(SimpleForm.parseAttribute(this.getAttribute('schema')))
         } else {
-          fetch(action, { method, body })
-            .then(response => {
-              if (event.detail && event.detail.button) event.detail.button.disabled = false
-              if (response.ok) {
-                this.submitSuccess(response, this.getAttribute('type'))
-              } else {
-                this.submitFailure(response, this.getAttribute('type'))
-              }
-            })
-            .catch(error => {
-              if (event.detail && event.detail.button) event.detail.button.disabled = false
-              this.submitFailure(error, this.getAttribute('type'))
-            })
+          this.inputs.forEach(input => {
+            if (input.getAttribute('name')) body[input.getAttribute('name')] = this.getInputValue(input)
+          })
         }
-        return true
-      } else {
-        this.validateFunctions.forEach(func => func())
-        return false
+        // TODO: remove the console log below
+        console.log('fetch', body)
+        fetch(this.getAttribute('endpoint', {
+          method: this.getAttribute('method') || 'GET',
+          mode: this.getAttribute('mode') || 'no-cors',
+          headers: this.hasAttribute('headers')
+            ? SimpleForm.parseAttribute(this.getAttribute('headers'))
+            : {
+              'Content-Type': 'application/json'
+            }
+          ,
+          redirect: this.getAttribute('follow') || 'follow',
+          body,
+          signal: this.abortController.signal
+        }))
       }
-      */
     }
   }
 
@@ -201,16 +199,14 @@ export default class SimpleForm extends Shadow() {
     return new FormData()
   }
 
+  getInputValue (input) {
+    return input.getAttribute('type') === 'checkbox'
+              ? input.checked
+              : input.value
+  }
+
   get form () {
     return this.root.querySelector('form')
-  }
-
-  get valids () {
-    return Array.from(this.form.querySelectorAll('[valid]'))
-  }
-
-  get invalids () {
-    return Array.from(this.form.querySelectorAll(':not([valid])'))
   }
 
   get inputs () {
