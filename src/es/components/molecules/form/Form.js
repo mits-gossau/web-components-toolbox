@@ -120,7 +120,7 @@ export default class Form extends Shadow() {
     button.hidden = true
     this.html = button
     // @ts-ignore
-    buttonPromises.push(button.renderCSS().then(styles => styles.forEach(style => {
+    buttonPromises.push(button.renderCssPromise.then(styles => styles.forEach(style => {
       if (!this.hasShadowRoot) style.styleNode.textContent = style.styleNode.textContent.replace(/:host/g, this.tagName)
       this.html = style.styleNode
     })))
@@ -131,7 +131,7 @@ export default class Form extends Shadow() {
     buttonSecondary.hidden = true
     this.html = buttonSecondary
     // @ts-ignore
-    buttonPromises.push(buttonSecondary.renderCSS().then(styles => styles.forEach(style => {
+    buttonPromises.push(buttonSecondary.renderCssPromise.then(styles => styles.forEach(style => {
       if (!this.hasShadowRoot) style.styleNode.textContent = style.styleNode.textContent.replace(/:host/g, this.tagName)
       this.html = style.styleNode
     })))
@@ -398,7 +398,7 @@ export default class Form extends Shadow() {
         }
       }
     `
-    return Promise.all([this.fetchTemplate(), ...buttonPromises])
+    return (this.renderCssPromise = Promise.all([this.fetchTemplate(), ...buttonPromises]))
   }
 
   /**

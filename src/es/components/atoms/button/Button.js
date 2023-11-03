@@ -308,7 +308,7 @@ export default class Button extends Hover() {
         }
       }
     `
-    return this.fetchTemplate()
+    return (this.renderCssPromise = this.fetchTemplate())
   }
 
   /**

@@ -1,6 +1,5 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
-import Form from '../form/Form.js'
 
 /**
  * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior or send it to an api endpoint
@@ -111,14 +110,24 @@ export default class SimpleForm extends Shadow() {
    * @return {Promise<[void, void]>}
    */
   renderCSS () {
-    // @ts-ignore
-    if (!customElements.get('m-form')) customElements.define('m-form', Form)
-    const form = new Form({ mode: 'open' })
-    form.hidden = true
-    this.html = form
-    const formPromise = form.renderCSS().then(styles => Array.from(form.root.querySelectorAll('style:not([_csshidden])')).forEach(style => (this.html = style)))
-    this.css = form.css
-    form.remove()
+    let formPromise = Promise.resolve()
+    // grab the styles form Form.js
+    if (this.hasAttribute('load-form-styles')) {
+      formPromise = this.fetchModules([
+        {
+          path: `${this.importMetaUrl}../form/Form.js`,
+          name: 'm-form'
+        }
+      ]).then(children => {
+        const form = new children[0].constructorClass({ mode: 'open' })
+        form.hidden = true
+        this.html = form
+        if (form.renderCssPromise) form.renderCssPromise.then(styles => Array.from(form.root.querySelectorAll('style:not([_csshidden])')).forEach(style => (this.html = style)))
+        this.css = form.css
+        form.remove()
+        return form.renderCssPromise
+      })
+    }
     this.css = /* css */`
       
     `
