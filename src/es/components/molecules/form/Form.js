@@ -121,7 +121,7 @@ export default class Form extends Shadow() {
     this.html = button
     // @ts-ignore
     buttonPromises.push(button.renderCSS().then(styles => styles.forEach(style => {
-      style.styleNode.textContent = style.styleNode.textContent.replace(/\s:host/g, ':root')
+      if (!this.hasShadowRoot) style.styleNode.textContent = style.styleNode.textContent.replace(/:host/g, this.tagName)
       this.html = style.styleNode
     })))
     // @ts-ignore
@@ -132,7 +132,7 @@ export default class Form extends Shadow() {
     this.html = buttonSecondary
     // @ts-ignore
     buttonPromises.push(buttonSecondary.renderCSS().then(styles => styles.forEach(style => {
-      style.styleNode.textContent = style.styleNode.textContent.replace(/\s:host/g, ':root')
+      if (!this.hasShadowRoot) style.styleNode.textContent = style.styleNode.textContent.replace(/:host/g, this.tagName)
       this.html = style.styleNode
     })))
     // make browser default file button look nicer
