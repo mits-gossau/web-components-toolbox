@@ -10,7 +10,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class SimpleForm
  * @type {CustomElementConstructor}
  * @attribute {
- *  {search|newsletter} [type] used to determine what should happen on form-submit success/failure (search shows an answer message, newsletter takes the form.getAttribute('redirect') to redirect)
+ *  {search|newsletter} [type] used to determine what should happen on submit success/failure (search shows an answer message, newsletter takes the form.getAttribute('redirect') to redirect)
  *  {string} [redirect=n.a.] controls for type newsletter if and where it shall be redirected on success
  *  {has} [use-html-submit=n.a.] controls if the form shall fetch or use plain html action, which then creates a form and triggers it by button[submit].click
  * }
@@ -27,8 +27,12 @@ export default class SimpleForm extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
+    this.clickEventListener = event => this.setAttribute('dirty', 'true')
     this.submitEventListener = event => {
-      event.preventDefault()
+      if (this.getAttribute('api-endpoint')) {
+        event.preventDefault()
+        // TODO: communication to endpoint
+      }
       /*
       if ((!this.emptyInput || !this.emptyInput.value) && this.form && this.inputFields.every(input => input.validity.valid) && this.valids.every(valid => valid.getAttribute('valid') === 'true')) {
         const method = this.form.getAttribute('method')
@@ -79,11 +83,13 @@ export default class SimpleForm extends Shadow() {
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     Promise.all(showPromises).then(() => (this.hidden = false))
-    this.addEventListener('form-submit', this.submitEventListener)
+    if (this.inputSubmit) this.inputSubmit.addEventListener('click', this.clickEventListener)
+    this.form.addEventListener('submit', this.submitEventListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener('form-submit', this.submitEventListener)
+    if (this.inputSubmit) this.inputSubmit.removeEventListener('click', this.clickEventListener)
+    this.form.removeEventListener('submit', this.submitEventListener)
   }
 
   /**
@@ -146,7 +152,7 @@ export default class SimpleForm extends Shadow() {
           // @ts-ignore
           path: `${this.importMetaUrl}./default-/default-.css`,
           namespace: false
-        }])
+        }], false)
       default:
         return Promise.resolve()
     }
@@ -200,10 +206,18 @@ export default class SimpleForm extends Shadow() {
   }
 
   get valids () {
-    return Array.from(this.root.querySelectorAll('[valid]'))
+    return Array.from(this.form.querySelectorAll('[valid]'))
   }
 
-  get inputAll () {
-    return Array.from(this.root.querySelectorAll('input')).concat(Array.from(this.root.querySelectorAll('select')))
+  get invalids () {
+    return Array.from(this.form.querySelectorAll(':not([valid])'))
+  }
+
+  get inputs () {
+    return Array.from(this.form.querySelectorAll('input')).concat(Array.from(this.root.querySelectorAll('select')))
+  }
+
+  get inputSubmit () {
+    return this.form.querySelector('[type=submit]')
   }
 }
