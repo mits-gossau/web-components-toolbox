@@ -44,7 +44,7 @@ export default class SimpleForm extends Shadow() {
               let input = null
               if (Object.hasOwnProperty.call(obj, key)) obj[key] = typeof obj[key] === 'object'
                 ? loop(obj[key])
-                : (input = this.inputs.find(input => input.getAttribute('name') === key))
+                : (input = this.inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key))
                   ? this.getInputValue(input)
                   : obj[key]
             }
@@ -53,7 +53,11 @@ export default class SimpleForm extends Shadow() {
           body = loop(SimpleForm.parseAttribute(this.getAttribute('schema')))
         } else {
           this.inputs.forEach(input => {
-            if (input.getAttribute('name')) body[input.getAttribute('name')] = this.getInputValue(input)
+            if (input.getAttribute('name')) {
+              body[input.getAttribute('name')] = this.getInputValue(input)
+            } else if (input.getAttribute('id')) {
+              body[input.getAttribute('id')] = this.getInputValue(input)
+            }
           })
         }
         // TODO: remove the console log below
@@ -175,28 +179,6 @@ export default class SimpleForm extends Shadow() {
     ]).then(children => {
       
     })
-  }
-
-  /**
-   * Extracts all input values and returns the name/value pairs as FormData for submitting
-   * Values are being manually extracted because form does not see the inputs inside the web components due to the Shadow-DOM
-   *
-   * @return {FormData}
-   */
-  getAllInputValues (form) {
-    if (form) {
-      const formData = new FormData();
-      [...this.root.querySelectorAll(`input${this.getAttribute('type') !== 'newsletter' ? ', a-input' : ''}`)].forEach(i => {
-        if ((this.getAttribute('type') !== 'newsletter' || i.id !== 'Policy') &&
-          (i.getAttribute('type') !== 'radio' || i.checked) &&
-          (i.getAttribute('type') !== 'checkbox' || i.checked)) formData.append(i.getAttribute('name'), i.value || i.getAttribute('value'))
-      });
-      [...this.root.querySelectorAll(`select${this.getAttribute('type') !== 'newsletter' ? ', a-select' : ''}`)].forEach(i =>
-        formData.append(i.getAttribute('name'), i.options[i.selectedIndex].text)
-      )
-      return formData
-    }
-    return new FormData()
   }
 
   getInputValue (input) {
