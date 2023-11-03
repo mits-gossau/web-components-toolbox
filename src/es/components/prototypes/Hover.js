@@ -32,7 +32,7 @@ export const Hover = (ChosenClass = Shadow()) => class Hover extends ChosenClass
     }
 
     this.mouseOutListener = event => {
-      this.setAttribute('hover', '')
+      this.removeAttribute('hover')
       this.classList.remove('hover')
     }
   }
