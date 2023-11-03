@@ -120,7 +120,10 @@ export default class Form extends Shadow() {
     button.hidden = true
     this.html = button
     // @ts-ignore
-    buttonPromises.push(button.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode))))
+    buttonPromises.push(button.renderCSS().then(styles => styles.forEach(style => {
+      style.styleNode.textContent = style.styleNode.textContent.replace(/\s:host/g, ':root')
+      this.html = style.styleNode
+    })))
     // @ts-ignore
     this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
     button.remove()
@@ -128,8 +131,10 @@ export default class Form extends Shadow() {
     buttonSecondary.hidden = true
     this.html = buttonSecondary
     // @ts-ignore
-    buttonPromises.push(buttonSecondary.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode))))
-    buttonSecondary.remove()
+    buttonPromises.push(buttonSecondary.renderCSS().then(styles => styles.forEach(style => {
+      style.styleNode.textContent = style.styleNode.textContent.replace(/\s:host/g, ':root')
+      this.html = style.styleNode
+    })))
     // make browser default file button look nicer
     buttonSecondary.css = /* css */ `
       @supports(selector(:has(> input[type=file]))) {
