@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Intersection } from '../../prototypes/Intersection.js'
 
 /**
  * As a molecule, this component shall hold Atoms
@@ -8,14 +8,34 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class Product
  * @type {CustomElementConstructor}
  */
-export default class Product extends Shadow() {
+export default class Product extends Intersection() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ 
+      importMetaUrl: import.meta.url, 
+      intersectionObserverInit: { rootMargin: '0px 0px -200px 0px' }, 
+      ...options 
+    }, ...args)
   }
 
   connectedCallback () {
+    super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+  }
+
+  intersectionCallback (entries, observer) {
+    if (entries[0] && entries[0].isIntersecting) {
+      this.dispatchEvent(new CustomEvent('product-viewed',
+        {
+          detail: {
+            fetch: Promise.resolve([{ products: [this.productData] }])
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }
+      ))
+    }
   }
 
   shouldRenderHTML () {
@@ -175,8 +195,8 @@ export default class Product extends Shadow() {
       accessible_information_text: accessibleInformationText,
       price,
       brand,
-      name, unit_price:
-      unitPrice,
+      name, 
+      unit_price: unitPrice,
       isWeighable,
       estimated_piece_weight: estimatedPieceWeight,
       slug,
