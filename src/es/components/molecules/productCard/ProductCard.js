@@ -166,7 +166,7 @@ export default class ProductCard extends Shadow() {
     const product = JSON.parse(this.getAttribute('data')) || defaultProduct
 
     return Promise.all([fetchModules]).then(() => {
-      const productSelect = this.isSelectable ? '<div class="product-select"><input type="checkbox" /></div>' : ''
+      const productSelect = this.isSelectable ? '<div class="product-select"><input type="checkbox" request-event-name="select-item" /></div>' : ''
       const productPrice = product.productDetail.price ? `<span>${product.productDetail.price}</span>` : ''
       const productName = product.productDetail.name ? `<span class="name">${product.productDetail.name}</span>` : ''
       const productEstimatedPieceWeight = product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''
