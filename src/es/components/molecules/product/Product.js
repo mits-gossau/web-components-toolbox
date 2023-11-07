@@ -10,10 +10,10 @@ import { Intersection } from '../../prototypes/Intersection.js'
  */
 export default class Product extends Intersection() {
   constructor (options = {}, ...args) {
-    super({ 
-      importMetaUrl: import.meta.url, 
-      intersectionObserverInit: { rootMargin: '0px 0px -200px 0px' }, 
-      ...options 
+    super({
+      importMetaUrl: import.meta.url,
+      intersectionObserverInit: { rootMargin: '0px 0px -200px 0px' },
+      ...options
     }, ...args)
   }
 
@@ -195,7 +195,7 @@ export default class Product extends Intersection() {
       accessible_information_text: accessibleInformationText,
       price,
       brand,
-      name, 
+      name,
       unit_price: unitPrice,
       isWeighable,
       estimated_piece_weight: estimatedPieceWeight,

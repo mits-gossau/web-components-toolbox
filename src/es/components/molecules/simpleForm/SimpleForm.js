@@ -49,11 +49,13 @@ export default class SimpleForm extends Shadow() {
           const loop = obj => {
             for (const key in obj) {
               let input = null
-              if (Object.hasOwnProperty.call(obj, key)) obj[key] = typeof obj[key] === 'object'
-                ? loop(obj[key])
-                : (input = this.inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key))
-                  ? this.getInputValue(input)
-                  : obj[key]
+              if (Object.hasOwnProperty.call(obj, key)) {
+                obj[key] = typeof obj[key] === 'object'
+                  ? loop(obj[key])
+                  : (input = this.inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key))
+                      ? this.getInputValue(input)
+                      : obj[key]
+              }
             }
             return obj
           }
@@ -75,9 +77,8 @@ export default class SimpleForm extends Shadow() {
           headers: this.hasAttribute('headers')
             ? SimpleForm.parseAttribute(this.getAttribute('headers'))
             : {
-              'Content-Type': 'application/json'
-            }
-          ,
+                'Content-Type': 'application/json'
+              },
           redirect: this.getAttribute('follow') || 'follow',
           body,
           signal: this.abortController.signal
@@ -184,14 +185,14 @@ export default class SimpleForm extends Shadow() {
         name: 'a-input'
       }
     ]).then(children => {
-      
+
     })
   }
 
   getInputValue (input) {
     return input.getAttribute('type') === 'checkbox'
-              ? input.checked
-              : input.value
+      ? input.checked
+      : input.value
   }
 
   get form () {
