@@ -28,7 +28,14 @@ export default class SimpleForm extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     // once the form was touched, resp. tried to submit, it is dirty. The dirty attribute signals the css to do the native validation
-    this.clickEventListener = event => this.setAttribute('dirty', 'true')
+    this.clickEventListener = event => {
+      let invalidNode
+      if ((invalidNode = this.form.querySelector('input:not(:valid):not([type=hidden])'))) {
+        let invalidNodeLabel
+        if ((invalidNodeLabel = invalidNode.parentNode.querySelector(`[for=${invalidNode.getAttribute('id')}]`))) invalidNodeLabel.scrollIntoView()
+      }
+      this.setAttribute('dirty', 'true')
+    }
     // fetch if there is an endpoint attribute, else do the native behavior of form post
     this.abortController = null
     this.submitEventListener = event => {
