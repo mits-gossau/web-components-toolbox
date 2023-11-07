@@ -1,0 +1,41 @@
+:host > form > div.inline {
+    align-items: center;
+    display: flex;
+    gap: 1em;
+    justify-content: flex-start;
+}
+:host > form > div.inline > label {
+    text-align: justify;
+}
+:host > form > div.inline > input {
+    flex-shrink: 0;
+}
+:host input {
+    transition: border-color 0.3s ease-out, outline 0.3s ease-out;
+}
+:host([dirty]) input:not(:valid) {
+    border-color: var(--color-error, var(--color-secondary, red));
+}
+:host([dirty]) input[type=checkbox]:not(:valid) {
+    border-radius: var(--border-radius, 0.5em);
+    outline-color: var(--color-error, var(--color-secondary, red));
+    outline-style: var(--outline-style, solid);
+    outline-width: var(--outline-width, 0.125em);
+    outline-offset: var(--outline-offset, 1px);
+}
+:host input + label::after, :host label:has(+ input)::after {
+    color: var(--color-error, var(--color-secondary, red));
+    content: attr(validation-message);
+    float: right;
+    font-size: 0.875em;
+    opacity: 0;
+    padding: 0 0.625em;
+    text-decoration: underline;
+    transition: opacity 0.3s ease-out;
+}
+:host([dirty]) input[type=checkbox] + label::after, :host([dirty]) label:has(+ input[type=checkbox])::after {
+    padding: 0 0 0 0.625em;
+}
+:host([dirty]) input:not(:valid) + label::after, :host([dirty]) label:has(+ input:not(:valid))::after {
+    opacity: 1;
+}

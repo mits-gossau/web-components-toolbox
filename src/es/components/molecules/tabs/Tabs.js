@@ -75,7 +75,7 @@ export default class Tabs extends Shadow() {
   renderCSS () {
     this.css = /* css */ `
         :host {
-            --background-color: var(--m-orange-300);
+            /*--background-color: var(--m-orange-300);*/ /* removed according laurin */
             --color-active: var(--m-orange-600);
             font-family: var(--font-family);
         }

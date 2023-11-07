@@ -132,7 +132,7 @@ export default class BasketControl extends Shadow() {
         margin: var(--quantity-margin, 0 0.5em);
         padding: var(--quantity-padding, 0.25em);
         text-align: var(--quantity-text-align, center);
-        width: var(--quantity-margin, 4em);
+        width: var(--quantity-width, 4em);
       }
       input[type=number] {
         appearance: textfield;
