@@ -183,11 +183,6 @@ export default class BasketControl extends Shadow() {
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
-      case 'basket-control-product-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./product-/product-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles])
       default:
         return this.fetchCSS(styles)
     }

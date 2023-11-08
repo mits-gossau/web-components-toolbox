@@ -28,7 +28,14 @@ export default class SimpleForm extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     // once the form was touched, resp. tried to submit, it is dirty. The dirty attribute signals the css to do the native validation
-    this.clickEventListener = event => this.setAttribute('dirty', 'true')
+    this.clickEventListener = event => {
+      let invalidNode
+      if ((invalidNode = this.form.querySelector('input:not(:valid):not([type=hidden])'))) {
+        let invalidNodeLabel
+        if ((invalidNodeLabel = invalidNode.parentNode.querySelector(`[for=${invalidNode.getAttribute('id')}]`))) invalidNodeLabel.scrollIntoView()
+      }
+      this.setAttribute('dirty', 'true')
+    }
     // fetch if there is an endpoint attribute, else do the native behavior of form post
     this.abortController = null
     this.submitEventListener = event => {
@@ -42,11 +49,13 @@ export default class SimpleForm extends Shadow() {
           const loop = obj => {
             for (const key in obj) {
               let input = null
-              if (Object.hasOwnProperty.call(obj, key)) obj[key] = typeof obj[key] === 'object'
-                ? loop(obj[key])
-                : (input = this.inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key))
-                  ? this.getInputValue(input)
-                  : obj[key]
+              if (Object.hasOwnProperty.call(obj, key)) {
+                obj[key] = typeof obj[key] === 'object'
+                  ? loop(obj[key])
+                  : ((input = this.inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key)))
+                      ? this.getInputValue(input)
+                      : obj[key]
+              }
             }
             return obj
           }
@@ -68,9 +77,8 @@ export default class SimpleForm extends Shadow() {
           headers: this.hasAttribute('headers')
             ? SimpleForm.parseAttribute(this.getAttribute('headers'))
             : {
-              'Content-Type': 'application/json'
-            }
-          ,
+                'Content-Type': 'application/json'
+              },
           redirect: this.getAttribute('follow') || 'follow',
           body,
           signal: this.abortController.signal
@@ -127,6 +135,7 @@ export default class SimpleForm extends Shadow() {
           name: 'm-form'
         }
       ]).then(children => {
+        // eslint-disable-next-line new-cap
         const form = new children[0].constructorClass({ mode: 'open' })
         form.hidden = true
         this.html = form
@@ -177,14 +186,14 @@ export default class SimpleForm extends Shadow() {
         name: 'a-input'
       }
     ]).then(children => {
-      
+
     })
   }
 
   getInputValue (input) {
     return input.getAttribute('type') === 'checkbox'
-              ? input.checked
-              : input.value
+      ? input.checked
+      : input.value
   }
 
   get form () {
