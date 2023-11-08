@@ -52,7 +52,7 @@ export default class SimpleForm extends Shadow() {
               if (Object.hasOwnProperty.call(obj, key)) {
                 obj[key] = typeof obj[key] === 'object'
                   ? loop(obj[key])
-                  : (input = this.inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key))
+                  : ((input = this.inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key)))
                       ? this.getInputValue(input)
                       : obj[key]
               }
@@ -135,6 +135,7 @@ export default class SimpleForm extends Shadow() {
           name: 'm-form'
         }
       ]).then(children => {
+        // eslint-disable-next-line new-cap
         const form = new children[0].constructorClass({ mode: 'open' })
         form.hidden = true
         this.html = form
