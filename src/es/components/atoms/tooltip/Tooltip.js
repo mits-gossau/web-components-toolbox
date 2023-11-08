@@ -93,7 +93,7 @@ export default class Tooltip extends Shadow() {
     }
     :host .icon-img {
       height: var(--icon-img-height, 1.5em);
-      width: var(--icon-img-width, 100%);
+      width: var(--icon-img-width, auto);
     }
     @media only screen and (max-width: _max-width_) {
       :host .tooltip:hover .tooltip-text {
