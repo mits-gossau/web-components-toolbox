@@ -71,18 +71,19 @@ export default class SimpleForm extends Shadow() {
         }
         // TODO: remove the console log below
         console.log('fetch', body)
-        fetch(this.getAttribute('endpoint', {
+        fetch(this.getAttribute('endpoint'), {
           method: this.getAttribute('method') || 'GET',
           mode: this.getAttribute('mode') || 'no-cors',
           headers: this.hasAttribute('headers')
             ? SimpleForm.parseAttribute(this.getAttribute('headers'))
             : {
-                'Content-Type': 'application/json'
-              },
+              'Content-Type': 'application/json'
+            }
+          ,
           redirect: this.getAttribute('follow') || 'follow',
-          body,
+          body: JSON.stringify(body),
           signal: this.abortController.signal
-        }))
+        })
       }
     }
   }
