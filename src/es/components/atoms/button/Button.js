@@ -157,7 +157,7 @@ export default class Button extends Hover() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector('style[_css]')
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**

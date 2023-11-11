@@ -16,7 +16,7 @@
   --teaser-plain-figcaption-bg-color-equal-padding: var(--teaser-plain-figcaption-bg-color-equal-padding-custom, 0.625em 0 0);
   --teaser-plain-figcaption-display: flex;
   --teaser-plain-figcaption-flex-direction: column;
-  --teaser-plain-figcaption-justify-content: flex-end;
+  --teaser-plain-figcaption-justify-content: var(--teaser-plain-figcaption-justify-content-custom, flex-end);
   --teaser-plain-figcaption-padding: 0.625em;
   --teaser-plain-figcaption-transition: background-color 0.3s ease-out;
   --teaser-plain-h-color: var(--teaser-plain-color);
