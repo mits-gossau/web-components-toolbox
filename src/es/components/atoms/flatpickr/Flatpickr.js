@@ -15,7 +15,13 @@ export default class Flatpickr extends Shadow() {
     // @ts-ignore
     super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options, mode: 'false' }, ...args)
 
-    this.label = this.getAttribute('label') || 'Datum auswählen → 📅'
+    if (this.children.length === 1) {
+      this.label = this.root.children[0]
+      this.label.classList.add('label')
+      this.root.children[0].remove()
+    } else {
+      this.label = this.getAttribute('label') || 'Datum auswählen → 📅'
+    }
     this.gotCleared = false
     this.dateStrSeparator = ' — '
 
@@ -35,12 +41,12 @@ export default class Flatpickr extends Shadow() {
       if (dateReset) {
         this.gotCleared = true
         if (this.flatpickrInstance) this.flatpickrInstance.clear()
-        this.labelNode.textContent = this.label
+        this.setLabel()
       }
     }
 
     this.setDateEventListener = event => {
-      this.labelNode.textContent = event.detail.dateStr || this.label
+      this.setLabel(event.detail.dateStr)
       if (event.detail.defaultDate) this.flatpickrInstance.setDate(event.detail.defaultDate)
     }
   }
@@ -87,6 +93,16 @@ export default class Flatpickr extends Shadow() {
     this.css = /* css */`
       :host, host * {
         cursor: var(--cursor, pointer);
+      }
+      :host > div {
+        border: 1px solid black;
+        border-radius: 2.5rem;
+        padding: 6px 24px;
+      }
+      :host .label {
+        align-items: center;
+        display: flex;
+        gap: 1em;
       }
     `
     // TODO: https://npmcdn.com/flatpickr@4.6.13/dist/themes/material_orange.css
@@ -161,7 +177,7 @@ export default class Flatpickr extends Shadow() {
         composed: true
       })))
       : Promise.resolve({})]).then(([dependencies, options]) => {
-      this.labelNode.textContent = options.dateStr || this.label
+      this.setLabel(options.dateStr)
       delete options.dateStr
       this.flatpickrInstance = dependencies[0](this.labelNode, {
         ...options, // see all possible options: https://flatpickr.js.org/options/
@@ -169,7 +185,7 @@ export default class Flatpickr extends Shadow() {
         dateFormat: 'd.m.Y',
         onChange: (selectedDates, dateStr, instance) => {
           if (this.getAttribute('request-event-name') && !this.gotCleared) {
-            this.labelNode.textContent = dateStr = dateStr.replace(' to ', this.dateStrSeparator)
+            dateStr = this.setLabel(dateStr.replace(' to ', this.dateStrSeparator))
             this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
               detail: {
                 origEvent: { selectedDates, dateStr, instance },
@@ -227,6 +243,15 @@ export default class Flatpickr extends Shadow() {
         document.head.appendChild(style)
       })
     ]))
+  }
+
+  setLabel (text) {
+    if (!text) text = this.label
+    if (typeof text === 'object') {
+      this.labelNode.innerHTML = ''
+      return this.labelNode.appendChild(text)
+    }
+    return this.labelNode.textContent = text
   }
 
   get style () {
