@@ -93,7 +93,6 @@ export default class Input extends Shadow() {
       this.error = this.hasAttribute('error')
   
       if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
-      console.log('changed', this.placeholder, this.inputField);
       if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
   
       if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
@@ -163,7 +162,6 @@ export default class Input extends Shadow() {
           `
           : ''
         }
-        color: var(--color, #777);
       }
 
       .mui-form-group {
@@ -229,14 +227,31 @@ export default class Input extends Shadow() {
       }
 
       :host([search]) input {
+        background-color: var(--search-input-background-color, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color, var(--m-gray-300));
+        color: var(--search-input-color);
         padding: var(--search-input-padding, 0.75em var(--content-spacing));
         padding-right: max(2.5em, 35px);
         border-radius: var(--search-input-border-radius, var(--border-radius, 0.5em));
         width: var(--search-input-width-big, var(--search-input-width, 100%));
         min-width: 9.7em;
       }
-
+      :host([search]) input:hover,
+      :host([search]) input:hover:not(:disabled):not(:read-only):not(:invalid) {
+        background-color: var(--search-input-background-color-hover, var(--input-bg-color, var(--m-gray-200)));
+        border-color: var(--search-input-border-color-hover, var(--m-gray-800));
+      }
+      :host([search]) input:focus:not(:read-only):not(:invalid) {
+        background-color: var(--search-input-background-color-focus, var(--input-bg-color, var(--m-gray-200)));
+        border-color: var(--search-input-border-color-focus, var(--m-gray-800));
+      }
+      :host([search]) input:visited {
+        text-decoration: var(--search-input-text-decoration, none);
+      }
+      :host([search]) input::placeholder {
+        color: var(--search-input-placeholder-color);
+        text-decoration: var(--search-input-text-decoration, none);
+      }
       :host([search]) input::-webkit-search-cancel-button {
         margin-right: 0.5em;
       }
