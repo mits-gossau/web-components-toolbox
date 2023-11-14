@@ -150,8 +150,10 @@ export default class CarouselTwo extends Mutation() {
     // Carousel still pops instead of appear nicely. With slow network connection it works though.
     Promise.all(showPromises).then(() => {
       this.hidden = false
-      const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
-      this.scrollIntoView(activeChild || this.section.children[0], false)
+      if (!this.section.classList.contains('scrolling')) {
+        const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
+        this.scrollIntoView(activeChild || this.section.children[0], false)
+      }
       this.setInterval()
     })
     this.addEventListener('click', this.clickListener)
