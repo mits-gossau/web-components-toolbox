@@ -308,6 +308,9 @@ export default class Form extends Shadow() {
       input[type="submit"] {
           padding: 0.75em 1.5em;
       }
+      input[type="checkbox"] {
+        cursor: pointer;
+    }
       @media only screen and (max-width: _max-width_) {
         ${this.getInputFieldsWithText()} {
           font-size: var(--font-size-mobile);
