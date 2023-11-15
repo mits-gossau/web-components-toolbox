@@ -36,9 +36,34 @@ export default class SimpleForm extends Shadow() {
       }
       this.setAttribute('dirty', 'true')
     }
+    this.changeListener = event => {
+      // input file detection with writing the selected files into the label
+      let inputTypeFile
+      if ((inputTypeFile = event.composedPath()[0]) && inputTypeFile.hasAttribute('type') && inputTypeFile.getAttribute('type') === 'file') {
+        const files = Array.from(inputTypeFile.files)
+        let typeFileLabel
+        if ((typeFileLabel = inputTypeFile.parentNode.querySelector('.type-file-label'))) {
+          if (files.length) {
+            if (inputTypeFile.hasAttribute('remove-file-title')) inputTypeFile.setAttribute('title', (inputTypeFile.getAttribute('remove-file-title')))
+            inputTypeFile.parentNode.classList.add('has-files')
+            if (!typeFileLabel.hasAttribute('original-label')) typeFileLabel.setAttribute('original-label', typeFileLabel.innerHTML)
+            typeFileLabel.innerHTML = files.reduce((acc, file, i) => `${acc}${file.name}${files[i + 1] ? '<br>' : ''}`, '&nbsp;')
+            inputTypeFile.addEventListener('click', event => {
+              event.preventDefault()
+              inputTypeFile.value = ''
+              this.changeListener(event)
+            }, { once: true })
+          } else if (typeFileLabel.hasAttribute('original-label')) {
+            if (inputTypeFile.hasAttribute('remove-file-title')) inputTypeFile.removeAttribute('title')
+            inputTypeFile.parentNode.classList.remove('has-files')
+            typeFileLabel.innerHTML = typeFileLabel.getAttribute('original-label')
+          }
+        }
+      }
+    }
     // fetch if there is an endpoint attribute, else do the native behavior of form post
     this.abortController = null
-    this.submitEventListener = event => {
+    this.submitEventListener = async event => {
       if (this.getAttribute('endpoint')) {
         event.preventDefault()
         if (this.abortController) this.abortController.abort()
@@ -46,43 +71,46 @@ export default class SimpleForm extends Shadow() {
         let body = {}
         // allow deeper json schemas for the body to be filled and sent
         if (this.getAttribute('schema')) {
-          const loop = obj => {
+          const loop = async obj => {
             for (const key in obj) {
               let input = null
               if (Object.hasOwnProperty.call(obj, key)) {
                 obj[key] = typeof obj[key] === 'object'
-                  ? loop(obj[key])
+                  ? await loop(obj[key])
                   : ((input = this.inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key)))
-                      ? this.getInputValue(input)
+                      ? await this.getInputValue(input)
                       : obj[key]
               }
             }
             return obj
           }
-          body = loop(SimpleForm.parseAttribute(this.getAttribute('schema')))
+          body = await loop(SimpleForm.parseAttribute(this.getAttribute('schema')))
         } else {
-          this.inputs.forEach(input => {
+          body = await this.inputs.reduce(async (acc, input) => {
+            acc = await acc
             if (input.getAttribute('name')) {
-              body[input.getAttribute('name')] = this.getInputValue(input)
+              acc[input.getAttribute('name')] = await this.getInputValue(input)
             } else if (input.getAttribute('id')) {
-              body[input.getAttribute('id')] = this.getInputValue(input)
+              acc[input.getAttribute('id')] = await this.getInputValue(input)
             }
-          })
+            return acc
+          }, Promise.resolve({}))
         }
         // TODO: remove the console log below
         console.log('fetch', body)
-        fetch(this.getAttribute('endpoint', {
+        fetch(this.getAttribute('endpoint'), {
           method: this.getAttribute('method') || 'GET',
           mode: this.getAttribute('mode') || 'no-cors',
           headers: this.hasAttribute('headers')
             ? SimpleForm.parseAttribute(this.getAttribute('headers'))
             : {
-                'Content-Type': 'application/json'
-              },
+              'Content-Type': 'application/json'
+            }
+          ,
           redirect: this.getAttribute('follow') || 'follow',
-          body,
+          body: JSON.stringify(body),
           signal: this.abortController.signal
-        }))
+        })
       }
     }
   }
@@ -94,11 +122,13 @@ export default class SimpleForm extends Shadow() {
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     Promise.all(showPromises).then(() => (this.hidden = false))
     if (this.inputSubmit) this.inputSubmit.addEventListener('click', this.clickEventListener)
+    this.form.addEventListener('change', this.changeListener)
     this.form.addEventListener('submit', this.submitEventListener)
   }
 
   disconnectedCallback () {
     if (this.inputSubmit) this.inputSubmit.removeEventListener('click', this.clickEventListener)
+    this.form.removeEventListener('change', this.changeListener)
     this.form.removeEventListener('submit', this.submitEventListener)
   }
 
@@ -185,15 +215,31 @@ export default class SimpleForm extends Shadow() {
         path: `${this.importMetaUrl}../../atoms/input/Input.js`,
         name: 'a-input'
       }
-    ]).then(children => {
-
-    })
+    ])
   }
 
+  /**
+   * @param {HTMLInputElement} input
+   * @return {Promise<boolean | string | string[]>}
+   */
   getInputValue (input) {
-    return input.getAttribute('type') === 'checkbox'
-      ? input.checked
-      : input.value
+    switch (input.getAttribute('type')) {
+      case 'file':
+        // @ts-ignore
+        return Promise.all(Array.from(input.files).map(file => new Promise(resolve => {
+          const reader = new FileReader()
+          reader.readAsDataURL(file)
+          reader.onload = () => resolve(reader.result)
+          reader.onerror = error => {
+            console.error('Error: ', error)
+            resolve(`File ${input.getAttribute('name') || input.getAttribute('id')} has the following Error: ${error}`)
+          }
+        })))
+      case 'checkbox':
+        return Promise.resolve(input.checked)
+      default:
+        return Promise.resolve(input.value)
+    }
   }
 
   get form () {

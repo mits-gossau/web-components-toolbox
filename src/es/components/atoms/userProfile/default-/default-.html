@@ -1,15 +1,17 @@
 <div>
-    <a-user-profile icon="../src/icons/user.svg">
+    <a-user-profile class="logged-in" namespace="user-profile-default-" icon-text="B2B">
         <a href='#'>
-            <a-picture defaultSource='../src/icons/shopping_basket.svg' alt=''></a-picture>
+            <a-picture namespace="user-profile-default-" defaultSource='../src/icons/user.svg' alt='user-icon'></a-picture>
             <span>Profil</span>
         </a>
-        <a href='#'>
-            <a-picture defaultSource='../src/icons/shopping_basket.svg' alt=''></a-picture>
+        <a href='#' class="sub">
+            <a-picture namespace="user-profile-default-" defaultSource='../src/icons/receipt.svg'
+                alt='receipt-icon'></a-picture>
             <span>Mes Tickets</span>
         </a>
         <a href='#'>
-            <a-picture defaultSource='../src/icons/shopping_basket.svg' alt=''></a-picture>
+            <a-picture namespace="user-profile-default-" defaultSource='../src/icons/log_out.svg'
+                alt='user-icon'></a-picture>
             <span>Logout</span>
         </a>
     </a-user-profile>

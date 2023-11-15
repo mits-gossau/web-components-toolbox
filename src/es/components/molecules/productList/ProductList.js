@@ -87,11 +87,9 @@ export default class ProductList extends Shadow() {
     }
 
     :host > m-load-template-tag {
-      flex: var(--m-load-template-tag-flex, 0 0 13vw);
+      flex: var(--m-load-template-tag-flex, 0 0 min(calc(16.66% - 0.5em)));
       margin: var(--m-load-template-tag-margin, 0 0.5em 0.5em 0);
       min-height: var(--m-load-template-tag-min-height, 12em);
-      min-width: var(--m-load-template-tag-min-width, 13vw);
-      width: var(--m-load-template-tag-width, 13vw);
     }
 
     :host .filter {
@@ -106,10 +104,24 @@ export default class ProductList extends Shadow() {
 
     :host select {}
 
-    @container products (max-width: 52em){
+    @container products (max-width: 80em) {
+      :host > m-load-template-tag  {
+        min-height: var(--m-load-template-tag-min-height-mobile, auto);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(20% - 0.5em)));
+      }
+    }
+
+    @container products (max-width: 60em){
       :host > m-load-template-tag {
         min-height: var(--m-load-template-tag-min-height-mobile, auto);
-        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(33% - 0.5em)));
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(25% - 0.5em)));
+      }
+    }
+
+    @container products (max-width: 40em){
+      :host > m-load-template-tag {
+        min-height: var(--m-load-template-tag-min-height-mobile, auto);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(33.33% - 0.5em)));
       }
     }
 
