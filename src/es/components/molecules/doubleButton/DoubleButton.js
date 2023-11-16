@@ -60,6 +60,7 @@ export default class DoubleButton extends Shadow() {
       :host {
         --justify-content: flex-start;
         display: inline-flex;
+        height: fit-content;
         gap: 1px;
         width: ${this.hasAttribute('width')
           ? this.getAttribute('width')
