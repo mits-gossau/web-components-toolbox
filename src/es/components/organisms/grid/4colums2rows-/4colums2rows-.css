@@ -4,6 +4,10 @@
     grid-gap: var(--grid-4colums2rows-grid-gap-custom, var(--content-spacing));
 }
 :host > section > *::part(button) {
+    --button-primary-label-white-space: nowrap;
+    --button-secondary-label-white-space: nowrap;
+    --button-tertiary-label-white-space: nowrap;
+    --button-quaternary-label-white-space: nowrap;
     text-wrap: nowrap;
     width: 100%;
 }
