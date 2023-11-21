@@ -91,10 +91,10 @@ export default class Input extends Shadow() {
       this.disabled = this.hasAttribute('disabled')
       this.readonly = this.hasAttribute('readonly')
       this.error = this.hasAttribute('error')
-  
+
       if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
       if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
-  
+
       if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
         if (this.hasAttribute('delete-listener')) {
           this.addEventListener('click', this.clickListener)
@@ -108,7 +108,6 @@ export default class Input extends Shadow() {
       }
       this.hidden = false
     })
-
   }
 
   disconnectedCallback () {
@@ -393,7 +392,8 @@ export default class Input extends Shadow() {
 
   renderSearchHTML () {
     if (!this.search) return Promise.resolve('')
-    if (!this.iconName) return Promise.resolve(/* html */`
+    if (!this.iconName) {
+      return Promise.resolve(/* html */`
       <button type="button" title="Search">
         <svg width="100%" height="100%" viewBox="0 0 24 24" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
         <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" class="icon-stroke-width" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -401,6 +401,7 @@ export default class Input extends Shadow() {
         </svg>
       </button>
     `)
+    }
     return this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`], true).then(htmls => `<button type="button" title="${this.iconName}">${htmls[0]}</button>`)
   }
 

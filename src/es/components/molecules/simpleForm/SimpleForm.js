@@ -1,6 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global FileReader */
+
 /**
  * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior or send it to an api endpoint
  * TODO: https://dev.to/stuffbreaker/custom-forms-with-web-components-and-elementinternals-4jaj
@@ -104,12 +106,23 @@ export default class SimpleForm extends Shadow() {
           headers: this.hasAttribute('headers')
             ? SimpleForm.parseAttribute(this.getAttribute('headers'))
             : {
-              'Content-Type': 'application/json'
-            }
-          ,
+                'Content-Type': 'application/json'
+              },
           redirect: this.getAttribute('follow') || 'follow',
           body: JSON.stringify(body),
           signal: this.abortController.signal
+        }).then(async response => {
+          if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399)) return response.json()
+          throw new Error(response.statusText)
+        }).then(json => {
+          let response
+          let redirectUrl
+          if ((response = json[this.getAttribute('response-property-name')] || json.response) && this.response) {
+            this.response.textContent = response
+            if (json[this.getAttribute('clear-property-name')] === true || json.clear === true) this.form.remove()
+          } else if ((redirectUrl = json[this.getAttribute('redirect-url-property-name')] || json.redirectUrl)) {
+            self.open(redirectUrl, json[this.getAttribute('target-property-name')] || json.target, json[this.getAttribute('features-property-name')] || json.features)
+          }
         })
       }
     }
@@ -252,5 +265,9 @@ export default class SimpleForm extends Shadow() {
 
   get inputSubmit () {
     return this.form.querySelector('[type=submit]')
+  }
+
+  get response () {
+    return this.form.querySelector('#response')
   }
 }

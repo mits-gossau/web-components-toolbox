@@ -1,6 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global self */
+
 /**
  * Creates an DoubleButton
  * https://www.figma.com/file/npi1QoTULLWLTGM4kMPUtZ/Components-Universal?node-id=2866%3A55901
@@ -60,6 +62,7 @@ export default class DoubleButton extends Shadow() {
       :host {
         --justify-content: flex-start;
         display: inline-flex;
+        height: fit-content;
         gap: 1px;
         width: ${this.hasAttribute('width')
           ? this.getAttribute('width')
@@ -140,7 +143,7 @@ export default class DoubleButton extends Shadow() {
       await this.buttonOne.renderHTMLPromise
       const labels = this.labelOne.textContent.split(',')
       if (labels.length > 1 && this.labelTwo.hasAttribute('dynamic')) {
-        this.labelOne.innerHTML = labels.reduce((acc, curr, i) => `${acc}<span>${curr.trim()}</span>${i === labels.length -1 ? '' : ', '}`,'')
+        this.labelOne.innerHTML = labels.reduce((acc, curr, i) => `${acc}<span>${curr.trim()}</span>${i === labels.length - 1 ? '' : ', '}`, '')
         setTimeout(() => (this.labelTwo.textContent = this.getHiddenLabelsCounter()), 2000)
         setTimeout(() => (this.labelTwo.textContent = this.getHiddenLabelsCounter()), 4000)
         setTimeout(() => (this.labelTwo.textContent = this.getHiddenLabelsCounter()), 6000)
