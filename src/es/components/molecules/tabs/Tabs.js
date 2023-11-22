@@ -91,7 +91,6 @@ export default class Tabs extends Shadow() {
             margin-bottom: var(--margin-bottom, 3em);
             overflow-x: auto;
             transform:rotateX(180deg);
-            
         }
         :host .tab-navigation::-webkit-scrollbar {
           width: 4px;
