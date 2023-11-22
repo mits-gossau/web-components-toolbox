@@ -351,6 +351,7 @@
   border-width: var(--hr-border-width, 0 0 1px);
   margin: var(--hr-margin, var(--content-spacing) auto);
   opacity: var(--hr-opacity, 0.5);
+  width: 100%;
 }
 :host hr.secondary {
   border: var(--hr-secondary-border, var(--hr-border, 0));
