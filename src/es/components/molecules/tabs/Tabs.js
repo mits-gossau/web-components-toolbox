@@ -65,8 +65,8 @@ export default class Tabs extends Shadow() {
       }
     })
 
-    const activeNavigationTab = this.root.querySelector(".tab-navigation li.active");
-    activeNavigationTab.scrollIntoView({behavior: "smooth" ,inline: "center"});
+    const activeNavigationTab = this.root.querySelector('.tab-navigation li.active')
+    activeNavigationTab.scrollIntoView({ behavior: 'smooth', inline: 'center' })
   }
 
   shouldRenderCSS () {

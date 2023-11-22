@@ -1,0 +1,12 @@
+:host > section {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-gap: var(--grid-4columns-grid-gap-custom, var(--content-spacing));
+}
+
+@media only screen and (max-width: _max-width_) {
+    :host > section {
+        grid-template-columns: repeat(2, minmax(0, 1fr));  
+        grid-gap: var(--grid-4columns-grid-gap-mobile-custom, var(--grid-4columns-grid-gap-custom, var(--content-spacing-mobile, var(--content-spacing))));   
+    }
+    
+}

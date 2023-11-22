@@ -52,9 +52,9 @@ export default class Grid extends Shadow() {
       :host > section {
         display:grid;
         ${this.hasAttribute('height')
-          ? `height: ${this.getAttribute('height') || '100%'};`
-          : ''
-        }
+        ? `height: ${this.getAttribute('height') || '100%'};`
+        : ''
+      }
       }
     `
     return this.fetchTemplate()
@@ -89,6 +89,14 @@ export default class Grid extends Shadow() {
       case 'grid-4colums2rows-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./4colums2rows-/4colums2rows-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        })
+      case 'grid-4columns-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./4columns-/4columns-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // make template ${code} accessible aka. set the variables in the literal string
