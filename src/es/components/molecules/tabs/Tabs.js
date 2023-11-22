@@ -64,6 +64,9 @@ export default class Tabs extends Shadow() {
         tab.click() // set initial tab
       }
     })
+
+    const activeNavigationTab = this.root.querySelector(".tab-navigation li.active");
+    activeNavigationTab.scrollIntoView({behavior: "smooth" ,inline: "center"});
   }
 
   shouldRenderCSS () {
@@ -80,12 +83,22 @@ export default class Tabs extends Shadow() {
             font-family: var(--font-family);
         }
         :host .tab-navigation {
-            border-bottom: var(--border-bottom, 1px solid var(--m-gray-300));
+            border-top: var(--border-bottom, 1px solid var(--m-gray-300));
             list-style: none;
             display: flex;
             padding: 0;
             gap: 1.5em;
             margin-bottom: var(--margin-bottom, 3em);
+            overflow-x: auto;
+            transform:rotateX(180deg);
+        }
+        :host .tab-navigation::-webkit-scrollbar {
+          width: 4px;
+          height: 4px;
+        }
+        :host .tab-navigation::-webkit-scrollbar-thumb{
+          background: var(--m-gray-400);
+          -webkit-appearance: none;
         }
         :host .tab-navigation li {
             border-top-left-radius: var(--border-radius, 0.5em);
@@ -94,6 +107,7 @@ export default class Tabs extends Shadow() {
             cursor: pointer;
             padding: 10px;
             position: relative;
+            transform:rotateX(180deg);
         }
         :host .tab-navigation li::after {
             content: '';

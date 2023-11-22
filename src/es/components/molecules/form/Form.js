@@ -313,7 +313,7 @@ export default class Form extends Shadow() {
     }
       @media only screen and (max-width: _max-width_) {
         ${this.getInputFieldsWithText()} {
-          font-size: var(--font-size-mobile);
+          font-size: var(--input-font-size-mobile, var(--font-size-mobile, 16px));
         }
         ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
