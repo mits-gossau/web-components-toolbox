@@ -176,14 +176,14 @@ export default class Flatpickr extends Shadow() {
           ? Promise.resolve(Flatpickr.parseAttribute(this.getAttribute('options')))
           : this.getAttribute('get-date-option-event-name')
             ? new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('get-date-option-event-name'), {
-                detail: {
-                  resolve,
-                  dateStrSeparator: this.dateStrSeparator
-                },
-                bubbles: true,
-                cancelable: true,
-                composed: true
-              })))
+              detail: {
+                resolve,
+                dateStrSeparator: this.dateStrSeparator
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            })))
             : Promise.resolve({})
       ]
     ).then(([dependencies, options]) => {
