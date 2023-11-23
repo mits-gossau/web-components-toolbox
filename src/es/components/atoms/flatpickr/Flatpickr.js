@@ -96,13 +96,17 @@ export default class Flatpickr extends Shadow() {
       }
       :host > div {
         border: 1px solid black;
-        border-radius: 2.5rem;
+        border-radius: var(--border-radius, 2.5rem);
         padding: 6px 24px;
       }
       :host .label {
         align-items: center;
         display: flex;
         gap: 1em;
+      }
+      :host input.flatpickr-input.active {
+        background-color: transparent;
+        border-color: var(--color-secondary)
       }
     `
     // TODO: https://npmcdn.com/flatpickr@4.6.13/dist/themes/material_orange.css
@@ -166,26 +170,32 @@ export default class Flatpickr extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    return Promise.all([this.loadDependency(), this.getAttribute('get-date-option-event-name')
-      ? new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('get-date-option-event-name'), {
-        detail: {
-          resolve,
-          dateStrSeparator: this.dateStrSeparator
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      })))
-      : Promise.resolve({})]).then(([dependencies, options]) => {
+    return Promise.all(
+      [this.loadDependency(),
+        this.hasAttribute('options')
+          ? Promise.resolve(Flatpickr.parseAttribute(this.getAttribute('options')))
+          : this.getAttribute('get-date-option-event-name')
+            ? new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('get-date-option-event-name'), {
+                detail: {
+                  resolve,
+                  dateStrSeparator: this.dateStrSeparator
+                },
+                bubbles: true,
+                cancelable: true,
+                composed: true
+              })))
+            : Promise.resolve({})
+      ]
+    ).then(([dependencies, options]) => {
       this.setLabel(options.dateStr)
       delete options.dateStr
       this.flatpickrInstance = dependencies[0](this.labelNode, {
-        ...options, // see all possible options: https://flatpickr.js.org/options/
         mode: 'range',
         dateFormat: 'd.m.Y',
+        ...options, // see all possible options: https://flatpickr.js.org/options/
         onChange: (selectedDates, dateStr, instance) => {
+          dateStr = this.setLabel(dateStr.replace(' to ', this.dateStrSeparator))
           if (this.getAttribute('request-event-name') && !this.gotCleared) {
-            dateStr = this.setLabel(dateStr.replace(' to ', this.dateStrSeparator))
             this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
               detail: {
                 origEvent: { selectedDates, dateStr, instance },
@@ -263,6 +273,15 @@ export default class Flatpickr extends Shadow() {
   }
 
   get labelNode () {
-    return this._labelNode || (this._labelNode = document.createElement('div'))
+    if (this._labelNode) return this._labelNode
+    if (this.hasAttribute('name') || this.hasAttribute('id') || this.hasAttribute('required')) {
+      this._labelNode = document.createElement('input')
+      this._labelNode.setAttribute('name', this.getAttribute('name'))
+      this._labelNode.setAttribute('id', this.getAttribute('id'))
+      this._labelNode.setAttribute('required', this.getAttribute('required') || 'true')
+    } else {
+      this._labelNode = document.createElement('div')
+    }
+    return this._labelNode
   }
 }
