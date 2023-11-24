@@ -22,6 +22,7 @@ self.Environment = {
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Header'):
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Logo'):
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Navigation'):
+      case constructor && typeof constructor.includes === 'function' && constructor.includes('LanguageSwitcher'):
       case tagName && typeof tagName.includes === 'function' && tagName.includes('O-NAV-WRAPPER'):
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Footer'):
       case constructor && typeof constructor.includes === 'function' && constructor.includes('Login'):

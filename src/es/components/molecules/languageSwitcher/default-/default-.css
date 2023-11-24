@@ -1,0 +1,16 @@
+:host {
+    --language-switcher-default-grid-area: var(--language-switcher-default-grid-area-custom, "login");
+    --language-switcher-default-content-spacing: var(--content-spacing);
+    --language-switcher-default-content-spacing-mobile: var(--content-spacing-mobile);
+    --language-switcher-default-ul-list-style: none;
+    --language-switcher-default-ul-display: flex;
+    --language-switcher-default-ul-flex-direction: row;
+    --language-switcher-default-ul-text-align: right;
+    --language-switcher-default-ul-margin: 0;
+}
+
+@media only screen and (max-width: _max-width_) {
+    :host {
+        display: none; /* hide language-switcher when hamburger pops up. under 1201px */
+    }
+}
