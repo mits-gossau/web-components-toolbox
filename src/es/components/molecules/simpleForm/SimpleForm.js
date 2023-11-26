@@ -113,7 +113,7 @@ export default class SimpleForm extends Shadow() {
           body: JSON.stringify(body),
           signal: this.abortController.signal
         }).then(async response => {
-          if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399) || (response.status >= 400 && response.status <= 499)) return response.json()
+          if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399)) return response.json()
           throw new Error(response.statusText)
         }).then(json => {
           let response
