@@ -269,6 +269,6 @@ export default class SimpleForm extends Shadow() {
   }
 
   get response () {
-    return this.querySelector('#response')
+    return this.root.querySelector('#response')
   }
 }
