@@ -1,3 +1,9 @@
+:host #response {
+    color: var(--color-error, var(--color-secondary, red));
+}
+:host #response[onclick] {
+    cursor: pointer;
+}
 :host > form > div.inline {
     align-items: center;
     display: flex;

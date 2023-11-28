@@ -120,6 +120,8 @@ export default class SimpleForm extends Shadow() {
           let redirectUrl
           if ((response = json[this.getAttribute('response-property-name')] || json.response) && this.response) {
             this.response.textContent = response
+            let onclick
+            if ((onclick = json[this.getAttribute('onclick-property-name')] || json.onclick)) this.response.setAttribute('onclick', onclick)
             if (json[this.getAttribute('clear-property-name')] === true || json.clear === true) this.form.remove()
           } else if ((redirectUrl = json[this.getAttribute('redirect-url-property-name')] || json.redirectUrl)) {
             self.open(redirectUrl, json[this.getAttribute('target-property-name')] || json.target, json[this.getAttribute('features-property-name')] || json.features)
@@ -189,9 +191,7 @@ export default class SimpleForm extends Shadow() {
         return form.renderCssPromise
       })
     }
-    this.css = /* css */`
-      
-    `
+    this.css = /* css */``
     return Promise.all([this.fetchTemplate(), formPromise])
   }
 
