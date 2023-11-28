@@ -1,0 +1,55 @@
+:host {
+    container-type: inline-size;
+}
+:host > section {
+    grid-template-columns: repeat(4, minmax(12.5em, 1fr));
+    grid-template-rows: auto;
+    grid-gap: var(--grid-432-auto-colums-auto-rows-grid-gap-custom, var(--content-spacing));
+    overflow-x: auto; /* desktop, the scrollbar should never be visible, otherwise the below container queries must be adjusted */
+}
+:host([count-section-children="1"]) > section > * {
+    grid-column: 3;
+    transform: translateX(calc(-1 * (50% + var(--grid-432-auto-colums-auto-rows-grid-gap-custom, var(--content-spacing)) / 2)));
+}
+@container (max-width: 54em) {
+    :host > section {
+        grid-template-columns: repeat(3, minmax(12.5em, 1fr));
+    }
+    :host([count-section-children="1"]) > section > * {
+        grid-column: 2;
+        transform: none;
+    }
+}
+@container (max-width: 40em) {
+    :host > section {
+        grid-template-columns: repeat(2, minmax(12.5em, 1fr));
+    }
+    :host([count-section-children="1"]) > section > * {
+        grid-column: 2;
+        transform: translateX(calc(-1 * (50% + var(--grid-432-auto-colums-auto-rows-grid-gap-custom, var(--content-spacing)) / 2)));
+    }
+}
+:host > section > *::part(button) {
+    --button-primary-label-white-space: nowrap;
+    --button-secondary-label-white-space: nowrap;
+    --button-tertiary-label-white-space: nowrap;
+    --button-quaternary-label-white-space: nowrap;
+    text-wrap: nowrap;
+    width: 100%;
+}
+@media only screen and (max-width: _max-width_) {
+    :host > section {
+        grid-template-columns: auto;
+        grid-auto-flow: column;
+        grid-gap: var(--grid-432-auto-colums-auto-rows-grid-gap-mobile-custom, var(--grid-432-auto-colums-auto-rows-grid-gap-custom, var(--content-spacing-mobile, var(--content-spacing))));
+        grid-template-rows: 1fr;
+    }
+    :host([count-section-children="1"]) > section > * {
+        grid-column: 1;
+        transform: none;
+    }
+    /* display cutoff at scroll fix */
+    :host > section > *:last-child {
+        margin-right: 1px;
+    }
+}
