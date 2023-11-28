@@ -122,6 +122,7 @@ export default class SimpleForm extends Shadow() {
             this.response.textContent = response
             let onclick
             if ((onclick = json[this.getAttribute('onclick-property-name')] || json.onclick)) this.response.setAttribute('onclick', onclick)
+            if (json[this.getAttribute('success-property-name')] === true || json.success === true) this.response.classList.add('success')
             if (json[this.getAttribute('clear-property-name')] === true || json.clear === true) this.form.remove()
           } else if ((redirectUrl = json[this.getAttribute('redirect-url-property-name')] || json.redirectUrl)) {
             self.open(redirectUrl, json[this.getAttribute('target-property-name')] || json.target, json[this.getAttribute('features-property-name')] || json.features)

@@ -1,6 +1,9 @@
 :host #response {
     color: var(--color-error, var(--color-secondary, red));
 }
+:host #response.success {
+    color: var(--color-success, var(--color-secondary, green));
+}
 :host #response[onclick] {
     cursor: pointer;
 }
