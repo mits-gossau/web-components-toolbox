@@ -186,8 +186,14 @@ export default class SimpleForm extends Shadow() {
         const form = new children[0].constructorClass({ mode: 'open' })
         form.hidden = true
         this.html = form
-        if (form.renderCssPromise) form.renderCssPromise.then(styles => Array.from(form.root.querySelectorAll('style:not([_csshidden])')).forEach(style => (this.html = style)))
-        this.css = form.css
+        if (form.renderCssPromise) {
+          form.renderCssPromise.then(styles => Array.from(form.root.querySelectorAll('style:not([_csshidden])')).forEach(style => {
+            style.setAttribute('load-form-styles', 'molecules/form/Form.js')
+            this.html = style
+          }))
+        } else{
+          this.css = form.css
+        }
         form.remove()
         return form.renderCssPromise
       })

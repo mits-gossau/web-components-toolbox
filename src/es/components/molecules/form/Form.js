@@ -139,7 +139,7 @@ export default class Form extends Shadow() {
     buttonSecondary.css = /* css */ `
       @supports(selector(:has(> input[type=file]))) {
         *:has(> input[type=file]) {
-          display: inline-grid;
+          display: inline-grid !important;
           padding: 0;
         }
         *:has(> input[type=file]) > * {
