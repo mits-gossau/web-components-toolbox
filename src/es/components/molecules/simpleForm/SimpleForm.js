@@ -42,7 +42,7 @@ export default class SimpleForm extends Shadow() {
     this.changeListener = event => {
       // input file detection with writing the selected files into the label
       let inputTypeFile
-      if ((inputTypeFile = event.composedPath()[0]) && inputTypeFile.hasAttribute('type') && inputTypeFile.getAttribute('type') === 'file') {
+      if ((inputTypeFile = event.composedPath()[0]) && inputTypeFile.getAttribute('type') === 'file') {
         const files = Array.from(inputTypeFile.files)
         let typeFileLabel
         if ((typeFileLabel = inputTypeFile.parentNode.querySelector('.type-file-label'))) {
@@ -183,7 +183,7 @@ export default class SimpleForm extends Shadow() {
         }
       ]).then(children => {
         // eslint-disable-next-line new-cap
-        const form = new children[0].constructorClass({ mode: 'open' })
+        const form = new children[0].constructorClass({ mode: 'open', namespace: this.getAttribute('namespace'), namespaceFallback: true })
         form.hidden = true
         this.html = form
         if (form.renderCssPromise) {

@@ -1,4 +1,4 @@
-<m-simple-form load-form-styles namespace="simple-form-default-">
+<m-simple-form load-form-styles namespace="simple-form-default-" endpoint="hi">
     <form action="/some-action" enctype="multipart/form-data" method="post">
       <input type="hidden" name="xp_sendBackParams" value="0" />
       <div class="inline">
@@ -20,6 +20,18 @@
       <div>
         <label validation-message="Ungültige Email" for="Email">E-Mail</label>
         <input id="Email" type="email" required="" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+      </div>
+      <div>
+        <label validation-message="Select a pet!" for="pets">Choose a pet:</label>
+        <select name="pets" required="" id="pets">
+          <option value="">--Please choose an option--</option>
+          <option value="dog">Dog</option>
+          <option value="cat">Cat</option>
+          <option value="hamster">Hamster</option>
+          <option value="parrot">Parrot</option>
+          <option value="spider">Spider</option>
+          <option value="goldfish">Goldfish</option>
+        </select>
       </div>
       <div class="center">
         <div>
