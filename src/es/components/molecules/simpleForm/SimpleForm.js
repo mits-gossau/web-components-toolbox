@@ -13,17 +13,10 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class SimpleForm
  * @type {CustomElementConstructor}
  * @attribute {
- *  {search|newsletter} [type] used to determine what should happen on submit success/failure (search shows an answer message, newsletter takes the form.getAttribute('redirect') to redirect)
- *  {string} [redirect=n.a.] controls for type newsletter if and where it shall be redirected on success
- *  {has} [use-html-submit=n.a.] controls if the form shall fetch or use plain html action, which then creates a form and triggers it by button[submit].click
+ *  
  * }
  * @css {
- *  --display [block]
- *  --form-display [flex]
- *  --form-align-items [center]
- *  --display-mobile [block]
- *  --form-display-mobile [flex]
- *  --form-align-items-mobile [center]
+ *  
  * }
  */
 export default class SimpleForm extends Shadow() {
@@ -40,28 +33,54 @@ export default class SimpleForm extends Shadow() {
       this.setAttribute('dirty', 'true')
     }
     this.changeListener = event => {
-      // input file detection with writing the selected files into the label
-      let inputTypeFile
-      if ((inputTypeFile = event.composedPath()[0]) && inputTypeFile.getAttribute('type') === 'file') {
-        const files = Array.from(inputTypeFile.files)
-        let typeFileLabel
-        if ((typeFileLabel = inputTypeFile.parentNode.querySelector('.type-file-label'))) {
-          if (files.length) {
-            if (inputTypeFile.hasAttribute('remove-file-title')) inputTypeFile.setAttribute('title', (inputTypeFile.getAttribute('remove-file-title')))
-            inputTypeFile.parentNode.classList.add('has-files')
-            if (!typeFileLabel.hasAttribute('original-label')) typeFileLabel.setAttribute('original-label', typeFileLabel.innerHTML)
-            typeFileLabel.innerHTML = files.reduce((acc, file, i) => `${acc}${file.name}${files[i + 1] ? '<br>' : ''}`, '&nbsp;')
-            inputTypeFile.addEventListener('click', event => {
-              event.preventDefault()
-              inputTypeFile.value = ''
-              this.changeListener(event)
-            }, { once: true })
-          } else if (typeFileLabel.hasAttribute('original-label')) {
-            if (inputTypeFile.hasAttribute('remove-file-title')) inputTypeFile.removeAttribute('title')
-            inputTypeFile.parentNode.classList.remove('has-files')
-            typeFileLabel.innerHTML = typeFileLabel.getAttribute('original-label')
+      const target = event.composedPath()[0]
+      if (!target) return
+      switch (true) {
+        // file picker stuff
+        case target.getAttribute('type') === 'file':
+          const files = Array.from(target.files)
+          let label
+          if ((label = target.parentNode.querySelector('.type-file-label'))) {
+            if (files.length) {
+              if (target.hasAttribute('remove-file-title')) target.setAttribute('title', (target.getAttribute('remove-file-title')))
+              target.parentNode.classList.add('has-files')
+              if (!label.hasAttribute('original-label')) label.setAttribute('original-label', label.innerHTML)
+              label.innerHTML = files.reduce((acc, file, i) => `${acc}${file.name}${files[i + 1] ? '<br>' : ''}`, '&nbsp;')
+              target.addEventListener('click', event => {
+                event.preventDefault()
+                target.value = ''
+                this.changeListener(event)
+              }, { once: true })
+            } else if (label.hasAttribute('original-label')) {
+              if (target.hasAttribute('remove-file-title')) target.removeAttribute('title')
+              target.parentNode.classList.remove('has-files')
+              label.innerHTML = label.getAttribute('original-label')
+            }
           }
-        }
+          break
+        // visibly conditional fields
+        case target.getAttribute('type') === 'checkbox':
+        case target.tagName === 'SELECT':
+          let conditionalNodes
+          if ((conditionalNodes = this.root.querySelectorAll(`[visible-by=${target.getAttribute('id')}]`))) {
+            conditionalNodes.forEach(conditionalNode => {
+              if (conditionalNode.hasAttribute('visible-condition')) {
+                if (
+                  conditionalNode.getAttribute('visible-condition') === target.value
+                  || (conditionalNode.getAttribute('visible-condition') === 'truthy' && target.value)
+                  || (conditionalNode.getAttribute('visible-condition') === 'falsy' && !target.value)
+                  || (target.getAttribute('type') === 'checkbox' && conditionalNode.getAttribute('visible-condition') === String(target.checked))
+                ) {
+                  this.show(conditionalNode)
+                } else {
+                  this.hide(conditionalNode)
+                }
+              } else {
+                this.show(conditionalNode)
+              }
+            })
+          }
+          break
       }
     }
     // fetch if there is an endpoint attribute, else do the native behavior of form post
@@ -236,7 +255,7 @@ export default class SimpleForm extends Shadow() {
         path: `${this.importMetaUrl}../../atoms/input/Input.js`,
         name: 'a-input'
       }
-    ])
+    ]).then(() => Array.from(this.root.querySelectorAll('[hidden]')).forEach(node => this.hide(node)))
   }
 
   /**
@@ -261,6 +280,22 @@ export default class SimpleForm extends Shadow() {
       default:
         return Promise.resolve(input.value)
     }
+  }
+
+  hide (node) {
+    node.setAttribute('hidden', 'true')
+    Array.from(node.querySelectorAll('[required]')).forEach(node => {
+      node.setAttribute('data-required', 'true')
+      node.removeAttribute('required')
+    })
+  }
+
+  show (node) {
+    node.removeAttribute('hidden')
+    Array.from(node.querySelectorAll('[data-required]')).forEach(node => {
+      node.setAttribute('required', 'true')
+      node.removeAttribute('data-required')
+    })
   }
 
   get form () {

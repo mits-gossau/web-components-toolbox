@@ -10,17 +10,20 @@
 :host #response[onclick] {
     cursor: pointer;
 }
-:host > form > div.inline {
+:host > form div.inline {
     align-items: center;
     display: flex;
     gap: 1em;
     justify-content: flex-start;
 }
-:host > form > div.inline > label {
+:host > form div.inline > label {
     text-align: justify;
 }
-:host > form > div.inline > input, :host > form > div.inline > select {
+:host > form div.inline > input, :host > form div.inline > select {
     flex-shrink: 0;
+}
+:host > form > * > *[visible-by] {
+    padding-left: var(--content-spacing);
 }
 :host input, :host select, :host div {
     transition: border-color 0.3s ease-out, outline 0.3s ease-out;
@@ -55,4 +58,9 @@
 :host([dirty]) input:not(:valid) + label::after, :host([dirty]) label:has(+ input:not(:valid))::after, :host([dirty]) select:not(:valid) + label::after, :host([dirty]) label:has(+ select:not(:valid))::after, :host([dirty]) input[type=file]:not(:valid) + div::after, :host([dirty]) div:has(+ input[type=file]:not(:valid))::after {
     display: inline-block;
     opacity: 1;
+}
+@media only screen and (max-width: _max-width_) {
+    :host > form > * > *[visible-by] {
+        padding-left: var(--content-spacing-mobile, var(--content-spacing));
+    }
 }
