@@ -214,6 +214,7 @@ export default class Button extends Hover() {
         text-decoration: var(--text-decoration, none);
         text-transform: var(--text-transform, none);
         touch-action: manipulation;
+        transform: var(--transform, none);
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
         visibility: var(--visibility, inherit);
@@ -243,6 +244,7 @@ export default class Button extends Hover() {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
+        transform: var(--transform-hover, var(--transform, none));
         opacity: var(--opacity-hover, var(--opacity, 1));
       }
       :host ${this.buttonTagName}[disabled] {
