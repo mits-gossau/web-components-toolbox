@@ -167,15 +167,15 @@ export default class ProductCard extends Shadow() {
 
     return Promise.all([fetchModules]).then(() => {
       const productSelect = this.isSelectable ? '<div class="product-select"><input type="checkbox" request-event-name="select-item" /></div>' : ''
-      const productPrice = product.productDetail.price ? `<span>${product.productDetail.price}</span>` : ''
-      const productName = product.productDetail.name ? `<span class="name">${product.productDetail.name}</span>` : ''
-      const productEstimatedPieceWeight = product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''
-      const productDelete = this.isDeletable ? `<a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>` : ''
+      const productPrice = product.price ? `<span>${product.price}</span>` : ''
+      const productName = product.name ? `<span class="name">${product.name}</span>` : ''
+      const productEstimatedPieceWeight = product.estimatedPieceWeight ? `<span class="additional-info">${product.estimatedPieceWeight}</span>` : ''
+      const productDelete = this.isDeletable ? `<a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>` : ''
       const productAmount = product.amount
         ? `<m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1" disable-all-elements="${this.isLoggedIn}">
-            <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-" product-name="${product.productDetail.name}"></a-button>
-            <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.productDetail.name}">
-            <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+" product-name="${product.productDetail.name}"></a-button>
+            <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.id}' label="-" product-name="${product.name}"></a-button>
+            <input id="${product.id}" class="basket-control-input" tag=${product.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.name}">
+            <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.id}' label="+" product-name="${product.name}"></a-button>
           </m-basket-control>`
         : '<div></div>'
       const productTotalTcc = product.totalTcc ? `<div class="bold">${product.totalTcc.toFixed(2)}</div>` : ''
@@ -184,7 +184,7 @@ export default class ProductCard extends Shadow() {
         <div class="product-item">
             ${productSelect}
             <div class="product-image">
-                <a-picture namespace="product-checkout-" picture-load defaultSource='${product.productDetail.image}' alt='${product.productDetail.name}'></a-picture>
+                <a-picture namespace="product-checkout-" picture-load defaultSource='${product.image}' alt='${product.name}'></a-picture>
             </div>
             <div class="product-data">
                 <div class="product-info">
