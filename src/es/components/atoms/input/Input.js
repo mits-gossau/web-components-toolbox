@@ -170,13 +170,13 @@ export default class Input extends Shadow() {
       }
 
       label {
-        font-size: var(--font-size);
-        font-weight: 700;
-        letter-spacing: 0.03em;
-        line-height: 1;
-        color: var(--color);
+        font-size: var(--label-font-size, var(--font-size));
+        font-weight: var(--label-font-weight, 700);
+        letter-spacing: var(--label-letter-spacing, 0.03em);
+        line-height: var(--label-line-height, 1);
+        color: var(--label-color, var(--color));
         display: block;
-        margin-bottom: 0.625em;
+        margin-bottom: var(--label-margin-bottom, 0.625em);
       }
 
       input {
@@ -224,7 +224,16 @@ export default class Input extends Shadow() {
         display: flex;
         position: relative;
       }
-
+      :host([search]) .mui-form-group:has(label) {
+        margin-top: 3.25rem;
+      }
+      :host([search]) label {
+        position: absolute;
+        top: -2.5rem;
+        font-weight: var(--search-label-font-weight, 500);
+        font-size: var(--search-label-font-size, var(--font-size));
+        line-height: var(--search-label-line-height, 1.5);
+      }
       :host([search]) input {
         background-color: var(--search-input-background-color, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color, var(--m-gray-300));
