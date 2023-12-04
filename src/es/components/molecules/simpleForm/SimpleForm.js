@@ -6,6 +6,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior or send it to an api endpoint
+ * TODO: Allow sending custom event instead of endpoint nor default form post
  * TODO: https://dev.to/stuffbreaker/custom-forms-with-web-components-and-elementinternals-4jaj
  * As a molecule, this component shall hold Atoms
  *
