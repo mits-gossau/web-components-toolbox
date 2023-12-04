@@ -87,6 +87,12 @@ export default class BasketControl extends Shadow() {
         min-height: var(--min-height, 3em);
         width: var(--width, 100%);
       }
+
+      a-button {
+        --button-label-margin: -3px 0 0 0;
+        --button-label-padding: 0;
+      }
+
       @container productList (max-width: 10em) {
         :host input {
           margin: 0;
@@ -96,11 +102,8 @@ export default class BasketControl extends Shadow() {
           --button-padding: 0;
           --button-width: 2em;
         }
-        a-button {
-          --button-label-margin: -3px 0 0 0;
-          --button-label-padding: 0;
-        }
       }
+      
       @container productList (max-width: 7em) {
         a-button#remove{
           --button-margin: 0 0 0 -0.85em;
