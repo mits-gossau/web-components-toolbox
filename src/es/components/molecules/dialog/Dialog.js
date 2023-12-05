@@ -15,15 +15,15 @@ export default class Dialog extends Shadow() {
     this.clickEventListener = event => {
       const target = event.composedPath()[0]
       if (!target) return
-      switch (true) {
-        case target.getAttribute('id') === 'show':
+      switch (target.getAttribute('id')) {
+        case 'show':
           this.dialog.show()
           break
-        case target.getAttribute('id') === 'show-modal':
-        case target.getAttribute('id') === 'open':
+        case 'show-modal':
+        case 'open':
           this.dialog.showModal()
           break
-        case target.getAttribute('id') === 'close':
+        case 'close':
           this.dialog.close()
           break
       }
