@@ -45,7 +45,7 @@ export default class Favorite extends Shadow() {
     }
     const productId = event.detail.id
     // @ts-ignore
-    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiToggleFavorite}?id=${productId}`
+    const endpoint = `${self.Environment.getApiBaseUrl('migrospro').apiToggleFavorite}?mapiProductId=${productId}`
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-favorite') || 'update-favorite', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
