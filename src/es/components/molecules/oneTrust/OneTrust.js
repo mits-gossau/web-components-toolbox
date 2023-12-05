@@ -79,18 +79,18 @@ export default class OneTrust extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML () {
-    this.html = 'Content rendered from Component: OneTrust'
-    this.loadCookieLawDependency().then((d) => {
-      console.log(d)
-      console.log(document.scripts)
-    })
-  }
-
-  loadCookieLawDependency () {
+  async renderHTML () {
     // TODO TESTING
     const id = '24c30047-255b-4c49-9da5-99d3419dc58b-test'
 
+    const lawDependency = await this.loadCookieLawDependency(id)
+    console.log(lawDependency)
+    const scriptTemplates = await this.loadCookieLawScriptTemplates(id)
+    console.log(scriptTemplates)
+    console.log(document.scripts)
+  }
+
+  async loadCookieLawDependency (id) {
     return this.loadCookieLawDependencyPromise || (this.loadCookieLawDependencyPromise = new Promise((resolve, reject) => {
       const cookieLawScript = document.createElement('script')
       cookieLawScript.setAttribute('async', '')
@@ -100,7 +100,25 @@ export default class OneTrust extends Shadow() {
         // @ts-ignore
         cookieLawScript.setAttribute('src', `https://cdn.cookielaw.org/consent/${id}/OtAutoBlock.js`)
         document.getElementsByTagName('head')[0].prepend(cookieLawScript)
-        cookieLawScript.onload = () => resolve('loaded')
+        cookieLawScript.onload = () => resolve('cookie law loaded')
+      } catch (e) {
+        return reject(e)
+      }
+    }))
+  }
+
+  async loadCookieLawScriptTemplates (id) {
+    return this.loadCookieLawScriptTemplatesPromise || (this.loadCookieLawScriptTemplatesPromise = new Promise((resolve, reject) => {
+      const cookieLawScriptTemplatesScript = document.createElement('script')
+      cookieLawScriptTemplatesScript.setAttribute('async', '')
+      cookieLawScriptTemplatesScript.setAttribute('type', 'text/javascript')
+      cookieLawScriptTemplatesScript.setAttribute('id', 'one-trust-cookie-law-script-templates')
+      cookieLawScriptTemplatesScript.setAttribute('data-domain-script', id)
+      try {
+        // @ts-ignore
+        cookieLawScriptTemplatesScript.setAttribute('src', 'https://cdn.cookielaw.org/scripttemplates/otSDKStub.js')
+        document.getElementsByTagName('head')[0].prepend(cookieLawScriptTemplatesScript)
+        cookieLawScriptTemplatesScript.onload = () => resolve('cookie law script templates loaded')
       } catch (e) {
         return reject(e)
       }
