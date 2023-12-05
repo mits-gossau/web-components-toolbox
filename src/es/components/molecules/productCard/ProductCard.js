@@ -12,14 +12,15 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class ProductCard extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-    this.isLoggedIn = this.getAttribute('is-logged-in') || 'false'
-    this.isSelectable = this.getAttribute('is-selectable') === 'true' || false
-    this.isDeletable = this.getAttribute('is-deletable') !== 'false' // to be backwards compatible
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.renderHTML()
+  }
+
+  disconnectedCallback () {
+    this.checkbox.removeEventListener('change', this.checkboxEventListener)
   }
 
   /**
@@ -139,18 +140,7 @@ export default class ProductCard extends Shadow() {
       }
     ])
 
-    /**
-     * Product object containing information about the product.
-     * @typedef {Object} Product
-     * @property {Object} productDetail - Details about the product.
-     * @property {string} productDetail.id - ID of the product.
-     * @property {string | undefined} productDetail.image - URL of the product image.
-     * @property {string} productDetail.name - Name of the product.
-     * @property {string | undefined} productDetail.price - Price of the product.
-     * @property {string | undefined} productDetail.estimatedPieceWeight - Estimated weight of the product.
-     * @property {number | undefined} amount - Quantity of the product.
-     * @property {number | undefined} totalTcc - Total TCC of the product.
-     */
+    // TODO
     const defaultProduct = {
       productDetail: {
         id: '000000000000',
@@ -162,15 +152,13 @@ export default class ProductCard extends Shadow() {
       amount: 99,
       totalTcc: 12.90
     }
-    /** @type {Product} */
+
     const product = JSON.parse(this.getAttribute('data')) || defaultProduct
 
     return Promise.all([fetchModules]).then(() => {
-      const productSelect = this.isSelectable ? '<div class="product-select"><input type="checkbox" request-event-name="select-item" /></div>' : ''
       const productPrice = product.price ? `<span>${product.price}</span>` : ''
       const productName = product.name ? `<span class="name">${product.name}</span>` : ''
       const productEstimatedPieceWeight = product.estimatedPieceWeight ? `<span class="additional-info">${product.estimatedPieceWeight}</span>` : ''
-      const productDelete = this.isDeletable ? `<a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>` : ''
       const productAmount = product.amount
         ? `<m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1" disable-all-elements="${this.isLoggedIn}">
             <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.id}' label="-" product-name="${product.name}"></a-button>
@@ -180,11 +168,15 @@ export default class ProductCard extends Shadow() {
         : '<div></div>'
       const productTotalTcc = product.totalTcc ? `<div class="bold">${product.totalTcc.toFixed(2)}</div>` : ''
 
+      // TODO
+      // <a-picture namespace="product-checkout-" picture-load defaultSource='${product.image}' alt='${product.name}'></a-picture>
       this.html = /* html */`
         <div class="product-item">
-            ${productSelect}
+            <div class="product-select">
+              <input id="selectCheckbox" type="checkbox" value=${product} />
+            </div>
             <div class="product-image">
-                <a-picture namespace="product-checkout-" picture-load defaultSource='${product.image}' alt='${product.name}'></a-picture>
+                img
             </div>
             <div class="product-data">
                 <div class="product-info">
@@ -194,7 +186,9 @@ export default class ProductCard extends Shadow() {
                         ${productEstimatedPieceWeight}
                     </div>
                     <div>
-                        ${productDelete}
+                        <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-favorite-from-order" tag="${product.id}">
+                          <a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx>
+                        </a-button>
                     </div>
                 </div>
                 <div class="product-footer">
@@ -204,6 +198,22 @@ export default class ProductCard extends Shadow() {
             </div>
         </div> 
       `
+      this.checkbox.addEventListener('change', this.checkboxEventListener)
     })
+  }
+
+  checkboxEventListener = (e) => {
+    if (this.checkbox.checked) {
+      this.setAttribute('selected', 'true')
+      this.setAttribute('id', this.checkbox.value)
+    } else {
+      this.removeAttribute('id')
+      this.removeAttribute('selected')
+    }
+  }
+
+  // orders dropdown
+  get checkbox () {
+    return this.root.querySelector('#selectCheckbox')
   }
 }
