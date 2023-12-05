@@ -16,7 +16,7 @@ export default class OneTrust extends Shadow() {
     if (this.shouldRenderHTML()) this.renderHTML()
   }
 
-  disconnectedCallback () {}
+  disconnectedCallback () { }
 
   /**
    * evaluates if a render is necessary
@@ -81,6 +81,29 @@ export default class OneTrust extends Shadow() {
    */
   renderHTML () {
     this.html = 'Content rendered from Component: OneTrust'
+    this.loadCookieLawDependency().then((d) => {
+      console.log(d)
+      console.log(document.scripts)
+    })
   }
 
+  loadCookieLawDependency () {
+    // TODO TESTING
+    const id = '24c30047-255b-4c49-9da5-99d3419dc58b-test'
+
+    return this.loadCookieLawDependencyPromise || (this.loadCookieLawDependencyPromise = new Promise((resolve, reject) => {
+      const cookieLawScript = document.createElement('script')
+      cookieLawScript.setAttribute('async', '')
+      cookieLawScript.setAttribute('type', 'text/javascript')
+      cookieLawScript.setAttribute('id', 'one-trust-cookie-law')
+      try {
+        // @ts-ignore
+        cookieLawScript.setAttribute('src', `https://cdn.cookielaw.org/consent/${id}/OtAutoBlock.js`)
+        document.getElementsByTagName('head')[0].prepend(cookieLawScript)
+        cookieLawScript.onload = () => resolve('loaded')
+      } catch (e) {
+        return reject(e)
+      }
+    }))
+  }
 }
