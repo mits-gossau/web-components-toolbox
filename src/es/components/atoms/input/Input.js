@@ -390,7 +390,7 @@ export default class Input extends Shadow() {
     ]).then(([labelHtml, searchHtml]) => {
       this.divWrapper.innerHTML = /* html */`
           ${labelHtml}
-          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.autoFocus} />
+          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute("autofocus") ? 'autofocus' : ''} />
           ${searchHtml}
       `
       this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint') ? this.getAttribute('enterkeyhint') : 'search')
@@ -492,10 +492,5 @@ export default class Input extends Shadow() {
 
   get iconName () {
     return this.getAttribute('icon-name')
-  }
-
-  get autoFocus () {
-    console.log(this.getAttribute('autofocus'))
-    return this.getAttribute('autofocus')
   }
 }
