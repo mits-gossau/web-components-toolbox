@@ -106,6 +106,7 @@ export default class OneTrust extends Shadow() {
       cookieLawScriptTemplatesScript.setAttribute('type', 'text/javascript')
       cookieLawScriptTemplatesScript.setAttribute('id', 'one-trust-cookie-law-script-templates')
       cookieLawScriptTemplatesScript.setAttribute('data-domain-script', id)
+      cookieLawScriptTemplatesScript.setAttribute('data-document-language', 'true')
       try {
         // @ts-ignore
         cookieLawScriptTemplatesScript.setAttribute('src', 'https://cdn.cookielaw.org/scripttemplates/otSDKStub.js')
