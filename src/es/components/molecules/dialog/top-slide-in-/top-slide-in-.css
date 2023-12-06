@@ -41,7 +41,7 @@
     align-items: center;
     display: flex;
     gap: 1.25rem;
-    max-width: 1280px;
+    max-width: _max-width_;
     margin: 0 auto;
 }
 .container > :first-child {
