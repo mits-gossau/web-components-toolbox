@@ -137,6 +137,11 @@ export default class Dialog extends Shadow() {
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
+      case 'dialog-top-slide-in-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./top-slide-in-/top-slide-in-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
       default:
         return this.fetchCSS(styles)
     }

@@ -165,8 +165,10 @@ export default class Input extends Shadow() {
 
       .mui-form-group {
         font-family: var(--font-family);
-        margin-bottom: var(--margin-bottom, var(--content-spacing));
         max-width: var(--max-width, none);
+      }
+      .mui-form-group + .mui-form-group {
+        margin-top: var(--margin-top, var(--content-spacing));
       }
 
       label {
