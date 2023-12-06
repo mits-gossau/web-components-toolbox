@@ -72,17 +72,17 @@ export const Mutation = (ChosenClass = Shadow()) => class Mutation extends Chose
       if (this.shadowRoot && this.mutationObserverInit.attributes) {
         const { attributeFilter, attributes, attributeOldValue, ...restObserverInit } = this.mutationObserverInit
         /** @return {void} */
-        this.mutationObserveStart = () => {
+        this.mutationObserveStart = (target = this) => {
           // @ts-ignore
-          if (restObserverInit.childList || restObserverInit.characterData) this.mutationObserver.observe(this.shadowRoot, restObserverInit)
+          if (restObserverInit.childList || restObserverInit.characterData) this.mutationObserver.observe(target.shadowRoot, restObserverInit)
           // @ts-ignore
-          this.mutationObserver.observe(this, { attributeFilter, attributes, attributeOldValue })
+          this.mutationObserver.observe(target, { attributeFilter, attributes, attributeOldValue })
         }
       } else {
         /** @return {void} */
-        this.mutationObserveStart = () => {
+        this.mutationObserveStart = (target = this.root) => {
           // @ts-ignore
-          this.mutationObserver.observe(this.root, this.mutationObserverInit)
+          this.mutationObserver.observe(target, this.mutationObserverInit)
         }
       }
       /** @return {void} */

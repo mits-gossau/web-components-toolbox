@@ -1,0 +1,33 @@
+<m-simple-form
+  load-form-styles
+  namespace="simple-form-default-"
+  endpoint="/api/login"
+  method="POST"
+  schema="{
+    'redirectUrl': 'string',
+    'username': 'string',
+    'password': 'string',
+    'rememberMe': true
+  }"
+>
+    <form>
+      <h2 id="response"></h2>
+      <input type="hidden" name="redirectUrl" value="some.redirect.url" />
+      <div>
+        <label validation-message="Username ist ungültig" for="username">Username</label>
+        <input id="username" type="text" required="" value="" name="username" placeholder="Username hier eingeben..."  autocomplete="off" />
+      </div>
+      <div>
+        <label validation-message="Password ist ungültig" for="password">Password</label>
+        <input id="password" type="password" required="" value="" name="password" placeholder="Password hier eingeben..." autocomplete="off" />
+      </div>
+      <div class="inline">
+        <label for="rememberMe">Remember me!</label>
+        <input id="rememberMe" name="rememberMe" type="checkbox" />
+      </div>
+      <input type="submit" value="Registrieren" />
+    </form>
+</m-simple-form>
+
+<script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=SimpleForm.js"></script>

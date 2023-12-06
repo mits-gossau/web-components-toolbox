@@ -139,7 +139,7 @@ export default class Form extends Shadow() {
     buttonSecondary.css = /* css */ `
       @supports(selector(:has(> input[type=file]))) {
         *:has(> input[type=file]) {
-          display: inline-grid;
+          display: inline-grid !important;
           padding: 0;
         }
         *:has(> input[type=file]) > * {
@@ -248,8 +248,11 @@ export default class Form extends Shadow() {
       .umbraco-forms-indicator {
         color: var(--color-secondary);
       }
-      :host form > div, .umbraco-forms-field {
+      :host form > div, :host form > section > div, :host form > div > section > div, .umbraco-forms-field {
         padding-bottom: var(--content-spacing);
+      }
+      :host form > div > *:has(+ section:not([hidden])) {
+        margin-bottom: var(--content-spacing);
       }
       .umbraco-forms-field.checkbox .umbraco-forms-field-wrapper {
         display:var(--checkbox-display, flex);
@@ -313,7 +316,7 @@ export default class Form extends Shadow() {
     }
       @media only screen and (max-width: _max-width_) {
         ${this.getInputFieldsWithText()} {
-          font-size: var(--font-size-mobile);
+          font-size: var(--input-font-size-mobile, var(--font-size-mobile, 16px));
         }
         ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
@@ -331,7 +334,7 @@ export default class Form extends Shadow() {
       
       :host option {
         background-color: var(--background-color);
-        padding: 0.3em var(--content-spacing-mobile, 0.3em) 0.3em var(--content-spacing-mobile, 0.3em) ;
+        padding: 0.3em var(--content-spacing, 0.3em) 0.3em var(--content-spacing, 0.3em) ;
         cursor: pointer;
       }
       :host option:hover, :host .active {
@@ -398,6 +401,27 @@ export default class Form extends Shadow() {
       @media only screen and (max-width: _max-width_) {
         :host .two-column-align-bottom {
           flex-direction: column
+        }
+        :host form > div, :host form > section > div, :host form > div > section > div, .umbraco-forms-field {
+          padding-bottom: var(--content-spacing-mobile, var(--content-spacing));
+        }
+        :host form > div > *:has(+ section:not([hidden])) {
+          margin-bottom: var(--content-spacing-mobile, var(--content-spacing));
+        }
+        .validation-errors {
+          margin-bottom: var(--content-spacing-mobile, var(--content-spacing));
+        }
+        .checkbox > label, .checkbox > .help-block, .checkboxlist > label, .checkboxlist > .help-block, .radiobutton > label, .radiobutton > .help-block, .radiobuttonlist > label, .radiobuttonlist > .help-block {
+          padding-left: var(--content-spacing-mobile, var(--content-spacing));
+        }
+        .checkboxlist img {
+          padding: 0 var(--content-spacing-mobile, var(--content-spacing));
+        }
+        :host option {
+          padding: 0.3em var(--content-spacing-mobile, var(--content-spacing, 0.3em)) 0.3em var(--content-spacing-mobile, var(--content-spacing, 0.3em)) ;
+        }
+        :host .two-column-align-bottom {
+          gap: var(--content-spacing-mobile, var(--content-spacing, 1em));
         }
       }
     `

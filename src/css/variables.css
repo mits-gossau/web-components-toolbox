@@ -11,6 +11,7 @@
   --color-error: var(--m-red-600);
   --color-hover: var(--m-orange-800);
   --color-secondary: var(--m-orange-600);
+  --color-success: var(--m-green-600);
   --color-tertiary: var(--color-secondary);
   --color: var(--m-black);
   --content-spacing-mobile: 1rem;

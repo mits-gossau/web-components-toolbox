@@ -26,7 +26,6 @@ export default class Product extends Shadow() {
     }, ...args)
 
     this.abortController = null
-    this.abortProductSearchController = null
 
     // TODO - Refactor
     // show/hide o-wrapper, based on the data-id tag
@@ -39,7 +38,6 @@ export default class Product extends Shadow() {
     if (!this.hasAttribute('no-popstate')) self.addEventListener('popstate', this.updatePopState)
     this.addEventListener(this.getAttribute('request-list-product') || 'request-list-product', this.requestListProductListener)
     this.addEventListener('request-href-' + (this.getAttribute('request-list-product') || 'request-list-product'), this.requestHrefEventListener)
-    this.addEventListener(this.getAttribute('request-submit-search') || 'submit-search', this.requestSubmitSearchListener)
   }
 
   disconnectedCallback () {
@@ -47,7 +45,6 @@ export default class Product extends Shadow() {
     if (!this.hasAttribute('no-popstate')) self.removeEventListener('popstate', this.updatePopState)
     this.removeEventListener(this.getAttribute('request-list-product') || 'request-list-product', this.requestListProductListener)
     this.removeEventListener('request-href-' + (this.getAttribute('request-list-product') || 'request-list-product'), this.requestHrefEventListener)
-    this.removeEventListener(this.getAttribute('request-submit-search') || 'submit-search', this.requestSubmitSearchListener)
   }
 
   /**
@@ -55,11 +52,18 @@ export default class Product extends Shadow() {
    * @param {{ detail: any; }} event
    */
   requestListProductListener = async (event) => {
+    let category = this.getCategory()
+
     if (event.detail && event.detail.tags) {
       this.setCategory(event.detail.tags[0], event.detail.pushHistory)
+      category = event.detail.tags[0]
     }
 
-    this.updateSortParam(event.detail)
+    // @ts-ignore
+    if (event.type === 'popstate') this.updateSortParam(event.detail, false)
+
+    // @ts-ignore
+    if (event.type !== 'popstate' && event.detail.type) this.updateSortParam(event.detail)
 
     if (this.abortController) this.abortController.abort()
     this.abortController = new AbortController()
@@ -68,7 +72,6 @@ export default class Product extends Shadow() {
       signal: this.abortController.signal
     }
     const sortOrder = this.getSort() || ''
-    const category = this.getCategory()
     this.showSubCategories(this.subCategoryList, category)
     if (category !== null || event.detail.searchterm) {
       // @ts-ignore
@@ -138,6 +141,7 @@ export default class Product extends Shadow() {
   setCategory (category, pushHistory = true) {
     const url = new URL(location.href, location.href.charAt(0) === '/' ? location.origin : location.href.charAt(0) === '.' ? this.importMetaUrl : undefined)
     url.searchParams.set('category', category)
+    url.searchParams.delete('sort')
     if (pushHistory) history.pushState({ ...history.state, category }, document.title, url.href)
     return url
   }
