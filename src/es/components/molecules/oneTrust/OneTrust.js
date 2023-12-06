@@ -12,11 +12,9 @@ export default class OneTrust extends Shadow() {
   }
 
   connectedCallback () {
+    this.renderScripts()
     if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
   }
-
-  disconnectedCallback () { }
 
   /**
    * evaluates if a render is necessary
@@ -25,15 +23,6 @@ export default class OneTrust extends Shadow() {
    */
   shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
-  }
-
-  /**
-   * evaluates if a render is necessary
-   *
-   * @return {boolean}
-   */
-  shouldRenderHTML () {
-    return !this.div
   }
 
   /**
@@ -75,21 +64,20 @@ export default class OneTrust extends Shadow() {
     }
   }
 
-  /**
-   * Render HTML
-   * @returns void
-   */
-  async renderHTML () {
+  async renderScripts () {
     // TODO TESTING
+    // TODO Get from Attribute
     const id = '24c30047-255b-4c49-9da5-99d3419dc58b-test'
 
-    const lawDependency = await this.loadCookieLawDependency(id)
-    console.log(lawDependency)
-    const scriptTemplates = await this.loadCookieLawScriptTemplates(id)
-    console.log(scriptTemplates)
-    console.log(document.scripts)
+    await this.loadCookieLawScriptTemplates(id)
+    await this.loadCookieLawDependency(id)
+    await this.callOptanonWrapper()
   }
 
+  /**
+   * @param {string} id
+   * @returns {Promise<any>}
+   */
   async loadCookieLawDependency (id) {
     return this.loadCookieLawDependencyPromise || (this.loadCookieLawDependencyPromise = new Promise((resolve, reject) => {
       const cookieLawScript = document.createElement('script')
@@ -107,6 +95,10 @@ export default class OneTrust extends Shadow() {
     }))
   }
 
+  /**
+   * @param {string} id
+   * @returns {Promise<any>}
+   */
   async loadCookieLawScriptTemplates (id) {
     return this.loadCookieLawScriptTemplatesPromise || (this.loadCookieLawScriptTemplatesPromise = new Promise((resolve, reject) => {
       const cookieLawScriptTemplatesScript = document.createElement('script')
@@ -119,6 +111,25 @@ export default class OneTrust extends Shadow() {
         cookieLawScriptTemplatesScript.setAttribute('src', 'https://cdn.cookielaw.org/scripttemplates/otSDKStub.js')
         document.getElementsByTagName('head')[0].prepend(cookieLawScriptTemplatesScript)
         cookieLawScriptTemplatesScript.onload = () => resolve('cookie law script templates loaded')
+      } catch (e) {
+        return reject(e)
+      }
+    }))
+  }
+
+  /**
+   * @returns {Promise<any>}
+   */
+  async callOptanonWrapper () {
+    return this.loadScriptDependencyPromise || (this.loadScriptDependencyPromise = new Promise((resolve, reject) => {
+      const optanonWrapperScript = document.createElement('script')
+      optanonWrapperScript.setAttribute('id', 'one-trust-optanon-wrapper')
+      optanonWrapperScript.type = 'text/javascript'
+      const fn = 'function OptanonWrapper() { }'
+      try {
+        optanonWrapperScript.appendChild(document.createTextNode(fn))
+        document.getElementsByTagName('head')[0].append(optanonWrapperScript)
+        return resolve('optanon wrapper loaded')
       } catch (e) {
         return reject(e)
       }
