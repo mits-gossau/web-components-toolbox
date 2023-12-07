@@ -5,8 +5,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global self */
 
 /**
- * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior or send it to an api endpoint
- * TODO: Allow sending custom event instead of endpoint nor default form post
+ * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior, send it to an api endpoint or emit a custom event
  * TODO: https://dev.to/stuffbreaker/custom-forms-with-web-components-and-elementinternals-4jaj
  * As a molecule, this component shall hold Atoms
  *
@@ -87,7 +86,7 @@ export default class SimpleForm extends Shadow() {
     // fetch if there is an endpoint attribute, else do the native behavior of form post
     this.abortController = null
     this.submitEventListener = async event => {
-      if (this.getAttribute('endpoint')) {
+      if (this.getAttribute('endpoint') || this.getAttribute('dispatch-event-name')) {
         event.preventDefault()
         if (this.abortController) this.abortController.abort()
         this.abortController = new AbortController()
@@ -120,22 +119,41 @@ export default class SimpleForm extends Shadow() {
           }, Promise.resolve({}))
         }
         // TODO: remove the console log below
-        console.log('fetch', body)
-        fetch(this.getAttribute('endpoint'), {
-          method: this.getAttribute('method') || 'GET',
-          mode: this.getAttribute('mode') || 'no-cors',
-          headers: this.hasAttribute('headers')
-            ? SimpleForm.parseAttribute(this.getAttribute('headers'))
-            : {
-                'Content-Type': 'application/json'
-              },
-          redirect: this.getAttribute('follow') || 'follow',
-          body: JSON.stringify(body),
-          signal: this.abortController.signal
-        }).then(async response => {
-          if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399)) return response.json()
-          throw new Error(response.statusText)
-        }).then(json => {
+        console.log('body', body);
+        (this.getAttribute('endpoint')
+          ? fetch(this.getAttribute('endpoint'), {
+            method: this.getAttribute('method') || 'GET',
+            mode: this.getAttribute('mode') || 'no-cors',
+            headers: this.hasAttribute('headers')
+              ? SimpleForm.parseAttribute(this.getAttribute('headers'))
+              : {
+                  'Content-Type': 'application/json'
+                },
+            redirect: this.getAttribute('follow') || 'follow',
+            body: JSON.stringify(body),
+            signal: this.abortController.signal
+          }).then(async response => {
+            if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399)) return response.json()
+            throw new Error(response.statusText)
+          })
+          : new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('dispatch-event-name'), {
+            detail: {
+              method: this.getAttribute('method') || 'GET',
+              mode: this.getAttribute('mode') || 'no-cors',
+              headers: this.hasAttribute('headers')
+                ? SimpleForm.parseAttribute(this.getAttribute('headers'))
+                : {
+                    'Content-Type': 'application/json'
+                  },
+              redirect: this.getAttribute('follow') || 'follow',
+              body: body,
+              resolve
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          })))
+        ).then(json => {
           let response
           let redirectUrl
           if ((response = json[this.getAttribute('response-property-name')] || json.response) && this.response) {
