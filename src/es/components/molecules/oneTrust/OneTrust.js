@@ -65,12 +65,8 @@ export default class OneTrust extends Shadow() {
   }
 
   async renderScripts () {
-    // TODO TESTING
-    // TODO Get from Attribute
-    const id = '59de787e-0109-42cb-9d40-7c34eb739ab1-test'
-
-    await this.loadCookieLawDependency(id)
-    await this.loadCookieLawScriptTemplates(id)
+    await this.loadCookieLawDependency(this.id)
+    await this.loadCookieLawScriptTemplates(this.id)
     await this.callOptanonWrapper()
   }
 
@@ -86,7 +82,8 @@ export default class OneTrust extends Shadow() {
       cookieLawScript.setAttribute('id', 'one-trust-cookie-law')
       try {
         // @ts-ignore
-        cookieLawScript.setAttribute('src', `https://cdn.cookielaw.org/consent/${id}/OtAutoBlock.js`)
+        const src = self.Environment.getApiBaseUrl('onetrust').consent.replace(/id/, id)
+        cookieLawScript.setAttribute('src', src)
         document.getElementsByTagName('head')[0].appendChild(cookieLawScript)
         cookieLawScript.onload = () => resolve('cookie law loaded')
       } catch (e) {
@@ -109,7 +106,7 @@ export default class OneTrust extends Shadow() {
       cookieLawScriptTemplatesScript.setAttribute('data-document-language', 'true')
       try {
         // @ts-ignore
-        cookieLawScriptTemplatesScript.setAttribute('src', 'https://cdn.cookielaw.org/scripttemplates/otSDKStub.js')
+        cookieLawScriptTemplatesScript.setAttribute('src', `${self.Environment.getApiBaseUrl('onetrust').scriptTemplates}`)
         document.getElementsByTagName('head')[0].appendChild(cookieLawScriptTemplatesScript)
         cookieLawScriptTemplatesScript.onload = () => resolve('cookie law script templates loaded')
       } catch (e) {
@@ -135,5 +132,9 @@ export default class OneTrust extends Shadow() {
         return reject(e)
       }
     }))
+  }
+
+  get id () {
+    return this.getAttribute('id')
   }
 }
