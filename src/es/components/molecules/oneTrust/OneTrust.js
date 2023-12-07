@@ -8,7 +8,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 */
 export default class OneTrust extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ mode: 'false' }, ...args)
   }
 
   connectedCallback () {
@@ -67,10 +67,10 @@ export default class OneTrust extends Shadow() {
   async renderScripts () {
     // TODO TESTING
     // TODO Get from Attribute
-    const id = '24c30047-255b-4c49-9da5-99d3419dc58b-test'
+    const id = '59de787e-0109-42cb-9d40-7c34eb739ab1-test'
 
-    await this.loadCookieLawScriptTemplates(id)
     await this.loadCookieLawDependency(id)
+    await this.loadCookieLawScriptTemplates(id)
     await this.callOptanonWrapper()
   }
 
@@ -87,7 +87,7 @@ export default class OneTrust extends Shadow() {
       try {
         // @ts-ignore
         cookieLawScript.setAttribute('src', `https://cdn.cookielaw.org/consent/${id}/OtAutoBlock.js`)
-        document.getElementsByTagName('head')[0].prepend(cookieLawScript)
+        document.getElementsByTagName('head')[0].appendChild(cookieLawScript)
         cookieLawScript.onload = () => resolve('cookie law loaded')
       } catch (e) {
         return reject(e)
@@ -110,7 +110,7 @@ export default class OneTrust extends Shadow() {
       try {
         // @ts-ignore
         cookieLawScriptTemplatesScript.setAttribute('src', 'https://cdn.cookielaw.org/scripttemplates/otSDKStub.js')
-        document.getElementsByTagName('head')[0].prepend(cookieLawScriptTemplatesScript)
+        document.getElementsByTagName('head')[0].appendChild(cookieLawScriptTemplatesScript)
         cookieLawScriptTemplatesScript.onload = () => resolve('cookie law script templates loaded')
       } catch (e) {
         return reject(e)
