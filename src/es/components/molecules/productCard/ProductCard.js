@@ -91,6 +91,9 @@ export default class ProductCard extends Shadow() {
         justify-content: var(--product-info-justify-content, space-between);
         padding: var(--product-info-padding, 0 0 1em 0);
       }
+      :host .product-info .product-info-action-section {
+        margin: var(--product-info-action-section-margin, auto 0);
+      }
       :host .product-footer {
         align-items: var(--product-footer-align-items, center);
         display: var(--product-footer-display, flex);
@@ -154,8 +157,10 @@ export default class ProductCard extends Shadow() {
     }
 
     const product = JSON.parse(this.getAttribute('data')) || defaultProduct
-
+    
     return Promise.all([fetchModules]).then(() => {
+      this.productId = product.id
+      this.setAttribute('id', this.productId)
       const productPrice = product.price ? `<span>${product.price}</span>` : ''
       const productName = product.name ? `<span class="name">${product.name}</span>` : ''
       const productEstimatedPieceWeight = product.estimatedPieceWeight ? `<span class="additional-info">${product.estimatedPieceWeight}</span>` : ''
@@ -176,16 +181,16 @@ export default class ProductCard extends Shadow() {
               <input id="selectCheckbox" type="checkbox" value=${product} />
             </div>
             <div class="product-image">
-                img
+              <a-picture namespace="product-list-" picture-load defaultSource='${product.image}' alt='${product.name}'></a-picture>
             </div>
             <div class="product-data">
                 <div class="product-info">
-                    <div>
+                    <div class="product-info-data-section">
                         ${productPrice}
                         ${productName}
                         ${productEstimatedPieceWeight}
                     </div>
-                    <div>
+                    <div class="product-info-action-section">
                         <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-favorite-from-order" tag="${product.id}">
                           <a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx>
                         </a-button>
@@ -205,9 +210,7 @@ export default class ProductCard extends Shadow() {
   checkboxEventListener = (e) => {
     if (this.checkbox.checked) {
       this.setAttribute('selected', 'true')
-      this.setAttribute('id', this.checkbox.value)
     } else {
-      this.removeAttribute('id')
       this.removeAttribute('selected')
     }
   }
