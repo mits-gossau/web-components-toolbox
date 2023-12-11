@@ -188,7 +188,7 @@ export default class ProductCard extends Shadow() {
                         ${productEstimatedPieceWeight}
                     </div>
                     <div class="product-info-action-section">
-                        <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-favorite-from-order" tag="${product.id}">
+                        <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-favorite-product-from-favorite-list" tag="${product.id}">
                           <a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx>
                         </a-button>
                     </div>
