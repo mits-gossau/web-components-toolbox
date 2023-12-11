@@ -159,8 +159,7 @@ export default class ProductCard extends Shadow() {
     const product = JSON.parse(this.getAttribute('data')) || defaultProduct
     
     return Promise.all([fetchModules]).then(() => {
-      this.productId = product.id
-      this.setAttribute('id', this.productId)
+      this.setAttribute('id', product.id)
       const productPrice = product.price ? `<span>${product.price}</span>` : ''
       const productName = product.name ? `<span class="name">${product.name}</span>` : ''
       const productEstimatedPieceWeight = product.estimatedPieceWeight ? `<span class="additional-info">${product.estimatedPieceWeight}</span>` : ''
@@ -173,8 +172,6 @@ export default class ProductCard extends Shadow() {
         : '<div></div>'
       const productTotalTcc = product.totalTcc ? `<div class="bold">${product.totalTcc.toFixed(2)}</div>` : ''
 
-      // TODO
-      // <a-picture namespace="product-checkout-" picture-load defaultSource='${product.image}' alt='${product.name}'></a-picture>
       this.html = /* html */`
         <div class="product-item">
             <div class="product-select">
