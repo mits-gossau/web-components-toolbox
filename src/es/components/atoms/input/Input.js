@@ -221,20 +221,16 @@ export default class Input extends Shadow() {
         cursor: not-allowed;
       }
 
-      :host([search]) .mui-form-group {
+      :host([search]) .mui-form-group > div {
         align-items: center;
         display: flex;
         position: relative;
       }
-      :host([search]) .mui-form-group:has(label) {
-        margin-top: 3.25rem;
-      }
       :host([search]) label {
-        position: absolute;
-        top: -2.5rem;
         font-weight: var(--search-label-font-weight, 500);
         font-size: var(--search-label-font-size, var(--font-size));
         line-height: var(--search-label-line-height, 1.5);
+        margin-top: 1.25rem;
       }
       :host([search]) input {
         background-color: var(--search-input-background-color, var(--input-bg-color, var(--m-gray-200)));
@@ -390,8 +386,10 @@ export default class Input extends Shadow() {
     ]).then(([labelHtml, searchHtml]) => {
       this.divWrapper.innerHTML = /* html */`
           ${labelHtml}
-          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
-          ${searchHtml}
+          <div>
+            <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
+            ${searchHtml}
+          <div>
       `
       this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint') ? this.getAttribute('enterkeyhint') : 'search')
     })
