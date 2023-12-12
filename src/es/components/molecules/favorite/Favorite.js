@@ -7,19 +7,21 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class Favorite extends Shadow() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.isActive = false
 
     this.answerEventNameListener = event => {
       event.detail.fetch.then(data => {
-        this.isActive = data?.requestSuccess
-        this.setCss(/* CSS */`
+        if (data && data?.requestSuccess) {
+          this.isActive = data.response
+          this.setCss(/* CSS */`
           a-tooltip::part(tooltip) {
             fill: ${this.isActive ? 'var(--svg-fill-active)' : 'var(--svg-fill-default)'};
           } 
-        `)
+          `)
+        }
       }).catch(error => console.warn(error))
     }
 
@@ -37,24 +39,21 @@ export default class Favorite extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     document.body.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     this.icon.addEventListener('click', this.clickListener)
-    this.dispatchEvent(new CustomEvent(this.getAttribute('request-favorite-event-name') || 'request-favorite-event-name',
-      {
-        detail: {
-          id: this.id
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      }
-    ))
+    // Set default icon based on product is favorite or not
+    let isFavoriteProduct = (this.getAttribute('favorite-state') === 'true')
+    this.setCss(/* CSS */`
+    a-tooltip::part(tooltip) {
+      fill: ${isFavoriteProduct ? 'var(--svg-fill-active)' : 'var(--svg-fill-default)'};
+    } 
+  `)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     document.body.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.icon.removeEventListener('click', this.clickListener)
   }
@@ -64,7 +63,7 @@ export default class Favorite extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -73,14 +72,14 @@ export default class Favorite extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.icon
   }
 
   /**
    * renders the css
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       a-tooltip::part(tooltip) {
         fill: ${this.isActive ? 'var(--svg-fill-active)' : 'var(--svg-fill-default)'};
@@ -100,7 +99,7 @@ export default class Favorite extends Shadow() {
   /**
    * fetches the template
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -127,7 +126,7 @@ export default class Favorite extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML () {
+  renderHTML() {
     const tooltipText = this.isActive ? this.removeFromFavoriteText : this.addToFavoriteText
     this.fetchModules([
       {
@@ -152,19 +151,19 @@ export default class Favorite extends Shadow() {
       `
   }
 
-  get icon () {
+  get icon() {
     return this.root.querySelector('svg')
   }
 
-  get id () {
+  get id() {
     return this.getAttribute('id')
   }
 
-  get addToFavoriteText () {
+  get addToFavoriteText() {
     return this.getAttribute('add-to-favorite-text') || 'Add to favorites'
   }
 
-  get removeFromFavoriteText () {
+  get removeFromFavoriteText() {
     return this.getAttribute('remove-from-favorite-text') || 'Remove from favorites'
   }
 }
