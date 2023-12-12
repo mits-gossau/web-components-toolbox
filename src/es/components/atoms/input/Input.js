@@ -221,7 +221,7 @@ export default class Input extends Shadow() {
         cursor: not-allowed;
       }
 
-      :host([search]) .mui-form-group > div {
+      :host([search]) .mui-form-group {
         align-items: center;
         display: flex;
         position: relative;
@@ -384,12 +384,10 @@ export default class Input extends Shadow() {
       this.renderLabelHTML(),
       this.renderSearchHTML()
     ]).then(([labelHtml, searchHtml]) => {
-      this.divWrapper.innerHTML = /* html */`
-          ${labelHtml}
-          <div>
-            <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
-            ${searchHtml}
-          <div>
+      this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml);
+      this.divWrapper.innerHTML += /* html */`
+          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
+          ${searchHtml}
       `
       this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint') ? this.getAttribute('enterkeyhint') : 'search')
     })
