@@ -215,6 +215,10 @@ export default class Flatpickr extends Shadow() {
           this.gotCleared = false
         }
       })
+      if(this.getAttribute("default-date")) {
+        this.flatpickrInstance.setDate(this.getAttribute("default-date"))
+      }
+      
       this.html = this.labelNode
       document.head.appendChild(this.style)
       // https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.css
