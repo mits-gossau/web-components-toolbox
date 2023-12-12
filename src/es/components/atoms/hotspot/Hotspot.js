@@ -283,6 +283,12 @@ export default class Hotspot extends Shadow() {
           namespaceFallback: true
         })
         break
+      case 'none':
+        styles.push({
+          path: `${this.importMetaUrl}./place/none.css`,
+          namespaceFallback: true
+        })
+        break
       case 'bottom':
       default:
         styles.push({

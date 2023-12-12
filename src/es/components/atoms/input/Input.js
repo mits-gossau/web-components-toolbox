@@ -165,18 +165,20 @@ export default class Input extends Shadow() {
 
       .mui-form-group {
         font-family: var(--font-family);
-        margin-bottom: var(--margin-bottom, var(--content-spacing));
         max-width: var(--max-width, none);
+      }
+      .mui-form-group + .mui-form-group {
+        margin-top: var(--margin-top, var(--content-spacing));
       }
 
       label {
-        font-size: var(--font-size);
-        font-weight: 700;
-        letter-spacing: 0.03em;
-        line-height: 1;
-        color: var(--color);
+        font-size: var(--label-font-size, var(--font-size));
+        font-weight: var(--label-font-weight, 700);
+        letter-spacing: var(--label-letter-spacing, 0.03em);
+        line-height: var(--label-line-height, 1);
+        color: var(--label-color, var(--color));
         display: block;
-        margin-bottom: 0.625em;
+        margin-bottom: var(--label-margin-bottom, 0.625em);
       }
 
       input {
@@ -224,7 +226,12 @@ export default class Input extends Shadow() {
         display: flex;
         position: relative;
       }
-
+      :host([search]) label {
+        font-weight: var(--search-label-font-weight, 500);
+        font-size: var(--search-label-font-size, var(--font-size));
+        line-height: var(--search-label-line-height, 1.5);
+        margin-top: 1.25rem;
+      }
       :host([search]) input {
         background-color: var(--search-input-background-color, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color, var(--m-gray-300));
@@ -377,9 +384,9 @@ export default class Input extends Shadow() {
       this.renderLabelHTML(),
       this.renderSearchHTML()
     ]).then(([labelHtml, searchHtml]) => {
-      this.divWrapper.innerHTML = /* html */`
-          ${labelHtml}
-          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" />
+      this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml);
+      this.divWrapper.innerHTML += /* html */`
+          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
           ${searchHtml}
       `
       this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint') ? this.getAttribute('enterkeyhint') : 'search')

@@ -1,0 +1,54 @@
+:host > dialog[open] {
+  /* open */
+  opacity: 1;
+  transform: translateY(0);
+}
+:host > dialog {
+  /* close */
+  border: 0 none;
+  margin: 0;
+  opacity: 1;
+  transform: translateY(-100%);
+  transition: 0.5s;
+  width: 100%;
+  max-width: 100%;
+}
+@starting-style {
+  /* before */
+  :host > dialog[open] {
+    opacity: 1;
+    transform: translateY(-100%);
+  }
+}
+:host > dialog::backdrop {
+  background-color: rgb(0 0 0 / 0);
+  transition: display 0.3s allow-discrete, overlay 0.3s allow-discrete,
+    background-color 0.3s;
+}
+:host > dialog[open]::backdrop {
+  background-color: rgb(0 0 0 / 0.5);
+}
+@starting-style {
+  :host > dialog[open]::backdrop {
+    background-color: rgb(0 0 0 / 0);
+  }
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+  }
+}
+.container {
+    align-items: center;
+    display: flex;
+    gap: 1.25rem;
+    max-width: _max-width_;
+    margin: 0 auto;
+}
+.container > :first-child {
+    flex: 1;
+}
+
+.container #close {
+    cursor: pointer;
+    margin-bottom: 0;
+}

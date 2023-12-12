@@ -15,12 +15,34 @@ export default class Product extends Intersection() {
       intersectionObserverInit: { rootMargin: '0px 0px -200px 0px' },
       ...options
     }, ...args)
+
+    this.clickListener = event => {
+      if (!event.composedPath().includes(this.basketControl)) {
+        this.dispatchEvent(new CustomEvent('product-clicked',
+          {
+            detail: {
+              data: this.productData,
+              origEvent: event
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }
+        ))
+      }
+    }
   }
 
   connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+    this.addEventListener('click', this.clickListener)
+  }
+
+  disconnectedCallback () {
+    super.disconnectedCallback()
+    this.removeEventListener('click', this.clickListener)
   }
 
   intersectionCallback (entries, observer) {
@@ -339,5 +361,9 @@ export default class Product extends Intersection() {
 
   get disable () {
     return this.getAttribute('disable') || 'false'
+  }
+
+  get basketControl () {
+    return this.root.querySelector('m-basket-control')
   }
 }
