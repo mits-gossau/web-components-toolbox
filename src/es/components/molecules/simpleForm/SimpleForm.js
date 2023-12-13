@@ -13,10 +13,10 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class SimpleForm
  * @type {CustomElementConstructor}
  * @attribute {
- *  
+ *
  * }
  * @css {
- *  
+ *
  * }
  */
 export default class SimpleForm extends Shadow() {
@@ -66,10 +66,10 @@ export default class SimpleForm extends Shadow() {
             conditionalNodes.forEach(conditionalNode => {
               if (conditionalNode.hasAttribute('visible-condition')) {
                 if (
-                  conditionalNode.getAttribute('visible-condition') === target.value
-                  || (conditionalNode.getAttribute('visible-condition') === 'truthy' && target.value)
-                  || (conditionalNode.getAttribute('visible-condition') === 'falsy' && !target.value)
-                  || (target.getAttribute('type') === 'checkbox' && conditionalNode.getAttribute('visible-condition') === String(target.checked))
+                  conditionalNode.getAttribute('visible-condition') === target.value ||
+                  (conditionalNode.getAttribute('visible-condition') === 'truthy' && target.value) ||
+                  (conditionalNode.getAttribute('visible-condition') === 'falsy' && !target.value) ||
+                  (target.getAttribute('type') === 'checkbox' && conditionalNode.getAttribute('visible-condition') === String(target.checked))
                 ) {
                   this.show(conditionalNode)
                 } else {
@@ -146,7 +146,7 @@ export default class SimpleForm extends Shadow() {
                     'Content-Type': 'application/json'
                   },
               redirect: this.getAttribute('follow') || 'follow',
-              body: body,
+              body,
               resolve
             },
             bubbles: true,
@@ -229,14 +229,14 @@ export default class SimpleForm extends Shadow() {
             style.setAttribute('load-form-styles', 'molecules/form/Form.js')
             this.html = style
           }))
-        } else{
+        } else {
           this.css = form.css
         }
         form.remove()
         return form.renderCssPromise
       })
     }
-    this.css = /* css */``
+    this.css = /* css */''
     return Promise.all([this.fetchTemplate(), formPromise])
   }
 
