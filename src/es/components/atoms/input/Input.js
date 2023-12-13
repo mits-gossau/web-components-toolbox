@@ -385,7 +385,7 @@ export default class Input extends Shadow() {
       this.renderLabelHTML(),
       this.renderSearchHTML()
     ]).then(([labelHtml, searchHtml]) => {
-      this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml);
+      this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml)
       this.divWrapper.innerHTML += /* html */`
           <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
           ${searchHtml}

@@ -157,7 +157,7 @@ export default class ProductCard extends Shadow() {
     }
 
     const product = JSON.parse(this.getAttribute('data')) || defaultProduct
-    
+
     return Promise.all([fetchModules]).then(() => {
       this.setAttribute('id', product.id)
       const productPrice = product.price ? `<span>${product.price}</span>` : ''
