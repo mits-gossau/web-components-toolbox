@@ -227,6 +227,7 @@ export default class Input extends Shadow() {
         position: relative;
       }
       :host([search]) label {
+        font-family: var(--search-label-font-family, var(--font-family-secondary));
         font-weight: var(--search-label-font-weight, 500);
         font-size: var(--search-label-font-size, var(--font-size));
         line-height: var(--search-label-line-height, 1.5);
