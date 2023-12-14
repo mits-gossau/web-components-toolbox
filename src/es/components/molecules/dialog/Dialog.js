@@ -14,7 +14,6 @@ export default class Dialog extends Shadow() {
 
     this.clickEventListener = event => {
       const target = event.composedPath()[0]
-      console.log(target.getAttribute('id'))
       if (!target) return
       switch (target.getAttribute('id')) {
         case 'show':
