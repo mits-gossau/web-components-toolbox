@@ -300,7 +300,7 @@ export default class Checkout extends Shadow() {
         </style>
         <div slot="description">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" part="svg"><path stroke-width="3.5" d="M28 18.667V28m0 9.333h.023M51.333 28c0 12.887-10.446 23.333-23.333 23.333C15.113 51.333 4.667 40.887 4.667 28 4.667 15.113 15.113 4.667 28 4.667c12.887 0 23.333 10.446 23.333 23.333Z"></path></svg>
-            <p>Some products were removed</a></p>
+            <p>Attention, certains produits ne sont plus disponibles et n'ont pas été dupliqués.</a></p>
         </div>
     </m-system-notification>
         `
