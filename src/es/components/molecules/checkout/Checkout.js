@@ -12,6 +12,9 @@ export default class Checkout extends Shadow() {
     this.answerEventNameListener = event => {
       event.detail.fetch.then(productData => {
         this.html = ''
+        if (productData.removedProducts) {
+          productData.response.removedProducts = true;
+        }
         this.renderHTML(productData.response)
       }).catch(error => {
         this.html = ''
@@ -271,6 +274,37 @@ export default class Checkout extends Shadow() {
           return null
         }
       })
+      // @ts-ignore
+      if (productData.removedProducts) {
+        this.html = /* html */ `
+        <m-system-notification type="info">
+        <style>
+            :host {
+                --svg-color: var(--m-blue-800);
+                width: 100%;
+                margin: 0 1em;
+            }
+            :host a {
+                color: inherit;
+            }
+            :host .description > div {
+                display: flex;
+                align-items: center;
+                gap: 0.5em;
+            }
+
+            :host .description svg {
+                min-width: var(--svg-min-width, 24px);
+                width: var(--svg-min-width, 24px);
+            }
+        </style>
+        <div slot="description">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" part="svg"><path stroke-width="3.5" d="M28 18.667V28m0 9.333h.023M51.333 28c0 12.887-10.446 23.333-23.333 23.333C15.113 51.333 4.667 40.887 4.667 28 4.667 15.113 15.113 4.667 28 4.667c12.887 0 23.333 10.446 23.333 23.333Z"></path></svg>
+            <p>Some products were removed</a></p>
+        </div>
+    </m-system-notification>
+        `
+      }
       this.html = products.join('')
       this.html = this.totalAndTaxes(productData)
       Array.from(this.root.querySelectorAll('input')).forEach(input => {
