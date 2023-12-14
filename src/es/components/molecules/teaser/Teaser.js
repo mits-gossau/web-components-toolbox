@@ -88,7 +88,7 @@ export default class Teaser extends Intersection() {
     if (this.getAttribute('namespace') === 'teaser-overlay-' && this.aArrow) this.aArrow.setAttribute('hover-set-by-outside', '')
     this.css = /* css */`
       :host {
-        max-width: 100%;
+        max-width: 100%;        
       }
       :host([href]) {
         cursor: pointer;
@@ -107,6 +107,7 @@ export default class Teaser extends Intersection() {
         overflow: var(--overflow, visible);
         position: var(--position, static);
         overflow: hidden;
+        box-shadow: var(--box-shadow, none);
       }
       :host figure a-picture, :host figure m-picture-with-picture {
         height: var(--a-picture-height, auto);
@@ -181,7 +182,7 @@ export default class Teaser extends Intersection() {
       :host(:hover) figure figcaption a-link {
         transform: var(--a-link-transform-hover, none);
         opacity: var(--a-link-opacity-hover, 1);
-      }
+      }     
       @media only screen and (max-width: _max-width_) {
         :host figure {
           border-radius: var(--border-radius-mobile, var(--border-radius, 0));
