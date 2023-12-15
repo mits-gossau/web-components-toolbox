@@ -9,9 +9,14 @@
   margin: 0;
   opacity: 1;
   transform: translateY(-100%);
-  transition: 0.5s;
+  transition: 0.3s;
   width: 100%;
   max-width: 100%;
+}
+:host > dialog.closed {
+  /* close */
+  opacity: 0;
+  transform: translateY(-100%);
 }
 @starting-style {
   /* before */

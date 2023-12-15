@@ -99,6 +99,10 @@ export default class ProductCard extends Shadow() {
         display: var(--product-footer-display, flex);
         justify-content: var(--product-footer-justify-content, space-between);
       }
+      :host input[type="checkbox"] {
+        cursor: pointer;
+        accent-color: var(--checkbox-selected-background-color, #ff5b03);
+      }
       @media only screen and (max-width: _max-width_) {
         :host .product-item {
           padding: var(--product-item-padding-mobile, 1em 0);

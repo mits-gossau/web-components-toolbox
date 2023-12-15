@@ -17,14 +17,27 @@ export default class Dialog extends Shadow() {
       if (!target) return
       switch (target.getAttribute('id')) {
         case 'show':
+          this.dialog.classList.remove('closed')
           this.dialog.show()
           break
         case 'show-modal':
         case 'open':
+          this.dialog.classList.remove('closed')
           this.dialog.showModal()
           break
         case 'close':
-          this.dialog.close()
+        this.dialog.classList.add('closed')
+          setTimeout(() => {
+            this.dialog.close()
+          }, 300)
+          break
+        case null: // click on backdrop
+          if (target === this.dialog) {
+            this.dialog.classList.add('closed')
+            setTimeout(() => {
+              this.dialog.close()
+            }, 300)
+          }
           break
       }
     }
@@ -71,6 +84,7 @@ export default class Dialog extends Shadow() {
       /*   Closed state of the dialog   */
       :host > dialog {
         opacity: 0;
+        position: fixed;
         transform: scaleY(0);
         transition:
           opacity 0.7s ease-out,
@@ -79,6 +93,7 @@ export default class Dialog extends Shadow() {
           display 0.7s ease-out allow-discrete;
         /* Equivalent to
         transition: all 0.7s allow-discrete; */
+        z-index: 99;
       }
       /*   Before-open state  */
       /* Needs to be after the previous dialog[open] rule to take effect,
@@ -108,6 +123,14 @@ export default class Dialog extends Shadow() {
         :host > dialog[open]::backdrop {
           background-color: rgb(0 0 0 / 0);
         }
+      }
+      :host #overlay {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
       }
       @media only screen and (max-width: _max-width_) {
         :host {}
@@ -152,6 +175,10 @@ export default class Dialog extends Shadow() {
    * @returns void
    */
   renderHTML () {
+    const overlay = document.createElement('div')
+    overlay.setAttribute('id', 'overlay')
+    this.root.appendChild(overlay)
+
     this.html = /* html */`
       <dialog
         ${
