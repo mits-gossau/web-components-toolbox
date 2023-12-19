@@ -59,12 +59,6 @@ self.Environment = {
           apiUpdateOrderItem: this.isTestingEnv ? 'https://testadmin.migrospro.ch/umbraco/api/MigrosProOrderApi/UpdateOrderItem' : 'https://www.migrospro.ch/umbraco/api/MigrosProOrderApi/UpdateOrderItem'
         }
       }
-      case 'onetrust': {
-        return {
-          consent: this.isTestingEnv ? 'https://cdn.cookielaw.org/consent/id/OtAutoBlock.js' : 'https://cdn.cookielaw.org/consent/id/OtAutoBlock.js',
-          scriptTemplates: this.isTestingEnv ? 'https://cdn.cookielaw.org/scripttemplates/otSDKStub.js' : 'https://cdn.cookielaw.org/consent/id/OtAutoBlock.js'
-        }
-      }
       default:
         return ''
     }

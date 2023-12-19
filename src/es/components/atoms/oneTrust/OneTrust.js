@@ -83,8 +83,7 @@ export default class OneTrust extends Shadow() {
       cookieLawScript.setAttribute('id', 'one-trust-cookie-law')
       try {
         // @ts-ignore
-        const src = self.Environment.getApiBaseUrl('onetrust').consent.replace(/id/, id)
-        cookieLawScript.setAttribute('src', src)
+        cookieLawScript.setAttribute('src', `https://cdn.cookielaw.org/consent/${id}/OtAutoBlock.js`)
         document.getElementsByTagName('head')[0].appendChild(cookieLawScript)
         cookieLawScript.onload = () => resolve('cookie law loaded')
       } catch (e) {
@@ -108,7 +107,7 @@ export default class OneTrust extends Shadow() {
       cookieLawScriptTemplatesScript.setAttribute('data-document-language', 'true')
       try {
         // @ts-ignore
-        cookieLawScriptTemplatesScript.setAttribute('src', `${self.Environment.getApiBaseUrl('onetrust').scriptTemplates}`)
+        cookieLawScriptTemplatesScript.setAttribute('src', 'https://cdn.cookielaw.org/scripttemplates/otSDKStub.js')
         document.getElementsByTagName('head')[0].appendChild(cookieLawScriptTemplatesScript)
         cookieLawScriptTemplatesScript.onload = () => resolve('cookie law script templates loaded')
       } catch (e) {
