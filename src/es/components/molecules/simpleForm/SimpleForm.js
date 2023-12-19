@@ -285,7 +285,7 @@ export default class SimpleForm extends Shadow() {
     switch (input.getAttribute('type')) {
       case 'file':
         // @ts-ignore
-        return Promise.all(Array.from(input.files).map(file => new Promise(resolve => {
+        const filePromises = Array.from(input.files).map(file => new Promise(resolve => {
           const reader = new FileReader()
           reader.readAsDataURL(file)
           reader.onload = () => resolve(reader.result)
@@ -293,7 +293,9 @@ export default class SimpleForm extends Shadow() {
             console.error('Error: ', error)
             resolve(`File ${input.getAttribute('name') || input.getAttribute('id')} has the following Error: ${error}`)
           }
-        })))
+        }))
+        if (filePromises.length === 1) return filePromises[0]
+        return Promise.all(filePromises)
       case 'checkbox':
         return Promise.resolve(input.checked)
       default:
