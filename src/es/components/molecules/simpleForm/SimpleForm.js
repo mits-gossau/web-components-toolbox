@@ -294,8 +294,8 @@ export default class SimpleForm extends Shadow() {
             resolve(`File ${input.getAttribute('name') || input.getAttribute('id')} has the following Error: ${error}`)
           }
         }))
-        if (filePromises.length === 1) return filePromises[0]
-        return Promise.all(filePromises)
+        if (input.hasAttribute('multiple')) return Promise.all(filePromises)
+        return filePromises[0]
       case 'checkbox':
         return Promise.resolve(input.checked)
       default:
