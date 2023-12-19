@@ -1,7 +1,7 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global self */
+/* global window */
 
 /**
 * @export
@@ -9,13 +9,35 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class OneTrust extends Shadow() {
+  /**
+   * @param {any} args
+   */
   constructor (options = {}, ...args) {
-    super({ mode: 'false' }, ...args)
+    super({ importMetaUrl: import.meta.url, mode: 'false', ...options }, ...args)
   }
 
   connectedCallback () {
-    this.renderScripts()
-    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) {
+      this.renderHTML().then(() => {
+        if (this.settingsLink) this.settingsLink.addEventListener('click', this.settingsLinkListener)
+      })
+    }
+  }
+
+  disconnectedCallback () {
+    if (this.settingsLink) this.settingsLink.removeEventListener('click', this.settingsLinkListener)
+  }
+
+  settingsLinkListener = (e) => {
+    // @ts-ignore
+    if (typeof window !== 'undefined' && window.OneTrust) {
+      try {
+        // @ts-ignore
+        window.OneTrust.ToggleInfoDisplay()
+      } catch (err) {
+        console.error('Failed to open Info Display:', err)
+      }
+    }
   }
 
   /**
@@ -23,47 +45,23 @@ export default class OneTrust extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+  shouldRenderHTML () {
+    return !document.head.querySelector('#one-trust-cookie-law')
   }
 
   /**
-   * renders the css
+   * Render HTML
+   * OneTrust loads its settings and we check whether we should display the link or not. 
+   * The link opens the cookie settings in a modal window
+   * @returns void
    */
-  renderCSS () {
-    this.css = /* css */`
-      :host {}
-      @media only screen and (max-width: _max-width_) {
-        :host {}
-      }
-    `
-    return this.fetchTemplate()
-  }
-
-  /**
-   * fetches the template
-   */
-  fetchTemplate () {
-    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
-    const styles = [
-      {
-        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
-        namespace: false
-      },
-      {
-        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
-        namespaceFallback: true
-      }
-    ]
-    switch (this.getAttribute('namespace')) {
-      case 'one-trust-default-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles])
-      default:
-        return this.fetchCSS(styles)
-    }
+  async renderHTML () {
+    await this.renderScripts()
+    const span = document.createElement('span')
+    span.classList.add('ot-sdk-show-settings')
+    span.setAttribute('style', 'display: none !important;')
+    document.body.appendChild(span)
+    if (self.getComputedStyle(span).getPropertyValue('visibility') === 'visible') this.html = `<a class="ot-sdk-show-settings">${this.linkText}</a>`
   }
 
   async renderScripts () {
@@ -73,8 +71,9 @@ export default class OneTrust extends Shadow() {
   }
 
   /**
+   * Loads a script for cookie law compliance.
    * @param {string} id
-   * @returns {Promise<any>}
+   * @returns a promise.
    */
   async loadCookieLawDependency (id) {
     return this.loadCookieLawDependencyPromise || (this.loadCookieLawDependencyPromise = new Promise((resolve, reject) => {
@@ -95,8 +94,9 @@ export default class OneTrust extends Shadow() {
   }
 
   /**
+   * Loads a script template for a cookie law script.
    * @param {string} id
-   * @returns {Promise<any>}
+   * @returns a promise.
    */
   async loadCookieLawScriptTemplates (id) {
     return this.loadCookieLawScriptTemplatesPromise || (this.loadCookieLawScriptTemplatesPromise = new Promise((resolve, reject) => {
@@ -118,7 +118,8 @@ export default class OneTrust extends Shadow() {
   }
 
   /**
-   * @returns {Promise<any>}
+   * Loads a script dependency called "optanon wrapper"
+   * @returns a promise.
    */
   async callOptanonWrapper () {
     return this.loadScriptDependencyPromise || (this.loadScriptDependencyPromise = new Promise((resolve, reject) => {
@@ -138,5 +139,13 @@ export default class OneTrust extends Shadow() {
 
   get id () {
     return this.getAttribute('id')
+  }
+
+  get settingsLink () {
+    return this.root.querySelector('a')
+  }
+
+  get linkText () {
+    return this.getAttribute('link-text') || 'Cookie Settings'
   }
 }

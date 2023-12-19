@@ -26,7 +26,7 @@ export default class Dialog extends Shadow() {
           this.dialog.showModal()
           break
         case 'close':
-        this.dialog.classList.add('closed')
+          this.dialog.classList.add('closed')
           setTimeout(() => {
             this.dialog.close()
           }, 300)
