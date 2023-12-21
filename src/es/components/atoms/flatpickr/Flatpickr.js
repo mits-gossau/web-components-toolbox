@@ -189,19 +189,23 @@ export default class Flatpickr extends Shadow() {
     ).then(([dependencies, options]) => {
       this.setLabel(options.dateStr)
       delete options.dateStr
-      switch (document.documentElement.getAttribute('lang')) {
-        case 'fr':
-          options.locale = this.french
-          break
-        case 'it':
-          options.locale = this.italian
-          break
-        case 'en':
-          options.locale = undefined
-          break
-        default:
-          options.locale = this.german
-          break
+      if (!options.locale) {
+        switch (document.documentElement.getAttribute('lang')) {
+          case 'fr':
+            options.locale = this.french
+            break
+          case 'it':
+            options.locale = this.italian
+            break
+          case 'en':
+            options.locale = {
+              firstDayOfWeek: 1
+            }
+            break
+          default:
+            options.locale = this.german
+            break
+        }
       }
       this.flatpickrInstance = dependencies[0](this.labelNode, {
         mode: 'range',
