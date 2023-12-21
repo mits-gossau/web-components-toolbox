@@ -2,6 +2,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global window */
+/* global self */
 
 /**
 * @export
@@ -51,7 +52,7 @@ export default class OneTrust extends Shadow() {
 
   /**
    * Render HTML
-   * OneTrust loads its settings and we check whether we should display the link or not. 
+   * OneTrust loads its settings and we check whether we should display the link or not.
    * The link opens the cookie settings in a modal window
    * @returns void
    */

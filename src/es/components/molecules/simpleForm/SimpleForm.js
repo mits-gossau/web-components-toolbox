@@ -3,6 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global FileReader */
 /* global self */
+/* global CustomEvent */
 
 /**
  * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior, send it to an api endpoint or emit a custom event
@@ -38,8 +39,8 @@ export default class SimpleForm extends Shadow() {
       switch (true) {
         // file picker stuff
         case target.getAttribute('type') === 'file':
-          const files = Array.from(target.files)
-          let label
+          const files = Array.from(target.files) // eslint-disable-line
+          let label // eslint-disable-line
           if ((label = target.parentNode.querySelector('.type-file-label'))) {
             if (files.length) {
               if (target.hasAttribute('remove-file-title')) target.setAttribute('title', (target.getAttribute('remove-file-title')))
@@ -61,7 +62,7 @@ export default class SimpleForm extends Shadow() {
         // visibly conditional fields
         case target.getAttribute('type') === 'checkbox':
         case target.tagName === 'SELECT':
-          let conditionalNodes
+          let conditionalNodes // eslint-disable-line
           if ((conditionalNodes = this.root.querySelectorAll(`[visible-by=${target.getAttribute('id')}]`))) {
             conditionalNodes.forEach(conditionalNode => {
               if (conditionalNode.hasAttribute('visible-condition')) {
@@ -285,7 +286,7 @@ export default class SimpleForm extends Shadow() {
     switch (input.getAttribute('type')) {
       case 'file':
         // @ts-ignore
-        const filePromises = Array.from(input.files).map(file => new Promise(resolve => {
+        const filePromises = Array.from(input.files).map(file => new Promise(resolve => { // eslint-disable-line
           const reader = new FileReader()
           reader.readAsDataURL(file)
           reader.onload = () => resolve(reader.result)
