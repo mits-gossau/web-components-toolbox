@@ -176,10 +176,20 @@ export default class SimpleForm extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    Promise.all(showPromises).then(() => (this.hidden = false))
-    if (this.inputSubmit) this.inputSubmit.addEventListener('click', this.clickEventListener)
-    this.form.addEventListener('change', this.changeListener)
-    this.form.addEventListener('submit', this.submitEventListener)
+    Promise.all(showPromises).then(() => {
+      if (this.inputSubmit) this.inputSubmit.addEventListener('click', this.clickEventListener)
+      this.form.addEventListener('change', this.changeListener)
+      this.form.addEventListener('submit', this.submitEventListener)
+      Array.from(this.root.querySelectorAll('[selected],[checked]')).forEach(node => {
+        const eventTarget = node.parentNode.tagName === 'SELECT' ? node.parentNode : node
+        eventTarget.dispatchEvent(new Event('change', {
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+      this.hidden = false
+    })
   }
 
   disconnectedCallback () {
