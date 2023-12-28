@@ -191,11 +191,11 @@ export default class Teaser extends Intersection() {
           border-radius: var(--figcaption-border-radius-mobile, var(--border-radius-mobile, var(--figcaption-border-radius, var(--border-radius, 0))));
         }
         :host figure figcaption {
-          transform: var(--figcaption-transform-hover, none);
+          transform: var(--figcaption-transform-hover-mobile, var(--figcaption-transform-hover, none));
         }
         :host figure figcaption a-link {
-          transform: var(--a-link-transform-hover, none) !important;
-          opacity: var(--a-link-opacity-hover, 1) !important;
+          transform: var(--a-link-transform-hover-mobile,  var(--a-link-transform-hover, none)) !important;
+          opacity: var(--a-link-opacity-hover-mobile,  var(--a-link-opacity-hover, 1)) !important;
         }
       }
     `
