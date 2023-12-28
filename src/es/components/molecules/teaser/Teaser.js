@@ -107,6 +107,7 @@ export default class Teaser extends Intersection() {
         overflow: var(--overflow, visible);
         position: var(--position, static);
         overflow: hidden;
+        box-shadow: var(--box-shadow, none);
       }
       :host figure a-picture, :host figure m-picture-with-picture {
         height: var(--a-picture-height, auto);
@@ -188,6 +189,13 @@ export default class Teaser extends Intersection() {
         }
         :host figure figcaption {
           border-radius: var(--figcaption-border-radius-mobile, var(--border-radius-mobile, var(--figcaption-border-radius, var(--border-radius, 0))));
+        }
+        :host figure figcaption {
+          transform: var(--figcaption-transform-hover-mobile, var(--figcaption-transform-hover, none));
+        }
+        :host figure figcaption a-link {
+          transform: var(--a-link-transform-hover-mobile,  var(--a-link-transform-hover, none)) !important;
+          opacity: var(--a-link-opacity-hover-mobile,  var(--a-link-opacity-hover, 1)) !important;
         }
       }
     `
