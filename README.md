@@ -5,7 +5,8 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 
 Install:
 - `git submodule update --init --recursive --force`\
-(don't use the `--remote` flag, https://git-scm.com/book/en/v2/Git-Tools-Submodules)
+VS Code: don't use the `--remote` flag, https://git-scm.com/book/en/v2/Git-Tools-Submodules \
+VS Studio: `--remote` is required to load latest Frontend Solution into Backend Solution
 - `npm install`
 
 Previews:

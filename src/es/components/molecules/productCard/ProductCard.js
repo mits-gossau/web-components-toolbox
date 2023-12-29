@@ -91,10 +91,17 @@ export default class ProductCard extends Shadow() {
         justify-content: var(--product-info-justify-content, space-between);
         padding: var(--product-info-padding, 0 0 1em 0);
       }
+      :host .product-info .product-info-action-section {
+        margin: var(--product-info-action-section-margin, auto 0);
+      }
       :host .product-footer {
         align-items: var(--product-footer-align-items, center);
         display: var(--product-footer-display, flex);
         justify-content: var(--product-footer-justify-content, space-between);
+      }
+      :host input[type="checkbox"] {
+        cursor: pointer;
+        accent-color: var(--checkbox-selected-background-color, #ff5b03);
       }
       @media only screen and (max-width: _max-width_) {
         :host .product-item {
@@ -156,6 +163,7 @@ export default class ProductCard extends Shadow() {
     const product = JSON.parse(this.getAttribute('data')) || defaultProduct
 
     return Promise.all([fetchModules]).then(() => {
+      this.setAttribute('id', product.id)
       const productPrice = product.price ? `<span>${product.price}</span>` : ''
       const productName = product.name ? `<span class="name">${product.name}</span>` : ''
       const productEstimatedPieceWeight = product.estimatedPieceWeight ? `<span class="additional-info">${product.estimatedPieceWeight}</span>` : ''
@@ -168,25 +176,23 @@ export default class ProductCard extends Shadow() {
         : '<div></div>'
       const productTotalTcc = product.totalTcc ? `<div class="bold">${product.totalTcc.toFixed(2)}</div>` : ''
 
-      // TODO
-      // <a-picture namespace="product-checkout-" picture-load defaultSource='${product.image}' alt='${product.name}'></a-picture>
       this.html = /* html */`
         <div class="product-item">
             <div class="product-select">
               <input id="selectCheckbox" type="checkbox" value=${product} />
             </div>
             <div class="product-image">
-                img
+              <a-picture namespace="product-list-" picture-load defaultSource='${product.image}' alt='${product.name}'></a-picture>
             </div>
             <div class="product-data">
                 <div class="product-info">
-                    <div>
+                    <div class="product-info-data-section">
                         ${productPrice}
                         ${productName}
                         ${productEstimatedPieceWeight}
                     </div>
-                    <div>
-                        <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-favorite-from-order" tag="${product.id}">
+                    <div class="product-info-action-section">
+                        <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-favorite-product-from-favorite-list" tag="${product.id}">
                           <a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx>
                         </a-button>
                     </div>
@@ -205,9 +211,7 @@ export default class ProductCard extends Shadow() {
   checkboxEventListener = (e) => {
     if (this.checkbox.checked) {
       this.setAttribute('selected', 'true')
-      this.setAttribute('id', this.checkbox.value)
     } else {
-      this.removeAttribute('id')
       this.removeAttribute('selected')
     }
   }

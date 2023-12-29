@@ -3,10 +3,10 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global FileReader */
 /* global self */
+/* global CustomEvent */
 
 /**
- * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior or send it to an api endpoint
- * TODO: Allow sending custom event instead of endpoint nor default form post
+ * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior, send it to an api endpoint or emit a custom event
  * TODO: https://dev.to/stuffbreaker/custom-forms-with-web-components-and-elementinternals-4jaj
  * As a molecule, this component shall hold Atoms
  *
@@ -14,10 +14,10 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class SimpleForm
  * @type {CustomElementConstructor}
  * @attribute {
- *  
+ *
  * }
  * @css {
- *  
+ *
  * }
  */
 export default class SimpleForm extends Shadow() {
@@ -39,8 +39,8 @@ export default class SimpleForm extends Shadow() {
       switch (true) {
         // file picker stuff
         case target.getAttribute('type') === 'file':
-          const files = Array.from(target.files)
-          let label
+          const files = Array.from(target.files) // eslint-disable-line
+          let label // eslint-disable-line
           if ((label = target.parentNode.querySelector('.type-file-label'))) {
             if (files.length) {
               if (target.hasAttribute('remove-file-title')) target.setAttribute('title', (target.getAttribute('remove-file-title')))
@@ -62,15 +62,15 @@ export default class SimpleForm extends Shadow() {
         // visibly conditional fields
         case target.getAttribute('type') === 'checkbox':
         case target.tagName === 'SELECT':
-          let conditionalNodes
+          let conditionalNodes // eslint-disable-line
           if ((conditionalNodes = this.root.querySelectorAll(`[visible-by=${target.getAttribute('id')}]`))) {
             conditionalNodes.forEach(conditionalNode => {
               if (conditionalNode.hasAttribute('visible-condition')) {
                 if (
-                  conditionalNode.getAttribute('visible-condition') === target.value
-                  || (conditionalNode.getAttribute('visible-condition') === 'truthy' && target.value)
-                  || (conditionalNode.getAttribute('visible-condition') === 'falsy' && !target.value)
-                  || (target.getAttribute('type') === 'checkbox' && conditionalNode.getAttribute('visible-condition') === String(target.checked))
+                  conditionalNode.getAttribute('visible-condition') === target.value ||
+                  (conditionalNode.getAttribute('visible-condition') === 'truthy' && target.value) ||
+                  (conditionalNode.getAttribute('visible-condition') === 'falsy' && !target.value) ||
+                  (target.getAttribute('type') === 'checkbox' && conditionalNode.getAttribute('visible-condition') === String(target.checked))
                 ) {
                   this.show(conditionalNode)
                 } else {
@@ -87,7 +87,7 @@ export default class SimpleForm extends Shadow() {
     // fetch if there is an endpoint attribute, else do the native behavior of form post
     this.abortController = null
     this.submitEventListener = async event => {
-      if (this.getAttribute('endpoint')) {
+      if (this.getAttribute('endpoint') || this.getAttribute('dispatch-event-name')) {
         event.preventDefault()
         if (this.abortController) this.abortController.abort()
         this.abortController = new AbortController()
@@ -120,22 +120,41 @@ export default class SimpleForm extends Shadow() {
           }, Promise.resolve({}))
         }
         // TODO: remove the console log below
-        console.log('fetch', body)
-        fetch(this.getAttribute('endpoint'), {
-          method: this.getAttribute('method') || 'GET',
-          mode: this.getAttribute('mode') || 'no-cors',
-          headers: this.hasAttribute('headers')
-            ? SimpleForm.parseAttribute(this.getAttribute('headers'))
-            : {
-                'Content-Type': 'application/json'
-              },
-          redirect: this.getAttribute('follow') || 'follow',
-          body: JSON.stringify(body),
-          signal: this.abortController.signal
-        }).then(async response => {
-          if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399)) return response.json()
-          throw new Error(response.statusText)
-        }).then(json => {
+        console.log('body', body);
+        (this.getAttribute('endpoint')
+          ? fetch(this.getAttribute('endpoint'), {
+            method: this.getAttribute('method') || 'GET',
+            mode: this.getAttribute('mode') || 'no-cors',
+            headers: this.hasAttribute('headers')
+              ? SimpleForm.parseAttribute(this.getAttribute('headers'))
+              : {
+                  'Content-Type': 'application/json'
+                },
+            redirect: this.getAttribute('follow') || 'follow',
+            body: JSON.stringify(body),
+            signal: this.abortController.signal
+          }).then(async response => {
+            if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399)) return response.json()
+            throw new Error(response.statusText)
+          })
+          : new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('dispatch-event-name'), {
+            detail: {
+              method: this.getAttribute('method') || 'GET',
+              mode: this.getAttribute('mode') || 'no-cors',
+              headers: this.hasAttribute('headers')
+                ? SimpleForm.parseAttribute(this.getAttribute('headers'))
+                : {
+                    'Content-Type': 'application/json'
+                  },
+              redirect: this.getAttribute('follow') || 'follow',
+              body,
+              resolve
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          })))
+        ).then(json => {
           let response
           let redirectUrl
           if ((response = json[this.getAttribute('response-property-name')] || json.response) && this.response) {
@@ -157,10 +176,20 @@ export default class SimpleForm extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    Promise.all(showPromises).then(() => (this.hidden = false))
-    if (this.inputSubmit) this.inputSubmit.addEventListener('click', this.clickEventListener)
-    this.form.addEventListener('change', this.changeListener)
-    this.form.addEventListener('submit', this.submitEventListener)
+    Promise.all(showPromises).then(() => {
+      if (this.inputSubmit) this.inputSubmit.addEventListener('click', this.clickEventListener)
+      this.form.addEventListener('change', this.changeListener)
+      this.form.addEventListener('submit', this.submitEventListener)
+      Array.from(this.root.querySelectorAll('[selected],[checked]')).forEach(node => {
+        const eventTarget = node.parentNode.tagName === 'SELECT' ? node.parentNode : node
+        eventTarget.dispatchEvent(new Event('change', {
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+      this.hidden = false
+    })
   }
 
   disconnectedCallback () {
@@ -211,14 +240,14 @@ export default class SimpleForm extends Shadow() {
             style.setAttribute('load-form-styles', 'molecules/form/Form.js')
             this.html = style
           }))
-        } else{
+        } else {
           this.css = form.css
         }
         form.remove()
         return form.renderCssPromise
       })
     }
-    this.css = /* css */``
+    this.css = /* css */''
     return Promise.all([this.fetchTemplate(), formPromise])
   }
 
@@ -267,7 +296,7 @@ export default class SimpleForm extends Shadow() {
     switch (input.getAttribute('type')) {
       case 'file':
         // @ts-ignore
-        return Promise.all(Array.from(input.files).map(file => new Promise(resolve => {
+        const filePromises = Array.from(input.files).map(file => new Promise(resolve => { // eslint-disable-line
           const reader = new FileReader()
           reader.readAsDataURL(file)
           reader.onload = () => resolve(reader.result)
@@ -275,7 +304,9 @@ export default class SimpleForm extends Shadow() {
             console.error('Error: ', error)
             resolve(`File ${input.getAttribute('name') || input.getAttribute('id')} has the following Error: ${error}`)
           }
-        })))
+        }))
+        if (input.hasAttribute('multiple')) return Promise.all(filePromises)
+        return filePromises[0]
       case 'checkbox':
         return Promise.resolve(input.checked)
       default:

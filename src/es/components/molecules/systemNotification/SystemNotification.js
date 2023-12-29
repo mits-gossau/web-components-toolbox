@@ -40,8 +40,8 @@ export default class SystemNotification extends Shadow() {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            margin-bottom: var(--margin-bottom, 1rem);
+            flex-direction: var(--system-notification-flex-direction, column);
+            margin: var(--system-notification-margin, 0 0 var(--margin-bottom, 1rem) 0);
         }
         :host .icon {
             position: relative;

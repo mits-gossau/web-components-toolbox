@@ -2,6 +2,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
+/* global CustomEvent */
 
 /**
  * Creates a Datepicker
@@ -189,6 +190,24 @@ export default class Flatpickr extends Shadow() {
     ).then(([dependencies, options]) => {
       this.setLabel(options.dateStr)
       delete options.dateStr
+      if (!options.locale) {
+        switch (document.documentElement.getAttribute('lang')) {
+          case 'fr':
+            options.locale = this.french
+            break
+          case 'it':
+            options.locale = this.italian
+            break
+          case 'en':
+            options.locale = {
+              firstDayOfWeek: 1
+            }
+            break
+          default:
+            options.locale = this.german
+            break
+        }
+      }
       this.flatpickrInstance = dependencies[0](this.labelNode, {
         mode: 'range',
         dateFormat: 'd.m.Y',
@@ -215,6 +234,10 @@ export default class Flatpickr extends Shadow() {
           this.gotCleared = false
         }
       })
+      if (this.getAttribute('default-date')) {
+        this.flatpickrInstance.setDate(this.getAttribute('default-date'))
+      }
+
       this.html = this.labelNode
       document.head.appendChild(this.style)
       // https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.css
@@ -261,7 +284,7 @@ export default class Flatpickr extends Shadow() {
       this.labelNode.innerHTML = ''
       return this.labelNode.appendChild(text)
     }
-    return this.labelNode.textContent = text
+    return (this.labelNode.textContent = text)
   }
 
   get style () {
@@ -283,5 +306,172 @@ export default class Flatpickr extends Shadow() {
       this._labelNode = document.createElement('div')
     }
     return this._labelNode
+  }
+
+  // https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js
+  get german () {
+    return {
+      weekdays: {
+        shorthand: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+        longhand: [
+          'Sonntag',
+          'Montag',
+          'Dienstag',
+          'Mittwoch',
+          'Donnerstag',
+          'Freitag',
+          'Samstag'
+        ]
+      },
+      months: {
+        shorthand: [
+          'Jan',
+          'Feb',
+          'Mär',
+          'Apr',
+          'Mai',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Okt',
+          'Nov',
+          'Dez'
+        ],
+        longhand: [
+          'Januar',
+          'Februar',
+          'März',
+          'April',
+          'Mai',
+          'Juni',
+          'Juli',
+          'August',
+          'September',
+          'Oktober',
+          'November',
+          'Dezember'
+        ]
+      },
+      firstDayOfWeek: 1,
+      weekAbbreviation: 'KW',
+      rangeSeparator: ' bis ',
+      scrollTitle: 'Zum Ändern scrollen',
+      toggleTitle: 'Zum Umschalten klicken',
+      time_24hr: true
+    }
+  }
+
+  // https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js
+  get french () {
+    return {
+      firstDayOfWeek: 1,
+      weekdays: {
+        shorthand: ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'],
+        longhand: [
+          'dimanche',
+          'lundi',
+          'mardi',
+          'mercredi',
+          'jeudi',
+          'vendredi',
+          'samedi'
+        ]
+      },
+      months: {
+        shorthand: [
+          'janv',
+          'févr',
+          'mars',
+          'avr',
+          'mai',
+          'juin',
+          'juil',
+          'août',
+          'sept',
+          'oct',
+          'nov',
+          'déc'
+        ],
+        longhand: [
+          'janvier',
+          'février',
+          'mars',
+          'avril',
+          'mai',
+          'juin',
+          'juillet',
+          'août',
+          'septembre',
+          'octobre',
+          'novembre',
+          'décembre'
+        ]
+      },
+      ordinal: function (nth) {
+        if (nth > 1) { return '' }
+        return 'er'
+      },
+      rangeSeparator: ' au ',
+      weekAbbreviation: 'Sem',
+      scrollTitle: 'Défiler pour augmenter la valeur',
+      toggleTitle: 'Cliquer pour basculer',
+      time_24hr: true
+    }
+  }
+
+  // https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js
+  get italian () {
+    return {
+      weekdays: {
+        shorthand: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
+        longhand: [
+          'Domenica',
+          'Lunedì',
+          'Martedì',
+          'Mercoledì',
+          'Giovedì',
+          'Venerdì',
+          'Sabato'
+        ]
+      },
+      months: {
+        shorthand: [
+          'Gen',
+          'Feb',
+          'Mar',
+          'Apr',
+          'Mag',
+          'Giu',
+          'Lug',
+          'Ago',
+          'Set',
+          'Ott',
+          'Nov',
+          'Dic'
+        ],
+        longhand: [
+          'Gennaio',
+          'Febbraio',
+          'Marzo',
+          'Aprile',
+          'Maggio',
+          'Giugno',
+          'Luglio',
+          'Agosto',
+          'Settembre',
+          'Ottobre',
+          'Novembre',
+          'Dicembre'
+        ]
+      },
+      firstDayOfWeek: 1,
+      ordinal: function () { return '°' },
+      rangeSeparator: ' al ',
+      weekAbbreviation: 'Se',
+      scrollTitle: 'Scrolla per aumentare',
+      toggleTitle: 'Clicca per cambiare',
+      time_24hr: true
+    }
   }
 }
