@@ -22,7 +22,7 @@
           <label for="showMore">Show me more!</label>
           <input id="showMore" name="showMore" type="checkbox" />
         </div>
-        <section hidden visible-by="showMore" visible-condition="true">
+        <section hidden inset visible-by="showMore" visible-condition="true">
           <div>
             <label validation-message="Dude ist ungültig" for="Dude">Dude</label>
             <input id="Dude" type="text" required="" value="Dude" name="Dude" placeholder="Dude hier eingeben..." autocomplete="off" />
@@ -40,7 +40,7 @@
           <option value="delivery">Delivery</option>
           <option value="pickup">Pickup</option>
         </select>
-        <section hidden visible-by="delivery-option" visible-condition="delivery">
+        <section hidden inset visible-by="delivery-option" visible-condition="delivery">
           <div>
             <label validation-message="Strasse ist ungültig" for="Street">Strasse</label>
             <input id="Street" type="text" required="" value="" name="Strasse" placeholder="Strasse hier eingeben..." autocomplete="off" />
@@ -51,14 +51,14 @@
           </div>
         </section>
       </div>
-      <div hidden visible-by="delivery-option" visible-condition="truthy">
+      <div hidden inset visible-by="delivery-option" visible-condition="truthy">
         <label validation-message="Select a pet!" for="delivery-option-two">Choose an other delivery option:</label>
         <select name="delivery-option-two" required="" id="delivery-option-two">
           <option value="">--Please choose an option--</option>
           <option value="delivery">Delivery</option>
           <option value="pickup">Pickup</option>
         </select>
-        <section hidden visible-by="delivery-option-two" visible-condition="delivery">
+        <section hidden inset visible-by="delivery-option-two" visible-condition="delivery">
           <div>
             <label validation-message="Strasse ist ungültig" for="Street">Strasse</label>
             <input id="Street" type="text" required="" value="" name="Strasse" placeholder="Strasse hier eingeben..." autocomplete="off" />
