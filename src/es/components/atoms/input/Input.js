@@ -193,6 +193,7 @@ export default class Input extends Shadow() {
         appearance: none;
         background: var(--input-bg-color, var(--m-gray-200));
         border: var(--border, 1px solid transparent);
+        border-radius: var(--border-radius, 0.5em);
         transition: background ease-out .3s, border-color ease-out .3s;
       }
 
@@ -332,6 +333,9 @@ export default class Input extends Shadow() {
       }
 
       @media only screen and (max-width: _max-width_) {
+        input {
+          border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
+        }
         :host([search]) input {
           padding: var(--search-input-padding-mobile, var(--search-input-padding, 0.75em var(--content-spacing-mobile)));
           border-radius: var(--search-input-border-radius-mobile, var(--search-input-border-radius, var(--border-radius-mobile, var(--border-radius, 0.571em))));
@@ -390,7 +394,12 @@ export default class Input extends Shadow() {
           <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
           ${searchHtml}
       `
-      this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint') ? this.getAttribute('enterkeyhint') : 'search')
+      this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint')
+        ? this.getAttribute('enterkeyhint')
+        : this.search
+          ? 'search'
+          : 'go'
+      )
     })
   }
 
