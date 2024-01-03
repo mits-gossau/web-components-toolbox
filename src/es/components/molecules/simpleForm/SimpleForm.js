@@ -100,7 +100,7 @@ export default class SimpleForm extends Shadow() {
             } else if (cloneTarget.getAttribute('type') === 'checkbox') {
               cloneTarget.checked = false
             } else if (cloneTarget.nodeName === 'SELECT') {
-              cloneTarget.value = ""
+              cloneTarget.value = ''
             }
             if (counter >= Number(cloneTarget.getAttribute('required'))) cloneTarget.removeAttribute('required')
             cloneTarget.setAttribute('id', `${target.getAttribute('id').replace(`-counter-${counter - 1}`, '')}-counter-${counter}`)
