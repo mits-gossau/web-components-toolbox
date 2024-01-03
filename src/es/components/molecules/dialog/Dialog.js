@@ -12,6 +12,15 @@ export default class Dialog extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
+    this.closeIcon = this.root.querySelector('#close')
+
+    this.closeEventListener = () => {
+      this.dialog.classList.add('closed')
+      setTimeout(() => {
+        this.dialog.close()
+      }, 300)
+    }
+
     this.clickEventListener = event => {
       const target = event.composedPath()[0]
       if (!target) return
@@ -26,17 +35,11 @@ export default class Dialog extends Shadow() {
           this.dialog.showModal()
           break
         case 'close':
-          this.dialog.classList.add('closed')
-          setTimeout(() => {
-            this.dialog.close()
-          }, 300)
+          this.closeEventListener()
           break
         case null: // click on backdrop
           if (target === this.dialog) {
-            this.dialog.classList.add('closed')
-            setTimeout(() => {
-              this.dialog.close()
-            }, 300)
+            this.closeEventListener()
           }
           break
       }
@@ -47,10 +50,12 @@ export default class Dialog extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     this.addEventListener('click', this.clickEventListener)
+    this.closeIcon.addEventListener('click',  this.closeEventListener)
   }
 
   disconnectedCallback () {
     this.removeEventListener('click', this.clickEventListener)
+    this.closeIcon.removeEventListener('click',  this.closeEventListener)
   }
 
   /**
