@@ -105,6 +105,8 @@ export default class SimpleForm extends Shadow() {
             if (counter >= Number(cloneTarget.getAttribute('required'))) cloneTarget.removeAttribute('required')
             cloneTarget.setAttribute('id', `${target.getAttribute('id').replace(`-counter-${counter - 1}`, '')}-counter-${counter}`)
             cloneTarget.setAttribute('counter', counter)
+            let label
+            if ((label = cloneTarget.parentElement.querySelector(`[for=${target.getAttribute('id')}]`))) label.setAttribute('for', cloneTarget.getAttribute('id'))
             Array.from(clone.querySelectorAll(`[${target.getAttribute('multiply-text-selector') || 'multiply-text'}]`)).forEach(node => (node.textContent = node.getAttribute(target.getAttribute('multiply-text-selector') || 'multiply-text').replace(target.getAttribute('counter-placeholder'), counter)))
             if (removedCloneTarget !== clone) originalNode.after(clone)
           }
