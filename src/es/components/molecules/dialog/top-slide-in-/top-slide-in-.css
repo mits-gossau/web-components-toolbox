@@ -39,7 +39,9 @@
   }
 }
 @media only screen and (max-width: _max-width_) {
-  :host {
+  :host .container #close {
+    position: relative;
+    right: 0;
   }
 }
 .container {
