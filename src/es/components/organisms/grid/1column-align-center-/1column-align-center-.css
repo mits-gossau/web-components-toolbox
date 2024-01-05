@@ -1,0 +1,11 @@
+:host > section {
+    grid-template-columns: ${this.getAttribute('column-with') || 'auto'};
+    grid-template-rows: auto;
+    justify-content: space-evenly;
+}
+
+@media only screen and (max-width: _max-width_) {
+    :host(:not([no-mobile])) > section {
+        grid-template-columns: 100%;
+    }
+}
