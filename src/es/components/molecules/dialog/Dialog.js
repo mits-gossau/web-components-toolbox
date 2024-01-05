@@ -12,17 +12,21 @@ export default class Dialog extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
-    this.closeIcon = this.root.querySelector('#close')
-
-    this.closeEventListener = () => {
+    const close = () => {
       this.dialog.classList.add('closed')
       setTimeout(() => {
         this.dialog.close()
-      }, 300)
+      }, this.getAttribute('namespace') === 'dialog-top-slide-in-' ? 300 : 0)
     }
 
     this.clickEventListener = event => {
-      const target = event.composedPath()[0]
+      // click on backdrop
+      if (event.composedPath()[0] === this.dialog) {
+        const rect = this.dialog.getBoundingClientRect()
+        if (event.clientY < rect.top || event.clientY > rect.bottom || event.clientX < rect.left || event.clientX > rect.right) close()
+        return
+      }
+      const target = event.composedPath().find(node => node.hasAttribute && node.hasAttribute('id'))
       if (!target) return
       switch (target.getAttribute('id')) {
         case 'show':
@@ -35,12 +39,7 @@ export default class Dialog extends Shadow() {
           this.dialog.showModal()
           break
         case 'close':
-          this.closeEventListener()
-          break
-        case null: // click on backdrop
-          if (target === this.dialog) {
-            this.closeEventListener()
-          }
+          close()
           break
       }
     }
@@ -50,12 +49,10 @@ export default class Dialog extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     this.addEventListener('click', this.clickEventListener)
-    this.closeIcon.addEventListener('click',  this.closeEventListener)
   }
 
   disconnectedCallback () {
     this.removeEventListener('click', this.clickEventListener)
-    this.closeIcon.removeEventListener('click',  this.closeEventListener)
   }
 
   /**
@@ -80,67 +77,6 @@ export default class Dialog extends Shadow() {
    * renders the css
    */
   renderCSS () {
-    this.css = /* css */`
-      /*   Open state of the dialog  */
-      :host > dialog[open] {
-        opacity: 1;
-        transform: scaleY(1);
-      }
-      /*   Closed state of the dialog   */
-      :host > dialog {
-        opacity: 0;
-        position: fixed;
-        transform: scaleY(0);
-        transition:
-          opacity 0.7s ease-out,
-          transform 0.7s ease-out,
-          overlay 0.7s ease-out allow-discrete,
-          display 0.7s ease-out allow-discrete;
-        /* Equivalent to
-        transition: all 0.7s allow-discrete; */
-        z-index: 99;
-      }
-      /*   Before-open state  */
-      /* Needs to be after the previous dialog[open] rule to take effect,
-          as the specificity is the same */
-      @starting-style {
-        :host > dialog[open] {
-          opacity: 0;
-          transform: scaleY(0);
-        }
-      }
-      /* Transition the :backdrop when the dialog modal is promoted to the top layer */
-      :host > dialog::backdrop {
-        background-color: rgb(0 0 0 / 0);
-        transition:
-          display 0.7s allow-discrete,
-          overlay 0.7s allow-discrete,
-          background-color 0.7s;
-        /* Equivalent to
-        transition: all 0.7s allow-discrete; */
-      }
-      :host > dialog[open]::backdrop {
-        background-color: rgb(0 0 0 / 0.25);
-      }
-      /* This starting-style rule cannot be nested inside the above selector
-      because the nesting selector cannot represent pseudo-elements. */
-      @starting-style {
-        :host > dialog[open]::backdrop {
-          background-color: rgb(0 0 0 / 0);
-        }
-      }
-      :host #overlay {
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-      }
-      @media only screen and (max-width: _max-width_) {
-        :host {}
-      }
-    `
     return this.fetchTemplate()
   }
 
@@ -180,10 +116,6 @@ export default class Dialog extends Shadow() {
    * @returns void
    */
   renderHTML () {
-    const overlay = document.createElement('div')
-    overlay.setAttribute('id', 'overlay')
-    this.root.appendChild(overlay)
-
     this.html = /* html */`
       <dialog
         ${
