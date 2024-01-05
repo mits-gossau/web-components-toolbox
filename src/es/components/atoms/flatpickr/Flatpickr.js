@@ -281,8 +281,11 @@ export default class Flatpickr extends Shadow() {
   setLabel (text) {
     if (!text) text = this.label
     if (typeof text === 'object') {
-      this.labelNode.innerHTML = ''
-      return this.labelNode.appendChild(text)
+      if (text.outerHTML !== this.labelNode.innerHTML) {
+        this.labelNode.innerHTML = ''
+        this.labelNode.appendChild(text)
+      }
+      return this.labelNode.textContent
     }
     return (this.labelNode.textContent = text)
   }
