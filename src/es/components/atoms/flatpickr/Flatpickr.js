@@ -24,7 +24,7 @@ export default class Flatpickr extends Shadow() {
       this.label = this.getAttribute('label') || 'Datum auswählen → 📅'
     }
     this.gotCleared = false
-    this.dateStrSeparator = ' — '
+    this.dateStrSeparator = this.locale.rangeSeparator || ' — '
 
     this.resetEventListener = async event => {
       let dateReset = event.detail.dateReset
@@ -190,23 +190,10 @@ export default class Flatpickr extends Shadow() {
     ).then(([dependencies, options]) => {
       this.setLabel(options.dateStr)
       delete options.dateStr
-      if (!options.locale) {
-        switch (document.documentElement.getAttribute('lang')) {
-          case 'fr':
-            options.locale = this.french
-            break
-          case 'it':
-            options.locale = this.italian
-            break
-          case 'en':
-            options.locale = {
-              firstDayOfWeek: 1
-            }
-            break
-          default:
-            options.locale = this.german
-            break
-        }
+      if (options.locale) {
+        this.dateStrSeparator = options.locale.rangeSeparator || this.dateStrSeparator
+      } else {
+        options.locale = this.locale
       }
       this.flatpickrInstance = dependencies[0](this.labelNode, {
         mode: 'range',
@@ -309,6 +296,21 @@ export default class Flatpickr extends Shadow() {
       this._labelNode = document.createElement('div')
     }
     return this._labelNode
+  }
+
+  get locale () {
+      switch (document.documentElement.getAttribute('lang')) {
+        case 'fr':
+          return this.french
+        case 'it':
+          return this.italian
+        case 'en':
+          return {
+            firstDayOfWeek: 1
+          }
+        default:
+          return this.german
+      }
   }
 
   // https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js
