@@ -65,6 +65,7 @@ export default class General extends Shadow() {
         grid-template-columns: 100%;
         grid-template-rows: auto minmax(var(--header-height , 50px), auto) 1fr minmax(var(--footer-min-height, 50px), auto);
         min-height: var(--min-height, 100vh);
+        overflow-x: var(--overflow-x, visible); /* it is a strong indicator, that something does not stay within bounds, when there is a scrollbar on the x-axis. It is preferable to fix it by finding the mistake, if not possible, set this variable to overflow-x hidden. */
       }
       /* global css set by page */
       :root {
