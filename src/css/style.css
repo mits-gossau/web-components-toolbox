@@ -118,6 +118,22 @@
 :host h6.font-family-tertiary {
   font-family: var(--h6-font-family-tertiary, var(--h1-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit)))));
 }
+@container style(--h-border-after: true) {
+  h1{
+    text-align: center !important;
+    
+  }
+  h1::after {
+    display: flex;
+    content: '';
+    width: 4%;
+    position: absolute;
+    height: 3px;
+    background: var(--color-tertiary);
+    left: calc(50% - 2%);
+    margin-top: 0.5em;
+  }
+}
 /* text stylings */
 :host .font-family-secondary {
   font-family: var(--font-family-secondary, var(--font-family, inherit));
