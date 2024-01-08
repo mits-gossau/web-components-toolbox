@@ -86,6 +86,7 @@ export default class Tabs extends Shadow() {
             border-top: var(--border-bottom, 1px solid var(--m-gray-300));
             list-style: none;
             display: flex;
+            justify-content: var(--tab-justify-content, none);
             padding: 0;
             gap: 1.5em;
             margin-bottom: var(--margin-bottom, 3em);
