@@ -436,7 +436,7 @@ export default class Navigation extends Mutation() {
         padding: var(--search-li-padding, var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4)));
       }
       :host(.wrapped) > nav > ul > li.search {
-        justify-content: flex-start;
+        justify-content: var(--search-justify-content-custom, flex-start);
       }
       :host > nav > ul > li > a-input{
         --margin-bottom: 0;
