@@ -21,7 +21,7 @@
 }
 :host([first-container-vertical]) > section > *:nth-child(1) h1 {
     color: var(--grid-2columns-content-stage-first-column-color-custom, white);
-    line-height: var(--grid-2columns-content-stage-first-column-line-height-custom, 1.5);
+    line-height: var(--grid-2columns-content-stage-first-column-line-height-custom, 1);
     margin-top: 1rem; 
     margin-bottom: 32px; 
     font-size: var(--grid-2columns-content-stage-first-column-h-font-size-custom, calc(8em/3));
