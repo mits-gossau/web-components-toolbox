@@ -299,18 +299,18 @@ export default class Flatpickr extends Shadow() {
   }
 
   get locale () {
-      switch (document.documentElement.getAttribute('lang')) {
-        case 'fr':
-          return this.french
-        case 'it':
-          return this.italian
-        case 'en':
-          return {
-            firstDayOfWeek: 1
-          }
-        default:
-          return this.german
-      }
+    switch (document.documentElement.getAttribute('lang')) {
+      case 'fr':
+        return this.french
+      case 'it':
+        return this.italian
+      case 'en':
+        return {
+          firstDayOfWeek: 1
+        }
+      default:
+        return this.german
+    }
   }
 
   // https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js
