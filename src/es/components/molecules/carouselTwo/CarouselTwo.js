@@ -283,6 +283,9 @@ export default class CarouselTwo extends Mutation() {
         scroll-snap-align: start;
         user-select: none;
       }
+      :host > section > * > a-picture {
+        margin: var(--section-child-a-picture-margin, auto);
+      }
       :host > section > div {
         align-items: var(--section-div-align-items, var(--section-child-align-items, center));
         justify-content: var(--section-div-justify-content, var(--section-child-justify-content, space-between));

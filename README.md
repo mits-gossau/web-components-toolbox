@@ -5,7 +5,8 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 
 Install:
 - `git submodule update --init --recursive --force`\
-(don't use the `--remote` flag, https://git-scm.com/book/en/v2/Git-Tools-Submodules)
+VS Code: don't use the `--remote` flag, https://git-scm.com/book/en/v2/Git-Tools-Submodules \
+VS Studio: `--remote` is required to load latest Frontend Solution into Backend Solution
 - `npm install`
 
 Previews:
@@ -48,7 +49,7 @@ Checklist for each component:
 
 TODO:
 - [ ] mdx icons pull dynamically from main repo https://git.intern.migros.net/mdx/mdx/-/tree/main/packages/icons/dist/svg
-- [ ] mdx compatibility use scss from here: https://git.intern.migros.net/mdx/mdx/-/blob/main/packages/web-components/src/components/button/button.scss , etc. to transcend the styles here: https://github.com/mits-gossau/web-components-toolbox-mdx and extend the component in this toolbox if anything is missing.
+- [x] mdx compatibility use scss from here: https://git.intern.migros.net/mdx/mdx/-/blob/main/packages/web-components/src/components/button/button.scss , etc. to transcend the styles here: https://github.com/mits-gossau/web-components-toolbox-mdx and extend the component in this toolbox if anything is missing.
 - [ ] playwright single component tests
 - [ ] documenter.js / automatic story book documentation by comments
 - [ ] Template.html api call to fetch page content for previews (playwright or https://github.com/Rob--W/cors-anywhere)

@@ -1,0 +1,97 @@
+:host > section {
+    grid-template-columns: ${this.getAttribute('first-column-with') || 'auto'} auto;
+    grid-template-rows: auto 1fr;
+}
+:host > section > * {
+    padding: var(--grid-2columns-content-section-padding-custom, var(--content-spacing));
+}
+:host > section p.intro {
+    font-family: var(--font-family);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 23.4px;
+}
+:host([with-border]) > section {
+    border-bottom: var(--content-section-border-bottom-custom, 1px solid var(--mdx-sys-color-brand-neutral-300));
+}
+/* ****************************************** first-container-vertical ****************************************** */
+/* filter left */
+:host([first-container-vertical]) > section > *:nth-child(1) {
+    grid-row: 1 / span 2;
+    grid-column: 1 / 1;
+    padding: var(--grid-2columns-content-section-first-column-padding-custom, var(--grid-2columns-content-section-padding-custom));
+}
+/* title + filter sub level */
+:host([first-container-vertical]) > section > *:nth-child(2) {
+    grid-row: 1 / 1;
+    grid-column: 2 / 2;
+    padding: var(--grid-2columns-content-section-second-column-padding-custom, var(--grid-2columns-content-section-padding-custom));
+}
+:host([first-container-vertical][with-border]) > section > *:nth-child(2) {
+    border-left: var(--content-section-border-left-custom, 1px solid var(--mdx-sys-color-brand-neutral-300));
+}
+:host([first-container-vertical][count-section-children="2"]) > section > *:nth-child(2) {
+    grid-row: 1 / span 2;
+    grid-column: 2 / 2;
+}
+/* list */
+:host([first-container-vertical]) > section > *:nth-child(3) {
+    grid-row: 2 / 2;
+    grid-column: 2 / 2;
+}
+:host([first-container-vertical]) > section > *[count-children="0"]:nth-child(2) ~ * {
+    grid-row: 1 / 2;
+}
+/* ****************************************** first-container-horizontal ****************************************** */
+/* title + filter top */
+:host([first-container-horizontal]) > section > *:nth-child(1) {
+    grid-row: 1 / 1;
+    grid-column: 1 / span 2;
+}
+/* filter left sub level */
+:host([first-container-horizontal]) > section > *:nth-child(2) {
+    grid-row: 2 / 2;
+    grid-column: 1 / 1;
+}
+:host([first-container-horizontal][count-section-children="2"]) > section > *:nth-child(2) {
+    grid-row: 2 / 2;
+    grid-column: 1 / span 2;
+}
+:host([first-container-horizontal][count-section-children="2"][height="100%"]) > section > *:last-child {
+    align-self: end;
+}
+/* list */
+:host([first-container-horizontal]) > section > *:nth-child(3) {
+    grid-row: 2 / 2;
+    grid-column: 2 / 2;
+}
+@media only screen and (max-width: _max-width_) {
+    :host(:not([no-mobile])) > section {
+        border-bottom: 0 none;
+        grid-template-columns: auto;
+    }
+    :host > section > * {
+        padding: var(--grid-2columns-content-section-padding-mobile-custom, var(--grid-2columns-content-section-padding-custom, var(--content-spacing-mobile, var(--content-spacing))));
+    }
+    :host > section p.intro {
+        font-size: 18px;
+    }
+    :host([first-container-vertical]) > section > *:nth-child(1) {
+        padding: var(--grid-2columns-content-section-first-column-padding-mobile-custom, var(--grid-2columns-content-section-padding-mobile-custom));
+    }
+    :host([first-container-vertical]) > section > *:nth-child(2) {
+        border-left: 0 none;
+        padding: var(--grid-2columns-content-section-second-column-padding-mobile-custom, var(--grid-2columns-content-section-padding-mobile-custom));
+    }
+    :host([first-container-horizontal]:not([no-mobile])) > section > *:nth-child(1),
+    :host([first-container-vertical]:not([no-mobile])) > section > *:nth-child(1),
+    :host([first-container-horizontal]:not([no-mobile])) > section > *:nth-child(2),
+    :host([first-container-vertical]:not([no-mobile])) > section > *:nth-child(2),
+    :host([first-container-horizontal][count-section-children="2"]:not([no-mobile])) > section > *:nth-child(2),
+    :host([first-container-vertical][count-section-children="2"]:not([no-mobile])) > section > *:nth-child(2),
+    :host([first-container-horizontal]:not([no-mobile])) > section > *:nth-child(3),
+    :host([first-container-vertical]:not([no-mobile])) > section > *:nth-child(3) {
+        grid-row: auto;
+        grid-column: auto;
+    }
+}

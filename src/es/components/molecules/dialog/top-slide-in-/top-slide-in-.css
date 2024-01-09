@@ -8,10 +8,17 @@
   border: 0 none;
   margin: 0;
   opacity: 1;
+  position: fixed;
   transform: translateY(-100%);
-  transition: 0.5s;
+  transition: 0.3s;
   width: 100%;
   max-width: 100%;
+  z-index: 99;
+}
+:host > dialog.closed {
+  /* close */
+  opacity: 0;
+  transform: translateY(-100%);
 }
 @starting-style {
   /* before */
@@ -34,21 +41,32 @@
   }
 }
 @media only screen and (max-width: _max-width_) {
-  :host {
+  :host .container #close {
+    position: relative;
+    right: 0;
   }
 }
 .container {
     align-items: center;
     display: flex;
     gap: 1.25rem;
-    max-width: 1280px;
+    max-width: _max-width_;
     margin: 0 auto;
 }
 .container > :first-child {
     flex: 1;
 }
-
 .container #close {
+    align-items: center;
     cursor: pointer;
+    display: flex;
+    height: var(--close-height, 2.25em);
+    justify-content: center;;
     margin-bottom: 0;
+    position: absolute;
+    right: 1.25em;
+    width: var(--close-width, var(--close-height, 2.25em));
+}
+.container #close a-icon-mdx[icon-name="Plus"]::part(svg) {
+    transform: rotate(45deg);
 }
