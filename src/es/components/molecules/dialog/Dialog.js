@@ -12,11 +12,17 @@ export default class Dialog extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
+    /**
+     * @param {'show'|'showModal'} [command='show']
+     */
+    const show = (command = 'show') => {
+      this.dialog.classList.remove('closed')
+      this.dialog[command]()
+      Array.from(this.dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
+    }
     const close = () => {
       this.dialog.classList.add('closed')
-      setTimeout(() => {
-        this.dialog.close()
-      }, this.getAttribute('namespace') === 'dialog-top-slide-in-' ? 300 : 0)
+      setTimeout(() => this.dialog.close(), this.getAttribute('namespace') === 'dialog-top-slide-in-' ? 300 : 0)
     }
 
     this.clickEventListener = event => {
@@ -30,13 +36,11 @@ export default class Dialog extends Shadow() {
       if (!target) return
       switch (target.getAttribute('id')) {
         case 'show':
-          this.dialog.classList.remove('closed')
-          this.dialog.show()
+          show()
           break
         case 'show-modal':
         case 'open':
-          this.dialog.classList.remove('closed')
-          this.dialog.showModal()
+          show('showModal')
           break
         case 'close':
           close()
