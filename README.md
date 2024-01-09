@@ -15,9 +15,21 @@ Previews:
 Component generation:   
 - To generate a new plain component use: `npm run make`
 
+Component Rules:
+- Components should share their breakpoint with children.
+- A component directly requiring web components as children has to customElement define those, if not already defined. To do this, use fetchModules. See more at Shadow.js.
+- A component triggers the rendering at the connected callback and must check, if it should render before doing so, to avoid multiple rendering.
+- Add event listeners at the connected callback and remove them at the disconnected callback.
+
+Event Driven Rules:
+- A controller must not query-select nor output any css or html. The communication must be strictly through events.
+- The only data, which can be passed between components except of events, is in case of a parent with child web components, through the constructor or attributes at creation time.
+
 JS Rules:
-- use as little JS as possible. First think, if your problem could be solved with CSS before using JS
-- Component should share its breakpoint with children
+- use as little JS as possible. First think, if your problem could be solved with CSS before using JS.
+- run the linter from time to time.
+- use as much jsdocs annotations as possible.
+- for nice appearance use this.hidden boolean. See more at Shadow.js.
 
 CSS Rules:
 - mobile font-size should not be smaller than 1rem
