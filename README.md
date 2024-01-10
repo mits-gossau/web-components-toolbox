@@ -32,6 +32,7 @@ JS Rules:
 - for nice appearance use this.hidden boolean. See more at Shadow.js.
 
 CSS Rules:
+- no inline style tags / styles with css properties outside of a web component or a template which is loaded by a web component (allowed are only inline style tags with css variable settings)
 - mobile font-size should not be smaller than 1rem
 - no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
 - variablesCustom.css has to be kept as tiny as possible
