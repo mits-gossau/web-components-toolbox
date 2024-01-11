@@ -1,3 +1,7 @@
+:host {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
 :host > section {
     grid-template-columns: ${this.getAttribute('first-column-with') || 'auto'} auto;
     grid-template-rows: auto 1fr;

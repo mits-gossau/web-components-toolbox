@@ -1,3 +1,6 @@
+:host {
+    margin-bottom: 0 !important;
+}
 :host([background-color]) {
     background-color: ${this.getAttribute('background-color')};
 }
