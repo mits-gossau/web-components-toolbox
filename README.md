@@ -5,7 +5,8 @@ The web component toolbox for any CMS but particularly used for [Web Components 
 
 Install:
 - `git submodule update --init --recursive --force`\
-(don't use the `--remote` flag, https://git-scm.com/book/en/v2/Git-Tools-Submodules)
+VS Code: don't use the `--remote` flag, https://git-scm.com/book/en/v2/Git-Tools-Submodules \
+VS Studio: `--remote` is required to load latest Frontend Solution into Backend Solution
 - `npm install`
 
 Previews:
@@ -14,11 +15,24 @@ Previews:
 Component generation:   
 - To generate a new plain component use: `npm run make`
 
+Component Rules:
+- Components should share their breakpoint with children.
+- A component directly requiring web components as children has to customElement define those, if not already defined. To do this, use fetchModules. See more at Shadow.js.
+- A component triggers the rendering at the connected callback and must check, if it should render before doing so, to avoid multiple rendering.
+- Add event listeners at the connected callback and remove them at the disconnected callback.
+
+Event Driven Rules:
+- A controller must not query-select nor output any css or html. The communication must be strictly through events.
+- The only data, which can be passed between components except of events, is in case of a parent with child web components, through the constructor or attributes at creation time.
+
 JS Rules:
-- use as little JS as possible. First think, if your problem could be solved with CSS before using JS
-- Component should share its breakpoint with children
+- use as little JS as possible. First think, if your problem could be solved with CSS before using JS.
+- run the linter from time to time.
+- use as much jsdocs annotations as possible.
+- for nice appearance use this.hidden boolean. See more at Shadow.js.
 
 CSS Rules:
+- no inline style tags / styles with css properties outside of a web component or a template which is loaded by a web component (allowed are only inline style tags with css variable settings)
 - mobile font-size should not be smaller than 1rem
 - no absolute CSS values like px except for borders. Everything has to be relative eg. em, vw, vh, etc.
 - variablesCustom.css has to be kept as tiny as possible
@@ -48,7 +62,7 @@ Checklist for each component:
 
 TODO:
 - [ ] mdx icons pull dynamically from main repo https://git.intern.migros.net/mdx/mdx/-/tree/main/packages/icons/dist/svg
-- [ ] mdx compatibility use scss from here: https://git.intern.migros.net/mdx/mdx/-/blob/main/packages/web-components/src/components/button/button.scss , etc. to transcend the styles here: https://github.com/mits-gossau/web-components-toolbox-mdx and extend the component in this toolbox if anything is missing.
+- [x] mdx compatibility use scss from here: https://git.intern.migros.net/mdx/mdx/-/blob/main/packages/web-components/src/components/button/button.scss , etc. to transcend the styles here: https://github.com/mits-gossau/web-components-toolbox-mdx and extend the component in this toolbox if anything is missing.
 - [ ] playwright single component tests
 - [ ] documenter.js / automatic story book documentation by comments
 - [ ] Template.html api call to fetch page content for previews (playwright or https://github.com/Rob--W/cors-anywhere)

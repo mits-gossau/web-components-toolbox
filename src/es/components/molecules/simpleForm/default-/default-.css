@@ -22,7 +22,7 @@
 :host > form div.inline > input, :host > form div.inline > select {
     flex-shrink: 0;
 }
-:host > form > * > *[visible-by] {
+:host > form *[inset] {
     padding-left: var(--content-spacing);
 }
 :host input, :host select, :host div {
@@ -60,7 +60,7 @@
     opacity: 1;
 }
 @media only screen and (max-width: _max-width_) {
-    :host > form > * > *[visible-by] {
+    :host > form *[inset] {
         padding-left: var(--content-spacing-mobile, var(--content-spacing));
     }
 }

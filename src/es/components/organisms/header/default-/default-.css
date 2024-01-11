@@ -30,8 +30,8 @@
   --header-default-box-sizing-open-mobile: border-box;
   --header-default-content-width-mobile: 100%;
   --header-default-flex-wrap: var(--header-default-flex-wrap-custom, wrap);
-  --header-default-height-mobile: 5rem;
-  --header-default-height: auto;
+  --header-default-height-mobile: var(--header-default-height-mobile-custom, 5rem);
+  --header-default-height: var(--header-default-height-custom, auto);
   --header-default-justify-content-mobile: space-between;
   --header-default-justify-content: center;
   --header-default-left-open-mobile: 0;
@@ -49,8 +49,8 @@
   --header-default-sticky-border-bottom: var(--header-default-sticky-border-bottom-custom, 1px solid var(--m-gray-300));
   --header-default-top-open-mobile: auto;
   --header-default-width-open-mobile: 100%;
-  --logo-default-height-mobile: var(--logo-default-height);
+  --logo-default-height-mobile: var(--logo-default-height-mobile-custom, var(--logo-default-height));
   --logo-default-height: auto;
-  --logo-default-width-mobile: var(--logo-default-width);
+  --logo-default-width-mobile: var(--logo-default-width-mobile-custom, var(--logo-default-width));
   --logo-default-width: var(--header-default-logo-width);
 }

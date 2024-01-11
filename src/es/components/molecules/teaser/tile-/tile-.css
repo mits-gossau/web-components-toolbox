@@ -15,7 +15,7 @@
   --teaser-tile-h5-margin: 0 0 0.5em;
   --teaser-tile-overflow: hidden;
   --teaser-tile-p-font-size: 0.875em;
-  --teaser-tile-p-line-height: 1.14em;
+  --teaser-tile-p-line-height: var(--teaser-tile-p-line-height-custom, 1.14em);
   --teaser-tile-p-margin: 0 0 0.625em;
   --teaser-tile-position: relative;
   --underline-font-size: var(--teaser-tile-p-font-size);

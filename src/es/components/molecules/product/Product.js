@@ -1,6 +1,8 @@
 // @ts-check
 import { Intersection } from '../../prototypes/Intersection.js'
 
+/* global CustomEvent */
+
 /**
  * As a molecule, this component shall hold Atoms
  *

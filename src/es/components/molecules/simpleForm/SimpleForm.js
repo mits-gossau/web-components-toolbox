@@ -3,6 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global FileReader */
 /* global self */
+/* global CustomEvent */
 
 /**
  * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior, send it to an api endpoint or emit a custom event
@@ -13,10 +14,10 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class SimpleForm
  * @type {CustomElementConstructor}
  * @attribute {
- *  
+ *
  * }
  * @css {
- *  
+ *
  * }
  */
 export default class SimpleForm extends Shadow() {
@@ -32,14 +33,15 @@ export default class SimpleForm extends Shadow() {
       }
       this.setAttribute('dirty', 'true')
     }
+
     this.changeListener = event => {
       const target = event.composedPath()[0]
       if (!target) return
       switch (true) {
         // file picker stuff
         case target.getAttribute('type') === 'file':
-          const files = Array.from(target.files)
-          let label
+          const files = Array.from(target.files) // eslint-disable-line
+          let label // eslint-disable-line
           if ((label = target.parentNode.querySelector('.type-file-label'))) {
             if (files.length) {
               if (target.hasAttribute('remove-file-title')) target.setAttribute('title', (target.getAttribute('remove-file-title')))
@@ -58,19 +60,15 @@ export default class SimpleForm extends Shadow() {
             }
           }
           break
-        // visibly conditional fields
+        // visibility and multiply conditional fields
         case target.getAttribute('type') === 'checkbox':
         case target.tagName === 'SELECT':
-          let conditionalNodes
+          // visibility
+          let conditionalNodes // eslint-disable-line
           if ((conditionalNodes = this.root.querySelectorAll(`[visible-by=${target.getAttribute('id')}]`))) {
             conditionalNodes.forEach(conditionalNode => {
               if (conditionalNode.hasAttribute('visible-condition')) {
-                if (
-                  conditionalNode.getAttribute('visible-condition') === target.value
-                  || (conditionalNode.getAttribute('visible-condition') === 'truthy' && target.value)
-                  || (conditionalNode.getAttribute('visible-condition') === 'falsy' && !target.value)
-                  || (target.getAttribute('type') === 'checkbox' && conditionalNode.getAttribute('visible-condition') === String(target.checked))
-                ) {
+                if (this.checkCondition(conditionalNode, target, 'visible-condition')) {
                   this.show(conditionalNode)
                 } else {
                   this.hide(conditionalNode)
@@ -80,9 +78,42 @@ export default class SimpleForm extends Shadow() {
               }
             })
           }
+          // multiply aka. clone
+          let originalNode // eslint-disable-line
+          if (target.hasAttribute('multiply') && (originalNode = SimpleForm.findByQuerySelector(target, target.getAttribute('multiply'))) !== document.documentElement && this.checkCondition(target, target, 'multiply-condition')) {
+            /** @type {any} */
+            const clone = originalNode.cloneNode(true)
+            target.removeAttribute('multiply')
+            let counter = Number(target.getAttribute('counter')) || 0
+            counter++
+            clone.setAttribute('visible-by', target.getAttribute('id'))
+            clone.setAttribute('visible-condition', target.getAttribute('multiply-condition'))
+            const cloneTarget = clone.querySelector(`#${target.getAttribute('id')}`)
+            let removedCloneTarget = null
+            if (counter >= Number(target.getAttribute('multiply-max') || 100000)) {
+              if (Array.from(cloneTarget.parentNode.children).length === 2 && Array.from(cloneTarget.parentNode.children).some(node => node.nodeName === 'LABEL')) {
+                removedCloneTarget = cloneTarget.parentNode
+              } else {
+                removedCloneTarget = cloneTarget
+              }
+              removedCloneTarget.remove()
+            } else if (cloneTarget.getAttribute('type') === 'checkbox') {
+              cloneTarget.checked = false
+            } else if (cloneTarget.nodeName === 'SELECT') {
+              cloneTarget.value = ''
+            }
+            if (counter >= Number(cloneTarget.getAttribute('required'))) cloneTarget.removeAttribute('required')
+            cloneTarget.setAttribute('id', `${target.getAttribute('id').replace(`-counter-${counter - 1}`, '')}-counter-${counter}`)
+            cloneTarget.setAttribute('counter', counter)
+            let label
+            if ((label = cloneTarget.parentElement.querySelector(`[for=${target.getAttribute('id')}]`))) label.setAttribute('for', cloneTarget.getAttribute('id'))
+            Array.from(clone.querySelectorAll(`[${target.getAttribute('multiply-text-selector') || 'multiply-text'}]`)).forEach(node => (node.textContent = node.getAttribute(target.getAttribute('multiply-text-selector') || 'multiply-text').replace(target.getAttribute('counter-placeholder'), counter)))
+            if (removedCloneTarget !== clone) originalNode.after(clone)
+          }
           break
       }
     }
+
     // fetch if there is an endpoint attribute, else do the native behavior of form post
     this.abortController = null
     this.submitEventListener = async event => {
@@ -93,20 +124,37 @@ export default class SimpleForm extends Shadow() {
         let body = {}
         // allow deeper json schemas for the body to be filled and sent
         if (this.getAttribute('schema')) {
-          const loop = async obj => {
+          const loop = async (obj, inputs = this.inputs, form = this.form) => {
+            if (!obj) return null
             for (const key in obj) {
               let input = null
               if (Object.hasOwnProperty.call(obj, key)) {
-                obj[key] = typeof obj[key] === 'object'
-                  ? await loop(obj[key])
-                  : ((input = this.inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key)))
-                      ? await this.getInputValue(input)
-                      : obj[key]
+                if (Array.isArray(obj[key])) {
+                  const parentsOfMultipleInput = Array.from(new Set(Array.from(form.querySelectorAll(`[name=${key}]`)).concat(Array.from(form.querySelectorAll(`#${key}`)))))
+                  parentsOfMultipleInput.forEach(async (parentOfMultipleInput, i) => {
+                    if (this.isInputValueNode(parentOfMultipleInput)) {
+                      obj[key][i] = await this.getInputValue(parentOfMultipleInput)
+                    } else {
+                      obj[key][i] = await loop(obj[key][i] || structuredClone(obj[key][0]), this.getInputs(parentOfMultipleInput), parentOfMultipleInput)
+                    }
+                  })
+                } else {
+                  obj[key] = typeof obj[key] === 'object'
+                    ? await loop(obj[key])
+                    : ((input = inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key)))
+                        ? await this.getInputValue(input)
+                        : obj[key]
+                }
               }
             }
             return obj
           }
-          body = await loop(SimpleForm.parseAttribute(this.getAttribute('schema')))
+          const schema = SimpleForm.parseAttribute(this.getAttribute('schema'))
+          if (typeof schema === 'object') {
+            body = await loop(schema)
+          } else {
+            console.error('the attribute schema is invalid: ', (body = schema), this)
+          }
         } else {
           body = await this.inputs.reduce(async (acc, input) => {
             acc = await acc
@@ -118,8 +166,7 @@ export default class SimpleForm extends Shadow() {
             return acc
           }, Promise.resolve({}))
         }
-        // TODO: remove the console log below
-        console.log('body', body);
+        console.info('submitting', body);
         (this.getAttribute('endpoint')
           ? fetch(this.getAttribute('endpoint'), {
             method: this.getAttribute('method') || 'GET',
@@ -146,7 +193,7 @@ export default class SimpleForm extends Shadow() {
                     'Content-Type': 'application/json'
                   },
               redirect: this.getAttribute('follow') || 'follow',
-              body: body,
+              body,
               resolve
             },
             bubbles: true,
@@ -175,10 +222,20 @@ export default class SimpleForm extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    Promise.all(showPromises).then(() => (this.hidden = false))
-    if (this.inputSubmit) this.inputSubmit.addEventListener('click', this.clickEventListener)
-    this.form.addEventListener('change', this.changeListener)
-    this.form.addEventListener('submit', this.submitEventListener)
+    Promise.all(showPromises).then(() => {
+      if (this.inputSubmit) this.inputSubmit.addEventListener('click', this.clickEventListener)
+      this.form.addEventListener('change', this.changeListener)
+      this.form.addEventListener('submit', this.submitEventListener)
+      Array.from(this.root.querySelectorAll('[selected],[checked]')).forEach(node => {
+        const eventTarget = node.parentNode.tagName === 'SELECT' ? node.parentNode : node
+        eventTarget.dispatchEvent(new Event('change', {
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      })
+      this.hidden = false
+    })
   }
 
   disconnectedCallback () {
@@ -229,14 +286,14 @@ export default class SimpleForm extends Shadow() {
             style.setAttribute('load-form-styles', 'molecules/form/Form.js')
             this.html = style
           }))
-        } else{
+        } else {
           this.css = form.css
         }
         form.remove()
         return form.renderCssPromise
       })
     }
-    this.css = /* css */``
+    this.css = /* css */''
     return Promise.all([this.fetchTemplate(), formPromise])
   }
 
@@ -279,13 +336,21 @@ export default class SimpleForm extends Shadow() {
 
   /**
    * @param {HTMLInputElement} input
+   * @return {boolean}
+   */
+  isInputValueNode (input) {
+    return input.nodeName === 'INPUT' || input.nodeName === 'SELECT'
+  }
+
+  /**
+   * @param {HTMLInputElement} input
    * @return {Promise<boolean | string | string[]>}
    */
   getInputValue (input) {
     switch (input.getAttribute('type')) {
       case 'file':
         // @ts-ignore
-        return Promise.all(Array.from(input.files).map(file => new Promise(resolve => {
+        const filePromises = Array.from(input.files).map(file => new Promise(resolve => { // eslint-disable-line
           const reader = new FileReader()
           reader.readAsDataURL(file)
           reader.onload = () => resolve(reader.result)
@@ -293,7 +358,9 @@ export default class SimpleForm extends Shadow() {
             console.error('Error: ', error)
             resolve(`File ${input.getAttribute('name') || input.getAttribute('id')} has the following Error: ${error}`)
           }
-        })))
+        }))
+        if (input.hasAttribute('multiple')) return Promise.all(filePromises)
+        return filePromises[0]
       case 'checkbox':
         return Promise.resolve(input.checked)
       default:
@@ -317,12 +384,41 @@ export default class SimpleForm extends Shadow() {
     })
   }
 
+  checkCondition (conditionalNode, targetNode, attributeName) {
+    return conditionalNode.getAttribute(attributeName) === targetNode.value ||
+    (conditionalNode.getAttribute(attributeName) === 'truthy' && targetNode.value) ||
+    (conditionalNode.getAttribute(attributeName) === 'falsy' && !targetNode.value) ||
+    (targetNode.getAttribute('type') === 'checkbox' && conditionalNode.getAttribute(attributeName) === String(targetNode.checked))
+  }
+
+  /**
+   * find html element by id or class
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @return {HTMLElement}
+   */
+  static findByQuerySelector (el, selector) {
+    while ((el = el.parentNode || el.host)) {
+      const parentNode = el.parentNode || el.host
+      if (parentNode && parentNode.querySelector(selector)) {
+        return el
+      }
+    }
+    return document.documentElement
+  }
+
   get form () {
     return this.root.querySelector('form')
   }
 
   get inputs () {
-    return Array.from(this.form.querySelectorAll('input')).concat(Array.from(this.root.querySelectorAll('select')))
+    return this.getInputs(this.form)
+  }
+
+  getInputs (target) {
+    if (!target) return []
+    return Array.from(target.querySelectorAll('input')).concat(Array.from(target.querySelectorAll('select')))
   }
 
   get inputSubmit () {

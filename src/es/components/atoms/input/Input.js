@@ -193,6 +193,7 @@ export default class Input extends Shadow() {
         appearance: none;
         background: var(--input-bg-color, var(--m-gray-200));
         border: var(--border, 1px solid transparent);
+        border-radius: var(--border-radius, 0.5em);
         transition: background ease-out .3s, border-color ease-out .3s;
       }
 
@@ -227,6 +228,7 @@ export default class Input extends Shadow() {
         position: relative;
       }
       :host([search]) label {
+        font-family: var(--search-label-font-family, var(--font-family-secondary));
         font-weight: var(--search-label-font-weight, 500);
         font-size: var(--search-label-font-size, var(--font-size));
         line-height: var(--search-label-line-height, 1.5);
@@ -331,6 +333,9 @@ export default class Input extends Shadow() {
       }
 
       @media only screen and (max-width: _max-width_) {
+        input {
+          border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
+        }
         :host([search]) input {
           padding: var(--search-input-padding-mobile, var(--search-input-padding, 0.75em var(--content-spacing-mobile)));
           border-radius: var(--search-input-border-radius-mobile, var(--search-input-border-radius, var(--border-radius-mobile, var(--border-radius, 0.571em))));
@@ -384,12 +389,17 @@ export default class Input extends Shadow() {
       this.renderLabelHTML(),
       this.renderSearchHTML()
     ]).then(([labelHtml, searchHtml]) => {
-      this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml);
+      this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml)
       this.divWrapper.innerHTML += /* html */`
           <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
           ${searchHtml}
       `
-      this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint') ? this.getAttribute('enterkeyhint') : 'search')
+      this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint')
+        ? this.getAttribute('enterkeyhint')
+        : this.search
+          ? 'search'
+          : 'go'
+      )
     })
   }
 
@@ -409,7 +419,11 @@ export default class Input extends Shadow() {
       </button>
     `)
     }
-    return this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`], true).then(htmls => `<button type="button" title="${this.iconName}">${htmls[0]}</button>`)
+    return (this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`], true).then(htmls => `<button type="button" title="${this.iconName}">${htmls[0]}</button>`))
+  }
+
+  focus() {
+    this.inputField.focus()
   }
 
   get inputId () {

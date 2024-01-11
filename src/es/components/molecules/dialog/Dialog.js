@@ -12,19 +12,38 @@ export default class Dialog extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
+    /**
+     * @param {'show'|'showModal'} [command='show']
+     */
+    const show = (command = 'show') => {
+      this.dialog.classList.remove('closed')
+      this.dialog[command]()
+      Array.from(this.dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
+    }
+    const close = () => {
+      this.dialog.classList.add('closed')
+      setTimeout(() => this.dialog.close(), this.getAttribute('namespace') === 'dialog-top-slide-in-' ? 300 : 0)
+    }
+
     this.clickEventListener = event => {
-      const target = event.composedPath()[0]
+      // click on backdrop
+      if (event.composedPath()[0] === this.dialog) {
+        const rect = this.dialog.getBoundingClientRect()
+        if (event.clientY < rect.top || event.clientY > rect.bottom || event.clientX < rect.left || event.clientX > rect.right) close()
+        return
+      }
+      const target = event.composedPath().find(node => node.hasAttribute && node.hasAttribute('id'))
       if (!target) return
       switch (target.getAttribute('id')) {
         case 'show':
-          this.dialog.show()
+          show()
           break
         case 'show-modal':
         case 'open':
-          this.dialog.showModal()
+          show('showModal')
           break
         case 'close':
-          this.dialog.close()
+          close()
           break
       }
     }
@@ -62,57 +81,6 @@ export default class Dialog extends Shadow() {
    * renders the css
    */
   renderCSS () {
-    this.css = /* css */`
-      /*   Open state of the dialog  */
-      :host > dialog[open] {
-        opacity: 1;
-        transform: scaleY(1);
-      }
-      /*   Closed state of the dialog   */
-      :host > dialog {
-        opacity: 0;
-        transform: scaleY(0);
-        transition:
-          opacity 0.7s ease-out,
-          transform 0.7s ease-out,
-          overlay 0.7s ease-out allow-discrete,
-          display 0.7s ease-out allow-discrete;
-        /* Equivalent to
-        transition: all 0.7s allow-discrete; */
-      }
-      /*   Before-open state  */
-      /* Needs to be after the previous dialog[open] rule to take effect,
-          as the specificity is the same */
-      @starting-style {
-        :host > dialog[open] {
-          opacity: 0;
-          transform: scaleY(0);
-        }
-      }
-      /* Transition the :backdrop when the dialog modal is promoted to the top layer */
-      :host > dialog::backdrop {
-        background-color: rgb(0 0 0 / 0);
-        transition:
-          display 0.7s allow-discrete,
-          overlay 0.7s allow-discrete,
-          background-color 0.7s;
-        /* Equivalent to
-        transition: all 0.7s allow-discrete; */
-      }
-      :host > dialog[open]::backdrop {
-        background-color: rgb(0 0 0 / 0.25);
-      }
-      /* This starting-style rule cannot be nested inside the above selector
-      because the nesting selector cannot represent pseudo-elements. */
-      @starting-style {
-        :host > dialog[open]::backdrop {
-          background-color: rgb(0 0 0 / 0);
-        }
-      }
-      @media only screen and (max-width: _max-width_) {
-        :host {}
-      }
-    `
     return this.fetchTemplate()
   }
 
@@ -168,7 +136,7 @@ export default class Dialog extends Shadow() {
     `
     Array.from(this.root.children).forEach(node => {
       if (node === this.dialog || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
-      if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open') return this.html = node
+      if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open') return (this.html = node)
       this.dialog.appendChild(node)
     })
   }
