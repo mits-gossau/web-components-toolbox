@@ -440,7 +440,7 @@ export default class Navigation extends Mutation() {
       }
       :host > nav > ul > li > a-input{
         --margin-bottom: 0;
-        --search-input-border-color: transparent;
+        --search-input-border-color: var(--search-input-border-color-custom, transparent);
         --search-input-padding-mobile: var(--a-link-content-spacing);
       }
       @media only screen and (max-width: ${self
