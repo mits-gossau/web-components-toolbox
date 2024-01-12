@@ -169,7 +169,7 @@ export default class SimpleForm extends Shadow() {
         (this.getAttribute('endpoint')
           ? fetch(this.getAttribute('endpoint'), {
             method: this.getAttribute('method') || 'GET',
-            mode: this.getAttribute('mode') || 'no-cors',
+            mode: this.getAttribute('mode') || 'cors',
             headers: this.hasAttribute('headers')
               ? SimpleForm.parseAttribute(this.getAttribute('headers'))
               : {
