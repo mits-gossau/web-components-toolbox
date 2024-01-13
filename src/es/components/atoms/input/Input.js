@@ -27,7 +27,7 @@ export default class Input extends Shadow() {
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']
     this.setAttribute('role', this.inputType)
     this.setAttribute('aria-label', this.inputType)
-    if (!this.children.length) this.labelText = this.textContent
+    if (!this.children.length) this.labelText = this.textContent.trim()
 
     this.lastValue = ''
     this.clickListener = (event, retry = true) => {
@@ -194,6 +194,7 @@ export default class Input extends Shadow() {
         background: var(--input-bg-color, var(--m-gray-200));
         border: var(--border, 1px solid transparent);
         border-radius: var(--border-radius, 0.5em);
+        text-overflow: var(--text-overflow, ellipsis);
         transition: background ease-out .3s, border-color ease-out .3s;
       }
 
