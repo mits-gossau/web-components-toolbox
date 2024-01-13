@@ -43,14 +43,8 @@ export default class Select extends Shadow() {
   }
 
   connectedCallback () {
-    this.hidden = true
-    const showPromises = []
-    // render template
-    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
-    Promise.all(showPromises).then(() => {
-      if (this.selectField) this.selectField.addEventListener('change', this.changeListener)
-      this.hidden = false
-    })
+    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.selectField) this.selectField.addEventListener('change', this.changeListener)
     if (this.hasAttribute('render-event-name')) document.body.addEventListener(this.getAttribute('render-event-name') || 'render-event-name', this.renderEventNameListener)
     if (this.hasAttribute('request-render-event-name')) this.dispatchEvent(new CustomEvent(this.getAttribute('request-render-event-name') || 'request-render-event-name', {
       bubbles: true,
