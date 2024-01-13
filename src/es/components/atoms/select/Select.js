@@ -100,6 +100,7 @@ export default class Select extends Shadow() {
       @media only screen and (max-width: _max-width_) {
         select {
           border-radius: var(--select-border-radius-mobile, var(--select-border-radius, var(--border-radius-mobile, var(--border-radius, 0.571em))));
+          font-size: var(--select-font-size-mobile, var(--select-font-size, var(--font-size-mobile, var(--font-size))));
         }
       }
     `
