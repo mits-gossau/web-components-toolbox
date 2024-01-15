@@ -118,6 +118,19 @@
 :host h6.font-family-tertiary {
   font-family: var(--h6-font-family-tertiary, var(--h1-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit)))));
 }
+:host h1.title-border::before, 
+:host h2.title-border::before, 
+:host h3.title-border::before, 
+:host h4.title-border::before, 
+:host h5.title-border::before, 
+:host h6.title-border::before {
+  background-color: var(--h-border-top-color, var(--mdx-base-color-klubschule-red-600));
+  content: '';
+  display: block;
+  margin-bottom: var(--h-border-margin-bottom, 16px);
+  height: var(--h-border-top-height, 4px);
+  width: var(--h-border-top-width, 32px);
+}
 /* text stylings */
 :host .font-family-secondary {
   font-family: var(--font-family-secondary, var(--font-family, inherit));
