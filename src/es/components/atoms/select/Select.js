@@ -31,6 +31,7 @@ export default class Select extends Shadow() {
     this.renderEventNameListener = event => {
       event.detail.fetch.then(data => {
         this.html = ''
+        /* eslint-disable */
         this.html = /* HTML */`
           <select ${data.name ? `name="$data.name}"` : ''} ${data.id ? `id="$data.id}"` : ''}>
             ${this.hasAttribute('placeholder') ? /* HTML */`<option value="">${this.getAttribute('placeholder')}</option>` : ''}
@@ -46,11 +47,13 @@ export default class Select extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.selectField) this.selectField.addEventListener('change', this.changeListener)
     if (this.hasAttribute('render-event-name')) document.body.addEventListener(this.getAttribute('render-event-name') || 'render-event-name', this.renderEventNameListener)
-    if (this.hasAttribute('request-render-event-name')) this.dispatchEvent(new CustomEvent(this.getAttribute('request-render-event-name') || 'request-render-event-name', {
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
+    if (this.hasAttribute('request-render-event-name')) {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-render-event-name') || 'request-render-event-name', {
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   disconnectedCallback () {

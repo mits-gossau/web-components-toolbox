@@ -126,7 +126,7 @@ export default class Grid extends Shadow() {
           // make template ${code} accessible aka. set the variables in the literal string
           fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
         })
-      
+
       default:
         return this.fetchCSS(styles, false)
     }
