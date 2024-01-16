@@ -484,6 +484,9 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   padding: var(--ul-icon-padding, 0);
 }
 /* table-tags */
+:host table thead {
+  display: table-header-group;
+}
 :host table tbody {
   display: table;
 }
@@ -493,17 +496,34 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   overflow: auto;
 }
 :host table, :host table tbody {
+  border: var(--table-border, 0);
   border-collapse: var(--table-border-collapse, collapse);
   border-spacing: var(--table-border-spacing, 0);
+  height: var(--table-height, auto) !important;
   max-width: var(--table-max-width, 100%);
   word-break: var(--table-word-break, normal);
   margin: var(--table-margin, 0 auto var(--content-spacing));
   text-align: var(--table-text-align, left);
   width: var(--table-width, 100%);
 }
+:host table tr:nth-child(even) {
+  background-color: var(--table-even-background-color, transparent);
+}
+:host table tr:nth-child(odd) {
+  background-color: var(--table-odd-background-color, transparent);
+}
+:host table thead {
+  display: table;
+  width: var(--table-thead-width, 100%);
+}
+:host table thead tr {
+  background-color: var(--table-thead-tr-background-color, transparent) !important;
+  width: var(--table-thead-tr-width, var(--table-thead-width, 100%));
+}
 :host table td, :host table th {
   border: var(--table-border, 0);
   vertical-align: var(--table-vertical-align, top);
+  padding: var(--table-padding, inherit);
   padding-right: var(--table-padding-right, 1em);
   white-space: var(--table-white-space, normal);
 }
