@@ -22,7 +22,6 @@ export default class Select extends Shadow() {
         cancelable: true,
         composed: true,
         detail: {
-          this: this,
           value: this.selectField.value
         }
       }))

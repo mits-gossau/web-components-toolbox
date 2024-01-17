@@ -676,7 +676,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     margin: var(--ol-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
   }
   :host ul {
-    margin: var(--ul-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+    margin: var(--ul-margin-mobile, var(--ul-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
     padding-left: var(--ul-margin-mobile, var(--content-spacing-mobile, var(--content-spacing)));
   }
   /* table-tags */
