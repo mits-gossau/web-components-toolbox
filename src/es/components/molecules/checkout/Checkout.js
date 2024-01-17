@@ -127,19 +127,19 @@ export default class Checkout extends Shadow() {
         display: var(--product-footer-display, flex);
         justify-content: var(--product-footer-justify-content, space-between);
       }
-      :host table {
+      :host table.totalSummary {
         border-top: 3px solid var(--table-border-bottom-color, #E0E0E0);
       }
-      :host table tr {
+      :host table.totalSummary tr {
         border-bottom: 1px solid var(--table-tr-border-bottom-color, #E0E0E0);
       }
-      :host table tr.important {
+      :host table.totalSummary tr.important {
        border-bottom: 3px solid var(--table-tr-important-border-bottom-color, #E0E0E0);
       }
-      :host table tr.with-background {
+      :host table.totalSummary tr.with-background {
         background-color: var(--table-tr-with-background-background-color, #F5F5F5);
       }
-      :host table td {
+      :host table.totalSummary td {
         text-align: var(--table-td-text-align, right);
         padding: var(--table-td-padding, 0.5em);
       }
@@ -322,7 +322,7 @@ export default class Checkout extends Shadow() {
   totalAndTaxes (data) {
     const { totalTtc, totalTva1, totalTva2, totalHt, totalTtcDiscount, totalTtcWithDiscount, totalTtcTranslation, montantRabaisTranslation, totalTva1Translation, totalTva2Translation, totalHtAvecRabaisTranslation, totalTtcAvecRabaisTranslation } = data
     return /* html */ `
-      <table>
+      <table class="totalSummary">
         <tr class="bold">
           <td>${totalTtcTranslation}</td>
           <td>CHF ${totalTtc}</td>
