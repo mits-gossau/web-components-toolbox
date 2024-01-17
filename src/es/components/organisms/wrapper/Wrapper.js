@@ -285,13 +285,14 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       } else if (childNodes.length > childNodesLength) {
         childNodes = childNodes.splice(0, childNodesLength)
       }
+      this.style.textContent = ''
       for (let i = 0; i < childNodesLength; i++) {
         if (this.hasAttribute(`any-${i + 1}-width`) || (childNodes[i] && childNodes[i].hasAttribute('width'))) {
-          this.css = /* css */`
+          this.setCss(/* CSS */`
             :host {
               --any-${i + 1}-width: ${childNodes[i].getAttribute('width') || this.getAttribute(`any-${i + 1}-width`)};
             }
-          `
+          `, undefined, undefined, undefined, this.style)
         }
       }
       // calculate flex child width by CSS vars
@@ -337,7 +338,6 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
       let freeWidth = ((100 - bookedWidth) / (childNodesLengthNotWidthHundredPercent - bookedCount))
       // @ts-ignore
       if (freeWidth === Infinity || freeWidth === -Infinity) freeWidth = 0
-      this.style.textContent = ''
       for (let i = 1; i < childNodesLength + 1; i++) {
         this.setCss(/* CSS */`
           :host > section > *:nth-child(${i}) {

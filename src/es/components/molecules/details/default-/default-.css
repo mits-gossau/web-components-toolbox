@@ -3,10 +3,10 @@
     --details-default-border-color-last: var(--details-default-border-color-last-custom, var(--details-default-border-color-custom, var(--color-secondary)));
     --details-default-border-color: var(--details-default-border-color-custom, var(--color-secondary));
     --details-default-border-top: var(--details-default-border-top-custom, 2px solid var(--color-secondary));
-    --details-default-child-margin-mobile: var(--content-spacing-mobile) auto;
-    --details-default-child-margin: var(--content-spacing) auto;
-    --details-default-content-spacing-mobile: var(--content-spacing-mobile);
-    --details-default-content-spacing: var(--content-spacing);
+    --details-default-child-margin-mobile: var(--details-default-child-margin-mobile-custom, var(--content-spacing-mobile) auto);
+    --details-default-child-margin: var(--details-default-child-margin-custom, var(--content-spacing) auto);
+    --details-default-content-spacing-mobile: var(--details-default-content-spacing-mobile-custom, var(--content-spacing-mobile));
+    --details-default-content-spacing: var(--details-default-content-spacing-custom, var(--content-spacing));
     --details-default-icon-align-items:flex-start;
     --details-default-icon-justify-content: flex-end;
     --details-default-icon-margin: 0 0.875em 0 0;

@@ -13,7 +13,7 @@ export default class Checkout extends Shadow() {
       event.detail.fetch.then(productData => {
         this.html = ''
         if (productData.removedProducts) {
-          productData.response.removedProducts = true;
+          productData.response.removedProducts = true
         }
         this.renderHTML(productData.response)
       }).catch(error => {

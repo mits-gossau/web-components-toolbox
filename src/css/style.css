@@ -2,6 +2,7 @@
 /* h-tags */
 /* IMPORTANT: This file will often be processed by namespace-fallback regex function src/es/components/web-components-toolbox/src/es/components/prototypes/Shadow.js:L244, which has trouble to detect proper closings with calc() functions. Be careful to use any factors before variables within calc! */
 :host h1, :host h2, :host h3, :host h4, :host h5, :host h6 {
+  hyphens: var(--h-hyphens, unset);
   transition: var(--h-transition, color 0.3s ease-out);
 }  
 :host h1 {
@@ -11,6 +12,7 @@
   line-height: var(--h1-line-height, var(--h-line-height, 1.286em));
   font-family: var(--h1-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h1-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h1-hyphens, var(--h-hyphens, unset));
   text-align: var(--h1-text-align, var(--h-text-align, start));
   word-break: var(--h1-word-break, var(--h-word-break, normal));
   text-transform: var(--h1-text-transform, var(--h-text-transform, none));
@@ -30,6 +32,7 @@
   line-height: var(--h2-line-height, var(--h-line-height, 1.334em));
   font-family: var(--h2-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h2-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h2-hyphens, var(--h-hyphens, unset));
   text-align: var(--h2-text-align, var(--h-text-align, start));
   word-break: var(--h2-word-break, var(--h-word-break, normal));
   text-transform: var(--h2-text-transform, var(--h-text-transform, none));
@@ -49,6 +52,7 @@
   line-height: var(--h3-line-height, var(--h-line-height, 1.4em));
   font-family: var(--h3-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h3-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h3-hyphens, var(--h-hyphens, unset));
   text-align: var(--h3-text-align, var(--h-text-align, start));
   word-break: var(--h3-word-break, var(--h-word-break, normal));
   text-transform: var(--h3-text-transform, var(--h-text-transform, none));
@@ -68,6 +72,7 @@
   line-height: var(--h4-line-height, var(--h-line-height, 1.334em));
   font-family: var(--h4-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h4-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h4-hyphens, var(--h-hyphens, unset));
   text-align: var(--h4-text-align, var(--h-text-align, start));
   word-break: var(--h4-word-break, var(--h-word-break, normal));
   text-transform: var(--h4-text-transform, var(--h-text-transform, none));
@@ -87,6 +92,7 @@
   line-height: var(--h5-line-height, var(--h-line-height, 1.334em));
   font-family: var(--h5-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h5-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h5-hyphens, var(--h-hyphens, unset));
   text-align: var(--h5-text-align, var(--h-text-align, start));
   word-break: var(--h5-word-break, var(--h-word-break, normal));
   text-transform: var(--h5-text-transform, var(--h-text-transform, none));
@@ -106,6 +112,7 @@
   line-height: var(--h6-line-height, var(--h1-line-height, var(--h-line-height, 1.286em)));
   font-family: var(--h6-font-family, var(--h1-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit)))));
   font-weight: var(--h6-font-weight, var(--h1-font-weight, var(--h-font-weight, normal)));
+  hyphens: var(--h6-hyphens, var(--h-hyphens, unset));
   text-align: var(--h6-text-align, var(--h1-text-align, var(--h-text-align, start)));
   word-break: var(--h6-word-break, var(--h1-word-break, var(--h-word-break, normal)));
   text-transform: var(--h6-text-transform, var(--h1-text-transform, var(--h-text-transform, none)));
@@ -117,6 +124,19 @@
 }
 :host h6.font-family-tertiary {
   font-family: var(--h6-font-family-tertiary, var(--h1-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit)))));
+}
+:host h1.title-border::before, 
+:host h2.title-border::before, 
+:host h3.title-border::before, 
+:host h4.title-border::before, 
+:host h5.title-border::before, 
+:host h6.title-border::before {
+  background-color: var(--h-border-top-color, var(--mdx-base-color-klubschule-red-600));
+  content: '';
+  display: block;
+  margin-bottom: var(--h-border-margin-bottom, 16px);
+  height: var(--h-border-top-height, 4px);
+  width: var(--h-border-top-width, 32px);
 }
 /* text stylings */
 :host .font-family-secondary {
@@ -403,7 +423,8 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   counter-increment: item;
   text-align: center;
 }
-:host ul {
+:host ul,
+:host ol {
   box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
   display: var(--ul-display, var(--ol-display, block));
   flex-direction: var(--ul-flex-direction, var(--ol-flex-direction, column));
@@ -411,6 +432,10 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   padding-left: var(--ul-margin, 1.5em);
   text-align: var(--ul-text-align, var(--ol-text-align, start));
   margin: var(--ul-margin, 0 auto var(--content-spacing));
+}
+:host ul > li,
+:host ol > li {
+  padding-left: var(--ul-li-padding-left, 0);
 }
 /* overwrite abuse of o-wrapper with simulate-children="1" src/es/components/pages/Home.html */
 :host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
@@ -471,6 +496,9 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   padding: var(--ul-icon-padding, 0);
 }
 /* table-tags */
+:host table thead {
+  display: table-header-group;
+}
 :host table tbody {
   display: table;
 }
@@ -480,17 +508,34 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   overflow: auto;
 }
 :host table, :host table tbody {
+  border: var(--table-border, 0);
   border-collapse: var(--table-border-collapse, collapse);
   border-spacing: var(--table-border-spacing, 0);
+  height: var(--table-height, auto) !important;
   max-width: var(--table-max-width, 100%);
   word-break: var(--table-word-break, normal);
   margin: var(--table-margin, 0 auto var(--content-spacing));
   text-align: var(--table-text-align, left);
   width: var(--table-width, 100%);
 }
+:host table tr:nth-child(even) {
+  background-color: var(--table-even-background-color, transparent);
+}
+:host table tr:nth-child(odd) {
+  background-color: var(--table-odd-background-color, transparent);
+}
+:host table thead {
+  display: table;
+  width: var(--table-thead-width, 100%);
+}
+:host table thead tr {
+  background-color: var(--table-thead-tr-background-color, transparent) !important;
+  width: var(--table-thead-tr-width, var(--table-thead-width, 100%));
+}
 :host table td, :host table th {
   border: var(--table-border, 0);
   vertical-align: var(--table-vertical-align, top);
+  padding: var(--table-padding, inherit);
   padding-right: var(--table-padding-right, 1em);
   white-space: var(--table-white-space, normal);
 }
@@ -638,7 +683,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     margin: var(--ol-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
   }
   :host ul {
-    margin: var(--ul-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+    margin: var(--ul-margin-mobile, var(--ul-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
     padding-left: var(--ul-margin-mobile, var(--content-spacing-mobile, var(--content-spacing)));
   }
   /* table-tags */

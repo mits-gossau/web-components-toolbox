@@ -132,11 +132,10 @@ export default class SimpleForm extends Shadow() {
                 if (Array.isArray(obj[key])) {
                   const parentsOfMultipleInput = Array.from(new Set(Array.from(form.querySelectorAll(`[name=${key}]`)).concat(Array.from(form.querySelectorAll(`#${key}`)))))
                   parentsOfMultipleInput.forEach(async (parentOfMultipleInput, i) => {
-                    if (this.isInputValueNode(parentOfMultipleInput)) {
-                      obj[key][i] = await this.getInputValue(parentOfMultipleInput)
-                    } else {
-                      obj[key][i] = await loop(obj[key][i] || structuredClone(obj[key][0]), this.getInputs(parentOfMultipleInput), parentOfMultipleInput)
-                    }
+                    const value = this.isInputValueNode(parentOfMultipleInput)
+                      ? await this.getInputValue(parentOfMultipleInput)
+                      : await loop(obj[key][i] || structuredClone(obj[key][0]), this.getInputs(parentOfMultipleInput), parentOfMultipleInput)
+                    if (value) obj[key][i] = value
                   })
                 } else {
                   obj[key] = typeof obj[key] === 'object'
@@ -170,7 +169,7 @@ export default class SimpleForm extends Shadow() {
         (this.getAttribute('endpoint')
           ? fetch(this.getAttribute('endpoint'), {
             method: this.getAttribute('method') || 'GET',
-            mode: this.getAttribute('mode') || 'no-cors',
+            mode: this.getAttribute('mode') || 'cors',
             headers: this.hasAttribute('headers')
               ? SimpleForm.parseAttribute(this.getAttribute('headers'))
               : {
