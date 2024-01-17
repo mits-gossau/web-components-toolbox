@@ -122,16 +122,19 @@ export default class SystemNotification extends Shadow() {
 
     if (timedNotificationData && this.isTimedNotification) {
       const duration = timedNotificationData.duration
-      // ATTENTION! Add px unit for position as a number!
+      const positionUnit = timedNotificationData.position.unit ?? "px"
+
       const position = {
-        top: timedNotificationData.position.top ? document.getElementsByTagName("html")[0].scrollTop + timedNotificationData.position.top + "px" : "",
-        right: timedNotificationData.position.right ? timedNotificationData.position.right + "px" : "",
-        bottom: timedNotificationData.position.bottom ? timedNotificationData.position.bottom + "px" : "",
-        left: timedNotificationData.position.left ? timedNotificationData.position.left + "px" : "",
+        position: timedNotificationData.position.position ?? "fixed",
+        top: timedNotificationData.position.top ? timedNotificationData.position.top + positionUnit : "",
+        right: timedNotificationData.position.right ? timedNotificationData.position.right + positionUnit : "",
+        bottom: timedNotificationData.position.bottom ? timedNotificationData.position.bottom + positionUnit : "",
+        left: timedNotificationData.position.left ? timedNotificationData.position.left + positionUnit : "",
       }
-      this.css = this.css + /* css */`
+      
+      this.css = /* css */`
       :host {
-        position: absolute;
+        position: ${position.position};
         top: ${position.top};
         right: ${position.right};
         bottom: ${position.bottom};
