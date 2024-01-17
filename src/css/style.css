@@ -416,7 +416,8 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   counter-increment: item;
   text-align: center;
 }
-:host ul {
+:host ul,
+:host ol {
   box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
   display: var(--ul-display, var(--ol-display, block));
   flex-direction: var(--ul-flex-direction, var(--ol-flex-direction, column));
@@ -424,6 +425,10 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   padding-left: var(--ul-margin, 1.5em);
   text-align: var(--ul-text-align, var(--ol-text-align, start));
   margin: var(--ul-margin, 0 auto var(--content-spacing));
+}
+:host ul > li,
+:host ol > li {
+  padding-left: var(--ul-li-padding-left, 0);
 }
 /* overwrite abuse of o-wrapper with simulate-children="1" src/es/components/pages/Home.html */
 :host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
