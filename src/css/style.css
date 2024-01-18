@@ -511,7 +511,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   display: var(--table-thead-display, table-header-group);
   width: var(--table-thead-width, 100%);
 }
-:host table thead tr {
+:host table thead tr:first-child {
   background-color: var(--table-thead-tr-background-color, transparent);
   width: var(--table-thead-tr-width, var(--table-thead-width, 100%));
 }
