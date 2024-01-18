@@ -22,9 +22,11 @@ export default class SystemNotification extends Shadow() {
 
   connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
+
     if (!this.isTimedNotification) {
       this.renderHTML()
     }
+
     if (this.isTimedNotification) {
       document.body.addEventListener("render-timed-system-notification", this.renderSystemNotification)
     }
@@ -154,7 +156,6 @@ export default class SystemNotification extends Shadow() {
       }, duration)
     }
 
-    this.html = ""
     this.html = /* html */`
       <div class="system-notification system-${type}" role="alert">
         ${icon
