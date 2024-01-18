@@ -232,8 +232,10 @@ export default class Form extends Shadow() {
         color: var(--color);
         padding: 0.625em;
         font-size: var(--font-size);
-        outline: none;
         width: 100%;
+      }
+      ${this.getInputFieldsWithText()} {
+        outline: none;
       }
       ${this.getInputFieldsWithText('::placeholder')} {
         color: var(--placeholder-color, var(--m-gray-600));

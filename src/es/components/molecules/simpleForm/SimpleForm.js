@@ -47,7 +47,67 @@ export default class SimpleForm extends Shadow() {
               if (target.hasAttribute('remove-file-title')) target.setAttribute('title', (target.getAttribute('remove-file-title')))
               target.parentNode.classList.add('has-files')
               if (!label.hasAttribute('original-label')) label.setAttribute('original-label', label.innerHTML)
-              label.innerHTML = files.reduce((acc, file, i) => `${acc}${file.name}${files[i + 1] ? '<br>' : ''}`, '&nbsp;')
+              label.innerHTML = ''
+              label.classList.remove('file-preview')
+              const ul = document.createElement('ul')
+              files.forEach((file, i) => {
+                const li = document.createElement('li')
+                li.textContent = file.name
+                ul.appendChild(li)
+                if (target.hasAttribute('file-preview')) SimpleForm.readFile(file, true).then(([base64, typeMatch]) => {
+                  const div = document.createElement('div')
+                  switch (typeMatch[1]) {
+                    // video-, pdf- preview
+                    case 'image':
+                      div.innerHTML = /* html */`
+                        <a-picture alt="${file.name}" defaultSource="${base64}"></a-picture>
+                      `
+                      label.classList.add('file-preview')
+                      this.fetchModules([
+                        {
+                          path: `${this.importMetaUrl}../../atoms/picture/Picture.js`,
+                          name: 'a-picture'
+                        }
+                      ])
+                      li.prepend(div.children[0])
+                      break
+                    case 'video':
+                      // with fallback without type, then it would try to play video/mp4
+                      div.innerHTML = /* html */`
+                        <a-video muted autoplay loop controls sources="[{'src':'${base64}', 'type':'${typeMatch[1]}/${typeMatch[2]}'}, {'src':'${base64}'}]"></a-video>
+                      `
+                      label.classList.add('file-preview')
+                      this.fetchModules([
+                        {
+                          path: `${this.importMetaUrl}../../atoms/video/Video.js`,
+                          name: 'a-video'
+                        }
+                      ])
+                      li.prepend(div.children[0])
+                      break
+                    case 'text':
+                    case 'application':
+                      if (typeMatch[2] !== 'pdf' && typeMatch[2] !== 'plain') break
+                      div.innerHTML = /* html */`
+                        <a-iframe>
+                          <template>
+                            <iframe src="${base64}" frameborder="0"></iframe>
+                          </template>
+                        </a-iframe>
+                      `
+                      label.classList.add('file-preview')
+                      this.fetchModules([
+                        {
+                          path: `${this.importMetaUrl}../../atoms/iframe/Iframe.js`,
+                          name: 'a-iframe'
+                        }
+                      ])
+                      li.prepend(div.children[0])
+                      break
+                  }
+                })
+                label.appendChild(ul)
+              })
               target.addEventListener('click', event => {
                 event.preventDefault()
                 target.value = ''
@@ -292,7 +352,22 @@ export default class SimpleForm extends Shadow() {
         return form.renderCssPromise
       })
     }
-    this.css = /* css */''
+    this.css = /* css */`
+      :host *:has(> input[type=file]) > *:not(input) {
+        gap: 1em;
+      }
+      :host *:has(> input[type=file]) > *:not(input) > *:first-child {
+        flex-shrink: 0;
+      }
+      :host *:has(> input[type=file]) *:not(input) > ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+      }
+      :host *:has(> input[type=file]) *.file-preview > ul > li:not(:last-child) {
+        margin-bottom: 1em;
+      }
+    `
     return Promise.all([this.fetchTemplate(), formPromise])
   }
 
@@ -349,15 +424,7 @@ export default class SimpleForm extends Shadow() {
     switch (input.getAttribute('type')) {
       case 'file':
         // @ts-ignore
-        const filePromises = Array.from(input.files).map(file => new Promise(resolve => { // eslint-disable-line
-          const reader = new FileReader()
-          reader.readAsDataURL(file)
-          reader.onload = () => resolve(reader.result)
-          reader.onerror = error => {
-            console.error('Error: ', error)
-            resolve(`File ${input.getAttribute('name') || input.getAttribute('id')} has the following Error: ${error}`)
-          }
-        }))
+        const filePromises = Array.from(input.files).map(file => SimpleForm.readFile(file))
         if (input.hasAttribute('multiple')) return Promise.all(filePromises)
         return filePromises[0]
       case 'checkbox':
@@ -388,6 +455,18 @@ export default class SimpleForm extends Shadow() {
     (conditionalNode.getAttribute(attributeName) === 'truthy' && targetNode.value) ||
     (conditionalNode.getAttribute(attributeName) === 'falsy' && !targetNode.value) ||
     (targetNode.getAttribute('type') === 'checkbox' && conditionalNode.getAttribute(attributeName) === String(targetNode.checked))
+  }
+
+  static readFile (file, returnTypeMatch = false) {
+    return new Promise(resolve => { // eslint-disable-line
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(returnTypeMatch ? [reader.result, typeof reader.result === 'string' ? reader.result.match(/data:(.*?)\/(.*?);/) : []] : reader.result)
+      reader.onerror = error => {
+        console.error('Error: ', error)
+        resolve(`File ${file.name} has the following Error: ${error}`)
+      }
+    })
   }
 
   /**
