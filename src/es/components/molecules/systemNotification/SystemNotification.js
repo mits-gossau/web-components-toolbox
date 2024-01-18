@@ -62,7 +62,8 @@ export default class SystemNotification extends Shadow() {
         :host .icon {
             position: relative;
         }
-        :host .icon img {
+        :host .icon img,
+        :host svg {
             max-height: var(--icon-max-height, var(--icon-default-width));
             max-width: var(--icon-max-width, var(--icon-default-width));
             height: var(--icon-height, auto);
