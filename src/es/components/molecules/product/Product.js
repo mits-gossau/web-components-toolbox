@@ -111,7 +111,12 @@ export default class Product extends Intersection() {
       }
 
       :host .product-image {
+        align-items: var(--product-image-align-items, baseline);
+        display: var(--product-image-display, inline);
+        flex-grow: var(--product-image-flex-grow, 0);
+        height: var(--product-image-height, auto);
         margin: var(--product-image-margin, 0);
+        max-height: var(--product-image-max-height, none);
         padding: 0 calc(var(--content-spacing)*2);
       }
 
@@ -130,6 +135,7 @@ export default class Product extends Intersection() {
       :host .product-data {
         flex: var(--product-data-flex, 1);
         margin: var(--product-data-margin, 0);
+        min-height: var(--product-data-min-height, 0);
       }
 
       :host .footer-label-data {
