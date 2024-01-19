@@ -12,6 +12,7 @@
     --product-default-product-image-display: var(--product-default-product-image-display-custom, flex);
     --product-default-product-image-flex-grow: var(--product-default-product-image-flex-grow-custom, 1);
     --product-default-product-image-height: var(--product-default-product-image-height-custom, 135px);
+    --product-default-product-image-justify-content: var(--product-default-product-image-justify-content-custom, center);
     --product-default-product-image-max-height: var(--product-default-product-image-max-height-custom, 135px);
     --product-default-unit-price-color: var(--product-default-unit-price-color-custom, var(--m-gray-600));
 }

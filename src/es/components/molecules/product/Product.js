@@ -115,6 +115,7 @@ export default class Product extends Intersection() {
         display: var(--product-image-display, inline);
         flex-grow: var(--product-image-flex-grow, 0);
         height: var(--product-image-height, auto);
+        justify-content: var(--product-image-justify-content, flex-start);
         margin: var(--product-image-margin, 0);
         max-height: var(--product-image-max-height, none);
         padding: 0 calc(var(--content-spacing)*2);
