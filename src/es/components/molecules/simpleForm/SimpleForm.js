@@ -123,9 +123,17 @@ export default class SimpleForm extends Shadow() {
         // visibility and multiply conditional fields
         case target.getAttribute('type') === 'checkbox':
         case target.tagName === 'SELECT':
+          // selector target has to be as low as possible to not affect other clones including clones
+          let el = target
+          while ((el = el.parentNode || this.root) && el !== this.root) {
+            if (el && el.querySelector('[multiply-condition]')) break
+          }
+          while ((el = el.parentNode || this.root) && el !== this.root) {
+            if (el && el.querySelector(`[visible-by=${target.getAttribute('id')}]`)) break
+          }
           // visibility
           let conditionalNodes // eslint-disable-line
-          if ((conditionalNodes = this.root.querySelectorAll(`[visible-by=${target.getAttribute('id')}]`))) {
+          if ((conditionalNodes = el.querySelectorAll(`[visible-by=${target.getAttribute('id')}]`))) {
             conditionalNodes.forEach(conditionalNode => {
               if (conditionalNode.hasAttribute('visible-condition')) {
                 if (this.checkCondition(conditionalNode, target, 'visible-condition')) {
@@ -191,12 +199,23 @@ export default class SimpleForm extends Shadow() {
               if (Object.hasOwnProperty.call(obj, key)) {
                 if (Array.isArray(obj[key])) {
                   const parentsOfMultipleInput = Array.from(new Set(Array.from(form.querySelectorAll(`[name=${key}]`)).concat(Array.from(form.querySelectorAll(`#${key}`)))))
-                  parentsOfMultipleInput.forEach(async (parentOfMultipleInput, i) => {
-                    const value = this.isInputValueNode(parentOfMultipleInput)
-                      ? await this.getInputValue(parentOfMultipleInput)
-                      : await loop(obj[key][i] || structuredClone(obj[key][0]), this.getInputs(parentOfMultipleInput), parentOfMultipleInput)
-                    if (value) obj[key][i] = value
-                  })
+                  await Promise.all(parentsOfMultipleInput.map(async (parentOfMultipleInput, i) => {
+                    // check if field is visible (TODO: loop up with a while to find the next parent with attribute visible-condition)
+                    const value = parentOfMultipleInput.hasAttribute('hidden') || parentOfMultipleInput.parentNode?.hasAttribute?.('hidden') || parentOfMultipleInput.parentNode?.parentNode?.hasAttribute?.('hidden')
+                      ? undefined
+                      : this.isInputValueNode(parentOfMultipleInput)
+                        // check if it has a value
+                        ? await this.getInputValue(parentOfMultipleInput)
+                        // loop through the object
+                        : await loop(obj[key][i] || structuredClone(obj[key][0]), this.getInputs(parentOfMultipleInput), parentOfMultipleInput)
+                      obj[key][i] = value
+                  }))
+                  // set falsy fields to empty
+                  const clone = structuredClone(obj[key])
+                  for (let i = 0; i < obj[key].length; i++) {
+                    if (!obj[key][i]) delete clone[i]
+                  }
+                  obj[key] = clone
                 } else {
                   obj[key] = typeof obj[key] === 'object'
                     ? await loop(obj[key])
