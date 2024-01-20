@@ -30,8 +30,8 @@ export default class Input extends Shadow() {
     if (!this.children.length) this.labelText = this.textContent.trim()
 
     this.lastValue = ''
-    this.clickListener = (event, retry = true) => {
-      if (this.lastValue === this.inputField.value) {
+    this.clickListener = (event, retry = true, force = false) => {
+      if (!force && this.lastValue === this.inputField.value) {
         // when delete native icon is pushed the value is not updated when the event hits here
         if (retry && event.composedPath()[0] === this.inputField) setTimeout(() => this.clickListener(event, false), 50)
         return
@@ -53,6 +53,7 @@ export default class Input extends Shadow() {
       }
     }
     this.changeListener = event => this.clickListener(event)
+    this.focusListener = event => this.clickListener(event, undefined, true)
     this.keydownTimeoutId = null
     this.keydownListener = event => {
       if (this.root.querySelector(':focus') !== this.inputField) return
@@ -102,6 +103,7 @@ export default class Input extends Shadow() {
           this.searchButton.addEventListener('click', this.clickListener)
         }
         if (this.hasAttribute('change-listener')) this.inputField.addEventListener('change', this.changeListener)
+        if (this.hasAttribute('focus-listener')) this.inputField.addEventListener('focus', this.focusListener)
         document.addEventListener('keydown', this.keydownListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
         if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
@@ -118,6 +120,7 @@ export default class Input extends Shadow() {
         this.searchButton.removeEventListener('click', this.clickListener)
       }
       if (this.hasAttribute('change-listener')) this.inputField.removeEventListener('change', this.changeListener)
+      if (this.hasAttribute('focus-listener')) this.inputField.removeEventListener('focus', this.focusListener)
       document.removeEventListener('keydown', this.keydownListener)
       if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     }
