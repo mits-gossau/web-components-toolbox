@@ -481,6 +481,19 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   list-style: var(--ul-icon-list-style, none);
   padding: var(--ul-icon-padding, 0);
 }
+/* list-style */
+:host :where(ul, ol):is(.decimal), .list-style-decimal {
+  list-style-type: decimal;
+}
+:host :where(ul, ol):is(.square), .list-style-square {
+  list-style-type: square;
+}
+:host :where(ul, ol):is(.upper-alpha), .list-style-upper-alpha {
+  list-style-type: upper-alpha;
+}
+:host :where(ul, ol):is(.circle), .list-style-circle {
+  list-style-type: circle;
+}
 /* table-tags */
 :host table tbody {
   display: table;
@@ -696,20 +709,4 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   .spacer-four {
     height: var(--spacer-four-height-mobile, var(--spacer-four-height, calc(4 * var(--content-spacing-mobile, var(--content-spacing)))));
   }
-}
-
-:host .list-style-decimal {
-  list-style-type: decimal;
-}
-
-:host .list-style-square {
-  list-style-type: square;
-}
-
-:host .list-style-upper-alpha {
-  list-style-type: upper-alpha;
-}
-
-:host .list-style-circle {
-  list-style-type: circle;
 }
