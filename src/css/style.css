@@ -415,7 +415,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   display: var(--ul-display, var(--ol-display, block));
   flex-direction: var(--ul-flex-direction, var(--ol-flex-direction, column));
   list-style: var(--ul-list-style, disc);
-  padding-left: var(--ul-margin, 1.5em);
+  padding-left: var(--ul-padding-left, 1.5em);
   text-align: var(--ul-text-align, var(--ol-text-align, start));
   margin: var(--ul-margin, 0 auto var(--content-spacing));
 }
@@ -510,6 +510,9 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 :host table thead {
   display: var(--table-thead-display, table-header-group);
   width: var(--table-thead-width, 100%);
+}
+:host table th {
+  font-weight: var(--table-th-font-weight, inherit);
 }
 :host table thead tr:first-child {
   background-color: var(--table-thead-tr-background-color, transparent);
