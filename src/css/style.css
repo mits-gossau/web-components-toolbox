@@ -698,18 +698,18 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   }
 }
 
-.list-style-decimal {
+:host .list-style-decimal {
   list-style-type: decimal;
 }
 
-.list-style-square {
+:host .list-style-square {
   list-style-type: square;
 }
 
-.list-style-upper-alpha {
+:host .list-style-upper-alpha {
   list-style-type: upper-alpha;
 }
 
-.list-style-circle {
+:host .list-style-circle {
   list-style-type: circle;
 }
