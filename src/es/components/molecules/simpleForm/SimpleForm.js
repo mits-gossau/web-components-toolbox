@@ -24,6 +24,8 @@ export default class SimpleForm extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
+    this.GRECAPTCHA_URL = this.getAttribute('grecaptcha-url') || `${location.protocol || 'http:'}//www.google.com/recaptcha/api.js`
+
     // once the form was touched, resp. tried to submit, it is dirty. The dirty attribute signals the css to do the native validation
     this.clickEventListener = event => {
       let invalidNode
@@ -215,7 +217,9 @@ export default class SimpleForm extends Shadow() {
                   for (let i = 0; i < obj[key].length; i++) {
                     if (!obj[key][i]) delete clone[i]
                   }
-                  obj[key] = clone
+                  obj[key] = this.hasAttribute('array-include-empty')
+                    ? clone
+                    : clone.filter(entry => entry || entry === 0)
                 } else {
                   obj[key] = typeof obj[key] === 'object'
                     ? await loop(obj[key])
@@ -386,6 +390,10 @@ export default class SimpleForm extends Shadow() {
       :host *:has(> input[type=file]) *.file-preview > ul > li:not(:last-child) {
         margin-bottom: 1em;
       }
+      :host .grecaptcha {
+        display: flex;
+        justify-content: center;
+      }
     `
     return Promise.all([this.fetchTemplate(), formPromise])
   }
@@ -415,16 +423,49 @@ export default class SimpleForm extends Shadow() {
   */
   renderHTML () {
     this.hasRendered = true
-    return this.fetchModules([
-      {
-        path: `${this.importMetaUrl}../../atoms/button/Button.js`,
-        name: 'a-button'
-      },
-      {
-        path: `${this.importMetaUrl}../../atoms/input/Input.js`,
-        name: 'a-input'
-      }
+    return Promise.all([
+      this.fetchModules([
+        {
+          path: `${this.importMetaUrl}../../atoms/button/Button.js`,
+          name: 'a-button'
+        },
+        {
+          path: `${this.importMetaUrl}../../atoms/input/Input.js`,
+          name: 'a-input'
+        }
+      ]),
+      this.loadGrecaptchaDependency()
     ]).then(() => Array.from(this.root.querySelectorAll('[hidden]')).forEach(node => this.hide(node)))
+  }
+
+  /**
+  * fetch dependency
+  * https://developers.google.com/recaptcha/docs/loading
+  *
+  * @returns {Promise<any>}
+  */
+  loadGrecaptchaDependency () {
+    if (!this.getAttribute('grecaptcha-key')) return Promise.resolve(null)
+    // @ts-ignore
+    if (self.grecaptcha) return Promise.resolve(self.grecaptcha)
+    return this._grecaptchaDependency || (this._grecaptchaDependency = new Promise(resolve => {
+      const script = document.createElement('script')
+      script.setAttribute('type', 'text/javascript')
+      script.setAttribute('async', '')
+      script.setAttribute('src', this.GRECAPTCHA_URL)
+      script.onload = () => {
+        const container = document.createElement('div')
+        container.classList.add('grecaptcha')
+        this.inputSubmit.parentNode.insertBefore(container, this.inputSubmit)
+        // @ts-ignore
+        self.grecaptcha.ready(() => grecaptcha.render(container, {
+          sitekey: this.getAttribute('grecaptcha-key')
+        }))
+        // @ts-ignore
+        if (self.grecaptcha) resolve(self.grecaptcha)
+      }
+      this.html = script
+    }))
   }
 
   /**
@@ -455,17 +496,23 @@ export default class SimpleForm extends Shadow() {
 
   hide (node) {
     node.setAttribute('hidden', 'true')
-    Array.from(node.querySelectorAll('[required]')).forEach(node => {
-      node.setAttribute('data-required', 'true')
-      node.removeAttribute('required')
+    Array.from(node.querySelectorAll('input')).forEach(node => {
+      if (node.hasAttribute('disabled')) {
+        node.setAttribute('had-disabled', 'true')
+      } else {
+        node.setAttribute('disabled', 'true')
+      }
     })
   }
 
   show (node) {
     node.removeAttribute('hidden')
-    Array.from(node.querySelectorAll('[data-required]')).forEach(node => {
-      node.setAttribute('required', 'true')
-      node.removeAttribute('data-required')
+    Array.from(node.querySelectorAll('input[disabled]')).forEach(node => {
+      if (node.hasAttribute('had-disabled')) {
+        node.removeAttribute('had-disabled')
+      } else {
+        node.removeAttribute('disabled')
+      }
     })
   }
 
