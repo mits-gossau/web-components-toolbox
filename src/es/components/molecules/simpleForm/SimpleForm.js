@@ -390,7 +390,7 @@ export default class SimpleForm extends Shadow() {
       :host *:has(> input[type=file]) *.file-preview > ul > li:not(:last-child) {
         margin-bottom: 1em;
       }
-      :host .grecaptcha {
+      :host .g-recaptcha {
         display: flex;
         justify-content: center;
       }
@@ -455,11 +455,13 @@ export default class SimpleForm extends Shadow() {
       script.setAttribute('src', this.GRECAPTCHA_URL)
       script.onload = () => {
         const container = document.createElement('div')
-        container.classList.add('grecaptcha')
+        container.classList.add('g-recaptcha')
+        this.inputSubmit.setAttribute('disabled', 'true')
         this.inputSubmit.parentNode.insertBefore(container, this.inputSubmit)
         // @ts-ignore
         self.grecaptcha.ready(() => grecaptcha.render(container, {
-          sitekey: this.getAttribute('grecaptcha-key')
+          sitekey: this.getAttribute('grecaptcha-key'),
+          callback: () => this.inputSubmit.removeAttribute('disabled')
         }))
         // @ts-ignore
         if (self.grecaptcha) resolve(self.grecaptcha)
