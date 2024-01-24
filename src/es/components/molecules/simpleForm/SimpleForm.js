@@ -115,6 +115,7 @@ export default class SimpleForm extends Shadow() {
                 target.value = ''
                 this.changeListener(event)
               }, { once: true })
+              if (target.hasAttribute('data-required')) target.setAttribute('required', true)
             } else if (label.hasAttribute('original-label')) {
               if (target.hasAttribute('remove-file-title')) target.removeAttribute('title')
               target.parentNode.classList.remove('has-files')
@@ -390,10 +391,6 @@ export default class SimpleForm extends Shadow() {
       :host *:has(> input[type=file]) *.file-preview > ul > li:not(:last-child) {
         margin-bottom: 1em;
       }
-      :host .g-recaptcha {
-        display: flex;
-        justify-content: center;
-      }
     `
     return Promise.all([this.fetchTemplate(), formPromise])
   }
@@ -441,6 +438,7 @@ export default class SimpleForm extends Shadow() {
   /**
   * fetch dependency
   * https://developers.google.com/recaptcha/docs/loading
+  * TODO: Implement alternative captcha eg: https://www.hcaptcha.com/
   *
   * @returns {Promise<any>}
   */
@@ -455,13 +453,26 @@ export default class SimpleForm extends Shadow() {
       script.setAttribute('src', this.GRECAPTCHA_URL)
       script.onload = () => {
         const container = document.createElement('div')
-        container.classList.add('g-recaptcha')
+        container.classList.add('grecaptcha')
+        // workaround, grecaptcha does not work within the shadow dom, since the iframe gets blocked by cors policy
+        const dialog = document.createElement('dialog')
+        dialog.setAttribute('open', 'true')
+        dialog.setAttribute('autofocus', 'true')
+        dialog.setAttribute('style', /* CSS */`
+          position: fixed;
+          bottom: 14px;
+          border: 0;
+          padding: 0;
+          margin-right: 0;
+        `)
+        dialog.appendChild(container)
+        document.body.appendChild(dialog)
         this.inputSubmit.setAttribute('disabled', 'true')
-        this.inputSubmit.parentNode.insertBefore(container, this.inputSubmit)
         // @ts-ignore
         self.grecaptcha.ready(() => grecaptcha.render(container, {
           sitekey: this.getAttribute('grecaptcha-key'),
-          callback: () => this.inputSubmit.removeAttribute('disabled')
+          callback: () => this.inputSubmit.removeAttribute('disabled'),
+          'expired-callback': () => this.inputSubmit.setAttribute('disabled', 'true')
         }))
         // @ts-ignore
         if (self.grecaptcha) resolve(self.grecaptcha)
