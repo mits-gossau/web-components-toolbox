@@ -88,6 +88,10 @@
 }
 :host .dialog-header > h3 {
   justify-content: center;
+  flex: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 :host .dialog-header > #close {
   position: relative;
