@@ -131,6 +131,12 @@ export default class ProductList extends Shadow() {
         min-width: var(--m-load-template-tag-min-width-mobile, min(calc(50% - 0.5em)));
       }
     }
+    
+    @media only screen and (max-width: _max-width_) {
+      :host > m-load-template-tag {
+        flex: var(--m-load-template-tag-flex-mobile, 1 1 35%);
+      } 
+    }
     `
     return this.fetchTemplate()
   }
