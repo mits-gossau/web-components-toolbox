@@ -353,8 +353,11 @@ export default class Input extends Shadow() {
         :host([search]) input::-webkit-search-cancel-button {
           margin-right: 2.5em;
         }
-        label, input, :host([search]) button {
+        label, :host([search]) button {
           font-size: var(--font-size-mobile, var(--font-size));
+        }
+        input {
+          font-size: var(--input-font-size-mobile, var(--input-font-size, var(--font-size-mobile, var(--font-size))));
         }
       }
     `
