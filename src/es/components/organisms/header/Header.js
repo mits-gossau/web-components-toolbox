@@ -175,10 +175,15 @@ export default class Header extends Shadow() {
       :host([sticky]) {
         position: static;
       }
-      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
+      /*
+        TODO Refactor later, we should not need m-navigation and m-navigation-two
+        */
+      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'},
+      :host > header > ${this.getAttribute('m-navigation-two') || 'm-navigation-two'} {
         flex-grow: 1;
         max-width: calc(var(--content-width, 55%) - var(--logo-width));
       }
+      
       :host > header::before {
         display: block;
         width: var(--logo-width);
@@ -262,7 +267,11 @@ export default class Header extends Shadow() {
       :host([sticky]:not(.top)) {
         transition: var(--sticky-transition-hide, top .4s ease);
       }
-      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
+      /*
+        TODO Refactor later, we should not need m-navigation and m-navigation-two
+        */
+      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'},
+      :host > header > ${this.getAttribute('m-navigation-two') || 'm-navigation-two'} {
         order: 2;
       }
       :host > header > a-logo{
@@ -308,14 +317,26 @@ export default class Header extends Shadow() {
           }
           width: var(--width-mobile, var(--width, 100%));
         }
-        :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
+        /*
+        TODO Refactor later, we should not need m-navigation and m-navigation-two
+        */
+        :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'},
+        :host > header > ${this.getAttribute('m-navigation-two') || 'm-navigation-two'} {
           animation: close .4s ease-in;
           left: -100vw;
         }
-        :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'}.open {
+        /*
+        TODO Refactor later, we should not need m-navigation and m-navigation-two
+        */
+        :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'}.open,
+        :host > header > ${this.getAttribute('m-navigation-two') || 'm-navigation-two'}.open {
           display: block;
         }
-        :host > header.open > ${this.getAttribute('m-navigation') || 'm-navigation'} {
+        /*
+        TODO Refactor later, we should not need m-navigation and m-navigation-two
+        */
+        :host > header.open > ${this.getAttribute('m-navigation') || 'm-navigation'},
+        :host > header.open > ${this.getAttribute('m-navigation-two') || 'm-navigation-two'} {
           animation: open .3s ease-out;
           left: 0;
         }
@@ -353,6 +374,24 @@ export default class Header extends Shadow() {
           width: 100%;
           min-width: 100%;
         }
+        /*
+        TODO Refactor later, we should not need m-navigation and m-navigation-two
+        */
+        :host > header > ${this.getAttribute('m-navigation-two') || 'm-navigation-two'} {
+          display: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-display-mobile, none);
+          left: 0;
+          background-color: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-background-color-mobile, transparent);
+          height: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-height-mobile, 0);
+          overflow: hidden;
+          position: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-position-mobile, absolute);
+          align-items: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-align-items-mobile, normal);
+          justify-content: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-justify-content-mobile, normal);
+          transition: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-transition, all 0.2s ease);
+          top: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-top-mobile, var(--height-mobile, 50px));
+          padding: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-padding-mobile, 0);
+          width: 100%;
+          min-width: 100%;
+        }
         :host > header > a {
           align-self: var(--a-align-self-mobile, var(--a-align-self, var(--align-self, auto)));
           font-size: var(--a-font-size-mobile, var(--a-font-size, var(--font-size)));
@@ -368,6 +407,15 @@ export default class Header extends Shadow() {
           height: var(--${this.getAttribute('m-navigation') || 'm-navigation'}-height-open-mobile, 100vh);
           overflow-y: var(--${this.getAttribute('m-navigation') || 'm-navigation'}-overflow-y-open-mobile, auto);
           padding: var(--${this.getAttribute('m-navigation') || 'm-navigation'}-padding-open-mobile, var(--${this.getAttribute('m-navigation') || 'm-navigation'}-padding-mobile, 0));
+        }
+          /*
+        TODO Refactor later, we should not need m-navigation and m-navigation-two
+        */
+        :host > header.open > ${this.getAttribute('m-navigation-two') || 'm-navigation-two'} {
+          display: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-display-open-mobile, var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-display-mobile, block));
+          height: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-height-open-mobile, 100vh);
+          overflow-y: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-overflow-y-open-mobile, auto);
+          padding: var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-padding-open-mobile, var(--${this.getAttribute('m-navigation-two') || 'm-navigation-two'}-padding-mobile, 0));
         }
         :host  > header > a-menu-icon{
           align-self: var(--a-menu-icon-align-self-mobile, var(--a-menu-icon-align-self, var(--align-self, auto)));
@@ -481,8 +529,13 @@ export default class Header extends Shadow() {
       : Promise.resolve()
   }
 
+  // TODO Refactor later we need to set back to m-navigation
   get mNavigation () {
-    return this.root.querySelector(this.getAttribute('m-navigation') || 'm-navigation')
+    return this.root.querySelector(this.getAttribute('m-navigation-two') || 'm-navigation-two')
+  }
+
+  get mNavigationTwo () {
+    return this.root.querySelector(this.getAttribute('m-navigation-two') || 'm-navigation-two')
   }
 
   get aLogo () {

@@ -15,6 +15,17 @@
     left: auto;
     right: 0;
 }
+/* TODO Refactor later*/
+:host > header > m-navigation-two {
+    animation: closeRight .4s ease-in;
+    left: auto;
+    right: -100vw;
+}
+:host > header.open > m-navigation-two {
+    animation: openRight .3s ease-out;
+    left: auto;
+    right: 0;
+}
 @keyframes openRight {
     0% {right: -100vw}
     100% {right: 0}

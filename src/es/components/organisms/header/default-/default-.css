@@ -41,6 +41,12 @@
   --header-default-m-navigation-height-open-mobile: var(--header-default-m-navigation-height-mobile);
   --header-default-m-navigation-top-mobile: var(--header-default-height-mobile);
   --header-default-m-navigation-transition: none;
+  /* TODO Refactor later */
+  --header-default-m-navigation-two-background-color-mobile: var(--background-color);
+  --header-default-m-navigation-two-height-mobile: calc(100vh - var(--header-default-m-navigation-two-top-mobile));
+  --header-default-m-navigation-two-height-open-mobile: var(--header-default-m-navigation-two-height-mobile);
+  --header-default-m-navigation-two-top-mobile: var(--header-default-height-mobile);
+  --header-default-m-navigation-two-transition: none;
   --header-default-margin-mobile: var(--header-default-margin-mobile-custom, var(--content-spacing-mobile) auto);
   --header-default-margin: var(--header-default-margin-custom, var(--content-spacing) auto);
   --header-default-order: 0;

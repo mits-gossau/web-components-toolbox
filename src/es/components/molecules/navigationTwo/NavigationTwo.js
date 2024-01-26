@@ -187,7 +187,7 @@ export default class NavigationTwo extends Mutation() {
   }
 
   /**
-   * renders the m-navigation css
+   * renders the m-navigation-two css
    *
    * @return {Promise<void>|void}
    */
@@ -480,7 +480,7 @@ export default class NavigationTwo extends Mutation() {
           display: flex;
           flex-direction: column;
           justify-content: flex-start; /* must be up, otherwise the iphone hides it behind the footer bar */
-          min-height: calc(100vh - var(--header-default-m-navigation-top-mobile));
+          min-height: calc(100vh - var(--header-default-m-navigation-two-top-mobile));
         }
         :host > nav > .language-switcher {
           display: flex;
