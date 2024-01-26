@@ -521,6 +521,7 @@ export default class SimpleForm extends Shadow() {
         if (input.hasAttribute('multiple')) return Promise.all(filePromises)
         return filePromises[0]
       case 'checkbox':
+      case 'radio':
         return input.value && input.value !== 'on' && input.checked ? Promise.resolve(input.value) : Promise.resolve(input.checked)
       default:
         return Promise.resolve(input.value)
