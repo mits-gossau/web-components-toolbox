@@ -83,8 +83,8 @@ export default class Select extends Shadow() {
         display: block;
         font-family: inherit;
         font-size: var(--select-font-size, var(--font-size));
-        height: 100%;
-        line-height: 1.4;
+        height: var(--select-height, 100%);
+        line-height: var(--select-line-height, 1.4);
         padding: var(--select-padding, 0.75em var(--content-spacing));
         text-overflow: var(--select-text-overflow, var(--text-overflow, ellipsis));
         width: 100%;
@@ -101,6 +101,7 @@ export default class Select extends Shadow() {
           border-radius: var(--select-border-radius-mobile, var(--select-border-radius, var(--border-radius-mobile, var(--border-radius, 0.571em))));
           font-size: var(--select-font-size-mobile, var(--select-font-size, var(--font-size-mobile, var(--font-size))));
           padding: var(--select-padding, 0.75em var(--content-spacing-mobile));
+          height: var(--select-height-mobile, var(--select-height, 100%));
         }
       }
     `

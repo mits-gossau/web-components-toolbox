@@ -51,10 +51,27 @@ export default class Grid extends Shadow() {
     this.css = /* css */`
       :host > section {
         display:grid;
-        ${this.hasAttribute('height')
-        ? `height: ${this.getAttribute('height') || '100%'};`
-        : ''
+          ${this.hasAttribute('height')
+          ? `height: ${this.getAttribute('height') || '100%'};`
+          : ''
+        }
       }
+    `
+    if (this.hasAttribute('auto-fit')) this.css = /* css */`
+      :host > section {
+        grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit') || '12.5em'}, 1fr));
+        grid-template-rows: auto;
+      }
+    `
+    if (this.hasAttribute('auto-fill')) this.css = /* css */`
+      :host > section {
+        grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill') || '12.5em'}, 1fr));
+        grid-template-rows: auto;
+      }
+    `
+    if (this.getAttribute('gap')) this.css = /* css */`
+      :host > section {
+        gap: ${this.getAttribute('gap')};
       }
     `
     return this.fetchTemplate()

@@ -391,6 +391,13 @@ export default class SimpleForm extends Shadow() {
       :host *:has(> input[type=file]) *.file-preview > ul > li:not(:last-child) {
         margin-bottom: 1em;
       }
+      :host [captcha-message] {
+        opacity: 1;
+      }
+      :host [captcha-message].hidden {
+        opacity: 0;
+        transition: opacity .3s ease-out;
+      }
     `
     return Promise.all([this.fetchTemplate(), formPromise])
   }
@@ -432,7 +439,9 @@ export default class SimpleForm extends Shadow() {
         }
       ]),
       this.loadGrecaptchaDependency()
-    ]).then(() => Array.from(this.root.querySelectorAll('[hidden]')).forEach(node => this.hide(node)))
+    ]).then(() => Array.from(this.root.querySelectorAll('[hidden]')).forEach(node => {
+      if (!node.hasAttribute('mode')) this.hide(node)
+    }))
   }
 
   /**
@@ -458,21 +467,32 @@ export default class SimpleForm extends Shadow() {
         const dialog = document.createElement('dialog')
         dialog.setAttribute('open', 'true')
         dialog.setAttribute('autofocus', 'true')
-        dialog.setAttribute('style', /* CSS */`
+        let style = /* CSS */`
           position: fixed;
           bottom: 14px;
           border: 0;
           padding: 0;
           margin-right: 0;
-        `)
+          transition: opacity 3s ease-out;
+          opacity: 1;
+        `
+        dialog.setAttribute('style', style)
         dialog.appendChild(container)
         document.body.appendChild(dialog)
         this.inputSubmit.setAttribute('disabled', 'true')
         // @ts-ignore
         self.grecaptcha.ready(() => grecaptcha.render(container, {
           sitekey: this.getAttribute('grecaptcha-key'),
-          callback: () => this.inputSubmit.removeAttribute('disabled'),
-          'expired-callback': () => this.inputSubmit.setAttribute('disabled', 'true')
+          callback: () => {
+            this.root.querySelectorAll('[captcha-message]').forEach(message => message.classList.add('hidden'))
+            this.inputSubmit.removeAttribute('disabled')
+            dialog.setAttribute('style', style + 'opacity: 0;')
+          },
+          'expired-callback': () => {
+            this.root.querySelectorAll('[captcha-message]').forEach(message => message.classList.remove('hidden'))
+            this.inputSubmit.setAttribute('disabled', 'true')
+            dialog.setAttribute('style', style + 'transition: none;')
+          }
         }))
         // @ts-ignore
         if (self.grecaptcha) resolve(self.grecaptcha)
@@ -501,7 +521,7 @@ export default class SimpleForm extends Shadow() {
         if (input.hasAttribute('multiple')) return Promise.all(filePromises)
         return filePromises[0]
       case 'checkbox':
-        return Promise.resolve(input.checked)
+        return input.value && input.value !== 'on' && input.checked ? Promise.resolve(input.value) : Promise.resolve(input.checked)
       default:
         return Promise.resolve(input.value)
     }
