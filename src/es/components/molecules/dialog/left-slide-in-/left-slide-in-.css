@@ -115,6 +115,7 @@
   align-items: start;
   flex: 1;
   flex-direction: column;
+  gap: calc(32rem/18);
   overflow: auto;
   padding: 1.5rem;
   position: relative;
