@@ -22,7 +22,7 @@ export default class Dialog extends Shadow() {
     }
     const close = () => {
       this.dialog.classList.add('closed')
-      setTimeout(() => this.dialog.close(), this.getAttribute('namespace') === 'dialog-top-slide-in-' ? 300 : 0)
+      setTimeout(() => this.dialog.close(), 300)
     }
 
     this.clickEventListener = event => {
@@ -108,6 +108,11 @@ export default class Dialog extends Shadow() {
       case 'dialog-top-slide-in-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./top-slide-in-/top-slide-in-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
+      case 'dialog-left-slide-in-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./left-slide-in-/left-slide-in-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
       default:
