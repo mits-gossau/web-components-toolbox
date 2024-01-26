@@ -232,7 +232,7 @@ export default class NavigationTwo extends Mutation() {
       :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) ul {
         background-color: var(--background-color-${this.getAttribute('no-scroll') || 'no-scroll'}, var(--background-color, black));
       }
-      :host > nav > ul{
+      :host > nav > ul {
         align-items: var(--align-items, center);
         justify-content: var(--justify-content, normal);
         display: flex;
@@ -243,7 +243,7 @@ export default class NavigationTwo extends Mutation() {
       :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) > nav > ul {
         padding: var(--padding-${this.getAttribute('no-scroll') || 'no-scroll'}, calc(var(--content-spacing, 40px) / 2) 0);
       }
-      :host > nav > ul > li{
+      :host > nav > ul > li {
         display: block;
         padding: var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4));
       }
@@ -308,7 +308,7 @@ export default class NavigationTwo extends Mutation() {
         :host > nav > ul li a-link.open ~ ul a-link {
           --font-size: var(--a-link-second-level-font-size-${this.getAttribute('no-scroll') || 'no-scroll'}-mobile, var(--a-link-second-level-font-size-${this.getAttribute('no-scroll') || 'no-scroll'}, 1rem));
         }
-        :host > nav > ul{
+        :host > nav > ul {
           flex-direction: var(--flex-direction-mobile, var(--flex-direction, column));
           padding: 0;
         }

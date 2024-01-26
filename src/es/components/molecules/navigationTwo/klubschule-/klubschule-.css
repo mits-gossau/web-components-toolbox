@@ -11,6 +11,7 @@
     --navigation-klubschule-section-color-open: var(--color);
     --navigation-klubschule-section-ul-background-color: var(--menu-background-color);
     --navigation-klubschule-path-color: var(--color);
+    --navigation-klubschule-justify-content: right;
   }
   :host > nav > ul.open {
     --navigation-klubschule-padding-no-scroll: 0;
