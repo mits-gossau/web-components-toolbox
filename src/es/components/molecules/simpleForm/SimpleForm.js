@@ -596,7 +596,7 @@ export default class SimpleForm extends Shadow() {
 
   getInputs (target) {
     if (!target) return []
-    return Array.from(target.querySelectorAll('input')).concat(Array.from(target.querySelectorAll('select')))
+    return Array.from(target.querySelectorAll('input')).concat(Array.from(target.querySelectorAll('select'))).concat(Array.from(target.querySelectorAll('textarea')))
   }
 
   get inputSubmit () {
