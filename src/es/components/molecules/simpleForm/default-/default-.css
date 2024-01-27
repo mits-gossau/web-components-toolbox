@@ -23,7 +23,7 @@
 :host > form div.inline > label {
     text-align: justify;
 }
-:host > form div.inline > input, :host > form div.inline > select {
+:host > form div.inline > input, :host > form div.inline > select, :host > form div.inline > textarea {
     flex-shrink: 0;
 }
 :host > form div.inline > div, :host > form o-grid > section > div, :host > form o-wrapper > section > div {
@@ -33,10 +33,10 @@
 :host > form *[inset] {
     padding-left: var(--content-spacing);
 }
-:host input, :host select, :host div {
+:host input, :host select, :host textarea, :host div {
     transition: border-color 0.3s ease-out, outline 0.3s ease-out;
 }
-:host([dirty]) input:not(:valid), :host([dirty]) div:has(input[type=file]:not(:valid)), :host([dirty]) select:not(:valid) {
+:host([dirty]) input:not(:valid), :host([dirty]) div:has(input[type=file]:not(:valid)), :host([dirty]) select:not(:valid), :host([dirty]) textarea:not(:valid) {
     border-color: var(--color-error, var(--color-secondary, red));
 }
 :host([dirty]) input[type=checkbox]:not(:valid) {
@@ -46,7 +46,7 @@
     outline-width: var(--outline-width, 0.125em);
     outline-offset: var(--outline-offset, 1px);
 }
-:host input + label::after, :host label:has(+ input)::after, :host select + label::after, :host label:has(+ select)::after, :host input[type=file] + div::after, :host div:has(+ input[type=file])::after {
+:host input + label::after, :host label:has(+ input)::after, :host select + label::after, :host label:has(+ select)::after, :host textarea + label::after, :host label:has(+ textarea)::after, :host input[type=file] + div::after, :host div:has(+ input[type=file])::after {
     color: var(--color-error, var(--color-secondary, red));
     content: attr(validation-message);
     float: right;
@@ -63,7 +63,7 @@
 :host([dirty]) input[type=checkbox] + label::after, :host([dirty]) label:has(+ input[type=checkbox])::after {
     padding: 0 0 0 0.625em;
 }
-:host([dirty]) input:not(:valid) + label::after, :host([dirty]) label:has(+ input:not(:valid))::after, :host([dirty]) select:not(:valid) + label::after, :host([dirty]) label:has(+ select:not(:valid))::after, :host([dirty]) input[type=file]:not(:valid) + div::after, :host([dirty]) div:has(+ input[type=file]:not(:valid))::after {
+:host([dirty]) input:not(:valid) + label::after, :host([dirty]) label:has(+ input:not(:valid))::after, :host([dirty]) select:not(:valid) + label::after, :host([dirty]) label:has(+ select:not(:valid))::after, :host([dirty]) textarea:not(:valid) + label::after, :host([dirty]) label:has(+ textarea:not(:valid))::after, :host([dirty]) input[type=file]:not(:valid) + div::after, :host([dirty]) div:has(+ input[type=file]:not(:valid))::after {
     display: inline-block;
     opacity: 1;
 }
