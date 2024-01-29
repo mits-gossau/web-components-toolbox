@@ -22,7 +22,9 @@ export default class Dialog extends Shadow() {
     }
     const close = () => {
       this.dialog.classList.add('closed')
-      setTimeout(() => this.dialog.close(), 300)
+      setTimeout(() => this.dialog.close(), this.getAttribute('namespace') === 'dialog-top-slide-in-' || this.getAttribute('namespace') === 'dialog-left-slide-in-'
+        ? 300
+        : 0)
     }
 
     this.clickEventListener = event => {
