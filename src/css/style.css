@@ -357,6 +357,8 @@
   border-width: var(--hr-border-width, 0 0 1px);
   margin: var(--hr-margin, var(--content-spacing) auto);
   opacity: var(--hr-opacity, 0.5);
+}
+:host hr.full-width, :host hr.primary.full-width, :host hr.secondary.full-width {
   width: var(--hr-width, 100%);
 }
 :host hr.secondary {
@@ -670,6 +672,8 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   /* hr-tag */
   :host hr, :host hr.primary {
     margin: var(--hr-margin-mobile, var(--hr-margin, var(--content-spacing-mobile) auto));
+  }
+  :host hr.full-width, :host hr.primary.full-width, :host hr.secondary.full-width {
     width: var(--hr-width-mobile, var(--hr-width, 100%));
   }
   :host hr.secondary {
