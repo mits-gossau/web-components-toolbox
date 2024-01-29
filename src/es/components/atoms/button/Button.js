@@ -177,7 +177,7 @@ export default class Button extends Hover() {
   renderCSS () {
     this.css = /* css */`
       :host {
-        cursor: unset !important;
+        ${this.hasAttribute('no-pointer-events') ? 'cursor: pointer;' : 'cursor: unset !important;'}
         display: inline-block;
       }
       #label {
@@ -211,6 +211,7 @@ export default class Button extends Hover() {
         outline: var(--outline, none);
         overflow: hidden;
         padding: var(--padding, calc(0.75em - var(--border-width, 0px)) calc(1.5em - var(--border-width, 0px)));
+        ${this.hasAttribute('no-pointer-events') ? 'pointer-events: none;' : ''}
         text-decoration: var(--text-decoration, none);
         text-transform: var(--text-transform, none);
         touch-action: manipulation;
@@ -440,7 +441,8 @@ export default class Button extends Hover() {
         ${this.buttonTagName === 'a'
           ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''}`
           : ''}
-        type="${this.hasAttribute('type') ? this.getAttribute('type') : 'button'}">
+        type="${this.hasAttribute('type') ? this.getAttribute('type') : 'button'}"
+      >
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </${this.buttonTagName}>
     `
