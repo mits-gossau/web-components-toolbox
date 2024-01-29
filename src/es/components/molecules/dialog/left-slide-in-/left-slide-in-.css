@@ -18,6 +18,8 @@
   width: 100%;
   max-width: 560px;
   z-index: 99;
+  display: flex;
+  flex-direction: column;
 }
 
 :host>dialog.closed {
@@ -63,6 +65,7 @@
   display: flex;
   gap: 1.25rem;
   max-width: _max-width_;
+  width: 100%;
   margin: 0 auto;
   padding: calc(24rem/18);
 }
