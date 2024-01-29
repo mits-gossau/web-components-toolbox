@@ -1,0 +1,77 @@
+<m-simple-form load-form-styles namespace="simple-form-default-" endpoint="hi">
+    <form>
+      <input type="hidden" name="xp_sendBackParams" value="0" />
+      <div class="inline">
+        <label for="anrede1">Herr</label>
+        <input id="anrede1" name="Anrede" type="radio" value="2" checked />
+        <label for="anrede2">Frau</label>
+        <input id="anrede2" name="Anrede" type="radio" value="1" />
+        <label for="anrede3">Other</label>
+        <input id="anrede3" name="Anrede" type="radio" value="3" />
+      </div>
+      <div>
+        <label validation-message="Name ist ungültig" for="Name">Name</label>
+        <input id="Name" type="text" required="" value="" name="Name" placeholder="Name hier eingeben..."  autocomplete="off" />
+      </div>
+      <div>
+        <label validation-message="Vorname ist ungültig" for="Firstname">Vorname</label>
+        <input id="Firstname" type="text" required="" value="" name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" />
+      </div>
+      <div>
+        <div class="inline">
+          <label for="showMore">Show me more!</label>
+          <input id="showMore" name="showMore" type="checkbox" />
+        </div>
+        <section hidden inset visible-by="showMore" visible-condition="true">
+          <div>
+            <label validation-message="Dude ist ungültig" for="Dude">Dude</label>
+            <input id="Dude" type="text" required="" value="Dude" name="Dude" placeholder="Dude hier eingeben..." autocomplete="off" />
+          </div>
+          <div>
+            <label validation-message="Dudin ist ungültig" for="Dudin">Dudin</label>
+            <input id="Dudin" type="text" required="" value="Dudin" name="Dudin" placeholder="Dudin hier eingeben..." autocomplete="off" />
+          </div>
+        </section>
+      </div>
+      <div>
+        <label validation-message="Select a pet!" for="delivery-option">Choose a delivery option:</label>
+        <select name="delivery-option" required="" id="delivery-option">
+          <option value="">--Please choose an option--</option>
+          <option value="delivery">Delivery</option>
+          <option value="pickup">Pickup</option>
+        </select>
+        <section hidden inset visible-by="delivery-option" visible-condition="delivery">
+          <div>
+            <label validation-message="Strasse ist ungültig" for="Street">Strasse</label>
+            <input id="Street" type="text" required="" value="" name="Strasse" placeholder="Strasse hier eingeben..." autocomplete="off" />
+          </div>
+          <div>
+            <label validation-message="Ort ist ungültig" for="Place">Ort</label>
+            <input id="Place" type="text" required="" value="" name="Ort" placeholder="Ort hier eingeben..." autocomplete="off" />
+          </div>
+        </section>
+      </div>
+      <div hidden inset visible-by="delivery-option" visible-condition="truthy">
+        <label validation-message="Select a pet!" for="delivery-option-two">Choose an other delivery option:</label>
+        <select name="delivery-option-two" required="" id="delivery-option-two">
+          <option value="">--Please choose an option--</option>
+          <option value="delivery">Delivery</option>
+          <option value="pickup">Pickup</option>
+        </select>
+        <section hidden inset visible-by="delivery-option-two" visible-condition="delivery">
+          <div>
+            <label validation-message="Strasse ist ungültig" for="Street">Strasse</label>
+            <input id="Street" type="text" required="" value="" name="Strasse" placeholder="Strasse hier eingeben..." autocomplete="off" />
+          </div>
+          <div>
+            <label validation-message="Ort ist ungültig" for="Place">Ort</label>
+            <input id="Place" type="text" required="" value="" name="Ort" placeholder="Ort hier eingeben..." autocomplete="off" />
+          </div>
+        </section>
+      </div>
+      <input type="submit" value="Registrieren" />
+    </form>
+</m-simple-form>
+
+<script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=SimpleForm.js"></script>

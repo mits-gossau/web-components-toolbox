@@ -110,16 +110,20 @@ export default class Form extends Shadow() {
   /**
    * renders the css
    *
-   * @return {Promise<void>}
+   * @return {Promise<void| [] | unknown[]>}
    */
   renderCSS () {
+    const buttonPromises = []
     // @ts-ignore
     if (!customElements.get('a-button')) customElements.define('a-button', Button)
     const button = new Button({ namespace: 'button-primary-' })
     button.hidden = true
     this.html = button
     // @ts-ignore
-    button.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
+    buttonPromises.push(button.renderCssPromise.then(styles => styles.forEach(style => {
+      if (!this.hasShadowRoot) style.styleNode.textContent = style.styleNode.textContent.replace(/:host/g, this.tagName)
+      this.html = style.styleNode
+    })))
     // @ts-ignore
     this.css = button.css.replace(/\sbutton/g, ' input[type=submit]').replace(/\s#label/g, ' input[type=submit]')
     button.remove()
@@ -127,12 +131,15 @@ export default class Form extends Shadow() {
     buttonSecondary.hidden = true
     this.html = buttonSecondary
     // @ts-ignore
-    buttonSecondary.renderCSS().then(styles => styles.forEach(style => (this.html = style.styleNode)))
+    buttonPromises.push(buttonSecondary.renderCssPromise.then(styles => styles.forEach(style => {
+      if (!this.hasShadowRoot) style.styleNode.textContent = style.styleNode.textContent.replace(/:host/g, this.tagName)
+      this.html = style.styleNode
+    })))
     // make browser default file button look nicer
     buttonSecondary.css = /* css */ `
       @supports(selector(:has(> input[type=file]))) {
         *:has(> input[type=file]) {
-          display: inline-grid;
+          display: inline-grid !important;
           padding: 0;
         }
         *:has(> input[type=file]) > * {
@@ -225,8 +232,10 @@ export default class Form extends Shadow() {
         color: var(--color);
         padding: 0.625em;
         font-size: var(--font-size);
-        outline: none;
         width: 100%;
+      }
+      ${this.getInputFieldsWithText()} {
+        outline: none;
       }
       ${this.getInputFieldsWithText('::placeholder')} {
         color: var(--placeholder-color, var(--m-gray-600));
@@ -241,8 +250,11 @@ export default class Form extends Shadow() {
       .umbraco-forms-indicator {
         color: var(--color-secondary);
       }
-      :host form > div, .umbraco-forms-field {
+      :host form > div, :host form > section > div, :host form > div > section > div, .umbraco-forms-field {
         padding-bottom: var(--content-spacing);
+      }
+      :host form > div > *:has(+ section:not([hidden])) {
+        margin-bottom: var(--content-spacing);
       }
       .umbraco-forms-field.checkbox .umbraco-forms-field-wrapper {
         display:var(--checkbox-display, flex);
@@ -301,10 +313,14 @@ export default class Form extends Shadow() {
       input[type="submit"] {
           padding: 0.75em 1.5em;
           float:left;
-      }    
+      }
+      input[type="checkbox"] {
+        cursor: pointer;
+      }
+
       @media only screen and (max-width: _max-width_) {
         ${this.getInputFieldsWithText()} {
-          font-size: var(--font-size-mobile);
+          font-size: var(--input-font-size-mobile, var(--font-size-mobile, 16px));
         }
         ${this.getInputFieldsWithText()}, ${this.getInputFieldsWithControl()} {
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
@@ -322,7 +338,7 @@ export default class Form extends Shadow() {
       
       :host option {
         background-color: var(--background-color);
-        padding: 0.3em var(--content-spacing-mobile, 0.3em) 0.3em var(--content-spacing-mobile, 0.3em) ;
+        padding: 0.3em var(--content-spacing, 0.3em) 0.3em var(--content-spacing, 0.3em) ;
         cursor: pointer;
       }
       :host option:hover, :host .active {
@@ -371,8 +387,49 @@ export default class Form extends Shadow() {
         animation: around 0.7s ease-in-out 0.1s infinite;
         background: transparent;
       }
+      :host .two-column-align-bottom {
+        display: flex;
+        gap: var(--content-spacing, 1em);
+        flex-wrap: nowrap;
+      }
+      :host .two-column-align-bottom > * {
+        align-items: baseline;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: end;
+      }
+      :host .two-column-align-bottom input[type="submit"] {
+        margin: 0;
+      }
+      @media only screen and (max-width: _max-width_) {
+        :host .two-column-align-bottom {
+          flex-direction: column
+        }
+        :host form > div, :host form > section > div, :host form > div > section > div, .umbraco-forms-field {
+          padding-bottom: var(--content-spacing-mobile, var(--content-spacing));
+        }
+        :host form > div > *:has(+ section:not([hidden])) {
+          margin-bottom: var(--content-spacing-mobile, var(--content-spacing));
+        }
+        .validation-errors {
+          margin-bottom: var(--content-spacing-mobile, var(--content-spacing));
+        }
+        .checkbox > label, .checkbox > .help-block, .checkboxlist > label, .checkboxlist > .help-block, .radiobutton > label, .radiobutton > .help-block, .radiobuttonlist > label, .radiobuttonlist > .help-block {
+          padding-left: var(--content-spacing-mobile, var(--content-spacing));
+        }
+        .checkboxlist img {
+          padding: 0 var(--content-spacing-mobile, var(--content-spacing));
+        }
+        :host option {
+          padding: 0.3em var(--content-spacing-mobile, var(--content-spacing, 0.3em)) 0.3em var(--content-spacing-mobile, var(--content-spacing, 0.3em)) ;
+        }
+        :host .two-column-align-bottom {
+          gap: var(--content-spacing-mobile, var(--content-spacing, 1em));
+        }
+      }
     `
-    return this.fetchTemplate()
+    return (this.renderCssPromise = Promise.all([this.fetchTemplate(), ...buttonPromises]))
   }
 
   /**

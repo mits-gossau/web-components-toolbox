@@ -12,14 +12,15 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class ProductCard extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-    this.isLoggedIn = this.getAttribute('is-logged-in') || 'false'
-    this.isSelectable = this.getAttribute('is-selectable') === 'true' || false
-    this.isDeletable = this.getAttribute('is-deletable') === 'false' ? false : true // to be backwards compatible
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.renderHTML()
+  }
+
+  disconnectedCallback () {
+    this.checkbox.removeEventListener('change', this.checkboxEventListener)
   }
 
   /**
@@ -50,7 +51,7 @@ export default class ProductCard extends Shadow() {
       }
       :host .product-item:last-of-type {
         border-bottom: var(--product-item-last-border-bottom, none);
-        padding-bottom:var(--product-item-last-padding-bottom, 4em);
+        padding-bottom:var(--product-item-last-padding-bottom, 2em);
       }
       :host .product-select {
         align-items: var(--product-select-align-items, center);
@@ -90,10 +91,17 @@ export default class ProductCard extends Shadow() {
         justify-content: var(--product-info-justify-content, space-between);
         padding: var(--product-info-padding, 0 0 1em 0);
       }
+      :host .product-info .product-info-action-section {
+        margin: var(--product-info-action-section-margin, auto 0);
+      }
       :host .product-footer {
         align-items: var(--product-footer-align-items, center);
         display: var(--product-footer-display, flex);
         justify-content: var(--product-footer-justify-content, space-between);
+      }
+      :host input[type="checkbox"] {
+        cursor: pointer;
+        accent-color: var(--checkbox-selected-background-color, #ff5b03);
       }
       @media only screen and (max-width: _max-width_) {
         :host .product-item {
@@ -139,18 +147,7 @@ export default class ProductCard extends Shadow() {
       }
     ])
 
-    /**
-     * Product object containing information about the product.
-     * @typedef {Object} Product
-     * @property {Object} productDetail - Details about the product.
-     * @property {string} productDetail.id - ID of the product.
-     * @property {string | undefined} productDetail.image - URL of the product image.
-     * @property {string} productDetail.name - Name of the product.
-     * @property {string | undefined} productDetail.price - Price of the product.
-     * @property {string | undefined} productDetail.estimatedPieceWeight - Estimated weight of the product.
-     * @property {number | undefined} amount - Quantity of the product.
-     * @property {number | undefined} totalTcc - Total TCC of the product.
-     */
+    // TODO
     const defaultProduct = {
       productDetail: {
         id: '000000000000',
@@ -162,39 +159,42 @@ export default class ProductCard extends Shadow() {
       amount: 99,
       totalTcc: 12.90
     }
-    /** @type {Product} */
-    const product = JSON.parse(this.getAttribute('product')) || defaultProduct
+
+    const product = JSON.parse(this.getAttribute('data')) || defaultProduct
 
     return Promise.all([fetchModules]).then(() => {
-      const productSelect = this.isSelectable ? `<div class="product-select"><input type="checkbox" /></div>` : ''
-      const productPrice = product.productDetail.price ? `<span>${product.productDetail.price}</span>` : ''
-      const productName = product.productDetail.name ? `<span class="name">${product.productDetail.name}</span>` : ''
-      const productEstimatedPieceWeight = product.productDetail.estimatedPieceWeight ? `<span class="additional-info">${product.productDetail.estimatedPieceWeight}</span>` : ''
-      const productDelete = this.isDeletable ? `<a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-from-order" tag="${product.productDetail.id}"><a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx></a-button>` : ''
+      this.setAttribute('id', product.id)
+      const productPrice = product.price ? `<span>${product.price}</span>` : ''
+      const productName = product.name ? `<span class="name">${product.name}</span>` : ''
+      const productEstimatedPieceWeight = product.estimatedPieceWeight ? `<span class="additional-info">${product.estimatedPieceWeight}</span>` : ''
       const productAmount = product.amount
         ? `<m-basket-control namespace="basket-control-default-" answer-event-name="update-basket" disable-minimum="1" disable-all-elements="${this.isLoggedIn}">
-            <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.productDetail.id}' label="-" product-name="${product.productDetail.name}"></a-button>
-            <input id="${product.productDetail.id}" class="basket-control-input" tag=${product.productDetail.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.productDetail.name}">
-            <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.productDetail.id}' label="+" product-name="${product.productDetail.name}"></a-button>
+            <a-button id="remove" namespace="basket-control-default-button-" request-event-name="remove-basket" tag='${product.id}' label="-" product-name="${product.name}"></a-button>
+            <input id="${product.id}" class="basket-control-input" tag=${product.id} name="quantity" type="number" value="${product.amount}" min=0 max=9999 request-event-name="add-basket" product-name="${product.name}">
+            <a-button id="add" namespace="basket-control-default-button-" request-event-name="add-basket" tag='${product.id}' label="+" product-name="${product.name}"></a-button>
           </m-basket-control>`
-        : `<div></div>`;
+        : '<div></div>'
       const productTotalTcc = product.totalTcc ? `<div class="bold">${product.totalTcc.toFixed(2)}</div>` : ''
 
       this.html = /* html */`
         <div class="product-item">
-            ${productSelect}
+            <div class="product-select">
+              <input id="selectCheckbox" type="checkbox" value=${product} />
+            </div>
             <div class="product-image">
-                <a-picture namespace="product-checkout-" picture-load defaultSource='${product.productDetail.image}' alt='${product.productDetail.name}'></a-picture>
+              <a-picture namespace="product-list-" picture-load defaultSource='${product.image}' alt='${product.name}'></a-picture>
             </div>
             <div class="product-data">
                 <div class="product-info">
-                    <div>
+                    <div class="product-info-data-section">
                         ${productPrice}
                         ${productName}
                         ${productEstimatedPieceWeight}
                     </div>
-                    <div>
-                        ${productDelete}
+                    <div class="product-info-action-section">
+                        <a-button namespace="checkout-default-delete-article-button-" request-event-name="delete-favorite-product-from-favorite-list" tag="${product.id}">
+                          <a-icon-mdx icon-name="Trash" size="1.25em"></a-icon-mdx>
+                        </a-button>
                     </div>
                 </div>
                 <div class="product-footer">
@@ -204,6 +204,20 @@ export default class ProductCard extends Shadow() {
             </div>
         </div> 
       `
+      this.checkbox.addEventListener('change', this.checkboxEventListener)
     })
+  }
+
+  checkboxEventListener = (e) => {
+    if (this.checkbox.checked) {
+      this.setAttribute('selected', 'true')
+    } else {
+      this.removeAttribute('selected')
+    }
+  }
+
+  // orders dropdown
+  get checkbox () {
+    return this.root.querySelector('#selectCheckbox')
   }
 }

@@ -1,5 +1,7 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Intersection } from '../../prototypes/Intersection.js'
+
+/* global CustomEvent */
 
 /**
  * As a molecule, this component shall hold Atoms
@@ -8,14 +10,56 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @class Product
  * @type {CustomElementConstructor}
  */
-export default class Product extends Shadow() {
+export default class Product extends Intersection() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({
+      importMetaUrl: import.meta.url,
+      intersectionObserverInit: { rootMargin: '0px 0px -200px 0px' },
+      ...options
+    }, ...args)
+
+    this.clickListener = event => {
+      if (!event.composedPath().includes(this.basketControl)) {
+        this.dispatchEvent(new CustomEvent('product-clicked',
+          {
+            detail: {
+              data: this.productData,
+              origEvent: event
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }
+        ))
+      }
+    }
   }
 
   connectedCallback () {
+    super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+    this.addEventListener('click', this.clickListener)
+  }
+
+  disconnectedCallback () {
+    super.disconnectedCallback()
+    this.removeEventListener('click', this.clickListener)
+  }
+
+  intersectionCallback (entries, observer) {
+    if (entries[0] && entries[0].isIntersecting) {
+      this.dispatchEvent(new CustomEvent('product-viewed',
+        {
+          detail: {
+            fetch: Promise.resolve([{ products: [this.productData] }])
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }
+      ))
+    }
   }
 
   shouldRenderHTML () {
@@ -67,7 +111,13 @@ export default class Product extends Shadow() {
       }
 
       :host .product-image {
+        align-items: var(--product-image-align-items, baseline);
+        display: var(--product-image-display, inline);
+        flex-grow: var(--product-image-flex-grow, 0);
+        height: var(--product-image-height, auto);
+        justify-content: var(--product-image-justify-content, flex-start);
         margin: var(--product-image-margin, 0);
+        max-height: var(--product-image-max-height, none);
         padding: 0 calc(var(--content-spacing)*2);
       }
 
@@ -86,6 +136,7 @@ export default class Product extends Shadow() {
       :host .product-data {
         flex: var(--product-data-flex, 1);
         margin: var(--product-data-margin, 0);
+        min-height: var(--product-data-min-height, 0);
       }
 
       :host .footer-label-data {
@@ -175,8 +226,8 @@ export default class Product extends Shadow() {
       accessible_information_text: accessibleInformationText,
       price,
       brand,
-      name, unit_price:
-      unitPrice,
+      name,
+      unit_price: unitPrice,
       isWeighable,
       estimated_piece_weight: estimatedPieceWeight,
       slug,
@@ -319,5 +370,9 @@ export default class Product extends Shadow() {
 
   get disable () {
     return this.getAttribute('disable') || 'false'
+  }
+
+  get basketControl () {
+    return this.root.querySelector('m-basket-control')
   }
 }

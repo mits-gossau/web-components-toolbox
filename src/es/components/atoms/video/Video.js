@@ -152,7 +152,7 @@ export default class Video extends Shadow() {
     })
 
     if ((this.sources && this.sources.every(i => {
-      if (i.src !== '' && i.type !== '') return (this.video.innerHTML += `<source src="${i.src}" type="${i.type}">`)
+      if (i.src !== '' && i.type !== '') return (this.video.innerHTML += `<source src="${i.src}" type="${i.type || 'video/mp4'}">`)
       return false
     })) || this.video.querySelector('source')) this.html = this.video
 

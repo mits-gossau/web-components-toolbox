@@ -59,15 +59,17 @@ export default class Tooltip extends Shadow() {
       position: var(--tooltip-position, relative);
     }
     :host .tooltip-text {
+      --text-align: ${this.textAlign ? this.textAlign : 'left'};
       border-radius:var(--tooltip-text-border-radius, 0.25em);
       bottom: var(--tooltip-text-bottom, 100%);
       color: var(--tooltip-text-color, #FFFFFF);
       font-size:var(--tooltip-text-font-size, 0.85em);
       left: var(--tooltip-text-left, 50%);
+      line-height: var(--tooltip-text-line-height, normal);
       margin-left: var(--half);
       padding: var(--tooltip-text-padding, 0.5em);
       position: var(--tooltip-text-position, absolute);
-      text-align: var(--tooltip-text-text-align, left);
+      text-align: var(--text-align, left);
       visibility: var(--tooltip-text-visibility, hidden);
       width: var(--width);
       z-index: var(--tooltip-text-z-index, 1);
@@ -91,7 +93,7 @@ export default class Tooltip extends Shadow() {
     }
     :host .icon-img {
       height: var(--icon-img-height, 1.5em);
-      width: var(--icon-img-width, 100%);
+      width: var(--icon-img-width, auto);
     }
     @media only screen and (max-width: _max-width_) {
       :host .tooltip:hover .tooltip-text {
@@ -145,5 +147,9 @@ export default class Tooltip extends Shadow() {
    */
   get tooltipWidth () {
     return Number(this.getAttribute('width')) || 10
+  }
+
+  get textAlign () {
+    return this.getAttribute('text-align')
   }
 }

@@ -51,10 +51,27 @@ export default class Grid extends Shadow() {
     this.css = /* css */`
       :host > section {
         display:grid;
-        ${this.hasAttribute('height')
+          ${this.hasAttribute('height')
           ? `height: ${this.getAttribute('height') || '100%'};`
           : ''
         }
+      }
+    `
+    if (this.hasAttribute('auto-fit')) this.css = /* css */`
+      :host > section {
+        grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit') || '12.5em'}, 1fr));
+        grid-template-rows: auto;
+      }
+    `
+    if (this.hasAttribute('auto-fill')) this.css = /* css */`
+      :host > section {
+        grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill') || '12.5em'}, 1fr));
+        grid-template-rows: auto;
+      }
+    `
+    if (this.getAttribute('gap')) this.css = /* css */`
+      :host > section {
+        gap: ${this.getAttribute('gap')};
       }
     `
     return this.fetchTemplate()
@@ -78,6 +95,30 @@ export default class Grid extends Shadow() {
       }
     ]
     switch (this.getAttribute('namespace')) {
+      case 'grid-1column-align-center-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./1column-align-center-/1column-align-center-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        })
+      case 'grid-2columns-content-section-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./2columns-content-section-/2columns-content-section-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        })
+      case 'grid-2columns-content-stage-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./2columns-content-stage-/2columns-content-stage-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        })
       case 'grid-2colums2rows-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./2colums2rows-/2colums2rows-.css`, // apply namespace since it is specific and no fallback
@@ -86,6 +127,23 @@ export default class Grid extends Shadow() {
           // make template ${code} accessible aka. set the variables in the literal string
           fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
         })
+      case 'grid-432-auto-colums-auto-rows-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./432-auto-colums-auto-rows-/432-auto-colums-auto-rows-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        })
+      case 'grid-4columns-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./4columns-/4columns-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        })
+
       default:
         return this.fetchCSS(styles, false)
     }

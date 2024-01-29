@@ -113,6 +113,14 @@ export default class Button extends Hover() {
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
     this.connectedCallbackOnce()
+    if (this.getAttribute('request-event-name') && this.classList.contains('active')) {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+        detail: this.getEventDetail(null),
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   connectedCallbackOnce () {
@@ -149,7 +157,7 @@ export default class Button extends Hover() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector('style[_css]')
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
@@ -171,6 +179,17 @@ export default class Button extends Hover() {
       :host {
         cursor: unset !important;
         display: inline-block;
+      }
+      #label {
+        display: inline-block;
+        padding: var(--label-padding, 0);
+        margin: var(--label-margin, 0);
+        position: relative;
+        text-align: var(--label-text-align, center);
+        white-space: var(--label-white-space, inherit);
+      }
+      #label.hide {
+        display: none;
       }
       ${this.buttonTagName} {
         align-items: var(--align-items, center);
@@ -195,6 +214,7 @@ export default class Button extends Hover() {
         text-decoration: var(--text-decoration, none);
         text-transform: var(--text-transform, none);
         touch-action: manipulation;
+        transform: var(--transform, none);
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
         width: var(--width, auto);
         visibility: var(--visibility, inherit);
@@ -214,7 +234,7 @@ export default class Button extends Hover() {
         width: var(--width, fit-content);
       }
       ${this.buttonTagName}:active, ${this.buttonTagName}.active {
-        display: var(--display-active, flex);
+        display: var(--display-active, flex); /* allows hiding the button but showing on active or vice versa */
         background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
         border: var(--border-width-active, var(--border-width, 0px)) solid var(--border-color-active, var(--border-color, #FFFFFF));
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
@@ -224,6 +244,7 @@ export default class Button extends Hover() {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
+        transform: var(--transform-hover, var(--transform, none));
         opacity: var(--opacity-hover, var(--opacity, 1));
       }
       :host ${this.buttonTagName}[disabled] {
@@ -237,21 +258,10 @@ export default class Button extends Hover() {
       :host ${this.buttonTagName}[disabled]:hover, :host(.hover) ${this.buttonTagName}[disabled] {
         opacity: var(--opacity-disabled-hover, var(--opacity-disabled, var(--opacity, 1)));
       }
-      #label {
-        display: inline-block;
-        padding: var(--label-padding, 0);
-        margin: var(--label-margin, 0);
-        position: relative;
-        text-align: var(--label-text-align, center);
-        white-space: var(--label-white-space, inherit);
-      }
-      #label.hide {
-        display: none;
-      }
-      .icon-left {
+      :not(a-icon-mdx).icon-left, a-icon-mdx.icon-left::part(svg) {
         margin: var(--icon-left-margin, 0 0.5em 0 0);
       }
-      .icon-right {
+      :not(a-icon-mdx).icon-right, a-icon-mdx.icon-right::part(svg) {
         margin: var(--icon-right-margin, 0 0 0 0.5em);
       }
       .icon-left, .icon-right {
@@ -260,6 +270,20 @@ export default class Button extends Hover() {
       }
       .icon-left, .icon-right {
         flex-shrink: 0;
+      }
+      /* icon aka. a-icon-mdx support */
+      ${this.buttonTagName} > * {
+        color: var(--color, black);
+        transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
+      }
+      ${this.buttonTagName}:active > *, ${this.buttonTagName}.active > * {
+        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
+      }
+      ${this.buttonTagName}:hover > *, :host(.hover) ${this.buttonTagName} > * {
+        color: var(--color-hover, var(--color, #FFFFFF));
+      }
+      :host ${this.buttonTagName}[disabled] > * {
+        color: var(--color-disabled, var(--color, #FFFFFF));
       }
       @media only screen and (max-width: _max-width_) {
         ${this.buttonTagName} {
@@ -287,7 +311,7 @@ export default class Button extends Hover() {
         }
       }
     `
-    return this.fetchTemplate()
+    return (this.renderCssPromise = this.fetchTemplate())
   }
 
   /**

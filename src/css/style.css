@@ -11,6 +11,7 @@
   line-height: var(--h1-line-height, var(--h-line-height, 1.286em));
   font-family: var(--h1-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h1-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h1-hyphens, var(--h-hyphens, manual));
   text-align: var(--h1-text-align, var(--h-text-align, start));
   word-break: var(--h1-word-break, var(--h-word-break, normal));
   text-transform: var(--h1-text-transform, var(--h-text-transform, none));
@@ -30,6 +31,7 @@
   line-height: var(--h2-line-height, var(--h-line-height, 1.334em));
   font-family: var(--h2-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h2-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h2-hyphens, var(--h-hyphens, manual));
   text-align: var(--h2-text-align, var(--h-text-align, start));
   word-break: var(--h2-word-break, var(--h-word-break, normal));
   text-transform: var(--h2-text-transform, var(--h-text-transform, none));
@@ -49,6 +51,7 @@
   line-height: var(--h3-line-height, var(--h-line-height, 1.4em));
   font-family: var(--h3-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h3-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h3-hyphens, var(--h-hyphens, manual));
   text-align: var(--h3-text-align, var(--h-text-align, start));
   word-break: var(--h3-word-break, var(--h-word-break, normal));
   text-transform: var(--h3-text-transform, var(--h-text-transform, none));
@@ -68,6 +71,7 @@
   line-height: var(--h4-line-height, var(--h-line-height, 1.334em));
   font-family: var(--h4-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h4-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h4-hyphens, var(--h-hyphens, manual));
   text-align: var(--h4-text-align, var(--h-text-align, start));
   word-break: var(--h4-word-break, var(--h-word-break, normal));
   text-transform: var(--h4-text-transform, var(--h-text-transform, none));
@@ -87,6 +91,7 @@
   line-height: var(--h5-line-height, var(--h-line-height, 1.334em));
   font-family: var(--h5-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h5-font-weight, var(--h-font-weight, normal));
+  hyphens: var(--h5-hyphens, var(--h-hyphens, manual));
   text-align: var(--h5-text-align, var(--h-text-align, start));
   word-break: var(--h5-word-break, var(--h-word-break, normal));
   text-transform: var(--h5-text-transform, var(--h-text-transform, none));
@@ -106,6 +111,7 @@
   line-height: var(--h6-line-height, var(--h1-line-height, var(--h-line-height, 1.286em)));
   font-family: var(--h6-font-family, var(--h1-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit)))));
   font-weight: var(--h6-font-weight, var(--h1-font-weight, var(--h-font-weight, normal)));
+  hyphens: var(--h6-hyphens, var(--h-hyphens, manual));
   text-align: var(--h6-text-align, var(--h1-text-align, var(--h-text-align, start)));
   word-break: var(--h6-word-break, var(--h1-word-break, var(--h-word-break, normal)));
   text-transform: var(--h6-text-transform, var(--h1-text-transform, var(--h-text-transform, none)));
@@ -152,12 +158,12 @@
   line-height: 1em;
 }
 :host .title-border:before {
-  width: 1.5em;
-  height: 0.25em;
-  background-color: var(--color-secondary);
+  width: var(--title-border-width, 1.5em);
+  height: var(--title-border-height, 0.25em);
+  background-color: var(--title-border-background-color, var(--color-secondary));
   content: '';
   display: var(--title-border-display, block);
-  margin-bottom: 0.3em;
+  margin-bottom: var(--title-border-margin-bottom, 0.3em);
 }
 :host .h-color {
   color: var(--h-color, var(--color-secondary, var(--color, black)));
@@ -351,6 +357,7 @@
   border-width: var(--hr-border-width, 0 0 1px);
   margin: var(--hr-margin, var(--content-spacing) auto);
   opacity: var(--hr-opacity, 0.5);
+  width: 100%;
 }
 :host hr.secondary {
   border: var(--hr-secondary-border, var(--hr-border, 0));
@@ -402,14 +409,19 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   counter-increment: item;
   text-align: center;
 }
-:host ul {
+:host ul,
+:host ol {
   box-sizing: var(--ul-box-sizing, var(--ol-box-sizing, border-box));
   display: var(--ul-display, var(--ol-display, block));
   flex-direction: var(--ul-flex-direction, var(--ol-flex-direction, column));
   list-style: var(--ul-list-style, disc);
-  padding-left: var(--ul-margin, 1.5em);
+  padding-left: var(--ul-padding-left, 1.5em);
   text-align: var(--ul-text-align, var(--ol-text-align, start));
   margin: var(--ul-margin, 0 auto var(--content-spacing));
+}
+:host ul > li,
+:host ol > li {
+  padding-left: var(--ul-li-padding-left, 0);
 }
 /* overwrite abuse of o-wrapper with simulate-children="1" src/es/components/pages/Home.html */
 :host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
@@ -469,6 +481,19 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   list-style: var(--ul-icon-list-style, none);
   padding: var(--ul-icon-padding, 0);
 }
+/* list-style */
+:host :where(ul, ol):is(.decimal), :host .list-style-decimal {
+  list-style-type: decimal;
+}
+:host :where(ul, ol):is(.square), :host .list-style-square {
+  list-style-type: square;
+}
+:host :where(ul, ol):is(.upper-alpha), :host .list-style-upper-alpha {
+  list-style-type: upper-alpha;
+}
+:host :where(ul, ol):is(.circle), :host .list-style-circle {
+  list-style-type: circle;
+}
 /* table-tags */
 :host table tbody {
   display: table;
@@ -479,17 +504,37 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   overflow: auto;
 }
 :host table, :host table tbody {
+  border: var(--table-border, 0);
   border-collapse: var(--table-border-collapse, collapse);
   border-spacing: var(--table-border-spacing, 0);
+  height: var(--table-height, auto);
   max-width: var(--table-max-width, 100%);
   word-break: var(--table-word-break, normal);
   margin: var(--table-margin, 0 auto var(--content-spacing));
   text-align: var(--table-text-align, left);
   width: var(--table-width, 100%);
 }
+:host table tr:nth-child(even) {
+  background-color: var(--table-even-background-color, transparent);
+}
+:host table tr:nth-child(odd) {
+  background-color: var(--table-odd-background-color, transparent);
+}
+:host table thead {
+  display: var(--table-thead-display, table-header-group);
+  width: var(--table-thead-width, 100%);
+}
+:host table th {
+  font-weight: var(--table-th-font-weight, inherit);
+}
+:host table thead tr:first-child {
+  background-color: var(--table-thead-tr-background-color, transparent);
+  width: var(--table-thead-tr-width, var(--table-thead-width, 100%));
+}
 :host table td, :host table th {
   border: var(--table-border, 0);
   vertical-align: var(--table-vertical-align, top);
+  padding: var(--table-padding, inherit);
   padding-right: var(--table-padding-right, 1em);
   white-space: var(--table-white-space, normal);
 }
@@ -637,7 +682,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     margin: var(--ol-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
   }
   :host ul {
-    margin: var(--ul-margin-mobile, var(--ol-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+    margin: var(--ul-margin-mobile, var(--ul-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
     padding-left: var(--ul-margin-mobile, var(--content-spacing-mobile, var(--content-spacing)));
   }
   /* table-tags */

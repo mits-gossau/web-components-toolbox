@@ -87,6 +87,12 @@ export default class BasketControl extends Shadow() {
         min-height: var(--min-height, 3em);
         width: var(--width, 100%);
       }
+
+      a-button {
+        --button-label-margin: -3px 0 0 0;
+        --button-label-padding: 0;
+      }
+
       @container productList (max-width: 10em) {
         :host input {
           margin: 0;
@@ -96,11 +102,8 @@ export default class BasketControl extends Shadow() {
           --button-padding: 0;
           --button-width: 2em;
         }
-        a-button {
-          --button-label-margin: -3px 0 0 0;
-          --button-label-padding: 0;
-        }
       }
+      
       @container productList (max-width: 7em) {
         a-button#remove{
           --button-margin: 0 0 0 -0.85em;
@@ -132,7 +135,7 @@ export default class BasketControl extends Shadow() {
         margin: var(--quantity-margin, 0 0.5em);
         padding: var(--quantity-padding, 0.25em);
         text-align: var(--quantity-text-align, center);
-        width: var(--quantity-margin, 4em);
+        width: var(--quantity-width, 4em);
       }
       input[type=number] {
         appearance: textfield;
@@ -181,11 +184,6 @@ export default class BasketControl extends Shadow() {
       case 'basket-control-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles])
-      case 'basket-control-product-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./product-/product-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
       default:

@@ -111,7 +111,7 @@ export default class Login extends Prototype() {
         justify-content: end;
         gap: calc(var(--content-spacing, 1em) * 2);
         margin: calc(var(--content-spacing, unset) / 2) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-        width: max(calc(_max-width_ - var(--content-spacing) * 2), 55%); /* Environment.js mobileBreakpoint must correspond to the calc 1200px */
+        width: var(--login-width, max(calc(_max-width_ - var(--content-spacing) * 2), 55%)); /* Environment.js mobileBreakpoint must correspond to the calc 1200px */
       }
       :host .font-size-tiny {
         font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));

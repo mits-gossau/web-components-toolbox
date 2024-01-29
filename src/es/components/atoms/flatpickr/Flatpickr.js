@@ -2,6 +2,7 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
+/* global CustomEvent */
 
 /**
  * Creates a Datepicker
@@ -15,9 +16,15 @@ export default class Flatpickr extends Shadow() {
     // @ts-ignore
     super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options, mode: 'false' }, ...args)
 
-    this.label = this.getAttribute('label') || 'Datum auswählen → 📅'
+    if (this.children.length === 1) {
+      this.label = this.root.children[0]
+      this.label.classList.add('label')
+      this.root.children[0].remove()
+    } else {
+      this.label = this.getAttribute('label') || 'Datum auswählen → 📅'
+    }
     this.gotCleared = false
-    this.dateStrSeparator = ' — '
+    this.dateStrSeparator = this.locale.rangeSeparator || ' — '
 
     this.resetEventListener = async event => {
       let dateReset = event.detail.dateReset
@@ -35,12 +42,12 @@ export default class Flatpickr extends Shadow() {
       if (dateReset) {
         this.gotCleared = true
         if (this.flatpickrInstance) this.flatpickrInstance.clear()
-        this.labelNode.textContent = this.label
+        this.setLabel()
       }
     }
 
     this.setDateEventListener = event => {
-      this.labelNode.textContent = event.detail.dateStr || this.label
+      this.setLabel(event.detail.dateStr)
       if (event.detail.defaultDate) this.flatpickrInstance.setDate(event.detail.defaultDate)
     }
   }
@@ -66,7 +73,7 @@ export default class Flatpickr extends Shadow() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector('style[_css]')
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
@@ -87,6 +94,20 @@ export default class Flatpickr extends Shadow() {
     this.css = /* css */`
       :host, host * {
         cursor: var(--cursor, pointer);
+      }
+      :host > div {
+        border: 1px solid black;
+        border-radius: var(--border-radius, 2.5rem);
+        padding: 6px 24px;
+      }
+      :host .label {
+        align-items: center;
+        display: flex;
+        gap: 1em;
+      }
+      :host input.flatpickr-input.active {
+        background-color: transparent;
+        border-color: var(--color-secondary)
       }
     `
     // TODO: https://npmcdn.com/flatpickr@4.6.13/dist/themes/material_orange.css
@@ -150,26 +171,37 @@ export default class Flatpickr extends Shadow() {
    * @return {Promise<void>}
    */
   renderHTML () {
-    return Promise.all([this.loadDependency(), this.getAttribute('get-date-option-event-name')
-      ? new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('get-date-option-event-name'), {
-        detail: {
-          resolve,
-          dateStrSeparator: this.dateStrSeparator
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      })))
-      : Promise.resolve({})]).then(([dependencies, options]) => {
-      this.labelNode.textContent = options.dateStr || this.label
+    return Promise.all(
+      [this.loadDependency(),
+        this.hasAttribute('options')
+          ? Promise.resolve(Flatpickr.parseAttribute(this.getAttribute('options')))
+          : this.getAttribute('get-date-option-event-name')
+            ? new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('get-date-option-event-name'), {
+              detail: {
+                resolve,
+                dateStrSeparator: this.dateStrSeparator
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            })))
+            : Promise.resolve({})
+      ]
+    ).then(([dependencies, options]) => {
+      this.setLabel(options.dateStr)
       delete options.dateStr
+      if (options.locale) {
+        this.dateStrSeparator = options.locale.rangeSeparator || this.dateStrSeparator
+      } else {
+        options.locale = this.locale
+      }
       this.flatpickrInstance = dependencies[0](this.labelNode, {
-        ...options, // see all possible options: https://flatpickr.js.org/options/
         mode: 'range',
         dateFormat: 'd.m.Y',
+        ...options, // see all possible options: https://flatpickr.js.org/options/
         onChange: (selectedDates, dateStr, instance) => {
+          dateStr = this.setLabel(dateStr.replace(' to ', this.dateStrSeparator))
           if (this.getAttribute('request-event-name') && !this.gotCleared) {
-            this.labelNode.textContent = dateStr = dateStr.replace(' to ', this.dateStrSeparator)
             this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
               detail: {
                 origEvent: { selectedDates, dateStr, instance },
@@ -189,6 +221,10 @@ export default class Flatpickr extends Shadow() {
           this.gotCleared = false
         }
       })
+      if (this.getAttribute('default-date')) {
+        this.flatpickrInstance.setDate(this.getAttribute('default-date'))
+      }
+
       this.html = this.labelNode
       document.head.appendChild(this.style)
       // https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.css
@@ -229,6 +265,18 @@ export default class Flatpickr extends Shadow() {
     ]))
   }
 
+  setLabel (text) {
+    if (!text) text = this.label
+    if (typeof text === 'object') {
+      if (text.outerHTML !== this.labelNode.innerHTML) {
+        this.labelNode.innerHTML = ''
+        this.labelNode.appendChild(text)
+      }
+      return this.labelNode.textContent
+    }
+    return (this.labelNode.textContent = text)
+  }
+
   get style () {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
@@ -238,6 +286,197 @@ export default class Flatpickr extends Shadow() {
   }
 
   get labelNode () {
-    return this._labelNode || (this._labelNode = document.createElement('div'))
+    if (this._labelNode) return this._labelNode
+    if (this.hasAttribute('name') || this.hasAttribute('id') || this.hasAttribute('required')) {
+      this._labelNode = document.createElement('input')
+      this._labelNode.setAttribute('name', this.getAttribute('name'))
+      this._labelNode.setAttribute('id', this.getAttribute('id'))
+      this._labelNode.setAttribute('required', this.getAttribute('required') || 'true')
+    } else {
+      this._labelNode = document.createElement('div')
+    }
+    return this._labelNode
+  }
+
+  get locale () {
+    switch (document.documentElement.getAttribute('lang')) {
+      case 'fr':
+        return this.french
+      case 'it':
+        return this.italian
+      case 'en':
+        return {
+          firstDayOfWeek: 1
+        }
+      default:
+        return this.german
+    }
+  }
+
+  // https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js
+  get german () {
+    return {
+      weekdays: {
+        shorthand: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+        longhand: [
+          'Sonntag',
+          'Montag',
+          'Dienstag',
+          'Mittwoch',
+          'Donnerstag',
+          'Freitag',
+          'Samstag'
+        ]
+      },
+      months: {
+        shorthand: [
+          'Jan',
+          'Feb',
+          'Mär',
+          'Apr',
+          'Mai',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Okt',
+          'Nov',
+          'Dez'
+        ],
+        longhand: [
+          'Januar',
+          'Februar',
+          'März',
+          'April',
+          'Mai',
+          'Juni',
+          'Juli',
+          'August',
+          'September',
+          'Oktober',
+          'November',
+          'Dezember'
+        ]
+      },
+      firstDayOfWeek: 1,
+      weekAbbreviation: 'KW',
+      rangeSeparator: ' bis ',
+      scrollTitle: 'Zum Ändern scrollen',
+      toggleTitle: 'Zum Umschalten klicken',
+      time_24hr: true
+    }
+  }
+
+  // https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js
+  get french () {
+    return {
+      firstDayOfWeek: 1,
+      weekdays: {
+        shorthand: ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'],
+        longhand: [
+          'dimanche',
+          'lundi',
+          'mardi',
+          'mercredi',
+          'jeudi',
+          'vendredi',
+          'samedi'
+        ]
+      },
+      months: {
+        shorthand: [
+          'janv',
+          'févr',
+          'mars',
+          'avr',
+          'mai',
+          'juin',
+          'juil',
+          'août',
+          'sept',
+          'oct',
+          'nov',
+          'déc'
+        ],
+        longhand: [
+          'janvier',
+          'février',
+          'mars',
+          'avril',
+          'mai',
+          'juin',
+          'juillet',
+          'août',
+          'septembre',
+          'octobre',
+          'novembre',
+          'décembre'
+        ]
+      },
+      ordinal: function (nth) {
+        if (nth > 1) { return '' }
+        return 'er'
+      },
+      rangeSeparator: ' au ',
+      weekAbbreviation: 'Sem',
+      scrollTitle: 'Défiler pour augmenter la valeur',
+      toggleTitle: 'Cliquer pour basculer',
+      time_24hr: true
+    }
+  }
+
+  // https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/it.js
+  get italian () {
+    return {
+      weekdays: {
+        shorthand: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
+        longhand: [
+          'Domenica',
+          'Lunedì',
+          'Martedì',
+          'Mercoledì',
+          'Giovedì',
+          'Venerdì',
+          'Sabato'
+        ]
+      },
+      months: {
+        shorthand: [
+          'Gen',
+          'Feb',
+          'Mar',
+          'Apr',
+          'Mag',
+          'Giu',
+          'Lug',
+          'Ago',
+          'Set',
+          'Ott',
+          'Nov',
+          'Dic'
+        ],
+        longhand: [
+          'Gennaio',
+          'Febbraio',
+          'Marzo',
+          'Aprile',
+          'Maggio',
+          'Giugno',
+          'Luglio',
+          'Agosto',
+          'Settembre',
+          'Ottobre',
+          'Novembre',
+          'Dicembre'
+        ]
+      },
+      firstDayOfWeek: 1,
+      ordinal: function () { return '°' },
+      rangeSeparator: ' al ',
+      weekAbbreviation: 'Se',
+      scrollTitle: 'Scrolla per aumentare',
+      toggleTitle: 'Clicca per cambiare',
+      time_24hr: true
+    }
   }
 }

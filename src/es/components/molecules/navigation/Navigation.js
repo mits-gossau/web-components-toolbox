@@ -436,11 +436,11 @@ export default class Navigation extends Mutation() {
         padding: var(--search-li-padding, var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4)));
       }
       :host(.wrapped) > nav > ul > li.search {
-        justify-content: flex-start;
+        justify-content: var(--search-justify-content, flex-start);
       }
       :host > nav > ul > li > a-input{
         --margin-bottom: 0;
-        --search-input-border-color: transparent;
+        --search-input-border-color: var(--search-input-border-color-custom, transparent);
         --search-input-padding-mobile: var(--a-link-content-spacing);
       }
       @media only screen and (max-width: ${self

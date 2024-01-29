@@ -1,6 +1,8 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global CustomEvent */
+
 /**
  * @export
  * @class Basket
@@ -44,7 +46,7 @@ export default class Basket extends Shadow() {
 
   activeOrderItemEventNameListener = (/** @type {{ detail: { fetch: Promise<any>; }; }} */ event) => {
     event.detail.fetch.then((/** @type {{ response: { allOrderItemProductTotal: any; }; }[]} */ activeItems) => {
-      this.count.textContent = activeItems[1].response?.allOrderItemProductTotal
+      this.count.textContent = activeItems[1].response?.allOrderItemProductTotal || 0
     }).catch((/** @type {any} */ error) => {
       this.count.textContent = '0'
       console.warn(error)

@@ -91,6 +91,17 @@ export default class GoogleMaps extends Shadow() {
     :host .control-events > div {
       margin:6px 0 6px 6px;
     }
+    :host .mapOverlay{
+      background: transparent; 
+      position:var(--map-overlay-position, absolute); 
+      width:var(--width, 100%);
+      height:var(--height, 75vh);
+      margin-top: - var(--map-overlay-margin-top, 75vh);
+      top: var(--map-overlay-top, 0);
+      pointer-events: auto;
+      
+    }
+
     :host iframe {
       border:var(--border, none);
       width:var(--width, 100%);
@@ -158,7 +169,17 @@ export default class GoogleMaps extends Shadow() {
 
   renderHTML () {
     let element = null
+
+    let htmlContent = '' // Initialize the HTML content as an empty string
+
     if (this.iframeUrl) {
+      if (this.scrollZoom) {
+        const overlayDiv = document.createElement('div')
+        overlayDiv.setAttribute('class', 'mapOverlay')
+        overlayDiv.setAttribute('onClick', "style.pointerEvents='none'")
+        htmlContent += overlayDiv.outerHTML // Add the overlayDiv to the HTML content
+      }
+
       const iframe = document.createElement('iframe')
       iframe.src = this.iframeUrl
       iframe.name = 'map'
@@ -172,7 +193,11 @@ export default class GoogleMaps extends Shadow() {
       })
       element = mapDiv
     }
-    this.html = element
+
+    htmlContent += element.outerHTML // Add the iframe or mapDiv to the HTML content
+
+    // Set the final HTML content to the container element
+    this.html = htmlContent
   }
 
   /**
@@ -278,5 +303,9 @@ export default class GoogleMaps extends Shadow() {
 
   get iframeUrl () {
     return this.getAttribute('iframe-url') || ''
+  }
+
+  get scrollZoom () {
+    return this.getAttribute('scrollZoom') || 'true'
   }
 }

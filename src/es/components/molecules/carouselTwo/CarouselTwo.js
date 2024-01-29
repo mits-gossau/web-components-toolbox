@@ -150,8 +150,10 @@ export default class CarouselTwo extends Mutation() {
     // Carousel still pops instead of appear nicely. With slow network connection it works though.
     Promise.all(showPromises).then(() => {
       this.hidden = false
-      const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
-      this.scrollIntoView(activeChild || this.section.children[0], false)
+      if (!this.section.classList.contains('scrolling')) {
+        const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
+        this.scrollIntoView(activeChild || this.section.children[0], false)
+      }
       this.setInterval()
     })
     this.addEventListener('click', this.clickListener)
@@ -281,6 +283,9 @@ export default class CarouselTwo extends Mutation() {
         scroll-snap-align: start;
         user-select: none;
       }
+      :host > section > * > a-picture {
+        margin: var(--section-child-a-picture-margin, auto);
+      }
       :host > section > div {
         align-items: var(--section-div-align-items, var(--section-child-align-items, center));
         justify-content: var(--section-div-justify-content, var(--section-child-justify-content, space-between));
@@ -301,25 +306,25 @@ export default class CarouselTwo extends Mutation() {
       :host > nav {
         align-items: center;
         align-self: ${this.hasAttribute('nav-separate')
-        ? 'center'
-        : this.hasAttribute('nav-align-self')
-          ? this.getAttribute('nav-align-self')
-          : 'var(--nav-align-self, end)'};
-        display: ${this.hasAttribute('no-default-nav') ? 'none' : 'flex'};
-        gap: var(--nav-gap);
-        height: fit-content;
-        margin: var(--nav-margin);
-        justify-content: center;
-        ${this.hasAttribute('nav-flex-wrap')
-        ? 'flex-wrap: wrap;'
-        : 'max-height: 20%;'
-      }
+          ? 'center'
+          : this.hasAttribute('nav-align-self')
+            ? this.getAttribute('nav-align-self')
+            : 'var(--nav-align-self, end)'};
+          display: ${this.hasAttribute('no-default-nav') ? 'none' : 'flex'};
+          gap: var(--nav-gap);
+          height: fit-content;
+          margin: var(--nav-margin);
+          justify-content: center;
+          ${this.hasAttribute('nav-flex-wrap')
+          ? 'flex-wrap: wrap;'
+          : 'max-height: 20%;'
+        }
+        z-index: 2;
       }
       :host > nav > * {
         --a-margin: 0;
         padding: 0;
         margin: 0;
-        z-index: 2;
       }
       :host > nav > * {
         opacity: var(--nav-opacity, 0.5);

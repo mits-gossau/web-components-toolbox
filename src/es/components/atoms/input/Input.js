@@ -27,11 +27,11 @@ export default class Input extends Shadow() {
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']
     this.setAttribute('role', this.inputType)
     this.setAttribute('aria-label', this.inputType)
-    if (!this.children.length) this.labelText = this.textContent
+    if (!this.children.length) this.labelText = this.textContent.trim()
 
     this.lastValue = ''
-    this.clickListener = (event, retry = true) => {
-      if (this.lastValue === this.inputField.value) {
+    this.clickListener = (event, retry = true, force = false) => {
+      if (!force && this.lastValue === this.inputField.value) {
         // when delete native icon is pushed the value is not updated when the event hits here
         if (retry && event.composedPath()[0] === this.inputField) setTimeout(() => this.clickListener(event, false), 50)
         return
@@ -53,10 +53,12 @@ export default class Input extends Shadow() {
       }
     }
     this.changeListener = event => this.clickListener(event)
+    this.focusListener = event => this.clickListener(event, undefined, true)
     this.keydownTimeoutId = null
     this.keydownListener = event => {
       if (this.root.querySelector(':focus') !== this.inputField) return
       if (!this.hasAttribute('any-key-listener') && event.keyCode !== 13) return
+      // @ts-ignore
       clearTimeout(this.keydownTimeoutId)
       this.keydownTimeoutId = setTimeout(() => this.clickListener(event), event.keyCode === 13 ? 0 : 1000) // no timeout on enter
     }
@@ -80,29 +82,34 @@ export default class Input extends Shadow() {
   }
 
   connectedCallback () {
+    this.hidden = true
+    const showPromises = []
     // render template
-    if (this.shouldRenderHTML()) this.renderHTML()
-    if (this.shouldRenderCSS()) this.renderCSS()
+    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    Promise.all(showPromises).then(() => {
+      // init configuration
+      this.disabled = this.hasAttribute('disabled')
+      this.readonly = this.hasAttribute('readonly')
+      this.error = this.hasAttribute('error')
 
-    // init configuration
-    this.disabled = this.hasAttribute('disabled')
-    this.readonly = this.hasAttribute('readonly')
-    this.error = this.hasAttribute('error')
+      if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
+      if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
 
-    if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
-    if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
-
-    if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
-      if (this.hasAttribute('delete-listener')) {
-        this.addEventListener('click', this.clickListener)
-      } else {
-        this.searchButton.addEventListener('click', this.clickListener)
+      if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
+        if (this.hasAttribute('delete-listener')) {
+          this.addEventListener('click', this.clickListener)
+        } else {
+          this.searchButton.addEventListener('click', this.clickListener)
+        }
+        if (this.hasAttribute('change-listener')) this.inputField.addEventListener('change', this.changeListener)
+        if (this.hasAttribute('focus-listener')) this.inputField.addEventListener('focus', this.focusListener)
+        document.addEventListener('keydown', this.keydownListener)
+        if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
+        if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
       }
-      if (this.hasAttribute('change-listener')) this.inputField.addEventListener('change', this.changeListener)
-      document.addEventListener('keydown', this.keydownListener)
-      if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
-      if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
-    }
+      this.hidden = false
+    })
   }
 
   disconnectedCallback () {
@@ -113,6 +120,7 @@ export default class Input extends Shadow() {
         this.searchButton.removeEventListener('click', this.clickListener)
       }
       if (this.hasAttribute('change-listener')) this.inputField.removeEventListener('change', this.changeListener)
+      if (this.hasAttribute('focus-listener')) this.inputField.removeEventListener('focus', this.focusListener)
       document.removeEventListener('keydown', this.keydownListener)
       if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     }
@@ -128,7 +136,7 @@ export default class Input extends Shadow() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector('style[_css]')
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
@@ -137,7 +145,7 @@ export default class Input extends Shadow() {
    * @return {boolean}
    */
   shouldRenderHTML () {
-    return !this.inputField
+    return !this.divWrapper
   }
 
   renderCSS () {
@@ -150,22 +158,30 @@ export default class Input extends Shadow() {
 
       :host {
         display: block;
+        ${this.getAttribute('icon-size')
+          ? `
+            --svg-size: ${this.getAttribute('icon-size')};
+          `
+          : ''
+        }
       }
 
       .mui-form-group {
         font-family: var(--font-family);
-        margin-bottom: var(--margin-bottom, var(--content-spacing));
         max-width: var(--max-width, none);
+      }
+      .mui-form-group + .mui-form-group {
+        margin-top: var(--margin-top, var(--content-spacing));
       }
 
       label {
-        font-size: var(--font-size);
-        font-weight: 700;
-        letter-spacing: 0.03em;
-        line-height: 1;
-        color: var(--color);
+        font-size: var(--label-font-size, var(--font-size));
+        font-weight: var(--label-font-weight, 700);
+        letter-spacing: var(--label-letter-spacing, 0.03em);
+        line-height: var(--label-line-height, 1);
+        color: var(--label-color, var(--color));
         display: block;
-        margin-bottom: 0.625em;
+        margin-bottom: var(--label-margin-bottom, 0.625em);
       }
 
       input {
@@ -175,11 +191,13 @@ export default class Input extends Shadow() {
         width: 100%;
         font-family: inherit;
         font-size: var(--input-font-size, var(--font-size));
-        line-height: 1.4;
+        line-height: var(--input-line-height, 1.4);
         color: var(--input-color, var(--color));
         appearance: none;
         background: var(--input-bg-color, var(--m-gray-200));
         border: var(--border, 1px solid transparent);
+        border-radius: var(--border-radius, 0.5em);
+        text-overflow: var(--text-overflow, ellipsis);
         transition: background ease-out .3s, border-color ease-out .3s;
       }
 
@@ -209,26 +227,50 @@ export default class Input extends Shadow() {
       }
 
       :host([search]) .mui-form-group {
+        align-items: center;
+        display: flex;
         position: relative;
       }
-
+      :host([search]) label {
+        font-family: var(--search-label-font-family, var(--font-family-secondary));
+        font-weight: var(--search-label-font-weight, 500);
+        font-size: var(--search-label-font-size, var(--font-size));
+        line-height: var(--search-label-line-height, 1.5);
+        margin-top: 1.25rem;
+      }
       :host([search]) input {
+        background-color: var(--search-input-background-color, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color, var(--m-gray-300));
+        color: var(--search-input-color);
         padding: var(--search-input-padding, 0.75em var(--content-spacing));
         padding-right: max(2.5em, 35px);
         border-radius: var(--search-input-border-radius, var(--border-radius, 0.5em));
         width: var(--search-input-width-big, var(--search-input-width, 100%));
         min-width: 9.7em;
       }
-
+      :host([search]) input:hover,
+      :host([search]) input:hover:not(:disabled):not(:read-only):not(:invalid) {
+        background-color: var(--search-input-background-color-hover, var(--input-bg-color, var(--m-gray-200)));
+        border-color: var(--search-input-border-color-hover, var(--m-gray-800));
+      }
+      :host([search]) input:focus:not(:read-only):not(:invalid) {
+        background-color: var(--search-input-background-color-focus, var(--input-bg-color, var(--m-gray-200)));
+        border-color: var(--search-input-border-color-focus, var(--m-gray-800));
+      }
+      :host([search]) input:visited {
+        text-decoration: var(--search-input-text-decoration, none);
+      }
+      :host([search]) input::placeholder {
+        color: var(--search-input-placeholder-color);
+        text-decoration: var(--search-input-text-decoration, none);
+      }
       :host([search]) input::-webkit-search-cancel-button {
         margin-right: 0.5em;
       }
 
       :host([search]) button {
         position: absolute;
-        bottom: 0.5em;
-        right: 0.47em;
+        right: 1em;
         padding: 0;
         border: 0;
         background: transparent;
@@ -237,16 +279,22 @@ export default class Input extends Shadow() {
         box-shadow: none;
         font-family: inherit;
         font-size: var(--input-font-size, var(--font-size));
-        line-height: var(--input-line-height, 0.5em);
         color: var(--icon-color, var(--color-secondary, var(--color)));
         font-style: normal;
         cursor: pointer;
         transition: color ease-out .3s;
+        ${this.getAttribute('icon-size')
+          ? `
+            height: ${this.getAttribute('icon-size')};
+            width: ${this.getAttribute('icon-size')};
+          `
+          : ''
+      }
       }
 
       :host([search]) button svg {
-        height: var(--svg-size, 2em);
-        width: var(--svg-size, 2em);
+        height: var(--svg-size, var(--svg-height, var(--svg-size, 1.5em)));
+        width: var(--svg-size, var(--svg-width, var(--svg-size, 1.5em)));
       }
 
       :host([disabled]) button,
@@ -289,6 +337,9 @@ export default class Input extends Shadow() {
       }
 
       @media only screen and (max-width: _max-width_) {
+        input {
+          border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
+        }
         :host([search]) input {
           padding: var(--search-input-padding-mobile, var(--search-input-padding, 0.75em var(--content-spacing-mobile)));
           border-radius: var(--search-input-border-radius-mobile, var(--search-input-border-radius, var(--border-radius-mobile, var(--border-radius, 0.571em))));
@@ -302,38 +353,84 @@ export default class Input extends Shadow() {
         :host([search]) input::-webkit-search-cancel-button {
           margin-right: 2.5em;
         }
-        label, input, :host([search]) button {
+        label, :host([search]) button {
           font-size: var(--font-size-mobile, var(--font-size));
+        }
+        input {
+          font-size: var(--input-font-size-mobile, var(--input-font-size, var(--font-size-mobile, var(--font-size))));
         }
       }
     `
+    return this.fetchTemplate()
+  }
+
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
+    const replaces = this.buttonTagName === 'a'
+      ? [{
+          pattern: '([^-]{1})button',
+          flags: 'g',
+          replacement: '$1a'
+        }]
+      : []
+    switch (this.getAttribute('namespace')) {
+      case 'input-default-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./default-/default-.css`,
+          namespace: false,
+          replaces
+        }], false)
+      default:
+        return Promise.resolve()
+    }
   }
 
   renderHTML () {
-    this.html = /* html */`
-      <div class="mui-form-group">
-        ${this.renderLabelHTML()}
-        <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" />
-        ${this.renderSearchHTML()}
-      </div>
-    `
-    this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint') ? this.getAttribute('enterkeyhint') : 'search')
+    this.html = '<div class="mui-form-group"></div>'
+    return Promise.all([
+      this.renderLabelHTML(),
+      this.renderSearchHTML()
+    ]).then(([labelHtml, searchHtml]) => {
+      this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml)
+      this.divWrapper.innerHTML += /* html */`
+          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
+          ${searchHtml}
+      `
+      this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint')
+        ? this.getAttribute('enterkeyhint')
+        : this.search
+          ? 'search'
+          : 'go'
+      )
+    })
   }
 
   renderLabelHTML () {
-    return this.labelText ? `<label for="${this.inputId}">${this.labelText}</label>` : ''
+    return Promise.resolve(this.labelText ? `<label for="${this.inputId}">${this.labelText}</label>` : '')
   }
 
   renderSearchHTML () {
-    return this.search
-      ? `
-    <button type="button" title="Search">
-      <svg width="100%" height="100%" viewBox="0 0 24 24" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
-      <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" class="icon-stroke-width" stroke-linecap="round" stroke-linejoin="round"></path>
-      <path d="M21 21L16.65 16.65" class="icon-stroke-width" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
-    </button>`
-      : ''
+    if (!this.search) return Promise.resolve('')
+    if (!this.iconName) {
+      return Promise.resolve(/* html */`
+      <button type="button" title="Search">
+        <svg width="100%" height="100%" viewBox="0 0 24 24" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
+        <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" class="icon-stroke-width" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M21 21L16.65 16.65" class="icon-stroke-width" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </button>
+    `)
+    }
+    return (this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`], true).then(htmls => `<button type="button" title="${this.iconName}">${htmls[0]}</button>`))
+  }
+
+  focus () {
+    this.inputField.focus()
   }
 
   get inputId () {
@@ -350,6 +447,10 @@ export default class Input extends Shadow() {
 
   get inputField () {
     return this.root.querySelector('input')
+  }
+
+  get divWrapper () {
+    return this.root.querySelector('div.mui-form-group')
   }
 
   get searchButton () {
@@ -404,5 +505,9 @@ export default class Input extends Shadow() {
     if (this.searchButton) {
       isInvalid ? this.searchButton.classList.add('error') : this.searchButton.classList.remove('error')
     }
+  }
+
+  get iconName () {
+    return this.getAttribute('icon-name')
   }
 }

@@ -1,0 +1,6 @@
+:host {
+    --favorite-default-svg-fill-active: var(--favorite-default-svg-fill-active-custom, var(--m-black));
+    --favorite-default-svg-fill-default: var(--favorite-default-svg-fill-default-custom, white);
+    --favorite-default-svg-stroke: var(--favorite-default-svg-stroke-custom, var(--m-black));
+    --favorite-default-svg-stroke-hover: var(--favorite-default-svg-stroke-hover-custom, var(--m-orange-600));
+}

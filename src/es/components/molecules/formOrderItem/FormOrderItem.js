@@ -8,36 +8,42 @@ export default class FormOrderItem extends Form {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.eventListener = event => {
-      const inputField = this.root.querySelector(':focus')
-      if (!inputField || inputField.getAttribute('type') === 'checkbox') return
-      if (inputField === this.clearQuantityBtn) {
-        if (event.key === 'Enter' || event.key === 'Spacebar' || event.key === ' ') this.clickListener()
+      if (!this.input) return
+
+      if (this.isCheckbox) {
+        if (event.currentTarget.checked) {
+          this.calcTotal('1', this.priceAttribute, this.priceTotalElement)
+        } else {
+          this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
+        }
       } else {
-        const value = inputField?.value ? inputField.value : '0'
-        this.updateInputAttributeValue(inputField, value)
+        const value = this.input?.value ? this.input.value : '0'
+        this.updateInputAttributeValue(this.input, value)
         this.calcTotal(value, this.priceAttribute, this.priceTotalElement)
       }
     }
-    this.clickListener = event => {
+
+    this.clickListener = () => {
       this.quantityField.value = ''
       this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
-    }
-    this.checkboxChangeListener = event => {
-      if (event.currentTarget.checked) {
-        this.calcTotal('1', this.priceAttribute, this.priceTotalElement)
-      } else {
-        this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
-      }
     }
   }
 
   connectedCallback () {
     super.connectedCallback()
+    
+    /* event listeners */
+    if (this.input) {
+      this.input.addEventListener('keyup', this.eventListener)
+      this.input.addEventListener('change', this.eventListener)
+    } 
     if (this.clearQuantityBtn) this.clearQuantityBtn.addEventListener('click', this.clickListener)
-    this.addEventListener('keyup', this.eventListener)
-    if (this.checkboxInput) this.checkboxInput.addEventListener('change', this.checkboxChangeListener)
+    
+    /* set initial attributes */
     this.setPrice(this.priceAttribute, this.priceElement)
     this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
+
+    /* update fixed-price-total on form (sum of all fixed prices) */
     if (this.getAttribute('is-fixed-price')) {
       const currentPrice = parseFloat(this.priceAttribute)
       const parentFormElement = this.closest('m-form')
@@ -54,9 +60,11 @@ export default class FormOrderItem extends Form {
 
   disconnectedCallback () {
     super.disconnectedCallback()
+    if (this.input) {
+      this.input.removeEventListener('keyup', this.eventListener)
+      this.input.removeEventListener('change', this.eventListener)
+    } 
     if (this.clearQuantityBtn) this.clearQuantityBtn.removeEventListener('click', this.clickListener)
-    if (this.checkboxInput) this.checkboxInput.removeEventListener('change', this.checkboxChangeListener)
-    this.removeEventListener('keyup', this.eventListener)
   }
 
   /**
@@ -87,6 +95,14 @@ export default class FormOrderItem extends Form {
         justify-content: space-between;
         padding:var(--padding, 0);
         border-top: 1px solid var(--border-top-color, black);
+      }
+      :host a-button {
+        border: 1px solid transparent; /*default so button wont move when focus border appears*/
+        margin-left: 5px;
+      }
+      :host a-button:focus {
+        border: 1px dotted rgb(255, 102, 0);
+        border-radius: 0.5em;
       }
     `
     return this.fetchTemplate()
@@ -176,8 +192,12 @@ export default class FormOrderItem extends Form {
     return this.root.querySelector('.price') || null
   }
 
-  get checkboxInput () {
-    return this.root.querySelector('input[type=checkbox]') || null
+  get input () {
+    return this.root.querySelector('input') || null
+  }
+
+  get isCheckbox () {
+    return this.input != null && this.input.getAttribute('type') === 'checkbox' || null
   }
 
   get priceTotalElement () {

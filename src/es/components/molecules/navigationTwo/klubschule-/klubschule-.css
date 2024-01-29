@@ -1,0 +1,155 @@
+:host {
+    --gap-custom: 0;
+    --menu-background-color: var(--background-color);
+    --menu-color: var(--menu-color-custom, var(--color-tertiary));
+    --navigation-klubschule-background-color-open: var(--menu-color);
+    --navigation-klubschule-border-color: var(--menu-color);
+    --navigation-klubschule-content-width: var(--navigation-klubschule-content-width-custom, var(--header-default-content-width));
+    --navigation-klubschule-padding-no-scroll: var(--content-spacing-mobile);
+    --navigation-klubschule-section-background-color-open: var(--menu-background-color);
+    --navigation-klubschule-section-background-color: var(--menu-color);
+    --navigation-klubschule-section-color-open: var(--color);
+    --navigation-klubschule-section-ul-background-color: var(--menu-background-color);
+    --navigation-klubschule-path-color: var(--color);
+  }
+  :host > nav > ul.open {
+    --navigation-klubschule-padding-no-scroll: 0;
+    --navigation-klubschule-padding: 0;
+  }
+  :host > nav > ul > li > a-link {
+    --navigation-klubschule-color-active: var(--navigation-klubschule-color-active-custom, var(--menu-background-color));
+  }
+  :host > nav > ul > li.open > a-link {
+    --navigation-klubschule-background-color-hover: var(--menu-color);
+    --navigation-klubschule-background-color-active: var(--menu-color);
+  }
+  :host > nav > ul > li:not(.open) > a-link {
+    --navigation-klubschule-color-active: var(--navigation-klubschule-not-open-color-active-custom, var(--color-tertiary));
+    --navigation-klubschule-color-hover: var(--navigation-klubschule-not-open-color-hover-custom, var(--color-tertiary));
+  }
+  :host > nav > ul li.open, :host > nav > ul li:hover, :host > nav > ul li.active {
+    --navigation-klubschule-path-color: var(--color-hover);
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section {
+    --navigation-klubschule-color: var(--navigation-klubschule-color-second-level-custom, var(--navigation-klubschule-color-custom, var(--menu-color)));
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > ul {
+    --padding-mobile-custom: var(--content-spacing-mobile);
+    --padding-mobile-first-child-custom: var(--content-spacing-mobile);
+    --padding-mobile: var(--content-spacing-mobile);
+    --padding: var(--content-spacing);
+    background-color: var(--menu-background-color);
+    border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.5em));
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > *[width="100%"] {
+    --margin-mobile: 0 0 var(--content-spacing-mobile);
+    --margin: 0 0 var(--content-spacing) 0;
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > * {
+    --margin-mobile: 0 0 var(--content-spacing-mobile);
+    --margin: 0 var(--content-spacing) 0 0;
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > *:last-child {
+    --margin-mobile: 0;
+    --margin: 0;
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > ul, :host > nav > ul li.open > o-nav-wrapper > section > ul a-link {
+    --navigation-klubschule-background-color: var(--menu-background-color);
+    --navigation-klubschule-font-size: 1em;
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) > li, :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) > li:last-child {
+    --any-padding: 0.5em 0;
+    border-bottom: 2px dotted var(--menu-color);
+    padding: 0.5em 0 !important;
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) > li:last-child {
+    border-bottom: 0;
+  }
+  :host > nav > ul li.open > o-nav-wrapper > section > ul:not([style])[width="100%"] > li {
+    border: 0;
+  }
+  @media only screen and (max-width: _max-width_) {
+    :host {
+      --icon-color: var(--menu-color);
+      --navigation-klubschule-a-link-content-spacing-custom: 0 0 0 1em;
+      --navigation-klubschule-a-link-content-spacing-no-scroll-custom: var(--navigation-klubschule-a-link-content-spacing-custom);
+      --navigation-klubschule-background-color: var(--menu-color);
+      --navigation-klubschule-color-mobile: var(--navigation-klubschule-color-mobile-custom, var(--menu-color));
+      --navigation-klubschule-color: var(--menu-color);
+      --navigation-klubschule-search-li-padding-mobile: var(--content-spacing-mobile) 0 0;
+    }
+    :host > nav > ul > li.open > a-link, :host > nav > ul > li:not(.open) > a-link, :host > nav > ul > li:not(.open) > a-arrow {
+      --navigation-klubschule-color-active: var(--color-hover);
+      --navigation-klubschule-background-color-hover: transparent;
+      --navigation-klubschule-color-open-mobile: var(--color-hover);
+    }
+    :host > nav > ul > li:not(.open) > a-link, :host > nav > ul > li:not(.open) > a-arrow {
+      --navigation-klubschule-color-active: var(--color-active);
+    }
+    :host > nav > ul > li:not(.open) > a-link {
+      --navigation-klubschule-color-hover: var(--color-hover);
+    }
+    :host > nav > ul:not(.language-switcher):not(.open):not(:hover) > li.active:not(.search):not(:last-child), :host > nav > ul:not(.language-switcher) > li.active:not(.search):not(:last-child), :host > nav > ul:not(.language-switcher) > li:not(.search):not(:last-child), :host > nav > ul:not(.language-switcher) > li:hover:not(.search):not(:last-child) {
+      border-bottom: 2px dotted var(--menu-color) !important;
+    }
+    :host > nav > ul > li > a-link, :host(.no-scroll) > nav > ul > li > a-link {
+      --navigation-klubschule-padding: var(--content-spacing-mobile);
+    }
+    :host > nav > ul:not(.open) > li, :host(.no-scroll) > nav > ul:not(.open) > li {
+      --navigation-klubschule-background-color: transparent;
+    }
+    :host > nav > ul:not(.open) > li, :host(.no-scroll) > nav > ul:not(.open) > li, :host > nav > ul.open > li, :host(.no-scroll) > nav > ul.open > li {
+      --navigation-klubschule-background-color-open: transparent;
+      --navigation-klubschule-background-color-active: transparent;
+      --navigation-klubschule-background-color: transparent;
+      background-color: transparent;
+    }
+    :host > nav > ul.language-switcher {
+      padding: var(--navigation-klubschule-padding-no-scroll,var(--padding-no-scroll, calc(var(--navigation-klubschule-content-spacing,var(--content-spacing, 40px))) / 2) 0)
+    }
+    :host > nav > ul:not(.open):not(.language-switcher) > li:not(.search), :host(.no-scroll) > nav > ul:not(.open):not(.language-switcher) > li:not(.search) {
+      border-bottom: 2px dotted var(--menu-color);
+    }
+    :host > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child, :host(.no-scroll) > nav > ul:not(.open):not(.language-switcher) > li:not(.search):last-child {
+      border-bottom: 0;
+    }
+    :host > nav > ul li.open > o-nav-wrapper > section > ul > li:first-child, :host > nav > ul li.open > o-nav-wrapper > section > ul > li.bold {
+      --navigation-klubschule-a-link-content-spacing-custom: 0 0 0 min(10vw, var(--content-spacing-mobile));
+      --navigation-klubschule-a-link-content-spacing-no-scroll-custom: var(--navigation-klubschule-a-link-content-spacing-custom);
+    }
+    :host > nav > ul:not(.language-switcher):not(.open), :host(:not(.no-scroll)) > nav > ul:not(.language-switcher):not(.open) {
+      background-color: var(--menu-background-color);
+      border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em));
+      margin: var(--navigation-klubschule-margin-no-scroll, var(--navigation-klubschule-padding-no-scroll));
+      padding: var(--navigation-klubschule-padding-no-scroll);
+    }
+    :host > nav > ul.language-switcher li, :host(:not(.no-scroll)) > nav > ul.language-switcher li, :host > nav > ul:not(.open).language-switcher li, :host(:not(.no-scroll)) > nav > ul:not(.open).language-switcher li {
+      --navigation-klubschule-color-mobile: var(--menu-background-color);
+    }
+    :host > nav > ul li:first-child {
+      --navigation-klubschule-search-li-padding-mobile: 0;
+    }
+    :host > nav > ul li.open > o-nav-wrapper > section {
+      left: var(--content-spacing-mobile, var(--content-spacing)) !important;
+      width: var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)) !important;
+    }
+    :host > nav > ul li > o-nav-wrapper > section > ul:not(:last-of-type):not([width="100%"]) {
+      --any-padding-bottom-last-child-mobile: 0.5em;
+    }
+    /* allow two uls to be merged into one block */
+    @supports(selector(:has(+ ul))) {
+      :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]):has(+ ul) {
+        border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) 0 0;
+      }
+      :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) + ul {
+        --margin-mobile: calc(var(--content-spacing-mobile) * -2) 0 var(--content-spacing-mobile);
+        --margin-last-child-mobile: calc(var(--content-spacing-mobile) * -2) 0 var(--content-spacing-mobile);
+        --padding-mobile: 0 1em 1em;
+        --padding-last-child-mobile: 0 1em 1em;
+        border-radius: 0 0 var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em)) var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.571em));
+      }
+      :host > nav > ul li.open > o-nav-wrapper > section > ul:not([width="100%"]) + ul > li:first-child {
+        border-top: 2px dotted var(--menu-color);
+      }
+    }
+  }

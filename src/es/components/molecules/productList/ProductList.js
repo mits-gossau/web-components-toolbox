@@ -16,13 +16,13 @@ export default class ProductList extends Shadow() {
     this.productNamespace = 'product-default-'
 
     this.answerEventNameListener = event => {
-      this.renderHTML('loading', null, null)
+      this.renderHTML('loading', null, null, '')
       this.productNamespace = event.detail.namespace || this.productNamespace
       event.detail.fetch.then(productData => {
-        const { products, total_hits: totalHits } = productData[0]
+        const { products, total_hits: totalHits, sort } = productData[0]
         const { orderItems } = (productData && productData[1]?.response) || {}
         if (!products) throw new Error('No Products found')
-        this.renderHTML(products, totalHits, orderItems)
+        this.renderHTML(products, totalHits, orderItems, sort)
       }).catch(error => {
         this.html = ''
         this.html = `<span style="color:var(--color-error);">${error}</span>`
@@ -50,7 +50,8 @@ export default class ProductList extends Shadow() {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name',
       {
         detail: {
-          type: 'get-active-order-items'
+          type: 'get-active-order-items',
+          searchterm: this.getAttribute('searchterm')
         },
         bubbles: true,
         cancelable: true,
@@ -86,11 +87,9 @@ export default class ProductList extends Shadow() {
     }
 
     :host > m-load-template-tag {
-      flex: var(--m-load-template-tag-flex, 0 0 13vw);
+      flex: var(--m-load-template-tag-flex, 0 0 min(calc(16.66% - 0.5em)));
       margin: var(--m-load-template-tag-margin, 0 0.5em 0.5em 0);
-      min-height: var(--m-load-template-tag-min-height, 12em);
-      min-width: var(--m-load-template-tag-min-width, 13vw);
-      width: var(--m-load-template-tag-width, 13vw);
+      min-height: var(--m-load-template-tag-min-height, 25em);
     }
 
     :host .filter {
@@ -105,18 +104,38 @@ export default class ProductList extends Shadow() {
 
     :host select {}
 
-    @container products (max-width: 52em){
+    @container products (max-width: 80em) {
+      :host > m-load-template-tag  {
+        min-height: var(--m-load-template-tag-min-height-mobile, 22em);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(20% - 0.5em)));
+      }
+    }
+
+    @container products (max-width: 60em){
       :host > m-load-template-tag {
-        min-height: var(--m-load-template-tag-min-height-mobile, auto);
-        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(33% - 0.5em)));
+        min-height: var(--m-load-template-tag-min-height-mobile, 22em);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(25% - 0.5em)));
+      }
+    }
+
+    @container products (max-width: 40em){
+      :host > m-load-template-tag {
+        min-height: var(--m-load-template-tag-min-height-mobile, 22em);
+        min-width: var(--m-load-template-tag-min-width-mobile, min(calc(33.33% - 0.5em)));
       }
     }
 
     @container products (max-width: 30em){
       :host > m-load-template-tag {
-        min-height: var(--m-load-template-tag-min-height-mobile, auto);
+        min-height: var(--m-load-template-tag-min-height-mobile, 22em);
         min-width: var(--m-load-template-tag-min-width-mobile, min(calc(50% - 0.5em)));
       }
+    }
+    
+    @media only screen and (max-width: _max-width_) {
+      :host > m-load-template-tag {
+        flex: var(--m-load-template-tag-flex-mobile, 1 1 35%);
+      } 
     }
     `
     return this.fetchTemplate()
@@ -157,9 +176,10 @@ export default class ProductList extends Shadow() {
    * @param {any[] | null} orderItems - The `orderItems` parameter is an array that contains information about the
    * items that have been ordered. Each item in the array is an object with properties such as
    * `mapiProductId` (the ID of the product) and `amount` (the quantity of the product ordered).
+   * @param {string} sort - Sort order
    * @returns {Promise<void>} The function `renderHTML` returns a Promise.
    */
-  async renderHTML (productData, totalHits, orderItems) {
+  async renderHTML (productData, totalHits, orderItems, sort) {
     if (!productData || (productData !== 'loading' && (!Array.isArray(productData) || !productData.length))) {
       this.html = ''
       this.html = `${this.getAttribute('no-products-found-translation') || 'Leider haben wir keine Produkte zu diesem Suchbegriff gefunden.'}`
@@ -183,6 +203,10 @@ export default class ProductList extends Shadow() {
       {
         path: `${this.importMetaUrl}'../../../../molecules/loadTemplateTag/LoadTemplateTag.js`,
         name: 'm-load-template-tag'
+      },
+      {
+        path: `${this.importMetaUrl}'../../../../molecules/systemNotification/SystemNotification.js`,
+        name: 'm-system-notification'
       },
       {
         path: `${this.importMetaUrl}'../../../../molecules/form/Form.js`,
@@ -253,9 +277,12 @@ export default class ProductList extends Shadow() {
       divHeaderWrapper.appendChild(totalElement)
       const showSort = this.showSort
       if (showSort) {
-        const select = this.renderSort()
+        const select = this.renderSort(sort)
         divHeaderWrapper.appendChild(select)
       }
+
+      if (!this.isLoggedIn) this.html = this.renderNotification('info')
+
       products.unshift(divHeaderWrapper.outerHTML)
       this.html = products.join('')
 
@@ -267,23 +294,81 @@ export default class ProductList extends Shadow() {
   }
 
   /**
-   * Creates a div element with a select dropdown menu for sorting options.
-   * @returns The `renderSort()` function returns a div element containing a select element with various sorting options.
+   * Return a system notification component with a description
+   * containing a message and a link.
+   * @param {string} type - The "type" parameter is used to specify the type of notification to be rendered. It
+   * is passed as an argument to the "renderNotification" function.
+   * @returns a string that represents an HTML template for a system notification. The template
+   * includes a slot for the description and a link to the login/registration page. The type of the
+   * notification is determined by the "type" parameter passed to the function.
    */
-  renderSort () {
-    const sortWrapper = document.createElement('div')
+  renderNotification (type) {
+    return `
+    <m-system-notification type="${type}">
+      <style>
+        :host {
+          --svg-color:var(--m-blue-800);
+          width: 100%;
+          margin: 0 1em;
+        }
+        :host a {
+          color: inherit;
+        } 
+        :host .description > div {
+          display: flex;
+          align-items: center;
+          gap: 0.5em;
+        }
+        :host .description svg {
+          min-width: var(--svg-min-width, 24px);
+          width: var(--svg-min-width, 24px);
+        }
+      </style>
+      <div slot="description">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" part="svg"><path stroke-width="3.5" d="M28 18.667V28m0 9.333h.023M51.333 28c0 12.887-10.446 23.333-23.333 23.333C15.113 51.333 4.667 40.887 4.667 28 4.667 15.113 15.113 4.667 28 4.667c12.887 0 23.333 10.446 23.333 23.333Z"></path></svg>
+          <p>Les fonctionnalités d'ajout au panier et de passation de commande ne sont disponibles que pour les utilisateurs enregistrés. Se connecter / Créer son compte <a href="/login">Login/registre</a></p>
+      </div>
+    </m-system-notification>`
+  }
+
+  /**
+   * Creates a select element with options for sorting and returns it wrapped in a div.
+   * @param {string} sortValue - The current selected value for sorting. It can be
+   * one of the following values: 'default', 'asc', 'desc', 'az', or 'za'.
+   * @returns a div element containing a select element with options for sorting values.
+   */
+  renderSort (sortValue) {
+    // TODO: Refactor - Use translation attribute
+    const options = {
+      default: 'Trier par',
+      asc: 'Prix le plus bas',
+      desc: 'Prix le plus élevé',
+      az: 'Nom A - Z',
+      za: 'Nom Z - A'
+    }
+
+    const selected = Object.keys(options).find(key => key === sortValue)
+
+    const sortList = document.createElement('select')
+    sortList.classList.add('form-control')
+    sortList.id = 'sort'
+
+    for (const key in options) {
+      const option = document.createElement('option')
+      option.value = key
+      option.text = options[key]
+      if (key === selected) option.setAttribute('selected', 'selected')
+      sortList.appendChild(option)
+    }
+
     this.sortSelect = `
       <m-form role="form">
         <div class="form-group">
-          <select class="form-control" id="sort">
-            <option disabled selected value>Trier par</option>
-            <option value="asc">Prix le plus élevé</option>
-            <option value="desc">Prix le plus bas</option>
-            <option value="az">A-Z</option>
-            <option value="za">Z-A</option>
-          </select>
+          ${sortList.outerHTML} 
         </div>
-      </m-form>`
+      </m-form>
+    `
+    const sortWrapper = document.createElement('div')
     sortWrapper.innerHTML = this.sortSelect
     return sortWrapper
   }
@@ -311,7 +396,7 @@ export default class ProductList extends Shadow() {
   }
 
   get isLoggedIn () {
-    return this.getAttribute('is-logged-in') || 'false'
+    return (this.getAttribute('is-logged-in').toLowerCase() === 'true') || false
   }
 
   get showSort () {
