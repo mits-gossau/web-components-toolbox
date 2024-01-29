@@ -206,6 +206,10 @@ export default class NavigationTwo extends Mutation() {
         --text-transform: var(--a-link-text-transform);
         font-family: var(--a-link-font-family, var(--font-family));
         font-weight: var(--a-font-weight, var(--font-weight, normal));
+        /*
+       TODO Refactor later, can i add it on better way?
+       */
+       --padding-last-child: 0 2px 0 var(--navigation-klubschule-a-link-padding-x-custom);
       }
       :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) a-link {
         --color: var(--a-link-color-${this.getAttribute('no-scroll') || 'no-scroll'});

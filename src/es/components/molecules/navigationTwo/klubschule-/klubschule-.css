@@ -11,7 +11,13 @@
     --navigation-klubschule-section-color-open: var(--color);
     --navigation-klubschule-section-ul-background-color: var(--menu-background-color);
     --navigation-klubschule-path-color: var(--color);
+    /*Refactor it later if needed*/
     --navigation-klubschule-justify-content: right;
+    --navigation-klubschule-color: var(--navigation-klubschule-color-custom, #262626);
+    --navigation-klubschule-a-link-content-spacing: var(--navigation-klubschule-a-link-padding-y-custom) var(--navigation-klubschule-a-link-padding-x-custom);
+    --navigation-klubschule-align-items: end;
+    --navigation-klubschule-margin: 0 calc(var(--content-spacing) - var(--navigation-klubschule-a-link-padding-x-custom));
+    --navigation-klubschule-border-color: red;
   }
   :host > nav > ul.open {
     --navigation-klubschule-padding-no-scroll: 0;
@@ -19,6 +25,14 @@
   }
   :host > nav > ul > li > a-link {
     --navigation-klubschule-color-active: var(--navigation-klubschule-color-active-custom, var(--menu-background-color));
+  }
+  /*Refactor it later if needed*/
+  :host > nav > ul > li:last-child {
+    --navigation-klubschule-margin: 0 0 0 calc(var(--content-spacing) - var(--navigation-klubschule-a-link-padding-x-custom));
+  }
+  /*Refactor it later if needed*/
+  :host > nav > ul > li:last-child > a-link {
+    --navigation-klubschule-padding: var(--navigation-klubschule-padding-last-child, var(--padding, 14px 10px));
   }
   :host > nav > ul > li.open > a-link {
     --navigation-klubschule-background-color-hover: var(--menu-color);

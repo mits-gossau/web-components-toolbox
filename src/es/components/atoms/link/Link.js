@@ -41,10 +41,14 @@ export default class Link extends Hover() {
     if (this.a) this.a.setAttribute('tabindex', '0')
   }
 
-  connectedCallback () {
+connectedCallback () {
     super.connectedCallback()
+    if (this.parentElement.tagName === "LI" && this.parentElement.hasAttribute("main-color")){
+      this.customHoverColor = this.parentElement.getAttribute("main-color")
+    }
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+
   }
 
   /**
@@ -127,7 +131,7 @@ export default class Link extends Hover() {
       :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName}, :host(.hover) > a, :host(.hover) > a ~ ${this.hitAreaTagName} {
         background-color:var(--background-color-hover, transparent);
         box-shadow: var(--box-shadow-hover, none);
-        color: var(--color-hover, var(--color, yellow));
+        color: ${this.customHoverColor ? this.customHoverColor : "var(--color-hover, var(--color, yellow))"};
         font-family: var(--font-family-hover, var(--font-family, inherit));
         text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
       }
