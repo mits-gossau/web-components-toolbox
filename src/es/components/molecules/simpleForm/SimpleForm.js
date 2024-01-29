@@ -486,7 +486,7 @@ export default class SimpleForm extends Shadow() {
           callback: () => {
             this.root.querySelectorAll('[captcha-message]').forEach(message => message.classList.add('hidden'))
             this.inputSubmit.removeAttribute('disabled')
-            dialog.setAttribute('style', style + 'opacity: 0;')
+            dialog.setAttribute('style', style + 'opacity: 0; pointer-events: none;')
           },
           'expired-callback': () => {
             this.root.querySelectorAll('[captcha-message]').forEach(message => message.classList.remove('hidden'))
