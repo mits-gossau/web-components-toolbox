@@ -17,7 +17,9 @@
     --navigation-klubschule-a-link-content-spacing: var(--navigation-klubschule-a-link-padding-y-custom) var(--navigation-klubschule-a-link-padding-x-custom);
     --navigation-klubschule-align-items: end;
     --navigation-klubschule-margin: 0 calc(var(--content-spacing) - var(--navigation-klubschule-a-link-padding-x-custom));
-    --navigation-klubschule-border-color: red;
+    --navigation-klubschule-border-color: transparent;
+    --navigation-klubschule-border-width: 4px;
+
   }
   :host > nav > ul.open {
     --navigation-klubschule-padding-no-scroll: 0;

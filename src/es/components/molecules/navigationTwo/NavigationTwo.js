@@ -136,6 +136,12 @@ export default class NavigationTwo extends Mutation() {
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
     super.connectedCallback()
+
+    Array.from(this.shadowRoot.querySelectorAll("li")).forEach(li => {
+      if (li.hasAttribute("main-color")) {
+        li.style.setProperty("--navigation-klubschule-border-color-active", li.getAttribute("main-color"))
+      }
+    })
   }
 
   disconnectedCallback () {
@@ -283,7 +289,7 @@ export default class NavigationTwo extends Mutation() {
         border-top: var(--border-top, 1px solid) var(--hr-color, var(--color, white));
       }
       :host > nav > ul li.open > a-link, :host > nav > ul li.open > a-arrow{
-        --color: var(--color-open), var(--color));
+        --color: var(--color-open, var(--color));
         --background-color: var(--background-color-open);
       }
       :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section a-link, :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section a-arrow {
@@ -382,8 +388,12 @@ export default class NavigationTwo extends Mutation() {
       :host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li:hover:not(.search) {
         border-bottom: var(--border-width, 2px) solid var(--border-color, var(--color));
       }
+      /*Refactor if needed*/
+      :host > nav > ul li.open:hover:not(.search) {
+        border-bottom: var(--border-width, 2px) solid var(--border-color-active, var(--border-color), var(--color));
+      }
       :host > nav > ul li:not(:hover).open {
-        border-bottom: var(--border-width, 2px) solid var(--border-color, var(--color));
+        border-bottom: var(--border-width, 2px) solid var(--border-color-active, var(--border-color), var(--color));
       }
       :host > nav > ul > li > div.background {
         cursor: auto;

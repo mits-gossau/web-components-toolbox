@@ -43,9 +43,6 @@ export default class Link extends Hover() {
 
 connectedCallback () {
     super.connectedCallback()
-    if (this.parentElement.tagName === "LI" && this.parentElement.hasAttribute("main-color")){
-      this.customHoverColor = this.parentElement.getAttribute("main-color")
-    }
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
 
@@ -100,6 +97,7 @@ connectedCallback () {
         : ''}
       :host {
         cursor: pointer;
+        --color-hover: var(--border-color-active);
       }
       :host > a, :host > ${this.hitAreaTagName} {
         box-sizing: border-box;
@@ -131,7 +129,7 @@ connectedCallback () {
       :host > a:hover, :host > a:hover ~ ${this.hitAreaTagName}, :host(.hover) > a, :host(.hover) > a ~ ${this.hitAreaTagName} {
         background-color:var(--background-color-hover, transparent);
         box-shadow: var(--box-shadow-hover, none);
-        color: ${this.customHoverColor ? this.customHoverColor : "var(--color-hover, var(--color, yellow))"};
+        color: var(--color-hover, var(--color, yellow));
         font-family: var(--font-family-hover, var(--font-family, inherit));
         text-decoration: var(--text-decoration-hover, var(--text-decoration, none));
       }
