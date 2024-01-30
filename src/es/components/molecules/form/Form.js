@@ -313,7 +313,7 @@ export default class Form extends Shadow() {
       input[type="submit"] {
           padding: 0.75em 1.5em;
           float:left;
-          margin: 0 0.5em 0 0;
+          margin: var(--input-type-submit-margin, auto);
       }
       input[type="checkbox"] {
         cursor: pointer;
