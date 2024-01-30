@@ -105,6 +105,7 @@
          * if the url points to a javascript file the fileName will be an empty string '' else it will replace the directory.selector from tagName, if possible, then it will convert hyphen separated tagNames to camel case example: playlist-item => PlaylistItem
          * @type {string}
          */
+        // @ts-ignore
         const fileName = /.[m]{0,1}js/.test(url) ? '' : `${(tagName.replace(directory.selector, '') || tagName).charAt(0).toUpperCase()}${(tagName.replace(directory.selector, '') || tagName).slice(1).replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())}.${fileEnding}`
         if (directory.separateFolder) url += `${`${fileName.slice(0, 1).toLowerCase()}${fileName.slice(1)}`.replace(`.${fileEnding}`, '')}${directory.separateFolderPlural ? 's' : ''}/`
         const importPath = `${/[./]{1}/.test(url.charAt(0)) ? '' : baseUrl}${url}${fileName}${query}`
@@ -117,17 +118,22 @@
     }
     return Promise.resolve(`${tagName} is already defined @load`)
   }
+  // @ts-ignore
   const loadListener = event => {
     /** @type {ImportEl[]} */
     const imports = []
     // finding all not defined web component nodes in the dom and forwarding their tagNames to the load function
+    // @ts-ignore
     Array.from(document.querySelectorAll(`${src.searchParams.get('querySelector') || ''}:not(:defined)`)).reduce((nodes, currentNode) => {
+      // @ts-ignore
       const index = nodes.findIndex(node => node.tagName === currentNode.tagName)
       if (index !== -1) {
+        // @ts-ignore
         if ((src.searchParams.get('urlAttributeLastTrumpsAll') !== 'false' || !nodes[index].hasAttribute(urlAttributeName)) && currentNode.hasAttribute(urlAttributeName)) nodes.splice(index, 1, currentNode)
         return nodes
       }
       return [...nodes, currentNode]
+    // @ts-ignore
     }, []).forEach(node => {
       // assemble query to url that the attributes can be read by the web components script before defining its class expl. ("import.meta.url" before "export default class Breadcrumb extends Shadow() {")
       let query = ''
@@ -139,6 +145,7 @@
       imports.push(load(node.tagName.toLowerCase(), node.getAttribute(urlAttributeName) || '', query))
     })
     // after all the imports have started we can resolve and do customElements.define
+    // @ts-ignore
     Promise.all(imports).then(elements => {
       if (src.searchParams.get('resolveImmediately') !== 'true') resolve(imports)
     }).catch(error => {
