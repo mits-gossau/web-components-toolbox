@@ -317,7 +317,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
    * @return {boolean}
    */
   shouldRenderHTML () {
-    return !this.divSummary
+    return !this.root.querySelector(this.cssSelector + '> details > summary > div.summary') 
   }
 
   /**
@@ -554,13 +554,13 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
    * @return {void}
    */
   renderHTML () {
-    this.divSummary = this.root.querySelector(this.cssSelector + ' > div.summary') || document.createElement('div')
-    this.divSummary.classList.add('summary')
-    Array.from(this.summary.childNodes).forEach(node => this.divSummary.appendChild(node))
-    this.divSummary = this.getAttribute('icon-image')
-      ? this.setIconFromAttribute(this.getAttribute('icon-image'), this.divSummary, 'icon-image')
-      : this.setIconDefault(this.divSummary, 'icon')
-    this.summary.appendChild(this.divSummary)
+    let divSummary = document.createElement('div')
+    divSummary.classList.add('summary')
+    Array.from(this.summary.childNodes).forEach(node => divSummary.appendChild(node))
+    divSummary = this.getAttribute('icon-image')
+      ? this.setIconFromAttribute(this.getAttribute('icon-image'), divSummary, 'icon-image')
+      : this.setIconDefault(divSummary, 'icon')
+    this.summary.appendChild(divSummary)
     this.html = this.style
   }
 
