@@ -49,12 +49,18 @@ export default class Grid extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+      :host {
+        ${this.hasAttribute('width')
+          ? `width: ${this.getAttribute('width') || 'auto'} !important;`
+          : ''
+        }
+      }
       :host > section {
         display:grid;
           ${this.hasAttribute('height')
-          ? `height: ${this.getAttribute('height') || '100%'};`
-          : ''
-        }
+            ? `height: ${this.getAttribute('height') || '100%'};`
+            : ''
+          }
       }
     `
     if (this.hasAttribute('auto-fit')) this.css = /* css */`
@@ -82,6 +88,12 @@ export default class Grid extends Shadow() {
     // mobile
     this.css = /* css */`
       @media only screen and (max-width: _max-width_) {
+        :host {
+          ${this.hasAttribute('width-mobile')
+            ? `width: ${this.getAttribute('width-mobile') || 'auto'} !important;`
+            : ''
+          }
+        }
         :host > section {
             ${this.hasAttribute('height-mobile')
             ? `height: ${this.getAttribute('height-mobile') || '100%'};`
@@ -189,7 +201,14 @@ export default class Grid extends Shadow() {
           // make template ${code} accessible aka. set the variables in the literal string
           fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
         })
-
+      case 'grid-12er-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./12er-/12er-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+        })
       default:
         return this.fetchCSS(styles, false)
     }
