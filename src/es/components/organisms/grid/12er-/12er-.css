@@ -1,0 +1,60 @@
+:host > section {
+  grid-template-columns: repeat(12, 1fr);
+  gap: ${this.getAttribute('gap') || 'var(--grid-12er-grid-gap, 1rem)'};
+}
+/* col-lg */
+${Array.from(this.section.querySelectorAll('[col-lg]')).reduce((acc, node) => acc + (acc.includes(`[col-lg="${node.getAttribute('col-lg')}"]`)
+  ? ''
+  : `
+    :host > section >*[col-lg="${node.getAttribute('col-lg')}"] {
+      grid-column: span ${node.getAttribute('col-lg') || node.getAttribute('col-md') || '12'};
+    }
+  `),
+'')}
+/* col-md */
+${Array.from(this.section.querySelectorAll('[col-md]')).reduce((acc, node) => acc + (acc.includes(`[col-md="${node.getAttribute('col-md')}"]`)
+  ? ''
+  : `
+    :host > section >*[col-md="${node.getAttribute('col-md')}"] {
+      grid-column: span ${node.getAttribute('col-md') || node.getAttribute('col-md') || '12'};
+    }
+  `),
+'')}
+/* col-sm */
+${Array.from(this.section.querySelectorAll('[col-sm]')).reduce((acc, node) => acc + (acc.includes(`[col-sm="${node.getAttribute('col-sm')}"]`)
+  ? ''
+  : `
+    :host > section >*[col-sm="${node.getAttribute('col-sm')}"] {
+      grid-column: span ${node.getAttribute('col-sm') || node.getAttribute('col-sm') || '12'};
+    }
+  `),
+'')}
+
+.col {
+  grid-column: span var(--col-lg, var(--col-md, 12));
+}
+
+@media screen and (max-width: 1000px) {
+  .col {
+    grid-column: span var(--col-md, var(--col-sm, 12));
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .col {
+    grid-column: span var(--col-sm, 12);
+  }
+}
+
+/* ------- */
+
+.content {
+  background: green;
+  height: 20px;
+}
+
+@media only screen and (max-width: _max-width_) {
+  :host > section {
+    gap: ${this.getAttribute('gap-mobile') || this.getAttribute('gap') || 'var(--grid-12er-grid-gap-mobile, var(--grid-12er-grid-gap, 1rem))'};
+  }
+}
