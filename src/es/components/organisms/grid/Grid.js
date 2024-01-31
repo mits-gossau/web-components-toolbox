@@ -203,11 +203,11 @@ export default class Grid extends Shadow() {
         })
       case 'grid-12er-':
         return this.fetchCSS([{
-          path: `${this.importMetaUrl}./12er-/12er-.css`, // apply namespace since it is specific and no fallback
+          path: `${this.importMetaUrl}./12er-/12er-.css.js`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(fetchCSSParams => {
           // make template ${code} accessible aka. set the variables in the literal string
-          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
+          fetchCSSParams[0].styleNode.textContent = eval(fetchCSSParams[0].style)// eslint-disable-line no-eval
         })
       default:
         return this.fetchCSS(styles, false)

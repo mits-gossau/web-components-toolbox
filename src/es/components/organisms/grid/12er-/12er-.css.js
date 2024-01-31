@@ -1,3 +1,4 @@
+/* css */ `
 :host > section {
   grid-template-columns: repeat(12, 1fr);
   gap: ${this.getAttribute('gap') || 'var(--grid-12er-grid-gap, 1rem)'};
@@ -42,4 +43,4 @@ ${Array.from(this.section.querySelectorAll('[col-lg]')).reduce((acc, node) => ac
   :host > section {
     gap: ${this.getAttribute('gap-mobile') || this.getAttribute('gap') || 'var(--grid-12er-grid-gap-mobile, var(--grid-12er-grid-gap, 1rem))'};
   }
-}
+}`
