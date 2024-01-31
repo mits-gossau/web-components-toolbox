@@ -637,19 +637,19 @@ export default class NavigationTwo extends Mutation() {
           path: `${this.importMetaUrl}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
-        case 'navigation-klubschule-':
-          return this.fetchCSS([{
-            path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-            namespace: false,
-            replaces: [{
-              pattern: '--navigation-default-',
-              flags: 'g',
-              replacement: '--navigation-klubschule-'
-            }]
-          }, {
-            path: `${this.importMetaUrl}./klubschule-/klubschule-.css`, // apply namespace since it is specific and no fallback
-            namespace: false
-          }, ...styles], false)
+      case 'navigation-klubschule-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--navigation-default-',
+            flags: 'g',
+            replacement: '--navigation-klubschule-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./klubschule-/klubschule-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
       case 'navigation-nature-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback

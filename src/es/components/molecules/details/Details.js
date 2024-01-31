@@ -317,7 +317,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
    * @return {boolean}
    */
   shouldRenderHTML () {
-    return !this.root.querySelector(this.cssSelector + '> details > summary > div.summary') 
+    return !this.root.querySelector(this.cssSelector + '> details > summary > div.summary')
   }
 
   /**
