@@ -720,17 +720,20 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 }
 @container style(--h-border-after: true) {
   h1{
-    text-align: var(--h-border-after-text-align) !important;
-
+    text-align: var(--h-border-after-text-align, center) !important;
+    position: relative;
   }
   h1::after {
-    display: flex;
+    background: var(--h-border-after-color, var(--color-tertiary, var(--color-secondary, black))); 
     content: '';
-    width: var(--h-border-after-width);
+    display: block; 
+    height: var(--h-border-after-height, 3px); 
     position: absolute;
-    height: var(--h-border-after-height) ; 
-    background: var(--color-tertiary);
-    left: var(--h-border-after-space-left);
-    margin-top: var(--h-border-after-margin-top);
+    left: var(--h-border-after-left-spacing, 50%);
+    transform: translateX(var(--h-border-after-translateX, -50%)); 
+    margin-top: var(--h-border-after-margin-top, 0.5em);
+    width: var(--h-border-after-width, auto);
+    min-width: var(--h-border-after-min-width, 2em);
+    max-width: var(--h-border-after-max-width, 100%); 
   }
 }
