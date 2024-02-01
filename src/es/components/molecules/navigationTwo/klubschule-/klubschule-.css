@@ -1,5 +1,5 @@
 :host {
-    /* --gap-custom: 0;
+    --gap-custom: 0;
     --menu-background-color: var(--background-color);
     --menu-color: var(--menu-color-custom, var(--color-tertiary));
     --navigation-klubschule-background-color-open: var(--menu-color);
@@ -12,13 +12,14 @@
     --navigation-klubschule-section-ul-background-color: var(--menu-background-color);
     --navigation-klubschule-path-color: var(--color);
     /*Refactor it later if needed*/
-    /* --navigation-klubschule-justify-content: right;
+    --navigation-klubschule-justify-content: right;
     --navigation-klubschule-color: var(--navigation-klubschule-color-custom, #262626);
-    --navigation-klubschule-a-link-content-spacing: var(--navigation-klubschule-a-link-padding-y-custom) var(--navigation-klubschule-a-link-padding-x-custom);
+    --navigation-klubschule-a-main-content-spacing: 1em;
     --navigation-klubschule-align-items: end;
     --navigation-klubschule-margin: 0 calc(var(--content-spacing) - var(--navigation-klubschule-a-link-padding-x-custom));
-    --navigation-klubschule-border-color: transparent;
-    --navigation-klubschule-border-width: 4px; */ 
+    --navigation-klubschule-border-color: transparent; 
+    --navigation-klubschule-border-width: 4px; 
+    --navigation-klubschule-main-wrapper-max-height: 70vh; 
     --ul-list-style: none;
     --a-text-decoration: none;
   }
@@ -55,7 +56,8 @@
     --padding-mobile-custom: var(--content-spacing-mobile);
     --padding-mobile-first-child-custom: var(--content-spacing-mobile);
     --padding-mobile: var(--content-spacing-mobile);
-    --padding: var(--content-spacing);
+    --padding: 0.5em;
+    --margin: 1em 0.5em;
     background-color: var(--menu-background-color);
     border-radius: var(--teaser-tile-rounded-border-radius-custom, var(--border-radius, 0.5em));
   }
@@ -63,14 +65,14 @@
     --margin-mobile: 0 0 var(--content-spacing-mobile);
     --margin: 0 0 var(--content-spacing) 0;
   }
-  :host > nav > ul li.open > o-nav-wrapper > section > * {
+ /* :host > nav > ul li.open > o-nav-wrapper > section > * {
     --margin-mobile: 0 0 var(--content-spacing-mobile);
     --margin: 0 var(--content-spacing) 0 0;
   }
   :host > nav > ul li.open > o-nav-wrapper > section > *:last-child {
     --margin-mobile: 0;
     --margin: 0;
-  }
+  }*/
   :host > nav > ul li.open > o-nav-wrapper > section > ul, :host > nav > ul li.open > o-nav-wrapper > section > ul a-link {
     --navigation-klubschule-background-color: var(--menu-background-color);
     --navigation-klubschule-font-size: 1em;

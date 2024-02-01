@@ -85,7 +85,7 @@ export default class NavigationTwo extends Mutation() {
       if (event && event.target) {
         this.root.querySelector('nav > ul:not(.language-switcher)').classList[event.target.parentNode && event.target.parentNode.classList.contains('open') ? 'add' : 'remove']('open')
         if (this.checkMedia('mobile')) {
-          this.adjustArrowDirections(event)
+          //this.adjustArrowDirections(event)
         } else {
           Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
             if (link !== event.target.parentNode) {
@@ -139,6 +139,16 @@ export default class NavigationTwo extends Mutation() {
     Array.from(this.shadowRoot.querySelectorAll("li")).forEach(li => {
       if (li.hasAttribute("main-color")) {
         li.style.setProperty("--navigation-klubschule-color-active", li.getAttribute("main-color"))
+      }
+      if (Array.from(li.childNodes).find(ch => ch.tagName == "UL")) {
+        li.querySelectorAll("ul").forEach(ul => ul.style.display = "none")
+        let newElement = document.createElement('section')
+        // @ts-ignore
+        newElement.appendChild(li.querySelectorAll("ul")[0])
+        li.addEventListener("mouseover", (event) => {
+          newElement.querySelectorAll("ul")[0].style.display = "block"
+          event.composedPath().find(el => el.tagName == "O-NAV-WRAPPER").appendChild(newElement)
+        });
       }
     })
   }
@@ -200,24 +210,24 @@ export default class NavigationTwo extends Mutation() {
     const firstLevelCount = this.root.querySelectorAll('nav > ul > li').length
     this.css = /* css */`
     :host > nav > ul {
-      padding: 0;
-      margin: 0;
-      list-style: none;
+      align-items: var(--align-items, center);
+      justify-content: var(--justify-content, normal);
       display: flex;
-      flex-direction: row;
-      justify-content: end;
+      flex-wrap: var(--flex-wrap, nowrap);
+      flex-direction: var(--flex-direction, row);
+      padding: var(--padding, calc(var(--content-spacing, 40px) / 2) 0);
       position: relative;
+      margin: 0;
     }
-    :host .subnav-title {
-      list-style: none;
+    :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) ul {
+      background-color: var(--background-color-${this.getAttribute('no-scroll') || 'no-scroll'}, var(--background-color, black));
+    }
+    :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) > nav > ul {
+      padding: var(--padding-${this.getAttribute('no-scroll') || 'no-scroll'}, calc(var(--content-spacing, 40px) / 2) 0);
     }
     :host > nav > ul > li {
-      margin: 0 0.5em;
-      padding: 0;
-    }
-    :host > nav > ul > li > a {
-      padding: 0 0.5em;
-      text-decoration: none;
+      display: block;
+      padding: var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4));
     }
     :host > nav > ul > li > o-nav-wrapper a {
       --a-color: var(--color-active);
@@ -225,12 +235,10 @@ export default class NavigationTwo extends Mutation() {
     :host > nav > ul > li > a.open > span {
       border-bottom: 3px solid var(--color-active);
       color: var(--color-active);
-      text-decoration: none;
     }
     :host > nav > ul > li > a:hover,
     :host > nav > ul > li > a:active,
     :host > nav > ul > li > a:focus {
-      text-decoration: none;
       color: var(--color-active);
     }
     :host > nav > ul > li > a > span {
@@ -245,39 +253,69 @@ export default class NavigationTwo extends Mutation() {
       top: 2em;
       left: calc(0 - var(--logo-default-width,var(--width, auto)));
       right: 0;
-      background-color: red;
+      background-color: white;
       width: calc(100% + var(--logo-default-width,var(--width, auto)));
       border-top: 1px solid #E0E0E0;
+      --any-1-width: 33%;
+      --justify-content: start;
+      max-height: var(--main-wrapper-max-height, 70vh);
+      overflow: hidden;
     }
     :host > nav > ul > li.open > o-nav-wrapper {
       display: flex !important;
     }
-      /*:host {
-        color: black;
-        overscroll-behavior: contain;
-      }
-      */
-      /*:host a-link {
-        --padding: var(--a-link-content-spacing, 14px 10px);
-        --font-size: var(--a-link-font-size, 1rem);
-        --font-weight: var(--a-link-font-weight);
-        --line-height: var(--a-link-line-height);
-        --text-transform: var(--a-link-text-transform);
-        font-family: var(--a-link-font-family, var(--font-family));
-        font-weight: var(--a-font-weight, var(--font-weight, normal));
-        /*
-       TODO Refactor later, can i add it on better way?
-       */
+    /* Temporary css */
+    :host > nav > ul > li.open > o-nav-wrapper section {
+      width: 33% !important;
+    }
+    :host > nav > ul > li > o-nav-wrapper ul {
+      max-height: calc(var(--main-wrapper-max-height) - 5vh);
+      overflow-y: auto;
+      overflow-x: visible;
+      position: relative;
+      /* Temporary css */
+      width: 100% !important;
+    }
+    :host > nav > ul > li > o-nav-wrapper ul::-webkit-scrollbar {
+      width: 5px;
+      background-color: #E0E0E0;
+      margin: 0.5em;
+    }
+    :host > nav > ul > li > o-nav-wrapper ul::-webkit-scrollbar-thumb {
+      background: var(--color-active);
+    }
+    /* FROM HERE THE PASTED CSS*/
+    :host {
+      color: black;
+      overscroll-behavior: contain;
+    }
+    :host > nav > ul > li > a {
+      padding: var(--a-main-content-spacing, 14px 10px);
+      font-size: var(--a-main-font-size, 1rem);
+      font-weight: var(--a-main-font-weight);
+      line-height: var(--a-main-line-height);
+      text-transform: var(--a-main-text-transform);
+      font-family: var(--a-main-font-family, var(--font-family));
+      font-weight: var(--a-font-weight, var(--font-weight, normal));
+    }
+    :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) a {
+      --color: var(--a-color-${this.getAttribute('no-scroll') || 'no-scroll'});
+      --padding: var(--a-content-spacing-${this.getAttribute('no-scroll') || 'no-scroll'}, 14px 10px);
+      --font-size: var(--a-font-size-${this.getAttribute('no-scroll') || 'no-scroll'}, 1rem);
+      --font-weight: var(--a-font-weight-${this.getAttribute('no-scroll') || 'no-scroll'});
+      --line-height: var(--a-line-height-${this.getAttribute('no-scroll') || 'no-scroll'});
+    }
+    :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
+      --a-link-content-spacing-no-scroll: var(--a-link-content-spacing-no-scroll-custom, 0.5rem 0.5rem 0.5rem calc(2rem + min(30vw, 50px)));
+      --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
+      --a-link-font-size-mobile: 1.1429rem;
+      --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
+      animation: open .2s ease;
+      left: 0;
+    }
+      
       /*
-       --padding-last-child: 0 2px 0 var(--navigation-klubschule-a-link-padding-x-custom);
-      }
-      :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) a-link {
-        --color: var(--a-link-color-${this.getAttribute('no-scroll') || 'no-scroll'});
-        --padding: var(--a-link-content-spacing-${this.getAttribute('no-scroll') || 'no-scroll'}, 14px 10px);
-        --font-size: var(--a-link-font-size-${this.getAttribute('no-scroll') || 'no-scroll'}, 1rem);
-        --font-weight: var(--a-link-font-weight-${this.getAttribute('no-scroll') || 'no-scroll'});
-        --line-height: var(--a-link-line-height-${this.getAttribute('no-scroll') || 'no-scroll'});
-      }
+      
       :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) > nav > ul li ul a-link {
         --font-size: var(--a-link-second-level-font-size, 1rem);
         --font-weight: var(--a-link-second-level-font-weight, var(--a-link-font-weight));
@@ -293,29 +331,7 @@ export default class NavigationTwo extends Mutation() {
         --font-weight: var(--a-link-second-level-font-weight-${this.getAttribute('no-scroll') || 'no-scroll'}, var(--a-link-font-weight-${this.getAttribute('no-scroll') || 'no-scroll'}));
         --line-height: var(--a-link-second-level-line-height-${this.getAttribute('no-scroll') || 'no-scroll'});
       }
-      :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) ul {
-        background-color: var(--background-color-${this.getAttribute('no-scroll') || 'no-scroll'}, var(--background-color, black));
-      }
-      :host > nav > ul {
-        align-items: var(--align-items, center);
-        justify-content: var(--justify-content, normal);
-        display: flex;
-        flex-wrap: var(--flex-wrap, nowrap);
-        flex-direction: var(--flex-direction, row);
-        padding: var(--padding, calc(var(--content-spacing, 40px) / 2) 0);
-      }
-      :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) > nav > ul {
-        padding: var(--padding-${this.getAttribute('no-scroll') || 'no-scroll'}, calc(var(--content-spacing, 40px) / 2) 0);
-      }
-      :host > nav > ul > li {
-        display: block;
-        padding: var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4));
-      }
-      :host > nav > ul li > a-arrow {
-        display: none;
-        user-select: none;
-        visibility: hidden;
-      }
+      
       :host > nav > ul li:nth-child(n+${firstLevelCount / 2 + 1}) ul{
         top: var(--li-ul-top-second-half, unset);
         right: var(--li-ul-right-second-half, unset);
@@ -615,14 +631,7 @@ export default class NavigationTwo extends Mutation() {
           z-index: 100;
         }
         */
-        :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-          --a-link-content-spacing-no-scroll: var(--a-link-content-spacing-no-scroll-custom, 0.5rem 0.5rem 0.5rem calc(2rem + min(30vw, 50px)));
-          --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
-          --a-link-font-size-mobile: 1.1429rem;
-          --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
-          animation: open .2s ease;
-          left: 0;
-        }
+       
         /*
         :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section > ul {
           --padding-mobile: var(--padding-mobile-custom, 0 0 0.8571rem);
@@ -855,10 +864,10 @@ export default class NavigationTwo extends Mutation() {
         const aLinkClickListener = event => {
           if (event.currentTarget) {
             let a = null
-            if (event.currentTarget && ((a = event.currentTarget) 
+            if (event.currentTarget && ((a = event.currentTarget)
             /*|| (event.target.getAttribute('direction') === 'right' && event.target.previousElementSibling && event.target.previousElementSibling.root && (a = event.target.previousElementSibling.root.querySelector('a')))
           */)) {
-            //arrowClickListener()
+              //arrowClickListener()
               if (!a.getAttribute('href') || a.getAttribute('href') === '#') {
                 const isOpen = event.currentTarget.classList.contains('open')
                 event.preventDefault()
@@ -879,7 +888,7 @@ export default class NavigationTwo extends Mutation() {
                 }
                 // this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
                 if (event.currentTarget && event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.tagName === 'UL') event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
-                
+
                 // remove all the previous open class by other a tag
                 Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('a')).forEach(a => {
                   a.classList.remove('open')
@@ -912,7 +921,7 @@ export default class NavigationTwo extends Mutation() {
             }
           }
         }
-       // arrow.addEventListener('click', aLinkClickListener)
+        // arrow.addEventListener('click', aLinkClickListener)
         a.addEventListener('click', aLinkClickListener)
         self.addEventListener('click', event => {
           if (this.focusLostClose) {
@@ -936,27 +945,27 @@ export default class NavigationTwo extends Mutation() {
             // this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
           }
         })
-        //li.prepend(arrow)
-        //a.replaceWith(aLink)
-        //li.prepend(aLink)
+        // li.prepend(arrow)
+        // a.replaceWith(aLink)
+        // li.prepend(aLink)
       })
-       Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
-         const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
-         // eslint-disable-line
-         wrapper.setAttribute('id', `nav-section-${i}`)
-         const sectionChildren = Array.from(section.children)
-         sectionChildren.forEach((node, i) => {
-           if (this.namespace === 'navigation-default-' && sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
-           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
-         })
-         section.parentNode.prepend(this.getBackground())
-         section.replaceWith(wrapper)
-       })
-      
-       //this.root.querySelectorAll('a').forEach(a => a.addEventListener('click', this.clickListener))
-       
-       // this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.addEventListener('click', this.liClickListener))
-       
+      Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
+        const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
+        // eslint-disable-line
+        wrapper.setAttribute('id', `nav-section-${i}`)
+        const sectionChildren = Array.from(section.children)
+        sectionChildren.forEach((node, i) => {
+          if (this.namespace === 'navigation-default-' && sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
+          if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
+        })
+        section.parentNode.prepend(this.getBackground())
+        section.replaceWith(wrapper)
+      })
+
+      //this.root.querySelectorAll('a').forEach(a => a.addEventListener('click', this.clickListener))
+
+      // this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.addEventListener('click', this.liClickListener))
+
       this.html = this.style
     })
   }
@@ -1004,30 +1013,30 @@ export default class NavigationTwo extends Mutation() {
     }
   }
 
-  openClose (open = true) {
-     // mobile has an extra height: calc(100% + 300px) url workaround, but scroll back when closed
-     if (!open && this.getMedia() !== 'desktop') {
-       this.scroll({
-         top: 0,
-         behavior: 'smooth'
-       })
-     }
-     if (!open && this.nav.getAttribute('aria-expanded') === 'true') {
-       Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
-         link.classList.remove('open')
-         link.setAttribute('aria-expanded', 'false')
-         if (link.parentElement) {
-           link.parentElement.classList.remove('open')
-           link.parentElement.setAttribute('aria-expanded', 'false')
-         }
-       })
-       Array.from(this.root.querySelectorAll('a.open')).forEach(aLink => {
-         aLink.classList.remove('open')
-         if (aLink.parentElement) aLink.parentElement.classList.remove('open')
-       })
-       Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => ul.classList.remove('open'))
-     }
-   }
+  openClose(open = true) {
+    // mobile has an extra height: calc(100% + 300px) url workaround, but scroll back when closed
+    if (!open && this.getMedia() !== 'desktop') {
+      this.scroll({
+        top: 0,
+        behavior: 'smooth'
+      })
+    }
+    if (!open && this.nav.getAttribute('aria-expanded') === 'true') {
+      Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
+        link.classList.remove('open')
+        link.setAttribute('aria-expanded', 'false')
+        if (link.parentElement) {
+          link.parentElement.classList.remove('open')
+          link.parentElement.setAttribute('aria-expanded', 'false')
+        }
+      })
+      Array.from(this.root.querySelectorAll('a.open')).forEach(aLink => {
+        aLink.classList.remove('open')
+        if (aLink.parentElement) aLink.parentElement.classList.remove('open')
+      })
+      Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => ul.classList.remove('open'))
+    }
+  }
 
   /**
    *
