@@ -264,7 +264,7 @@ export default class SimpleForm extends Shadow() {
             signal: this.abortController.signal
           }).then(async response => {
             if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399)) return response.json()
-            throw new Error(response.statusText)
+            throw new Error(this.response.textContent = response.statusText)
           })
           : new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('dispatch-event-name'), {
             detail: {
@@ -287,7 +287,7 @@ export default class SimpleForm extends Shadow() {
           let response
           let redirectUrl
           if ((response = json[this.getAttribute('response-property-name')] || json.response) && this.response) {
-            this.response.textContent = response
+            this.response.innerHTML = response
             let onclick
             if ((onclick = json[this.getAttribute('onclick-property-name')] || json.onclick)) this.response.setAttribute('onclick', onclick)
             if (json[this.getAttribute('success-property-name')] === true || json.success === true) this.response.classList.add('success')
