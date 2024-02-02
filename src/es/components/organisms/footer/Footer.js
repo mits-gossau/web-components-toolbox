@@ -45,7 +45,7 @@ export default class Footer extends Shadow() {
       this.injectCssIntoWrappers(wrappers)
       this.fetchModules([
         {
-          path: `${this.importMetaUrl}../../../../molecules/details/Details.js`,
+          path: `${this.importMetaUrl}'../../../../molecules/details/Details.js`,
           name: 'm-details'
         }
       ]).then(modules => {
