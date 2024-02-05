@@ -135,18 +135,6 @@ export default class NavigationTwo extends Mutation() {
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
     super.connectedCallback()
-
-    Array.from(this.shadowRoot.querySelectorAll("ul")).forEach(ul => {
-      if (+ul.getAttribute("nav-level") === 2 || +ul.getAttribute("nav-level") === 3 || +ul.getAttribute("nav-level") === 4) {
-        ul.style.display = "none"
-      }
-    })
-
-    Array.from(this.shadowRoot.querySelectorAll("li")).forEach(li => {
-      if (li.hasAttribute("main-color")) {
-        li.style.setProperty("--navigation-klubschule-color-active", li.getAttribute("main-color"))
-      }
-    })
   }
 
   disconnectedCallback() {
@@ -206,7 +194,7 @@ export default class NavigationTwo extends Mutation() {
     const firstLevelCount = this.root.querySelectorAll('nav > ul > li').length
     this.css = /* css */`
     :host > nav > ul {
-      align-items: var(--align-items, center);
+      align-items: var(--align-items, normal);
       justify-content: var(--justify-content, normal);
       display: flex;
       flex-wrap: var(--flex-wrap, nowrap);
@@ -214,6 +202,7 @@ export default class NavigationTwo extends Mutation() {
       padding: var(--padding, calc(var(--content-spacing, 40px) / 2) 0);
       position: relative;
       margin: 0;
+      --navigation-klubschule-a-color: var(--color);
     }
     :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) ul {
       background-color: var(--background-color-${this.getAttribute('no-scroll') || 'no-scroll'}, var(--background-color, black));
@@ -221,7 +210,10 @@ export default class NavigationTwo extends Mutation() {
     :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) > nav > ul {
       padding: var(--padding-${this.getAttribute('no-scroll') || 'no-scroll'}, calc(var(--content-spacing, 40px) / 2) 0);
     }
-    /* CSS Temporary */
+    :host li ks-m-nav-level-item {
+      --nav-level-item-default-font-size: 1em;
+      --nav-level-item-default-font-weight: 500;
+    }
     :host li.hover-active ks-m-nav-level-item {
       --nav-level-item-default-background-color: #E0F0FF;
     }
@@ -258,34 +250,50 @@ export default class NavigationTwo extends Mutation() {
       border-top: 1px solid #E0E0E0;
       --any-1-width: 33%;
       --justify-content: start;
+      --align-items: start;
+      --ul-padding-left: 0;
       max-height: var(--main-wrapper-max-height, 70vh);
       overflow: hidden;
     }
     :host > nav > ul > li.open > o-nav-wrapper {
       display: flex !important;
     }
-    /* Temporary css */
-    :host > nav > ul > li.open > o-nav-wrapper section {
-      width: 33% !important;
+    :host > nav > ul > li > o-nav-wrapper > section {
+      --gap: 1.25em;
+     padding: 1.25em 0;
     }
-    :host > nav > ul > li.open > o-nav-wrapper section:not(:first-child) {
-      border-left: 1px solid #E0E0E0;
-    }
-    :host > nav > ul > li > o-nav-wrapper ul {
+    :host > nav > ul > li > o-nav-wrapper > section > div {
       max-height: calc(var(--main-wrapper-max-height) - 5vh);
+      max-width: 33.5%;
       overflow-y: auto;
       overflow-x: visible;
       position: relative;
-      /* Temporary css */
-      width: 100% !important;
     }
-    :host > nav > ul > li > o-nav-wrapper ul::-webkit-scrollbar {
+    :host > nav > ul > li > o-nav-wrapper > section > div::-webkit-scrollbar {
       width: 5px;
       background-color: #E0E0E0;
       margin: 0.5em;
     }
-    :host > nav > ul > li > o-nav-wrapper ul::-webkit-scrollbar-thumb {
+    :host > nav > ul > li > o-nav-wrapper > section > div::-webkit-scrollbar-thumb {
       background: var(--color-active);
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title {
+      padding: 1em;
+      --ul-li-padding-left: 0.75em;
+      --a-font-weight: 500;
+      --a-font-size: 1.15em;
+      --a-color-hover: var(--color-active);
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a > span {
+      font-size: 0.7em !important;
+      color: var(--color) !important;
+      font-weight: 300 !important;
+      padding-left: 0.25em;
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a:hover > span {
+      text-decoration: underline;
+      color: var(--color-active) !important;
+
     }
     /* FROM HERE THE PASTED CSS*/
     :host {
@@ -315,6 +323,14 @@ export default class NavigationTwo extends Mutation() {
       --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
       animation: open .2s ease;
       left: 0;
+    }
+    @keyframes show {
+      0%{opacity: 0}
+      100%{opacity: 1}
+    }
+    @keyframes slideInFromTop {
+      0%{transform: translateY(-5em)}
+      100%{transform: translateY(0)}
     }
       
       /*
@@ -847,8 +863,10 @@ export default class NavigationTwo extends Mutation() {
       Array.from(this.root.querySelectorAll('a')).forEach(a => {
         const li = a.parentElement
         if (li.querySelector('section')) li.setAttribute('aria-expanded', 'false')
+        // Probably we dont need, remove it later
         if (!li.querySelector('ul')) li.classList.add('no-arrow')
         /*const aLink = new children[0].constructorClass(a, { namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) */
+        // a is always a hit area => maybe we dont need this attribute if there is no a-link just a tag
         // eslint-disable-line
         a.setAttribute('hit-area', this.getAttribute('hit-area') || 'true')
         if (this.hasAttribute('set-active')) a.setAttribute('set-active', this.getAttribute('set-active'))
@@ -962,44 +980,82 @@ export default class NavigationTwo extends Mutation() {
         })
         section.parentNode.prepend(this.getBackground())
         section.replaceWith(wrapper)
-
-         // create placeholders for subnav
-         const maxNavigationLevel = wrapper.parentElement.getAttribute("max-navigation-level")
-         wrapper.querySelector("section").setAttribute("section-level","1")
-         if (maxNavigationLevel) {
-           for (let i = 0; i < maxNavigationLevel - 1; i++) {
-             let childSection = document.createElement("section")
-             childSection.setAttribute("section-level",`${i+2}`)
-             wrapper.appendChild(childSection)
-           }
-         }
-        
         // add event listener on li
-        Array.from(wrapper.querySelectorAll("li")).forEach(li => {
+        Array.from(this.root.querySelectorAll("li")).forEach(li => {
           if (li.hasAttribute("main-color")) {
             li.style.setProperty("--navigation-klubschule-color-active", li.getAttribute("main-color"))
           }
+        })
+
+        Array.from(wrapper.querySelectorAll("div")).forEach(div => {
+         if (+div.getAttribute("nav-level") !== 1) {
+          Array.from(div.querySelectorAll("ul")).forEach(ul => {
+            ul.style.display = "none";
+          })
+         }
+        })
+
+        let subTitleLiTags = Array.from(wrapper.querySelectorAll("li")).filter(li => !li.querySelector("ks-m-nav-level-item"))
+        subTitleLiTags.forEach(li=> li.classList.add("list-title"))
+
+        let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("ks-m-nav-level-item"))
+        subLiElements.forEach(li => {
           li.addEventListener("mouseenter", (event) => {
             event.target.parentElement.querySelectorAll("li").forEach(li => li.classList.remove("hover-active"))
+            const currentNavLevel = + event.target.parentElement.parentElement.getAttribute("nav-level")
+            const nextNavLevel = currentNavLevel + 1
+            const secondNextNavLevel = currentNavLevel + 2
+            const childSubNavName = event.target.getAttribute("sub-nav")
+            const directSubWrapper =  Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") === nextNavLevel)
+            const secondSubWrapper =  Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") === secondNextNavLevel)
+            const allSubWrappers = Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > currentNavLevel)
+
+
+
             if (!event.target.classList.contains("hover-active")) event.target.classList.add("hover-active")
-            if (event.target.classList.contains("hover-active") && event.target.querySelector("ul")){
-              let parentNavLevel = +event.target.parentElement.getAttribute("nav-level")
-              let contentWrapper = wrapper.querySelector(`[section-level="${parentNavLevel + 1}"]`)
-              contentWrapper.innerHTML = ""
-              contentWrapper.appendChild(event.target.querySelector("ul"))
-              contentWrapper.querySelector("ul").style.display = "block";
+            
+            if(!event.target.hasAttribute("sub-nav")){
+              allSubWrappers.forEach(wrapper => {
+                Array.from(wrapper.querySelectorAll("ul")).forEach(ul => {
+                  Array.from(ul.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
+                  ul.style.display = "none";
+                })
+              })
             }
-            // the Problem that it comes always here
-            if(event.target.classList.contains("hover-active") && event.target.querySelector("ul") === null){
-              console.log("event.target.querySelector", !event.target.querySelector("ul"))
-              let allSectionAfterFirstOne = Array.from(wrapper.querySelectorAll("section")).filter(section => +section.getAttribute("section-level") !== 1)
-              console.log("allSectionAfterFirstOne",allSectionAfterFirstOne)
-              // allSectionAfterFirstOne.forEach(section => section.innerHTML = "")
+
+            if(event.target.hasAttribute("sub-nav")) {
+
+              if(allSubWrappers.length){
+                allSubWrappers.forEach(wrapper => {
+                  let activeLiElements = Array.from(wrapper.querySelectorAll(".hover-active"));
+                  let allLiElements = Array.from(wrapper.querySelectorAll("li"));
+                  activeLiElements.forEach(li => li.parentElement.style.display = "none")
+                  allLiElements.forEach(li => li.classList.remove("hover-active"))
+                })
+              }
+
+              if(directSubWrapper.length) {
+                directSubWrapper.forEach(wrapper => {
+                  Array.from(wrapper.querySelectorAll("ul")).forEach(ul => {
+                    if(ul.getAttribute("sub-nav-id") === childSubNavName){
+                      ul.style.display = "block"
+                    }else {
+                      ul.style.display = "none"
+                    }
+                  })
+                })
+              }
+
+              if(secondSubWrapper.length){
+                secondSubWrapper.forEach(wrapper => {
+                  if(Array.from(wrapper.querySelectorAll(".hover-active"))){
+                    Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.style.display = "none")
+                  }
+                })
+              }
             }
           })
         })
-
-       
       })
 
       //this.root.querySelectorAll('a').forEach(a => a.addEventListener('click', this.clickListener))
