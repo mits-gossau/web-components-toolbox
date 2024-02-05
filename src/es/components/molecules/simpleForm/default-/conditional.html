@@ -1,13 +1,18 @@
 <m-simple-form load-form-styles namespace="simple-form-default-" endpoint="hi">
     <form>
       <input type="hidden" name="xp_sendBackParams" value="0" />
-      <div class="inline">
-        <label for="anrede1">Herr</label>
-        <input id="anrede1" name="Anrede" type="radio" value="2" checked />
-        <label for="anrede2">Frau</label>
-        <input id="anrede2" name="Anrede" type="radio" value="1" />
-        <label for="anrede3">Other</label>
-        <input id="anrede3" name="Anrede" type="radio" value="3" />
+      <div>
+        <div class="inline">
+          <label for="anrede1">Herr</label>
+          <input id="anrede1" name="Anrede" type="radio" value="2" checked />
+          <label for="anrede2">Frau</label>
+          <input id="anrede2" name="Anrede" type="radio" value="1" />
+          <label for="anrede3">Other</label>
+          <input id="anrede3" name="Anrede" type="radio" value="3" />
+        </div>
+        <section hidden inset visible-by="Anrede" visible-condition="1">
+          <div>You chose Frau</div>
+        </section>
       </div>
       <div>
         <label validation-message="Name ist ungültig" for="Name">Name</label>
@@ -60,12 +65,12 @@
         </select>
         <section hidden inset visible-by="delivery-option-two" visible-condition="delivery">
           <div>
-            <label validation-message="Strasse ist ungültig" for="Street">Strasse</label>
-            <input id="Street" type="text" required="" value="" name="Strasse" placeholder="Strasse hier eingeben..." autocomplete="off" />
+            <label validation-message="Strasse ist ungültig" for="Street2">Strasse</label>
+            <input id="Street2" type="text" required="" value="" name="Strasse" placeholder="Strasse hier eingeben..." autocomplete="off" />
           </div>
           <div>
-            <label validation-message="Ort ist ungültig" for="Place">Ort</label>
-            <input id="Place" type="text" required="" value="" name="Ort" placeholder="Ort hier eingeben..." autocomplete="off" />
+            <label validation-message="Ort ist ungültig" for="Place2">Ort</label>
+            <input id="Place2" type="text" required="" value="" name="Ort" placeholder="Ort hier eingeben..." autocomplete="off" />
           </div>
         </section>
       </div>
