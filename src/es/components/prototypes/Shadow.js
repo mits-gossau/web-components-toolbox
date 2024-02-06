@@ -762,7 +762,6 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         ${generalFix}
         :host, :host > *, :host > * > * {
           animation: var(--show, show .3s ease-out);
-          will-change: opacity;
         }
         @keyframes show {
           0%{opacity: 0}
