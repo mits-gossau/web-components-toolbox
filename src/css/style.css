@@ -421,6 +421,9 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   text-align: var(--ul-text-align, var(--ol-text-align, start));
   margin: var(--ul-margin, 0 auto var(--content-spacing));
 }
+:host ol {
+  list-style: var(--ol-list-style, decimal);
+}
 :host ul > li,
 :host ol > li {
   padding-left: var(--ul-li-padding-left, 0);
