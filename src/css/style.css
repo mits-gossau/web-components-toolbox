@@ -718,3 +718,22 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     height: var(--spacer-four-height-mobile, var(--spacer-four-height, calc(4 * var(--content-spacing-mobile, var(--content-spacing)))));
   }
 }
+@container style(--h-border-after: true) {
+  h1{
+    text-align: var(--h-border-after-text-align, center) !important;
+    position: relative;
+  }
+  h1::after {
+    background: var(--h-border-after-background-color, var(--h1-color, var(--color, black))); 
+    content: '';
+    display: block; 
+    height: var(--h-border-after-height, auto); 
+    position: absolute;
+    left: var(--h-border-after-left, auto);
+    transform: translateX(var(--h-border-after-transform, 0)); 
+    margin-top: var(--h-border-after-margin-top, 0.5em);
+    width: var(--h-border-after-width, auto);
+    min-width: var(--h-border-after-min-width, 2em);
+    max-width: var(--h-border-after-max-width, 100%); 
+  }
+}
