@@ -724,13 +724,13 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     position: relative;
   }
   h1::after {
-    background: var(--h-border-after-color, var(--h1-color, var(--color, black))); 
+    background: var(--h-border-after-background-color, var(--h1-color, var(--color, black))); 
     content: '';
     display: block; 
     height: var(--h-border-after-height, auto); 
     position: absolute;
-    left: var(--h-border-after-left-spacing, auto);
-    transform: translateX(var(--h-border-after-translateX, 0)); 
+    left: var(--h-border-after-left, auto);
+    transform: translateX(var(--h-border-after-transform, 0)); 
     margin-top: var(--h-border-after-margin-top, 0.5em);
     width: var(--h-border-after-width, auto);
     min-width: var(--h-border-after-min-width, 2em);
