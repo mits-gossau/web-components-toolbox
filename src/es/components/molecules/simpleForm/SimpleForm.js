@@ -323,7 +323,7 @@ export default class SimpleForm extends Shadow() {
     }
     // multiply aka. clone
     let originalNode // eslint-disable-line
-    if (target.hasAttribute('multiply') && (originalNode = SimpleForm.walksUpDomQuerySelecting(target, target.getAttribute('multiply'), this.root)) !== this.root && this.checkCondition(target, target, 'multiply-condition')) {
+    if (target.hasAttribute('multiply') && (originalNode = SimpleForm.findByQuerySelector(target, target.getAttribute('multiply'), this.root)) !== this.root && this.checkCondition(target, target, 'multiply-condition')) {
       /** @type {any} */
       const clone = originalNode.cloneNode(true)
       target.removeAttribute('multiply')
@@ -347,6 +347,7 @@ export default class SimpleForm extends Shadow() {
       }
       if (counter >= Number(cloneTarget.getAttribute('required'))) cloneTarget.removeAttribute('required')
       cloneTarget.setAttribute('id', `${target.getAttribute('id').replace(`-counter-${counter - 1}`, '')}-counter-${counter}`)
+      cloneTarget.setAttribute('name', `${target.getAttribute('name').replace(`-counter-${counter - 1}`, '')}-counter-${counter}`)
       cloneTarget.setAttribute('counter', counter)
       let label
       if ((label = cloneTarget.parentElement.querySelector(`[for=${target.getAttribute('id')}]`))) label.setAttribute('for', cloneTarget.getAttribute('id'))
@@ -559,6 +560,23 @@ export default class SimpleForm extends Shadow() {
       if (el.matches(selector)) return el
     }
     return el
+  }
+
+  /**
+   * find html element by id or class
+   * return the element of whose parent finds the query
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @param {HTMLElement} root
+   * @return {HTMLElement}
+   */
+  static findByQuerySelector (el, selector, root) {
+    while ((el = el.parentNode || el.host)) {
+      const parentNode = el.parentNode || el.host
+      if (parentNode && parentNode.querySelector(selector)) return el
+    }
+    return root
   }
 
   get form () {
