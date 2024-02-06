@@ -14,7 +14,6 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * @type {CustomElementConstructor}
  * @attribute {
  *  {boolean} [hover=false]
- *  {boolean} [hit-area=true] this lets you define a hit-area of your link, to avoid too large focus (hit-area) by fonts too large line-height, which can't be overwritten with css: https://github.com/mits-gossau/web-components-cms-template/issues/53
  *  {boolean} [focus-lost-close=false] tell it to close when focus is lost
  * }
  * @css {
@@ -48,7 +47,9 @@ export default class NavigationTwo extends Mutation() {
     this.isDesktop = this.checkMedia('desktop')
     // desktop keep gray background in right position
     this.clickListener = event => {
+      // TODO remove if not needed
       this.checkIfWrapped(true)
+       // TODO remove if not needed
       this.setFocusLostClickBehavior()
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
       if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((!this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) {
@@ -64,6 +65,7 @@ export default class NavigationTwo extends Mutation() {
         }))
         if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'true')
       }
+    // TODO remove if not needed => ask Ivan if needed or not
       self.requestAnimationFrame(timeStamp => this.backgroundAdjust())
       this.liClickListener(event)
     }
@@ -85,7 +87,7 @@ export default class NavigationTwo extends Mutation() {
       if (event && event.target) {
         this.root.querySelector('nav > ul:not(.language-switcher)').classList[event.target.parentNode && event.target.parentNode.classList.contains('open') ? 'add' : 'remove']('open')
         if (this.checkMedia('mobile')) {
-          //this.adjustArrowDirections(event)
+          // this.adjustArrowDirections(event)
         } else {
           Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
             if (link !== event.target.parentNode) {
@@ -147,6 +149,7 @@ export default class NavigationTwo extends Mutation() {
 
   mutationCallback(mutationList, observer) {
     // TODO: It takes too long to find out why certain behaviors happen, for this reason we patch it with this mutation observer
+    console.log("mutationCallback",mutationList)
     mutationList.forEach(mutation => {
       if (!mutation.target) return
       if (this.nav.getAttribute('aria-expanded') === 'false') {
@@ -252,6 +255,7 @@ export default class NavigationTwo extends Mutation() {
       --justify-content: start;
       --align-items: start;
       --ul-padding-left: 0;
+      --show: slideInFromTop 0.2s ease;
       max-height: var(--main-wrapper-max-height, 70vh);
       overflow: hidden;
     }
@@ -260,22 +264,35 @@ export default class NavigationTwo extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper > section {
       --gap: 1.25em;
-     padding: 1.25em 0;
+     padding: 1.5em 0;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div {
-      max-height: calc(var(--main-wrapper-max-height) - 5vh);
       max-width: 33.5%;
+      position: relative;
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div::after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 4px;
+      right: -0.5em;
+      height: 100%;
+      width: 1px;
+      background: #E0E0E0;
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div > ul {
+      max-height: calc(var(--main-wrapper-max-height) - 5vh);
       overflow-y: auto;
       overflow-x: visible;
       position: relative;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div::-webkit-scrollbar {
+    :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar {
       width: 5px;
       background-color: #E0E0E0;
       margin: 0.5em;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div::-webkit-scrollbar-thumb {
-      background: var(--color-active);
+    :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar-thumb {
+      background: #535353;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title {
       padding: 1em;
@@ -324,13 +341,15 @@ export default class NavigationTwo extends Mutation() {
       animation: open .2s ease;
       left: 0;
     }
-    @keyframes show {
-      0%{opacity: 0}
-      100%{opacity: 1}
-    }
     @keyframes slideInFromTop {
-      0%{transform: translateY(-5em)}
-      100%{transform: translateY(0)}
+      0% {
+        opacity: 0;
+        transform: translateY(-5em)
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0)
+      }
     }
       
       /*
@@ -960,7 +979,7 @@ export default class NavigationTwo extends Mutation() {
                 }))
                 if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'false')
               }
-              this.openClose(false)
+              // this.openClose(false)
             }
             // this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
           }
@@ -1010,14 +1029,15 @@ export default class NavigationTwo extends Mutation() {
             const secondSubWrapper =  Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") === secondNextNavLevel)
             const allSubWrappers = Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > currentNavLevel)
 
-
-
-            if (!event.target.classList.contains("hover-active")) event.target.classList.add("hover-active")
+            if (!event.target.classList.contains("hover-active")) {
+              event.target.classList.add("hover-active")
+            }
             
             if(!event.target.hasAttribute("sub-nav")){
               allSubWrappers.forEach(wrapper => {
                 Array.from(wrapper.querySelectorAll("ul")).forEach(ul => {
                   Array.from(ul.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
+                  ul.scrollTo(0,0)
                   ul.style.display = "none";
                 })
               })
@@ -1029,7 +1049,12 @@ export default class NavigationTwo extends Mutation() {
                 allSubWrappers.forEach(wrapper => {
                   let activeLiElements = Array.from(wrapper.querySelectorAll(".hover-active"));
                   let allLiElements = Array.from(wrapper.querySelectorAll("li"));
-                  activeLiElements.forEach(li => li.parentElement.style.display = "none")
+                  activeLiElements.forEach(li => {
+                    if(li.parentElement.getAttribute("sub-nav-id") !== event.target.getAttribute("sub-nav")){
+                      li.parentElement.scrollTo(0,0)
+                    }
+                    li.parentElement.style.display = "none"
+                  })
                   allLiElements.forEach(li => li.classList.remove("hover-active"))
                 })
               }
@@ -1040,6 +1065,7 @@ export default class NavigationTwo extends Mutation() {
                     if(ul.getAttribute("sub-nav-id") === childSubNavName){
                       ul.style.display = "block"
                     }else {
+                      ul.scrollTo(0,0)
                       ul.style.display = "none"
                     }
                   })
@@ -1049,7 +1075,10 @@ export default class NavigationTwo extends Mutation() {
               if(secondSubWrapper.length){
                 secondSubWrapper.forEach(wrapper => {
                   if(Array.from(wrapper.querySelectorAll(".hover-active"))){
-                    Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.style.display = "none")
+                    Array.from(wrapper.querySelectorAll("ul")).forEach(ul => {
+                      ul.scrollTo(0,0)
+                      ul.style.display = "none"
+                    })
                   }
                 })
               }
@@ -1118,6 +1147,14 @@ export default class NavigationTwo extends Mutation() {
       })
     }
     if (!open && this.nav.getAttribute('aria-expanded') === 'true') {
+      const firstLevelUl = this.root.querySelector("[nav-level='1'] > ul")
+      if (firstLevelUl) firstLevelUl.scrollTo(0,0)
+
+      // We should refactor, too much forEach does the same thing
+      Array.from(this.root.querySelectorAll("ul[style='display: block;']")).forEach(ul => {
+        ul.scrollTo(0,0)
+        ul.style.display = "none"
+      })
       Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
         link.classList.remove('open')
         link.setAttribute('aria-expanded', 'false')
@@ -1126,11 +1163,19 @@ export default class NavigationTwo extends Mutation() {
           link.parentElement.setAttribute('aria-expanded', 'false')
         }
       })
-      Array.from(this.root.querySelectorAll('a.open')).forEach(aLink => {
-        aLink.classList.remove('open')
-        if (aLink.parentElement) aLink.parentElement.classList.remove('open')
+      Array.from(this.root.querySelectorAll('a.open')).forEach(a => {
+        a.classList.remove('open')
+        if (a.parentElement) a.parentElement.classList.remove('open')
       })
-      Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => ul.classList.remove('open'))
+      Array.from(this.root.querySelectorAll('li.hover-active')).forEach(li => {
+        li.classList.remove('hover-active')
+      })
+      Array.from(this.root.querySelectorAll("ul[style='display: block;']")).forEach(ul => {
+        ul.style.display = "none"
+      })
+      Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => {
+        ul.classList.remove('open')
+      })
     }
   }
 
