@@ -30,6 +30,9 @@
     display: flex;
     align-items: center;
 }
+:host > form o-grid > section > div {
+    justify-content: space-between;
+}
 :host > form *[inset] {
     padding-left: var(--content-spacing);
 }
