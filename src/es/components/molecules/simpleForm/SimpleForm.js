@@ -7,7 +7,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior, send it to an api endpoint or emit a custom event
- * TODO: https://dev.to/stuffbreaker/custom-forms-with-web-components-and-elementinternals-4jaj
+ * Expose Internals does not work with native :valid selector... https://dev.to/stuffbreaker/custom-forms-with-web-components-and-elementinternals-4jaj, solution to turn off the shadow dom of child components
  * As a molecule, this component shall hold Atoms
  *
  * @export
@@ -210,9 +210,7 @@ export default class SimpleForm extends Shadow() {
         }
       ]),
       this.loadGrecaptchaDependency()
-    ]).then(() => Array.from(this.root.querySelectorAll('[hidden]')).forEach(node => {
-      if (!node.hasAttribute('mode')) this.hide(node, true)
-    }))
+    ]).then(() => Array.from(this.root.querySelectorAll('[hidden]:not([mode])')).forEach(node => this.hide(node, true)))
   }
 
   // do the whole file pick, delete and preview stuff
@@ -231,6 +229,7 @@ export default class SimpleForm extends Shadow() {
           const li = document.createElement('li')
           li.textContent = file.name
           ul.appendChild(li)
+          // file preview
           if (target.hasAttribute('file-preview')) SimpleForm.readFile(file, true).then(([base64, typeMatch]) => {
             const div = document.createElement('div')
             switch (typeMatch[1]) {
@@ -290,7 +289,6 @@ export default class SimpleForm extends Shadow() {
           target.value = ''
           this.changeListener(event)
         }, { once: true })
-        if (target.hasAttribute('data-required')) target.setAttribute('required', true)
       } else if (label.hasAttribute('original-label')) {
         if (target.hasAttribute('remove-file-title')) target.removeAttribute('title')
         target.parentNode.classList.remove('has-files')
@@ -302,16 +300,12 @@ export default class SimpleForm extends Shadow() {
   // deal with the visibility and multiply aka. clone conditions
   conditionalHandling (target) {
     // selector target has to be as low as possible to not affect other clones including clones
-    let el = target
-    // TODO: replace with proper loop func
     // only reach up to the multiply, clone boundary if possible
-    while ((el = el.parentNode || this.root) && el !== this.root) {
-      if (el && el.querySelector('[multiply-condition]')) break
-    }
-    // TODO: replace with proper loop func
-    while ((el = el.parentNode || this.root) && el !== this.root) {
-      if (el && el.querySelector(`[visible-by=${target.getAttribute('id')}],[visible-by=${target.getAttribute('name')}]`)) break
-    }
+    let el = SimpleForm.walksUpDomQuerySelecting(target, '[multiply-condition]', this.root)
+    // incase none visible-by selector can be found step further up the tree
+    el = SimpleForm.walksUpDomQuerySelecting(el === this.root ? target : el, `[visible-by=${target.getAttribute('id')}],[visible-by=${target.getAttribute('name')}]`, this.root)
+    // step one further up to also regard siblings
+    if (el !== this.root) el = el.parentNode || el
     // visibility
     let conditionalNodes // eslint-disable-line
     if ((conditionalNodes = el.querySelectorAll(`[visible-by=${target.getAttribute('id')}],[visible-by=${target.getAttribute('name')}]`))) {
@@ -329,7 +323,7 @@ export default class SimpleForm extends Shadow() {
     }
     // multiply aka. clone
     let originalNode // eslint-disable-line
-    if (target.hasAttribute('multiply') && (originalNode = SimpleForm.findByQuerySelector(target, target.getAttribute('multiply'))) !== document.documentElement && this.checkCondition(target, target, 'multiply-condition')) {
+    if (target.hasAttribute('multiply') && (originalNode = SimpleForm.walksUpDomQuerySelecting(target, target.getAttribute('multiply'), this.root)) !== this.root && this.checkCondition(target, target, 'multiply-condition')) {
       /** @type {any} */
       const clone = originalNode.cloneNode(true)
       target.removeAttribute('multiply')
@@ -375,14 +369,14 @@ export default class SimpleForm extends Shadow() {
             if (Array.isArray(obj[key])) {
               const parentsOfMultipleInput = Array.from(new Set(Array.from(form.querySelectorAll(`[name=${key}]`)).concat(Array.from(form.querySelectorAll(`#${key}`)))))
               await Promise.all(parentsOfMultipleInput.map(async (parentOfMultipleInput, i) => {
-                // check if field is visible (TODO: loop up with a while to find the next parent with attribute visible-condition)
-                const value = parentOfMultipleInput.hasAttribute('hidden') || parentOfMultipleInput.parentNode?.hasAttribute?.('hidden') || parentOfMultipleInput.parentNode?.parentNode?.hasAttribute?.('hidden')
-                  ? undefined
-                  : this.isInputValueNode(parentOfMultipleInput)
+                // check if field is visible, which is the case when walksUpDomQueryMatching returns this.root
+                const value = SimpleForm.walksUpDomQueryMatching(parentOfMultipleInput, '[hidden]', this.root) === this.root
+                  ? this.isInputValueNode(parentOfMultipleInput)
                     // check if it has a value
                     ? await this.getInputValue(parentOfMultipleInput)
                     // loop through the object
                     : await loop(obj[key][i] || structuredClone(obj[key][0]), this.getInputs(parentOfMultipleInput), parentOfMultipleInput)
+                  : undefined
                   obj[key][i] = value
               }))
               // set falsy fields to empty
@@ -475,7 +469,6 @@ export default class SimpleForm extends Shadow() {
    * @return {boolean}
    */
   isInputValueNode (input) {
-    // TODO: is this all?
     return input.nodeName === 'INPUT' || input.nodeName === 'SELECT'
   }
 
@@ -493,8 +486,7 @@ export default class SimpleForm extends Shadow() {
       case 'checkbox':
         return input.value && input.value !== 'on' && input.checked ? Promise.resolve(input.value) : Promise.resolve(input.checked)
       case 'radio':
-        // TODO: do proper radio button handling and search the others to determine the value
-        return input.value && input.value !== 'on' && input.checked ? Promise.resolve(input.value) : Promise.resolve(input.checked)
+        return Promise.resolve(Array.from(this.root.querySelectorAll(`[name="${input.getAttribute('name')}"]`)).find(input => input.checked).value)
       default:
         return Promise.resolve(input.value)
     }
@@ -510,14 +502,13 @@ export default class SimpleForm extends Shadow() {
 
   show (node) {
     node.removeAttribute('hidden')
-    // TODO: only show all children until there is an other conditional node in the path down
-    Array.from(node.querySelectorAll('input[disabled],select[disabled]')).forEach(node => {
-      if (node.getAttribute('data-disabled') !== 'true') node.removeAttribute('disabled')
+    // check for if right parent triggering this by walksUpDomQueryMatching
+    Array.from(node.querySelectorAll('input[disabled],select[disabled]')).forEach(input => {
+      if (SimpleForm.walksUpDomQueryMatching(input, '[visible-by]', this.root) === node && input.getAttribute('data-disabled') !== 'true') input.removeAttribute('disabled')
     })
   }
 
   checkCondition (conditionalNode, targetNode, attributeName) {
-    console.log('checkCondition', {conditionalNode, targetNode, attributeName});
     return conditionalNode.getAttribute(attributeName) === targetNode.value ||
     (conditionalNode.getAttribute(attributeName) === 'truthy' && targetNode.value) ||
     (conditionalNode.getAttribute(attributeName) === 'falsy' && !targetNode.value) ||
@@ -537,20 +528,37 @@ export default class SimpleForm extends Shadow() {
   }
 
   /**
-   * find html element by id or class
+   * find html element by selector
+   * ends and returns this.root when stepped up all the way but nothing found
    *
    * @param {HTMLElement | any} el
    * @param {string} selector
-   * @return {HTMLElement}
+   * @param {HTMLElement} root
+   * @return {any}
    */
-  static findByQuerySelector (el, selector) {
-    while ((el = el.parentNode || el.host)) {
-      const parentNode = el.parentNode || el.host
-      if (parentNode && parentNode.querySelector(selector)) {
-        return el
-      }
+  static walksUpDomQuerySelecting (el, selector, root) {
+    if (el.querySelector(selector)) return el
+    while ((el = el.parentNode || root) && el !== root) {
+      if (el.querySelector(selector)) return el
     }
-    return document.documentElement
+    return el
+  }
+
+  /**
+   * matches html element by selector
+   * ends and returns root when stepped up all the way but nothing found
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @param {HTMLElement} root
+   * @return {any}
+   */
+  static walksUpDomQueryMatching (el, selector, root) {
+    if (el.matches(selector)) return el
+    while ((el = el.parentNode || root) && el !== root) {
+      if (el.matches(selector)) return el
+    }
+    return el
   }
 
   get form () {
@@ -563,7 +571,6 @@ export default class SimpleForm extends Shadow() {
 
   getInputs (target) {
     if (!target) return []
-    // TODO: is this all?
     return Array.from(target.querySelectorAll('input')).concat(Array.from(target.querySelectorAll('select'))).concat(Array.from(target.querySelectorAll('textarea')))
   }
 
