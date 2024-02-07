@@ -5,9 +5,16 @@
 :host > section {
     grid-template-columns: ${this.getAttribute('first-column-with') || 'auto'} auto;
     grid-template-rows: auto 1fr;
+    background-color: ${this.getAttribute('background-color') || 'none'};
+    color: ${this.getAttribute('text-color') || 'inherit'};
 }
 :host > section > * {
     padding: var(--grid-2columns-content-section-padding-custom, var(--content-spacing));
+}
+:host > section h1,
+:host > section h2,
+:host > section h3 {
+    color: ${this.getAttribute('text-color') || 'inherit'};
 }
 :host > section p.intro {
     font-family: var(--font-family);
