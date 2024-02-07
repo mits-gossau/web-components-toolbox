@@ -1,5 +1,6 @@
 :host {
     --simple-form-default-border-radius: var(--simple-form-default-border-radius-custom, var(--border-radius, 0.5em));
+    --simple-form-default-color-error: var(--color-error, var(--color-secondary, red));
 }
 :host #response {
     color: var(--color-error, var(--color-secondary, red));
