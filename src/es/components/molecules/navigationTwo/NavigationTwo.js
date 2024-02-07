@@ -45,7 +45,9 @@ export default class NavigationTwo extends Mutation() {
     }, ...args)
 
     this.isDesktop = this.checkMedia('desktop')
+
     this.clickListener = event => {
+      console.log("clickListener")
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
       if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((!this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) {
         this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
@@ -89,6 +91,7 @@ export default class NavigationTwo extends Mutation() {
       }
     }
 
+    // Done
     this.selfClickListener = () => {
       this.openClose(false)
     }
@@ -118,7 +121,6 @@ export default class NavigationTwo extends Mutation() {
   disconnectedCallback() {
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
-    this.root.querySelectorAll('a').forEach(a => a.removeEventListener('click', this.clickListener))
     super.disconnectedCallback()
   }
 
@@ -438,14 +440,9 @@ export default class NavigationTwo extends Mutation() {
                 }))
                 if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'false')
               }
-              // this.openClose(false)
             }
-            // this.adjustArrowDirections(event, arrowDirections, 'a-link.open')
           }
         })
-        // li.prepend(arrow)
-        // a.replaceWith(aLink)
-        // li.prepend(aLink)
       })
       Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
         const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
@@ -456,7 +453,6 @@ export default class NavigationTwo extends Mutation() {
           if (this.namespace === 'navigation-default-' && sectionChildren.length < 4 && self.innerWidth > 1600) wrapper.setAttribute(`any-${i + 1}-width`, '25%')
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
-        section.parentNode.prepend(this.getBackground())
         section.replaceWith(wrapper)
         // add event listener on li
         Array.from(this.root.querySelectorAll("li")).forEach(li => {
@@ -545,56 +541,12 @@ export default class NavigationTwo extends Mutation() {
           })
         })
       })
-
-      //this.root.querySelectorAll('a').forEach(a => a.addEventListener('click', this.clickListener))
-
-      // this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.addEventListener('click', this.liClickListener))
-
       this.html = this.style
     })
   }
 
   get focusLostClose() {
     return this.hasAttribute('focus-lost-close') && this.getAttribute('focus-lost-close') !== 'false'
-  }
-
-  getBackground() {
-    const background = document.createElement('div')
-    background.classList.add('background')
-    return background
-  }
-
-  setFocusLostClickBehavior() {
-    clearTimeout(this._focusLostClickBehaviorTimeout)
-    this._focusLostClickBehaviorTimeout = setTimeout(() => {
-      // the checkMedia is used to hack the click behavior of BaseNavigation to remove on desktop all li.open when  clicked away or in an other menu point. This because we need to indicate the active menu point with a border under the list
-      if (this.checkMedia('desktop')) {
-        this.setAttribute('focus-lost-close-mobile', '')
-      } else {
-        this.removeAttribute('focus-lost-close-mobile')
-      }
-    }, 50)
-  }
-
-  /*adjustArrowDirections (event, arrowDirections = ['left', 'right'], selector = 'li.open') {
-    if (!event) return
-    Array.from(this.root.querySelectorAll(selector)).forEach(link => {
-      let arrow
-      if (arrowDirections && link.parentNode && event.target && !link.parentNode.classList.contains('open') && (arrow = link.parentNode.querySelector(`[direction=${arrowDirections[0]}]`))) arrow.setAttribute('direction', arrowDirections[1])
-    })
-  }*/
-
-  backgroundAdjust() {
-    if (this.checkMedia('desktop')) {
-      let section
-      if (!(section = this.root.querySelector('li.open section'))) return
-      this.style.textContent = ''
-      this.setCss(/* CSS */`
-        :host > nav > ul > li.open > div.background {
-          top: ${section.getBoundingClientRect().bottom}px;
-        }
-      `, undefined, undefined, undefined, this.style)
-    }
   }
 
   openClose(open = true) {
@@ -656,27 +608,6 @@ export default class NavigationTwo extends Mutation() {
       style.setAttribute('protected', 'true')
       return style
     })())
-  }
-
-  get liSearch() {
-    return this.root.querySelector('li.search') || this.root.querySelector('li')
-  }
-
-  // adjust logo top position
-  checkIfWrapped(resetCouter) {
-    if (this.getMedia() !== 'desktop') return
-    this._checkIfWrappedCounter = resetCouter ? 1 : !this._checkIfWrappedCounter ? 1 : this._checkIfWrappedCounter + 1
-    self.requestAnimationFrame(timeStamp => {
-      if (this._checkIfWrappedCounter < 30 && (!this.offsetHeight || !this.liSearch.offsetHeight)) return setTimeout(() => this.checkIfWrapped(false), 1000)
-      this.classList[this.offsetHeight > this.liSearch.offsetHeight + 5 ? 'add' : 'remove']('wrapped')
-      this.css = /* css */`
-        @media only screen and (min-width: calc(${this.mobileBreakpoint} + 1px)) {
-          :host > nav > ul li > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-            margin-top: calc(${this.root.querySelector('nav > ul').offsetHeight}px + var(--section-margin-top-desktop, ${Number(this.getAttribute('margin-top') || 1)}px));
-          }
-        }
-      `
-    })
   }
 
   getMedia() {
