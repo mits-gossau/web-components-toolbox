@@ -45,7 +45,7 @@ export default class NavigationTwo extends Mutation() {
     }, ...args)
 
     this.isDesktop = this.checkMedia('desktop')
-    this.useHoverListener = false
+    this.useHoverListener = true
 
 
     // Done
@@ -102,9 +102,57 @@ export default class NavigationTwo extends Mutation() {
       if (event.currentTarget) {
         // If use-hover-listener attribute exists
         if (this.isDesktop && this.useHoverListener) {
+          if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
+            const isOpen = event.currentTarget.classList.contains('open')
+            event.preventDefault()
+            if (this.focusLostClose) {
+              event.stopPropagation()
+              if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
+                this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+                  detail: {
+                    hasNoScroll: true,
+                    origEvent: event,
+                    this: this
+                  },
+                  bubbles: true,
+                  cancelable: true,
+                  composed: true
+                }))
+              }
+            }
+            // clean state between main li switching
+            if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
+              event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+              this.hideAndClearSubNavigationDivs()
+            }
 
+            // remove all the previous open class by other a tag
+            Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('.open')).forEach(el => {
+              el.classList.remove('open')
+            })
+
+            event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+
+          } else if (event.currentTarget.getAttribute('href').includes('#')) {
+            // TODO Silvan => why it doesnt work innerLink
+            this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
+              detail: {
+                selector: event.currentTarget.getAttribute('href')
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          } else if (event.currentTarget.getAttribute('href')) {
+            // TODO Ivan keep open or close?
+            event.preventDefault()
+            // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
+            if (this.getMedia() !== 'desktop') this.setAttribute('style', 'display: none;')
+            setTimeout(() => this.removeAttribute('style'), 3000)
+            self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
+          }
         }
-        // If use-hover-listener attribute NOT exists 
+        // If use-hover-listener attribute NOT exists TODO => should we keep open the flyout by target new tab navigation?
         else {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             const isOpen = event.currentTarget.classList.contains('open')
@@ -126,24 +174,15 @@ export default class NavigationTwo extends Mutation() {
             }
             // clean state between main li switching
             if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
+              event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
               this.hideAndClearSubNavigationDivs()
             }
 
-            if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.tagName === 'UL') {
-              event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
-            }
-
             // remove all the previous open class by other a tag
-            Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('a')).forEach(a => {
-              a.classList.remove('open')
+            Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('.open')).forEach(el => {
+              el.classList.remove('open')
             })
 
-            // remove all the previous open class by other li tag
-            Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('li')).forEach(li => {
-              li.classList.remove('open')
-            })
-
-            event.currentTarget.classList[isOpen ? 'remove' : 'add']('open')
             event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
 
             // Click event logic
@@ -170,19 +209,13 @@ export default class NavigationTwo extends Mutation() {
                 subUl.style.display = "block"
                 subUl.scrollTo(0, 0)
                 if (wrapperDivSecondNextSiblingDiv) wrapperDivSecondNextSiblingDiv.hidden = true
-                if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => {
-                  ul.style.display = "none"
-                })
+                if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = "none")
               } else {
 
               }
 
 
-            } else {
-
             }
-
-
           } else if (event.currentTarget.getAttribute('href').includes('#')) {
             // TODO Silvan => why it doesnt work innerLink
             this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
@@ -387,7 +420,7 @@ export default class NavigationTwo extends Mutation() {
       background-color: white;
       width: calc(100% + var(--logo-default-width,var(--width, auto)));
       border-top: 1px solid #E0E0E0;
-      --any-1-width: 33%;
+      --any-1-width: 31%;
       --justify-content: start;
       --align-items: start;
       --ul-padding-left: 0;
@@ -574,6 +607,7 @@ export default class NavigationTwo extends Mutation() {
         // Add listener if there is an attribute on this element
         let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("ks-m-nav-level-item"))
         if (this.isDesktop && this.useHoverListener) {
+          console.log("mouseenter")
           subLiElements.forEach(li => {
             li.addEventListener("mouseenter", this.subLiHoverListener)
             li.currentWrapper = wrapper
@@ -673,7 +707,14 @@ export default class NavigationTwo extends Mutation() {
     let navWrappers = Array.from(this.root.querySelectorAll("o-nav-wrapper"))
     navWrappers.forEach(wrapper => {
       let subNavigationDivs = Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
-      if (subNavigationDivs.length) subNavigationDivs.forEach(subNav => subNav.hidden = true)
+      if (subNavigationDivs.length) {
+        subNavigationDivs.forEach(subNav => {
+          if (this.useHoverListener) {
+            Array.from(subNav.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0))
+          }
+          subNav.hidden = true
+        })
+      }
     })
   }
 
