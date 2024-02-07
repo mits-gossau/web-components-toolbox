@@ -29,7 +29,7 @@ export default class SimpleForm extends Shadow() {
       let invalidNode
       if ((invalidNode = this.form.querySelector('input:not(:valid):not([type=hidden])'))) {
         let invalidNodeLabel
-        if ((invalidNodeLabel = invalidNode.parentNode.querySelector(`[for=${invalidNode.getAttribute('id')}]`))) invalidNodeLabel.scrollIntoView()
+        if ((invalidNodeLabel = invalidNode.parentNode.querySelector(`[for="${invalidNode.getAttribute('id')}"]`))) invalidNodeLabel.scrollIntoView()
       }
       // once the form was touched, resp. tried to submit, it is dirty. The dirty attribute signals the css to do the native validation
       this.setAttribute('dirty', 'true')
@@ -303,12 +303,12 @@ export default class SimpleForm extends Shadow() {
     // only reach up to the multiply, clone boundary if possible
     let el = SimpleForm.walksUpDomQuerySelecting(target, '[multiply-condition]', this.root)
     // incase none visible-by selector can be found step further up the tree
-    el = SimpleForm.walksUpDomQuerySelecting(el === this.root ? target : el, `[visible-by=${target.getAttribute('id')}],[visible-by=${target.getAttribute('name')}]`, this.root)
+    el = SimpleForm.walksUpDomQuerySelecting(el === this.root ? target : el, `[visible-by="${target.getAttribute('id')}"],[visible-by="${target.getAttribute('name')}"]`, this.root)
     // step one further up to also regard siblings
     if (el !== this.root) el = el.parentNode || el
     // visibility
     let conditionalNodes // eslint-disable-line
-    if ((conditionalNodes = el.querySelectorAll(`[visible-by=${target.getAttribute('id')}],[visible-by=${target.getAttribute('name')}]`))) {
+    if ((conditionalNodes = el.querySelectorAll(`[visible-by="${target.getAttribute('id')}"],[visible-by="${target.getAttribute('name')}"]`))) {
       conditionalNodes.forEach(conditionalNode => {
         if (conditionalNode.hasAttribute('visible-condition')) {
           if (this.checkCondition(conditionalNode, target, 'visible-condition')) {
@@ -350,7 +350,7 @@ export default class SimpleForm extends Shadow() {
       cloneTarget.setAttribute('name', `${target.getAttribute('name').replace(`-counter-${counter - 1}`, '')}-counter-${counter}`)
       cloneTarget.setAttribute('counter', counter)
       let label
-      if ((label = cloneTarget.parentElement.querySelector(`[for=${target.getAttribute('id')}]`))) label.setAttribute('for', cloneTarget.getAttribute('id'))
+      if ((label = cloneTarget.parentElement.querySelector(`[for="${target.getAttribute('id')}"]`))) label.setAttribute('for', cloneTarget.getAttribute('id'))
       Array.from(clone.querySelectorAll(`[${target.getAttribute('multiply-text-selector') || 'multiply-text'}]`)).forEach(node => (node.textContent = node.getAttribute(target.getAttribute('multiply-text-selector') || 'multiply-text').replace(target.getAttribute('counter-placeholder'), counter)))
       if (removedCloneTarget !== clone) originalNode.after(clone)
     }
@@ -368,7 +368,7 @@ export default class SimpleForm extends Shadow() {
           let input = null
           if (Object.hasOwnProperty.call(obj, key)) {
             if (Array.isArray(obj[key])) {
-              const parentsOfMultipleInput = Array.from(new Set(Array.from(form.querySelectorAll(`[name=${key}]`)).concat(Array.from(form.querySelectorAll(`#${key}`)))))
+              const parentsOfMultipleInput = Array.from(new Set(Array.from(form.querySelectorAll(`[name="${key}"]`)).concat(Array.from(form.querySelectorAll(`#${key}`)))))
               await Promise.all(parentsOfMultipleInput.map(async (parentOfMultipleInput, i) => {
                 // check if field is visible, which is the case when walksUpDomQueryMatching returns this.root
                 const value = SimpleForm.walksUpDomQueryMatching(parentOfMultipleInput, '[hidden]', this.root) === this.root
