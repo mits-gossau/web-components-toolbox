@@ -162,7 +162,10 @@ export default class SimpleForm extends Shadow() {
       :host *:has(> input[type=file]) *.file-preview > ul > li:not(:last-child) {
         margin-bottom: 1em;
       }
+    `
+    if (this.getAttribute('grecaptcha-key')) this.css = /* css */`
       :host [captcha-message] {
+        color: var(--color-error, var(--color, black));
         opacity: 1;
       }
       :host [captcha-message].hidden {
@@ -210,7 +213,10 @@ export default class SimpleForm extends Shadow() {
         }
       ]),
       this.loadGrecaptchaDependency()
-    ]).then(() => Array.from(this.root.querySelectorAll('[hidden]:not([mode])')).forEach(node => this.hide(node, true)))
+    ]).then(() => {
+      Array.from(this.root.querySelectorAll('[hidden]:not([mode])')).forEach(node => this.hide(node, true))
+      this.initBotDetectCaptcha()
+    })
   }
 
   // do the whole file pick, delete and preview stuff
@@ -534,10 +540,10 @@ export default class SimpleForm extends Shadow() {
    *
    * @param {HTMLElement | any} el
    * @param {string} selector
-   * @param {HTMLElement} root
+   * @param {HTMLElement} [root=document.documentElement]
    * @return {any}
    */
-  static walksUpDomQuerySelecting (el, selector, root) {
+  static walksUpDomQuerySelecting (el, selector, root = document.documentElement) {
     if (el.querySelector(selector)) return el
     while ((el = el.parentNode || root) && el !== root) {
       if (el.querySelector(selector)) return el
@@ -551,10 +557,10 @@ export default class SimpleForm extends Shadow() {
    *
    * @param {HTMLElement | any} el
    * @param {string} selector
-   * @param {HTMLElement} root
+   * @param {HTMLElement} [root=document.documentElement]
    * @return {any}
    */
-  static walksUpDomQueryMatching (el, selector, root) {
+  static walksUpDomQueryMatching (el, selector, root = document.documentElement) {
     if (el.matches(selector)) return el
     while ((el = el.parentNode || root) && el !== root) {
       if (el.matches(selector)) return el
@@ -568,10 +574,10 @@ export default class SimpleForm extends Shadow() {
    *
    * @param {HTMLElement | any} el
    * @param {string} selector
-   * @param {HTMLElement} root
+   * @param {HTMLElement} [root=document.documentElement]
    * @return {HTMLElement}
    */
-  static findByQuerySelector (el, selector, root) {
+  static findByQuerySelector (el, selector, root = document.documentElement) {
     while ((el = el.parentNode || el.host)) {
       const parentNode = el.parentNode || el.host
       if (parentNode && parentNode.querySelector(selector)) return el
@@ -601,9 +607,9 @@ export default class SimpleForm extends Shadow() {
   }
 
   /**
-  * fetch dependency
+  * fetch dependency for google recaptcha
+  * this is only triggered when the key as attribute grecaptcha-key is set
   * https://developers.google.com/recaptcha/docs/loading
-  * TODO: Implement alternative captcha eg: https://www.hcaptcha.com/
   *
   * @returns {Promise<any>}
   */
@@ -655,5 +661,77 @@ export default class SimpleForm extends Shadow() {
       }
       this.html = script
     }))
+  }
+
+  /**
+  * fetch dependency for google recaptcha
+  * this is only triggered when certain query selectors trigger
+  * an implementation of https://captcha.com/asp.net-captcha.html
+  *
+  * @returns {void}
+  */
+  initBotDetectCaptcha () {
+    let image, reload, sound
+    if ((image = this.root.querySelector('#Captcha_CaptchaImage')) && (reload = this.root.querySelector('#Captcha_ReloadIcon')) && (sound = this.root.querySelector('#Captcha_SoundLink'))) {
+      this.css = /* css */`
+        :host captcha {
+          display: block;
+        }
+        :host captcha > * {
+          display: flex;
+          justify-content: space-between;
+        }
+        :host captcha .BDC_CaptchaIconsDiv {
+          display: flex;
+          flex-direction: column;
+        }
+        :host captcha .BDC_CaptchaIconsDiv > a {
+          margin: 0 0 0.1em 0.1em;
+        }
+        :host captcha a[href^="//captcha.org"] {
+          font-size: 0.75em;
+          font-style: italic;
+        }
+      `
+      const captcha = SimpleForm.walksUpDomQueryMatching(image, 'captcha', this.root)
+      // clean out all inline styles
+      Array.from(captcha.querySelectorAll('*[style]')).forEach(node => node.removeAttribute('style'))
+      // remove unwanted spacers
+      Array.from(captcha.querySelectorAll('.BDC_Placeholder')).forEach(node => node.remove())
+      // disable and enable button
+      let input
+      if ((input = this.root.querySelector('#captchaCode[required]'))) {
+        if (!input.value) this.inputSubmit.setAttribute('disabled', 'true')
+        input.addEventListener('keyup', event => {
+          if (input.value) {
+            this.inputSubmit.removeAttribute('disabled')
+          } else {
+            this.inputSubmit.setAttribute('disabled', 'true')
+          }
+        })
+      }
+      // reload image click event behavior
+      reload.addEventListener('click', event => {
+        event.preventDefault()
+        event.stopPropagation()
+        const newImage = document.createElement('img')
+        Array.from(image.attributes).forEach(attribute => {
+          if (attribute.name && attribute.value) newImage.setAttribute(attribute.name, attribute.value)
+        })
+        image.replaceWith(newImage)
+      })
+      // sound image click event behavior
+      sound.addEventListener('click', event => {
+        event.preventDefault()
+        event.stopPropagation()
+        const audio = document.createElement('audio')
+        audio.setAttribute('src', sound.getAttribute('href'))
+        const source = document.createElement('source')
+        source.setAttribute('type', 'audio/wav')
+        source.setAttribute('src', sound.getAttribute('href'))
+        audio.appendChild(source)
+        audio.play()
+      })
+    }
   }
 }
