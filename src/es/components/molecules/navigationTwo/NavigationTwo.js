@@ -45,7 +45,7 @@ export default class NavigationTwo extends Mutation() {
     }, ...args)
 
     this.isDesktop = this.checkMedia('desktop')
-    this.useHoverListener = true
+    this.useHoverListener = false
 
 
     // Done
@@ -70,7 +70,7 @@ export default class NavigationTwo extends Mutation() {
 
         if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'true')
       }
-
+      this.hideAndClearSubNavigationDivs()
       this.openClose(false)
     }
 
@@ -94,66 +94,114 @@ export default class NavigationTwo extends Mutation() {
           }
         }
       }
+      this.hideAndClearSubNavigationDivs()
       this.openClose(false)
     }
 
     this.aLinkClickListener = event => {
       if (event.currentTarget) {
-        if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
-          const isOpen = event.currentTarget.classList.contains('open')
-          event.preventDefault()
-          if (this.focusLostClose) {
-            event.stopPropagation()
-            if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
-              this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-                detail: {
-                  hasNoScroll: true,
-                  origEvent: event,
-                  this: this
-                },
-                bubbles: true,
-                cancelable: true,
-                composed: true
-              }))
-            }
-          }
+        // If use-hover-listener attribute exists
+        if (this.isDesktop && this.useHoverListener) {
 
-          if (this.isDesktop && this.useHoverListener) { }
-          if (this.isDesktop && !this.useHoverListener) { }
-          if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.tagName === 'UL') {
-            event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
-          }
-
-          // remove all the previous open class by other a tag
-          Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('a')).forEach(a => {
-            a.classList.remove('open')
-          })
-          // remove all the previous open class by other li tag
-          Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('li')).forEach(li => {
-            li.classList.remove('open')
-          })
-          event.currentTarget.classList[isOpen ? 'remove' : 'add']('open')
-          event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
-
-        } else if (event.currentTarget.getAttribute('href').includes('#')) {
-          // TODO Silvan => why it doesnt work innerLink
-          this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
-            detail: {
-              selector: event.currentTarget.getAttribute('href')
-            },
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        } else if (event.currentTarget.getAttribute('href')) {
-          // TODO Ivan keep open or close?
-          event.preventDefault()
-          // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
-          if (this.getMedia() !== 'desktop') this.setAttribute('style', 'display: none;')
-          setTimeout(() => this.removeAttribute('style'), 3000)
-          self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
         }
+        // If use-hover-listener attribute NOT exists 
+        else {
+          if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
+            const isOpen = event.currentTarget.classList.contains('open')
+            event.preventDefault()
+            if (this.focusLostClose) {
+              event.stopPropagation()
+              if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
+                this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+                  detail: {
+                    hasNoScroll: true,
+                    origEvent: event,
+                    this: this
+                  },
+                  bubbles: true,
+                  cancelable: true,
+                  composed: true
+                }))
+              }
+            }
+            // clean state between main li switching
+            if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
+              this.hideAndClearSubNavigationDivs()
+            }
 
+            if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.tagName === 'UL') {
+              event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+            }
+
+            // remove all the previous open class by other a tag
+            Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('a')).forEach(a => {
+              a.classList.remove('open')
+            })
+
+            // remove all the previous open class by other li tag
+            Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('li')).forEach(li => {
+              li.classList.remove('open')
+            })
+
+            event.currentTarget.classList[isOpen ? 'remove' : 'add']('open')
+            event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+
+            // Click event logic
+            if (event.currentTarget.parentNode.hasAttribute("sub-nav")) {
+              let wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
+              let wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
+              let wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll("ul"))
+              let wrapperDivSecondNextSiblingDiv = null
+              let wrapperDivSecondNextSiblingDivUls = null
+              if (wrapperDivNextSiblingDiv.nextSibling) wrapperDivSecondNextSiblingDiv = wrapperDivNextSiblingDiv.nextSibling
+              if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul")).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul"))
+
+
+              Array.from(wrapperDiv.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
+              event.currentTarget.parentNode.classList.add("hover-active")
+              let subUl = null
+              if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
+                wrapperDivNextSiblingDiv.hidden = true
+                wrapperDivNextSiblingDivUls.forEach(ul => {
+                  ul.style.display = "none"
+                  Array.from(ul.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
+                })
+                subUl.parentElement.hidden = false
+                subUl.style.display = "block"
+                subUl.scrollTo(0, 0)
+                if (wrapperDivSecondNextSiblingDiv) wrapperDivSecondNextSiblingDiv.hidden = true
+                if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => {
+                  ul.style.display = "none"
+                })
+              } else {
+
+              }
+
+
+            } else {
+
+            }
+
+
+          } else if (event.currentTarget.getAttribute('href').includes('#')) {
+            // TODO Silvan => why it doesnt work innerLink
+            this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
+              detail: {
+                selector: event.currentTarget.getAttribute('href')
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          } else if (event.currentTarget.getAttribute('href')) {
+            // TODO Ivan keep open or close?
+            event.preventDefault()
+            // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
+            if (this.getMedia() !== 'desktop') this.setAttribute('style', 'display: none;')
+            setTimeout(() => this.removeAttribute('style'), 3000)
+            self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
+          }
+        }
       }
     }
 
@@ -355,7 +403,7 @@ export default class NavigationTwo extends Mutation() {
      padding: 1.5em 0;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div {
-      max-width: 33.5%;
+      max-width: 32.5%;
       position: relative;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div::after {
@@ -618,6 +666,14 @@ export default class NavigationTwo extends Mutation() {
       if (li.hasAttribute("main-color")) {
         li.style.setProperty("--navigation-klubschule-color-active", li.getAttribute("main-color"))
       }
+    })
+  }
+
+  hideAndClearSubNavigationDivs() {
+    let navWrappers = Array.from(this.root.querySelectorAll("o-nav-wrapper"))
+    navWrappers.forEach(wrapper => {
+      let subNavigationDivs = Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
+      if (subNavigationDivs.length) subNavigationDivs.forEach(subNav => subNav.hidden = true)
     })
   }
 
