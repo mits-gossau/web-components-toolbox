@@ -18,7 +18,7 @@ export default class Checkout extends Shadow() {
         this.renderHTML(productData.response)
       }).catch(error => {
         this.html = ''
-        this.html = `${error}`
+        console.error(`Checkout Fetch failed!: ${error}`)
       })
     }
     this.clickListener = event => {
