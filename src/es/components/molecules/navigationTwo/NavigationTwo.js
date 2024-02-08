@@ -669,29 +669,15 @@ export default class NavigationTwo extends Mutation() {
       })
     }
     if (!open && this.nav.getAttribute('aria-expanded') === 'true') {
-      Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
-        link.classList.remove('open')
-        link.setAttribute('aria-expanded', 'false')
-        if (link.parentElement) {
-          link.parentElement.classList.remove('open')
-          link.parentElement.setAttribute('aria-expanded', 'false')
+      Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
+        li.classList.remove('open')
+        if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+        if (li.parentElement) {
+          li.parentElement.classList.remove('open')
         }
-      })
-      Array.from(this.root.querySelectorAll('a.open')).forEach(a => {
-        a.classList.remove('open')
-        if (a.parentElement) a.parentElement.classList.remove('open')
-      })
-      Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => {
-        ul.classList.remove('open')
       })
     }
   }
-
-  setAriaAttributes(event) {
-    console.log("element", event.currentTarget.parentElement.parentElement)
-  }
-
-  cleanAriaAttributes() { }
 
   /**
    *
