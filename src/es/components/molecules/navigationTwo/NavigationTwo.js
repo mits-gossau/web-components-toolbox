@@ -430,7 +430,6 @@ export default class NavigationTwo extends Mutation() {
       background-color: white;
       width: calc(100% + var(--logo-default-width,var(--width, auto)));
       border-top: 1px solid #E0E0E0;
-      --any-1-width: 31%;
       --justify-content: start;
       --align-items: start;
       --ul-padding-left: 0;
@@ -446,7 +445,7 @@ export default class NavigationTwo extends Mutation() {
      padding: 2em 0 1.5em 0;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div {
-      max-width: 32.5%;
+      width: calc(calc(100% - 2 * var(--gap)) / 3) !important;
       position: relative;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div::after {
@@ -467,8 +466,8 @@ export default class NavigationTwo extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper > section .close-icon {
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 0.25em;
+      top: 0.25em;
       width: auto !important;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar {
