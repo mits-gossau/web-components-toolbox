@@ -123,6 +123,8 @@ export default class NavigationTwo extends Mutation() {
             // clean state between main li switching
             if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
               event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+              event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+              event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
               this.hideAndClearSubNavigationDivs()
             }
 
@@ -175,6 +177,8 @@ export default class NavigationTwo extends Mutation() {
             // clean state between main li switching
             if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
               event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+              event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+              event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
               this.hideAndClearSubNavigationDivs()
             }
 
@@ -196,14 +200,21 @@ export default class NavigationTwo extends Mutation() {
               if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul")).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul"))
 
 
-              Array.from(wrapperDiv.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
+              Array.from(wrapperDiv.querySelectorAll("li")).forEach(li => {
+                if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+                li.classList.remove("hover-active")
+              })
+              event.currentTarget.parentNode.setAttribute("aria-expanded", "true")
               event.currentTarget.parentNode.classList.add("hover-active")
               let subUl = null
               if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
                 wrapperDivNextSiblingDiv.hidden = true
                 wrapperDivNextSiblingDivUls.forEach(ul => {
                   ul.style.display = "none"
-                  Array.from(ul.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
+                  Array.from(ul.querySelectorAll("li")).forEach(li => {
+                    if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+                    li.classList.remove("hover-active")
+                  })
                 })
                 subUl.parentElement.hidden = false
                 subUl.style.display = "block"
@@ -395,7 +406,7 @@ export default class NavigationTwo extends Mutation() {
     :host > nav > ul > li > o-nav-wrapper a {
       --a-color: var(--color-active);
     }
-    :host > nav > ul > li > a.open > span {
+    :host > nav > ul > li.open > a > span {
       border-bottom: 3px solid var(--color-active);
       color: var(--color-active);
     }
@@ -605,18 +616,29 @@ export default class NavigationTwo extends Mutation() {
             div.hidden = true
           }
         })
+
         // Add class for title li a element
         let subTitleLiTags = Array.from(wrapper.querySelectorAll("li")).filter(li => !li.querySelector("ks-m-nav-level-item"))
         subTitleLiTags.forEach(li => li.classList.add("list-title"))
 
+        // add subUl id based on sub-nav-id to have aria-controls connection
+        let subUlElements = Array.from(wrapper.querySelectorAll("ul")).filter(ul => ul.hasAttribute("sub-nav-id"))
+        subUlElements.forEach(ul => ul.setAttribute("id", `${ul.getAttribute('sub-nav-id')}`))
+
         // Add listener if there is an attribute on this element
         let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("ks-m-nav-level-item"))
-        if (this.isDesktop && this.useHoverListener) {
-          subLiElements.forEach(li => {
+        subLiElements.forEach(li => {
+          // add aria attributes to lis where needed
+          if (li.hasAttribute("sub-nav")) {
+            li.setAttribute("aria-expanded", "false")
+            li.setAttribute("aria-controls", `${li.getAttribute('sub-nav')}`)
+          }
+          // add hover listener when needed
+          if (this.isDesktop && this.useHoverListener) {
             li.addEventListener("mouseenter", this.subLiHoverListener)
             li.currentWrapper = wrapper
-          })
-        }
+          }
+        })
       })
       this.html = this.style
     })
@@ -647,11 +669,6 @@ export default class NavigationTwo extends Mutation() {
       })
     }
     if (!open && this.nav.getAttribute('aria-expanded') === 'true') {
-      // We should refactor, too much forEach does the same thing
-      Array.from(this.root.querySelectorAll("ul[style='display: block;']")).forEach(ul => {
-        ul.scrollTo(0, 0)
-        ul.style.display = "none"
-      })
       Array.from(this.root.querySelectorAll('li.open')).forEach(link => {
         link.classList.remove('open')
         link.setAttribute('aria-expanded', 'false')
@@ -664,17 +681,17 @@ export default class NavigationTwo extends Mutation() {
         a.classList.remove('open')
         if (a.parentElement) a.parentElement.classList.remove('open')
       })
-      Array.from(this.root.querySelectorAll('li.hover-active')).forEach(li => {
-        li.classList.remove('hover-active')
-      })
-      Array.from(this.root.querySelectorAll("ul[style='display: block;']")).forEach(ul => {
-        ul.style.display = "none"
-      })
       Array.from(this.root.querySelectorAll('ul.open')).forEach(ul => {
         ul.classList.remove('open')
       })
     }
   }
+
+  setAriaAttributes(event) {
+    console.log("element", event.currentTarget.parentElement.parentElement)
+  }
+
+  cleanAriaAttributes() { }
 
   /**
    *
@@ -707,8 +724,10 @@ export default class NavigationTwo extends Mutation() {
   hideAndClearSubNavigationDivs() {
     let navWrappers = Array.from(this.root.querySelectorAll("o-nav-wrapper"))
     navWrappers.forEach(wrapper => {
+      let firstNavigationDiv = wrapper.querySelector("div[nav-level='1']")
       let subNavigationDivs = Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
       Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0))
+      Array.from(firstNavigationDiv.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
       if (subNavigationDivs.length) {
         subNavigationDivs.forEach(subNav => {
           subNav.hidden = true
