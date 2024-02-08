@@ -394,6 +394,8 @@ export default class NavigationTwo extends Mutation() {
     }
     :host li ks-m-nav-level-item {
       --nav-level-item-default-font-size: 1em;
+      --nav-level-item-default-height: 2.75em;
+      --nav-level-item-default-margin: 2px;
       --nav-level-item-default-font-weight: 500;
     }
     :host li.hover-active ks-m-nav-level-item {
@@ -606,7 +608,7 @@ export default class NavigationTwo extends Mutation() {
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
         section.replaceWith(wrapper)
-        
+
         // add close icon to all flyout
         let closeIconElement = document.createElement("a")
         closeIconElement.innerHTML = /* HTML */`
