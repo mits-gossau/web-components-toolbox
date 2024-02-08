@@ -606,6 +606,14 @@ export default class NavigationTwo extends Mutation() {
           if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
         })
         section.replaceWith(wrapper)
+        
+        // add close icon to all flyout
+        let closeIconElement = document.createElement("a")
+        closeIconElement.innerHTML = /* HTML */`
+            <a-icon-mdx namespace="icon-link-list-" icon-name="X" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
+        `
+        closeIconElement.classList.add("close-icon")
+        wrapper.querySelector("section").appendChild(closeIconElement)
 
         Array.from(wrapper.querySelectorAll("div")).forEach(div => {
           if (+div.getAttribute("nav-level") !== 1) {
