@@ -45,7 +45,7 @@ export default class NavigationTwo extends Mutation() {
     }, ...args)
 
     this.isDesktop = this.checkMedia('desktop')
-    this.useHoverListener = true
+    this.useHoverListener = this.hasAttribute('use-hover-listener')
 
 
     // Done
@@ -363,7 +363,6 @@ export default class NavigationTwo extends Mutation() {
    * @return {Promise<void>|void}
    */
   renderCSS() {
-    const firstLevelCount = this.root.querySelectorAll('nav > ul > li').length
     this.css = /* css */`
     :host > nav > ul {
       align-items: var(--align-items, normal);
@@ -433,7 +432,7 @@ export default class NavigationTwo extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper > section {
       --gap: 1.25em;
-     padding: 1.5em 0;
+     padding: 2em 0 1.5em 0;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div {
       max-width: 32.5%;
@@ -454,6 +453,12 @@ export default class NavigationTwo extends Mutation() {
       overflow-y: auto;
       overflow-x: visible;
       position: relative;
+    }
+    :host > nav > ul > li > o-nav-wrapper > section .close-icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: auto !important;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar {
       width: 5px;
@@ -607,7 +612,6 @@ export default class NavigationTwo extends Mutation() {
         // Add listener if there is an attribute on this element
         let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("ks-m-nav-level-item"))
         if (this.isDesktop && this.useHoverListener) {
-          console.log("mouseenter")
           subLiElements.forEach(li => {
             li.addEventListener("mouseenter", this.subLiHoverListener)
             li.currentWrapper = wrapper
@@ -643,9 +647,6 @@ export default class NavigationTwo extends Mutation() {
       })
     }
     if (!open && this.nav.getAttribute('aria-expanded') === 'true') {
-      const firstLevelUl = this.root.querySelector("[nav-level='1'] > ul")
-      if (firstLevelUl) firstLevelUl.scrollTo(0, 0)
-
       // We should refactor, too much forEach does the same thing
       Array.from(this.root.querySelectorAll("ul[style='display: block;']")).forEach(ul => {
         ul.scrollTo(0, 0)
@@ -707,11 +708,9 @@ export default class NavigationTwo extends Mutation() {
     let navWrappers = Array.from(this.root.querySelectorAll("o-nav-wrapper"))
     navWrappers.forEach(wrapper => {
       let subNavigationDivs = Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
+      Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0))
       if (subNavigationDivs.length) {
         subNavigationDivs.forEach(subNav => {
-          if (this.useHoverListener) {
-            Array.from(subNav.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0))
-          }
           subNav.hidden = true
         })
       }
