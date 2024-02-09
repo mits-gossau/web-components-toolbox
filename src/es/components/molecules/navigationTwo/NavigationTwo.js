@@ -71,14 +71,13 @@ export default class NavigationTwo extends Mutation() {
         if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'true')
       }
       this.hideAndClearSubNavigationDivs()
-      this.openClose(false)
+      this.openClose()
     }
 
     // Done
-    this.selfClickListener = () => {
+    this.selfClickListener = (event) => {
       if (this.focusLostClose) {
         if (this.hasAttribute('focus-lost-close-mobile')) {
-          // this.adjustArrowDirections(event, arrowDirections)
           if (this.hasAttribute('no-scroll')) {
             this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
               detail: {
@@ -95,7 +94,7 @@ export default class NavigationTwo extends Mutation() {
         }
       }
       this.hideAndClearSubNavigationDivs()
-      this.openClose(false)
+      this.openClose()
     }
 
     this.aLinkClickListener = event => {
@@ -155,7 +154,7 @@ export default class NavigationTwo extends Mutation() {
           }
         }
         // If use-hover-listener attribute NOT exists TODO => should we keep open the flyout by target new tab navigation?
-        else {
+        else if (this.isDesktop && !this.useHoverListener) {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             const isOpen = event.currentTarget.classList.contains('open')
             event.preventDefault()
@@ -188,6 +187,96 @@ export default class NavigationTwo extends Mutation() {
             })
 
             event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+
+            // Click event logic
+            if (event.currentTarget.parentNode.hasAttribute("sub-nav")) {
+              let wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
+              let wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
+              let wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll("ul"))
+              let wrapperDivSecondNextSiblingDiv = null
+              let wrapperDivSecondNextSiblingDivUls = null
+              if (wrapperDivNextSiblingDiv.nextSibling) wrapperDivSecondNextSiblingDiv = wrapperDivNextSiblingDiv.nextSibling
+              if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul")).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul"))
+
+
+              Array.from(wrapperDiv.querySelectorAll("li")).forEach(li => {
+                if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+                li.classList.remove("hover-active")
+              })
+              event.currentTarget.parentNode.setAttribute("aria-expanded", "true")
+              event.currentTarget.parentNode.classList.add("hover-active")
+              let subUl = null
+              if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
+                wrapperDivNextSiblingDiv.hidden = true
+                wrapperDivNextSiblingDivUls.forEach(ul => {
+                  ul.style.display = "none"
+                  Array.from(ul.querySelectorAll("li")).forEach(li => {
+                    if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+                    li.classList.remove("hover-active")
+                  })
+                })
+                subUl.parentElement.hidden = false
+                subUl.style.display = "block"
+                subUl.scrollTo(0, 0)
+                if (wrapperDivSecondNextSiblingDiv) wrapperDivSecondNextSiblingDiv.hidden = true
+                if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = "none")
+              } else {
+
+              }
+
+
+            }
+          } else if (event.currentTarget.getAttribute('href').includes('#')) {
+            // TODO Silvan => why it doesnt work innerLink
+            this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
+              detail: {
+                selector: event.currentTarget.getAttribute('href')
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          } else if (event.currentTarget.getAttribute('href')) {
+            // TODO Ivan keep open or close?
+            event.preventDefault()
+            // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
+            if (this.getMedia() !== 'desktop') this.setAttribute('style', 'display: none;')
+            setTimeout(() => this.removeAttribute('style'), 3000)
+            self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
+          }
+        }
+        // if mobile
+        else {
+          if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
+            event.preventDefault()
+            if (this.focusLostClose) {
+              event.stopPropagation()
+              if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
+                this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+                  detail: {
+                    hasNoScroll: true,
+                    origEvent: event,
+                    this: this
+                  },
+                  bubbles: true,
+                  cancelable: true,
+                  composed: true
+                }))
+              }
+            }
+            // clean state between main li switching
+            if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
+              // hide main navigation
+              event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+              const sectionChildren = Array.from(event.currentTarget.parentNode.querySelector("section").children)
+              sectionChildren.forEach((node) => {
+                // node.hidden = true
+                // if (+node.getAttribute("nav-level") === 1) node.hidden = false
+                if (!node.getAttribute('slot')) event.currentTarget.parentNode.parentNode.parentNode.appendChild(node)
+              })
+              event.currentTarget.parentNode.parentNode.classList.add("close-left-slide")
+              event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").classList.add("open-right-slide")
+            }
 
             // Click event logic
             if (event.currentTarget.parentNode.hasAttribute("sub-nav")) {
@@ -527,6 +616,50 @@ export default class NavigationTwo extends Mutation() {
       animation: open .2s ease;
       left: 0;
     }
+    /* Mobile layout */
+    @media only screen and (max-width: _max-width_){
+      :host .close-left-slide {
+        animation: closeLeft 0.3s ease-in forwards;
+      }
+
+      :host .open-right-slide {
+        animation: openRight 0.3s ease-in forwards;
+      }
+
+      :host > nav > ul {
+        border-top: 1px solid #E0E0E0;
+        --flex-direction:column;
+        --navigation-klubschule-a-color: var(--a-color);
+        --navigation-klubschule-align-items: start;
+        --navigation-klubschule-padding-no-scroll: 1rem 0 0 0;
+      }
+
+      :host > nav > div {
+        right: -100vw;
+      }
+
+      :host > nav > ul.open {
+        margin: 1em 0;
+      }
+
+      :host > nav > ul > li {
+        width: 100%;
+        margin: 2px 0;
+        height: 3em;
+      }
+
+      :host > nav > ul > li > a {
+        display: flex;
+        justify-content: space-between;
+        margin: 0;
+      }
+
+      :host > nav > ul > li > a > span {
+       padding: 0;
+       color: #262626;
+      }
+    }
+
     @keyframes slideInFromTop {
       0% {
         opacity: 0;
@@ -537,7 +670,29 @@ export default class NavigationTwo extends Mutation() {
         transform: translateY(0)
         }
       }
+
+      @keyframes openRight {
+        0% {
+          display: block !important;
+          right: -100vw;
+        }
+        100% {right: 0}
+      }
+
+      @keyframes closeRight {
+        0% {right: 0}
+        100% {right: -100vw}
+      }
+
+      @keyframes closeLeft {
+        0% {right: 0}
+        100% {
+          right: 100vw;
+          display: none;
+        }
+      }
     }
+    
     `
     return this.fetchTemplate()
   }
@@ -592,65 +747,86 @@ export default class NavigationTwo extends Mutation() {
       this.nav.appendChild(node)
     })
     this.html = this.nav
-    return this.fetchModules([
-      {
-        path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
-        name: this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'
-      }
-    ]).then(children => {
-      Array.from(this.root.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
-      Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
-        const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
-        // eslint-disable-line
-        wrapper.setAttribute('id', `nav-section-${i}`)
-        const sectionChildren = Array.from(section.children)
-        sectionChildren.forEach((node) => {
-          if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
+    if (this.isDesktop) {
+      return this.fetchModules([
+        {
+          path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
+          name: this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'
+        }
+      ]).then(children => {
+        Array.from(this.root.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+        Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
+          const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
+          // eslint-disable-line
+          wrapper.setAttribute('id', `nav-section-${i}`)
+          const sectionChildren = Array.from(section.children)
+          sectionChildren.forEach((node) => {
+            if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
+          })
+          section.replaceWith(wrapper)
+
+          // add close icon to all flyout
+          let closeIconElement = document.createElement("a")
+          closeIconElement.innerHTML = /* HTML */`
+          <a-icon-mdx namespace="icon-link-list-" icon-name="X" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
+          `
+          closeIconElement.classList.add("close-icon")
+          wrapper.querySelector("section").appendChild(closeIconElement)
+
+          Array.from(wrapper.querySelectorAll("div")).forEach(div => {
+            if (+div.getAttribute("nav-level") !== 1) {
+              Array.from(div.querySelectorAll("ul")).forEach(ul => {
+                ul.style.display = "none";
+              })
+              div.hidden = true
+            }
+          })
+
+          // Add class for title li a element
+          let subTitleLiTags = Array.from(wrapper.querySelectorAll("li")).filter(li => !li.querySelector("ks-m-nav-level-item"))
+          subTitleLiTags.forEach(li => li.classList.add("list-title"))
+
+          // add subUl id based on sub-nav-id to have aria-controls connection
+          let subUlElements = Array.from(wrapper.querySelectorAll("ul")).filter(ul => ul.hasAttribute("sub-nav-id"))
+          subUlElements.forEach(ul => ul.setAttribute("id", `${ul.getAttribute('sub-nav-id')}`))
+
+          // Add listener if there is an attribute on this element
+          let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("ks-m-nav-level-item"))
+          subLiElements.forEach(li => {
+            // add aria attributes to lis where needed
+            if (li.hasAttribute("sub-nav")) {
+              li.setAttribute("aria-expanded", "false")
+              li.setAttribute("aria-controls", `${li.getAttribute('sub-nav')}`)
+            }
+            // add hover listener when needed
+            if (this.useHoverListener) {
+              li.addEventListener("mouseenter", this.subLiHoverListener)
+              li.currentWrapper = wrapper
+            }
+          })
         })
-        section.replaceWith(wrapper)
-
-        // add close icon to all flyout
-        let closeIconElement = document.createElement("a")
-        closeIconElement.innerHTML = /* HTML */`
-            <a-icon-mdx namespace="icon-link-list-" icon-name="X" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
-        `
-        closeIconElement.classList.add("close-icon")
-        wrapper.querySelector("section").appendChild(closeIconElement)
-
-        Array.from(wrapper.querySelectorAll("div")).forEach(div => {
-          if (+div.getAttribute("nav-level") !== 1) {
-            Array.from(div.querySelectorAll("ul")).forEach(ul => {
-              ul.style.display = "none";
-            })
-            div.hidden = true
-          }
-        })
-
-        // Add class for title li a element
-        let subTitleLiTags = Array.from(wrapper.querySelectorAll("li")).filter(li => !li.querySelector("ks-m-nav-level-item"))
-        subTitleLiTags.forEach(li => li.classList.add("list-title"))
-
-        // add subUl id based on sub-nav-id to have aria-controls connection
-        let subUlElements = Array.from(wrapper.querySelectorAll("ul")).filter(ul => ul.hasAttribute("sub-nav-id"))
-        subUlElements.forEach(ul => ul.setAttribute("id", `${ul.getAttribute('sub-nav-id')}`))
-
-        // Add listener if there is an attribute on this element
-        let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("ks-m-nav-level-item"))
-        subLiElements.forEach(li => {
-          // add aria attributes to lis where needed
-          if (li.hasAttribute("sub-nav")) {
-            li.setAttribute("aria-expanded", "false")
-            li.setAttribute("aria-controls", `${li.getAttribute('sub-nav')}`)
-          }
-          // add hover listener when needed
-          if (this.isDesktop && this.useHoverListener) {
-            li.addEventListener("mouseenter", this.subLiHoverListener)
-            li.currentWrapper = wrapper
-          }
-        })
+        this.html = this.style
       })
+    } else {
+      Array.from(this.root.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+      // add list-item-element
+      Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi,i) => {
+        let currentATag
+        mainLi.setAttribute("aria-expanded","false")
+        mainLi.setAttribute("aria-controls",`nav-level-${i+1}`)
+        if ((currentATag = mainLi.querySelector("a")) && (!currentATag.hasAttribute("href") || currentATag.getAttribute("href") === "" || currentATag.getAttribute("href") === "#"))
+          mainLi.querySelector("a").insertAdjacentHTML('beforeend', /* html*/`
+          <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronRight" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
+          ` );
+      })
+
+      // extract section element
+      Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
+        section.hidden = true
+      })
+
       this.html = this.style
-    })
+    }
   }
 
   get focusLostClose() {
@@ -669,15 +845,17 @@ export default class NavigationTwo extends Mutation() {
     }, 50)
   }
 
-  openClose(open = true) {
+  openClose() {
     // mobile has an extra height: calc(100% + 300px) url workaround, but scroll back when closed
-    if (!open && this.getMedia() !== 'desktop') {
+    if (this.getMedia() !== 'desktop') {
       this.scroll({
         top: 0,
         behavior: 'smooth'
       })
+      // build mobile layout
+      this.buildMobileLayout()
     }
-    if (!open && this.nav.getAttribute('aria-expanded') === 'true') {
+    if (this.nav.getAttribute('aria-expanded') === 'true') {
       Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
         li.classList.remove('open')
         if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
@@ -729,6 +907,31 @@ export default class NavigationTwo extends Mutation() {
         })
       }
     })
+  }
+
+  buildMobileLayout() {
+    let isNavigationMenuOpen = this.parentElement.classList.contains("open")
+    // if(isNavigationMenuOpen){
+    //   let mainNavLis = Array.from(this.root.querySelectorAll("nav > ul > li"))
+    //   this.fetchModules([
+    //     {
+    //       path: `${this.importMetaUrl}'../../../../../../../../molecules/navLevelItem/NavLevelItem.js`,
+    //       name: this.getAttribute('ks-m-nav-level-item') || 'ks-m-nav-level-item'
+    //     }
+    //   ]).then(children => {
+    //     mainNavLis.forEach((li,i) => {
+    //       const mainLiChild = new children[0].constructorClass({mode:"false", mobileBreakpoint: this.mobileBreakpoint})
+    //       console.log(li.innerHTML)
+    //       mainLiChild.innerHTML = li.innerHTML
+    //       li.innerHTML = ""
+    //       li.appendChild(mainLiChild)
+    //       // const liChildren = Array.from(li.children)
+    //       // liChildren.forEach(liChild => mainLiChild.appendChild(liChild))
+    //       // li.innerHTML = ""
+    //       // li.appendChild(mainLiChild)
+    //     })
+    //   })
+    // }
   }
 
   getMedia() {
