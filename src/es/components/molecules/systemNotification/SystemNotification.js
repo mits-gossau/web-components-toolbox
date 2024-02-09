@@ -13,11 +13,29 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class SystemNotification extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    this.isTimedNotification = this.hasAttribute('timed-notification')
+
+    this.renderSystemNotification = event => {
+      this.renderHTML(event.detail)
+    }
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
-    this.renderHTML()
+
+    if (!this.isTimedNotification) {
+      this.renderHTML()
+    }
+
+    if (this.isTimedNotification) {
+      document.body.addEventListener('render-timed-system-notification', this.renderSystemNotification)
+    }
+  }
+
+  disconnectedCallback () {
+    if (this.isTimedNotification) {
+      document.body.removeEventListener('render-timed-system-notification', this.renderSystemNotification)
+    }
   }
 
   /**
@@ -46,7 +64,8 @@ export default class SystemNotification extends Shadow() {
         :host .icon {
             position: relative;
         }
-        :host .icon img {
+        :host .icon img,
+        :host svg {
             max-height: var(--icon-max-height, var(--icon-default-width));
             max-width: var(--icon-max-width, var(--icon-default-width));
             height: var(--icon-height, auto);
@@ -97,19 +116,66 @@ export default class SystemNotification extends Shadow() {
    *
    * @return {void}
    */
-  renderHTML () {
-    const iconBadge = this.getAttribute('icon-badge') ? `<div class="icon-badge">${this.getAttribute('icon-badge')}</div>` : ''
-    const icon = this.getAttribute('icon-src') ? `<div class="icon"><img src="${this.getAttribute('icon-src')}" alt="icon-notification" />${iconBadge}</div>` : ''
-    const title = this.getAttribute('title') ? `<div class="title"><h3>${this.getAttribute('title')}</h3></div>` : ''
-    const type = this.getAttribute('type') || ''
-    const description = `<div class="description">${this.innerHTML}</div>`
+  renderHTML (timedNotificationData) {
+    const iconBadge = this.getAttribute('icon-badge') || timedNotificationData?.iconBadge || ''
+    const icon = this.getAttribute('icon-src') || timedNotificationData?.icon || ''
+    const title = this.getAttribute('title') || timedNotificationData?.title || ''
+    const type = this.getAttribute('type') || timedNotificationData?.type || ''
+    const description = timedNotificationData?.description || this.innerHTML || ''
+
+    if (timedNotificationData && this.isTimedNotification) {
+      const duration = timedNotificationData.duration
+      const positionUnit = timedNotificationData.position.unit ?? 'px'
+
+      const position = {
+        position: timedNotificationData.position.position ?? 'fixed',
+        top: timedNotificationData.position.top ? timedNotificationData.position.top + positionUnit : '',
+        right: timedNotificationData.position.right ? timedNotificationData.position.right + positionUnit : '',
+        bottom: timedNotificationData.position.bottom ? timedNotificationData.position.bottom + positionUnit : '',
+        left: timedNotificationData.position.left ? timedNotificationData.position.left + positionUnit : ''
+      }
+
+      this.css = /* css */`
+      :host {
+        position: ${position.position};
+        top: ${position.top};
+        right: ${position.right};
+        bottom: ${position.bottom};
+        left: ${position.left};
+        z-index: 55555;
+        width: auto;
+        animation: var(--show, show .3s ease-out);
+      }
+      @keyframes show {
+       0%{opacity: 0}
+       100%{opacity: 1}
+     }`
+      this.renderCSS()
+      setTimeout(() => {
+        this.html = ''
+      }, duration)
+    }
 
     this.html = /* html */`
-        <div class="system-notification system-${type}">
-            ${icon}
-            ${title}
-            ${description}
-        </div>
+      <div class="system-notification system-${type}" role="alert">
+        ${icon
+        ? /* html */ `<div class="icon">
+                          <img src="${icon}" alt="icon-notification" />
+                            ${iconBadge
+          ? /* html */ `<div class="icon-badge">${iconBadge}</div>`
+          : ''}
+                        </div>`
+        : ''
+      }
+        ${title
+        ? /* html */ `<div class="title"><h3>${title}</h3></div>`
+        : ''
+      }
+        ${description
+        ? /* html */ `<div class="description">${description}</div>`
+        : ''
+      }
+      </div>
     `
   }
 }

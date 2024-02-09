@@ -22,16 +22,22 @@ export default class Dialog extends Shadow() {
     }
     const close = () => {
       this.dialog.classList.add('closed')
-      setTimeout(() => this.dialog.close(), this.getAttribute('namespace') === 'dialog-top-slide-in-' ? 300 : 0)
+      setTimeout(() => this.dialog.close(), this.getAttribute('namespace') === 'dialog-top-slide-in-' || this.getAttribute('namespace') === 'dialog-left-slide-in-'
+        ? 300
+        : 0)
     }
 
     this.clickEventListener = event => {
+      event.stopPropagation()
+
       // click on backdrop
       if (event.composedPath()[0] === this.dialog) {
         const rect = this.dialog.getBoundingClientRect()
         if (event.clientY < rect.top || event.clientY > rect.bottom || event.clientX < rect.left || event.clientX > rect.right) close()
         return
       }
+
+      // click on id
       const target = event.composedPath().find(node => node.hasAttribute && node.hasAttribute('id'))
       if (!target) return
       switch (target.getAttribute('id')) {
@@ -43,6 +49,7 @@ export default class Dialog extends Shadow() {
           show('showModal')
           break
         case 'close':
+        case 'close-back':
           close()
           break
       }
@@ -108,6 +115,16 @@ export default class Dialog extends Shadow() {
       case 'dialog-top-slide-in-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./top-slide-in-/top-slide-in-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
+      case 'dialog-left-slide-in-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./left-slide-in-/left-slide-in-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
+      case 'dialog-left-slide-in-without-background-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./left-slide-in-without-background-/left-slide-in-without-background-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
       default:

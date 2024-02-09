@@ -184,6 +184,7 @@ export default class Button extends Hover() {
         display: inline-block;
         padding: var(--label-padding, 0);
         margin: var(--label-margin, 0);
+        ${this.hasAttribute('no-pointer-events') ? 'pointer-events: none;' : ''}
         position: relative;
         text-align: var(--label-text-align, center);
         white-space: var(--label-white-space, inherit);

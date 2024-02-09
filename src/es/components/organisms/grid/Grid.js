@@ -49,14 +49,105 @@ export default class Grid extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+      :host {
+        ${this.hasAttribute('width')
+          ? `width: ${this.getAttribute('width') || 'auto'} !important;`
+          : ''
+        }
+      }
       :host > section {
         display:grid;
-        ${this.hasAttribute('height')
-        ? `height: ${this.getAttribute('height') || '100%'};`
-        : ''
-      }
+          ${this.hasAttribute('height')
+            ? `height: ${this.getAttribute('height') || '100%'};`
+            : ''
+          }
       }
     `
+    if (this.hasAttribute('auto-fit')) {
+      this.css = /* css */`
+      :host > section {
+        grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit') || '12.5em'}, 1fr));
+        grid-template-rows: auto;
+      }
+    `
+    }
+    if (this.hasAttribute('auto-fill')) {
+      this.css = /* css */`
+      :host > section {
+        grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill') || '12.5em'}, 1fr));
+        grid-template-rows: auto;
+      }
+    `
+    }
+    if (this.getAttribute('gap')) {
+      this.css = /* css */`
+      :host > section {
+        gap: ${this.getAttribute('gap')};
+      }
+    `
+    }
+    if (this.getAttribute('padding')) {
+      this.css = /* css */`
+      :host > section > * {
+        padding: ${this.getAttribute('padding')};
+      }
+    `
+    }
+    // mobile
+    this.css = /* css */`
+      @media only screen and (max-width: _max-width_) {
+        :host {
+          ${this.hasAttribute('width-mobile')
+            ? `width: ${this.getAttribute('width-mobile') || 'auto'} !important;`
+            : ''
+          }
+        }
+        :host > section {
+            ${this.hasAttribute('height-mobile')
+            ? `height: ${this.getAttribute('height-mobile') || '100%'};`
+            : ''
+          }
+        }
+      }
+    `
+    if (this.hasAttribute('auto-fit-mobile')) {
+      this.css = /* css */`
+      @media only screen and (max-width: _max-width_) {
+        :host > section {
+          grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit-mobile') || '12.5em'}, 1fr));
+          grid-template-rows: auto;
+        }
+      }
+    `
+    }
+    if (this.hasAttribute('auto-fill-mobile')) {
+      this.css = /* css */`
+      @media only screen and (max-width: _max-width_) {
+        :host > section {
+          grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill-mobile') || '12.5em'}, 1fr));
+          grid-template-rows: auto;
+        }
+      }
+    `
+    }
+    if (this.getAttribute('gap-mobile')) {
+      this.css = /* css */`
+      @media only screen and (max-width: _max-width_) {
+        :host > section {
+          gap: ${this.getAttribute('gap-mobile')};
+        }
+      }
+    `
+    }
+    if (this.getAttribute('padding-mobile')) {
+      this.css = /* css */`
+      @media only screen and (max-width: _max-width_) {
+        :host > section {
+          padding: ${this.getAttribute('padding-mobile')};
+        }
+      }
+    `
+    }
     return this.fetchTemplate()
   }
 
@@ -126,7 +217,14 @@ export default class Grid extends Shadow() {
           // make template ${code} accessible aka. set the variables in the literal string
           fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
         })
-      
+      case 'grid-12er-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./12er-/12er-.css.js`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[0].styleNode.textContent = eval(fetchCSSParams[0].style)// eslint-disable-line no-eval
+        })
       default:
         return this.fetchCSS(styles, false)
     }
@@ -145,6 +243,55 @@ export default class Grid extends Shadow() {
     this.setAttribute('count-section-children', this.section.children.length)
     Array.from(this.section.children).forEach(node => {
       if ((node.getAttribute('style') || '').includes('background')) node.setAttribute('has-background', 'true')
+      if (node.getAttribute('grid-column')) {
+        this.css = /* css */`
+        :host > section > [grid-column="${node.getAttribute('grid-column')}"]{
+          grid-column: ${node.getAttribute('grid-column')};
+        }
+      `
+      }
+      if (node.getAttribute('grid-row')) {
+        this.css = /* css */`
+        :host > section > [grid-row="${node.getAttribute('grid-row')}"]{
+          grid-row: ${node.getAttribute('grid-row')};
+        }
+      `
+      }
+      if (node.getAttribute('padding')) {
+        this.css = /* css */`
+        :host > section > [padding="${node.getAttribute('padding')}"]{
+          padding: ${node.getAttribute('padding')};
+        }
+      `
+      }
+      // mobile
+      if (node.getAttribute('grid-column-mobile')) {
+        this.css = /* css */`
+        @media only screen and (max-width: _max-width_) {
+          :host > section > [grid-column-mobile="${node.getAttribute('grid-column-mobile')}"]{
+            grid-column: ${node.getAttribute('grid-column-mobile')};
+          }
+        }
+      `
+      }
+      if (node.getAttribute('grid-row-mobile')) {
+        this.css = /* css */`
+        @media only screen and (max-width: _max-width_) {
+          :host > section > [grid-row-mobile="${node.getAttribute('grid-row-mobile')}"]{
+            grid-row: ${node.getAttribute('grid-row-mobile')};
+          }
+        }
+      `
+      }
+      if (node.getAttribute('padding-mobile')) {
+        this.css = /* css */`
+        @media only screen and (max-width: _max-width_) {
+          :host > section > [padding-mobile="${node.getAttribute('padding-mobile')}"]{
+            padding: ${node.getAttribute('padding-mobile')};
+          }
+        }
+      `
+      }
     })
     this.html = [this.section]
     return Promise.resolve()

@@ -92,12 +92,12 @@ export default class GoogleMaps extends Shadow() {
       margin:6px 0 6px 6px;
     }
     :host .mapOverlay{
-      background:transparent; 
-      position:relative; 
+      background: transparent; 
+      position:var(--map-overlay-position, absolute); 
       width:var(--width, 100%);
       height:var(--height, 75vh);
-      margin-top: - var(--height, 75vh);
-      top: var(--height, 75vh);
+      margin-top: - var(--map-overlay-margin-top, 75vh);
+      top: var(--map-overlay-top, 0);
       pointer-events: auto;
       
     }

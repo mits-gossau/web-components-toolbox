@@ -27,11 +27,11 @@ export default class Input extends Shadow() {
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']
     this.setAttribute('role', this.inputType)
     this.setAttribute('aria-label', this.inputType)
-    if (!this.children.length) this.labelText = this.textContent
+    if (!this.children.length) this.labelText = this.textContent.trim()
 
     this.lastValue = ''
-    this.clickListener = (event, retry = true) => {
-      if (this.lastValue === this.inputField.value) {
+    this.clickListener = (event, retry = true, force = false) => {
+      if (!force && this.lastValue === this.inputField.value) {
         // when delete native icon is pushed the value is not updated when the event hits here
         if (retry && event.composedPath()[0] === this.inputField) setTimeout(() => this.clickListener(event, false), 50)
         return
@@ -53,6 +53,7 @@ export default class Input extends Shadow() {
       }
     }
     this.changeListener = event => this.clickListener(event)
+    this.focusListener = event => this.clickListener(event, undefined, true)
     this.keydownTimeoutId = null
     this.keydownListener = event => {
       if (this.root.querySelector(':focus') !== this.inputField) return
@@ -102,6 +103,7 @@ export default class Input extends Shadow() {
           this.searchButton.addEventListener('click', this.clickListener)
         }
         if (this.hasAttribute('change-listener')) this.inputField.addEventListener('change', this.changeListener)
+        if (this.hasAttribute('focus-listener')) this.inputField.addEventListener('focus', this.focusListener)
         document.addEventListener('keydown', this.keydownListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
         if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
@@ -118,6 +120,7 @@ export default class Input extends Shadow() {
         this.searchButton.removeEventListener('click', this.clickListener)
       }
       if (this.hasAttribute('change-listener')) this.inputField.removeEventListener('change', this.changeListener)
+      if (this.hasAttribute('focus-listener')) this.inputField.removeEventListener('focus', this.focusListener)
       document.removeEventListener('keydown', this.keydownListener)
       if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     }
@@ -188,12 +191,13 @@ export default class Input extends Shadow() {
         width: 100%;
         font-family: inherit;
         font-size: var(--input-font-size, var(--font-size));
-        line-height: 1.4;
+        line-height: var(--input-line-height, 1.4);
         color: var(--input-color, var(--color));
         appearance: none;
         background: var(--input-bg-color, var(--m-gray-200));
         border: var(--border, 1px solid transparent);
         border-radius: var(--border-radius, 0.5em);
+        text-overflow: var(--text-overflow, ellipsis);
         transition: background ease-out .3s, border-color ease-out .3s;
       }
 
@@ -349,8 +353,11 @@ export default class Input extends Shadow() {
         :host([search]) input::-webkit-search-cancel-button {
           margin-right: 2.5em;
         }
-        label, input, :host([search]) button {
+        label, :host([search]) button {
           font-size: var(--font-size-mobile, var(--font-size));
+        }
+        input {
+          font-size: var(--input-font-size-mobile, var(--input-font-size, var(--font-size-mobile, var(--font-size))));
         }
       }
     `
@@ -422,7 +429,7 @@ export default class Input extends Shadow() {
     return (this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`], true).then(htmls => `<button type="button" title="${this.iconName}">${htmls[0]}</button>`))
   }
 
-  focus() {
+  focus () {
     this.inputField.focus()
   }
 
