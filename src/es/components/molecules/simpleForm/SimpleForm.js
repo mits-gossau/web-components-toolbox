@@ -719,6 +719,7 @@ export default class SimpleForm extends Shadow() {
           if (attribute.name && attribute.value) newImage.setAttribute(attribute.name, attribute.value)
         })
         image.replaceWith(newImage)
+        image = newImage
       })
       // sound image click event behavior
       sound.addEventListener('click', event => {
