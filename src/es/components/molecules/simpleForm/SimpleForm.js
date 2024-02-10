@@ -727,7 +727,7 @@ export default class SimpleForm extends Shadow() {
         const audio = document.createElement('audio')
         audio.setAttribute('src', sound.getAttribute('href'))
         const source = document.createElement('source')
-        source.setAttribute('type', 'audio/wav')
+        source.setAttribute('type', 'audio/x-wav')
         source.setAttribute('src', sound.getAttribute('href'))
         audio.appendChild(source)
         audio.play()
