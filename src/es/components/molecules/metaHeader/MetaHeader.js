@@ -45,6 +45,7 @@ export default class MetaHeader extends Shadow() {
       @media only screen and (max-width: _max-width_) {
         :host {
           justify-content: var(--justify-content-mobile, space-between);
+          width: var(--width-mobile, var(--width, auto));
         }
         :host div {
           flex: var(--div-flex-mobile, 1);

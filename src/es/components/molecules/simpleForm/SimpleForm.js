@@ -674,26 +674,26 @@ export default class SimpleForm extends Shadow() {
     let image, reload, sound
     if ((image = this.root.querySelector('#Captcha_CaptchaImage')) && (reload = this.root.querySelector('#Captcha_ReloadIcon')) && (sound = this.root.querySelector('#Captcha_SoundLink'))) {
       this.css = /* css */`
-        :host captcha {
+        :host #captcha, :host captcha {
           display: block;
         }
-        :host captcha > * {
+        :host #captcha > *, :host captcha > * {
           display: flex;
           justify-content: space-between;
         }
-        :host captcha .BDC_CaptchaIconsDiv {
+        :host #captcha .BDC_CaptchaIconsDiv, :host captcha .BDC_CaptchaIconsDiv {
           display: flex;
           flex-direction: column;
         }
-        :host captcha .BDC_CaptchaIconsDiv > a {
+        :host #captcha .BDC_CaptchaIconsDiv > a, :host captcha .BDC_CaptchaIconsDiv > a {
           margin: 0 0 0.1em 0.1em;
         }
-        :host captcha a[href^="//captcha.org"] {
+        :host #captcha a[href^="//captcha.org"], :host captcha a[href^="//captcha.org"] {
           font-size: 0.75em;
           font-style: italic;
         }
       `
-      const captcha = SimpleForm.walksUpDomQueryMatching(image, 'captcha', this.root)
+      const captcha = SimpleForm.walksUpDomQueryMatching(image, '#captcha,captcha', this.root)
       // clean out all inline styles
       Array.from(captcha.querySelectorAll('*[style]')).forEach(node => node.removeAttribute('style'))
       // remove unwanted spacers
