@@ -11,6 +11,10 @@
 :host > section > * {
     padding: var(--grid-2columns-content-stage-padding-custom, var(--content-spacing));
 }
+:host .aside-image {
+    padding: var(--mdx-sys-spacing-flex-large-xs);
+    text-align: right;
+}
 /* ****************************************** first-container-vertical ****************************************** */
 /* filter left */
 :host([first-container-vertical]) > section > *:nth-child(1) {
