@@ -11,9 +11,49 @@
 :host > section > * {
     padding: var(--grid-2columns-content-stage-padding-custom, var(--content-spacing));
 }
+:host .topline {
+    display: flex;
+}
+:host .topline a {
+    align-items: center;
+    display: inline-flex;
+    width: 100%;
+}
+:host .topline ks-a-button {
+    display: none;
+}
+:host aside ks-a-button {
+    display: inline-block;
+}
+:host a {
+    color: white;
+}
+:host a-icon-mdx {
+    color: var(--grid-2columns-content-stage-address-icon-color-custom, white);
+    display: inline-block;
+    position: relative;
+    top: 0.125em;
+}
+:host address {
+    align-items: flex-start;
+    display: flex;
+    font-style: normal;
+    gap: var(--grid-2columns-content-stage-address-gap-custom);
+}
+:host address a-icon-mdx {
+    top: 0;
+}
+
 :host .aside-image {
     padding: var(--grid-2columns-content-stage-aside-image-padding-custom);
     text-align: right;
+}
+:host .label {
+    border: var(--grid-2columns-content-stage-distinction-border-custom);
+    border-radius: var(--grid-2columns-content-stage-distinction-border-radius-custom);
+    font: var(--grid-2columns-content-stage-distinction-font-custom);
+    margin-left: var(--grid-2columns-content-stage-distinction-margin-left-custom);
+    padding: var(--grid-2columns-content-stage-distinction-padding-custom);
 }
 /* ****************************************** first-container-vertical ****************************************** */
 /* filter left */
@@ -102,6 +142,12 @@
     }
     :host > section p.intro {
         font-size: 18px;
+    }
+    :host .topline ks-a-button {
+        display: inline-block;
+    }
+    :host aside ks-a-button {
+        display: none;
     }
     :host([first-container-vertical]) > section > *:nth-child(1) {
         padding: var(--grid-2columns-content-stage-first-column-padding-mobile-custom, var(--grid-2columns-content-stage-padding-mobile-custom));
