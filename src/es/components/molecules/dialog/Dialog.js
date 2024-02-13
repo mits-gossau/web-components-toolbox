@@ -15,12 +15,12 @@ export default class Dialog extends Shadow() {
     /**
      * @param {'show'|'showModal'} [command='show']
      */
-    const show = (command = 'show') => {
+    this.show = (command = 'show') => {
       this.dialog.classList.remove('closed')
       this.dialog[command]()
       Array.from(this.dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
     }
-    const close = () => {
+    this.close = () => {
       this.dialog.classList.add('closed')
       setTimeout(() => this.dialog.close(), this.getAttribute('namespace') === 'dialog-top-slide-in-' || this.getAttribute('namespace') === 'dialog-left-slide-in-'
         ? 300
@@ -28,31 +28,26 @@ export default class Dialog extends Shadow() {
     }
 
     this.clickEventListener = event => {
-      event.stopPropagation()
-
       // click on backdrop
       if (event.composedPath()[0] === this.dialog) {
         const rect = this.dialog.getBoundingClientRect()
-        if (event.clientY < rect.top || event.clientY > rect.bottom || event.clientX < rect.left || event.clientX > rect.right) close()
-        return
+        if (event.clientY < rect.top || event.clientY > rect.bottom || event.clientX < rect.left || event.clientX > rect.right) {
+          event.stopPropagation()
+          this.close()
+        }
       }
-
-      // click on id
-      const target = event.composedPath().find(node => node.hasAttribute && node.hasAttribute('id'))
-      if (!target) return
-      switch (target.getAttribute('id')) {
-        case 'show':
-          show()
-          break
-        case 'show-modal':
-        case 'open':
-          show('showModal')
-          break
-        case 'close':
-        case 'close-back':
-          close()
-          break
+    }
+    this.showClickEventListener = event => {
+      event.stopPropagation()
+      if (event.target.getAttribute('id') === 'show') {
+        this.show()
+      } else {
+        this.show('showModal')
       }
+    }
+    this.closeClickEventListener = event => {
+      event.stopPropagation()
+      this.close()
     }
   }
 
@@ -60,10 +55,16 @@ export default class Dialog extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     this.addEventListener('click', this.clickEventListener)
+    // From web components the event does not bubble up to this host
+    this.showNodes.forEach(node => node.addEventListener('click', this.showClickEventListener))
+    this.closeNodes.forEach(node => node.addEventListener('click', this.closeClickEventListener))
   }
 
   disconnectedCallback () {
     this.removeEventListener('click', this.clickEventListener)
+    // From web components the event does not bubble up to this host
+    this.showNodes.forEach(node => node.removeEventListener('click', this.showClickEventListener))
+    this.closeNodes.forEach(node => node.removeEventListener('click', this.closeClickEventListener))
   }
 
   /**
@@ -88,6 +89,11 @@ export default class Dialog extends Shadow() {
    * renders the css
    */
   renderCSS () {
+    this.css = /* css */`
+      :host > dialog {
+        background-color: var(--background-color, canvas);x
+      }
+    `
     return this.fetchTemplate()
   }
 
@@ -160,5 +166,13 @@ export default class Dialog extends Shadow() {
 
   get dialog () {
     return this.root.querySelector('dialog')
+  }
+
+  get showNodes () {
+    return Array.from(this.root.querySelectorAll('[id^=show],[id=open]'))
+  }
+
+  get closeNodes () {
+    return Array.from(this.root.querySelectorAll('[id^=close]'))
   }
 }
