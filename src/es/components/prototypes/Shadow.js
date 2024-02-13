@@ -42,6 +42,7 @@
     disconnectedCallback,
     Shadow.parseAttribute,
     Shadow.getMode,
+    keepCloneOutsideShadowRoot,
     mode,
     namespace,
     namespaceFallback,
@@ -72,13 +73,17 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   /**
    * Creates an instance of Shadow. The constructor will be called for every custom element using this class when initially created.
    *
-   * @param {{mode?: mode | undefined, namespace?: string | undefined, namespaceFallback?: boolean | undefined, mobileBreakpoint?: string, importMetaUrl?: string | undefined}} [options = {mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined}]
+   * @param {{keepCloneOutsideShadowRoot?: boolean | undefined, mode?: mode | undefined, namespace?: string | undefined, namespaceFallback?: boolean | undefined, mobileBreakpoint?: string, importMetaUrl?: string | undefined}} [options = {keepCloneOutsideShadowRoot:undefined, mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined}]
    * @param {*} args
    */
-  constructor (options = { mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined }, ...args) {
+  constructor (options = { keepCloneOutsideShadowRoot: undefined, mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined }, ...args) {
     // @ts-ignore
     super(...args)
 
+    // keeps a copy of all content outside the shadowRoot for future cloning
+    if (options.keepCloneOutsideShadowRoot) this.setAttribute('keep-clone-outside-shadow-root', '')
+    /** @type {boolean} */
+    this.keepCloneOutsideShadowRoot = this.hasAttribute('keep-clone-outside-shadow-root')
     /**
      * Digest attribute to have shadow or not
      * open, closed or false (no shadow) Note: open or closed only differs by exposing shadowRoot, which could be worked around anyways.
@@ -90,9 +95,14 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (this.hasShadowRoot) {
       // @ts-ignore
       const shadowRoot = this.attachShadow({ mode: this.mode })
+      const appendedNodes = []
       Array.from(this.children).forEach(node => {
-        if (!node.getAttribute('slot')) shadowRoot.appendChild(node)
+        if (!node.getAttribute('slot')) {
+          shadowRoot.appendChild(node)
+          appendedNodes.push(node)
+        }
       })
+      if (this.keepCloneOutsideShadowRoot) appendedNodes.forEach(node => this.appendChild(node.cloneNode(true)))
       this.setAttribute('tabindex', '0')
     }
     if (typeof options.namespace === 'string') this.setAttribute('namespace', options.namespace)
