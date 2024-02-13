@@ -290,25 +290,35 @@ export default class NavigationTwo extends Mutation() {
               event.currentTarget.parentNode.parentNode.classList.add("close-left-slide")
 
               // create new a tag with text of li which navigates one level up
-              if (!event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").querySelector("div > a")) {
-                let navBackATag = event.currentTarget.cloneNode(true)
-                navBackATag.querySelector("a-icon-mdx").setAttribute("icon-name", "ChevronLeft")
-                navBackATag.classList.add("navigation-back")
-                let navBackATagChevron = navBackATag.querySelector("a-icon-mdx")
-                navBackATag.prepend(navBackATagChevron)
-                navBackATag.addEventListener('click', (event) => {
-                  event.currentTarget.parentNode.classList.remove("open-right-slide")
-                  event.currentTarget.parentNode.previousElementSibling.classList.remove("close-left-slide")
-                  event.currentTarget.parentNode.classList.add("close-right-slide")
-                  event.currentTarget.parentNode.previousElementSibling.classList.add("open-left-slide")
-                  // remove subNav divs from next to ul 
-                  let currentSubNavs = Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('nav > div[nav-level]'))
-                  // remove element after animation is done => TODO create global animation duration variable
-                  setTimeout(()=> currentSubNavs.forEach(subNav => subNav.parentNode.removeChild(subNav)), 350)
-                })
-                // add click eventlistener which bring back the main navigation
-                event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").prepend(navBackATag)
+              if (event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").querySelector("div > a")) {
+               let currentNavBackATag = event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").querySelector("div > a")
+               currentNavBackATag.parentElement.removeChild(currentNavBackATag)
               }
+
+              let navBackATag = document.createElement("a")
+              let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute("mobile-navigation-name")
+              navBackATag.innerHTML = /* HTML */`
+              <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronLeft" color="red" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
+              <span>${mobileNavigationName}</span>
+              `
+              navBackATag.classList.add("navigation-back")
+              navBackATag.addEventListener('click', (event) => {
+                // @ts-ignore
+                event.currentTarget.parentNode.classList.remove("open-right-slide")
+                // @ts-ignore
+                event.currentTarget.parentNode.previousElementSibling.classList.remove("close-left-slide")
+                // @ts-ignore
+                event.currentTarget.parentNode.classList.add("close-right-slide")
+                // @ts-ignore
+                event.currentTarget.parentNode.previousElementSibling.classList.add("open-left-slide")
+                // remove subNav divs from next to ul 
+                // @ts-ignore
+                let currentSubNavs = Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('nav > div[nav-level]'))
+                // remove element after animation is done => TODO create global animation duration variable
+                setTimeout(() => currentSubNavs.forEach(subNav => subNav.parentNode.removeChild(subNav)), 350)
+              })
+              // add click eventlistener which bring back the main navigation
+              event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").prepend(navBackATag)
               event.currentTarget.parentNode.parentNode.classList.remove("open-left-slide")
               event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").classList.add("open-right-slide")
             }
@@ -329,10 +339,40 @@ export default class NavigationTwo extends Mutation() {
                 wrapperDivNextSiblingDivUls.forEach(ul => {
                   ul.style.display = "none"
                 })
+
+                if (wrapperDivNextSiblingDiv) {
+                  if (wrapperDivNextSiblingDiv.querySelector("div > a")) {
+                    let currentNavBackATag = wrapperDivNextSiblingDiv.querySelector("div > a")
+                    currentNavBackATag.parentElement.removeChild(currentNavBackATag)
+                  }
+                  let navBackATag2 = document.createElement("a")
+                  let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute("mobile-navigation-name")
+                  navBackATag2.innerHTML = /* HTML */`
+                  <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronLeft" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
+                  <span>${mobileNavigationName}</span>
+                  `
+                  navBackATag2.classList.add("navigation-back")
+
+                  navBackATag2.addEventListener('click', (event) => {
+                    // @ts-ignore
+                    event.currentTarget.parentNode.className = ""
+                    // @ts-ignore
+                    event.currentTarget.parentNode.previousElementSibling.className = ""
+                    // @ts-ignore
+                    event.currentTarget.parentNode.classList.add("close-right-slide")
+                    // @ts-ignore
+                    event.currentTarget.parentNode.previousElementSibling.classList.add("open-left-slide")
+                    // @ts-ignore
+                    console.log(event.currentTarget)
+                  })
+                  subUl.parentElement.prepend(navBackATag2)
+                }
+
                 subUl.style.display = "block"
                 subUl.scrollTo(0, 0)
+                wrapperDiv.className = ""
                 wrapperDiv.classList.add("close-left-slide")
-                wrapperDiv.classList.remove("open-right-slide")
+                wrapperDivNextSiblingDiv.className = ""
                 wrapperDivNextSiblingDiv.classList.add("open-right-slide")
                 if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = "none")
               } else {
@@ -643,6 +683,10 @@ export default class NavigationTwo extends Mutation() {
     }
     /* Mobile layout */
     @media only screen and (max-width: _max-width_){
+      :host {
+        --ul-li-padding-left: 0;
+      }
+
       :host .close-left-slide {
         animation: closeLeft 0.3s ease-in forwards;
       }
@@ -658,6 +702,40 @@ export default class NavigationTwo extends Mutation() {
       :host .open-right-slide {
         animation: openRight 0.3s ease-in forwards;
       }
+
+      :host .navigation-back {
+        display: flex;
+        padding: var(--content-spacing-mobile);
+        color: #262626;
+        font-weight: 500;
+        margin:0;
+      }
+
+      :host .navigation-back a-icon-mdx {
+        --icon-link-list-color: #262626;
+      }
+
+      :host li ks-m-nav-level-item {
+        --nav-level-item-default-height: 3.25em;
+        --nav-level-item-default-padding: 0 0.75em 0 0;
+        --nav-level-item-default-margin: 2px 0;
+      }
+
+      :host li.list-title {
+        padding: 1em 0;
+      }
+
+      :host li.list-title a {
+        font-weight: 500;
+        font-size: 1.1em;
+      }
+
+      :host li.list-title a span {
+        font-weight: 300;
+        font-size: 0.8em;
+        color: #262626;
+      }
+
 
       :host > nav {
         position: relative;
@@ -678,6 +756,7 @@ export default class NavigationTwo extends Mutation() {
       :host > nav > div {
         position: absolute;
         border-top: 1px solid #E0E0E0;
+        margin-top: 1em;
         width: 100vw;
         right: -100vw;
       }
@@ -696,6 +775,7 @@ export default class NavigationTwo extends Mutation() {
         display: flex;
         justify-content: space-between;
         margin: 0;
+        font-weight: 500;
       }
 
       :host > nav > ul > li > a > span {
@@ -852,6 +932,7 @@ export default class NavigationTwo extends Mutation() {
       })
     } else {
       Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+
       // add list-item-element
       Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi, i) => {
         let currentATag
@@ -861,6 +942,10 @@ export default class NavigationTwo extends Mutation() {
           mainLi.querySelector("a").insertAdjacentHTML('beforeend', /* html*/`
           <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronRight" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
           ` );
+        
+        // Add class for title li a element
+        let subTitleLiTags = Array.from(mainLi.querySelectorAll("li")).filter(li => !li.querySelector("ks-m-nav-level-item"))
+        subTitleLiTags.forEach(li => li.classList.add("list-title"))
       })
 
       // extract section element
