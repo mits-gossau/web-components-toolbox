@@ -134,7 +134,7 @@ export default class ProductList extends Shadow() {
     
     @media only screen and (max-width: _max-width_) {
       :host > m-load-template-tag {
-        flex: var(--m-load-template-tag-flex-mobile, 1 1 35%);
+        flex: var(--m-load-template-tag-flex-mobile, 0 1 35%);
       } 
     }
     `
