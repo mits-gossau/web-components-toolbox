@@ -264,17 +264,52 @@ export default class NavigationTwo extends Mutation() {
                 }))
               }
             }
+            // set aria expended attributes
+            Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll("li")).forEach(li => {
+              if (li.hasAttribute("sub-nav")) li.setAttribute("aria-expanded", "false")
+            })
+
             // clean state between main li switching
             if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
-              // hide main navigation
-              event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
-              const sectionChildren = Array.from(event.currentTarget.parentNode.querySelector("section").children)
-              sectionChildren.forEach((node) => {
-                // node.hidden = true
-                // if (+node.getAttribute("nav-level") === 1) node.hidden = false
-                if (!node.getAttribute('slot')) event.currentTarget.parentNode.parentNode.parentNode.appendChild(node)
+              // hide all subUl height to avoid large height of nav tag
+              let subNavigationDivs = Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
+              subNavigationDivs.forEach(subNavDiv => {
+                let subNavUls = Array.from(subNavDiv.querySelectorAll("ul"))
+                subNavUls.forEach(ul => ul.style.display = "none")
               })
+              event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+
+              // hide main navigation
+              let sectionChildren = Array.from(event.currentTarget.parentNode.querySelector("section").children)
+              sectionChildren.forEach((node) => {
+                let currentNode = node.cloneNode(true)
+                Array.from(currentNode.querySelectorAll("a")).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+                if (!node.getAttribute('slot')) event.currentTarget.parentNode.parentNode.parentNode.appendChild(currentNode)
+              })
+
               event.currentTarget.parentNode.parentNode.classList.add("close-left-slide")
+
+              // create new a tag with text of li which navigates one level up
+              if (!event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").querySelector("div > a")) {
+                let navBackATag = event.currentTarget.cloneNode(true)
+                navBackATag.querySelector("a-icon-mdx").setAttribute("icon-name", "ChevronLeft")
+                navBackATag.classList.add("navigation-back")
+                let navBackATagChevron = navBackATag.querySelector("a-icon-mdx")
+                navBackATag.prepend(navBackATagChevron)
+                navBackATag.addEventListener('click', (event) => {
+                  event.currentTarget.parentNode.classList.remove("open-right-slide")
+                  event.currentTarget.parentNode.previousElementSibling.classList.remove("close-left-slide")
+                  event.currentTarget.parentNode.classList.add("close-right-slide")
+                  event.currentTarget.parentNode.previousElementSibling.classList.add("open-left-slide")
+                  // remove subNav divs from next to ul 
+                  let currentSubNavs = Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('nav > div[nav-level]'))
+                  // remove element after animation is done => TODO create global animation duration variable
+                  setTimeout(()=> currentSubNavs.forEach(subNav => subNav.parentNode.removeChild(subNav)), 350)
+                })
+                // add click eventlistener which bring back the main navigation
+                event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").prepend(navBackATag)
+              }
+              event.currentTarget.parentNode.parentNode.classList.remove("open-left-slide")
               event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").classList.add("open-right-slide")
             }
 
@@ -288,30 +323,20 @@ export default class NavigationTwo extends Mutation() {
               if (wrapperDivNextSiblingDiv.nextSibling) wrapperDivSecondNextSiblingDiv = wrapperDivNextSiblingDiv.nextSibling
               if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul")).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul"))
 
-
-              Array.from(wrapperDiv.querySelectorAll("li")).forEach(li => {
-                if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
-                li.classList.remove("hover-active")
-              })
               event.currentTarget.parentNode.setAttribute("aria-expanded", "true")
-              event.currentTarget.parentNode.classList.add("hover-active")
               let subUl = null
               if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
-                wrapperDivNextSiblingDiv.hidden = true
                 wrapperDivNextSiblingDivUls.forEach(ul => {
                   ul.style.display = "none"
-                  Array.from(ul.querySelectorAll("li")).forEach(li => {
-                    if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
-                    li.classList.remove("hover-active")
-                  })
                 })
-                subUl.parentElement.hidden = false
                 subUl.style.display = "block"
                 subUl.scrollTo(0, 0)
-                if (wrapperDivSecondNextSiblingDiv) wrapperDivSecondNextSiblingDiv.hidden = true
+                wrapperDiv.classList.add("close-left-slide")
+                wrapperDiv.classList.remove("open-right-slide")
+                wrapperDivNextSiblingDiv.classList.add("open-right-slide")
                 if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = "none")
               } else {
-
+                return
               }
 
 
@@ -622,12 +647,28 @@ export default class NavigationTwo extends Mutation() {
         animation: closeLeft 0.3s ease-in forwards;
       }
 
+      :host .open-left-slide {
+        animation: openLeft 0.3s ease-in forwards;
+      }
+
+      :host .close-right-slide {
+        animation: closeRight 0.3s ease-in forwards;
+      }
+
       :host .open-right-slide {
         animation: openRight 0.3s ease-in forwards;
       }
 
+      :host > nav {
+        position: relative;
+        height: 90vh;
+        width: 100vw;
+      }
+
       :host > nav > ul {
+        position: absolute;
         border-top: 1px solid #E0E0E0;
+        width: 100vw;
         --flex-direction:column;
         --navigation-klubschule-a-color: var(--a-color);
         --navigation-klubschule-align-items: start;
@@ -635,6 +676,9 @@ export default class NavigationTwo extends Mutation() {
       }
 
       :host > nav > div {
+        position: absolute;
+        border-top: 1px solid #E0E0E0;
+        width: 100vw;
         right: -100vw;
       }
 
@@ -672,10 +716,7 @@ export default class NavigationTwo extends Mutation() {
       }
 
       @keyframes openRight {
-        0% {
-          display: block !important;
-          right: -100vw;
-        }
+        0% {right: -100vw}
         100% {right: 0}
       }
 
@@ -686,10 +727,12 @@ export default class NavigationTwo extends Mutation() {
 
       @keyframes closeLeft {
         0% {right: 0}
-        100% {
-          right: 100vw;
-          display: none;
-        }
+        100% { right: 100vw}
+      }
+
+      @keyframes openLeft {
+        0% {right: 100vw}
+        100% { right: 0}
       }
     }
     
@@ -808,12 +851,12 @@ export default class NavigationTwo extends Mutation() {
         this.html = this.style
       })
     } else {
-      Array.from(this.root.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+      Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
       // add list-item-element
-      Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi,i) => {
+      Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi, i) => {
         let currentATag
-        mainLi.setAttribute("aria-expanded","false")
-        mainLi.setAttribute("aria-controls",`nav-level-${i+1}`)
+        mainLi.setAttribute("aria-expanded", "false")
+        mainLi.setAttribute("aria-controls", `nav-level-${i + 1}`)
         if ((currentATag = mainLi.querySelector("a")) && (!currentATag.hasAttribute("href") || currentATag.getAttribute("href") === "" || currentATag.getAttribute("href") === "#"))
           mainLi.querySelector("a").insertAdjacentHTML('beforeend', /* html*/`
           <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronRight" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
@@ -852,9 +895,21 @@ export default class NavigationTwo extends Mutation() {
         top: 0,
         behavior: 'smooth'
       })
-      // build mobile layout
-      this.buildMobileLayout()
+
+      const navElementChildren = Array.from(this.root.querySelector("nav").children)
+      if (this.getAttribute("aria-expanded") === "false" && navElementChildren.length) {
+        navElementChildren.forEach(childEl => {
+          if (childEl.tagName === 'UL') {
+            childEl.classList.remove("close-left-slide")
+          }
+          if (childEl.hasAttribute("nav-level")) {
+            childEl.parentNode.removeChild(childEl)
+          }
+        })
+      }
     }
+
+    // maybe i dont need this anymore
     if (this.nav.getAttribute('aria-expanded') === 'true') {
       Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
         li.classList.remove('open')
@@ -907,31 +962,6 @@ export default class NavigationTwo extends Mutation() {
         })
       }
     })
-  }
-
-  buildMobileLayout() {
-    let isNavigationMenuOpen = this.parentElement.classList.contains("open")
-    // if(isNavigationMenuOpen){
-    //   let mainNavLis = Array.from(this.root.querySelectorAll("nav > ul > li"))
-    //   this.fetchModules([
-    //     {
-    //       path: `${this.importMetaUrl}'../../../../../../../../molecules/navLevelItem/NavLevelItem.js`,
-    //       name: this.getAttribute('ks-m-nav-level-item') || 'ks-m-nav-level-item'
-    //     }
-    //   ]).then(children => {
-    //     mainNavLis.forEach((li,i) => {
-    //       const mainLiChild = new children[0].constructorClass({mode:"false", mobileBreakpoint: this.mobileBreakpoint})
-    //       console.log(li.innerHTML)
-    //       mainLiChild.innerHTML = li.innerHTML
-    //       li.innerHTML = ""
-    //       li.appendChild(mainLiChild)
-    //       // const liChildren = Array.from(li.children)
-    //       // liChildren.forEach(liChild => mainLiChild.appendChild(liChild))
-    //       // li.innerHTML = ""
-    //       // li.appendChild(mainLiChild)
-    //     })
-    //   })
-    // }
   }
 
   getMedia() {
