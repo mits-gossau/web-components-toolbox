@@ -27,7 +27,7 @@ export default class MenuIcon extends Shadow() {
   constructor (...args) {
     super(...args)
 
-    this.setAttribute('id', 'hamburger')
+    if (!this.hasAttribute('id')) this.setAttribute('id', 'hamburger')
     this.setAttribute('aria-label', 'show navigation menu')
     this.setAttribute('aria-expanded', 'false')
     if (this.getMedia() === 'desktop') this.setAttribute('aria-hidden', 'true')
