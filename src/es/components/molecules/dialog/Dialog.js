@@ -16,11 +16,13 @@ export default class Dialog extends Shadow() {
      * @param {'show'|'showModal'} [command='show']
      */
     this.show = (command = 'show') => {
+      this.dispatchEvent(new CustomEvent('no-scroll', { detail: { hasNoScroll: true }, bubbles: true, cancelable: true, composed: true }))
       this.dialog.classList.remove('closed')
       this.dialog[command]()
       Array.from(this.dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
     }
     this.close = () => {
+      this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
       this.dialog.classList.add('closed')
       setTimeout(() => this.dialog.close(), this.getAttribute('namespace') === 'dialog-top-slide-in-' || this.getAttribute('namespace') === 'dialog-left-slide-in-'
         ? 300
