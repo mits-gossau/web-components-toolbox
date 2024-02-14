@@ -4,6 +4,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global FileReader */
 /* global self */
 /* global CustomEvent */
+/* global location */
+/* global grecaptcha */
 
 /**
  * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior, send it to an api endpoint or emit a custom event
@@ -163,7 +165,8 @@ export default class SimpleForm extends Shadow() {
         margin-bottom: 1em;
       }
     `
-    if (this.getAttribute('grecaptcha-key')) this.css = /* css */`
+    if (this.getAttribute('grecaptcha-key')) {
+      this.css = /* css */`
       :host [captcha-message] {
         color: var(--color-error, var(--color, black));
         opacity: 1;
@@ -173,6 +176,7 @@ export default class SimpleForm extends Shadow() {
         transition: opacity .3s ease-out;
       }
     `
+    }
     return Promise.all([this.fetchTemplate(), formPromise])
   }
 
@@ -236,58 +240,60 @@ export default class SimpleForm extends Shadow() {
           li.textContent = file.name
           ul.appendChild(li)
           // file preview
-          if (target.hasAttribute('file-preview')) SimpleForm.readFile(file, true).then(([base64, typeMatch]) => {
-            const div = document.createElement('div')
-            switch (typeMatch[1]) {
+          if (target.hasAttribute('file-preview')) {
+            SimpleForm.readFile(file, true).then(([base64, typeMatch]) => {
+              const div = document.createElement('div')
+              switch (typeMatch[1]) {
               // video-, pdf- preview
-              case 'image':
-                div.innerHTML = /* html */`
+                case 'image':
+                  div.innerHTML = /* html */`
                   <a-picture alt="${file.name}" defaultSource="${base64}"></a-picture>
                 `
-                label.classList.add('file-preview')
-                this.fetchModules([
-                  {
-                    path: `${this.importMetaUrl}../../atoms/picture/Picture.js`,
-                    name: 'a-picture'
-                  }
-                ])
-                li.prepend(div.children[0])
-                break
-              case 'video':
+                  label.classList.add('file-preview')
+                  this.fetchModules([
+                    {
+                      path: `${this.importMetaUrl}../../atoms/picture/Picture.js`,
+                      name: 'a-picture'
+                    }
+                  ])
+                  li.prepend(div.children[0])
+                  break
+                case 'video':
                 // with fallback without type, then it would try to play video/mp4
-                div.innerHTML = /* html */`
+                  div.innerHTML = /* html */`
                   <a-video muted autoplay loop controls sources="[{'src':'${base64}', 'type':'${typeMatch[1]}/${typeMatch[2]}'}, {'src':'${base64}'}]"></a-video>
                 `
-                label.classList.add('file-preview')
-                this.fetchModules([
-                  {
-                    path: `${this.importMetaUrl}../../atoms/video/Video.js`,
-                    name: 'a-video'
-                  }
-                ])
-                li.prepend(div.children[0])
-                break
-              case 'text':
-              case 'application':
-                if (typeMatch[2] !== 'pdf' && typeMatch[2] !== 'plain') break
-                div.innerHTML = /* html */`
+                  label.classList.add('file-preview')
+                  this.fetchModules([
+                    {
+                      path: `${this.importMetaUrl}../../atoms/video/Video.js`,
+                      name: 'a-video'
+                    }
+                  ])
+                  li.prepend(div.children[0])
+                  break
+                case 'text':
+                case 'application':
+                  if (typeMatch[2] !== 'pdf' && typeMatch[2] !== 'plain') break
+                  div.innerHTML = /* html */`
                   <a-iframe>
                     <template>
                       <iframe src="${base64}" frameborder="0"></iframe>
                     </template>
                   </a-iframe>
                 `
-                label.classList.add('file-preview')
-                this.fetchModules([
-                  {
-                    path: `${this.importMetaUrl}../../atoms/iframe/Iframe.js`,
-                    name: 'a-iframe'
-                  }
-                ])
-                li.prepend(div.children[0])
-                break
-            }
-          })
+                  label.classList.add('file-preview')
+                  this.fetchModules([
+                    {
+                      path: `${this.importMetaUrl}../../atoms/iframe/Iframe.js`,
+                      name: 'a-iframe'
+                    }
+                  ])
+                  li.prepend(div.children[0])
+                  break
+              }
+            })
+          }
           label.appendChild(ul)
         })
         target.addEventListener('click', event => {
@@ -384,7 +390,7 @@ export default class SimpleForm extends Shadow() {
                     // loop through the object
                     : await loop(obj[key][i] || structuredClone(obj[key][0]), this.getInputs(parentOfMultipleInput), parentOfMultipleInput)
                   : undefined
-                  obj[key][i] = value
+                obj[key][i] = value
               }))
               // set falsy fields to empty
               const clone = structuredClone(obj[key])
@@ -487,7 +493,7 @@ export default class SimpleForm extends Shadow() {
     switch (input.getAttribute('type')) {
       case 'file':
         // @ts-ignore
-        const filePromises = Array.from(input.files).map(file => SimpleForm.readFile(file))
+        const filePromises = Array.from(input.files).map(file => SimpleForm.readFile(file)) // eslint-disable-line
         if (input.hasAttribute('multiple')) return Promise.all(filePromises)
         return filePromises[0]
       case 'checkbox':
@@ -545,7 +551,7 @@ export default class SimpleForm extends Shadow() {
    */
   static walksUpDomQuerySelecting (el, selector, root = document.documentElement) {
     if (el.querySelector(selector)) return el
-    while ((el = el.parentNode || root) && el !== root) {
+    while ((el = el.parentNode || root) && el !== root) { // eslint-disable-line
       if (el.querySelector(selector)) return el
     }
     return el
@@ -562,7 +568,7 @@ export default class SimpleForm extends Shadow() {
    */
   static walksUpDomQueryMatching (el, selector, root = document.documentElement) {
     if (el.matches(selector)) return el
-    while ((el = el.parentNode || root) && el !== root) {
+    while ((el = el.parentNode || root) && el !== root) { // eslint-disable-line
       if (el.matches(selector)) return el
     }
     return el
@@ -629,7 +635,7 @@ export default class SimpleForm extends Shadow() {
         const dialog = document.createElement('dialog')
         dialog.setAttribute('open', 'true')
         dialog.setAttribute('autofocus', 'true')
-        let style = `
+        const style = `
           position: fixed;
           bottom: 14px;
           border: 0;
