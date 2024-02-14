@@ -57,10 +57,10 @@ export default class NavigationTwo extends Mutation() {
       }
 
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
-      if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((!this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) {
+      if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) {
         this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
           detail: {
-            hasNoScroll: true,
+            hasNoScroll: !this.classList.contains('open'),
             origEvent: event,
             this: this
           },
@@ -70,54 +70,30 @@ export default class NavigationTwo extends Mutation() {
         }))
       }
 
-      if (this.getMedia() !== 'desktop') {
+      if (!this.isDesktop) {
         this.nav.setAttribute('aria-expanded', 'true')
         if (this.getRootNode().host.shadowRoot && this.getRootNode().host.shadowRoot.querySelector("header") && this.getRootNode().host.shadowRoot.querySelector("header").classList.contains("open")) {
           this.getRootNode().host.shadowRoot.querySelector("a-menu-icon").click()
+
+          this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+            detail: {
+              hasNoScroll: true,
+              origEvent: event,
+              this: this
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
         }
       }
 
-      // remove from here and put in if because on this way it calls always
-      this.hideAndClearDesktopSubNavigationDivs()
+      if (this.isDesktop) this.hideAndClearDesktopSubNavigationDivs()
+
       this.openClose()
 
       if (oldIsDesktopValue !== this.isDesktop) {
-        let currentNav = this.root.querySelector("nav")
-        if (this.isDesktop) {
-          // set nav element from mobile to desktop compatible
-          let mainATags = Array.from(currentNav.querySelectorAll("nav > ul > li > a"))
-          if (mainATags.length > 0) {
-            mainATags.forEach(a => {
-              let aTagChildren = Array.from(a.children)
-              let aTagMDXIcon = aTagChildren?.find(child => child.tagName === "A-ICON-MDX")
-              if (aTagChildren.length && aTagMDXIcon) aTagMDXIcon.parentElement.removeChild(aTagMDXIcon)
-            })
-          }
-        } else {
-          // set nav from desktop to mobile compatible
-          let desktopOWrappers = Array.from(currentNav.querySelectorAll("o-nav-wrapper"))
-          if (desktopOWrappers.length > 0) {
-            desktopOWrappers.forEach(wrapper => {
-              // remove close icon
-              let closeIcon
-              if (closeIcon = wrapper.querySelector("section a.close-icon")) {
-                closeIcon.parentElement.removeChild(closeIcon)
-              }
-
-              // put section outside of o nav wrapper
-              let wrapperSection
-              if (wrapperSection = wrapper.querySelector("section")) {
-                let subNavigationDivs = Array.from(wrapperSection.querySelectorAll("div[nav-level]"))
-                if (subNavigationDivs.length > 0) {
-                  subNavigationDivs.forEach(div => div.hidden = false)
-                }
-                wrapper.parentElement.appendChild(wrapperSection)
-                wrapper.parentElement.removeChild(wrapper)
-              }
-            })
-          }
-        }
-        this.renderHTML(currentNav)
+        this.htmlReBuilderByLayoutChange()
       }
     }
 
@@ -140,7 +116,9 @@ export default class NavigationTwo extends Mutation() {
           }
         }
       }
+
       if (this.isDesktop) this.hideAndClearDesktopSubNavigationDivs()
+
       this.openClose()
     }
 
@@ -153,7 +131,7 @@ export default class NavigationTwo extends Mutation() {
             event.preventDefault()
             if (this.focusLostClose) {
               event.stopPropagation()
-              if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
+              if (this.hasAttribute('no-scroll')) {
                 this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
                   detail: {
                     hasNoScroll: true,
@@ -1033,8 +1011,7 @@ export default class NavigationTwo extends Mutation() {
   }
 
   openClose() {
-    if (this.getMedia() !== 'desktop') {
-      // maybe we dont need, lets see after testing
+    if (!this.isDesktop) {
       this.scroll({
         top: 0,
         behavior: 'smooth'
@@ -1053,18 +1030,18 @@ export default class NavigationTwo extends Mutation() {
           })
         }, 350)
       }
+    } else {
+      if (this.nav.getAttribute('aria-expanded') === 'true') {
+        Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
+          li.classList.remove('open')
+          if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+          if (li.parentElement) {
+            li.parentElement.classList.remove('open')
+          }
+        })
+      }
     }
 
-    // maybe i dont need this anymore
-    if (this.nav.getAttribute('aria-expanded') === 'true') {
-      Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
-        li.classList.remove('open')
-        if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
-        if (li.parentElement) {
-          li.parentElement.classList.remove('open')
-        }
-      })
-    }
   }
 
   /**
@@ -1108,6 +1085,45 @@ export default class NavigationTwo extends Mutation() {
         })
       }
     })
+  }
+
+  htmlReBuilderByLayoutChange() {
+    let currentNav = this.root.querySelector("nav")
+    if (this.isDesktop) {
+      // set nav element from mobile to desktop compatible
+      let mainATags = Array.from(currentNav.querySelectorAll("nav > ul > li > a"))
+      if (mainATags.length > 0) {
+        mainATags.forEach(a => {
+          let aTagChildren = Array.from(a.children)
+          let aTagMDXIcon = aTagChildren?.find(child => child.tagName === "A-ICON-MDX")
+          if (aTagChildren.length && aTagMDXIcon) aTagMDXIcon.parentElement.removeChild(aTagMDXIcon)
+        })
+      }
+    } else {
+      // set nav from desktop to mobile compatible
+      let desktopOWrappers = Array.from(currentNav.querySelectorAll("o-nav-wrapper"))
+      if (desktopOWrappers.length > 0) {
+        desktopOWrappers.forEach(wrapper => {
+          // remove close icon
+          let closeIcon
+          if (closeIcon = wrapper.querySelector("section a.close-icon")) {
+            closeIcon.parentElement.removeChild(closeIcon)
+          }
+
+          // put section outside of o nav wrapper
+          let wrapperSection
+          if (wrapperSection = wrapper.querySelector("section")) {
+            let subNavigationDivs = Array.from(wrapperSection.querySelectorAll("div[nav-level]"))
+            if (subNavigationDivs.length > 0) {
+              subNavigationDivs.forEach(div => div.hidden = false)
+            }
+            wrapper.parentElement.appendChild(wrapperSection)
+            wrapper.parentElement.removeChild(wrapper)
+          }
+        })
+      }
+    }
+    this.renderHTML(currentNav)
   }
 
   getMedia() {
