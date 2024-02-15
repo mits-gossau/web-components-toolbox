@@ -242,7 +242,8 @@ export default class AsciiCaptcha extends Shadow() {
     this._updateInputTimeoutID = setTimeout(() => {
       const value = {
         timestamp: Date.now(),
-        chars: []
+        chars: [],
+        isDesktop: this.getMedia() === 'desktop'
       }
       Array.from(pre.attributes).reduce((acc, attribute) => {
         acc[attribute.name] = attribute.value
@@ -271,6 +272,10 @@ export default class AsciiCaptcha extends Shadow() {
       }))
       if (this.hasAttribute('debug')) console.log(`${this.tagName} set new value to input`, {input: this.input, value})
     }, 200)
+  }
+
+  getMedia () {
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 
   get pre () {
