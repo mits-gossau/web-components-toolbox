@@ -1,0 +1,6 @@
+:host {
+    --ascii-captcha-default-background-color: var(--ascii-captcha-default-background-color-custom, transparent);
+    --ascii-captcha-default-color: var(--ascii-captcha-default-color-custom, black);
+    --ascii-captcha-default-width: var(--ascii-captcha-default-width-custom, 100%);
+    --ascii-captcha-default-height: var(--ascii-captcha-default-height-custom, 75dvh);
+}
