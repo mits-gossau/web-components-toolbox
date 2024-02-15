@@ -90,154 +90,43 @@ export default class NavigationTwo extends Mutation() {
       if (event.currentTarget) {
         // If desktop use-hover-listener attribute exists
         if (this.isDesktop && this.useHoverListener) {
-          if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
-            const isOpen = event.currentTarget.classList.contains('open')
-            event.preventDefault()
-            event.stopPropagation()
-            if (this.hasAttribute('no-scroll')) {
-              this.setScrollOnBody(true, event)
-            }
-
-            // clean state between main li switching
-            if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
-              event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
-              event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
-              event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
-              this.hideAndClearDesktopSubNavigation()
-            }
-
-            // remove all the previous open class by other a tag
-            Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('.open')).forEach(el => {
-              el.classList.remove('open')
-            })
-
-            event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
-
-          } else if (event.currentTarget.getAttribute('href').includes('#')) {
-            // TODO Silvan => why it doesnt work innerLink
-            this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
-              detail: {
-                selector: event.currentTarget.getAttribute('href')
-              },
-              bubbles: true,
-              cancelable: true,
-              composed: true
-            }))
-          } else if (event.currentTarget.getAttribute('href')) {
-            // TODO Ivan keep open or close?
-            event.preventDefault()
-            // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
-            setTimeout(() => this.removeAttribute('style'), 3000)
-            self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
-          }
+          if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') this.setMainNavItems(event)
+          else if (event.currentTarget.getAttribute('href').includes('#')) this.handleAnchorClickOnNavItems(event)
+          else if (event.currentTarget.getAttribute('href')) this.handleNewTabNavigationOnNavItems(event)
         }
         // If use-hover-listener attribute NOT exists 
         else if (this.isDesktop && !this.useHoverListener) {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
-            const isOpen = event.currentTarget.classList.contains('open')
-            event.preventDefault()
-            event.stopPropagation()
-            if (this.hasAttribute('no-scroll')) {
-              this.setScrollOnBody(true, event)
-            }
-
-            // clean state between main li switching
-            if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
-              event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
-              event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
-              event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
-              this.hideAndClearDesktopSubNavigation()
-            }
-
-            // remove all the previous open class by other a tag
-            Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('.open')).forEach(el => {
-              el.classList.remove('open')
-            })
-
-            event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
-
+            this.setMainNavItems(event)
             // Click event logic
-            if (event.currentTarget.parentNode.hasAttribute("sub-nav")) {
-              let wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
-              let wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
-              let wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll("ul"))
-              let wrapperDivSecondNextSiblingDiv = null
-              let wrapperDivSecondNextSiblingDivUls = null
-              if (wrapperDivNextSiblingDiv.nextSibling) wrapperDivSecondNextSiblingDiv = wrapperDivNextSiblingDiv.nextSibling
-              if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul")).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul"))
-
-
-              Array.from(wrapperDiv.querySelectorAll("li")).forEach(li => {
-                if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
-                li.classList.remove("hover-active")
-              })
-              event.currentTarget.parentNode.setAttribute("aria-expanded", "true")
-              event.currentTarget.parentNode.classList.add("hover-active")
-              let subUl = null
-              if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
-                wrapperDivNextSiblingDiv.hidden = true
-                wrapperDivNextSiblingDivUls.forEach(ul => {
-                  ul.style.display = "none"
-                  Array.from(ul.querySelectorAll("li")).forEach(li => {
-                    if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
-                    li.classList.remove("hover-active")
-                  })
-                })
-                subUl.parentElement.hidden = false
-                subUl.style.display = "block"
-                subUl.scrollTo(0, 0)
-                if (wrapperDivSecondNextSiblingDiv) wrapperDivSecondNextSiblingDiv.hidden = true
-                if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = "none")
-              } else {
-                return
-              }
-
-
-            }
-          } else if (event.currentTarget.getAttribute('href').includes('#')) {
-            // TODO Silvan => why it doesnt work innerLink
-            this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
-              detail: {
-                selector: event.currentTarget.getAttribute('href')
-              },
-              bubbles: true,
-              cancelable: true,
-              composed: true
-            }))
-          } else if (event.currentTarget.getAttribute('href')) {
-            // TODO Ivan keep open or close?
-            event.preventDefault()
-            // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
-            if (this.getMedia() !== 'desktop') this.setAttribute('style', 'display: none;')
-            setTimeout(() => this.removeAttribute('style'), 3000)
-            self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
-          }
+            if (event.currentTarget.parentNode.hasAttribute("sub-nav")) this.handleOnClickOnSubNavItems(event)
+          } 
+          else if (event.currentTarget.getAttribute('href').includes('#')) this.handleAnchorClickOnNavItems(event)
+          else if (event.currentTarget.getAttribute('href')) this.handleNewTabNavigationOnNavItems(event)
         }
         // if mobile
         else {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             event.preventDefault()
             event.stopPropagation()
-            if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
-              this.setScrollOnBody(true, event)
-            }
 
             // set aria expended attributes
-            Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll("li")).forEach(li => {
-              if (li.hasAttribute("sub-nav")) li.setAttribute("aria-expanded", "false")
-            })
+            let allSubNavLinks = Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll("li")).filter(li => li.hasAttribute("sub-nav")) 
+            allSubNavLinks.forEach(link => link.setAttribute("aria-expanded", "false"))  
 
             // clean state between main li switching
-            if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
+            if (event.currentTarget.parentNode?.parentNode?.parentNode?.tagName === 'NAV') {
+
               // hide all subUl height to avoid large height of nav tag
               let subNavigationDivs = Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
               subNavigationDivs.forEach(subNavDiv => {
                 let subNavUls = Array.from(subNavDiv.querySelectorAll("ul"))
                 subNavUls.forEach(ul => ul.style.display = "none")
               })
+              // set the currently clicked/touched aria expended attribute
               event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
 
-              // hide main navigation
+              // add currently open sub-navigation content to be visible
               let sectionChildren = Array.from(event.currentTarget.parentNode.querySelector("section").children)
               sectionChildren.forEach((node) => {
                 let currentNode = node.cloneNode(true)
@@ -245,14 +134,15 @@ export default class NavigationTwo extends Mutation() {
                 if (!node.getAttribute('slot')) event.currentTarget.parentNode.parentNode.parentNode.appendChild(currentNode)
               })
 
+              // hide element with left slide animation
               event.currentTarget.parentNode.parentNode.classList.add("close-left-slide")
 
-              // create new a tag with text of li which navigates one level up
+              // remove navigation back button since it can be changed and will be dynamically added below
               if (event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").querySelector("div > a")) {
                 let currentNavBackATag = event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").querySelector("div > a")
                 currentNavBackATag.parentElement.removeChild(currentNavBackATag)
               }
-
+              // create new navigation back button 
               let navBackATag = document.createElement("a")
               let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute("mobile-navigation-name")
               navBackATag.innerHTML = /* HTML */`
@@ -273,11 +163,10 @@ export default class NavigationTwo extends Mutation() {
                 event.currentTarget.parentNode.previousElementSibling.classList.add("open-left-slide")
                 // remove subNav divs from next to ul 
                 // @ts-ignore
-                let currentSubNavs = Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('nav > div[nav-level]'))
+                let currentSubNavElements = Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('nav > div[nav-level]'))
                 // remove element after animation is done => TODO create global animation duration variable
-                setTimeout(() => currentSubNavs.forEach(subNav => subNav.parentNode.removeChild(subNav)), this.removeElementAfterAnimationDurationMs)
+                setTimeout(() => currentSubNavElements.forEach(subNav => subNav.parentNode.removeChild(subNav)), this.removeElementAfterAnimationDurationMs)
               })
-              // add click eventlistener which bring back the main navigation
               event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").prepend(navBackATag)
               event.currentTarget.parentNode.parentNode.classList.remove("open-left-slide")
               event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").classList.add("open-right-slide")
@@ -1098,6 +987,86 @@ export default class NavigationTwo extends Mutation() {
       cancelable: true,
       composed: true
     }))
+  }
+
+  setMainNavItems(event) {
+    const isOpen = event.currentTarget.classList.contains('open')
+    event.preventDefault()
+    event.stopPropagation()
+    if (this.hasAttribute('no-scroll')) {
+      this.setScrollOnBody(true, event)
+    }
+
+    // clean state between main li switching
+    if (event.currentTarget.parentNode?.parentNode?.parentNode?.tagName === 'NAV') {
+      event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+      event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+      event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
+      this.hideAndClearDesktopSubNavigation()
+    }
+
+    // remove all the previous open class by other a tag
+    Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('.open')).forEach(el => {
+      el.classList.remove('open')
+    })
+
+    event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+  }
+
+  handleOnClickOnSubNavItems(event) {
+    let wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
+    let wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
+    let wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll("ul"))
+    let wrapperDivSecondNextSiblingDiv = null
+    let wrapperDivSecondNextSiblingDivUls = null
+    if (wrapperDivNextSiblingDiv.nextSibling) wrapperDivSecondNextSiblingDiv = wrapperDivNextSiblingDiv.nextSibling
+    if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul")).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul"))
+
+
+    Array.from(wrapperDiv.querySelectorAll("li")).forEach(li => {
+      if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+      li.classList.remove("hover-active")
+    })
+    event.currentTarget.parentNode.setAttribute("aria-expanded", "true")
+    event.currentTarget.parentNode.classList.add("hover-active")
+    let subUl = null
+    if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
+      wrapperDivNextSiblingDiv.hidden = true
+      wrapperDivNextSiblingDivUls.forEach(ul => {
+        ul.style.display = "none"
+        Array.from(ul.querySelectorAll("li")).forEach(li => {
+          if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+          li.classList.remove("hover-active")
+        })
+      })
+      subUl.parentElement.hidden = false
+      subUl.style.display = "block"
+      subUl.scrollTo(0, 0)
+      if (wrapperDivSecondNextSiblingDiv) wrapperDivSecondNextSiblingDiv.hidden = true
+      if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = "none")
+    } else {
+      return
+    }
+  }
+
+  handleAnchorClickOnNavItems(event) {
+    // TODO Silvan => why it doesnt work innerLink
+    this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
+      detail: {
+        selector: event.currentTarget.getAttribute('href')
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
+  }
+
+  handleNewTabNavigationOnNavItems(event){
+    // TODO Ivan keep open or close?
+    event.preventDefault()
+    // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
+    setTimeout(() => this.removeAttribute('style'), 3000)
+    self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
   }
 
   getMedia() {
