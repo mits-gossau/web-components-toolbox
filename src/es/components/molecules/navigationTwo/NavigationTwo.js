@@ -46,6 +46,9 @@ export default class NavigationTwo extends Mutation() {
 
     this.isDesktop = this.checkMedia('desktop')
     this.useHoverListener = this.hasAttribute('use-hover-listener')
+    this.animationDurationMs = this.getAttribute("animation-duration") || 300
+    this.removeElementAfterAnimationDurationMs = this.animationDurationMs + 50
+
 
     // Done
     this.resizeListener = event => {
@@ -58,33 +61,14 @@ export default class NavigationTwo extends Mutation() {
 
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
       if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) {
-        this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-          detail: {
-            hasNoScroll: !this.classList.contains('open'),
-            origEvent: event,
-            this: this
-          },
-          bubbles: true,
-          cancelable: true,
-          composed: true
-        }))
+        this.setScrollOnBody(!this.classList.contains('open'), event)
       }
 
       if (!this.isDesktop) {
         this.nav.setAttribute('aria-expanded', 'true')
         if (this.getRootNode().host.shadowRoot && this.getRootNode().host.shadowRoot.querySelector("header") && this.getRootNode().host.shadowRoot.querySelector("header").classList.contains("open")) {
           this.getRootNode().host.shadowRoot.querySelector("a-menu-icon").click()
-
-          this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-            detail: {
-              hasNoScroll: true,
-              origEvent: event,
-              this: this
-            },
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
+          this.setScrollOnBody(true, event)
         }
       }
 
@@ -102,16 +86,7 @@ export default class NavigationTwo extends Mutation() {
       if (this.focusLostClose) {
         if (this.hasAttribute('focus-lost-close-mobile')) {
           if (this.hasAttribute('no-scroll')) {
-            this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-              detail: {
-                hasNoScroll: false,
-                origEvent: event,
-                this: this
-              },
-              bubbles: true,
-              cancelable: true,
-              composed: true
-            }))
+            this.setScrollOnBody(false, event)
             if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'false')
           }
         }
@@ -132,16 +107,7 @@ export default class NavigationTwo extends Mutation() {
             if (this.focusLostClose) {
               event.stopPropagation()
               if (this.hasAttribute('no-scroll')) {
-                this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-                  detail: {
-                    hasNoScroll: true,
-                    origEvent: event,
-                    this: this
-                  },
-                  bubbles: true,
-                  cancelable: true,
-                  composed: true
-                }))
+                this.setScrollOnBody(true, event)
               }
             }
             // clean state between main li switching
@@ -186,16 +152,7 @@ export default class NavigationTwo extends Mutation() {
             if (this.focusLostClose) {
               event.stopPropagation()
               if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
-                this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-                  detail: {
-                    hasNoScroll: true,
-                    origEvent: event,
-                    this: this
-                  },
-                  bubbles: true,
-                  cancelable: true,
-                  composed: true
-                }))
+                this.setScrollOnBody(true, event)
               }
             }
             // clean state between main li switching
@@ -277,16 +234,7 @@ export default class NavigationTwo extends Mutation() {
             if (this.focusLostClose) {
               event.stopPropagation()
               if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
-                this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-                  detail: {
-                    hasNoScroll: true,
-                    origEvent: event,
-                    this: this
-                  },
-                  bubbles: true,
-                  cancelable: true,
-                  composed: true
-                }))
+                this.setScrollOnBody(true, event)
               }
             }
             // set aria expended attributes
@@ -342,7 +290,7 @@ export default class NavigationTwo extends Mutation() {
                 // @ts-ignore
                 let currentSubNavs = Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('nav > div[nav-level]'))
                 // remove element after animation is done => TODO create global animation duration variable
-                setTimeout(() => currentSubNavs.forEach(subNav => subNav.parentNode.removeChild(subNav)), 350)
+                setTimeout(() => currentSubNavs.forEach(subNav => subNav.parentNode.removeChild(subNav)), this.removeElementAfterAnimationDurationMs)
               })
               // add click eventlistener which bring back the main navigation
               event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").prepend(navBackATag)
@@ -397,14 +345,14 @@ export default class NavigationTwo extends Mutation() {
                         ul.scrollTo(0, 0)
                         ul.style.display = "none"
                       })
-                    }, 350)
+                    }, this.removeElementAfterAnimationDurationMs)
                   })
 
                   subUl.parentElement.prepend(navBackATag2)
                 }
                 setTimeout(() => { 
                   wrapperDiv.scrollTo(0, 0)
-                }, 350)
+                }, this.removeElementAfterAnimationDurationMs)
                 wrapperDivNextSiblingDiv.scrollTo(0, 0)
                 subUl.style.display = "block"
                 wrapperDiv.className = ""
@@ -726,23 +674,24 @@ export default class NavigationTwo extends Mutation() {
       }
 
       :host .close-left-slide {
-        animation: closeLeft 0.3s ease-in forwards;
+        animation: closeLeft ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
 
       :host .open-left-slide {
-        animation: openLeft 0.3s ease-in forwards;
+        animation: openLeft ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
 
       :host .close-right-slide {
-        animation: closeRight 0.3s ease-in forwards;
+        animation: closeRight ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
 
       :host .open-right-slide {
-        animation: openRight 0.3s ease-in forwards;
+        animation: openRight ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
 
       :host .navigation-back {
         display: flex;
+        width: fit-content;
         padding: var(--content-spacing-mobile);
         color: #262626;
         font-weight: 500;
@@ -1044,7 +993,7 @@ export default class NavigationTwo extends Mutation() {
               childEl.parentNode.removeChild(childEl)
             }
           })
-        }, 350)
+        }, this.removeElementAfterAnimationDurationMs)
       }
     } else {
       if (this.nav.getAttribute('aria-expanded') === 'true') {
@@ -1141,6 +1090,19 @@ export default class NavigationTwo extends Mutation() {
     }
     this.setFocusLostClickBehavior()
     this.renderHTML(currentNav)
+  }
+
+  setScrollOnBody(isScrollOnBodyEnabled, event){
+    this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+      detail: {
+        hasNoScroll: isScrollOnBodyEnabled,
+        origEvent: event,
+        this: this
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
   }
 
   getMedia() {
