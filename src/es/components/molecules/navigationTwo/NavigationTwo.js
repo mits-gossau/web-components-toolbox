@@ -64,21 +64,21 @@ export default class NavigationTwo extends Mutation() {
         this.setScrollOnBody(!this.classList.contains('open'), event)
       }
 
+      // by mobile resize it closes the open flyout nav, clears the flyout state and set the scroll available on the body
       if (!this.isDesktop) {
         this.nav.setAttribute('aria-expanded', 'true')
         if (this.getRootNode().host.shadowRoot && this.getRootNode().host.shadowRoot.querySelector("header") && this.getRootNode().host.shadowRoot.querySelector("header").classList.contains("open")) {
           this.getRootNode().host.shadowRoot.querySelector("a-menu-icon").click()
           this.setScrollOnBody(true, event)
         }
+        this.hideAndClearMobileSubNavigation()
       }
 
-      if (this.isDesktop) this.hideAndClearDesktopSubNavigationDivs()
+      // clear desktop flyout state (hover, scrollPosition, etc) if closes
+      if (this.isDesktop) this.hideAndClearDesktopSubNavigation()
 
-      this.openClose()
-
-      if (oldIsDesktopValue !== this.isDesktop) {
-        this.htmlReBuilderByLayoutChange()
-      }
+      // make some change on html to be mobile or desktop layout compatible if the screen-width changes between mobile and desktop
+      if (oldIsDesktopValue !== this.isDesktop) this.htmlReBuilderByLayoutChange()
     }
 
     // Done
@@ -92,9 +92,8 @@ export default class NavigationTwo extends Mutation() {
         }
       }
 
-      if (this.isDesktop) this.hideAndClearDesktopSubNavigationDivs()
-
-      this.openClose()
+      if (this.isDesktop) this.hideAndClearDesktopSubNavigation()
+      if (!this.isDesktop) this.hideAndClearMobileSubNavigation()
     }
 
     this.aLinkClickListener = event => {
@@ -115,7 +114,7 @@ export default class NavigationTwo extends Mutation() {
               event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
               event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
               event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
-              this.hideAndClearDesktopSubNavigationDivs()
+              this.hideAndClearDesktopSubNavigation()
             }
 
             // remove all the previous open class by other a tag
@@ -160,7 +159,7 @@ export default class NavigationTwo extends Mutation() {
               event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
               event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
               event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
-              this.hideAndClearDesktopSubNavigationDivs()
+              this.hideAndClearDesktopSubNavigation()
             }
 
             // remove all the previous open class by other a tag
@@ -350,7 +349,7 @@ export default class NavigationTwo extends Mutation() {
 
                   subUl.parentElement.prepend(navBackATag2)
                 }
-                setTimeout(() => { 
+                setTimeout(() => {
                   wrapperDiv.scrollTo(0, 0)
                 }, this.removeElementAfterAnimationDurationMs)
                 wrapperDivNextSiblingDiv.scrollTo(0, 0)
@@ -975,40 +974,6 @@ export default class NavigationTwo extends Mutation() {
     }, 50)
   }
 
-  openClose() {
-    if (!this.isDesktop) {
-      this.scroll({
-        top: 0,
-        behavior: 'smooth'
-      })
-
-      const navElementChildren = Array.from(this.root.querySelector("nav").children)
-      if (this.getAttribute("aria-expanded") === "false" && navElementChildren.length) {
-        setTimeout(() => {
-          navElementChildren.forEach(childEl => {
-            if (childEl.tagName === 'UL') {
-              childEl.classList.remove("close-left-slide")
-            }
-            if (childEl.hasAttribute("nav-level") && childEl.parentNode) {
-              childEl.parentNode.removeChild(childEl)
-            }
-          })
-        }, this.removeElementAfterAnimationDurationMs)
-      }
-    } else {
-      if (this.nav.getAttribute('aria-expanded') === 'true') {
-        Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
-          li.classList.remove('open')
-          if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
-          if (li.parentElement) {
-            li.parentElement.classList.remove('open')
-          }
-        })
-      }
-    }
-
-  }
-
   /**
    *
    *
@@ -1037,7 +1002,7 @@ export default class NavigationTwo extends Mutation() {
     })
   }
 
-  hideAndClearDesktopSubNavigationDivs() {
+  hideAndClearDesktopSubNavigation() {
     let navWrappers = Array.from(this.root.querySelectorAll("o-nav-wrapper"))
     navWrappers.forEach(wrapper => {
       let firstNavigationDiv = wrapper.querySelector("div[nav-level='1']")
@@ -1050,6 +1015,33 @@ export default class NavigationTwo extends Mutation() {
         })
       }
     })
+
+    // set the aria attributes back to default
+    if (this.nav.getAttribute('aria-expanded') === 'true') {
+      Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
+        li.classList.remove('open')
+        if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+        if (li.parentElement) {
+          li.parentElement.classList.remove('open')
+        }
+      })
+    }
+  }
+
+  hideAndClearMobileSubNavigation() {
+    const navElementChildren = Array.from(this.root.querySelector("nav").children)
+    if (this.getAttribute("aria-expanded") === "false" && navElementChildren.length) {
+      setTimeout(() => {
+        navElementChildren.forEach(childEl => {
+          if (childEl.tagName === 'UL') {
+            childEl.classList.remove("close-left-slide")
+          }
+          if (childEl.hasAttribute("nav-level") && childEl.parentNode) {
+            childEl.parentNode.removeChild(childEl)
+          }
+        })
+      }, this.removeElementAfterAnimationDurationMs)
+    }
   }
 
   htmlReBuilderByLayoutChange() {
@@ -1092,7 +1084,7 @@ export default class NavigationTwo extends Mutation() {
     this.renderHTML(currentNav)
   }
 
-  setScrollOnBody(isScrollOnBodyEnabled, event){
+  setScrollOnBody(isScrollOnBodyEnabled, event) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
       detail: {
         hasNoScroll: isScrollOnBodyEnabled,
