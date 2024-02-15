@@ -1,10 +1,6 @@
 :host > header {
   flex-direction: row;
 }
-:host > header > a-logo  {
-    left: 2em;
-    right: auto;
-}
 :host > header > m-navigation {
     animation: closeRight .4s ease-in;
     left: auto;
@@ -33,4 +29,11 @@
 @keyframes closeRight {
     0% {right: 0}
     100% {right: -100vw}
+}
+/* TODO Fix the position of the logo */
+@media only screen and (max-width: _max-width_){
+    :host > header > a-logo  {
+        left: 2em;
+        right: auto;
+    }
 }
