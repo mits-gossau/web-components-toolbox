@@ -575,7 +575,6 @@ export default class NavigationTwo extends Mutation() {
       --align-items: start;
       --ul-padding-left: 0;
       --show: slideInFromTop 0.2s ease;
-      max-height: var(--main-wrapper-max-height, 70vh);
       overflow: hidden;
     }
     :host > nav > ul > li.open > o-nav-wrapper {
@@ -666,6 +665,28 @@ export default class NavigationTwo extends Mutation() {
       animation: open .2s ease;
       left: 0;
     }
+
+    @media only screen and (min-height: 701px) {
+      :host > nav > ul > li > o-nav-wrapper {
+        max-height: var(--main-wrapper-max-height, 70vh);
+      }
+    }
+
+    @media only screen and (max-height: 700px) {
+      :host > nav > ul > li > o-nav-wrapper {
+        max-height: 60vh;
+      }
+    }
+
+    @media only screen and (max-height: 500px) {
+      :host > nav > ul > li > o-nav-wrapper {
+        max-height: 50vh;
+      }
+    }
+
+
+
+
     /* Mobile layout */
     @media only screen and (max-width: _max-width_) {
       :host {
