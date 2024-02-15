@@ -2,9 +2,12 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
-* @export
-* @class AsciiCaptcha
-* @type {CustomElementConstructor}
+ * Make your own Captcha with any Ascii Image, which has on each row the same total number of characters
+ * here is a great collection: https://www.asciiart.eu/
+ * 
+ * @export
+ * @class AsciiCaptcha
+ * @type {CustomElementConstructor}
 */
 export default class AsciiCaptcha extends Shadow() {
   constructor (options = {}, ...args) {
@@ -69,7 +72,10 @@ export default class AsciiCaptcha extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    Promise.all(showPromises).then(() => this.resizeListener().then(() => (this.hidden = false)))
+    Promise.all(showPromises).then(() => this.resizeListener().then(() => {
+      this.hidden = false
+      this.updateInput(this.pre)
+    }))
     self.addEventListener('resize', this.resizeListener)
     this.addEventListener('mousedown', this.mousedownEventListener)
     this.addEventListener('mouseup', this.mouseupEventListener)
@@ -113,6 +119,9 @@ export default class AsciiCaptcha extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+      :host > figure {
+        margin: 0;
+      }
       :host > figure > pre {
         --line-height: 1.15;
         --show: var(--show-custom, show 1s ease-in);
@@ -213,7 +222,7 @@ export default class AsciiCaptcha extends Shadow() {
     })
     const figure = this.root.querySelector('figure') || document.createElement('figure')
     figure.appendChild(figcaption)
-    this.pre.innerHTML = Array.from(this.pre.textContent).reduce((acc, char, i) => `${acc}<span char=${i + 1}${char.trim() ? '' : ' empty'}>${char}</span>`, '')
+    this.pre.innerHTML = Array.from(this.pre.textContent).reduce((acc, char, i) => `${acc}<span count=${i + 1}${char.trim() ? '' : ' empty'}>${char}</span>`, '')
     figure.appendChild(this.pre)
     this.html = [figure, this.style]
     this.pre.setAttribute('length', Array.from(this.pre.textContent).length)
@@ -221,8 +230,8 @@ export default class AsciiCaptcha extends Shadow() {
     if (!this.pre.hasAttribute('aria-label')) this.pre.setAttribute('aria-label', fakeName)
     const input = this.root.querySelector('input') || document.createElement('input')
     input.setAttribute('type', 'hidden')
-    if (!input.hasAttribute('id')) input.setAttribute('id', fakeName || this.tagName)
-    if (!input.hasAttribute('name')) input.setAttribute('name', fakeName || this.tagName)
+    if (!input.hasAttribute('id')) input.setAttribute('id', fakeName.replace(/\s/g, '_') || this.tagName)
+    if (!input.hasAttribute('name')) input.setAttribute('name', fakeName.replace(/\s/g, '_') || this.tagName)
     // NOTE: The input must be outside the shadowRoot for native form consumption
     this.appendChild(input)
     return Promise.resolve()
@@ -243,10 +252,23 @@ export default class AsciiCaptcha extends Shadow() {
         acc.push(Array.from(child.attributes).reduce((acc, attribute) => {
           acc[attribute.name] = attribute.value
           return acc
-        }, {}))
+        }, { char: child.textContent }))
         return acc
       }, value.chars)
+      // @ts-ignore
+      value.selected = value.chars.some(char => (char.class === 'selected'))
+      // @ts-ignore
+      value.touched = value.chars.some(char => char.touched)
       this.input.value = JSON.stringify(value)
+      this.dispatchEvent(new CustomEvent(this.getAttribute('ascii-captcha') || 'ascii-captcha', {
+        detail: {
+          input: this.input,
+          value
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
       if (this.hasAttribute('debug')) console.log(`${this.tagName} set new value to input`, {input: this.input, value})
     }, 200)
   }

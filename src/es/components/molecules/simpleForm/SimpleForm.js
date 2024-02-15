@@ -220,6 +220,7 @@ export default class SimpleForm extends Shadow() {
     ]).then(() => {
       Array.from(this.root.querySelectorAll('[hidden]:not([mode])')).forEach(node => this.hide(node, true))
       this.initBotDetectCaptcha()
+      this.initAsciiCaptcha()
     })
   }
 
@@ -613,12 +614,12 @@ export default class SimpleForm extends Shadow() {
   }
 
   /**
-  * fetch dependency for google recaptcha
-  * this is only triggered when the key as attribute grecaptcha-key is set
-  * https://developers.google.com/recaptcha/docs/loading
-  *
-  * @returns {Promise<any>}
-  */
+   * fetch dependency for google recaptcha
+   * this is only triggered when the key as attribute grecaptcha-key is set
+   * https://developers.google.com/recaptcha/docs/loading
+   *
+   * @returns {Promise<any>}
+   */
   loadGrecaptchaDependency () {
     if (!this.getAttribute('grecaptcha-key')) return Promise.resolve(null)
     // @ts-ignore
@@ -670,12 +671,11 @@ export default class SimpleForm extends Shadow() {
   }
 
   /**
-  * fetch dependency for google recaptcha
-  * this is only triggered when certain query selectors trigger
-  * an implementation of https://captcha.com/asp.net-captcha.html
-  *
-  * @returns {void}
-  */
+   * this is only triggered when certain query selectors trigger
+   * an implementation of https://captcha.com/asp.net-captcha.html
+   *
+   * @returns {void}
+   */
   initBotDetectCaptcha () {
     let image, reload, sound
     if ((image = this.root.querySelector('#Captcha_CaptchaImage')) && (reload = this.root.querySelector('#Captcha_ReloadIcon')) && (sound = this.root.querySelector('#Captcha_SoundLink'))) {
@@ -738,6 +738,26 @@ export default class SimpleForm extends Shadow() {
         source.setAttribute('src', sound.getAttribute('href'))
         audio.appendChild(source)
         audio.play()
+      })
+    }
+  }
+
+  /**
+   * this is only triggered when certain query selectors trigger
+   * a custom captcha implementation: src/es/components/atoms/asciiCaptcha/AsciiCaptcha.js
+   *
+   * @returns {void}
+   */
+  initAsciiCaptcha () {
+    if (this.root.querySelector('a-ascii-captcha')) {
+      this.addEventListener(this.getAttribute('ascii-captcha') || 'ascii-captcha', event => {
+        if (event.detail.value[this.hasAttribute('ascii-captcha-enable-touched')
+          ? 'touched'
+          : 'selected']) {
+          this.inputSubmit.removeAttribute('disabled')
+        } else {
+          this.inputSubmit.setAttribute('disabled', 'true')
+        }
       })
     }
   }
