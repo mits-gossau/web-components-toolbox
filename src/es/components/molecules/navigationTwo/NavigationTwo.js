@@ -331,6 +331,8 @@ export default class NavigationTwo extends Mutation() {
                 // @ts-ignore
                 event.currentTarget.parentNode.classList.remove("open-right-slide")
                 // @ts-ignore
+                event.currentTarget.parentNode.previousElementSibling.scrollTo(0, 0)
+                // @ts-ignore
                 event.currentTarget.parentNode.previousElementSibling.classList.remove("close-left-slide")
                 // @ts-ignore
                 event.currentTarget.parentNode.classList.add("close-right-slide")
@@ -390,18 +392,26 @@ export default class NavigationTwo extends Mutation() {
                     event.currentTarget.parentNode.previousElementSibling.classList.add("open-left-slide")
 
                     // find uls and add display none to all
-                    wrapperDivNextSiblingDivUls.forEach(ul => ul.style.display = "none")
+                    setTimeout(() => {
+                      wrapperDivNextSiblingDivUls.forEach(ul => {
+                        ul.scrollTo(0, 0)
+                        ul.style.display = "none"
+                      })
+                    }, 350)
                   })
 
                   subUl.parentElement.prepend(navBackATag2)
                 }
-
+                setTimeout(() => { 
+                  wrapperDiv.scrollTo(0, 0)
+                }, 350)
+                wrapperDivNextSiblingDiv.scrollTo(0, 0)
                 subUl.style.display = "block"
-                subUl.scrollTo(0, 0)
                 wrapperDiv.className = ""
                 wrapperDiv.classList.add("close-left-slide")
                 wrapperDivNextSiblingDiv.className = ""
                 wrapperDivNextSiblingDiv.classList.add("open-right-slide")
+                // i think we dont need at all this line of code
                 if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = "none")
               } else {
                 return
@@ -771,12 +781,17 @@ export default class NavigationTwo extends Mutation() {
         position: relative;
         height: 90vh;
         width: 100vw;
+        overflow-x: visible;
+        overflow-y: hidden;
       }
 
       :host > nav > ul {
         position: absolute;
+        display: block;
         border-top: 1px solid #E0E0E0;
         width: 100vw;
+        height: 85vh;
+        overflow: auto;
         --flex-direction:column;
         --navigation-klubschule-a-color: var(--a-color);
         --navigation-klubschule-align-items: start;
@@ -793,6 +808,8 @@ export default class NavigationTwo extends Mutation() {
         margin-top: 1em;
         width: 100vw;
         right: -100vw;
+        overflow: auto;
+        height: 85vh;
       }
 
       :host > nav > ul.open {
@@ -903,7 +920,6 @@ export default class NavigationTwo extends Mutation() {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'NAV') return false
       this.nav.appendChild(node)
     })
-    this.originalNavHtml = this.nav
     this.html = this.nav
     if (this.isDesktop) {
       return this.fetchModules([
@@ -1123,6 +1139,7 @@ export default class NavigationTwo extends Mutation() {
         })
       }
     }
+    this.setFocusLostClickBehavior()
     this.renderHTML(currentNav)
   }
 
