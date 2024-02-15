@@ -57,12 +57,16 @@ export default class AsciiCaptcha extends Shadow() {
     this.mouseupEventListener = event => (this.lastCommand = undefined)
     // touch
     this.touchstartEventListener = event => {
-      if (event.touches.length === 1) event.preventDefault()
-      draw(event)
+      if (event.touches.length === 1) {
+        event.preventDefault()
+        draw(event)
+      }
     }
     this.touchmoveEventListener = event => {
-      if (event.touches.length === 1) event.preventDefault()
-      draw(event, this.root.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY), this.lastCommand)
+      if (event.touches.length === 1) {
+        event.preventDefault()
+        draw(event, this.root.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY), this.lastCommand)
+      }
     }
     this.touchendEventListener = event => (this.lastCommand = undefined)
   }
