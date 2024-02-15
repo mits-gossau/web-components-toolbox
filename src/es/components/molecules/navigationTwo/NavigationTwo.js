@@ -81,15 +81,7 @@ export default class NavigationTwo extends Mutation() {
     }
 
     this.selfClickListener = (event) => {
-      if (this.focusLostClose) {
-        if (this.hasAttribute('focus-lost-close-mobile')) {
-          if (this.hasAttribute('no-scroll')) {
-            this.setScrollOnBody(false, event)
-            if (this.getMedia() !== 'desktop') this.nav.setAttribute('aria-expanded', 'false')
-          }
-        }
-      }
-
+      if (this.isDesktop && this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
       if (this.isDesktop) this.hideAndClearDesktopSubNavigation()
       if (!this.isDesktop) this.hideAndClearMobileSubNavigation()
     }
@@ -101,12 +93,11 @@ export default class NavigationTwo extends Mutation() {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             const isOpen = event.currentTarget.classList.contains('open')
             event.preventDefault()
-            if (this.focusLostClose) {
-              event.stopPropagation()
-              if (this.hasAttribute('no-scroll')) {
-                this.setScrollOnBody(true, event)
-              }
+            event.stopPropagation()
+            if (this.hasAttribute('no-scroll')) {
+              this.setScrollOnBody(true, event)
             }
+
             // clean state between main li switching
             if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
               event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
@@ -134,7 +125,7 @@ export default class NavigationTwo extends Mutation() {
             }))
           } else if (event.currentTarget.getAttribute('href')) {
             // TODO Ivan keep open or close?
-            event.preventDefault() 
+            event.preventDefault()
             // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
             setTimeout(() => this.removeAttribute('style'), 3000)
             self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
@@ -145,12 +136,11 @@ export default class NavigationTwo extends Mutation() {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             const isOpen = event.currentTarget.classList.contains('open')
             event.preventDefault()
-            if (this.focusLostClose) {
-              event.stopPropagation()
-              if (this.hasAttribute('no-scroll')) {
-                this.setScrollOnBody(true, event)
-              }
+            event.stopPropagation()
+            if (this.hasAttribute('no-scroll')) {
+              this.setScrollOnBody(true, event)
             }
+
             // clean state between main li switching
             if (event.currentTarget.parentNode && event.currentTarget.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode && event.currentTarget.parentNode.parentNode.parentNode.tagName === 'NAV') {
               event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
@@ -227,12 +217,11 @@ export default class NavigationTwo extends Mutation() {
         else {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             event.preventDefault()
-            if (this.focusLostClose) {
-              event.stopPropagation()
-              if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
-                this.setScrollOnBody(true, event)
-              }
+            event.stopPropagation()
+            if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
+              this.setScrollOnBody(true, event)
             }
+
             // set aria expended attributes
             Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll("li")).forEach(li => {
               if (li.hasAttribute("sub-nav")) li.setAttribute("aria-expanded", "false")
@@ -974,10 +963,6 @@ export default class NavigationTwo extends Mutation() {
 
       this.html = this.style
     }
-  }
-
-  get focusLostClose() {
-    return this.hasAttribute('focus-lost-close') && this.getAttribute('focus-lost-close') !== 'false'
   }
 
   setFocusLostClickBehavior() {
