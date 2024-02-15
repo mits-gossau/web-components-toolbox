@@ -50,7 +50,6 @@ export default class NavigationTwo extends Mutation() {
     this.removeElementAfterAnimationDurationMs = this.animationDurationMs + 50
 
 
-    // Done
     this.resizeListener = event => {
       let oldIsDesktopValue = this.isDesktop
 
@@ -81,7 +80,6 @@ export default class NavigationTwo extends Mutation() {
       if (oldIsDesktopValue !== this.isDesktop) this.htmlReBuilderByLayoutChange()
     }
 
-    // Done
     this.selfClickListener = (event) => {
       if (this.focusLostClose) {
         if (this.hasAttribute('focus-lost-close-mobile')) {
@@ -98,7 +96,7 @@ export default class NavigationTwo extends Mutation() {
 
     this.aLinkClickListener = event => {
       if (event.currentTarget) {
-        // If use-hover-listener attribute exists
+        // If desktop use-hover-listener attribute exists
         if (this.isDesktop && this.useHoverListener) {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             const isOpen = event.currentTarget.classList.contains('open')
@@ -136,14 +134,13 @@ export default class NavigationTwo extends Mutation() {
             }))
           } else if (event.currentTarget.getAttribute('href')) {
             // TODO Ivan keep open or close?
-            event.preventDefault()
+            event.preventDefault() 
             // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
-            if (this.getMedia() !== 'desktop') this.setAttribute('style', 'display: none;')
             setTimeout(() => this.removeAttribute('style'), 3000)
             self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
           }
         }
-        // If use-hover-listener attribute NOT exists TODO => should we keep open the flyout by target new tab navigation?
+        // If use-hover-listener attribute NOT exists 
         else if (this.isDesktop && !this.useHoverListener) {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             const isOpen = event.currentTarget.classList.contains('open')
