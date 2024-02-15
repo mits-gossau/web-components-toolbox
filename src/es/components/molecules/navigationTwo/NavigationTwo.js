@@ -147,7 +147,7 @@ export default class NavigationTwo extends Mutation() {
             event.preventDefault()
             if (this.focusLostClose) {
               event.stopPropagation()
-              if (this.hasAttribute('focus-lost-close-mobile') && this.hasAttribute('no-scroll')) {
+              if (this.hasAttribute('no-scroll')) {
                 this.setScrollOnBody(true, event)
               }
             }
