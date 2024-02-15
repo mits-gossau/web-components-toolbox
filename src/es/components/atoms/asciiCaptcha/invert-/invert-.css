@@ -1,0 +1,7 @@
+:host {
+    --ascii-captcha-invert-background-color: var(--ascii-captcha-invert-background-color-custom, black);
+    --ascii-captcha-invert-color: var(--ascii-captcha-invert-color-custom, white);
+    --ascii-captcha-invert-width: var(--ascii-captcha-invert-width-custom, 100%);
+    --ascii-captcha-invert-height: var(--ascii-captcha-invert-height-custom, 75dvh);
+    --ascii-captcha-invert-ol-color: black;
+}

@@ -522,10 +522,10 @@ export default class SimpleForm extends Shadow() {
   }
 
   checkCondition (conditionalNode, targetNode, attributeName) {
+    if (targetNode.getAttribute('type') === 'checkbox') return conditionalNode.getAttribute(attributeName) === String(targetNode.checked)
     return conditionalNode.getAttribute(attributeName) === targetNode.value ||
     (conditionalNode.getAttribute(attributeName) === 'truthy' && targetNode.value) ||
-    (conditionalNode.getAttribute(attributeName) === 'falsy' && !targetNode.value) ||
-    (targetNode.getAttribute('type') === 'checkbox' && conditionalNode.getAttribute(attributeName) === String(targetNode.checked))
+    (conditionalNode.getAttribute(attributeName) === 'falsy' && !targetNode.value)
   }
 
   static readFile (file, returnTypeMatch = false) {
