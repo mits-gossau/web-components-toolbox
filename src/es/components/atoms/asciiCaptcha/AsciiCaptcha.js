@@ -57,11 +57,11 @@ export default class AsciiCaptcha extends Shadow() {
     this.mouseupEventListener = event => (this.lastCommand = undefined)
     // touch
     this.touchstartEventListener = event => {
-      event.preventDefault()
+      if (event.touches.length === 1) event.preventDefault()
       draw(event)
     }
     this.touchmoveEventListener = event => {
-      event.preventDefault()
+      if (event.touches.length === 1) event.preventDefault()
       draw(event, this.root.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY), this.lastCommand)
     }
     this.touchendEventListener = event => (this.lastCommand = undefined)
@@ -148,13 +148,6 @@ export default class AsciiCaptcha extends Shadow() {
       :host([draw]) > figure > pre > *:not([empty]) {
         transition: var(--transition, color .2s ease-out, text-shadow .5s ease-out);
       }
-      :host([draw][command=add]) > figure > pre > *:not([empty]):hover {
-        text-shadow: var(--add-text-shadow, 0 0 10em green, 0 0 5em green, 0 0 1em green, 0 0 0.2em green);
-      }
-      :host([draw][command=remove]) > figure > pre > *:not([empty]):hover {
-        color: var(--remove-color, red);
-        text-shadow: var(--remove-text-shadow, 0 0 10em red, 0 0 5em red, 0 0 1em red, 0 0 0.2em red);
-      }
       :host([draw]) > figure > pre > *:not([empty]).selected {
         color: var(--selected-color, green);
         font-weight: var(--selected-font-weight, bold);
@@ -164,15 +157,26 @@ export default class AsciiCaptcha extends Shadow() {
       :host([fill]) > figure > pre > *[empty] {
         transition: var(--empty-transition, background-color .3s ease-out, box-shadow .3s ease-out);
       }
-      :host([fill][command=add]) > figure > pre > *[empty]:hover {
-        box-shadow: var(--empty-add-box-shadow, 0 0 10em green, 0 0 5em green, 0 0 1em green, 0 0 0.2em green);
-      }
-      :host([fill][command=remove]) > figure > pre > *[empty]:hover {
-        background-color: var(--empty-remove-background-color, red);
-        box-shadow: var(--empty-remove-box-shadow, 0 0 10em red, 0 0 5em red, 0 0 1em red, 0 0 0.2em red);
-      }
       :host([fill]) > figure > pre > *[empty].selected {
         background-color: var(--empty-selected-background-color, green);
+      }
+      @media screen and (min-width: _max-width_){
+        :host([draw][command=add]) > figure > pre > *:not([empty]):hover {
+          /* not empty means with char */
+          text-shadow: var(--add-text-shadow, 0 0 10em green, 0 0 5em green, 0 0 1em green, 0 0 0.2em green);
+        }
+        :host([draw][command=remove]) > figure > pre > *:not([empty]):hover {
+          color: var(--remove-color, red);
+          text-shadow: var(--remove-text-shadow, 0 0 10em red, 0 0 5em red, 0 0 1em red, 0 0 0.2em red);
+        }
+        /* empty means with space */
+        :host([fill][command=add]) > figure > pre > *[empty]:hover {
+          box-shadow: var(--empty-add-box-shadow, 0 0 10em green, 0 0 5em green, 0 0 1em green, 0 0 0.2em green);
+        }
+        :host([fill][command=remove]) > figure > pre > *[empty]:hover {
+          background-color: var(--empty-remove-background-color, red);
+          box-shadow: var(--empty-remove-box-shadow, 0 0 10em red, 0 0 5em red, 0 0 1em red, 0 0 0.2em red);
+        }
       }
     `
     return this.fetchTemplate()
