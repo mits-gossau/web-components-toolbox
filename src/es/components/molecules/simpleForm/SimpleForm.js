@@ -219,7 +219,6 @@ export default class SimpleForm extends Shadow() {
       this.loadGrecaptchaDependency()
     ]).then(() => {
       Array.from(this.root.querySelectorAll('[hidden]:not([mode])')).forEach(node => this.hide(node, true))
-      this.initBotDetectCaptcha()
       this.initAsciiCaptcha()
     })
   }
