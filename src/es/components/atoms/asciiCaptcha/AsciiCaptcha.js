@@ -19,12 +19,19 @@ export default class AsciiCaptcha extends Shadow() {
       return new Promise(resolve => {
         clearTimeout(timeout)
         timeout = setTimeout(() => {
+          const charRects = Array.from(this.pre.children).map(child => child.getBoundingClientRect())
+          const charWidth = Math.max(...charRects.map(rect => rect.width))
+          const charHeight = Math.max(...charRects.map(rect => rect.height))
+          const width = this.getBoundingClientRect().width
           // @ts-ignore
           let height = self.getComputedStyle(this).getPropertyValue(`--${this.namespace || ''}height`) || self.getComputedStyle(this).getPropertyValue('height')
           if (height === 'auto') height = '75dvh'
+          const fontSize = self.getComputedStyle(this.pre).getPropertyValue('font-size').replace('px', '')
+          // calculate max font-size by width: available width / occupied width * actual fontSize
+          // calculate max font-size by height: available height / occupied height * actual fontSize
           this.style.textContent = /* css */`
             :host > figure > pre {
-              font-size: min(${Math.round(this.getBoundingClientRect().width / this.columnCount)}px, calc(${height} / (${this.rowCount} * var(--line-height))));
+              font-size: min(calc(${width}px / ${this.columnCount * charWidth} * ${fontSize}), calc(${height} / ${this.rowCount * charHeight} * ${fontSize}));
             }
           `
           resolve('done')
@@ -123,11 +130,22 @@ export default class AsciiCaptcha extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+      :host {
+        display: flex;
+        flex-direction: var(--flex-direction, column);
+        align-items: var(--align-items, end);
+        justify-content: var(--justify-content, normal);
+      }
+      :host > *[id=reset] {
+        height: var(--reset-height, 3em);
+        width: var(--reset-width, fit-content);
+        padding: var(--reset-padding, 0 1em);
+        margin: var(--reset-margin, 0);
+      }
       :host > figure {
         margin: 0;
       }
       :host > figure > pre {
-        --line-height: 1.15;
         --show: var(--show-custom, show 1s ease-in);
         /*aspect-ratio: ${this.rowCount}/${this.columnCount}; would need actual char width and height calc*/
         background-color: var(--background-color, canvas);
@@ -135,12 +153,13 @@ export default class AsciiCaptcha extends Shadow() {
         cursor: pointer;
         font-family: monospace, monospace;
         font-size: 1em;
-        line-height: calc(1em * var(--line-height));
+        line-height: 1.15;
         margin: 0;
         overflow: auto;
         padding: 0;
         user-select: none;
         text-align: center;
+        transition: font-size .3s ease-out;
       }
       :host([command=add]) > figure > pre {
         cursor: crosshair;
@@ -226,13 +245,20 @@ export default class AsciiCaptcha extends Shadow() {
     const figcaption = this.root.querySelector('figcaption') || document.createElement('figcaption')
     if (!figcaption.hasAttribute('id')) figcaption.setAttribute('id', fakeName)
     Array.from(this.root.children).forEach(node => {
-      if (!node.getAttribute('slot') && node !== this.pre && !node.matches('style')) figcaption.appendChild(node)
+      if (!node.getAttribute('slot') && node !== this.pre && node !== this.reset && !node.matches('style')) figcaption.appendChild(node)
     })
     const figure = this.root.querySelector('figure') || document.createElement('figure')
     figure.appendChild(figcaption)
     this.pre.innerHTML = Array.from(this.pre.textContent).reduce((acc, char, i) => `${acc}<span count=${i + 1}${char.trim() ? '' : ' empty'}>${char}</span>`, '')
     figure.appendChild(this.pre)
     this.html = [figure, this.style]
+    if (this.reset) {
+      this.reset.addEventListener('click', event => {
+        Array.from(this.pre.children).forEach(child => child.classList.remove('selected'))
+        this.updateInput(this.pre)
+      })
+      this.html = this.reset
+    }
     this.pre.setAttribute('length', Array.from(this.pre.textContent).length)
     if (!this.pre.hasAttribute('role')) this.pre.setAttribute('role', 'img')
     if (!this.pre.hasAttribute('aria-label')) this.pre.setAttribute('aria-label', fakeName)
@@ -293,6 +319,10 @@ export default class AsciiCaptcha extends Shadow() {
   get input () {
     return this.querySelector('input')
   }
+  
+  get reset () {
+    return this.root.querySelector('[id=reset]')
+  }
 
   get style () {
     return (
@@ -306,7 +336,7 @@ export default class AsciiCaptcha extends Shadow() {
   }
 
   get columnCount () {
-    if (!this.pre.hasAttribute('column-count')) this.pre.setAttribute('column-count', this.pre.textContent.indexOf('\n') - 1)
+    if (!this.pre.hasAttribute('column-count')) this.pre.setAttribute('column-count', Math.max(...this.pre.textContent.split('\n').map(chars => chars.length)))
     return Number(this.pre.getAttribute('column-count'))
   }
   
