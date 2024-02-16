@@ -64,13 +64,13 @@ export default class AsciiCaptcha extends Shadow() {
     this.mouseupEventListener = event => (this.lastCommand = undefined)
     // touch
     this.touchstartEventListener = event => {
-      if (event.touches.length === 1) {
+      if (event.cancelable && event.touches.length === 1) {
         event.preventDefault()
         draw(event)
       }
     }
     this.touchmoveEventListener = event => {
-      if (event.touches.length === 1) {
+      if (event.cancelable && event.touches.length === 1) {
         event.preventDefault()
         draw(event, this.root.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY), this.lastCommand)
       }
@@ -86,24 +86,26 @@ export default class AsciiCaptcha extends Shadow() {
     Promise.all(showPromises).then(() => this.resizeListener().then(() => {
       this.hidden = false
       this.updateInput(this.pre)
+      this.pre.addEventListener('mousedown', this.mousedownEventListener)
+      this.pre.addEventListener('mouseup', this.mouseupEventListener)
+      this.pre.addEventListener('mousemove', this.mousemoveEventListener)
+      this.pre.addEventListener('touchstart', this.touchstartEventListener)
+      this.pre.addEventListener('touchend', this.touchendEventListener)
+      this.pre.addEventListener('touchmove', this.touchmoveEventListener)
     }))
     self.addEventListener('resize', this.resizeListener)
-    this.addEventListener('mousedown', this.mousedownEventListener)
-    this.addEventListener('mouseup', this.mouseupEventListener)
-    this.addEventListener('mousemove', this.mousemoveEventListener)
-    this.addEventListener('touchstart', this.touchstartEventListener)
-    this.addEventListener('touchend', this.touchendEventListener)
-    this.addEventListener('touchmove', this.touchmoveEventListener)
   }
 
   disconnectedCallback () {
     self.removeEventListener('resize', this.resizeListener)
-    this.removeEventListener('mousedown', this.mousedownEventListener)
-    this.removeEventListener('mouseup', this.mouseupEventListener)
-    this.removeEventListener('mousemove', this.mousemoveEventListener)
-    this.removeEventListener('touchstart', this.touchstartEventListener)
-    this.removeEventListener('touchend', this.touchendEventListener)
-    this.removeEventListener('touchmove', this.touchmoveEventListener)
+    if (this.pre) {
+      this.pre.removeEventListener('mousedown', this.mousedownEventListener)
+      this.pre.removeEventListener('mouseup', this.mouseupEventListener)
+      this.pre.removeEventListener('mousemove', this.mousemoveEventListener)
+      this.pre.removeEventListener('touchstart', this.touchstartEventListener)
+      this.pre.removeEventListener('touchend', this.touchendEventListener)
+      this.pre.removeEventListener('touchmove', this.touchmoveEventListener)
+    }
   }
 
   /**
