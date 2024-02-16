@@ -62,6 +62,14 @@ export default class SimpleForm extends Shadow() {
         this.fetchOrDispatch()
       }
     }
+
+    this.submitDisabledEventListener = event => {
+      if (event.detail.disabled) {
+        this.inputSubmit.setAttribute('disabled', 'true')
+      } else {
+        this.inputSubmit.removeAttribute('disabled')
+      }
+    }
   }
 
   connectedCallback () {
@@ -84,12 +92,14 @@ export default class SimpleForm extends Shadow() {
       })
       this.hidden = false
     })
+    this.addEventListener(this.getAttribute('submit-disabled') || 'submit-disabled', this.submitDisabledEventListener)
   }
 
   disconnectedCallback () {
     if (this.inputSubmit) this.inputSubmit.removeEventListener('click', this.clickEventListener)
     this.form.removeEventListener('change', this.changeListener)
     this.form.removeEventListener('submit', this.submitEventListener)
+    this.removeEventListener(this.getAttribute('submit-disabled') || 'submit-disabled', this.submitDisabledEventListener)
   }
 
   /**
@@ -217,12 +227,9 @@ export default class SimpleForm extends Shadow() {
         }
       ]),
       this.loadGrecaptchaDependency()
-    ]).then(() => {
-      Array.from(this.root.querySelectorAll('[hidden]:not([mode])')).forEach(node => {
-        if (!node.root && !node.shadowRoot) this.hide(node, true)
-      })
-      this.initAsciiCaptcha()
-    })
+    ]).then(() => Array.from(this.root.querySelectorAll('[hidden]:not([mode])')).forEach(node => {
+      if (!node.root && !node.shadowRoot) this.hide(node, true)
+    }))
   }
 
   // do the whole file pick, delete and preview stuff
@@ -669,25 +676,5 @@ export default class SimpleForm extends Shadow() {
       }
       this.html = script
     }))
-  }
-
-  /**
-   * this is only triggered when certain query selectors trigger
-   * a custom captcha implementation: src/es/components/atoms/asciiCaptcha/AsciiCaptcha.js
-   *
-   * @returns {void}
-   */
-  initAsciiCaptcha () {
-    if (this.root.querySelector('a-ascii-captcha')) {
-      this.addEventListener(this.getAttribute('ascii-captcha') || 'ascii-captcha', event => {
-        if (event.detail.value[this.hasAttribute('ascii-captcha-enable-touched')
-          ? 'touched'
-          : 'selected']) {
-          this.inputSubmit.removeAttribute('disabled')
-        } else {
-          this.inputSubmit.setAttribute('disabled', 'true')
-        }
-      })
-    }
   }
 }

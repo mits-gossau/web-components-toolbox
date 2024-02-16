@@ -297,10 +297,12 @@ export default class AsciiCaptcha extends Shadow() {
       // @ts-ignore
       value.touched = value.chars.some(char => char.touched)
       this.input.value = JSON.stringify(value)
-      this.dispatchEvent(new CustomEvent(this.getAttribute('ascii-captcha') || 'ascii-captcha', {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('submit-disabled') || 'submit-disabled', {
         detail: {
           input: this.input,
-          value
+          disabled: !value[this.hasAttribute('enable-on-touched')
+          ? 'touched'
+          : 'selected']
         },
         bubbles: true,
         cancelable: true,
