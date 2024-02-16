@@ -52,21 +52,19 @@ export default class NavigationTwo extends Mutation() {
 
     this.resizeListener = event => {
       let oldIsDesktopValue = this.isDesktop
+      let oldAriaExpandedAttribute = this.nav.getAttribute("aria-expanded")
 
-      if (this.hasAttribute('no-scroll')) {
-        this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
-        this.nav.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
-      }
+      if (this.hasAttribute('no-scroll')) this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
 
       // header removes no-scroll at body on resize, which must be avoided if navigation is open
       if (this.hasAttribute('no-scroll') && this.isDesktop === (this.isDesktop = this.checkMedia('desktop')) && ((this.isDesktop && this.classList.contains('open')) || (this.isDesktop && this.root.querySelector('li.open')))) {
+        this.nav.setAttribute('aria-expanded', 'false')
         this.setScrollOnBody(!this.classList.contains('open'), event)
       }
 
       // by mobile resize it closes the open flyout nav, clears the flyout state and set the scroll available on the body
       if (!this.isDesktop) {
-        this.nav.setAttribute('aria-expanded', 'true')
-        if (this.getRootNode().host.shadowRoot && this.getRootNode().host.shadowRoot.querySelector("header") && this.getRootNode().host.shadowRoot.querySelector("header").classList.contains("open")) {
+        if (this.getRootNode().host?.shadowRoot?.querySelector("header")?.classList.contains("open")) {
           this.getRootNode().host.shadowRoot.querySelector("a-menu-icon").click()
           this.setScrollOnBody(true, event)
         }
@@ -74,15 +72,17 @@ export default class NavigationTwo extends Mutation() {
       }
 
       // clear desktop flyout state (hover, scrollPosition, etc) if closes
-      if (this.isDesktop) this.hideAndClearDesktopSubNavigation()
+      if (this.isDesktop && (oldAriaExpandedAttribute !== this.nav.getAttribute("aria-expanded") || oldIsDesktopValue !== this.isDesktop)) this.hideAndClearDesktopSubNavigation()
 
       // make some change on html to be mobile or desktop layout compatible if the screen-width changes between mobile and desktop
       if (oldIsDesktopValue !== this.isDesktop) this.htmlReBuilderByLayoutChange()
     }
 
     this.selfClickListener = (event) => {
+      let currentAriaExpandedAttribute = this.nav.getAttribute("aria-expanded") === "true"
+      if (this.isDesktop) this.nav.setAttribute("aria-expanded", "false")
       if (this.isDesktop && this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
-      if (this.isDesktop) this.hideAndClearDesktopSubNavigation()
+      if (this.isDesktop && currentAriaExpandedAttribute) this.hideAndClearDesktopSubNavigation()
       if (!this.isDesktop) this.hideAndClearMobileSubNavigation()
     }
 
@@ -332,9 +332,15 @@ export default class NavigationTwo extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul {
       max-height: calc(var(--main-wrapper-max-height) - 5vh);
+      position: relative;
       overflow-y: auto;
       overflow-x: visible;
-      position: relative;
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar {
+      background-color: #E0E0E0;
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar-thumb {
+      background: #535353;
     }
     :host > nav > ul > li > o-nav-wrapper > section .close-icon {
       position: absolute;
@@ -343,12 +349,12 @@ export default class NavigationTwo extends Mutation() {
       width: auto !important;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar {
+      background-color: transparent;
       width: 5px;
-      background-color: #E0E0E0;
       margin: 0.5em;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar-thumb {
-      background: #535353;
+      background: transparent;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title {
       padding: 1em;
@@ -416,9 +422,6 @@ export default class NavigationTwo extends Mutation() {
       }
     }
 
-
-
-
     /* Mobile layout */
     @media only screen and (max-width: _max-width_) {
       :host {
@@ -439,6 +442,7 @@ export default class NavigationTwo extends Mutation() {
 
       :host .open-right-slide {
         animation: openRight ${this.animationDurationMs + 'ms'} ease-in-out forwards;
+
       }
 
       :host .navigation-back {
@@ -509,8 +513,8 @@ export default class NavigationTwo extends Mutation() {
         margin-top: 1em;
         width: 100vw;
         right: -100vw;
-        overflow: auto;
         height: 85vh;
+        overflow: hidden;
       }
 
       :host > nav > ul.open {
@@ -549,7 +553,10 @@ export default class NavigationTwo extends Mutation() {
 
       @keyframes openRight {
         0% {right: -100vw}
-        100% {right: 0}
+        100% {
+          right: 0;
+          overflow: auto;
+        }
       }
 
       @keyframes closeRight {
@@ -564,7 +571,10 @@ export default class NavigationTwo extends Mutation() {
 
       @keyframes openLeft {
         0% {right: 100vw}
-        100% { right: 0}
+        100% { 
+          right: 0;
+          overflow: auto;
+        }
       }
     }
     
@@ -616,7 +626,7 @@ export default class NavigationTwo extends Mutation() {
   renderHTML(clonedNav) {
     this.nav = clonedNav || this.root.querySelector('nav') || document.createElement('nav')
     this.nav.setAttribute('aria-labelledby', 'hamburger')
-    this.nav.setAttribute('aria-expanded', this.getMedia() === 'desktop' ? 'true' : 'false')
+    this.nav.setAttribute('aria-expanded', 'false')
     Array.from(this.root.children).forEach(node => {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'NAV') return false
       this.nav.appendChild(node)
@@ -656,28 +666,22 @@ export default class NavigationTwo extends Mutation() {
 
   hideAndClearDesktopSubNavigation() {
     let navWrappers = Array.from(this.root.querySelectorAll("o-nav-wrapper"))
+    let allOpenLiTags = Array.from(this.root.querySelectorAll('li.open'))
+
     navWrappers.forEach(wrapper => {
       let firstNavigationDiv = wrapper.querySelector("div[nav-level='1']")
       let subNavigationDivs = Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
+      navWrappers.forEach(wrapper => Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0)))
       Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0))
       Array.from(firstNavigationDiv.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
-      if (subNavigationDivs.length) {
-        subNavigationDivs.forEach(subNav => {
-          subNav.hidden = true
-        })
-      }
+      if (subNavigationDivs.length) subNavigationDivs.forEach(subNav => subNav.hidden = true)
     })
 
-    // set the aria attributes back to default
-    if (this.nav.getAttribute('aria-expanded') === 'true') {
-      Array.from(this.root.querySelectorAll('li.open')).forEach(li => {
-        li.classList.remove('open')
-        if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
-        if (li.parentElement) {
-          li.parentElement.classList.remove('open')
-        }
-      })
-    }
+    allOpenLiTags.forEach(li => {
+      li.classList.remove('open')
+      if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+      if (li.parentElement) li.parentElement.classList.remove('open')
+    })
   }
 
   hideAndClearMobileSubNavigation() {
@@ -713,19 +717,13 @@ export default class NavigationTwo extends Mutation() {
       let desktopOWrappers = Array.from(currentNav.querySelectorAll("o-nav-wrapper"))
       if (desktopOWrappers.length > 0) {
         desktopOWrappers.forEach(wrapper => {
-          // remove close icon
+          // remove close icon append section
           let closeIcon
-          if (closeIcon = wrapper.querySelector("section a.close-icon")) {
-            closeIcon.parentElement.removeChild(closeIcon)
-          }
-
-          // put section outside of o nav wrapper
           let wrapperSection
+          if (closeIcon = wrapper.querySelector("section a.close-icon")) closeIcon.parentElement.removeChild(closeIcon)
           if (wrapperSection = wrapper.querySelector("section")) {
             let subNavigationDivs = Array.from(wrapperSection.querySelectorAll("div[nav-level]"))
-            if (subNavigationDivs.length > 0) {
-              subNavigationDivs.forEach(div => div.hidden = false)
-            }
+            if (subNavigationDivs.length > 0) subNavigationDivs.forEach(div => div.hidden = false)
             wrapper.parentElement.appendChild(wrapperSection)
             wrapper.parentElement.removeChild(wrapper)
           }
@@ -758,7 +756,8 @@ export default class NavigationTwo extends Mutation() {
 
     // clean state between main li switching
     if (event.currentTarget.parentNode?.parentNode?.parentNode?.tagName === 'NAV') {
-      event.currentTarget.parentNode.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+      this.nav.setAttribute("aria-expanded", "true")
+      // TODO add id for attribute to the element where nav-level-1
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
       this.hideAndClearDesktopSubNavigation()
@@ -775,9 +774,9 @@ export default class NavigationTwo extends Mutation() {
   setMobileMainNavItems(event) {
     // hide all subUl height to avoid large height of nav tag
     let subNavigationDivs = Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
-    subNavigationDivs.forEach(subNavDiv => {
-      let subNavUls = Array.from(subNavDiv.querySelectorAll("ul"))
-      subNavUls.forEach(ul => ul.style.display = "none")
+    subNavigationDivs?.forEach(subNavDiv => {
+      let subNavDivUls = Array.from(subNavDiv.querySelectorAll("ul"))
+      subNavDivUls.forEach(ul => ul.style.display = "none")
     })
     // set the currently clicked/touched aria expended attribute
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
@@ -794,19 +793,18 @@ export default class NavigationTwo extends Mutation() {
     event.currentTarget.parentNode.parentNode.classList.add("close-left-slide")
 
     // remove navigation back button since it can be changed and will be dynamically added below
-    if (event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").querySelector("div > a")) {
-      let currentNavBackATag = event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").querySelector("div > a")
-      currentNavBackATag.parentElement.removeChild(currentNavBackATag)
-    }
+    let oldNavBackATag = event.currentTarget.parentNode?.parentNode?.parentNode?.querySelector("nav > div[nav-level='1']")?.querySelector("div > a")
+    oldNavBackATag?.parentElement.removeChild(oldNavBackATag)
+
     // create new navigation back button 
-    let navBackATag = document.createElement("a")
+    let newNavBackATag = document.createElement("a")
     let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute("mobile-navigation-name")
-    navBackATag.innerHTML = /* HTML */`
+    newNavBackATag.innerHTML = /* HTML */`
      <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronLeft" color="red" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
      <span>${mobileNavigationName}</span>
      `
-    navBackATag.classList.add("navigation-back")
-    navBackATag.addEventListener('click', (event) => {
+    newNavBackATag.classList.add("navigation-back")
+    newNavBackATag.addEventListener('click', (event) => {
       // @ts-ignore
       event.currentTarget.parentNode.classList.remove("open-right-slide")
       // @ts-ignore
@@ -823,7 +821,7 @@ export default class NavigationTwo extends Mutation() {
       // remove element after animation is done => TODO create global animation duration variable
       setTimeout(() => currentSubNavElements.forEach(subNav => subNav.parentNode.removeChild(subNav)), this.removeElementAfterAnimationDurationMs)
     })
-    event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").prepend(navBackATag)
+    event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").prepend(newNavBackATag)
     event.currentTarget.parentNode.parentNode.classList.remove("open-left-slide")
     event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").classList.add("open-right-slide")
   }
@@ -842,8 +840,10 @@ export default class NavigationTwo extends Mutation() {
       if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
       li.classList.remove("hover-active")
     })
+
     event.currentTarget.parentNode.setAttribute("aria-expanded", "true")
     event.currentTarget.parentNode.classList.add("hover-active")
+
     let subUl = null
     if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
       wrapperDivNextSiblingDiv.hidden = true
@@ -877,9 +877,8 @@ export default class NavigationTwo extends Mutation() {
   }
 
   handleNewTabNavigationOnNavItems(event) {
-    // TODO Ivan keep open or close?
     event.preventDefault()
-    // immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
+    // TODO do we need this remove? immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
     setTimeout(() => this.removeAttribute('style'), 3000)
     self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
   }
@@ -894,6 +893,7 @@ export default class NavigationTwo extends Mutation() {
     if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul")).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul"))
 
     event.currentTarget.parentNode.setAttribute("aria-expanded", "true")
+
     let subUl = null
     if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
       wrapperDivNextSiblingDivUls.forEach(ul => {
@@ -901,19 +901,21 @@ export default class NavigationTwo extends Mutation() {
       })
 
       if (wrapperDivNextSiblingDiv) {
+        //remove old navigation-back button
         if (wrapperDivNextSiblingDiv.querySelector("div > a")) {
-          let currentNavBackATag = wrapperDivNextSiblingDiv.querySelector("div > a")
-          currentNavBackATag.parentElement.removeChild(currentNavBackATag)
+          let oldNavBackATag = wrapperDivNextSiblingDiv.querySelector("div > a")
+          oldNavBackATag.parentElement.removeChild(oldNavBackATag)
         }
-        let navBackATag2 = document.createElement("a")
+        // create new navigation-back button
+        let newNavBackATag = document.createElement("a")
         let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute("mobile-navigation-name")
-        navBackATag2.innerHTML = /* HTML */`
+        newNavBackATag.innerHTML = /* HTML */`
         <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronLeft" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
         <span>${mobileNavigationName}</span>
         `
-        navBackATag2.classList.add("navigation-back")
+        newNavBackATag.classList.add("navigation-back")
 
-        navBackATag2.addEventListener('click', (event) => {
+        newNavBackATag.addEventListener('click', (event) => {
 
           // @ts-ignore
           event.currentTarget.parentNode.className = ""
@@ -927,25 +929,24 @@ export default class NavigationTwo extends Mutation() {
           // find uls and add display none to all
           setTimeout(() => {
             wrapperDivNextSiblingDivUls.forEach(ul => {
-              ul.scrollTo(0, 0)
               ul.style.display = "none"
             })
           }, this.removeElementAfterAnimationDurationMs)
         })
 
-        subUl.parentElement.prepend(navBackATag2)
+        subUl.parentElement.prepend(newNavBackATag)
       }
+
       setTimeout(() => {
         wrapperDiv.scrollTo(0, 0)
       }, this.removeElementAfterAnimationDurationMs)
+
       wrapperDivNextSiblingDiv.scrollTo(0, 0)
       subUl.style.display = "block"
       wrapperDiv.className = ""
       wrapperDiv.classList.add("close-left-slide")
       wrapperDivNextSiblingDiv.className = ""
       wrapperDivNextSiblingDiv.classList.add("open-right-slide")
-      // i think we dont need at all this line of code
-      if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = "none")
     } else {
       return
     }
@@ -979,15 +980,6 @@ export default class NavigationTwo extends Mutation() {
         closeIconElement.classList.add("close-icon")
         wrapper.querySelector("section").appendChild(closeIconElement)
 
-        Array.from(wrapper.querySelectorAll("div")).forEach(div => {
-          if (+div.getAttribute("nav-level") !== 1) {
-            Array.from(div.querySelectorAll("ul")).forEach(ul => {
-              ul.style.display = "none";
-            })
-            div.hidden = true
-          }
-        })
-
         // Add class for title li a element
         let subTitleLiTags = Array.from(wrapper.querySelectorAll("li")).filter(li => !li.querySelector("ks-m-nav-level-item"))
         subTitleLiTags.forEach(li => li.classList.add("list-title"))
@@ -999,7 +991,7 @@ export default class NavigationTwo extends Mutation() {
         // Add listener if there is an attribute on this element
         let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("ks-m-nav-level-item"))
         subLiElements.forEach(li => {
-          // add aria attributes to lis where needed
+          // set aria attributes where needed
           if (li.hasAttribute("sub-nav")) {
             li.setAttribute("aria-expanded", "false")
             li.setAttribute("aria-controls", `${li.getAttribute('sub-nav')}`)
