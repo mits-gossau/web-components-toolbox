@@ -32,7 +32,8 @@
     align-items: center;
 }
 :host > form o-grid > section > div {
-    justify-content: space-between;
+    justify-content: var(--simple-form-default-o-grid-div-justify-content-custom, space-between);
+    gap: var(--simple-form-default-o-grid-div-gap-custom, 1em);
 }
 :host > form *[inset] {
     padding-left: var(--content-spacing);
@@ -53,6 +54,7 @@
 :host input + label::after, :host label:has(+ input)::after, :host select + label::after, :host label:has(+ select)::after, :host textarea + label::after, :host label:has(+ textarea)::after, :host input[type=file] + div::after, :host div:has(+ input[type=file])::after {
     color: var(--color-error, var(--color-secondary, red));
     content: attr(validation-message);
+    display: none;
     float: right;
     font-size: 0.875em;
     opacity: 0;
@@ -61,7 +63,6 @@
     transition: opacity 0.3s ease-out;
 }
 :host input[type=file] + div::after, :host div:has(+ input[type=file])::after {
-    display: none;
     transition: display 0.3s ease-out;
 }
 :host([dirty]) input[type=checkbox] + label::after, :host([dirty]) label:has(+ input[type=checkbox])::after {
