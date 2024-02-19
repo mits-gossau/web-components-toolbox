@@ -54,19 +54,28 @@ export default class Dialog extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
+    this.hidden = true
+    const showPromises = []
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    Promise.all(showPromises).then(() => {
+      this.hidden = false
+      if (this.hasAttribute('open')) {
+        this.show((this.getAttribute('open') || '').replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase()) || undefined)
+        this.removeAttribute('open')
+      }
+      // From web components the event does not bubble up to this host
+      this.showNodes.forEach(node => node.addEventListener('click', this.showClickEventListener))
+      this.closeNodes.forEach(node => node.addEventListener('click', this.closeClickEventListener))
+    })
     this.addEventListener('click', this.clickEventListener)
-    // From web components the event does not bubble up to this host
-    this.showNodes.forEach(node => node.addEventListener('click', this.showClickEventListener))
-    this.closeNodes.forEach(node => node.addEventListener('click', this.closeClickEventListener))
   }
 
   disconnectedCallback () {
-    this.removeEventListener('click', this.clickEventListener)
     // From web components the event does not bubble up to this host
     this.showNodes.forEach(node => node.removeEventListener('click', this.showClickEventListener))
     this.closeNodes.forEach(node => node.removeEventListener('click', this.closeClickEventListener))
+    this.removeEventListener('click', this.clickEventListener)
   }
 
   /**
@@ -119,22 +128,22 @@ export default class Dialog extends Shadow() {
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles])
+        }, ...styles], false)
       case 'dialog-top-slide-in-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./top-slide-in-/top-slide-in-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles])
+        }, ...styles], false)
       case 'dialog-left-slide-in-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./left-slide-in-/left-slide-in-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles])
+        }, ...styles], false)
       case 'dialog-left-slide-in-without-background-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./left-slide-in-without-background-/left-slide-in-without-background-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles])
+        }, ...styles], false)
       default:
         return this.fetchCSS(styles)
     }
@@ -142,16 +151,11 @@ export default class Dialog extends Shadow() {
 
   /**
    * Render HTML
-   * @returns void
+   * @returns Promise<void>
    */
   renderHTML () {
     this.html = /* html */`
       <dialog
-        ${
-          this.hasAttribute('open')
-            ? 'open'
-            : ''
-        }
         ${
           this.hasAttribute('autofocus')
            ? 'autofocus'
@@ -164,6 +168,7 @@ export default class Dialog extends Shadow() {
       if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open') return (this.html = node)
       this.dialog.appendChild(node)
     })
+    return Promise.resolve()
   }
 
   get dialog () {
