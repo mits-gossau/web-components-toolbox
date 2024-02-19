@@ -154,7 +154,7 @@
   font-weight: var(--font-weight-strong, bold);
   text-transform: var(--text-transform-strong, none);
 }
-:host .italic, :host strong, :host b {
+:host .italic {
   font-style: italic;
 }
 :host .line-height-one-em {
