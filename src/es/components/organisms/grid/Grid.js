@@ -51,14 +51,14 @@ export default class Grid extends Shadow() {
     this.css = /* css */`
       :host {
         ${this.hasAttribute('width')
-          ? `width: ${this.getAttribute('width') || 'auto'} !important;`
+          ? `width: ${this.getAttribute('width') || 'var(--width, auto)'} !important;`
           : ''
         }
       }
       :host > section {
         display:grid;
           ${this.hasAttribute('height')
-            ? `height: ${this.getAttribute('height') || '100%'};`
+            ? `height: ${this.getAttribute('height') || 'var(--height, 100%)'};`
             : ''
           }
       }
@@ -66,30 +66,30 @@ export default class Grid extends Shadow() {
     if (this.hasAttribute('auto-fit')) {
       this.css = /* css */`
       :host > section {
-        grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit') || '12.5em'}, 1fr));
-        grid-template-rows: auto;
+        grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit') || 'var(--auto-fit-grid-template-columns, 12.5em)'}, 1fr));
+        grid-template-rows: var(--auto-fit-grid-template-rows, auto);
       }
     `
     }
     if (this.hasAttribute('auto-fill')) {
       this.css = /* css */`
       :host > section {
-        grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill') || '12.5em'}, 1fr));
-        grid-template-rows: auto;
+        grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill') || 'var(--auto-fill-grid-template-columns, 12.5em)'}, 1fr));
+        grid-template-rows: var(--auto-fill-grid-template-rows, auto);
       }
     `
     }
-    if (this.getAttribute('gap')) {
+    if (this.hasAttribute('gap')) {
       this.css = /* css */`
       :host > section {
-        gap: ${this.getAttribute('gap')};
+        gap: ${this.getAttribute('gap') || 'var(--gap, 0)'};
       }
     `
     }
-    if (this.getAttribute('padding')) {
+    if (this.hasAttribute('padding')) {
       this.css = /* css */`
       :host > section > * {
-        padding: ${this.getAttribute('padding')};
+        padding: ${this.getAttribute('padding') || 'var(--padding, 0)'};
       }
     `
     }
@@ -98,13 +98,13 @@ export default class Grid extends Shadow() {
       @media only screen and (max-width: _max-width_) {
         :host {
           ${this.hasAttribute('width-mobile')
-            ? `width: ${this.getAttribute('width-mobile') || 'auto'} !important;`
+            ? `width: ${this.getAttribute('width-mobile') || 'var(--width-mobile, var(--width, auto))'} !important;`
             : ''
           }
         }
         :host > section {
             ${this.hasAttribute('height-mobile')
-            ? `height: ${this.getAttribute('height-mobile') || '100%'};`
+            ? `height: ${this.getAttribute('height-mobile') || 'var(--height-mobile, var(--height, 100%))'};`
             : ''
           }
         }
@@ -114,8 +114,8 @@ export default class Grid extends Shadow() {
       this.css = /* css */`
       @media only screen and (max-width: _max-width_) {
         :host > section {
-          grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit-mobile') || '12.5em'}, 1fr));
-          grid-template-rows: auto;
+          grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit-mobile') || 'var(--auto-fit-grid-template-columns-mobile, var(--auto-fit-grid-template-columns, 12.5em))'}, 1fr));
+          grid-template-rows: var(--auto-fit-grid-template-rows-mobile, var(--auto-fit-grid-template-rows, auto));
         }
       }
     `
@@ -124,26 +124,26 @@ export default class Grid extends Shadow() {
       this.css = /* css */`
       @media only screen and (max-width: _max-width_) {
         :host > section {
-          grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill-mobile') || '12.5em'}, 1fr));
-          grid-template-rows: auto;
+          grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill-mobile') || 'var(--auto-fill-grid-template-columns-mobile, var(--auto-fill-grid-template-columns, 12.5em))'}, 1fr));
+          grid-template-rows: var(--auto-fill-grid-template-rows-mobile, var(--auto-fill-grid-template-rows, auto));
         }
       }
     `
     }
-    if (this.getAttribute('gap-mobile')) {
+    if (this.hasAttribute('gap-mobile')) {
       this.css = /* css */`
       @media only screen and (max-width: _max-width_) {
         :host > section {
-          gap: ${this.getAttribute('gap-mobile')};
+          gap: ${this.getAttribute('gap-mobile') || 'var(--gap-mobile, var(--gap, 0))'};
         }
       }
     `
     }
-    if (this.getAttribute('padding-mobile')) {
+    if (this.hasAttribute('padding-mobile')) {
       this.css = /* css */`
       @media only screen and (max-width: _max-width_) {
         :host > section {
-          padding: ${this.getAttribute('padding-mobile')};
+          padding: ${this.getAttribute('padding-mobile') || 'var(--padding-mobile, var(--padding, 0))'};
         }
       }
     `
