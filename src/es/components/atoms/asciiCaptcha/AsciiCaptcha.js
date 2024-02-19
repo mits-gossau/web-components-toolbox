@@ -135,7 +135,7 @@ export default class AsciiCaptcha extends Shadow() {
       :host {
         display: flex;
         flex-direction: var(--flex-direction, column);
-        align-items: var(--align-items, end);
+        align-items: var(--align-items, start);
         justify-content: var(--justify-content, normal);
       }
       :host > *[id=reset] {
