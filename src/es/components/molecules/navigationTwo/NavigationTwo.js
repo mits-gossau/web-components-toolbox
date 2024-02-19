@@ -276,6 +276,21 @@ export default class NavigationTwo extends Mutation() {
       display: block;
       padding: var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4));
     }
+    :host > nav > ul > li > div.main-background {
+      cursor: auto;
+      display: none;
+      position: fixed;
+      background-color: var(--m-gray-500);
+      width: var(--ul-li-div-background-width, 100vw);
+      height: 100vw;
+      left: var(--ul-li-div-background-left, 0);
+      top: 0;
+      opacity: 0;
+    }
+    :host > nav > ul > li.open > div.main-background {
+      display: block;
+      opacity: 0.4;
+    }
     :host > nav > ul > li > o-nav-wrapper a {
       --a-color: var(--color-active);
     }
@@ -307,10 +322,19 @@ export default class NavigationTwo extends Mutation() {
       --align-items: start;
       --ul-padding-left: 0;
       --show: slideInFromTop 0.2s ease;
-      overflow: hidden;
+      overflow: visible;
     }
     :host > nav > ul > li.open > o-nav-wrapper {
       display: flex !important;
+    }
+    :host > nav > ul > li.open > o-nav-wrapper div.wrapper-background {
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      background-color: white;
     }
     :host > nav > ul > li > o-nav-wrapper > section {
       --gap: 1.25em;
@@ -320,7 +344,7 @@ export default class NavigationTwo extends Mutation() {
       width: calc(calc(100% - 2 * var(--gap)) / 3) !important;
       position: relative;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div::after {
+    :host > nav > ul > li > o-nav-wrapper > section > div:not(:last-of-type):after {
       content: "";
       display: block;
       position: absolute;
@@ -760,6 +784,7 @@ export default class NavigationTwo extends Mutation() {
       // TODO add id for attribute to the element where nav-level-1
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
+      this.addBackgroundDivPosition(event)
       this.hideAndClearDesktopSubNavigation()
     }
 
@@ -972,6 +997,15 @@ export default class NavigationTwo extends Mutation() {
         })
         section.replaceWith(wrapper)
 
+        // add main background color dark if flyout open div
+        const mainBackgroundDiv = document.createElement('div')
+        mainBackgroundDiv.className = "main-background"
+        wrapper.parentElement.prepend(mainBackgroundDiv)
+        //add full width background with div
+        const wrapperBackgroundDiv = document.createElement('div')
+        wrapperBackgroundDiv.className = "wrapper-background"
+        wrapper.prepend(wrapperBackgroundDiv)
+
         // add close icon to all flyout
         let closeIconElement = document.createElement("a")
         closeIconElement.innerHTML = /* HTML */`
@@ -1031,6 +1065,12 @@ export default class NavigationTwo extends Mutation() {
     })
 
     this.html = this.style
+  }
+
+  addBackgroundDivPosition(event) {
+    const backgroundTopPosition = event.pageY + 50
+    const mainFlyoutBackgroundDiv = event.currentTarget.parentElement.querySelector('.main-background')
+    if (mainFlyoutBackgroundDiv) mainFlyoutBackgroundDiv.style.top = `${backgroundTopPosition}px`;
   }
 
   getMedia() {
