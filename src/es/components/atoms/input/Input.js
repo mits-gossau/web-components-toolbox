@@ -169,6 +169,7 @@ export default class Input extends Shadow() {
       .mui-form-group {
         font-family: var(--font-family);
         max-width: var(--max-width, none);
+        height: var(--height, auto);
       }
       .mui-form-group + .mui-form-group {
         margin-top: var(--margin-top, var(--content-spacing));
@@ -188,7 +189,8 @@ export default class Input extends Shadow() {
         caret-color: var(--caret-color, var(--input-color, var(--color-secondary, var(--color))));
         display: block;
         padding: 0.625em 1em;
-        width: 100%;
+        width: var(--input-width, 100%);
+        height: var(--input-height, auto);
         font-family: inherit;
         font-size: var(--input-font-size, var(--font-size));
         line-height: var(--input-line-height, 1.4);
@@ -224,6 +226,11 @@ export default class Input extends Shadow() {
       input:disabled,
       input:read-only {
         cursor: not-allowed;
+      }
+
+      input:disabled {
+        background: var(--input-bg-color-disabled, var(--input-bg-color, var(--m-gray-200)));
+        color: var(--input-color-disabled, var(--input-color, var(--color)));
       }
 
       :host([search]) .mui-form-group {
@@ -398,9 +405,10 @@ export default class Input extends Shadow() {
     ]).then(([labelHtml, searchHtml]) => {
       this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml)
       this.divWrapper.innerHTML += /* html */`
-          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
+          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} ${this.hasAttribute('disabled') ? 'disabled' : ''} />
           ${searchHtml}
       `
+      if (this.hasAttribute('autofocus')) this.removeAttribute('autofocus')
       this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint')
         ? this.getAttribute('enterkeyhint')
         : this.search
