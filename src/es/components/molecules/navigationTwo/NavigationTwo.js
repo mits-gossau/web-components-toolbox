@@ -133,6 +133,12 @@ export default class NavigationTwo extends Mutation() {
 
       if (!event.target.classList.contains("hover-active")) {
         event.target.classList.add("hover-active")
+        let currentEventTarget = event.target
+        if (event.target && !event.target.hasAttribute('sub-nav') && event.target.classList.contains("hover-active")) {
+          setTimeout(() => {
+            currentEventTarget.classList.remove('hover-active')
+          }, 3000)
+        }
       }
 
       if (!event.target.hasAttribute("sub-nav")) {
@@ -263,13 +269,13 @@ export default class NavigationTwo extends Mutation() {
     :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) > nav > ul {
       padding: var(--padding-${this.getAttribute('no-scroll') || 'no-scroll'}, calc(var(--content-spacing, 40px) / 2) 0);
     }
-    :host li ks-m-nav-level-item {
+    :host li m-nav-level-item {
       --nav-level-item-default-font-size: 1em;
       --nav-level-item-default-height: 2.75em;
       --nav-level-item-default-margin: 2px;
       --nav-level-item-default-font-weight: 500;
     }
-    :host li.hover-active ks-m-nav-level-item {
+    :host li.hover-active m-nav-level-item {
       --nav-level-item-default-background-color: #E0F0FF;
     }
     :host > nav > ul > li {
@@ -343,6 +349,8 @@ export default class NavigationTwo extends Mutation() {
     :host > nav > ul > li > o-nav-wrapper > section > div {
       width: calc(calc(100% - 2 * var(--gap)) / 3) !important;
       position: relative;
+      height: 100%;
+
     }
     :host > nav > ul > li > o-nav-wrapper > section > div:not(:last-of-type):after {
       content: "";
@@ -355,7 +363,7 @@ export default class NavigationTwo extends Mutation() {
       background: #E0E0E0;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul {
-      max-height: calc(var(--main-wrapper-max-height) - 5vh);
+      height: 100%;
       position: relative;
       overflow-y: auto;
       overflow-x: visible;
@@ -364,7 +372,7 @@ export default class NavigationTwo extends Mutation() {
       background-color: #E0E0E0;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar-thumb {
-      background: #535353;
+      background: #c1c1c1;
     }
     :host > nav > ul > li > o-nav-wrapper > section .close-icon {
       position: absolute;
@@ -430,19 +438,13 @@ export default class NavigationTwo extends Mutation() {
 
     @media only screen and (min-height: 701px) {
       :host > nav > ul > li > o-nav-wrapper {
-        max-height: var(--main-wrapper-max-height, 70vh);
+        height: var(--desktop-main-wrapper-height, 50vh);
       }
     }
 
     @media only screen and (max-height: 700px) {
       :host > nav > ul > li > o-nav-wrapper {
-        max-height: 60vh;
-      }
-    }
-
-    @media only screen and (max-height: 500px) {
-      :host > nav > ul > li > o-nav-wrapper {
-        max-height: 50vh;
+        height: var(--mobile-main-wrapper-height, 60vh);
       }
     }
 
@@ -482,7 +484,7 @@ export default class NavigationTwo extends Mutation() {
         --icon-link-list-color: #262626;
       }
 
-      :host li ks-m-nav-level-item {
+      :host li m-nav-level-item {
         --nav-level-item-default-height: 3.25em;
         --nav-level-item-default-padding: 0 0.75em 0 0;
         --nav-level-item-default-margin: 2px 0;
@@ -603,8 +605,17 @@ export default class NavigationTwo extends Mutation() {
     }
     
     `
+    this.setCss(/* css */`
+      :host li m-nav-level-item {
+        --nav-level-item-default-font-size: 1em;
+        --nav-level-item-default-height: 2.75em;
+        --nav-level-item-default-margin: 2px;
+        --nav-level-item-default-font-weight: 500;
+      }
+    `, undefined, false, false)
     return this.fetchTemplate()
   }
+
 
   /**
    * fetches the template
@@ -1015,7 +1026,7 @@ export default class NavigationTwo extends Mutation() {
         wrapper.querySelector("section").appendChild(closeIconElement)
 
         // Add class for title li a element
-        let subTitleLiTags = Array.from(wrapper.querySelectorAll("li")).filter(li => !li.querySelector("ks-m-nav-level-item"))
+        let subTitleLiTags = Array.from(wrapper.querySelectorAll("li")).filter(li => !li.querySelector("m-nav-level-item"))
         subTitleLiTags.forEach(li => li.classList.add("list-title"))
 
         // add subUl id based on sub-nav-id to have aria-controls connection
@@ -1023,7 +1034,7 @@ export default class NavigationTwo extends Mutation() {
         subUlElements.forEach(ul => ul.setAttribute("id", `${ul.getAttribute('sub-nav-id')}`))
 
         // Add listener if there is an attribute on this element
-        let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("ks-m-nav-level-item"))
+        let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("m-nav-level-item"))
         subLiElements.forEach(li => {
           // set aria attributes where needed
           if (li.hasAttribute("sub-nav")) {
@@ -1055,7 +1066,7 @@ export default class NavigationTwo extends Mutation() {
         ` );
 
       // Add class for title li a element
-      let subTitleLiTags = Array.from(mainLi.querySelectorAll("li")).filter(li => !li.querySelector("ks-m-nav-level-item"))
+      let subTitleLiTags = Array.from(mainLi.querySelectorAll("li")).filter(li => !li.querySelector("m-nav-level-item"))
       subTitleLiTags.forEach(li => li.classList.add("list-title"))
     })
 
