@@ -587,18 +587,21 @@ export default class NavigationTwo extends Mutation() {
     @keyframes slideInFromTop {
       0% {
         opacity: 0;
-        transform: translateY(-5em)
+        transform: translateY(-5em);
+        pointer-events: none;
       }
       100% {
         opacity: 1;
-        transform: translateY(0)
+        transform: translateY(0);
+        pointer-events: auto;
         }
       }
 
       @keyframes slideOutToTop {
         0% {
           opacity: 1;
-          transform: translateY(0)
+          transform: translateY(0);
+          pointer-events: none;
         }
         100% {
           opacity: 0;
@@ -625,28 +628,42 @@ export default class NavigationTwo extends Mutation() {
         }
 
       @keyframes mobileOpenRight {
-        0% {right: -100vw}
+        0% {
+          right: -100vw;
+          pointer-events: none;
+        }
         100% {
           right: 0;
           overflow: auto;
+          pointer-events: auto;
         }
       }
 
       @keyframes mobileCloseRight {
-        0% {right: 0}
+        0% {
+          right: 0;
+          pointer-events: none;
+        }
         100% {right: -100vw}
       }
 
       @keyframes mobileCloseLeft {
-        0% {right: 0}
+        0% {
+          right: 0;
+          pointer-events: none;
+        }
         100% { right: 100vw}
       }
 
       @keyframes mobileOpenLeft {
-        0% {right: 100vw}
+        0% {
+          right: 100vw;
+          pointer-events: none;
+        }
         100% { 
           right: 0;
           overflow: auto;
+          pointer-events: auto;
         }
       }
 
@@ -660,17 +677,6 @@ export default class NavigationTwo extends Mutation() {
           opacity: 1;
           right: 0;
           pointer-events: auto;
-        }
-      }
-
-      @keyframes desktopCloseLeft {
-        0% {
-          opacity: 1;
-          right: 0;
-        }
-        100% { 
-          opacity: 0;
-          right: 5em;
         }
       }
     }
@@ -843,6 +849,7 @@ export default class NavigationTwo extends Mutation() {
           // remove close icon append section
           let closeIcon
           let wrapperSection
+          wrapper.parentElement.classList.remove("open")
           if (closeIcon = wrapper.querySelector("section a.close-icon")) closeIcon.parentElement.removeChild(closeIcon)
           if (wrapperSection = wrapper.querySelector("section")) {
             let subNavigationDivs = Array.from(wrapperSection.querySelectorAll("div[nav-level]"))
