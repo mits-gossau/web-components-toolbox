@@ -252,6 +252,10 @@ export default class NavigationTwo extends Mutation() {
    */
   renderCSS() {
     this.css = /* css */`
+    :host {
+      color: black;
+      overscroll-behavior: contain;
+    }
     :host > nav > ul {
       align-items: var(--align-items, normal);
       justify-content: var(--justify-content, normal);
@@ -305,6 +309,15 @@ export default class NavigationTwo extends Mutation() {
     :host > nav > ul > li.open > a > span {
       border-bottom: 3px solid var(--color-active);
       color: var(--color-active);
+    }
+    :host > nav > ul > li > a {
+      padding: var(--a-main-content-spacing, 14px 10px);
+      font-size: var(--a-main-font-size, 1rem);
+      font-weight: var(--a-main-font-weight);
+      line-height: var(--a-main-line-height);
+      text-transform: var(--a-main-text-transform);
+      font-family: var(--a-main-font-family, var(--font-family));
+      font-weight: var(--a-font-weight, var(--font-weight, normal));
     }
     :host > nav > ul > li > a:hover,
     :host > nav > ul > li > a:active,
@@ -424,36 +437,6 @@ export default class NavigationTwo extends Mutation() {
       color: var(--color-active) !important;
 
     }
-    /* FROM HERE THE PASTED CSS*/
-    :host {
-      color: black;
-      overscroll-behavior: contain;
-    }
-    :host > nav > ul > li > a {
-      padding: var(--a-main-content-spacing, 14px 10px);
-      font-size: var(--a-main-font-size, 1rem);
-      font-weight: var(--a-main-font-weight);
-      line-height: var(--a-main-line-height);
-      text-transform: var(--a-main-text-transform);
-      font-family: var(--a-main-font-family, var(--font-family));
-      font-weight: var(--a-font-weight, var(--font-weight, normal));
-    }
-    :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) a {
-      --color: var(--a-color-${this.getAttribute('no-scroll') || 'no-scroll'});
-      --padding: var(--a-content-spacing-${this.getAttribute('no-scroll') || 'no-scroll'}, 14px 10px);
-      --font-size: var(--a-font-size-${this.getAttribute('no-scroll') || 'no-scroll'}, 1rem);
-      --font-weight: var(--a-font-weight-${this.getAttribute('no-scroll') || 'no-scroll'});
-      --line-height: var(--a-line-height-${this.getAttribute('no-scroll') || 'no-scroll'});
-    }
-    :host > nav > ul li.open > ${this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'} > section {
-      --a-link-content-spacing-no-scroll: var(--a-link-content-spacing-no-scroll-custom, 0.5rem 0.5rem 0.5rem calc(2rem + min(30vw, 50px)));
-      --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
-      --a-link-font-size-mobile: 1.1429rem;
-      --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
-      /*animation: open .2s ease;*/
-      left: 0;
-    }
-
     @media only screen and (min-height: 701px) {
       :host > nav > ul > li > o-nav-wrapper {
         height: var(--desktop-main-wrapper-height, 50vh);
@@ -786,7 +769,15 @@ export default class NavigationTwo extends Mutation() {
       navWrappers.forEach(wrapper => Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0)))
       Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0))
       Array.from(firstNavigationDiv.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
-      if (subNavigationDivs.length) subNavigationDivs.forEach(subNav => subNav.hidden = true)
+      if (subNavigationDivs.length) subNavigationDivs.forEach(subNav => {
+        if (event && !event.currentTarget.tagName) {
+          setTimeout(() => {
+            subNav.hidden = true
+          }, 300);
+        } else {
+          subNav.hidden = true
+        }
+      })
       if (wrapper.parentElement.classList.contains('open')) {
         wrapper.classList.remove("no-animation")
       }
