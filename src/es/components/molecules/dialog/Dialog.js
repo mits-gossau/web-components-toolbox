@@ -15,9 +15,12 @@ export default class Dialog extends Shadow() {
     /**
      * @param {'show'|'showModal'} [command='show']
      */
-    this.show = (command = 'show') => {
+    this.show = (command = this.getAttribute('command-show') || 'show-modal') => {
+      // @ts-ignore
+      command = command.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
       this.dispatchEvent(new CustomEvent('no-scroll', { detail: { hasNoScroll: true }, bubbles: true, cancelable: true, composed: true }))
       this.dialog.classList.remove('closed')
+      // @ts-ignore
       this.dialog[command]()
       Array.from(this.dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
     }
@@ -31,11 +34,12 @@ export default class Dialog extends Shadow() {
 
     this.clickEventListener = event => {
       // click on backdrop
-      if (event.composedPath()[0] === this.dialog) {
+      if (!this.hasAttribute('no-backdrop-close') && event.composedPath()[0] === this.dialog) {
         const rect = this.dialog.getBoundingClientRect()
         if (event.clientY < rect.top || event.clientY > rect.bottom || event.clientX < rect.left || event.clientX > rect.right) {
           event.stopPropagation()
           this.close()
+          this.dispatchEvent(new CustomEvent(this.getAttribute('backdrop-clicked') || 'backdrop-clicked', { bubbles: true, cancelable: true, composed: true }))
         }
       }
     }
@@ -51,6 +55,8 @@ export default class Dialog extends Shadow() {
       event.stopPropagation()
       this.close()
     }
+    this.showEventListener = event => this.show(event.detail.command)
+    this.closeEventListener = () => this.close()
   }
 
   connectedCallback () {
@@ -61,7 +67,7 @@ export default class Dialog extends Shadow() {
     Promise.all(showPromises).then(() => {
       this.hidden = false
       if (this.hasAttribute('open')) {
-        this.show((this.getAttribute('open') || '').replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase()) || undefined)
+        this.show(this.getAttribute('open') || undefined)
         this.removeAttribute('open')
       }
       // From web components the event does not bubble up to this host
@@ -69,6 +75,8 @@ export default class Dialog extends Shadow() {
       this.closeNodes.forEach(node => node.addEventListener('click', this.closeClickEventListener))
     })
     this.addEventListener('click', this.clickEventListener)
+    if (this.getAttribute('show-event-name')) document.body.addEventListener(this.getAttribute('show-event-name'), this.showEventListener)
+    if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
   }
 
   disconnectedCallback () {
@@ -76,6 +84,8 @@ export default class Dialog extends Shadow() {
     this.showNodes.forEach(node => node.removeEventListener('click', this.showClickEventListener))
     this.closeNodes.forEach(node => node.removeEventListener('click', this.closeClickEventListener))
     this.removeEventListener('click', this.clickEventListener)
+    if (this.getAttribute('show-event-name')) document.body.removeEventListener(this.getAttribute('show-event-name'), this.showEventListener)
+    if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
   }
 
   /**
