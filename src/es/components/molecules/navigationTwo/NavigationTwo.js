@@ -82,7 +82,7 @@ export default class NavigationTwo extends Mutation() {
       let currentAriaExpandedAttribute = this.nav.getAttribute("aria-expanded") === "true"
       if (this.isDesktop) this.nav.setAttribute("aria-expanded", "false")
       if (this.isDesktop && this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
-      if (this.isDesktop && currentAriaExpandedAttribute) this.hideAndClearDesktopSubNavigation()
+      if (this.isDesktop && currentAriaExpandedAttribute) this.hideAndClearDesktopSubNavigation(event)
       if (!this.isDesktop) this.hideAndClearMobileSubNavigation()
     }
 
@@ -137,7 +137,7 @@ export default class NavigationTwo extends Mutation() {
         if (event.target && !event.target.hasAttribute('sub-nav') && event.target.classList.contains("hover-active")) {
           setTimeout(() => {
             currentEventTarget.classList.remove('hover-active')
-          }, 3000)
+          }, 2000)
         }
       }
 
@@ -295,7 +295,9 @@ export default class NavigationTwo extends Mutation() {
     }
     :host > nav > ul > li.open > div.main-background {
       display: block;
-      opacity: 0.4;
+    }
+    :host > nav > ul > li > div.main-background.hide {
+      animation: FadeOutBackground 0.1s ease-in-out forwards !important;
     }
     :host > nav > ul > li > o-nav-wrapper a {
       --a-color: var(--color-active);
@@ -324,16 +326,17 @@ export default class NavigationTwo extends Mutation() {
       background-color: white;
       width: calc(100% + var(--logo-default-width,var(--width, auto)));
       border-top: 1px solid #E0E0E0;
+      --show: slideInFromTop 0.3s ease-in-out forwards;
       --justify-content: start;
       --align-items: start;
       --ul-padding-left: 0;
-      --show: slideInFromTop 0.2s ease;
       overflow: visible;
     }
     :host > nav > ul > li.open > o-nav-wrapper {
       display: flex !important;
     }
-    :host > nav > ul > li.open > o-nav-wrapper div.wrapper-background {
+    :host > nav > ul > li > o-nav-wrapper div.wrapper-background {
+      display: none;
       width: 100vw;
       position: relative;
       left: 50%;
@@ -341,6 +344,16 @@ export default class NavigationTwo extends Mutation() {
       margin-left: -50vw;
       margin-right: -50vw;
       background-color: white;
+      animation: none !important;
+    }
+    :host > nav > ul > li > o-nav-wrapper.hide {
+      --show: slideOutToTop 0.3s ease-in-out forwards;
+    }
+    :host > nav > ul > li.open > o-nav-wrapper.no-animation {
+      --show: none;
+    }
+    :host > nav > ul > li.open > o-nav-wrapper div.wrapper-background {
+      display: block;
     }
     :host > nav > ul > li > o-nav-wrapper > section {
       --gap: 1.25em;
@@ -350,7 +363,12 @@ export default class NavigationTwo extends Mutation() {
       width: calc(calc(100% - 2 * var(--gap)) / 3) !important;
       position: relative;
       height: 100%;
-
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div:first-of-type {
+      --show: none;
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div:not(:first-of-type) {
+      --show: desktopOpenLeft 0.3s ease-in-out forwards;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div:not(:last-of-type):after {
       content: "";
@@ -432,7 +450,7 @@ export default class NavigationTwo extends Mutation() {
       --a-link-content-spacing: var(--a-link-content-spacing-no-scroll);
       --a-link-font-size-mobile: 1.1429rem;
       --a-link-second-level-font-size-mobile: var(--a-link-font-size-mobile);
-      animation: open .2s ease;
+      /*animation: open .2s ease;*/
       left: 0;
     }
 
@@ -455,19 +473,19 @@ export default class NavigationTwo extends Mutation() {
       }
 
       :host .close-left-slide {
-        animation: closeLeft ${this.animationDurationMs + 'ms'} ease-in-out forwards;
+        animation: mobileCloseLeft ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
 
       :host .open-left-slide {
-        animation: openLeft ${this.animationDurationMs + 'ms'} ease-in-out forwards;
+        animation: mobileOpenLeft ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
 
       :host .close-right-slide {
-        animation: closeRight ${this.animationDurationMs + 'ms'} ease-in-out forwards;
+        animation: mobileCloseRight ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
 
       :host .open-right-slide {
-        animation: openRight ${this.animationDurationMs + 'ms'} ease-in-out forwards;
+        animation: mobileOpenRight ${this.animationDurationMs + 'ms'} ease-in-out forwards;
 
       }
 
@@ -577,7 +595,36 @@ export default class NavigationTwo extends Mutation() {
         }
       }
 
-      @keyframes openRight {
+      @keyframes slideOutToTop {
+        0% {
+          opacity: 1;
+          transform: translateY(0)
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-5em);
+          }
+        }
+
+      @keyframes FadeInBackground {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 0.45;
+          }
+        }
+
+      @keyframes FadeOutBackground {
+        0% {
+          opacity: 0.45;
+        }
+        100% {
+          opacity: 0;
+          }
+        }
+
+      @keyframes mobileOpenRight {
         0% {right: -100vw}
         100% {
           right: 0;
@@ -585,21 +632,45 @@ export default class NavigationTwo extends Mutation() {
         }
       }
 
-      @keyframes closeRight {
+      @keyframes mobileCloseRight {
         0% {right: 0}
         100% {right: -100vw}
       }
 
-      @keyframes closeLeft {
+      @keyframes mobileCloseLeft {
         0% {right: 0}
         100% { right: 100vw}
       }
 
-      @keyframes openLeft {
+      @keyframes mobileOpenLeft {
         0% {right: 100vw}
         100% { 
           right: 0;
           overflow: auto;
+        }
+      }
+
+      @keyframes desktopOpenLeft {
+        0% {
+          opacity: 0;
+          right: 5em;
+          pointer-events: none;
+        }
+        100% { 
+          opacity: 1;
+          right: 0;
+          pointer-events: auto;
+        }
+      }
+
+      @keyframes desktopCloseLeft {
+        0% {
+          opacity: 1;
+          right: 0;
+        }
+        100% { 
+          opacity: 0;
+          right: 5em;
         }
       }
     }
@@ -699,7 +770,7 @@ export default class NavigationTwo extends Mutation() {
     })
   }
 
-  hideAndClearDesktopSubNavigation() {
+  hideAndClearDesktopSubNavigation(event) {
     let navWrappers = Array.from(this.root.querySelectorAll("o-nav-wrapper"))
     let allOpenLiTags = Array.from(this.root.querySelectorAll('li.open'))
 
@@ -710,10 +781,27 @@ export default class NavigationTwo extends Mutation() {
       Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0))
       Array.from(firstNavigationDiv.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
       if (subNavigationDivs.length) subNavigationDivs.forEach(subNav => subNav.hidden = true)
+      if (wrapper.parentElement.classList.contains('open')) {
+        wrapper.classList.remove("no-animation")
+      }
     })
 
     allOpenLiTags.forEach(li => {
-      li.classList.remove('open')
+      // add fade-out animation on desktop if flyout closes
+      let currentNavWrapper
+      let backgroundDiv
+      if ((currentNavWrapper = li.querySelector('li o-nav-wrapper')) && event && !event.currentTarget.tagName) {
+        currentNavWrapper.classList.add('hide')
+        backgroundDiv = li.querySelector('div.main-background')
+        backgroundDiv.classList.add('hide')
+        setTimeout(() => {
+          backgroundDiv.classList.remove('hide')
+          currentNavWrapper.classList.remove('hide')
+          li.classList.remove('open')
+        }, 300);
+      } else {
+        li.classList.remove('open')
+      }
       if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
       if (li.parentElement) li.parentElement.classList.remove('open')
     })
@@ -783,11 +871,10 @@ export default class NavigationTwo extends Mutation() {
 
   setDesktopMainNavItems(event) {
     const isOpen = event.currentTarget.classList.contains('open')
+    let isFlyoutOpen = false
     event.preventDefault()
     event.stopPropagation()
-    if (this.hasAttribute('no-scroll')) {
-      this.setScrollOnBody(true, event)
-    }
+    if (this.hasAttribute('no-scroll')) this.setScrollOnBody(true, event)
 
     // clean state between main li switching
     if (event.currentTarget.parentNode?.parentNode?.parentNode?.tagName === 'NAV') {
@@ -795,16 +882,13 @@ export default class NavigationTwo extends Mutation() {
       // TODO add id for attribute to the element where nav-level-1
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
-      this.addBackgroundDivPosition(event)
-      this.hideAndClearDesktopSubNavigation()
+      isFlyoutOpen = Array.from(this.root.querySelector("nav > ul").querySelectorAll(":scope > li")).some(el => el.classList.contains('open'))
+      this.addBackgroundDivPosition(event, isFlyoutOpen)
+      this.hideAndClearDesktopSubNavigation(event)
     }
-
-    // remove all the previous open class by other a tag
-    Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('.open')).forEach(el => {
-      el.classList.remove('open')
-    })
-
     event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+    // remove animation if flyout is open
+    if (isFlyoutOpen) event.currentTarget.parentElement.querySelector('o-nav-wrapper').classList.add('no-animation')
   }
 
   setMobileMainNavItems(event) {
@@ -1078,10 +1162,13 @@ export default class NavigationTwo extends Mutation() {
     this.html = this.style
   }
 
-  addBackgroundDivPosition(event) {
+  addBackgroundDivPosition(event, isFlyoutOpen) {
     const backgroundTopPosition = event.pageY + 50
     const mainFlyoutBackgroundDiv = event.currentTarget.parentElement.querySelector('.main-background')
-    if (mainFlyoutBackgroundDiv) mainFlyoutBackgroundDiv.style.top = `${backgroundTopPosition}px`;
+    if (mainFlyoutBackgroundDiv) {
+      mainFlyoutBackgroundDiv.style.top = `${backgroundTopPosition}px`
+      mainFlyoutBackgroundDiv.style.animation = isFlyoutOpen ? "FadeInBackground 0s ease-in-out forwards" : "FadeInBackground 0.3s ease-in-out forwards"
+    }
   }
 
   getMedia() {
