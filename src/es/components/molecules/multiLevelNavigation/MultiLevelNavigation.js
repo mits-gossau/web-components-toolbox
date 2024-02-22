@@ -10,33 +10,14 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * As a molecule, this component shall hold Atoms
  *
  * @export
- * @class NavigationTwo
+ * @class MultiLevelNavigation
  * @type {CustomElementConstructor}
  * @attribute {
  *  {boolean} [hover=false]
  *  {boolean} [use-hover-listener=false] use hover listener on navigation // if false it uses click listener
  * }
- * @css {
- *  --content-spacing [40px]
- *  --a-link-content-spacing [0]
- *  --a-link-font-size [1rem]
- *  --background-color [black]
- *  --list-style [none]
- *  --align-items [start]
- *  --min-width [100px] of list items at second level
- *  --padding-top [6px] first list item at second level
- *  --hr-color [white]
- *  --a-link-font-size-mobile [2rem]
- *  --font-weight-mobile [normal]
- *  --a-link-text-align-mobile [center]
- *  --justify-content-mobile [center]
- *  --a-arrow-color-hover [--color-hover, white]
- *  --a-arrow-color [#777]
- *  --min-height-mobile [50px]
- *  --min-width-mobile [50px]
- * }
  */
-export default class NavigationTwo extends Mutation() {
+export default class MultiLevelNavigation extends Mutation() {
   constructor(options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
@@ -246,54 +227,37 @@ export default class NavigationTwo extends Mutation() {
   }
 
   /**
-   * renders the m-navigation-two css
+   * renders the m-multi-level-navigation css
    *
    * @return {Promise<void>|void}
    */
   renderCSS() {
-    this.css = /* css */`
+     this.css = /* css */`
     :host {
       color: black;
       overscroll-behavior: contain;
     }
     :host > nav > ul {
-      align-items: var(--align-items, normal);
-      justify-content: var(--justify-content, normal);
-      display: flex;
+      position: relative;
+      align-items: var(--main-ul-align-items, normal);
+      justify-content: var(--main-ul-justify-content, normal);
+      display: var(--main-ul-display, flex);
       flex-wrap: var(--flex-wrap, nowrap);
       flex-direction: var(--flex-direction, row);
-      padding: var(--padding, calc(var(--content-spacing, 40px) / 2) 0);
-      position: relative;
-      margin: 0;
-      --navigation-klubschule-a-color: var(--color);
-    }
-    :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) ul {
-      background-color: var(--background-color-${this.getAttribute('no-scroll') || 'no-scroll'}, var(--background-color, black));
-    }
-    :host(.${this.getAttribute('no-scroll') || 'no-scroll'}) > nav > ul {
-      padding: var(--padding-${this.getAttribute('no-scroll') || 'no-scroll'}, calc(var(--content-spacing, 40px) / 2) 0);
-    }
-    :host li m-nav-level-item {
-      --nav-level-item-default-font-size: 1em;
-      --nav-level-item-default-height: 2.75em;
-      --nav-level-item-default-margin: 2px;
-      --nav-level-item-default-font-weight: 500;
-    }
-    :host li.hover-active m-nav-level-item {
-      --nav-level-item-default-background-color: #E0F0FF;
+      padding: var(--padding, 0);
+      margin: var(--margin, 0);
     }
     :host > nav > ul > li {
       display: block;
-      padding: var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4));
+      padding: var(--li-padding, 0);
     }
     :host > nav > ul > li > div.main-background {
-      cursor: auto;
       display: none;
-      position: fixed;
       background-color: var(--m-gray-500);
-      width: var(--ul-li-div-background-width, 100vw);
-      height: 100vw;
-      left: var(--ul-li-div-background-left, 0);
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      left: 0;
       top: 0;
       opacity: 0;
     }
@@ -301,11 +265,11 @@ export default class NavigationTwo extends Mutation() {
       display: block;
     }
     :host > nav > ul > li > div.main-background.hide {
-      animation: FadeOutBackground 0.1s ease-in-out forwards !important;
+      animation: FadeOutBackground 0.3s ease-in-out forwards !important;
     }
-    :host > nav > ul > li > o-nav-wrapper a {
+   /* :host > nav > ul > li > o-nav-wrapper a {
       --a-color: var(--color-active);
-    }
+    }*/
     :host > nav > ul > li.open > a > span {
       border-bottom: 3px solid var(--color-active);
       color: var(--color-active);
@@ -485,14 +449,6 @@ export default class NavigationTwo extends Mutation() {
         --icon-link-list-color: #262626;
       }
 
-      :host li m-nav-level-item {
-        --nav-level-item-default-height: 3.25em;
-        --nav-level-item-default-padding: 0 0.75em 0 0;
-        --nav-level-item-default-margin: 2px 0;
-        --nav-level-item-default-hover-background-color: transparent;
-
-      }
-
       :host li.list-title {
         padding: 1em 0;
       }
@@ -525,9 +481,9 @@ export default class NavigationTwo extends Mutation() {
         height: 85vh;
         overflow: auto;
         --flex-direction:column;
-        --navigation-klubschule-a-color: var(--a-color);
-        --navigation-klubschule-align-items: start;
-        --navigation-klubschule-padding-no-scroll: 1rem 0 0 0;
+        --multi-level-navigation-default-a-color: var(--a-color);
+        --multi-level-navigation-default-align-items: start;
+        --multi-level-navigation-default-padding-no-scroll: 1rem 0 0 0;
       }
 
       :host > nav > ul > li > a:hover > span {
@@ -663,15 +619,27 @@ export default class NavigationTwo extends Mutation() {
         }
       }
     }
-    
     `
+    
     this.setCss(/* css */`
+    /*:host li.hover-active m-nav-level-item {
+      --nav-level-item-default-background-color: #E0F0FF;
+    }*/
+    :host li m-nav-level-item {
+      --nav-level-item-default-font-size: 1em;
+      --nav-level-item-default-height: 2.75em;
+      --nav-level-item-default-margin: 2px;
+      --nav-level-item-default-font-weight: 500;
+      --nav-level-item-default-hover-background-color: #E0F0FF;
+    }
+    @media only screen and (max-width: _max-width_) {
       :host li m-nav-level-item {
-        --nav-level-item-default-font-size: 1em;
-        --nav-level-item-default-height: 2.75em;
-        --nav-level-item-default-margin: 2px;
-        --nav-level-item-default-font-weight: 500;
+        --nav-level-item-default-height: 3.25em;
+        --nav-level-item-default-padding: 0 0.75em 0 0;
+        --nav-level-item-default-margin: 2px 0;
+        --nav-level-item-default-hover-background-color: transparent;
       }
+    }
     `, undefined, false, false)
     return this.fetchTemplate()
   }
@@ -695,18 +663,15 @@ export default class NavigationTwo extends Mutation() {
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'navigation-klubschule-':
+      case 'multi-level-navigation-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false,
           replaces: [{
-            pattern: '--navigation-default-',
+            pattern: '--multi-level-navigation-default-',
             flags: 'g',
-            replacement: '--navigation-klubschule-'
+            replacement: '--multi-level-navigation-default-'
           }]
-        }, {
-          path: `${this.importMetaUrl}./klubschule-/klubschule-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
         }, ...styles], false)
       default:
         return Promise.resolve()
@@ -714,7 +679,7 @@ export default class NavigationTwo extends Mutation() {
   }
 
   /**
-   * renders the a-link html
+   *
    *
    * @return {Promise<void>|void}
    */
@@ -754,7 +719,7 @@ export default class NavigationTwo extends Mutation() {
   addCustomColors() {
     Array.from(this.root.querySelectorAll("li")).forEach(li => {
       if (li.hasAttribute("main-color")) {
-        li.style.setProperty("--navigation-klubschule-color-active", li.getAttribute("main-color"))
+        li.style.setProperty("--multi-level-navigation-default-color-active", li.getAttribute("main-color"))
       }
     })
   }

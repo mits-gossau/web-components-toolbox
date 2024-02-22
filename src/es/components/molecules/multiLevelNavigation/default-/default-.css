@@ -1,0 +1,12 @@
+:host {
+    --color: #262626;
+    --multi-level-navigation-default-main-ul-align-items: end;
+    --multi-level-navigation-default-main-ul-justify-content: right;
+    --multi-level-navigation-default-main-ul-display: flex;
+    --multi-level-navigation-default-color: var(--multi-level-navigation-default-color-custom, #262626);
+    --multi-level-navigation-default-a-main-content-spacing: 1em;
+    --multi-level-navigation-default-desktop-main-wrapper-height: 55dvh; 
+    --multi-level-navigation-default-mobile-main-wrapper-height: 60dvh; 
+    --ul-list-style: none;
+    --a-text-decoration: none;
+  }

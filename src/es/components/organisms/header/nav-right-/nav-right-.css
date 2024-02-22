@@ -12,12 +12,12 @@
     right: 0;
 }
 /* TODO Refactor later*/
-:host > header > m-navigation-two {
+:host > header > m-multi-level-navigation {
     animation: closeRight .4s ease-in;
     left: auto;
     right: -100vw;
 }
-:host > header.open > m-navigation-two {
+:host > header.open > m-multi-level-navigation {
     animation: openRight .3s ease-out;
     left: auto;
     right: 0;
