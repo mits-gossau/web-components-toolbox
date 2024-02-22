@@ -160,13 +160,8 @@
 }
 
 :host .reset-link {
+  margin-top: 1rem;
   text-align: right;
-}
-
-:host .reset-link a {
-  color: var(--mdx-comp-link-color-default);
-  font: var(--mdx-sys-font-fix-label2);
-  text-decoration: none;
 }
 
 :host .reset-link a-icon-mdx {

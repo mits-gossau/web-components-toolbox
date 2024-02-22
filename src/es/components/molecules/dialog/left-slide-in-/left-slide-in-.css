@@ -121,14 +121,25 @@
   align-items: start;
   flex: 1;
   flex-direction: column;
-  gap: calc(32rem/18);
   overflow: auto;
-  padding: 1.5rem;
+  padding: 0;
   position: relative;
   z-index: 1;
 }
 
-:host .dialog-content>* {
+:host .dialog-content .sub-content {
+  align-items: start;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: calc(32rem/18);
+  padding: 0 1.5rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+:host .dialog-content>*,
+:host .dialog-content .sub-content>* {
   margin: 0;
   width: 100%;
 }
@@ -145,13 +156,8 @@
 }
 
 :host .reset-link {
+  margin-top: 1rem;
   text-align: right;
-}
-
-:host .reset-link a {
-  color: var(--mdx-comp-link-color-default);
-  font: var(--mdx-sys-font-fix-label2);
-  text-decoration: none;
 }
 
 :host .reset-link a-icon-mdx {
