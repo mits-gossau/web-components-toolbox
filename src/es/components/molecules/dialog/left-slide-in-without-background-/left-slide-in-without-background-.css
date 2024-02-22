@@ -1,3 +1,9 @@
+:host {
+  /* button margin and padding */
+  --margin: auto 0;
+  --padding: calc(24rem/18);
+}
+
 :host>dialog[open] {
   /* open */
   opacity: 1;
@@ -67,7 +73,7 @@
   max-width: _max-width_;
   width: 100%;
   margin: 0 auto;
-  padding: calc(24rem/18);
+  padding: var(--padding);
 }
 
 :host .dialog-header {
@@ -76,6 +82,7 @@
   align-items: stretch;
   display: flex;
   justify-content: space-between;
+  padding: 0;
   position: sticky;
   top: 0;
   z-index: 2;
