@@ -30,7 +30,7 @@ export default class Input extends Shadow() {
     if (!this.children.length) this.labelText = this.textContent.trim()
 
     this.lastValue = ''
-    this.clickListener = (event, retry = true, force = false) => {
+    this.clickListener = (event, retry = true, force = this.hasAttribute('force')) => {
       if (!force && this.lastValue === this.inputField.value) {
         // when delete native icon is pushed the value is not updated when the event hits here
         if (retry && event.composedPath()[0] === this.inputField) setTimeout(() => this.clickListener(event, false), 50)
@@ -96,27 +96,29 @@ export default class Input extends Shadow() {
       if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
       if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
 
-      if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
+      if ((this.hasAttribute('submit-search') || this.search && this.searchButton) && !this.readonly && !this.disabled && !this.error) {
         if (this.hasAttribute('delete-listener')) {
           this.addEventListener('click', this.clickListener)
-        } else {
+        } else if(this.searchButton) {
           this.searchButton.addEventListener('click', this.clickListener)
         }
         if (this.hasAttribute('change-listener')) this.inputField.addEventListener('change', this.changeListener)
         if (this.hasAttribute('focus-listener')) this.inputField.addEventListener('focus', this.focusListener)
-        document.addEventListener('keydown', this.keydownListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
         if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
       }
       this.hidden = false
     })
+    if ((this.hasAttribute('submit-search') || this.search && this.searchButton) && !this.readonly && !this.disabled && !this.error) {
+      document.addEventListener('keydown', this.keydownListener)
+    }
   }
 
   disconnectedCallback () {
-    if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
+    if ((this.hasAttribute('submit-search') || this.search && this.searchButton) && !this.readonly && !this.disabled && !this.error) {
       if (this.hasAttribute('delete-listener')) {
         this.removeEventListener('click', this.clickListener)
-      } else {
+      } else if(this.searchButton) {
         this.searchButton.removeEventListener('click', this.clickListener)
       }
       if (this.hasAttribute('change-listener')) this.inputField.removeEventListener('change', this.changeListener)

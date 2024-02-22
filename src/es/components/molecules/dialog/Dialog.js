@@ -164,25 +164,16 @@ export default class Dialog extends Shadow() {
    * @returns Promise<void>
    */
   renderHTML () {
-    this.html = /* html */`
-      <dialog
-        ${
-          this.hasAttribute('autofocus')
-           ? 'autofocus'
-           : ''
-        }
-      ></dialog>
-    `
+    this.dialog = this.root.querySelector(this.cssSelector + ' > dialog') || document.createElement('dialog')
+    if (this.hasAttribute('autofocus')) this.dialog.setAttribute('autofocus', '')
     Array.from(this.root.children).forEach(node => {
       if (node === this.dialog || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
-      if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open') return (this.html = node)
+      if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open') return false
+      if (node.getAttribute('id') === 'close') return this.dialog.prepend(node)
       this.dialog.appendChild(node)
     })
+    this.html = this.dialog
     return Promise.resolve()
-  }
-
-  get dialog () {
-    return this.root.querySelector('dialog')
   }
 
   get showNodes () {

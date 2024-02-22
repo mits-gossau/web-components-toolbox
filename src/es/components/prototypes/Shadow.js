@@ -733,7 +733,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     Array.from(innerHTML).forEach(
       node => {
         // @ts-ignore
-        if (node) this.root.appendChild(node)
+        if (node && !this.root.contains(node)) this.root.appendChild(node)
       })
   }
 
