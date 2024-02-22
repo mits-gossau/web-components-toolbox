@@ -75,7 +75,7 @@ export default class General extends Shadow() {
         letter-spacing: var(--letter-spacing, normal);
         word-break: var(--word-break, normal);
         /*on Safari still not supported but all other browser does*/
-        scrollbar-gutter: stable;
+        scrollbar-gutter: var(--scrollbar-gutter, auto);
       }
       /* to counteract initial.css */
       /* hide component stuff before it is rendered to avoid the blitz (flashing white) also set the --background-color in the variables...css */

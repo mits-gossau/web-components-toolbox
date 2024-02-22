@@ -267,32 +267,31 @@ export default class MultiLevelNavigation extends Mutation() {
     :host > nav > ul > li > div.main-background.hide {
       animation: FadeOutBackground 0.3s ease-in-out forwards !important;
     }
-   /* :host > nav > ul > li > o-nav-wrapper a {
-      --a-color: var(--color-active);
-    }*/
     :host > nav > ul > li.open > a > span {
       border-bottom: 3px solid var(--color-active);
       color: var(--color-active);
     }
     :host > nav > ul > li > a {
+      color: var(--color);
       padding: var(--a-main-content-spacing, 14px 10px);
       font-size: var(--a-main-font-size, 1rem);
-      font-weight: var(--a-main-font-weight);
+      font-weight: var(--a-main-font-weight, 400);
       line-height: var(--a-main-line-height);
       text-transform: var(--a-main-text-transform);
       font-family: var(--a-main-font-family, var(--font-family));
       font-weight: var(--a-font-weight, var(--font-weight, normal));
+    }
+    :host > nav > ul > li > a > span {
+      padding: 0 0 0.5em 0;
+      font-weight: var(--a-main-font-weight, 400);
     }
     :host > nav > ul > li > a:hover,
     :host > nav > ul > li > a:active,
     :host > nav > ul > li > a:focus {
       color: var(--color-active);
     }
-    :host > nav > ul > li > a > span {
-      padding: 0 0 0.5em 0;
-    }
     :host > nav > ul > li > a:hover > span {
-      border-bottom: 3px solid var(--color-active);
+      border-bottom:  var(--a-main-border-width)  var(--a-main-border-style); var(--color-active);
     }
     :host > nav > ul > li > o-nav-wrapper {
       display: none !important;
@@ -300,13 +299,8 @@ export default class MultiLevelNavigation extends Mutation() {
       top: 2em;
       left: calc(0 - var(--logo-default-width,var(--width, auto)));
       right: 0;
-      background-color: white;
       width: calc(100% + var(--logo-default-width,var(--width, auto)));
-      border-top: 1px solid #E0E0E0;
-      --show: slideInFromTop 0.3s ease-in-out forwards;
-      --justify-content: start;
-      --align-items: start;
-      --ul-padding-left: 0;
+      border-top: var(--desktop-main-wrapper-border-width, 1px) var(--desktop-main-wrapper-border-style, solid) var(--desktop-main-wrapper-border-color, black);
       overflow: visible;
     }
     :host > nav > ul > li.open > o-nav-wrapper {
@@ -314,14 +308,14 @@ export default class MultiLevelNavigation extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper div.wrapper-background {
       display: none;
+      background-color: var(--multi-level-navigation-default-desktop-main-wrapper-background-color, white);
       width: 100vw;
+      animation: none !important;
       position: relative;
       left: 50%;
       right: 50%;
       margin-left: -50vw;
       margin-right: -50vw;
-      background-color: white;
-      animation: none !important;
     }
     :host > nav > ul > li > o-nav-wrapper.hide {
       --show: slideOutToTop 0.3s ease-in-out forwards;
@@ -337,25 +331,32 @@ export default class MultiLevelNavigation extends Mutation() {
      padding: 2em 0 1.5em 0;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div {
+      /* this setting is quite fragile here, we need to improve it for reusability */
       width: calc(calc(100% - 2 * var(--gap)) / 3) !important;
       position: relative;
       height: 100%;
+      background-color: var(--sub-navigation-wrapper-background-color, white);
     }
     :host > nav > ul > li > o-nav-wrapper > section > div:first-of-type {
       --show: none;
+      z-index: 999;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div:not(:first-of-type) {
       --show: desktopOpenLeft 0.3s ease-in-out forwards;
+      z-index: 998;
+    }
+    :host > nav > ul > li > o-nav-wrapper > section > div:last-of-type {
+      z-index: 997;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div:not(:last-of-type):after {
-      content: "";
       display: block;
+      content: "";
+      background: var(--multi-level-navigation-default-desktop-main-wrapper-border-color, black);
       position: absolute;
       top: 4px;
       right: -0.5em;
       height: 100%;
-      width: 1px;
-      background: #E0E0E0;
+      width: var(--multi-level-navigation-default-desktop-main-wrapper-border-width, 1px);
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul {
       height: 100%;
@@ -364,21 +365,20 @@ export default class MultiLevelNavigation extends Mutation() {
       overflow-x: visible;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar {
-      background-color: #E0E0E0;
+      background-color: var(--multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-background-color, black);
     }
     :host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar-thumb {
-      background: #c1c1c1;
+      background: var(--multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-thumb-background-color, black);
     }
     :host > nav > ul > li > o-nav-wrapper > section .close-icon {
       position: absolute;
-      right: 0.25em;
+      right: 1.75em;
       top: 0.25em;
       width: auto !important;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar {
       background-color: transparent;
       width: 5px;
-      margin: 0.5em;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar-thumb {
       background: transparent;
@@ -388,25 +388,24 @@ export default class MultiLevelNavigation extends Mutation() {
       --ul-li-padding-left: 0.75em;
       --a-font-weight: 500;
       --a-font-size: 1.15em;
+      --a-color: var(--color-active);
       --a-color-hover: var(--color-active);
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a > span {
       font-size: 0.7em !important;
       color: var(--color) !important;
       font-weight: 300 !important;
-      padding-left: 0.25em;
+      padding-left: 0.2em;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a:hover > span {
       text-decoration: underline;
       color: var(--color-active) !important;
-
     }
     @media only screen and (min-height: 701px) {
       :host > nav > ul > li > o-nav-wrapper {
         height: var(--desktop-main-wrapper-height, 50vh);
       }
     }
-
     @media only screen and (max-height: 700px) {
       :host > nav > ul > li > o-nav-wrapper {
         height: var(--mobile-main-wrapper-height, 60vh);
@@ -417,54 +416,43 @@ export default class MultiLevelNavigation extends Mutation() {
     @media only screen and (max-width: _max-width_) {
       :host {
         --ul-li-padding-left: 0;
+        margin-top: 1em;
       }
-
       :host .close-left-slide {
         animation: mobileCloseLeft ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
-
       :host .open-left-slide {
         animation: mobileOpenLeft ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
-
       :host .close-right-slide {
         animation: mobileCloseRight ${this.animationDurationMs + 'ms'} ease-in-out forwards;
       }
-
       :host .open-right-slide {
         animation: mobileOpenRight ${this.animationDurationMs + 'ms'} ease-in-out forwards;
-
       }
-
       :host .navigation-back {
         display: flex;
         width: fit-content;
         padding: var(--content-spacing-mobile);
-        color: #262626;
+        color: var(--color);
         font-weight: 500;
-        margin:0;
+        margin: 0;
       }
-
       :host .navigation-back a-icon-mdx {
-        --icon-link-list-color: #262626;
+        --icon-link-list-color: var(--multi-level-navigation-default-mobile-icon-background-color);
       }
-
       :host li.list-title {
         padding: 1em 0;
       }
-
       :host li.list-title a {
         font-weight: 500;
         font-size: 1.1em;
       }
-
       :host li.list-title a span {
         font-weight: 300;
         font-size: 0.8em;
-        color: #262626;
+        color: var(--color);
       }
-
-
       :host > nav {
         position: relative;
         height: 90vh;
@@ -472,57 +460,44 @@ export default class MultiLevelNavigation extends Mutation() {
         overflow-x: visible;
         overflow-y: hidden;
       }
-
       :host > nav > ul {
-        position: absolute;
         display: block;
-        border-top: 1px solid #E0E0E0;
+        position: absolute;
+        border-top: var(--mobile-wrapper-border-width, 1px) var(--mobile-wrapper-border-style, solid) var(--mobile-wrapper-border-color, black);
         width: 100vw;
         height: 85vh;
         overflow: auto;
-        --flex-direction:column;
-        --multi-level-navigation-default-a-color: var(--a-color);
-        --multi-level-navigation-default-align-items: start;
-        --multi-level-navigation-default-padding-no-scroll: 1rem 0 0 0;
       }
-
       :host > nav > ul > li > a:hover > span {
         border-bottom: none;
       }
-
       :host > nav > div {
         position: absolute;
-        border-top: 1px solid #E0E0E0;
-        margin-top: 1em;
+        border-top: var(--mobile-wrapper-border-width, 1px) var(--mobile-wrapper-border-style, solid) var(--mobile-wrapper-border-color, black);
         width: 100vw;
         right: -100vw;
         height: 85vh;
         overflow: hidden;
       }
-
       :host > nav > ul.open {
         margin: 1em 0;
       }
-
       :host > nav > ul > li {
         width: 100%;
         margin: 2px 0;
-        height: 3em;
       }
-
       :host > nav > ul > li > a {
         display: flex;
         justify-content: space-between;
         margin: 0;
         font-weight: 500;
       }
-
       :host > nav > ul > li > a > span {
        padding: 0;
-       color: #262626;
+       color: var(--color);
       }
     }
-
+    /*Animations */
     @keyframes slideInFromTop {
       0% {
         opacity: 0;
@@ -535,7 +510,6 @@ export default class MultiLevelNavigation extends Mutation() {
         pointer-events: auto;
         }
       }
-
       @keyframes slideOutToTop {
         0% {
           opacity: 1;
@@ -547,7 +521,6 @@ export default class MultiLevelNavigation extends Mutation() {
           transform: translateY(-5em);
           }
         }
-
       @keyframes FadeInBackground {
         0% {
           opacity: 0;
@@ -556,7 +529,6 @@ export default class MultiLevelNavigation extends Mutation() {
           opacity: 0.45;
           }
         }
-
       @keyframes FadeOutBackground {
         0% {
           opacity: 0.45;
@@ -565,7 +537,6 @@ export default class MultiLevelNavigation extends Mutation() {
           opacity: 0;
           }
         }
-
       @keyframes mobileOpenRight {
         0% {
           right: -100vw;
@@ -577,7 +548,6 @@ export default class MultiLevelNavigation extends Mutation() {
           pointer-events: auto;
         }
       }
-
       @keyframes mobileCloseRight {
         0% {
           right: 0;
@@ -585,15 +555,15 @@ export default class MultiLevelNavigation extends Mutation() {
         }
         100% {right: -100vw}
       }
-
       @keyframes mobileCloseLeft {
         0% {
           right: 0;
           pointer-events: none;
         }
-        100% { right: 100vw}
+        100% { 
+          right: 100vw
+        }
       }
-
       @keyframes mobileOpenLeft {
         0% {
           right: 100vw;
@@ -605,7 +575,6 @@ export default class MultiLevelNavigation extends Mutation() {
           pointer-events: auto;
         }
       }
-
       @keyframes desktopOpenLeft {
         0% {
           opacity: 0;
@@ -618,19 +587,24 @@ export default class MultiLevelNavigation extends Mutation() {
           pointer-events: auto;
         }
       }
-    }
     `
-    
+
     this.setCss(/* css */`
-    /*:host li.hover-active m-nav-level-item {
+    :host li.hover-active m-nav-level-item {
       --nav-level-item-default-background-color: #E0F0FF;
-    }*/
+    }
     :host li m-nav-level-item {
       --nav-level-item-default-font-size: 1em;
       --nav-level-item-default-height: 2.75em;
       --nav-level-item-default-margin: 2px;
       --nav-level-item-default-font-weight: 500;
       --nav-level-item-default-hover-background-color: #E0F0FF;
+    }
+    :host > nav > ul > li > o-nav-wrapper {
+      --show: slideInFromTop 0.3s ease-in-out forwards;
+      --justify-content: start;
+      --align-items: start;
+      --ul-padding-left: 0;
     }
     @media only screen and (max-width: _max-width_) {
       :host li m-nav-level-item {
@@ -738,7 +712,7 @@ export default class MultiLevelNavigation extends Mutation() {
         if (event && !event.currentTarget.tagName) {
           setTimeout(() => {
             subNav.hidden = true
-          }, 300);
+          }, this.removeElementAfterAnimationDurationMs);
         } else {
           subNav.hidden = true
         }
@@ -760,7 +734,7 @@ export default class MultiLevelNavigation extends Mutation() {
           backgroundDiv.classList.remove('hide')
           currentNavWrapper.classList.remove('hide')
           li.classList.remove('open')
-        }, 300);
+        }, this.animationDurationMs);
       } else {
         li.classList.remove('open')
       }
@@ -961,7 +935,6 @@ export default class MultiLevelNavigation extends Mutation() {
 
   handleNewTabNavigationOnNavItems(event) {
     event.preventDefault()
-    // TODO do we need this remove? immediately hide the navigation when navigating to new page and in case the self.open would fail, for what ever reason, reset the style attribute
     setTimeout(() => this.removeAttribute('style'), 3000)
     self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
   }
