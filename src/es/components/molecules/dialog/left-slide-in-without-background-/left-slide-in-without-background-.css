@@ -127,9 +127,20 @@
   flex-direction: column;
   gap: calc(32rem/18);
   overflow: auto;
-  padding: 1.5rem;
   position: relative;
   z-index: 1;
+}
+
+:host .dialog-content .sub-level {
+  padding: 0 1.5rem;
+}
+
+:host .dialog-content .sub-level.margin-bottom {
+  margin-bottom: 1.5rem;
+}
+
+:host .dialog-content .sub-level.margin-top-bottom {
+  margin: 1.5rem 0;
 }
 
 :host .dialog-content>* {
