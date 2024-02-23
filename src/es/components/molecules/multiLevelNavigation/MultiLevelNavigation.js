@@ -27,13 +27,13 @@ export default class MultiLevelNavigation extends Mutation() {
 
     this.isDesktop = this.checkMedia('desktop')
     this.useHoverListener = this.hasAttribute('use-hover-listener')
-    this.animationDurationMs = this.getAttribute("animation-duration") || 300
+    this.animationDurationMs = this.getAttribute('animation-duration') || 300
     this.removeElementAfterAnimationDurationMs = this.animationDurationMs + 50
 
 
     this.resizeListener = event => {
       let oldIsDesktopValue = this.isDesktop
-      let oldAriaExpandedAttribute = this.nav.getAttribute("aria-expanded")
+      let oldAriaExpandedAttribute = this.nav.getAttribute('aria-expanded')
 
       if (this.hasAttribute('no-scroll')) this.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
 
@@ -45,23 +45,23 @@ export default class MultiLevelNavigation extends Mutation() {
 
       // by mobile resize it closes the open flyout nav, clears the flyout state and set the scroll available on the body
       if (!this.isDesktop) {
-        if (this.getRootNode().host?.shadowRoot?.querySelector("header")?.classList.contains("open")) {
-          this.getRootNode().host.shadowRoot.querySelector("a-menu-icon").click()
+        if (this.getRootNode().host?.shadowRoot?.querySelector('header')?.classList.contains('open')) {
+          this.getRootNode().host.shadowRoot.querySelector('a-menu-icon').click()
           this.setScrollOnBody(true, event)
         }
         this.hideAndClearMobileSubNavigation()
       }
 
       // clear desktop flyout state (hover, scrollPosition, etc) if closes
-      if (this.isDesktop && (oldAriaExpandedAttribute !== this.nav.getAttribute("aria-expanded") || oldIsDesktopValue !== this.isDesktop)) this.hideAndClearDesktopSubNavigation()
+      if (this.isDesktop && (oldAriaExpandedAttribute !== this.nav.getAttribute('aria-expanded') || oldIsDesktopValue !== this.isDesktop)) this.hideAndClearDesktopSubNavigation()
 
       // make some change on html to be mobile or desktop layout compatible if the screen-width changes between mobile and desktop
       if (oldIsDesktopValue !== this.isDesktop) this.htmlReBuilderByLayoutChange()
     }
 
     this.selfClickListener = (event) => {
-      let currentAriaExpandedAttribute = this.nav.getAttribute("aria-expanded") === "true"
-      if (this.isDesktop) this.nav.setAttribute("aria-expanded", "false")
+      let currentAriaExpandedAttribute = this.nav.getAttribute('aria-expanded') === 'true'
+      if (this.isDesktop) this.nav.setAttribute('aria-expanded', 'false')
       if (this.isDesktop && this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
       if (this.isDesktop && currentAriaExpandedAttribute) this.hideAndClearDesktopSubNavigation(event)
       if (!this.isDesktop) this.hideAndClearMobileSubNavigation()
@@ -80,7 +80,7 @@ export default class MultiLevelNavigation extends Mutation() {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             this.setDesktopMainNavItems(event)
             // Click event logic
-            if (event.currentTarget.parentNode.hasAttribute("sub-nav")) this.handleOnClickOnDesktopSubNavItems(event)
+            if (event.currentTarget.parentNode.hasAttribute('sub-nav')) this.handleOnClickOnDesktopSubNavItems(event)
           }
           else if (event.currentTarget.getAttribute('href').includes('#')) this.handleAnchorClickOnNavItems(event)
           else if (event.currentTarget.getAttribute('href')) this.handleNewTabNavigationOnNavItems(event)
@@ -90,11 +90,11 @@ export default class MultiLevelNavigation extends Mutation() {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             event.preventDefault()
             event.stopPropagation()
-            // set aria expended attributes
-            let allSubNavLinks = Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll("li")).filter(li => li.hasAttribute("sub-nav"))
-            allSubNavLinks.forEach(link => link.setAttribute("aria-expanded", "false"))
+            // set aria expanded attributes
+            let allSubNavLinks = Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll('li')).filter(li => li.hasAttribute('sub-nav'))
+            allSubNavLinks.forEach(link => link.setAttribute('aria-expanded', 'false'))
             if (event.currentTarget.parentNode?.parentNode?.parentNode?.tagName === 'NAV') this.setMobileMainNavItems(event)
-            if (event.currentTarget.parentNode.hasAttribute("sub-nav")) this.handleOnClickOnMobileSubNavItems(event)
+            if (event.currentTarget.parentNode.hasAttribute('sub-nav')) this.handleOnClickOnMobileSubNavItems(event)
           }
           else if (event.currentTarget.getAttribute('href').includes('#')) this.handleAnchorClickOnNavItems(event)
           else if (event.currentTarget.getAttribute('href')) this.handleNewTabNavigationOnNavItems(event)
@@ -103,62 +103,62 @@ export default class MultiLevelNavigation extends Mutation() {
     }
 
     this.subLiHoverListener = (event) => {
-      event.target.parentElement.querySelectorAll("li").forEach(li => li.classList.remove("hover-active"))
-      const currentNavLevel = + event.target.parentElement.parentElement.getAttribute("nav-level")
+      event.target.parentElement.querySelectorAll('li').forEach(li => li.classList.remove('hover-active'))
+      const currentNavLevel = + event.target.parentElement.parentElement.getAttribute('nav-level')
       const nextNavLevel = currentNavLevel + 1
       const secondNextNavLevel = currentNavLevel + 2
-      const childSubNavName = event.target.getAttribute("sub-nav")
-      const directSubWrapper = Array.from(event.currentTarget.currentWrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") === nextNavLevel)
-      const secondSubWrapper = Array.from(event.currentTarget.currentWrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") === secondNextNavLevel)
-      const allSubWrappers = Array.from(event.currentTarget.currentWrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > currentNavLevel)
+      const childSubNavName = event.target.getAttribute('sub-nav')
+      const directSubWrapper = Array.from(event.currentTarget.currentWrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') === nextNavLevel)
+      const secondSubWrapper = Array.from(event.currentTarget.currentWrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') === secondNextNavLevel)
+      const allSubWrappers = Array.from(event.currentTarget.currentWrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') > currentNavLevel)
 
-      if (!event.target.classList.contains("hover-active")) {
-        event.target.classList.add("hover-active")
+      if (!event.target.classList.contains('hover-active')) {
+        event.target.classList.add('hover-active')
         let currentEventTarget = event.target
-        if (event.target && !event.target.hasAttribute('sub-nav') && event.target.classList.contains("hover-active")) {
+        if (event.target && !event.target.hasAttribute('sub-nav') && event.target.classList.contains('hover-active')) {
           setTimeout(() => {
             currentEventTarget.classList.remove('hover-active')
           }, 2000)
         }
       }
 
-      if (!event.target.hasAttribute("sub-nav")) {
+      if (!event.target.hasAttribute('sub-nav')) {
         allSubWrappers.forEach(wrapper => {
-          Array.from(wrapper.querySelectorAll("ul")).forEach(ul => {
-            Array.from(ul.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
+          Array.from(wrapper.querySelectorAll('ul')).forEach(ul => {
+            Array.from(ul.querySelectorAll('li')).forEach(li => li.classList.remove('hover-active'))
             ul.scrollTo(0, 0)
-            ul.style.display = "none";
+            ul.style.display = 'none';
             ul.parentElement.hidden = true
           })
         })
       }
 
-      if (event.target.hasAttribute("sub-nav")) {
+      if (event.target.hasAttribute('sub-nav')) {
 
         if (allSubWrappers.length) {
           allSubWrappers.forEach(wrapper => {
-            let activeLiElements = Array.from(wrapper.querySelectorAll(".hover-active"));
-            let allLiElements = Array.from(wrapper.querySelectorAll("li"));
+            let activeLiElements = Array.from(wrapper.querySelectorAll('.hover-active'));
+            let allLiElements = Array.from(wrapper.querySelectorAll('li'));
             activeLiElements.forEach(li => {
-              if (li.parentElement.getAttribute("sub-nav-id") !== event.target.getAttribute("sub-nav")) {
+              if (li.parentElement.getAttribute('sub-nav-id') !== event.target.getAttribute('sub-nav')) {
                 li.parentElement.scrollTo(0, 0)
               }
               li.parentElement.parentElement.hidden = true
-              li.parentElement.style.display = "none"
+              li.parentElement.style.display = 'none'
             })
-            allLiElements.forEach(li => li.classList.remove("hover-active"))
+            allLiElements.forEach(li => li.classList.remove('hover-active'))
           })
         }
 
         if (directSubWrapper.length) {
           directSubWrapper.forEach(wrapper => {
-            Array.from(wrapper.querySelectorAll("ul")).forEach(ul => {
-              if (ul.getAttribute("sub-nav-id") === childSubNavName) {
+            Array.from(wrapper.querySelectorAll('ul')).forEach(ul => {
+              if (ul.getAttribute('sub-nav-id') === childSubNavName) {
                 ul.parentElement.hidden = false
-                ul.style.display = "block"
+                ul.style.display = 'block'
               } else {
                 ul.scrollTo(0, 0)
-                ul.style.display = "none"
+                ul.style.display = 'none'
               }
             })
           })
@@ -166,10 +166,10 @@ export default class MultiLevelNavigation extends Mutation() {
 
         if (secondSubWrapper.length) {
           secondSubWrapper.forEach(wrapper => {
-            if (Array.from(wrapper.querySelectorAll(".hover-active"))) {
-              Array.from(wrapper.querySelectorAll("ul")).forEach(ul => {
+            if (Array.from(wrapper.querySelectorAll('.hover-active'))) {
+              Array.from(wrapper.querySelectorAll('ul')).forEach(ul => {
                 ul.scrollTo(0, 0)
-                ul.style.display = "none"
+                ul.style.display = 'none'
                 ul.parentElement.hidden = true
               })
             }
@@ -351,7 +351,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper > section > div:not(:last-of-type):after {
       display: block;
-      content: "";
+      content: '';
       background: var(--multi-level-navigation-default-desktop-main-wrapper-border-color, black);
       position: absolute;
       top: 4px;
@@ -417,7 +417,6 @@ export default class MultiLevelNavigation extends Mutation() {
     @media only screen and (max-width: _max-width_) {
       :host {
         --ul-li-padding-left: 0;
-        margin-top: 1em;
       }
       :host .close-left-slide {
         animation: mobileCloseLeft ${this.animationDurationMs + 'ms'} ease-in-out forwards;
@@ -462,6 +461,7 @@ export default class MultiLevelNavigation extends Mutation() {
         width: 100vw;
         overflow-x: visible;
         overflow-y: hidden;
+        padding-top: 1em;
       }
       :host > nav > ul {
         display: block;
@@ -628,7 +628,7 @@ export default class MultiLevelNavigation extends Mutation() {
    * @return {Promise<void>}
    */
   fetchTemplate() {
-    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    /** @type {import('../../prototypes/Shadow.js').fetchCSSParams[]} */
     const styles = [
       {
         path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
@@ -694,25 +694,25 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   addCustomColors() {
-    Array.from(this.root.querySelectorAll("li")).forEach(li => {
-      if (li.hasAttribute("main-color")) {
-        li.style.setProperty("--multi-level-navigation-default-color-active", li.getAttribute("main-color"))
+    Array.from(this.root.querySelectorAll('li')).forEach(li => {
+      if (li.hasAttribute('main-color')) {
+        li.style.setProperty('--multi-level-navigation-default-color-active', li.getAttribute('main-color'))
       }
     })
   }
 
   hideAndClearDesktopSubNavigation(event) {
-    let navWrappers = Array.from(this.root.querySelectorAll("o-nav-wrapper"))
+    let navWrappers = Array.from(this.root.querySelectorAll('o-nav-wrapper'))
     let allOpenLiTags = Array.from(this.root.querySelectorAll('li.open'))
     let allActiveLiTags = Array.from(this.root.querySelectorAll('li.active'))
 
 
     navWrappers.forEach(wrapper => {
-      let firstNavigationDiv = wrapper.querySelector("div[nav-level='1']")
-      let subNavigationDivs = Array.from(wrapper.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
-      navWrappers.forEach(wrapper => Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0)))
-      Array.from(wrapper.querySelectorAll("ul")).forEach(ul => ul.scrollTo(0, 0))
-      Array.from(firstNavigationDiv.querySelectorAll("li")).forEach(li => li.classList.remove("hover-active"))
+      let firstNavigationDiv = wrapper.querySelector('div[nav-level="1"]')
+      let subNavigationDivs = Array.from(wrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') > 1)
+      navWrappers.forEach(wrapper => Array.from(wrapper.querySelectorAll('ul')).forEach(ul => ul.scrollTo(0, 0)))
+      Array.from(wrapper.querySelectorAll('ul')).forEach(ul => ul.scrollTo(0, 0))
+      Array.from(firstNavigationDiv.querySelectorAll('li')).forEach(li => li.classList.remove('hover-active'))
       if (subNavigationDivs.length) subNavigationDivs.forEach(subNav => {
         if (event && !event.currentTarget.tagName) {
           setTimeout(() => {
@@ -723,7 +723,7 @@ export default class MultiLevelNavigation extends Mutation() {
         }
       })
       if (wrapper.parentElement.classList.contains('open')) {
-        wrapper.classList.remove("no-animation")
+        wrapper.classList.remove('no-animation')
       }
     })
 
@@ -743,22 +743,22 @@ export default class MultiLevelNavigation extends Mutation() {
       } else {
         li.classList.remove('open')
       }
-      if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
+      if (li.hasAttribute('aria-expanded')) li.setAttribute('aria-expanded', 'false')
       if (li.parentElement) li.parentElement.classList.remove('open')
     })
 
-    allActiveLiTags.forEach(li => li.classList.remove("active"))
+    allActiveLiTags.forEach(li => li.classList.remove('active'))
   }
 
   hideAndClearMobileSubNavigation() {
-    const navElementChildren = Array.from(this.root.querySelector("nav").children)
-    if (this.getAttribute("aria-expanded") === "false" && navElementChildren.length) {
+    const navElementChildren = Array.from(this.root.querySelector('nav').children)
+    if (this.getAttribute('aria-expanded') === 'false' && navElementChildren.length) {
       setTimeout(() => {
         navElementChildren.forEach(childEl => {
           if (childEl.tagName === 'UL') {
-            childEl.classList.remove("close-left-slide")
+            childEl.classList.remove('close-left-slide')
           }
-          if (childEl.hasAttribute("nav-level") && childEl.parentNode) {
+          if (childEl.hasAttribute('nav-level') && childEl.parentNode) {
             childEl.parentNode.removeChild(childEl)
           }
         })
@@ -767,31 +767,31 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   htmlReBuilderByLayoutChange() {
-    let currentNav = this.root.querySelector("nav")
+    let currentNav = this.root.querySelector('nav')
     if (this.isDesktop) {
       // set nav element from mobile to desktop compatible
-      let mainATags = Array.from(currentNav.querySelectorAll("nav > ul > li > a"))
+      let mainATags = Array.from(currentNav.querySelectorAll('nav > ul > li > a'))
       if (mainATags.length > 0) {
         mainATags.forEach(a => {
           let aTagChildren = Array.from(a.children)
-          let aTagMDXIcon = aTagChildren?.find(child => child.tagName === "A-ICON-MDX")
+          let aTagMDXIcon = aTagChildren?.find(child => child.tagName === 'A-ICON-MDX')
           if (aTagChildren.length && aTagMDXIcon) aTagMDXIcon.parentElement.removeChild(aTagMDXIcon)
         })
       }
     } else {
       // set nav from desktop to mobile compatible
-      let desktopOWrappers = Array.from(currentNav.querySelectorAll("o-nav-wrapper"))
-      let desktopMainFlyoutBackgrounds = Array.from(currentNav.querySelectorAll("div.main-background"))
+      let desktopOWrappers = Array.from(currentNav.querySelectorAll('o-nav-wrapper'))
+      let desktopMainFlyoutBackgrounds = Array.from(currentNav.querySelectorAll('div.main-background'))
       if (desktopOWrappers.length > 0) {
         desktopOWrappers.forEach(wrapper => {
           // remove close icon append section
           let closeIcon
           let wrapperSection
-          wrapper.parentElement.classList.remove("open")
-          wrapper.parentElement.classList.remove("active")
-          if (closeIcon = wrapper.querySelector("section a.close-icon")) closeIcon.parentElement.removeChild(closeIcon)
-          if (wrapperSection = wrapper.querySelector("section")) {
-            let subNavigationDivs = Array.from(wrapperSection.querySelectorAll("div[nav-level]"))
+          wrapper.parentElement.classList.remove('open')
+          wrapper.parentElement.classList.remove('active')
+          if (closeIcon = wrapper.querySelector('section a.close-icon')) closeIcon.parentElement.removeChild(closeIcon)
+          if (wrapperSection = wrapper.querySelector('section')) {
+            let subNavigationDivs = Array.from(wrapperSection.querySelectorAll('div[nav-level]'))
             if (subNavigationDivs.length > 0) subNavigationDivs.forEach(div => div.hidden = false)
             wrapper.parentElement.appendChild(wrapperSection)
             wrapper.parentElement.removeChild(wrapper)
@@ -828,11 +828,9 @@ export default class MultiLevelNavigation extends Mutation() {
 
     // clean state between main li switching
     if (event.currentTarget.parentNode?.parentNode?.parentNode?.tagName === 'NAV') {
-      this.nav.setAttribute("aria-expanded", "true")
-      // TODO add id for attribute to the element where nav-level-1
+      this.nav.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
-      event.currentTarget.parentNode.setAttribute('aria-controls', 'nav-level-1')
-      isFlyoutOpen = Array.from(this.root.querySelector("nav > ul").querySelectorAll(":scope > li")).some(el => el.classList.contains('open'))
+      isFlyoutOpen = Array.from(this.root.querySelector('nav > ul').querySelectorAll(':scope > li')).some(el => el.classList.contains('open'))
       this.addBackgroundDivPosition(event, isFlyoutOpen)
       this.hideAndClearDesktopSubNavigation(event)
     }
@@ -844,100 +842,106 @@ export default class MultiLevelNavigation extends Mutation() {
 
   setMobileMainNavItems(event) {
     // hide all subUl height to avoid large height of nav tag
-    let subNavigationDivs = Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll("div[nav-level]")).filter(div => +div.getAttribute("nav-level") > 1)
+    let subNavigationDivs = Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') > 1)
     subNavigationDivs?.forEach(subNavDiv => {
-      let subNavDivUls = Array.from(subNavDiv.querySelectorAll("ul"))
-      subNavDivUls.forEach(ul => ul.style.display = "none")
+      let subNavDivUls = Array.from(subNavDiv.querySelectorAll('ul'))
+      subNavDivUls.forEach(ul => ul.style.display = 'none')
     })
-    // set the currently clicked/touched aria expended attribute
+    // set the currently clicked/touched aria expanded attribute
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
-
     // add currently open sub-navigation content to be visible
-    let sectionChildren = Array.from(event.currentTarget.parentNode.querySelector("section").children)
+    let sectionChildren = Array.from(event.currentTarget.parentNode.querySelector('section').children)
     sectionChildren.forEach((node) => {
       let currentNode = node.cloneNode(true)
-      currentNode.style.setProperty("--multi-level-navigation-default-color-active", node.parentElement.parentElement.getAttribute("main-color"))
-      Array.from(currentNode.querySelectorAll("a")).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+      let currentNodeExpandableLiTags = currentNode.querySelectorAll('li[sub-nav]')
+      let currentNodeAriaControlUlTags = currentNode.querySelectorAll('ul[sub-nav-id]')
+      currentNode.style.setProperty('--multi-level-navigation-default-color-active', node.parentElement.parentElement.getAttribute('main-color'))
+      Array.from(currentNode.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+      if(currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
+      if(currentNodeAriaControlUlTags.length > 0) currentNodeAriaControlUlTags.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
+      if (+currentNode.getAttribute('nav-level') === 1) currentNode.querySelector('ul').setAttribute('id', 'nav-level-1')
       if (!node.getAttribute('slot')) event.currentTarget.parentNode.parentNode.parentNode.appendChild(currentNode)
     })
 
     // hide element with left slide animation
-    event.currentTarget.parentNode.parentNode.classList.add("close-left-slide")
+    event.currentTarget.parentNode.parentNode.classList.add('close-left-slide')
 
     // remove navigation back button since it can be changed and will be dynamically added below
-    let oldNavBackATag = event.currentTarget.parentNode?.parentNode?.parentNode?.querySelector("nav > div[nav-level='1']")?.querySelector("div > a")
+    let oldNavBackATag = event.currentTarget.parentNode?.parentNode?.parentNode?.querySelector('nav > div[nav-level="1"]')?.querySelector('div > a')
     oldNavBackATag?.parentElement.removeChild(oldNavBackATag)
 
     // create new navigation back button 
-    let newNavBackATag = document.createElement("a")
-    let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute("mobile-navigation-name")
+    let newNavBackATag = document.createElement('a')
+    let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute('mobile-navigation-name')
     newNavBackATag.innerHTML = /* HTML */`
-     <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronLeft" color="red" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
+     <a-icon-mdx namespace='icon-link-list-' icon-name='ChevronLeft' color='red' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
      <span>${mobileNavigationName}</span>
      `
-    newNavBackATag.classList.add("navigation-back")
+    newNavBackATag.classList.add('navigation-back')
     newNavBackATag.addEventListener('click', (event) => {
       // @ts-ignore
-      event.currentTarget.parentNode.classList.remove("open-right-slide")
+      event.currentTarget.parentNode.classList.remove('open-right-slide')
       // @ts-ignore
       event.currentTarget.parentNode.previousElementSibling.scrollTo(0, 0)
       // @ts-ignore
-      event.currentTarget.parentNode.previousElementSibling.classList.remove("close-left-slide")
+      event.currentTarget.parentNode.previousElementSibling.classList.remove('close-left-slide')
       // @ts-ignore
-      event.currentTarget.parentNode.classList.add("close-right-slide")
+      event.currentTarget.parentNode.classList.add('close-right-slide')
       // @ts-ignore
-      event.currentTarget.parentNode.previousElementSibling.classList.add("open-left-slide")
+      event.currentTarget.parentNode.previousElementSibling.classList.add('open-left-slide')
+      // @ts-ignore
+      let expandedElements = Array.from(event.currentTarget.parentNode.previousElementSibling.querySelectorAll('[aria-expanded="true"]'))
+      if(expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded','false'))
       // remove subNav divs from next to ul 
       // @ts-ignore
       let currentSubNavElements = Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('nav > div[nav-level]'))
       // remove element after animation is done => TODO create global animation duration variable
       setTimeout(() => currentSubNavElements.forEach(subNav => subNav.parentNode.removeChild(subNav)), this.removeElementAfterAnimationDurationMs)
     })
-    event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").prepend(newNavBackATag)
-    event.currentTarget.parentNode.parentNode.classList.remove("open-left-slide")
-    event.currentTarget.parentNode.parentNode.parentNode.querySelector("nav > div[nav-level='1']").classList.add("open-right-slide")
+    event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > div[nav-level="1"]').prepend(newNavBackATag)
+    event.currentTarget.parentNode.parentNode.classList.remove('open-left-slide')
+    event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > div[nav-level="1"]').classList.add('open-right-slide')
   }
 
   handleOnClickOnDesktopSubNavItems(event) {
     let wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
     let wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
-    let wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll("ul"))
+    let wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll('ul'))
     let wrapperDivSecondNextSiblingDiv = null
     let wrapperDivSecondNextSiblingDivUls = null
     if (wrapperDivNextSiblingDiv.nextSibling) wrapperDivSecondNextSiblingDiv = wrapperDivNextSiblingDiv.nextSibling
-    if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul")).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul"))
+    if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul')).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul'))
 
 
-    Array.from(wrapperDiv.querySelectorAll("li")).forEach(li => {
-      if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
-      li.classList.remove("hover-active")
+    Array.from(wrapperDiv.querySelectorAll('li')).forEach(li => {
+      if (li.hasAttribute('aria-expanded')) li.setAttribute('aria-expanded', 'false')
+      li.classList.remove('hover-active')
     })
 
-    event.currentTarget.parentNode.setAttribute("aria-expanded", "true")
-    event.currentTarget.parentNode.classList.add("hover-active")
+    event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+    event.currentTarget.parentNode.classList.add('hover-active')
 
     let subUl = null
-    if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
+    if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute('sub-nav-id') === event.currentTarget.parentNode.getAttribute('sub-nav')))) {
       wrapperDivNextSiblingDiv.hidden = true
       wrapperDivNextSiblingDivUls.forEach(ul => {
-        ul.style.display = "none"
-        Array.from(ul.querySelectorAll("li")).forEach(li => {
-          if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
-          li.classList.remove("hover-active")
+        ul.style.display = 'none'
+        Array.from(ul.querySelectorAll('li')).forEach(li => {
+          if (li.hasAttribute('aria-expanded')) li.setAttribute('aria-expanded', 'false')
+          li.classList.remove('hover-active')
         })
       })
       subUl.parentElement.hidden = false
-      subUl.style.display = "block"
+      subUl.style.display = 'block'
       subUl.scrollTo(0, 0)
       if (wrapperDivSecondNextSiblingDiv) wrapperDivSecondNextSiblingDiv.hidden = true
-      if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = "none")
+      if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = 'none')
     } else {
       return
     }
   }
 
   handleAnchorClickOnNavItems(event) {
-    // TODO Silvan => why it doesnt work innerLink
     this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
       detail: {
         selector: event.currentTarget.getAttribute('href')
@@ -957,50 +961,52 @@ export default class MultiLevelNavigation extends Mutation() {
   handleOnClickOnMobileSubNavItems(event) {
     let wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
     let wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
-    let wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll("ul"))
+    let wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll('ul'))
     let wrapperDivSecondNextSiblingDiv = null
     let wrapperDivSecondNextSiblingDivUls = null
     if (wrapperDivNextSiblingDiv.nextSibling) wrapperDivSecondNextSiblingDiv = wrapperDivNextSiblingDiv.nextSibling
-    if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul")).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll("ul"))
+    if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul')).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul'))
 
-    event.currentTarget.parentNode.setAttribute("aria-expanded", "true")
+    event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
 
     let subUl = null
-    if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute("sub-nav-id") === event.currentTarget.parentNode.getAttribute("sub-nav")))) {
+    if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute('sub-nav-id') === event.currentTarget.parentNode.getAttribute('sub-nav')))) {
       wrapperDivNextSiblingDivUls.forEach(ul => {
-        ul.style.display = "none"
+        ul.style.display = 'none'
       })
 
       if (wrapperDivNextSiblingDiv) {
         //remove old navigation-back button
-        if (wrapperDivNextSiblingDiv.querySelector("div > a")) {
-          let oldNavBackATag = wrapperDivNextSiblingDiv.querySelector("div > a")
+        if (wrapperDivNextSiblingDiv.querySelector('div > a')) {
+          let oldNavBackATag = wrapperDivNextSiblingDiv.querySelector('div > a')
           oldNavBackATag.parentElement.removeChild(oldNavBackATag)
         }
         // create new navigation-back button
-        let newNavBackATag = document.createElement("a")
-        let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute("mobile-navigation-name")
+        let newNavBackATag = document.createElement('a')
+        let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute('mobile-navigation-name')
         newNavBackATag.innerHTML = /* HTML */`
-        <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronLeft" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
+        <a-icon-mdx namespace='icon-link-list-' icon-name='ChevronLeft' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
         <span>${mobileNavigationName}</span>
         `
-        newNavBackATag.classList.add("navigation-back")
+        newNavBackATag.classList.add('navigation-back')
 
         newNavBackATag.addEventListener('click', (event) => {
-
           // @ts-ignore
-          event.currentTarget.parentNode.className = ""
+          event.currentTarget.parentNode.className = ''
           // @ts-ignore
-          event.currentTarget.parentNode.previousElementSibling.className = ""
+          event.currentTarget.parentNode.previousElementSibling.className = ''
           // @ts-ignore
-          event.currentTarget.parentNode.classList.add("close-right-slide")
+          event.currentTarget.parentNode.classList.add('close-right-slide')
           // @ts-ignore
-          event.currentTarget.parentNode.previousElementSibling.classList.add("open-left-slide")
+          event.currentTarget.parentNode.previousElementSibling.classList.add('open-left-slide')
+          // @ts-ignore
+          let expandedElements = Array.from(event.currentTarget.parentNode.previousElementSibling.querySelectorAll('[aria-expanded="true"]'))
+          if(expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded','false'))
 
           // find uls and add display none to all
           setTimeout(() => {
             wrapperDivNextSiblingDivUls.forEach(ul => {
-              ul.style.display = "none"
+              ul.style.display = 'none'
             })
           }, this.removeElementAfterAnimationDurationMs)
         })
@@ -1013,11 +1019,11 @@ export default class MultiLevelNavigation extends Mutation() {
       }, this.removeElementAfterAnimationDurationMs)
 
       wrapperDivNextSiblingDiv.scrollTo(0, 0)
-      subUl.style.display = "block"
-      wrapperDiv.className = ""
-      wrapperDiv.classList.add("close-left-slide")
-      wrapperDivNextSiblingDiv.className = ""
-      wrapperDivNextSiblingDiv.classList.add("open-right-slide")
+      subUl.style.display = 'block'
+      wrapperDiv.className = ''
+      wrapperDiv.classList.add('close-left-slide')
+      wrapperDivNextSiblingDiv.className = ''
+      wrapperDivNextSiblingDiv.classList.add('open-right-slide')
     } else {
       return
     }
@@ -1033,52 +1039,62 @@ export default class MultiLevelNavigation extends Mutation() {
       Array.from(this.root.querySelectorAll('a')).forEach(a => {
         a.addEventListener('click', this.aLinkClickListener)
       })
+      let mainNavigationLiTags = this.root.querySelectorAll('nav > ul > li')
+      mainNavigationLiTags.forEach(li => {
+        li.setAttribute('aria-expanded', 'false')
+        li.setAttribute('aria-controls', 'nav-level-1')
+      })
       Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
         const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
         // eslint-disable-line
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node) => {
-          if (!node.getAttribute('slot')) wrapper.root.appendChild(node)
+          if (!node.getAttribute('slot')) {
+            if (+node.getAttribute('nav-level') === 1) node.querySelector('ul').setAttribute('id', 'nav-level-1')
+            wrapper.root.appendChild(node)
+          }
         })
         section.replaceWith(wrapper)
 
+
         // add main background color dark if flyout open div
         const mainBackgroundDiv = document.createElement('div')
-        mainBackgroundDiv.className = "main-background"
+        mainBackgroundDiv.className = 'main-background'
         wrapper.parentElement.prepend(mainBackgroundDiv)
+
         //add full width background with div
         const wrapperBackgroundDiv = document.createElement('div')
-        wrapperBackgroundDiv.className = "wrapper-background"
+        wrapperBackgroundDiv.className = 'wrapper-background'
         wrapper.prepend(wrapperBackgroundDiv)
 
         // add close icon to all flyout
-        let closeIconElement = document.createElement("a")
+        let closeIconElement = document.createElement('a')
         closeIconElement.innerHTML = /* HTML */`
-        <a-icon-mdx namespace="icon-link-list-" icon-name="X" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
+        <a-icon-mdx namespace='icon-link-list-' icon-name='X' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
         `
-        closeIconElement.classList.add("close-icon")
-        wrapper.querySelector("section").appendChild(closeIconElement)
+        closeIconElement.classList.add('close-icon')
+        wrapper.querySelector('section').appendChild(closeIconElement)
 
         // Add class for title li a element
-        let subTitleLiTags = Array.from(wrapper.querySelectorAll("li")).filter(li => !li.querySelector("m-nav-level-item"))
-        subTitleLiTags.forEach(li => li.classList.add("list-title"))
+        let subTitleLiTags = Array.from(wrapper.querySelectorAll('li')).filter(li => !li.querySelector('m-nav-level-item'))
+        subTitleLiTags.forEach(li => li.classList.add('list-title'))
 
         // add subUl id based on sub-nav-id to have aria-controls connection
-        let subUlElements = Array.from(wrapper.querySelectorAll("ul")).filter(ul => ul.hasAttribute("sub-nav-id"))
-        subUlElements.forEach(ul => ul.setAttribute("id", `${ul.getAttribute('sub-nav-id')}`))
+        let subUlElements = Array.from(wrapper.querySelectorAll('ul')).filter(ul => ul.hasAttribute('sub-nav-id'))
+        subUlElements.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
 
         // Add listener if there is an attribute on this element
-        let subLiElements = Array.from(wrapper.querySelectorAll("li")).filter(li => li.querySelector("m-nav-level-item"))
+        let subLiElements = Array.from(wrapper.querySelectorAll('li')).filter(li => li.querySelector('m-nav-level-item'))
         subLiElements.forEach(li => {
           // set aria attributes where needed
-          if (li.hasAttribute("sub-nav")) {
-            li.setAttribute("aria-expanded", "false")
-            li.setAttribute("aria-controls", `${li.getAttribute('sub-nav')}`)
+          if (li.hasAttribute('sub-nav')) {
+            li.setAttribute('aria-expanded', 'false')
+            li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`)
           }
           // add hover listener when needed
           if (this.useHoverListener) {
-            li.addEventListener("mouseenter", this.subLiHoverListener)
+            li.addEventListener('mouseenter', this.subLiHoverListener)
             li.currentWrapper = wrapper
           }
         })
@@ -1091,24 +1107,38 @@ export default class MultiLevelNavigation extends Mutation() {
     Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
 
     // add list-item-element
-    Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi, i) => {
+    Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi) => {
       let currentATag
-      mainLi.setAttribute("aria-expanded", "false")
-      mainLi.setAttribute("aria-controls", `nav-level-${i + 1}`)
-      if ((currentATag = mainLi.querySelector("a")) && (!currentATag.hasAttribute("href") || currentATag.getAttribute("href") === "" || currentATag.getAttribute("href") === "#"))
-        mainLi.querySelector("a").insertAdjacentHTML('beforeend', /* html*/`
-        <a-icon-mdx namespace="icon-link-list-" icon-name="ChevronRight" size="1.5em" rotate="0" class="icon-right"></a-icon-mdx>
+      mainLi.setAttribute('aria-expanded', 'false')
+      mainLi.setAttribute('aria-controls', `nav-level-1`)
+      if ((currentATag = mainLi.querySelector('a')) && (!currentATag.hasAttribute('href') || currentATag.getAttribute('href') === '' || currentATag.getAttribute('href') === '#'))
+        mainLi.querySelector('a').insertAdjacentHTML('beforeend', /* html*/`
+        <a-icon-mdx namespace='icon-link-list-' icon-name='ChevronRight' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
         ` );
 
       // Add class for title li a element
-      let subTitleLiTags = Array.from(mainLi.querySelectorAll("li")).filter(li => !li.querySelector("m-nav-level-item"))
-      subTitleLiTags.forEach(li => li.classList.add("list-title"))
+      let subTitleLiTags = Array.from(mainLi.querySelectorAll('li')).filter(li => !li.querySelector('m-nav-level-item'))
+      subTitleLiTags.forEach(li => li.classList.add('list-title'))
     })
 
     // extract section element
-    Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
+    Array.from(this.root.querySelectorAll('section')).forEach((section) => {
       section.hidden = true
     })
+
+    // set aria-attributes for nav tag
+    setTimeout(() => {
+      let menuIconElement = null
+      if (menuIconElement = this.getRootNode().host?.shadowRoot?.querySelector('header > a-menu-icon')) {
+        menuIconElement.addEventListener('click', (event) => {
+          if (event.currentTarget.getAttribute('aria-expanded') === 'true') {
+            this.root.querySelector('nav')?.setAttribute('aria-expanded', 'true')
+          } else {
+            this.root.querySelector('nav')?.setAttribute('aria-expanded', 'false')
+          }
+        })
+      }
+    }, 500);
 
     this.html = this.style
   }
@@ -1118,7 +1148,7 @@ export default class MultiLevelNavigation extends Mutation() {
     const mainFlyoutBackgroundDiv = event.currentTarget.parentElement.querySelector('.main-background')
     if (mainFlyoutBackgroundDiv) {
       mainFlyoutBackgroundDiv.style.top = `${backgroundTopPosition}px`
-      mainFlyoutBackgroundDiv.style.animation = isFlyoutOpen ? "FadeInBackground 0s ease-in-out forwards" : "FadeInBackground 0.3s ease-in-out forwards"
+      mainFlyoutBackgroundDiv.style.animation = isFlyoutOpen ? 'FadeInBackground 0s ease-in-out forwards' : 'FadeInBackground 0.3s ease-in-out forwards'
     }
   }
 
