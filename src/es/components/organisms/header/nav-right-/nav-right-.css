@@ -11,7 +11,6 @@
     left: auto;
     right: 0;
 }
-/* TODO Refactor later*/
 :host > header > m-multi-level-navigation {
     animation: closeRight .4s ease-in;
     left: auto;
