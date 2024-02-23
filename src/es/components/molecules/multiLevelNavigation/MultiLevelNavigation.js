@@ -232,7 +232,7 @@ export default class MultiLevelNavigation extends Mutation() {
    * @return {Promise<void>|void}
    */
   renderCSS() {
-     this.css = /* css */`
+    this.css = /* css */`
     :host {
       color: black;
       overscroll-behavior: contain;
@@ -250,6 +250,7 @@ export default class MultiLevelNavigation extends Mutation() {
     :host > nav > ul > li {
       display: block;
       padding: var(--li-padding, 0);
+      --a-transition: none;
     }
     :host > nav > ul > li > div.main-background {
       display: none;
@@ -267,7 +268,7 @@ export default class MultiLevelNavigation extends Mutation() {
     :host > nav > ul > li > div.main-background.hide {
       animation: FadeOutBackground 0.3s ease-in-out forwards !important;
     }
-    :host > nav > ul > li.open > a > span {
+    :host > nav > ul > li.active > a > span {
       border-bottom: 3px solid var(--color-active);
       color: var(--color-active);
     }
@@ -372,7 +373,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper > section .close-icon {
       position: absolute;
-      right: 1.75em;
+      right: -1.75em;
       top: 0.25em;
       width: auto !important;
     }
@@ -443,6 +444,8 @@ export default class MultiLevelNavigation extends Mutation() {
       }
       :host li.list-title {
         padding: 1em 0;
+        --a-color: var(--color-active);
+        --a-color-hover: var(--color-active);
       }
       :host li.list-title a {
         font-weight: 500;
@@ -701,6 +704,8 @@ export default class MultiLevelNavigation extends Mutation() {
   hideAndClearDesktopSubNavigation(event) {
     let navWrappers = Array.from(this.root.querySelectorAll("o-nav-wrapper"))
     let allOpenLiTags = Array.from(this.root.querySelectorAll('li.open'))
+    let allActiveLiTags = Array.from(this.root.querySelectorAll('li.active'))
+
 
     navWrappers.forEach(wrapper => {
       let firstNavigationDiv = wrapper.querySelector("div[nav-level='1']")
@@ -741,6 +746,8 @@ export default class MultiLevelNavigation extends Mutation() {
       if (li.hasAttribute("aria-expanded")) li.setAttribute("aria-expanded", "false")
       if (li.parentElement) li.parentElement.classList.remove('open')
     })
+
+    allActiveLiTags.forEach(li => li.classList.remove("active"))
   }
 
   hideAndClearMobileSubNavigation() {
@@ -774,12 +781,14 @@ export default class MultiLevelNavigation extends Mutation() {
     } else {
       // set nav from desktop to mobile compatible
       let desktopOWrappers = Array.from(currentNav.querySelectorAll("o-nav-wrapper"))
+      let desktopMainFlyoutBackgrounds = Array.from(currentNav.querySelectorAll("div.main-background"))
       if (desktopOWrappers.length > 0) {
         desktopOWrappers.forEach(wrapper => {
           // remove close icon append section
           let closeIcon
           let wrapperSection
           wrapper.parentElement.classList.remove("open")
+          wrapper.parentElement.classList.remove("active")
           if (closeIcon = wrapper.querySelector("section a.close-icon")) closeIcon.parentElement.removeChild(closeIcon)
           if (wrapperSection = wrapper.querySelector("section")) {
             let subNavigationDivs = Array.from(wrapperSection.querySelectorAll("div[nav-level]"))
@@ -788,6 +797,10 @@ export default class MultiLevelNavigation extends Mutation() {
             wrapper.parentElement.removeChild(wrapper)
           }
         })
+      }
+      // remove added faded background effect on desktop
+      if (desktopMainFlyoutBackgrounds.length > 0) {
+        desktopMainFlyoutBackgrounds.forEach(div => div.parentElement.removeChild(div))
       }
     }
     this.renderHTML(currentNav)
@@ -824,6 +837,7 @@ export default class MultiLevelNavigation extends Mutation() {
       this.hideAndClearDesktopSubNavigation(event)
     }
     event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
+    event.currentTarget.parentNode.classList.add('active')
     // remove animation if flyout is open
     if (isFlyoutOpen) event.currentTarget.parentElement.querySelector('o-nav-wrapper').classList.add('no-animation')
   }
@@ -842,6 +856,7 @@ export default class MultiLevelNavigation extends Mutation() {
     let sectionChildren = Array.from(event.currentTarget.parentNode.querySelector("section").children)
     sectionChildren.forEach((node) => {
       let currentNode = node.cloneNode(true)
+      currentNode.style.setProperty("--multi-level-navigation-default-color-active", node.parentElement.parentElement.getAttribute("main-color"))
       Array.from(currentNode.querySelectorAll("a")).forEach(a => a.addEventListener('click', this.aLinkClickListener))
       if (!node.getAttribute('slot')) event.currentTarget.parentNode.parentNode.parentNode.appendChild(currentNode)
     })
