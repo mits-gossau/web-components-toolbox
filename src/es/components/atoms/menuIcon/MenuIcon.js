@@ -34,13 +34,23 @@ export default class MenuIcon extends Shadow() {
     this.openClass = this.getAttribute('openClass') ? this.getAttribute('openClass') : 'open'
     this.barClass = this.getAttribute('barClass') ? this.getAttribute('barClass') : 'bar'
 
-    this.clickListener = event => this.toggleAnimationClass()
+    this.clickListener = event => {
+      if (!this.hasAttribute('no-click')) this.toggleAnimationClass()
+      if (this.getAttribute('click-event-name')) {
+        event.preventDefault()
+        this.getAttribute('click-event-name').split(',').forEach(eventName => this.dispatchEvent(new CustomEvent(eventName, {
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        })))
+      }
+    }
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-    if (!this.hasAttribute('no-click')) this.addEventListener('click', this.clickListener)
+    if (!this.hasAttribute('no-click') || this.getAttribute('click-event-name')) this.addEventListener('click', this.clickListener)
   }
 
   disconnectedCallback () {
@@ -80,6 +90,10 @@ export default class MenuIcon extends Shadow() {
         margin: var(--margin, 0);
         transition: var(--transition, 0.2s);
         font-size: 14px;
+        outline: var(--outline, none) !important;
+      }
+      :host(:focus-visible) {
+        outline: var(--outline-focus-visible, var(--outline, none)) !important;
       }
       :host(.${this.openClass}) {
         padding: var(--padding-open, 0 calc(var(--width, 35px) / 4)) !important;
