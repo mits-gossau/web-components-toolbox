@@ -344,7 +344,7 @@ export default class SimpleForm extends Shadow() {
     }
     // multiply aka. clone
     let originalNode // eslint-disable-line
-    if (target.hasAttribute('multiply') && (originalNode = SimpleForm.findByQuerySelector(target, target.getAttribute('multiply'), this.root)) !== this.root && this.checkCondition(target, target, 'multiply-condition')) {
+    if (target.hasAttribute('multiply') && (originalNode = SimpleForm.walksUpDomQuerySelector(target, target.getAttribute('multiply'), this.root)) !== this.root && this.checkCondition(target, target, 'multiply-condition')) {
       /** @type {any} */
       const clone = originalNode.cloneNode(true)
       target.removeAttribute('multiply')
@@ -352,7 +352,8 @@ export default class SimpleForm extends Shadow() {
       counter++
       clone.setAttribute('visible-by', target.getAttribute('id'))
       clone.setAttribute('visible-condition', target.getAttribute('multiply-condition'))
-      const cloneTarget = clone.querySelector(`#${target.getAttribute('id')}`)
+      /** @type {any} */
+      const cloneTarget = SimpleForm.walksUpDomQuerySelector(clone, `#${target.getAttribute('id')}`)
       let removedCloneTarget = null
       if (counter >= Number(target.getAttribute('multiply-max') || 100000)) {
         if (Array.from(cloneTarget.parentNode.children).length === 2 && Array.from(cloneTarget.parentNode.children).some(node => node.nodeName === 'LABEL')) {
@@ -371,7 +372,7 @@ export default class SimpleForm extends Shadow() {
       cloneTarget.setAttribute('name', `${target.getAttribute('name').replace(`-counter-${counter - 1}`, '')}-counter-${counter}`)
       cloneTarget.setAttribute('counter', counter)
       let label
-      if ((label = cloneTarget.parentElement.querySelector(`[for="${target.getAttribute('id')}"]`))) label.setAttribute('for', cloneTarget.getAttribute('id'))
+      if ((label = SimpleForm.walksUpDomQuerySelector(cloneTarget, `[for="${target.getAttribute('id')}"]`))) label.setAttribute('for', cloneTarget.getAttribute('id'))
       Array.from(clone.querySelectorAll(`[${target.getAttribute('multiply-text-selector') || 'multiply-text'}]`)).forEach(node => (node.textContent = node.getAttribute(target.getAttribute('multiply-text-selector') || 'multiply-text').replace(target.getAttribute('counter-placeholder'), counter)))
       if (removedCloneTarget !== clone) originalNode.after(clone)
     }
@@ -390,15 +391,17 @@ export default class SimpleForm extends Shadow() {
           if (Object.hasOwnProperty.call(obj, key)) {
             if (Array.isArray(obj[key])) {
               const parentsOfMultipleInput = Array.from(new Set(Array.from(form.querySelectorAll(`[name="${key}"]`)).concat(Array.from(form.querySelectorAll(`#${key}`)))))
+              let lastObj
               await Promise.all(parentsOfMultipleInput.map(async (parentOfMultipleInput, i) => {
-                // check if field is visible, which is the case when walksUpDomQueryMatching returns this.root
-                const value = SimpleForm.walksUpDomQueryMatching(parentOfMultipleInput, '[hidden]', this.root) === this.root
+                // check if field is visible, which is the case when walksUpDomQueryMatches returns this.root
+                const value = SimpleForm.walksUpDomQueryMatches(parentOfMultipleInput, '[hidden]', this.root) === this.root
                   ? this.isInputValueNode(parentOfMultipleInput)
                     // check if it has a value
                     ? await this.getInputValue(parentOfMultipleInput)
                     // loop through the object
-                    : await loop(obj[key][i] || structuredClone(obj[key][0]), this.getInputs(parentOfMultipleInput), parentOfMultipleInput)
+                    : await loop(obj[key][i] || structuredClone(obj[key][0]) || structuredClone(lastObj), this.getInputs(parentOfMultipleInput), parentOfMultipleInput)
                   : undefined
+                lastObj = structuredClone(obj[key][i]) || lastObj
                 obj[key][i] = value
               }))
               // set falsy fields to empty
@@ -524,9 +527,9 @@ export default class SimpleForm extends Shadow() {
 
   show (node) {
     node.removeAttribute('hidden')
-    // check for if right parent triggering this by walksUpDomQueryMatching
+    // check for if right parent triggering this by walksUpDomQueryMatches
     Array.from(node.querySelectorAll('input[disabled],select[disabled]')).forEach(input => {
-      if (SimpleForm.walksUpDomQueryMatching(input, '[visible-by]', this.root) === node && input.getAttribute('data-disabled') !== 'true') input.removeAttribute('disabled')
+      if (SimpleForm.walksUpDomQueryMatches(input, '[visible-by]', this.root) === node && input.getAttribute('data-disabled') !== 'true') input.removeAttribute('disabled')
     })
   }
 
@@ -575,10 +578,10 @@ export default class SimpleForm extends Shadow() {
    * @param {HTMLElement} [root=document.documentElement]
    * @return {any}
    */
-  static walksUpDomQueryMatching (el, selector, root = document.documentElement) {
+  static walksUpDomQueryMatches (el, selector, root = document.documentElement) {
     if (el.matches(selector)) return el
-    while ((el = el.parentNode || root) && el !== root) { // eslint-disable-line
-      if (el.matches(selector)) return el
+    while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
+      if (typeof el.matches === 'function' && el.matches(selector)) return el
     }
     return el
   }
@@ -592,13 +595,15 @@ export default class SimpleForm extends Shadow() {
    * @param {HTMLElement} [root=document.documentElement]
    * @return {HTMLElement}
    */
-  static findByQuerySelector (el, selector, root = document.documentElement) {
-    while ((el = el.parentNode || el.host)) {
-      const parentNode = el.parentNode || el.host
-      if (parentNode && parentNode.querySelector(selector)) return el
-    }
-    return root
+static walksUpDomQuerySelector (el, selector, root = document.documentElement) {
+  if (typeof el.matches === 'function' && el.matches(selector)) return el
+  if (el.querySelector(selector)) return el.querySelector(selector)
+  while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
+    if (typeof el.matches === 'function' && el.matches(selector)) return el
+    if (el.querySelector(selector)) return el.querySelector(selector)
   }
+  return el
+}
 
   get form () {
     return this.root.querySelector('form')
