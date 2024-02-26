@@ -104,10 +104,10 @@ export default class General extends Shadow() {
       }
       /* navigation open */
       :root.${this.getAttribute('no-scroll') || 'no-scroll'} {
-        overflow: hidden;
+        overflow: var(--root-no-scroll-overflow, hidden);
       }
       :root.${this.getAttribute('no-scroll') || 'no-scroll'} body {
-        overflow: hidden;
+        overflow: var(--body-no-scroll-overflow, hidden);
       }
       @media only screen and (max-width: _max-width_) {
         :host {
