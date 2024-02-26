@@ -352,6 +352,13 @@ export default class Button extends Hover() {
           namespace: false,
           replaces
         }])
+      case 'button-transparent-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./transparent-/transparent-.css`,
+          namespace: false,
+          replaces
+        }])
       case 'button-quaternary-':
         return this.fetchCSS([{
           // @ts-ignore
