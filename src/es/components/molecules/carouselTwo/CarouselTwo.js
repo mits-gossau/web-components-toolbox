@@ -310,12 +310,14 @@ export default class CarouselTwo extends Mutation() {
           : this.hasAttribute('nav-align-self')
             ? this.getAttribute('nav-align-self')
             : 'var(--nav-align-self, end)'};
-          display: ${this.hasAttribute('no-default-nav') ? 'none' : 'flex'};
-          gap: var(--nav-gap);
-          height: fit-content;
-          margin: var(--nav-margin);
-          justify-content: center;
-          ${this.hasAttribute('nav-flex-wrap')
+        display: flex;
+        gap: var(--nav-gap);
+        height: fit-content;
+        margin: var(--nav-margin);
+        justify-content:  ${this.hasAttribute('nav-justify-content')
+          ? this.getAttribute('nav-justify-content')
+          : 'var(--nav-justify-content, center)'};
+        ${this.hasAttribute('nav-flex-wrap')
           ? 'flex-wrap: wrap;'
           : 'max-height: 20%;'
         }
@@ -619,11 +621,12 @@ export default class CarouselTwo extends Mutation() {
       Array.from(this.section.children).forEach((node, i) => {
         // add attribute tabindex to each slide
         node.setAttribute('tabindex', '0')
+        if (this.hasAttribute('no-default-nav-linking')) return
+        node.setAttribute('aria-label', `slide ${i + 1}`)
+        node.setAttribute('aria-hidden', 'true')
         // make sure the ids match between section and navigation nodes
         const id = `${this.id}-${i}`
         node.setAttribute('id', id)
-        node.setAttribute('aria-label', `slide ${i + 1}`)
-        node.setAttribute('aria-hidden', 'true')
         // set the id on the nav child
         if (this.nav.children[i]) {
           let navNode = this.nav.children[i].tagName === 'A'

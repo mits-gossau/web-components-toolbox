@@ -7,8 +7,8 @@
   --carousel-two-default-nav-background-color: var(--carousel-two-default-nav-background-color-custom, var(--color-secondary));
   --carousel-two-default-nav-gap-mobile: var(--content-spacing-mobile);
   --carousel-two-default-nav-gap: var(--content-spacing);
-  --carousel-two-default-nav-margin-mobile: var(--content-spacing-mobile);
-  --carousel-two-default-nav-margin: var(--content-spacing);
+  --carousel-two-default-nav-margin-mobile: var(--carousel-two-default-nav-margin-mobile-custom, var(--content-spacing-mobile));
+  --carousel-two-default-nav-margin: var(--carousel-two-default-nav-margin-custom, var(--content-spacing));
   --carousel-two-default-section-gap: 1em;
   --carousel-two-default-section-nav-separate-margin-mobile: var(--content-spacing-mobile);
   --carousel-two-default-section-nav-separate-margin: var(--content-spacing);
