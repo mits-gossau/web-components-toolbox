@@ -595,15 +595,15 @@ export default class SimpleForm extends Shadow() {
    * @param {HTMLElement} [root=document.documentElement]
    * @return {HTMLElement}
    */
-static walksUpDomQuerySelector (el, selector, root = document.documentElement) {
-  if (typeof el.matches === 'function' && el.matches(selector)) return el
-  if (el.querySelector(selector)) return el.querySelector(selector)
-  while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
+  static walksUpDomQuerySelector (el, selector, root = document.documentElement) {
     if (typeof el.matches === 'function' && el.matches(selector)) return el
     if (el.querySelector(selector)) return el.querySelector(selector)
+  while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
+      if (typeof el.matches === 'function' && el.matches(selector)) return el
+      if (el.querySelector(selector)) return el.querySelector(selector)
+    }
+    return el
   }
-  return el
-}
 
   get form () {
     return this.root.querySelector('form')
