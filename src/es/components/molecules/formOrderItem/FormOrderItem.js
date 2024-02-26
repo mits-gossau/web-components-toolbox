@@ -31,14 +31,14 @@ export default class FormOrderItem extends Form {
 
   connectedCallback () {
     super.connectedCallback()
-    
+
     /* event listeners */
     if (this.input) {
       this.input.addEventListener('keyup', this.eventListener)
       this.input.addEventListener('change', this.eventListener)
-    } 
+    }
     if (this.clearQuantityBtn) this.clearQuantityBtn.addEventListener('click', this.clickListener)
-    
+
     /* set initial attributes */
     this.setPrice(this.priceAttribute, this.priceElement)
     this.calcTotal('0', this.priceAttribute, this.priceTotalElement)
@@ -63,7 +63,7 @@ export default class FormOrderItem extends Form {
     if (this.input) {
       this.input.removeEventListener('keyup', this.eventListener)
       this.input.removeEventListener('change', this.eventListener)
-    } 
+    }
     if (this.clearQuantityBtn) this.clearQuantityBtn.removeEventListener('click', this.clickListener)
   }
 
@@ -197,7 +197,7 @@ export default class FormOrderItem extends Form {
   }
 
   get isCheckbox () {
-    return this.input != null && this.input.getAttribute('type') === 'checkbox' || null
+    return (this.input != null && this.input.getAttribute('type') === 'checkbox') || null
   }
 
   get priceTotalElement () {

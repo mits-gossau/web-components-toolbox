@@ -9,4 +9,5 @@
     --meta-header-default-padding:var(--meta-header-default-padding-custom, 0.75em 0 0 0);
     --meta-header-default-svg-color:var(--meta-header-default-svg-color-custom, var(--color-secondary, black));
     --meta-header-default-width:var(--header-default-content-width);
+    --meta-header-default-width-mobile:var(--header-default-content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2));
 }

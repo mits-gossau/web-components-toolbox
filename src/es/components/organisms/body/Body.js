@@ -38,6 +38,7 @@ export default class Body extends Shadow() {
           }
         }))
         element.scrollIntoView({ behavior: 'smooth' })
+        // @ts-ignore
         clearTimeout(this.timeout)
         this.timeout = setTimeout(() => {
           element.scrollIntoView({ behavior: 'auto' })

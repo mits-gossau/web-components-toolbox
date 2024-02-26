@@ -96,9 +96,11 @@ export default class General extends Shadow() {
       }
       /* sticky footer */
       body {
-        margin: 0;
-        min-height: var(--min-height, 100vh);
+        margin: var(--body-margin, 0);
+        max-width: var(--body-max-width, none);
+        min-height: var(--body-min-height, var(--min-height, 100vh));
         overflow-x: hidden;
+        padding: var(--body-padding, 0);
       }
       /* navigation open */
       :root.${this.getAttribute('no-scroll') || 'no-scroll'} {

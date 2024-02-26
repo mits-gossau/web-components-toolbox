@@ -33,7 +33,7 @@
   --header-default-height-mobile: var(--header-default-height-mobile-custom, 5rem);
   --header-default-height: var(--header-default-height-custom, auto);
   --header-default-justify-content-mobile: space-between;
-  --header-default-justify-content: center;
+  --header-default-justify-content: var(--header-default-justify-content-custom, center);
   --header-default-left-open-mobile: 0;
   --header-default-logo-width: var(--header-default-logo-width-custom, 90px);
   --header-default-m-navigation-background-color-mobile: var(--background-color);

@@ -92,6 +92,7 @@ export default class ProductList extends Shadow() {
       min-height: var(--m-load-template-tag-min-height, 25em);
     }
 
+
     :host .filter {
       align-items: var(--filter-align-items, center);
       align-self: var(--filter-align-self, center);
@@ -131,11 +132,18 @@ export default class ProductList extends Shadow() {
         min-width: var(--m-load-template-tag-min-width-mobile, min(calc(50% - 0.5em)));
       }
     }
-    
+
     @media only screen and (max-width: _max-width_) {
       :host > m-load-template-tag {
         flex: var(--m-load-template-tag-flex-mobile, 1 1 35%);
-      } 
+      }
+      :host::after{
+        display: block;
+        width: 50%;
+        height: auto;
+        clear: both;
+        content: '';
+      }
     }
     `
     return this.fetchTemplate()

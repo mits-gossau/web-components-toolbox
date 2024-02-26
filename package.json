@@ -22,7 +22,8 @@
   },
   "standard": {
     "ignore": [
-      "docs/es/prism.*"
+      "docs/es/prism.*",
+      "*.css.js"
     ]
   }
 }

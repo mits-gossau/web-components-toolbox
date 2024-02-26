@@ -12,20 +12,25 @@
   </div>
   <div class="container dialog-content">
     <p class="reset-link"><a>Alles zur&uuml;cksetzen <a-icon-mdx icon-name="RotateLeft" size="1em"></a-icon-mdx></a></p>
-    <p>Content here</p>
-    <p>Content here</p>
-    <p>Content here</p>
-    <p>Content here</p>
-    <p>(scroll down)</p>
-    <p style="height: 1000px">...</p>
-    <p>Content here</p>
+    <div>
+      <p>Content here</p>
+      <p>Content here</p>
+      <p>Content here</p>
+      <p>Content here</p>
+      <p>Content here</p>
+      <p>(scroll down)</p>
+      <p style="height: 500px">...</p>
+      <p>Content here</p>
+      <p>Content here</p>
+      <p>Content here</p>
+    </div>
   </div>
   <div class="container dialog-footer">
-    <a-button id="close" namespace="button-secondary-">Schliessen</a-button>
+    <a-button id="close" namespace="button-secondary-" no-pointer-events>Schliessen</a-button>
     <a-button namespace="button-primary-">Angebote anzeigen</a-button>
   </div>
   
-  <a-button id="show-modal" namespace="button-primary-">Show dialog left slide in</a-button>
+  <a-button id="show-modal" namespace="button-primary-" no-pointer-events>Show dialog left slide in</a-button>
 </m-dialog>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./left-slide-in-.js"></script>

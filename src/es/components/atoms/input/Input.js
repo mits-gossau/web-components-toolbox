@@ -30,7 +30,7 @@ export default class Input extends Shadow() {
     if (!this.children.length) this.labelText = this.textContent.trim()
 
     this.lastValue = ''
-    this.clickListener = (event, retry = true, force = false) => {
+    this.clickListener = (event, retry = true, force = this.hasAttribute('force')) => {
       if (!force && this.lastValue === this.inputField.value) {
         // when delete native icon is pushed the value is not updated when the event hits here
         if (retry && event.composedPath()[0] === this.inputField) setTimeout(() => this.clickListener(event, false), 50)
@@ -96,27 +96,29 @@ export default class Input extends Shadow() {
       if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
       if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
 
-      if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
+      if ((this.hasAttribute('submit-search') || this.search && this.searchButton) && !this.readonly && !this.disabled && !this.error) {
         if (this.hasAttribute('delete-listener')) {
           this.addEventListener('click', this.clickListener)
-        } else {
+        } else if(this.searchButton) {
           this.searchButton.addEventListener('click', this.clickListener)
         }
         if (this.hasAttribute('change-listener')) this.inputField.addEventListener('change', this.changeListener)
         if (this.hasAttribute('focus-listener')) this.inputField.addEventListener('focus', this.focusListener)
-        document.addEventListener('keydown', this.keydownListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
         if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
       }
       this.hidden = false
     })
+    if ((this.hasAttribute('submit-search') || this.search && this.searchButton) && !this.readonly && !this.disabled && !this.error) {
+      document.addEventListener('keydown', this.keydownListener)
+    }
   }
 
   disconnectedCallback () {
-    if (this.search && this.searchButton && !this.readonly && !this.disabled && !this.error) {
+    if ((this.hasAttribute('submit-search') || this.search && this.searchButton) && !this.readonly && !this.disabled && !this.error) {
       if (this.hasAttribute('delete-listener')) {
         this.removeEventListener('click', this.clickListener)
-      } else {
+      } else if(this.searchButton) {
         this.searchButton.removeEventListener('click', this.clickListener)
       }
       if (this.hasAttribute('change-listener')) this.inputField.removeEventListener('change', this.changeListener)
@@ -169,6 +171,7 @@ export default class Input extends Shadow() {
       .mui-form-group {
         font-family: var(--font-family);
         max-width: var(--max-width, none);
+        height: var(--height, auto);
       }
       .mui-form-group + .mui-form-group {
         margin-top: var(--margin-top, var(--content-spacing));
@@ -188,7 +191,8 @@ export default class Input extends Shadow() {
         caret-color: var(--caret-color, var(--input-color, var(--color-secondary, var(--color))));
         display: block;
         padding: 0.625em 1em;
-        width: 100%;
+        width: var(--input-width, 100%);
+        height: var(--input-height, auto);
         font-family: inherit;
         font-size: var(--input-font-size, var(--font-size));
         line-height: var(--input-line-height, 1.4);
@@ -224,6 +228,11 @@ export default class Input extends Shadow() {
       input:disabled,
       input:read-only {
         cursor: not-allowed;
+      }
+
+      input:disabled {
+        background: var(--input-bg-color-disabled, var(--input-bg-color, var(--m-gray-200)));
+        color: var(--input-color-disabled, var(--input-color, var(--color)));
       }
 
       :host([search]) .mui-form-group {
@@ -398,9 +407,10 @@ export default class Input extends Shadow() {
     ]).then(([labelHtml, searchHtml]) => {
       this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml)
       this.divWrapper.innerHTML += /* html */`
-          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} />
+          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} ${this.hasAttribute('disabled') ? 'disabled' : ''} />
           ${searchHtml}
       `
+      if (this.hasAttribute('autofocus')) this.removeAttribute('autofocus')
       this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint')
         ? this.getAttribute('enterkeyhint')
         : this.search

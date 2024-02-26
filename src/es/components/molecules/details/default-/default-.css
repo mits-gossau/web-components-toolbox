@@ -1,5 +1,5 @@
 :host {
-    --details-default-border-bottom-last: 2px solid ;
+    --details-default-border-bottom-last: var(--details-default-border-bottom-last-custom, 2px solid);
     --details-default-border-color-last: var(--details-default-border-color-last-custom, var(--details-default-border-color-custom, var(--color-secondary)));
     --details-default-border-color: var(--details-default-border-color-custom, var(--color-secondary));
     --details-default-border-top: var(--details-default-border-top-custom, 2px solid var(--color-secondary));

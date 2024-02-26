@@ -609,9 +609,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {fetchModulesParams[]} fetchModulesParams
    * @param {boolean} [hide = false]
    * @param {boolean} [useController = true]
+   * @param {boolean} [defineImmediately = false]
    * @return {Promise<fetchModulesParams[]>}
    */
-  fetchModules (fetchModulesParams, hide = false, useController = true) {
+  fetchModules (fetchModulesParams, hide = false, useController = true, defineImmediately = false) {
     if (hide) this.hidden = true
     if (!Array.isArray(fetchModulesParams)) fetchModulesParams = [fetchModulesParams]
     if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-modules') || 'fetch-modules')) {
@@ -627,6 +628,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           /** @type {import("../controllers/fetchModules/FetchModules.js").fetchModulesEventDetail} */
           detail: {
             fetchModulesParams,
+            defineImmediately,
             resolve,
             node: this
           },
@@ -647,6 +649,20 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }
       )
     } else {
+      /**
+       * customElements define
+       *
+       * @param {any} module
+       * @param {fetchModulesParams} fetchModulesParam
+       * @return {fetchModulesParams}
+       */
+      const define = (module, fetchModulesParam) => {
+        let constructorClass = module.default || module
+        if (typeof constructorClass === 'object') constructorClass = constructorClass[Object.keys(constructorClass)[0]]()
+        if (!customElements.get(fetchModulesParam.name)) customElements.define(fetchModulesParam.name, constructorClass)
+        fetchModulesParam.constructorClass = constructorClass
+        return fetchModulesParam
+      }
       return Promise.all(fetchModulesParams.map(
         /**
          * fetch each fetchHTMLParam.paths and return the promise
@@ -654,21 +670,9 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
          * @param {fetchModulesParams} fetchModulesParam
          * @return {Promise<fetchModulesParams>}
          */
-        fetchModulesParam => (import(fetchModulesParam.path).then(
-          /**
-           * return the paths with the response.text or an Error
-           *
-           * @param {any} module
-           * @return {fetchModulesParams}
-           */
-          module => {
-            let constructorClass = module.default || module
-            if (typeof constructorClass === 'object') constructorClass = constructorClass[Object.keys(constructorClass)[0]]()
-            if (!customElements.get(fetchModulesParam.name)) customElements.define(fetchModulesParam.name, constructorClass)
-            fetchModulesParam.constructorClass = constructorClass
-            return fetchModulesParam
-          }
-        )).catch(
+        fetchModulesParam => import(fetchModulesParam.path).then(module => defineImmediately
+          ? define(module, fetchModulesParam)
+          : Object.assign(fetchModulesParam, { constructorClass: module })).catch(
           /**
            * Return the paths with the attached error
            *
@@ -690,6 +694,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
          * @return {fetchModulesParams[]}
          */
         fetchModulesParams => {
+          if (!defineImmediately) fetchModulesParams.forEach(fetchModulesParam => define(fetchModulesParam.constructorClass, fetchModulesParam))
           if (hide) this.hidden = false
           // @ts-ignore
           return fetchModulesParams
@@ -738,7 +743,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     Array.from(innerHTML).forEach(
       node => {
         // @ts-ignore
-        if (node) this.root.appendChild(node)
+        if (node && !this.root.contains(node)) this.root.appendChild(node)
       })
   }
 
@@ -772,7 +777,6 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         ${generalFix}
         :host, :host > *, :host > * > * {
           animation: var(--show, show .3s ease-out);
-          will-change: opacity;
         }
         @keyframes show {
           0%{opacity: 0}

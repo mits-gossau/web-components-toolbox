@@ -11,16 +11,16 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 
 export default class SystemNotification extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-    this.isTimedNotification = this.hasAttribute("timed-notification")
+    this.isTimedNotification = this.hasAttribute('timed-notification')
 
     this.renderSystemNotification = event => {
       this.renderHTML(event.detail)
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
 
     if (!this.isTimedNotification) {
@@ -28,13 +28,13 @@ export default class SystemNotification extends Shadow() {
     }
 
     if (this.isTimedNotification) {
-      document.body.addEventListener("render-timed-system-notification", this.renderSystemNotification)
+      document.body.addEventListener('render-timed-system-notification', this.renderSystemNotification)
     }
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     if (this.isTimedNotification) {
-      document.body.removeEventListener("render-timed-system-notification", this.renderSystemNotification)
+      document.body.removeEventListener('render-timed-system-notification', this.renderSystemNotification)
     }
   }
 
@@ -43,13 +43,13 @@ export default class SystemNotification extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(
       `:host > style[_css], ${this.tagName} > style[_css]`
     )
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */ `
         :host {
             --icon-default-width: 52px;
@@ -116,7 +116,7 @@ export default class SystemNotification extends Shadow() {
    *
    * @return {void}
    */
-  renderHTML(timedNotificationData) {
+  renderHTML (timedNotificationData) {
     const iconBadge = this.getAttribute('icon-badge') || timedNotificationData?.iconBadge || ''
     const icon = this.getAttribute('icon-src') || timedNotificationData?.icon || ''
     const title = this.getAttribute('title') || timedNotificationData?.title || ''
@@ -125,16 +125,16 @@ export default class SystemNotification extends Shadow() {
 
     if (timedNotificationData && this.isTimedNotification) {
       const duration = timedNotificationData.duration
-      const positionUnit = timedNotificationData.position.unit ?? "px"
+      const positionUnit = timedNotificationData.position.unit ?? 'px'
 
       const position = {
-        position: timedNotificationData.position.position ?? "fixed",
-        top: timedNotificationData.position.top ? timedNotificationData.position.top + positionUnit : "",
-        right: timedNotificationData.position.right ? timedNotificationData.position.right + positionUnit : "",
-        bottom: timedNotificationData.position.bottom ? timedNotificationData.position.bottom + positionUnit : "",
-        left: timedNotificationData.position.left ? timedNotificationData.position.left + positionUnit : "",
+        position: timedNotificationData.position.position ?? 'fixed',
+        top: timedNotificationData.position.top ? timedNotificationData.position.top + positionUnit : '',
+        right: timedNotificationData.position.right ? timedNotificationData.position.right + positionUnit : '',
+        bottom: timedNotificationData.position.bottom ? timedNotificationData.position.bottom + positionUnit : '',
+        left: timedNotificationData.position.left ? timedNotificationData.position.left + positionUnit : ''
       }
-      
+
       this.css = /* css */`
       :host {
         position: ${position.position};
@@ -150,9 +150,9 @@ export default class SystemNotification extends Shadow() {
        0%{opacity: 0}
        100%{opacity: 1}
      }`
-      this.renderCSS();
+      this.renderCSS()
       setTimeout(() => {
-        this.html = ""
+        this.html = ''
       }, duration)
     }
 
@@ -163,20 +163,19 @@ export default class SystemNotification extends Shadow() {
                           <img src="${icon}" alt="icon-notification" />
                             ${iconBadge
           ? /* html */ `<div class="icon-badge">${iconBadge}</div>`
-          : ""}
+          : ''}
                         </div>`
-        : ""
+        : ''
       }
         ${title
         ? /* html */ `<div class="title"><h3>${title}</h3></div>`
-        : ""
+        : ''
       }
         ${description
         ? /* html */ `<div class="description">${description}</div>`
-        : ""
+        : ''
       }
       </div>
     `
   }
 }
-
