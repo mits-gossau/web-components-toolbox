@@ -103,79 +103,85 @@ export default class MultiLevelNavigation extends Mutation() {
     }
 
     this.subLiHoverListener = (event) => {
-      event.target.parentElement.querySelectorAll('li').forEach(li => li.classList.remove('hover-active'))
-      const currentNavLevel = + event.target.parentElement.parentElement.getAttribute('nav-level')
-      const nextNavLevel = currentNavLevel + 1
-      const secondNextNavLevel = currentNavLevel + 2
-      const childSubNavName = event.target.getAttribute('sub-nav')
-      const directSubWrapper = Array.from(event.currentTarget.currentWrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') === nextNavLevel)
-      const secondSubWrapper = Array.from(event.currentTarget.currentWrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') === secondNextNavLevel)
-      const allSubWrappers = Array.from(event.currentTarget.currentWrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') > currentNavLevel)
+      clearTimeout(this.subLiHoverTimeout)
+      const target = Array.from(event.composedPath()).find(node => node.tagName === 'LI')
+      this.subLiHoverTimeout = setTimeout(() => {
+        console.log(event.target, event.currentTarget, event.composedPath())
+        
+        target.parentElement.querySelectorAll('li').forEach(li => li.classList.remove('hover-active'))
+        const currentNavLevel = + target.parentElement.parentElement.getAttribute('nav-level')
+        const nextNavLevel = currentNavLevel + 1
+        const secondNextNavLevel = currentNavLevel + 2
+        const childSubNavName = target.getAttribute('sub-nav')
+        const directSubWrapper = Array.from(target.currentWrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') === nextNavLevel)
+        const secondSubWrapper = Array.from(target.currentWrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') === secondNextNavLevel)
+        const allSubWrappers = Array.from(target.currentWrapper.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') > currentNavLevel)
 
-      if (!event.target.classList.contains('hover-active')) {
-        event.target.classList.add('hover-active')
-        let currentEventTarget = event.target
-        if (event.target && !event.target.hasAttribute('sub-nav') && event.target.classList.contains('hover-active')) {
-          setTimeout(() => {
-            currentEventTarget.classList.remove('hover-active')
-          }, 2000)
+        if (!target.classList.contains('hover-active')) {
+          target.classList.add('hover-active')
+          let currentEventTarget = target
+          if (target && !target.hasAttribute('sub-nav') && target.classList.contains('hover-active')) {
+            setTimeout(() => {
+              currentEventTarget.classList.remove('hover-active')
+            }, 2000)
+          }
         }
-      }
 
-      if (!event.target.hasAttribute('sub-nav')) {
-        allSubWrappers.forEach(wrapper => {
-          Array.from(wrapper.querySelectorAll('ul')).forEach(ul => {
-            Array.from(ul.querySelectorAll('li')).forEach(li => li.classList.remove('hover-active'))
-            ul.scrollTo(0, 0)
-            ul.style.display = 'none';
-            ul.parentElement.hidden = true
-          })
-        })
-      }
-
-      if (event.target.hasAttribute('sub-nav')) {
-
-        if (allSubWrappers.length) {
+        if (!target.hasAttribute('sub-nav')) {
           allSubWrappers.forEach(wrapper => {
-            let activeLiElements = Array.from(wrapper.querySelectorAll('.hover-active'));
-            let allLiElements = Array.from(wrapper.querySelectorAll('li'));
-            activeLiElements.forEach(li => {
-              if (li.parentElement.getAttribute('sub-nav-id') !== event.target.getAttribute('sub-nav')) {
-                li.parentElement.scrollTo(0, 0)
-              }
-              li.parentElement.parentElement.hidden = true
-              li.parentElement.style.display = 'none'
-            })
-            allLiElements.forEach(li => li.classList.remove('hover-active'))
-          })
-        }
-
-        if (directSubWrapper.length) {
-          directSubWrapper.forEach(wrapper => {
             Array.from(wrapper.querySelectorAll('ul')).forEach(ul => {
-              if (ul.getAttribute('sub-nav-id') === childSubNavName) {
-                ul.parentElement.hidden = false
-                ul.style.display = 'block'
-              } else {
-                ul.scrollTo(0, 0)
-                ul.style.display = 'none'
-              }
+              Array.from(ul.querySelectorAll('li')).forEach(li => li.classList.remove('hover-active'))
+              ul.scrollTo(0, 0)
+              ul.style.display = 'none';
+              ul.parentElement.hidden = true
             })
           })
         }
 
-        if (secondSubWrapper.length) {
-          secondSubWrapper.forEach(wrapper => {
-            if (Array.from(wrapper.querySelectorAll('.hover-active'))) {
-              Array.from(wrapper.querySelectorAll('ul')).forEach(ul => {
-                ul.scrollTo(0, 0)
-                ul.style.display = 'none'
-                ul.parentElement.hidden = true
+        if (target.hasAttribute('sub-nav')) {
+
+          if (allSubWrappers.length) {
+            allSubWrappers.forEach(wrapper => {
+              let activeLiElements = Array.from(wrapper.querySelectorAll('.hover-active'));
+              let allLiElements = Array.from(wrapper.querySelectorAll('li'));
+              activeLiElements.forEach(li => {
+                if (li.parentElement.getAttribute('sub-nav-id') !== target.getAttribute('sub-nav')) {
+                  li.parentElement.scrollTo(0, 0)
+                }
+                li.parentElement.parentElement.hidden = true
+                li.parentElement.style.display = 'none'
               })
-            }
-          })
+              allLiElements.forEach(li => li.classList.remove('hover-active'))
+            })
+          }
+
+          if (directSubWrapper.length) {
+            directSubWrapper.forEach(wrapper => {
+              Array.from(wrapper.querySelectorAll('ul')).forEach(ul => {
+                if (ul.getAttribute('sub-nav-id') === childSubNavName) {
+                  ul.parentElement.hidden = false
+                  ul.style.display = 'block'
+                } else {
+                  ul.scrollTo(0, 0)
+                  ul.style.display = 'none'
+                }
+              })
+            })
+          }
+
+          if (secondSubWrapper.length) {
+            secondSubWrapper.forEach(wrapper => {
+              if (Array.from(wrapper.querySelectorAll('.hover-active'))) {
+                Array.from(wrapper.querySelectorAll('ul')).forEach(ul => {
+                  ul.scrollTo(0, 0)
+                  ul.style.display = 'none'
+                  ul.parentElement.hidden = true
+                })
+              }
+            })
+          }
         }
-      }
+      }, 75);
     }
   }
 
@@ -857,8 +863,8 @@ export default class MultiLevelNavigation extends Mutation() {
       let currentNodeAriaControlUlTags = currentNode.querySelectorAll('ul[sub-nav-id]')
       currentNode.style.setProperty('--multi-level-navigation-default-color-active', node.parentElement.parentElement.getAttribute('main-color'))
       Array.from(currentNode.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
-      if(currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
-      if(currentNodeAriaControlUlTags.length > 0) currentNodeAriaControlUlTags.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
+      if (currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
+      if (currentNodeAriaControlUlTags.length > 0) currentNodeAriaControlUlTags.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
       if (+currentNode.getAttribute('nav-level') === 1) currentNode.querySelector('ul').setAttribute('id', 'nav-level-1')
       if (!node.getAttribute('slot')) event.currentTarget.parentNode.parentNode.parentNode.appendChild(currentNode)
     })
@@ -891,7 +897,7 @@ export default class MultiLevelNavigation extends Mutation() {
       event.currentTarget.parentNode.previousElementSibling.classList.add('open-left-slide')
       // @ts-ignore
       let expandedElements = Array.from(event.currentTarget.parentNode.previousElementSibling.querySelectorAll('[aria-expanded="true"]'))
-      if(expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded','false'))
+      if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
       // remove subNav divs from next to ul 
       // @ts-ignore
       let currentSubNavElements = Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('nav > div[nav-level]'))
@@ -1001,7 +1007,7 @@ export default class MultiLevelNavigation extends Mutation() {
           event.currentTarget.parentNode.previousElementSibling.classList.add('open-left-slide')
           // @ts-ignore
           let expandedElements = Array.from(event.currentTarget.parentNode.previousElementSibling.querySelectorAll('[aria-expanded="true"]'))
-          if(expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded','false'))
+          if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
 
           // find uls and add display none to all
           setTimeout(() => {
