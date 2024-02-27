@@ -38,7 +38,8 @@
   --header-default-logo-width: var(--header-default-logo-width-custom, 90px);
   --header-default-m-navigation-background-color-mobile: var(--background-color);
   --header-default-m-navigation-height-mobile: calc(100vh - var(--header-default-m-navigation-top-mobile));
-  --header-default-m-navigation-height-open-mobile: var(--header-default-m-navigation-height-mobile);
+  /* 116px = height of header and height of login, since it will probably change, i leave it as fixed variable and add as variable later in new header component*/
+  --m-multi-level-navigation-height-open-mobile: calc(100svh - 116px);
   --header-default-m-navigation-top-mobile: var(--header-default-height-mobile);
   --header-default-m-navigation-transition: none;
   --header-default-m-multi-level-navigation-background-color-mobile: var(--background-color);

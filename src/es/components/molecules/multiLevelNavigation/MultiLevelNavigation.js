@@ -463,10 +463,9 @@ export default class MultiLevelNavigation extends Mutation() {
       }
       :host > nav {
         position: relative;
-        height: 90vh;
+        height: 100%;
         width: 100vw;
-        overflow-x: visible;
-        overflow-y: hidden;
+        overflow: hidden;
         padding-top: 1em;
       }
       :host > nav > ul {
@@ -474,7 +473,7 @@ export default class MultiLevelNavigation extends Mutation() {
         position: absolute;
         border-top: var(--mobile-wrapper-border-width, 1px) var(--mobile-wrapper-border-style, solid) var(--mobile-wrapper-border-color, black);
         width: 100vw;
-        height: 85vh;
+        height: 100%;
         overflow: auto;
       }
       :host > nav > ul > li > a:hover > span {
@@ -485,7 +484,7 @@ export default class MultiLevelNavigation extends Mutation() {
         border-top: var(--mobile-wrapper-border-width, 1px) var(--mobile-wrapper-border-style, solid) var(--mobile-wrapper-border-color, black);
         width: 100vw;
         right: -100vw;
-        height: 85vh;
+        height: 100%;
         overflow: hidden;
       }
       :host > nav > ul.open {
