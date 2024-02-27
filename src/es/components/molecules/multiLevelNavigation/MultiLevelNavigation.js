@@ -1140,6 +1140,7 @@ export default class MultiLevelNavigation extends Mutation() {
             this.root.querySelector('nav')?.setAttribute('aria-expanded', 'true')
           } else {
             this.root.querySelector('nav')?.setAttribute('aria-expanded', 'false')
+            menuIconElement.previousElementSibling.classList.remove('open')
           }
         })
       }
