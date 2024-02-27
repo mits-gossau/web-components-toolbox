@@ -120,7 +120,12 @@ export default class IconMdx extends Hover() {
   renderHTML () {
     this.html = ''
     this.html = '<svg></svg>' // placeholder for keeping the size
-    this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${(this.lastFetchedIconName = this.iconName)}/Size_${this.getAttribute('icon-size') || '56x56'}.svg`], true).then(htmls => htmls.forEach(html => {
+    const iconPath = this.getAttribute('icon-url')
+      ? `${this.getAttribute('icon-url').substring(0,1) === '.'
+        ? this.importMetaUrl + this.getAttribute('icon-url')
+        : this.getAttribute('icon-url')}`
+      : `${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${(this.lastFetchedIconName = this.iconName)}/Size_${this.getAttribute('icon-size') || '56x56'}.svg`
+    this.fetch = this.fetchHTML([iconPath], true).then(htmls => htmls.forEach(html => {
       this.html = ''
       this.html = html
       this.root.querySelector('svg')?.setAttribute('part', 'svg')

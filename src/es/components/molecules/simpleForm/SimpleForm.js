@@ -361,6 +361,7 @@ export default class SimpleForm extends Shadow() {
         } else {
           removedCloneTarget = cloneTarget
         }
+        removedCloneTarget.parentNode.setAttribute('removed-child', removedCloneTarget.tagName)
         removedCloneTarget.remove()
       } else if (cloneTarget.getAttribute('type') === 'checkbox') {
         cloneTarget.checked = false
