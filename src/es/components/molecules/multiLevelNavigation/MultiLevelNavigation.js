@@ -846,6 +846,7 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   setMobileMainNavItems(event) {
+    console.log("start")
     // hide all subUl height to avoid large height of nav tag
     let subNavigationDivs = Array.from(event.currentTarget.parentNode.parentNode.parentNode.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') > 1)
     subNavigationDivs?.forEach(subNavDiv => {
@@ -855,17 +856,17 @@ export default class MultiLevelNavigation extends Mutation() {
     // set the currently clicked/touched aria expanded attribute
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
     // add currently open sub-navigation content to be visible
-    let sectionChildren = Array.from(event.currentTarget.parentNode.querySelector('section').children)
-    sectionChildren.forEach((node) => {
-      let currentNode = node.cloneNode(true)
-      let currentNodeExpandableLiTags = currentNode.querySelectorAll('li[sub-nav]')
-      let currentNodeAriaControlUlTags = currentNode.querySelectorAll('ul[sub-nav-id]')
-      currentNode.style.setProperty('--multi-level-navigation-default-color-active', node.parentElement.parentElement.getAttribute('main-color'))
-      Array.from(currentNode.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
-      if (currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
-      if (currentNodeAriaControlUlTags.length > 0) currentNodeAriaControlUlTags.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
-      if (+currentNode.getAttribute('nav-level') === 1) currentNode.querySelector('ul').setAttribute('id', 'nav-level-1')
-      if (!node.getAttribute('slot')) event.currentTarget.parentNode.parentNode.parentNode.appendChild(currentNode)
+    let clonedSection = event.currentTarget.parentNode.querySelector('section').cloneNode(true)
+    let clonedSectionChildren = Array.from(clonedSection.children)
+    clonedSectionChildren.forEach((node) => {
+        if (!node.getAttribute('slot')) event.currentTarget.parentNode.parentNode.parentNode.appendChild(node)
+        let currentNodeExpandableLiTags = node.querySelectorAll('li[sub-nav]')
+        let currentNodeAriaControlUlTags = node.querySelectorAll('ul[sub-nav-id]')
+        node.style.setProperty('--multi-level-navigation-default-color-active', event.currentTarget.parentNode.getAttribute('main-color'))
+        Array.from(node.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+        if (currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
+        if (currentNodeAriaControlUlTags.length > 0) currentNodeAriaControlUlTags.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
+        if (+node.getAttribute('nav-level') === 1) node.querySelector('ul').setAttribute('id', 'nav-level-1')
     })
 
     // hide element with left slide animation
@@ -906,6 +907,7 @@ export default class MultiLevelNavigation extends Mutation() {
     event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > div[nav-level="1"]').prepend(newNavBackATag)
     event.currentTarget.parentNode.parentNode.classList.remove('open-left-slide')
     event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > div[nav-level="1"]').classList.add('open-right-slide')
+    console.log("end")
   }
 
   handleOnClickOnDesktopSubNavItems(event) {

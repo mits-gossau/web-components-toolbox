@@ -72,13 +72,15 @@ export default class NavLevelItem extends Shadow() {
       /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
       switch (this.getAttribute('namespace')) {
           case 'nav-level-item-default-':
-              return this.fetchCSS([
+              return 
+              this.fetchCSS([
                   {
                   path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
                   namespace: false
               }])
           case 'nav-level-item-active-':
-              return this.fetchCSS([{
+              return 
+              this.fetchCSS([{
                   path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
                   namespace: false,
                   replaces: [{
