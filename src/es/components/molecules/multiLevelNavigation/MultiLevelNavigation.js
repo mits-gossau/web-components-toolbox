@@ -755,8 +755,10 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   hideAndClearMobileSubNavigation() {
-    const navElementChildren = Array.from(this.root.querySelector('nav').children)
+    const navElement = this.root.querySelector('nav')
+    const navElementChildren = Array.from(navElement.children)
     if (this.getAttribute('aria-expanded') === 'false' && navElementChildren.length) {
+      navElement.querySelector('ul').classList.remove('open-left-slide')
       setTimeout(() => {
         navElementChildren.forEach(childEl => {
           if (childEl.tagName === 'UL') {
@@ -775,12 +777,16 @@ export default class MultiLevelNavigation extends Mutation() {
     if (this.isDesktop) {
       // set nav element from mobile to desktop compatible
       let mainATags = Array.from(currentNav.querySelectorAll('nav > ul > li > a'))
+      let mobileSubNavs = Array.from(currentNav.querySelectorAll('nav > div[nav-level]'))
       if (mainATags.length > 0) {
         mainATags.forEach(a => {
           let aTagChildren = Array.from(a.children)
           let aTagMDXIcon = aTagChildren?.find(child => child.tagName === 'A-ICON-MDX')
           if (aTagChildren.length && aTagMDXIcon) aTagMDXIcon.parentElement.removeChild(aTagMDXIcon)
         })
+      }
+      if (mobileSubNavs.length > 0) {
+        mobileSubNavs.forEach(subNav => subNav.parentElement.removeChild(subNav))
       }
     } else {
       // set nav from desktop to mobile compatible
