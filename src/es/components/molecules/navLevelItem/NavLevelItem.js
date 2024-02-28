@@ -37,7 +37,7 @@ export default class NavLevelItem extends Shadow() {
         }
 
         :host(:hover) span {
-          color: #0053A6;
+          color: var(--hover-color, #0053A6);
         }
 
         :host .wrap {

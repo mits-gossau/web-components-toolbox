@@ -617,7 +617,8 @@ export default class MultiLevelNavigation extends Mutation() {
         --nav-level-item-default-height: 3.25em;
         --nav-level-item-default-padding: 0 0.75em 0 0;
         --nav-level-item-default-margin: 2px 0;
-        --nav-level-item-default-hover-background-color: transparent;
+        --nav-level-item-default-hover-background-color: white;
+        --nav-level-item-default-hover-color: var(--color);
       }
     }
     `, undefined, false, false)
@@ -929,7 +930,6 @@ export default class MultiLevelNavigation extends Mutation() {
       wrapperDivNextSiblingDivUls.forEach(ul => {
         ul.style.display = 'none'
       })
-
       setTimeout(() => {
         wrapperDiv.scrollTo(0, 0)
       }, this.removeElementAfterAnimationDurationMs)
