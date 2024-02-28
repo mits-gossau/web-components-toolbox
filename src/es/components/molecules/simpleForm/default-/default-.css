@@ -51,9 +51,6 @@
     animation: hide .3s ease-out;
     overflow: hidden;
 }
-:host > form > section:only-child {
-    background-color: red;
-}
 :host > form > section input,
 :host > form > section textarea,
 :host > form > section select {
@@ -67,6 +64,12 @@
 }
 :host form > section > div:last-of-type {
     padding-bottom: 0;
+}
+:host form > section:not(:has(~section:not([hidden]))) [trash] {
+    display: none;
+}
+:host form > section:not([hidden]) ~section [trash] {
+    display: inherit;
 }
 :host form > section:has(~section:not([hidden])) [add] {
     display: none;
