@@ -761,8 +761,8 @@ export default class MultiLevelNavigation extends Mutation() {
           if (childEl.tagName === 'UL') {
             childEl.classList.remove('close-left-slide')
           }
-          if (childEl.hasAttribute('nav-level') && childEl.parentNode) {
-            childEl.parentNode.removeChild(childEl)
+          if (childEl.hasAttribute('nav-level')) {
+            childEl.hidden = true
           }
         })
       }, this.removeElementAfterAnimationDurationMs)
@@ -846,62 +846,16 @@ export default class MultiLevelNavigation extends Mutation() {
   setMobileMainNavItems(event) {
     // set the currently clicked/touched aria expanded attribute
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
-    let subNavigationSection = event.currentTarget.parentNode.querySelector('section')
-    let activeSection = Array.from(this.root.querySelectorAll('nav > section')).find(section => section.isEqualNode(subNavigationSection))
-    activeSection.querySelector('div[nav-level="1"]').setAttribute('id', 'nav-level-1')
-    let currentNodeExpandableLiTags = activeSection.querySelectorAll('li[sub-nav]')
-    let currentNodeAriaControlUlTags = activeSection.querySelectorAll('ul[sub-nav-id]')
-    activeSection.style.setProperty('--multi-level-navigation-default-color-active', event.currentTarget.parentNode.getAttribute('main-color'))
-    Array.from(activeSection.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
-    if (currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
-    if (currentNodeAriaControlUlTags.length > 0) currentNodeAriaControlUlTags.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
-    activeSection.hidden = false
 
-    // hide all subUl height to avoid large height of nav tag
-    let subNavigationDivs = Array.from(activeSection.parentNode.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') > 1)
-    subNavigationDivs?.forEach(subNavDiv => {
-      let subNavDivUls = Array.from(subNavDiv.querySelectorAll('ul'))
-      subNavDivUls.forEach(ul => ul.style.display = 'none')
-    })
+    let navWrapper = this.root.querySelector('nav')
+    let activeMainLiIndex = +event.currentTarget.parentNode.getAttribute('sub-nav-control')
+    let activeFirstLevelSubNav = navWrapper.querySelector(`[nav-level="1"][parent-main-nav="${activeMainLiIndex}"]`)
 
     // hide element with left slide animation
+    activeFirstLevelSubNav.hidden = false
     event.currentTarget.parentNode.parentNode.classList.add('close-left-slide')
-
-    // remove navigation back button since it can be changed and will be dynamically added below
-    let oldNavBackATag = event.currentTarget.parentNode?.parentNode?.parentNode?.querySelector('nav > section:not([hidden]) > div[nav-level="1"]')?.querySelector('div > a')
-    oldNavBackATag?.parentElement.removeChild(oldNavBackATag)
-
-    // create new navigation back button 
-    let newNavBackATag = document.createElement('a')
-    let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute('mobile-navigation-name')
-    newNavBackATag.innerHTML = /* HTML */`
-     <a-icon-mdx namespace='icon-link-list-' icon-name='ChevronLeft' color='red' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
-     <span>${mobileNavigationName}</span>
-     `
-    newNavBackATag.classList.add('navigation-back')
-    newNavBackATag.addEventListener('click', (event) => {
-      // @ts-ignore
-      event.currentTarget.parentNode.classList.remove('open-right-slide')
-      // @ts-ignore
-      event.currentTarget.parentNode.parentNode.querySelector('ul').scrollTo(0, 0)
-      // @ts-ignore
-      event.currentTarget.parentNode.parentNode.querySelector('ul').classList.remove('close-left-slide')
-      // @ts-ignore
-      event.currentTarget.parentNode.classList.add('close-right-slide')
-      // @ts-ignore
-      event.currentTarget.parentNode.parentNode.querySelector('ul').classList.add('open-left-slide')
-      // @ts-ignore
-      let expandedElements = Array.from(event.currentTarget.parentNode.parentNode.querySelector('ul').querySelectorAll('[aria-expanded="true"]'))
-      if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
-      // remove subNav divs from next to ul 
-      // @ts-ignore
-      let currentSubNavElements = Array.from(event.currentTarget.parentNode.parentNode.querySelectorAll('nav > div[nav-level]'))
-      // remove element after animation is done => TODO create global animation duration variable
-      setTimeout(() => currentSubNavElements.forEach(subNav => subNav.parentNode.removeChild(subNav)), this.removeElementAfterAnimationDurationMs)
-    })
-    event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > section:not([hidden]) > div[nav-level="1"]').prepend(newNavBackATag)
     event.currentTarget.parentNode.parentNode.classList.remove('open-left-slide')
-    event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > section:not([hidden]) > div[nav-level="1"]').classList.add('open-right-slide')
+    activeFirstLevelSubNav.classList.add('open-right-slide')
   }
 
   handleOnClickOnDesktopSubNavItems(event) {
@@ -976,50 +930,12 @@ export default class MultiLevelNavigation extends Mutation() {
         ul.style.display = 'none'
       })
 
-      if (wrapperDivNextSiblingDiv) {
-        //remove old navigation-back button
-        if (wrapperDivNextSiblingDiv.querySelector('div > a')) {
-          let oldNavBackATag = wrapperDivNextSiblingDiv.querySelector('div > a')
-          oldNavBackATag.parentElement.removeChild(oldNavBackATag)
-        }
-        // create new navigation-back button
-        let newNavBackATag = document.createElement('a')
-        let mobileNavigationName = event.currentTarget.parentNode.parentNode.getAttribute('mobile-navigation-name')
-        newNavBackATag.innerHTML = /* HTML */`
-        <a-icon-mdx namespace='icon-link-list-' icon-name='ChevronLeft' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
-        <span>${mobileNavigationName}</span>
-        `
-        newNavBackATag.classList.add('navigation-back')
-
-        newNavBackATag.addEventListener('click', (event) => {
-          // @ts-ignore
-          event.currentTarget.parentNode.className = ''
-          // @ts-ignore
-          event.currentTarget.parentNode.previousElementSibling.className = ''
-          // @ts-ignore
-          event.currentTarget.parentNode.classList.add('close-right-slide')
-          // @ts-ignore
-          event.currentTarget.parentNode.previousElementSibling.classList.add('open-left-slide')
-          // @ts-ignore
-          let expandedElements = Array.from(event.currentTarget.parentNode.previousElementSibling.querySelectorAll('[aria-expanded="true"]'))
-          if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
-
-          // find uls and add display none to all
-          setTimeout(() => {
-            wrapperDivNextSiblingDivUls.forEach(ul => {
-              ul.style.display = 'none'
-            })
-          }, this.removeElementAfterAnimationDurationMs)
-        })
-
-        subUl.parentElement.prepend(newNavBackATag)
-      }
-
       setTimeout(() => {
         wrapperDiv.scrollTo(0, 0)
       }, this.removeElementAfterAnimationDurationMs)
 
       wrapperDivNextSiblingDiv.scrollTo(0, 0)
+      wrapperDivNextSiblingDiv.hidden = false
       subUl.style.display = 'block'
       wrapperDiv.className = ''
       wrapperDiv.classList.add('close-left-slide')
@@ -1108,10 +1024,11 @@ export default class MultiLevelNavigation extends Mutation() {
     Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
 
     // add list-item-element
-    Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi) => {
+    Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi, index) => {
       let currentATag
       mainLi.setAttribute('aria-expanded', 'false')
       mainLi.setAttribute('aria-controls', `nav-level-1`)
+      mainLi.setAttribute('sub-nav-control', `${index}`)
       if ((currentATag = mainLi.querySelector('a')) && (!currentATag.hasAttribute('href') || currentATag.getAttribute('href') === '' || currentATag.getAttribute('href') === '#'))
         mainLi.querySelector('a').insertAdjacentHTML('beforeend', /* html*/`
         <a-icon-mdx namespace='icon-link-list-' icon-name='ChevronRight' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
@@ -1123,11 +1040,77 @@ export default class MultiLevelNavigation extends Mutation() {
     })
 
     // extract section element
-    Array.from(this.root.querySelectorAll('section')).forEach((section) => {
-      console.log("section", section.parentNode)
-      let clonedNode = section.cloneNode(true)
-      clonedNode.hidden = true
-      section.parentElement.parentElement.parentElement.appendChild(clonedNode)
+    Array.from(this.root.querySelectorAll('section')).forEach((section, index) => {
+      Array.from(section.children).forEach(node => {
+        let clonedNode = node.cloneNode(true)
+        let currentNodeAriaControlUlTags = clonedNode.querySelectorAll('ul[sub-nav-id]')
+        let currentNodeExpandableLiTags = clonedNode.querySelectorAll('li[sub-nav]')
+        Array.from(clonedNode.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+        clonedNode.setAttribute('parent-main-nav', `${index}`)
+        clonedNode.style.setProperty('--multi-level-navigation-default-color-active', section.parentElement.getAttribute('main-color'))
+
+        if (currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
+        if (currentNodeAriaControlUlTags.length > 0) currentNodeAriaControlUlTags.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
+        if (+clonedNode.getAttribute('nav-level') === 1) clonedNode.setAttribute('id', 'nav-level-1')
+        if (+clonedNode.getAttribute('nav-level') === 1) {
+          // create new navigation back button 
+          let newNavBackATag = document.createElement('a')
+          let mobileNavigationName = node.parentNode.parentNode.parentNode.getAttribute('mobile-navigation-name')
+          newNavBackATag.innerHTML = /* HTML */`
+       <a-icon-mdx namespace='icon-link-list-' icon-name='ChevronLeft' color='red' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
+       <span>${mobileNavigationName}</span>
+       `
+          newNavBackATag.classList.add('navigation-back')
+          newNavBackATag.addEventListener('click', (event) => {
+            // @ts-ignore
+            event.currentTarget.parentNode.classList.remove('open-right-slide')
+            // @ts-ignore
+            event.currentTarget.parentNode.parentNode.querySelector('ul').scrollTo(0, 0)
+            // @ts-ignore
+            event.currentTarget.parentNode.parentNode.querySelector('ul').classList.remove('close-left-slide')
+            // @ts-ignore
+            event.currentTarget.parentNode.classList.add('close-right-slide')
+            // @ts-ignore
+            event.currentTarget.parentNode.parentNode.querySelector('ul').classList.add('open-left-slide')
+            // @ts-ignore
+            let expandedElements = Array.from(event.currentTarget.parentNode.parentNode.querySelector('ul').querySelectorAll('[aria-expanded="true"]'))
+            if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
+            // @ts-ignore
+            // remove element after animation is done => TODO create global animation duration variable
+            setTimeout(() => clonedNode.hidden = true, this.removeElementAfterAnimationDurationMs)
+          })
+          clonedNode.prepend(newNavBackATag)
+        }
+        if (clonedNode.hasAttribute('nav-level') && +clonedNode.getAttribute('nav-level') !== 1) {
+          // create new navigation-back button
+          let newNavBackATag = document.createElement('a')
+          let mobileNavigationName = node.previousElementSibling.querySelector('ul').getAttribute('mobile-navigation-name')
+          newNavBackATag.innerHTML = /* HTML */`
+        <a-icon-mdx namespace='icon-link-list-' icon-name='ChevronLeft' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
+        <span>${mobileNavigationName}</span>
+        `
+          newNavBackATag.classList.add('navigation-back')
+
+          newNavBackATag.addEventListener('click', (event) => {
+            // @ts-ignore
+            event.currentTarget.parentNode.className = ''
+            // @ts-ignore
+            event.currentTarget.parentNode.previousElementSibling.className = ''
+            // @ts-ignore
+            event.currentTarget.parentNode.classList.add('close-right-slide')
+            // @ts-ignore
+            event.currentTarget.parentNode.previousElementSibling.classList.add('open-left-slide')
+            // @ts-ignore
+            let expandedElements = Array.from(event.currentTarget.parentNode.previousElementSibling.querySelectorAll('[aria-expanded="true"]'))
+            if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
+          })
+
+          clonedNode.prepend(newNavBackATag)
+        }
+
+        clonedNode.hidden = true
+        section.parentElement.parentElement.parentElement.appendChild(clonedNode)
+      })
       section.hidden = true
     })
 
