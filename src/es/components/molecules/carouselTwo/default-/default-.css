@@ -12,10 +12,22 @@
   --carousel-two-default-section-gap: 1em;
   --carousel-two-default-section-nav-separate-margin-mobile: var(--content-spacing-mobile);
   --carousel-two-default-section-nav-separate-margin: var(--content-spacing);
+  --carousel-two-default-p-margin: 0;
+  --carousel-two-default-section-child-a-picture-margin: 0;
+  --carousel-two-default-nav-margin-mobile: 0;
+  --carousel-two-default-nav-margin: 0;
 }
 :host > *.arrow-nav {
   --carousel-two-default-color: var(--m-white);
 }
 :host > *.arrow-nav > *:hover {
   --carousel-two-default-color: var(--color-hover);
+}
+:host > section + div > p {
+  align-self: center;
+}
+:host > section + div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

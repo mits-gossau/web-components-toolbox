@@ -23,6 +23,7 @@ export default class CarouselTwo extends Mutation() {
       mutationObserverInit: { subtree: true, childList: true },
       ...options
     }, ...args)
+    this.currentIndex = 1;
 
     if (this.hasAttribute('open-modal')) this.setAttribute('aria-haspopup', 'true')
     // on click anchor scroll to the image with the matching id or previous/next
@@ -34,9 +35,15 @@ export default class CarouselTwo extends Mutation() {
         if ((sectionChild = this.section.querySelector(target.getAttribute('href')))) {
           this.scrollIntoView(sectionChild)
         } else if (target.getAttribute('href') === '#previous') {
+          this.currentIndex = this.currentIndex === 1 ? this.section.children.length : this.currentIndex - 1
           this.previous()
         } else if (target.getAttribute('href') === '#next') {
+          this.currentIndex = (this.currentIndex % this.section.children.length) + 1
+          console.log(this.currentIndex)
           this.next()
+        }
+        if (this.indicator) {
+          this.indicator.innerHTML = `${this.currentIndex} / ${this.section.children.length}`
         }
       }
       if (this.hasAttribute('open-modal')) {
@@ -236,7 +243,7 @@ export default class CarouselTwo extends Mutation() {
       :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > .arrow-nav {
         margin-top: var(--section-nav-separate-margin);
       }
-      :host > section, :host > nav, :host > *.arrow-nav {
+      :host > section, :host > section + div > nav, :host > *.arrow-nav {
         grid-column: 1;
         grid-row: 1;
       }
@@ -253,7 +260,7 @@ export default class CarouselTwo extends Mutation() {
               }
             `
           : /* css */`
-              :host > nav {
+              :host > section + div > nav {
                 grid-row: 2;
               }
               :host > *.arrow-nav {
@@ -303,7 +310,10 @@ export default class CarouselTwo extends Mutation() {
       :host > section:not(.scrolling) > *:not(.active) {
         opacity: var(--section-child-opacity-not-active, 0);
       }
-      :host > nav {
+      :host > section + div {
+        margin: var(--nav-margin);
+      }
+      :host > section + div > nav {
         align-items: center;
         align-self: ${this.hasAttribute('nav-separate')
           ? 'center'
@@ -323,12 +333,12 @@ export default class CarouselTwo extends Mutation() {
         }
         z-index: 2;
       }
-      :host > nav > * {
+      :host > section + div > nav > * {
         --a-margin: 0;
         padding: 0;
         margin: 0;
       }
-      :host > nav > * {
+      :host > section + div > nav > * {
         opacity: var(--nav-opacity, 0.5);
       }
       :host > section:not(.scrolling) ~ nav > *.active {
@@ -346,7 +356,7 @@ export default class CarouselTwo extends Mutation() {
         height: var(--nav-height, 1em);
         width: var(--nav-width, 1em);
       }
-      :host(.has-default-nav) > nav > *, :host > nav > * {
+      :host(.has-default-nav) > div > nav > *, :host > div > nav > * {
         transition: all .3s ease-out !important;
       }
       :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active {
@@ -433,7 +443,7 @@ export default class CarouselTwo extends Mutation() {
         :host > section > div > div {
           padding: var(--section-div-padding-mobile, var(--section-div-padding, var(--nav-margin-mobile, var(--nav-margin))));
         }
-        :host > nav {
+        :host > section + div > nav {
           gap: var(--nav-gap-mobile, var(--nav-gap));
           margin: var(--nav-margin-mobile, var(--nav-margin));
         }
@@ -575,7 +585,11 @@ export default class CarouselTwo extends Mutation() {
    */
   renderHTML () {
     this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
-    this.nav = this.root.querySelector(this.cssSelector + ' > nav') || document.createElement('nav')
+    this.indicator = this.root.querySelector('.js-m-carousel-index')
+    if (this.indicator) {
+      this.indicator.innerHTML = `${this.currentIndex} / ${this.section.children.length}`
+    }
+    this.nav = this.root.querySelector(this.cssSelector + ' > nav') || this.root.querySelector(this.cssSelector + ' section + div > nav') || document.createElement('nav')
     if (!this.hasAttribute('no-default-arrow-nav')) {
       this.arrowNav = this.root.querySelector(this.cssSelector + ' > .arrow-nav') || document.createElement('span')
       this.arrowNav.classList.add('arrow-nav')
