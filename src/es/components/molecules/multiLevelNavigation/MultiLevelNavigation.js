@@ -25,7 +25,6 @@ export default class MultiLevelNavigation extends Mutation() {
       ...options
     }, ...args)
 
-    this.cloneMap = new Map()
     this.isDesktop = this.checkMedia('desktop')
     this.useHoverListener = this.hasAttribute('use-hover-listener')
     this.animationDurationMs = this.getAttribute('animation-duration') || 300
@@ -845,27 +844,31 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   setMobileMainNavItems(event) {
-    console.log("start")
-
     // set the currently clicked/touched aria expanded attribute
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
     let subNavigationSection = event.currentTarget.parentNode.querySelector('section')
-    // set only the first subnav because performance
-    let clonedFirstLevelSubNavigation = this.cloneMap.get(subNavigationSection.children[0])
-    clonedFirstLevelSubNavigation.querySelector('ul').setAttribute('id', 'nav-level-1')
-    let currentNodeExpandableLiTags = clonedFirstLevelSubNavigation.querySelectorAll('li[sub-nav]')
-    let currentNodeAriaControlUlTags = clonedFirstLevelSubNavigation.querySelectorAll('ul[sub-nav-id]')
-    clonedFirstLevelSubNavigation.style.setProperty('--multi-level-navigation-default-color-active', event.currentTarget.parentNode.getAttribute('main-color'))
-    Array.from(clonedFirstLevelSubNavigation.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+    let activeSection = Array.from(this.root.querySelectorAll('nav > section')).find(section => section.isEqualNode(subNavigationSection))
+    activeSection.querySelector('div[nav-level="1"]').setAttribute('id', 'nav-level-1')
+    let currentNodeExpandableLiTags = activeSection.querySelectorAll('li[sub-nav]')
+    let currentNodeAriaControlUlTags = activeSection.querySelectorAll('ul[sub-nav-id]')
+    activeSection.style.setProperty('--multi-level-navigation-default-color-active', event.currentTarget.parentNode.getAttribute('main-color'))
+    Array.from(activeSection.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
     if (currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
     if (currentNodeAriaControlUlTags.length > 0) currentNodeAriaControlUlTags.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
-    event.currentTarget.parentNode.parentNode.parentNode.appendChild(clonedFirstLevelSubNavigation)
+    activeSection.hidden = false
+
+    // hide all subUl height to avoid large height of nav tag
+    let subNavigationDivs = Array.from(activeSection.parentNode.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') > 1)
+    subNavigationDivs?.forEach(subNavDiv => {
+      let subNavDivUls = Array.from(subNavDiv.querySelectorAll('ul'))
+      subNavDivUls.forEach(ul => ul.style.display = 'none')
+    })
 
     // hide element with left slide animation
     event.currentTarget.parentNode.parentNode.classList.add('close-left-slide')
 
     // remove navigation back button since it can be changed and will be dynamically added below
-    let oldNavBackATag = event.currentTarget.parentNode?.parentNode?.parentNode?.querySelector('nav > div[nav-level="1"]')?.querySelector('div > a')
+    let oldNavBackATag = event.currentTarget.parentNode?.parentNode?.parentNode?.querySelector('nav > section:not([hidden]) > div[nav-level="1"]')?.querySelector('div > a')
     oldNavBackATag?.parentElement.removeChild(oldNavBackATag)
 
     // create new navigation back button 
@@ -880,15 +883,15 @@ export default class MultiLevelNavigation extends Mutation() {
       // @ts-ignore
       event.currentTarget.parentNode.classList.remove('open-right-slide')
       // @ts-ignore
-      event.currentTarget.parentNode.previousElementSibling.scrollTo(0, 0)
+      event.currentTarget.parentNode.parentNode.querySelector('ul').scrollTo(0, 0)
       // @ts-ignore
-      event.currentTarget.parentNode.previousElementSibling.classList.remove('close-left-slide')
+      event.currentTarget.parentNode.parentNode.querySelector('ul').classList.remove('close-left-slide')
       // @ts-ignore
       event.currentTarget.parentNode.classList.add('close-right-slide')
       // @ts-ignore
-      event.currentTarget.parentNode.previousElementSibling.classList.add('open-left-slide')
+      event.currentTarget.parentNode.parentNode.querySelector('ul').classList.add('open-left-slide')
       // @ts-ignore
-      let expandedElements = Array.from(event.currentTarget.parentNode.previousElementSibling.querySelectorAll('[aria-expanded="true"]'))
+      let expandedElements = Array.from(event.currentTarget.parentNode.parentNode.querySelector('ul').querySelectorAll('[aria-expanded="true"]'))
       if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
       // remove subNav divs from next to ul 
       // @ts-ignore
@@ -896,31 +899,9 @@ export default class MultiLevelNavigation extends Mutation() {
       // remove element after animation is done => TODO create global animation duration variable
       setTimeout(() => currentSubNavElements.forEach(subNav => subNav.parentNode.removeChild(subNav)), this.removeElementAfterAnimationDurationMs)
     })
-    event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > div[nav-level="1"]').prepend(newNavBackATag)
+    event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > section:not([hidden]) > div[nav-level="1"]').prepend(newNavBackATag)
     event.currentTarget.parentNode.parentNode.classList.remove('open-left-slide')
-    event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > div[nav-level="1"]').classList.add('open-right-slide')
-
-    setTimeout(() => {
-      // hide all subUl height to avoid large height of nav tag
-      let subNavigationDivs = Array.from(subNavigationSection.parentNode.querySelectorAll('div[nav-level]')).filter(div => +div.getAttribute('nav-level') > 1)
-      subNavigationDivs?.forEach(subNavDiv => {
-        let subNavDivUls = Array.from(subNavDiv.querySelectorAll('ul'))
-        subNavDivUls.forEach(ul => ul.style.display = 'none')
-      })
-
-      let restSectionChildren = Array.from(subNavigationSection.children).filter(node => node !== subNavigationSection.children[0])
-      restSectionChildren.forEach((node) => {
-        let currentNode = this.cloneMap.get(node) 
-        let currentNodeExpandableLiTags = currentNode.querySelectorAll('li[sub-nav]')
-        let currentNodeAriaControlUlTags = currentNode.querySelectorAll('ul[sub-nav-id]')
-        currentNode.style.setProperty('--multi-level-navigation-default-color-active', node.parentElement.parentElement.getAttribute('main-color'))
-        Array.from(currentNode.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
-        if (currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
-        if (currentNodeAriaControlUlTags.length > 0) currentNodeAriaControlUlTags.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
-        if (!node.getAttribute('slot')) node.parentNode.parentNode.parentNode.parentNode.appendChild(currentNode)
-      })
-    }, 100);
-    console.log("end")
+    event.currentTarget.parentNode.parentNode.parentNode.querySelector('nav > section:not([hidden]) > div[nav-level="1"]').classList.add('open-right-slide')
   }
 
   handleOnClickOnDesktopSubNavItems(event) {
@@ -1143,10 +1124,10 @@ export default class MultiLevelNavigation extends Mutation() {
 
     // extract section element
     Array.from(this.root.querySelectorAll('section')).forEach((section) => {
-      Array.from(section.children).forEach(node => {
-        let clonedNode = node.cloneNode(true)
-        this.cloneMap.set(node, clonedNode)
-      })
+      console.log("section", section.parentNode)
+      let clonedNode = section.cloneNode(true)
+      clonedNode.hidden = true
+      section.parentElement.parentElement.parentElement.appendChild(clonedNode)
       section.hidden = true
     })
 
