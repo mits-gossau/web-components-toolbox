@@ -1045,7 +1045,7 @@ export default class MultiLevelNavigation extends Mutation() {
     // add list-item-element
     Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi, index) => {
       let currentATag
-      if (!mainLi.hasAttribute('only-mobile') || mainLi.hasAttribute('language-switcher')) {
+      if (mainLi.querySelector('section')) {
         mainLi.setAttribute('aria-expanded', 'false')
         mainLi.setAttribute('aria-controls', `nav-level-1`)
         mainLi.setAttribute('sub-nav-control', `${index}`)
