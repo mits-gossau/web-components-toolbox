@@ -175,10 +175,11 @@ export default class Header extends Shadow() {
       :host([sticky]) {
         position: static;
       }
-      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
+      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'}{
         flex-grow: 1;
         max-width: calc(var(--content-width, 55%) - var(--logo-width));
       }
+      
       :host > header::before {
         display: block;
         width: var(--logo-width);
@@ -262,7 +263,7 @@ export default class Header extends Shadow() {
       :host([sticky]:not(.top)) {
         transition: var(--sticky-transition-hide, top .4s ease);
       }
-      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
+      :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'}{
         order: 2;
       }
       :host > header > a-logo{
@@ -308,7 +309,7 @@ export default class Header extends Shadow() {
           }
           width: var(--width-mobile, var(--width, 100%));
         }
-        :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'} {
+        :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'}{
           animation: close .4s ease-in;
           left: -100vw;
         }
@@ -480,7 +481,6 @@ export default class Header extends Shadow() {
       })
       : Promise.resolve()
   }
-
   get mNavigation () {
     return this.root.querySelector(this.getAttribute('m-navigation') || 'm-navigation')
   }

@@ -41,10 +41,11 @@ export default class Link extends Hover() {
     if (this.a) this.a.setAttribute('tabindex', '0')
   }
 
-  connectedCallback () {
+connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+
   }
 
   /**
@@ -96,6 +97,7 @@ export default class Link extends Hover() {
         : ''}
       :host {
         cursor: pointer;
+        --color-hover: var(--border-color-active);
       }
       :host > a, :host > ${this.hitAreaTagName} {
         box-sizing: border-box;
