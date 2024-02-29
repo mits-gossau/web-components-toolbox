@@ -445,6 +445,9 @@ export default class MultiLevelNavigation extends Mutation() {
       :host .navigation-back a-icon-mdx {
         --icon-link-list-color: var(--multi-level-navigation-default-mobile-icon-background-color);
       }
+      :host .grey-background {
+        background-color: var(--grey-background-color, #EDEDED);
+      }
       :host li.list-title {
         padding: 1em 0;
         --a-color: var(--color-active);
@@ -966,6 +969,9 @@ export default class MultiLevelNavigation extends Mutation() {
       Array.from(this.root.querySelectorAll('a')).forEach(a => {
         a.addEventListener('click', this.aLinkClickListener)
       })
+      Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
+        node.style.display = 'none'
+      })
       let mainNavigationLiTags = this.root.querySelectorAll('nav > ul > li')
       mainNavigationLiTags.forEach(li => {
         li.setAttribute('aria-expanded', 'false')
@@ -1032,13 +1038,18 @@ export default class MultiLevelNavigation extends Mutation() {
 
   renderMobileHTML() {
     Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+    Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
+      node.style.display = 'block'
+    })
 
     // add list-item-element
     Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi, index) => {
       let currentATag
-      mainLi.setAttribute('aria-expanded', 'false')
-      mainLi.setAttribute('aria-controls', `nav-level-1`)
-      mainLi.setAttribute('sub-nav-control', `${index}`)
+      if (!mainLi.hasAttribute('only-mobile') || mainLi.hasAttribute('language-switcher')) {
+        mainLi.setAttribute('aria-expanded', 'false')
+        mainLi.setAttribute('aria-controls', `nav-level-1`)
+        mainLi.setAttribute('sub-nav-control', `${index}`)
+      }
       if ((currentATag = mainLi.querySelector('a')) && (!currentATag.hasAttribute('href') || currentATag.getAttribute('href') === '' || currentATag.getAttribute('href') === '#'))
         mainLi.querySelector('a').insertAdjacentHTML('beforeend', /* html*/`
         <a-icon-mdx namespace='icon-link-list-' icon-name='ChevronRight' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
@@ -1050,13 +1061,14 @@ export default class MultiLevelNavigation extends Mutation() {
     })
 
     // extract section element
-    Array.from(this.root.querySelectorAll('section')).forEach((section, index) => {
+    Array.from(this.root.querySelectorAll('section')).forEach((section) => {
       Array.from(section.children).forEach(node => {
+        let parentMainNav = section.parentElement.getAttribute('sub-nav-control')
         let clonedNode = node.cloneNode(true)
         let currentNodeAriaControlUlTags = clonedNode.querySelectorAll('ul[sub-nav-id]')
         let currentNodeExpandableLiTags = clonedNode.querySelectorAll('li[sub-nav]')
         Array.from(clonedNode.querySelectorAll('a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
-        clonedNode.setAttribute('parent-main-nav', `${index}`)
+        clonedNode.setAttribute('parent-main-nav', `${parentMainNav}`)
         clonedNode.style.setProperty('--multi-level-navigation-default-color-active', section.parentElement.getAttribute('main-color'))
 
         if (currentNodeExpandableLiTags.length > 0) currentNodeExpandableLiTags.forEach(li => li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`))
