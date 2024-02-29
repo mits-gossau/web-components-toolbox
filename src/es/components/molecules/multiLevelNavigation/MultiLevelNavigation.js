@@ -791,6 +791,7 @@ export default class MultiLevelNavigation extends Mutation() {
     } else {
       // set nav from desktop to mobile compatible
       let desktopOWrappers = Array.from(currentNav.querySelectorAll('o-nav-wrapper'))
+      let allCurrentHoveredElement = Array.from(currentNav.querySelectorAll('.hover-active'))
       let desktopMainFlyoutBackgrounds = Array.from(currentNav.querySelectorAll('div.main-background'))
       if (desktopOWrappers.length > 0) {
         desktopOWrappers.forEach(wrapper => {
@@ -807,6 +808,9 @@ export default class MultiLevelNavigation extends Mutation() {
             wrapper.parentElement.removeChild(wrapper)
           }
         })
+      }
+      if (allCurrentHoveredElement.length > 0) {
+        allCurrentHoveredElement.forEach(el => el.classList.remove('hover-active'))
       }
       // remove added faded background effect on desktop
       if (desktopMainFlyoutBackgrounds.length > 0) {
