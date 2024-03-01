@@ -1,12 +1,12 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
-/* global fetch */
 /* global AbortController */
 /* global CustomEvent */
-/* global self */
-/* global location */
+/* global fetch */
 /* global history */
+/* global location */
+/* global self */
 
 /**
 * @export 
@@ -44,7 +44,7 @@ export default class <%= name %> extends Shadow() {
       signal: this.addAbortController.signal
     }
     const endpoint = ''
-    this.dispatchEvent(new CustomEvent(this.getAttribute('update-favorite') || 'update-favorite', {
+    this.dispatchEvent(new CustomEvent(this.getAttribute('update-<%= nameSpace %>') || 'update-<%= nameSpace %>', {
       detail: {
         fetch: fetch(endpoint, fetchOptions).then(async response => {
           if (response.status >= 200 && response.status <= 299) return await response.json()
