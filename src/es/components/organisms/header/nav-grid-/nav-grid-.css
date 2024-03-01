@@ -1,0 +1,52 @@
+:host {
+    --header-nav-grid-background-color: white;
+    --header-nav-grid-a-menu-icon-background-color-custom: var(--color);
+    --header-nav-grid-margin: 2rem 1.5rem;
+    --header-nav-grid-justify-content: none;
+    --logo-default-justify-content: start;
+}
+:host > header {
+    width: var(--any-content-width, var(--content-width, 55%));
+    display: grid;
+    grid-template-areas:
+    'logo login'
+    'logo navigation';
+    grid-template-columns: auto 1fr;
+}
+:host > header > a-logo {
+    --logo-default-justify-content: start;
+    grid-area: logo;
+    position: relative;
+    transform: none;
+    left: 0;
+    top: 0;
+}
+:host > header > msrc-login {
+    grid-area: login;
+    width: 100%;
+}
+:host > header > m-multi-level-navigation {
+    grid-area: navigation;
+    max-width: none;
+    margin-right: calc(0px - var(--multi-level-navigation-default-a-main-content-spacing))
+}
+
+@media only screen and (max-width: _max-width_) {
+    :host > header {
+        grid-template-areas:
+        'logo login menu-icon';
+        grid-template-columns: auto 1fr auto;
+    }
+    :host > header > a-menu-icon {
+        grid-area: menu-icon;
+        order: 0;
+        margin-right: -1rem;
+    }
+    :host > header.open > a-menu-icon {
+        margin-right: 0.5rem;
+    }
+    :host > header > m-multi-level-navigation {
+        grid-area: none;
+        top: 0;
+    }
+}
