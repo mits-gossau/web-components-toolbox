@@ -94,7 +94,6 @@ const main = () => {
           }
           return true
         }
-
       }
     ]).then((answers) => {
     try {
