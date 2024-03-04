@@ -585,7 +585,7 @@ export default class CarouselTwo extends Mutation() {
    */
   renderHTML () {
     this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
-    this.indicator = this.root.querySelector('.js-m-carousel-index')
+    this.indicator = this.root.querySelector('#index')
     if (this.indicator) {
       this.indicator.innerHTML = `${this.currentIndex} / ${this.section.children.length}`
     }
