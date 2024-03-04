@@ -97,6 +97,11 @@ export default class DoubleButton extends Shadow() {
       :host > *::part(label2) {
         flex-grow: 0;
       }
+      @media only screen and (max-width: _max-width_) {
+        :host > *::part(label1) {
+          max-width: 50vw;
+        }
+      }
     `
     return this.fetchTemplate()
   }

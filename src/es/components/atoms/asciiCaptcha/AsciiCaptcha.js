@@ -1,10 +1,12 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global self */
+
 /**
  * Make your own Captcha with any Ascii Image, which has on each row the same total number of characters
  * here is a great collection: https://www.asciiart.eu/
- * 
+ *
  * @export
  * @class AsciiCaptcha
  * @type {CustomElementConstructor}
@@ -301,14 +303,14 @@ export default class AsciiCaptcha extends Shadow() {
         detail: {
           input: this.input,
           disabled: !value[this.hasAttribute('enable-on-touched')
-          ? 'touched'
-          : 'selected']
+            ? 'touched'
+            : 'selected']
         },
         bubbles: true,
         cancelable: true,
         composed: true
       }))
-      if (this.hasAttribute('debug')) console.log(`${this.tagName} set new value to input`, {input: this.input, value})
+      if (this.hasAttribute('debug')) console.log(`${this.tagName} set new value to input`, { input: this.input, value })
     }, 200)
   }
 
@@ -323,7 +325,7 @@ export default class AsciiCaptcha extends Shadow() {
   get input () {
     return this.querySelector('input')
   }
-  
+
   get reset () {
     return this.root.querySelector('[id=reset]')
   }
@@ -343,7 +345,7 @@ export default class AsciiCaptcha extends Shadow() {
     if (!this.pre.hasAttribute('column-count')) this.pre.setAttribute('column-count', Math.max(...this.pre.textContent.split('\n').map(chars => chars.length)))
     return Number(this.pre.getAttribute('column-count'))
   }
-  
+
   get rowCount () {
     if (!this.pre.hasAttribute('row-count')) this.pre.setAttribute('row-count', (this.pre.textContent.match(/\n/g) || []).length)
     return Number(this.pre.getAttribute('row-count'))

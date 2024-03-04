@@ -39,6 +39,7 @@
     border-radius: var(--simple-form-default-section-border-radius, var(--section-border-radius, 0));
     background-color: var(--simple-form-default-section-background-color, var(--section-background-color, transparent));
     padding: var(--simple-form-default-section-padding, var(--section-padding, 0));
+    overflow: auto;
     --h-color: var(--simple-form-default-section-h-color, var(--section-h-color, inherit));
     --hr-color: var(--simple-form-default-section-hr-color, var(--section-hr-color, inherit));
     --color: var(--simple-form-default-section-color, var(--section-color, inherit));
@@ -46,8 +47,9 @@
     --color-hover: var(--simple-form-default-section-color-hover, var(--section-color-hover, inherit));
     color: var(--simple-form-default-section-color, var(--section-color, inherit));
 }
-:host > form > section:only-child {
-    background-color: red;
+:host > form > section[hidden] {
+    animation: hide .3s ease-out;
+    overflow: hidden;
 }
 :host > form > section input,
 :host > form > section textarea,
@@ -62,6 +64,15 @@
 }
 :host form > section > div:last-of-type {
     padding-bottom: 0;
+}
+:host form > section:not(:has(~section:not([hidden]))) [trash] {
+    display: none;
+}
+:host form > section:not([hidden]) ~section [trash] {
+    display: inherit;
+}
+:host form > section:has(~section:not([hidden])) [add] {
+    display: none;
 }
 :host > form o-grid > section > div {
     justify-content: var(--simple-form-default-o-grid-div-justify-content-custom, space-between);
@@ -116,5 +127,18 @@
     }
     :host > form > section ~ section {
         margin-top: var(--simple-form-default-content-spacing-mobile, var(--simple-form-default-content-spacing, var(--content-spacing-mobile, var(--content-spacing))));
+    }
+}
+
+@keyframes hide {
+    0% {
+        display: inherit;
+        max-height: 100vh;
+    }
+    100% {
+        display: none;
+        max-height: 0;
+        margin: 0;
+        padding: 0;
     }
 }
