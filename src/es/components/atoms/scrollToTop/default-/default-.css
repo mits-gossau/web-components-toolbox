@@ -1,0 +1,13 @@
+:host {
+    position: var(--scroll-to-top-host-position, fixed);
+    bottom: var(--scroll-to-top-host-bottom, 20px);
+    right: var(--scroll-to-top-host-right, 3%);
+    --content-width: var(--scroll-to-top-host-content-width, 40px);
+    --button-primary-border-radius: var(--scroll-to-top-host-button-primary-border-radius, 2em);
+}
+:host > * {
+    float: var(--scroll-to-top-children-float, right);
+    --button-primary-background-color: var(--color-tertiary, black);
+    --button-primary-background-color-hover: var(--color-secondary, white);
+    
+ }
