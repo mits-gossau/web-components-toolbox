@@ -313,6 +313,9 @@ export default class CarouselTwo extends Mutation() {
       :host > section + div {
         margin: var(--nav-margin);
       }
+      :host > section + div > #index + nav > * {
+        opacity: 1;
+      }
       :host > section + div > nav {
         align-items: center;
         align-self: ${this.hasAttribute('nav-separate')
@@ -371,6 +374,14 @@ export default class CarouselTwo extends Mutation() {
       :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover {
         transform: var(--nav-transform-hover, scale(1.6));
         z-index: 3;
+      }
+      :host > section + div > #index {
+        align-self: center;
+      }
+      :host > section + div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
       }
       :host(.has-default-arrow-nav) > *.arrow-nav {
         align-items: center;
@@ -571,6 +582,28 @@ export default class CarouselTwo extends Mutation() {
           }]
         }, {
           path: `${this.importMetaUrl}./seperate-nav-/seperate-nav-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(() => setAttributeStyles())
+
+      case 'carousel-two-3-column-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-two-default-',
+            flags: 'g',
+            replacement: '--carousel-two-3-column-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./3-column-/3-column-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(() => setAttributeStyles())
+      case 'carousel-two-image-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, {
+          path: `${this.importMetaUrl}./image-/image-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => setAttributeStyles())
       default:
