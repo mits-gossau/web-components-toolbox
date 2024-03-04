@@ -235,6 +235,9 @@ export default class CarouselTwo extends Mutation() {
         background-color: var(--background-color, transparent);
         display: grid !important;
       }
+      :host > section + div > nav {
+        display: grid;
+      }
       :host([nav-separate][nav-align-self="start"]:not([no-default-nav])) > section,
       :host([nav-separate][nav-align-self="start"]:not([no-default-nav])) > .arrow-nav {
         margin-bottom: var(--section-nav-separate-margin);
@@ -243,7 +246,7 @@ export default class CarouselTwo extends Mutation() {
       :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > .arrow-nav {
         margin-top: var(--section-nav-separate-margin);
       }
-      :host > section, :host > section + div > nav, :host > *.arrow-nav {
+      :host > section, :host > nav, :host > section + div > nav, :host > *.arrow-nav {
         grid-column: 1;
         grid-row: 1;
       }
@@ -260,6 +263,7 @@ export default class CarouselTwo extends Mutation() {
               }
             `
           : /* css */`
+              :host > nav,
               :host > section + div > nav {
                 grid-row: 2;
               }
@@ -313,8 +317,30 @@ export default class CarouselTwo extends Mutation() {
       :host > section + div {
         margin: var(--nav-margin);
       }
-      :host > section + div > #index + nav > * {
-        opacity: 1;
+      :host > section + div > p {
+        align-self: center;
+      }
+      :host > section + div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      :host > nav {
+        align-items: center;
+        align-self: ${this.hasAttribute('nav-separate')
+          ? 'center'
+          : this.hasAttribute('nav-align-self')
+            ? this.getAttribute('nav-align-self')
+            : 'var(--nav-align-self, end)'};
+          display: ${this.hasAttribute('no-default-nav') ? 'none' : 'flex'};
+          gap: var(--nav-gap);
+          height: fit-content;
+          margin: var(--nav-margin);
+          justify-content: center;
+          ${this.hasAttribute('nav-flex-wrap')
+            ? 'flex-wrap: wrap;'
+            : 'max-height: 20%;'}
       }
       :host > section + div > nav {
         align-items: center;
@@ -336,12 +362,13 @@ export default class CarouselTwo extends Mutation() {
         }
         z-index: 2;
       }
+      :host > nav > * ,
       :host > section + div > nav > * {
         --a-margin: 0;
         padding: 0;
         margin: 0;
       }
-      :host > section + div > nav > * {
+      :host > nav > * {
         opacity: var(--nav-opacity, 0.5);
       }
       :host > section:not(.scrolling) ~ nav > *.active {
@@ -454,6 +481,7 @@ export default class CarouselTwo extends Mutation() {
         :host > section > div > div {
           padding: var(--section-div-padding-mobile, var(--section-div-padding, var(--nav-margin-mobile, var(--nav-margin))));
         }
+        :host > nav,
         :host > section + div > nav {
           gap: var(--nav-gap-mobile, var(--nav-gap));
           margin: var(--nav-margin-mobile, var(--nav-margin));

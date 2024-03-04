@@ -4,23 +4,11 @@
   --carousel-two-teaser-section-child-opacity-not-active: 1;
 }
 :host > *.arrow-nav {
-  --carousel-two-default-color: var(--m-white);
-}
-:host > main > * {
-  margin: var(--any-content-spacing, var(--content-spacing, unset)) auto var(--any-content-spacing, var(--content-spacing, unset)) 0;
-  width: var(--any-content-width, var(--content-width, 55%));
-}
-:host > *.arrow-nav > *:hover {
-  --carousel-two-default-color: var(--color-hover);
+  --carousel-two-teaser-color: var(--m-white);
 }
 :host > section {
   grid-column: 2 / 3;
-  grid-row: 1 / 2;
-  overflow: visible;
-}
-:host > section + div {
-  grid-column: 2 / 3;
-  grid-row: 2 / 2;
+  grid-row: 1 / 1;
 }
 :host > *.arrow-nav, :host(.has-default-arrow-nav) > *.arrow-nav {
   display: contents;
@@ -41,8 +29,8 @@
 }
 @media only screen and (max-width: _max-width_) {
   :host {
-    --carousel-two-teaser-section-child-min-width: 30%;
-    --carousel-two-teaser-section-child-max-width: 30%;
+    --carousel-two-teaser-section-child-min-width: 80%;
+    --carousel-two-teaser-section-child-max-width: 80%;
   }
   :host > *.arrow-nav, :host(.has-default-arrow-nav) > *.arrow-nav {
     display: none;
