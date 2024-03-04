@@ -281,6 +281,18 @@
   text-transform: var(--p-text-transform, none);
   margin: var(--p-margin, 0 auto var(--content-spacing));
 }
+:host .columns-one {
+  columns: var(--columns-one, 1);
+}
+:host .columns-two {
+  columns: var(--columns-two, 2);
+}
+:host .columns-three {
+  columns: var(--columns-three, 3);
+}
+:host .columns-four {
+  columns: var(--columns-four, 4);
+}
 /* a-tag */
 :host a {
   cursor: pointer;
@@ -665,6 +677,18 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     line-height: var(--p-line-height-mobile, var(--p-line-height, var(--line-height, normal)));
     text-transform: var(--p-text-transform-mobile, var(--p-text-transform, none));
     margin: var(--p-margin-mobile, var(--p-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
+  }
+  :host .columns-one-mobile {
+    columns: var(--columns-one-mobile, var(--columns-one, 1));
+  }
+  :host .columns-two-mobile {
+    columns: var(--columns-two-mobile, var(--columns-two, 2));
+  }
+  :host .columns-three-mobile {
+    columns: var(--columns-three-mobile, var(--columns-three, 3));
+  }
+  :host .columns-four-mobile {
+    columns: var(--columns-four-mobile, var(--columns-four, 4));
   }
   /* a-tag */
   :host a {
