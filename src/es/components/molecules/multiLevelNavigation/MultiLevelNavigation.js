@@ -287,7 +287,7 @@ export default class MultiLevelNavigation extends Mutation() {
       font-weight: var(--a-font-weight, var(--font-weight, normal));
     }
     :host > nav > ul > li > a > span {
-      padding: 0 0 0.5em 0;
+      padding: 0 0 0.25em 0;
       font-weight: var(--a-main-font-weight, 400);
     }
     :host > nav > ul > li > a:hover,
@@ -377,13 +377,12 @@ export default class MultiLevelNavigation extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper > section .close-icon {
       position: absolute;
-      right: -0.75em;
+      right: 0;
       top: 0.25em;
       width: auto !important;
       --icon-link-list-color: var(--color);
       --icon-link-list-color-hover: var(--color);
       --icon-link-list-show: none;
-      animation: none !important;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar {
       background-color: transparent;
@@ -396,12 +395,12 @@ export default class MultiLevelNavigation extends Mutation() {
       padding: 1em;
       --ul-li-padding-left: 0.75em;
       --a-font-weight: 500;
-      --a-font-size: 1.15em;
+      --a-font-size: 1.25em;
       --a-color: var(--color-active);
       --a-color-hover: var(--color-active);
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a > span {
-      font-size: 0.7em !important;
+      font-size: 0.8em !important;
       color: var(--color) !important;
       font-weight: 300 !important;
       padding-left: 0.2em;
@@ -504,6 +503,7 @@ export default class MultiLevelNavigation extends Mutation() {
         justify-content: space-between;
         margin: 0;
         font-weight: 500;
+        font-size: var(--a-main-mobile-font-size, 1rem);
       }
       :host > nav > ul > li > a > span {
        padding: 0;
@@ -612,6 +612,7 @@ export default class MultiLevelNavigation extends Mutation() {
       --nav-level-item-default-margin: 2px;
       --nav-level-item-default-font-weight: 500;
       --nav-level-item-default-hover-background-color: #E0F0FF;
+      --color: var(--a-color);
     }
     :host > nav > ul > li > o-nav-wrapper {
       --show: slideInFromTop 0.3s ease-in-out forwards;

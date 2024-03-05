@@ -77,7 +77,7 @@
     :host>header>a-menu-icon {
         grid-area: menu-icon;
         order: 0;
-        --header-nav-grid-a-menu-icon-padding: 1.5rem 0 1.5rem 2rem;
+        --header-nav-grid-a-menu-icon-padding: 1.5rem 0 1.5rem 1rem;
         --header-nav-grid-a-menu-icon-padding-open: 1.5rem 0 1.5rem 1rem;
     }
 
