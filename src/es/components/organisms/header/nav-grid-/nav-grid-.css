@@ -25,7 +25,7 @@
     top: 0;
 }
 
-:host>header>msrc-login {
+:host>header>ks-m-login {
     grid-area: login;
     width: 100%;
 }

@@ -470,7 +470,7 @@ export default class MultiLevelNavigation extends Mutation() {
         height: 100%;
         width: 100vw;
         overflow: hidden;
-        padding-top: 1em;
+        padding-top: 0.5rem;
       }
       :host > nav > ul {
         display: block;
