@@ -75,7 +75,7 @@ export default class General extends Shadow() {
         letter-spacing: var(--letter-spacing, normal);
         word-break: var(--word-break, normal);
         /*on Safari still not supported but all other browser does*/
-        scrollbar-gutter: var(--scrollbar-gutter, auto);
+        scrollbar-gutter: var(--scrollbar-gutter-desktop, auto);
       }
       /* to counteract initial.css */
       /* hide component stuff before it is rendered to avoid the blitz (flashing white) also set the --background-color in the variables...css */
@@ -119,6 +119,11 @@ export default class General extends Shadow() {
           font-weight: var(--font-weight-mobile, var(--font-weight, normal));
           line-height: var(--line-height-mobile, var(--line-height, normal));
           word-break: var(--word-break-mobile, var(--word-break, normal));
+        }
+      }
+      @media only screen and (max-width: 1200px) {
+        :root {
+          scrollbar-gutter: var(--scrollbar-gutter-mobile, auto);
         }
       }
     `

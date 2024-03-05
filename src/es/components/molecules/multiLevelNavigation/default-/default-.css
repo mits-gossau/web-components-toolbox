@@ -4,7 +4,8 @@
     --multi-level-navigation-default-main-ul-justify-content: right;
     --multi-level-navigation-default-main-ul-display: flex;
     --multi-level-navigation-default-a-main-content-spacing: 1em;
-    --multi-level-navigation-default-a-main-font-size: 1em;
+    --multi-level-navigation-default-a-main-font-size: 1.25em;
+    --multi-level-navigation-default-a-main-mobile-font-size: 1em;
     --multi-level-navigation-default-a-main-font-weight: 500;
     --multi-level-navigation-default-a-main-border-width: 3px;
     --multi-level-navigation-default-a-main-border-style: solid;
