@@ -377,9 +377,13 @@ export default class MultiLevelNavigation extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper > section .close-icon {
       position: absolute;
-      right: -1.75em;
+      right: -0.75em;
       top: 0.25em;
       width: auto !important;
+      --icon-link-list-color: var(--color);
+      --icon-link-list-color-hover: var(--color);
+      --icon-link-list-show: none;
+      animation: none !important;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar {
       background-color: transparent;
