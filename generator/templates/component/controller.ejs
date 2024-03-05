@@ -1,5 +1,4 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global AbortController */
 /* global CustomEvent */
@@ -13,15 +12,10 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @class <%= name %>
 * @type {CustomElementConstructor}
 */
-export default class <%= name %> extends Shadow() {
-  constructor (options = {}, ...args) {
-    super({
-      importMetaUrl: import.meta.url,
-      mode: 'false',
-      ...options
-    }, ...args)
-
-    this.addAbortController = null
+export default class <%= name %> extends HTMLElement {
+  constructor () {
+    super()
+    this.abortController = null
   }
 
   connectedCallback () {
@@ -37,11 +31,11 @@ export default class <%= name %> extends Shadow() {
    * @param {{ detail: any; }} event
    */
   request<%= name %>Listener = async (event) => {
-    if (this.addAbortController) this.addAbortController.abort()
-    this.addAbortController = new AbortController()
+    if (this.abortController) this.abortController.abort()
+    this.abortController = new AbortController()
     const fetchOptions = {
       method: 'GET',
-      signal: this.addAbortController.signal
+      signal: this.abortController.signal
     }
     const endpoint = ''
     this.dispatchEvent(new CustomEvent(this.getAttribute('update-<%= nameSpace %>') || 'update-<%= nameSpace %>', {
