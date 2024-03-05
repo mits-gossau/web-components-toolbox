@@ -36,6 +36,24 @@
     margin-right: calc(0px - var(--multi-level-navigation-default-a-main-content-spacing))
 }
 
+@media only screen and (max-width:1025px) {
+    :host>header>a-menu-icon {
+        grid-area: menu-icon;
+        order: 0;
+        --header-nav-grid-a-menu-icon-padding: 1.5rem 0 1.5rem 1rem;
+    }
+    :host > header > m-multi-level-navigation {
+        animation: closeRight .4s ease-in;
+        left: auto;
+        right: -100vw;
+    }
+    :host > header.open > m-multi-level-navigation {
+        animation: openRight .3s ease-out;
+        left: auto;
+        right: 0;
+    }
+}
+
 @media only screen and (max-width: _max-width_) {
     :host>header {
         grid-template-areas:
@@ -71,12 +89,25 @@
         right: 0;
         width: unset;
     }
-}
-
-@media only screen and (max-width:1025px) {
-    :host>header>a-menu-icon {
-        grid-area: menu-icon;
-        order: 0;
-        --header-nav-grid-a-menu-icon-padding: 1.5rem 0 1.5rem 1rem;
+    :host > header > m-multi-level-navigation {
+        animation: closeRight .4s ease-in;
+        left: auto;
+        right: -100vw;
+    }
+    :host > header.open > m-multi-level-navigation {
+        animation: openRight .3s ease-out;
+        left: auto;
+        right: 0;
     }
 }
+
+@keyframes openRight {
+    0% {right: -100vw}
+    100% {right: 0}
+}
+@keyframes closeRight {
+    0% {right: 0}
+    100% {right: -100vw}
+}
+
+
