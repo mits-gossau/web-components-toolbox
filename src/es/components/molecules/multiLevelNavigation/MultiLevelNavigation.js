@@ -853,6 +853,11 @@ export default class MultiLevelNavigation extends Mutation() {
       this.nav.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
       isFlyoutOpen = Array.from(this.root.querySelector('nav > ul').querySelectorAll(':scope > li')).some(el => el.classList.contains('open'))
+      const languageSwitcherButtonWrapper = document.getElementsByTagName('o-header')[0].shadowRoot?.querySelector('ks-m-login')?.shadowRoot?.querySelector('ks-m-sort')
+      // @ts-ignore
+      const languageSwitcherButtonFlyout = languageSwitcherButtonWrapper?.shadowRoot.querySelector('.m-sort__tooltip-open')
+      const isLanguageSwitcherButtonOpen = languageSwitcherButtonWrapper && languageSwitcherButtonFlyout
+      if (isLanguageSwitcherButtonOpen) languageSwitcherButtonFlyout.classList.remove('m-sort__tooltip-open')
       this.addBackgroundDivPosition(event, isFlyoutOpen)
       this.hideAndClearDesktopSubNavigation(event)
     }
