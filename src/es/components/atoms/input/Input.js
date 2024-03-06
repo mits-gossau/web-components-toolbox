@@ -102,9 +102,9 @@ export default class Input extends Shadow() {
         } else if(this.searchButton) {
           this.searchButton.addEventListener('click', this.clickListener)
         }
-        if (this.hasAttribute('change-listener')) this.inputField.addEventListener('change', this.changeListener)
-        if (this.hasAttribute('focus-listener')) this.inputField.addEventListener('focus', this.focusListener)
-        if (this.getAttribute('search') && location.href.includes(this.getAttribute('search'))) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
+        if (this.hasAttribute('change-listener') && this.inputField) this.inputField.addEventListener('change', this.changeListener)
+        if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.addEventListener('focus', this.focusListener)
+        if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
         if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
       }
       this.hidden = false
@@ -121,8 +121,8 @@ export default class Input extends Shadow() {
       } else if(this.searchButton) {
         this.searchButton.removeEventListener('click', this.clickListener)
       }
-      if (this.hasAttribute('change-listener')) this.inputField.removeEventListener('change', this.changeListener)
-      if (this.hasAttribute('focus-listener')) this.inputField.removeEventListener('focus', this.focusListener)
+      if (this.hasAttribute('change-listener') && this.inputField) this.inputField.removeEventListener('change', this.changeListener)
+      if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.removeEventListener('focus', this.focusListener)
       document.removeEventListener('keydown', this.keydownListener)
       if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     }
