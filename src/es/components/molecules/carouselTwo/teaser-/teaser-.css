@@ -4,7 +4,7 @@
   --carousel-two-teaser-section-child-opacity-not-active: 1;
 }
 :host > *.arrow-nav {
-  --carousel-two-teaser-color: var(--m-white);
+  --carousel-two-teaser-color: var(--carousel-two-teaser-color-custom, var(--color-secondary));
 }
 :host > section {
   grid-column: 2 / 3;
