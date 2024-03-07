@@ -20,24 +20,31 @@
   --button-primary-background-color: var(--color-tertiary);
 }
 :host {
-  --carousel-two-3-column-section-child-min-width: calc(30% - var(--carousel-two-3-column-section-gap) / 2);
-  --carousel-two-3-column-section-child-max-width: calc(30% - var(--carousel-two-3-column-section-gap) / 2);
+  --carousel-two-3-column-section-child-min-width: calc(100% / 3 - 0.5 * var(--carousel-two-3-column-section-gap) - 32px);
+  --carousel-two-3-column-section-child-max-width: calc(100% / 3 - 0.5 * var(--carousel-two-3-column-section-gap) - 32px);
   --carousel-two-3-column-section-child-opacity-not-active: 1;
 }
-:host > main > * {
-  margin: var(--any-content-spacing, var(--content-spacing, unset)) auto var(--any-content-spacing, var(--content-spacing, unset)) 0;
-  width: var(--any-content-width, var(--content-width, 55%));
-}
 :host > section {
-  overflow: visible;
+  width: calc(100vw - 96px);
+  margin-left: calc(96px - var(--content-spacing));
+}
+:host > section > *:last-child {
+  margin-right: 96px;
 }
 :host > section + div {
-  grid-column: 1 / 3;
-  grid-row: 2 / 2;
+  /* margin-left: calc(var(--content-spacing) - 96px * 2); */
+  /* width: var(--any-content-width, var(--content-width, 55%)); */
+  margin-right: 96px;
+}
+:host > section + div > nav {
+  margin-left: auto;
 }
 @media only screen and (max-width: _max-width_) {
   :host {
     --carousel-two-3-column-section-child-min-width: 80%;
     --carousel-two-3-column-section-child-max-width: 80%;
+  }
+  :host > section + div {
+    display: none;
   }
 }

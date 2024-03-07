@@ -39,7 +39,6 @@ export default class CarouselTwo extends Mutation() {
           this.previous()
         } else if (target.getAttribute('href') === '#next') {
           this.currentIndex = (this.currentIndex % this.section.children.length) + 1
-          console.log(this.currentIndex)
           this.next()
         }
         if (this.indicator) {
@@ -84,15 +83,19 @@ export default class CarouselTwo extends Mutation() {
       clearTimeout(scrollTimeoutId)
       scrollTimeoutId = setTimeout(() => {
         let hostLeft, activeChild
-        if (this.getAttribute('namespace') === 'carousel-two-teaser-'
+        if (this.getAttribute('namespace') === 'carousel-two-teaser-' || this.getAttribute('namespace') === 'carousel-two-3-column-'
           ? (hostLeft = Math.round(this.section.getBoundingClientRect().right)) && (activeChild = Array.from(this.section.children).find(node => {
               const nodeLeft = Math.round(node.getBoundingClientRect().right)
-              return hostLeft + scrollTolerance > nodeLeft && hostLeft - (scrollTolerance + Math.round(node.getBoundingClientRect().width) / 2) < nodeLeft
+              const width = this.getAttribute('namespace') === 'carousel-two-3-column-' ? Math.round(node.getBoundingClientRect().width) : Math.round(node.getBoundingClientRect().width) / 2
+              console.log(node, width, Math.round(node.getBoundingClientRect().width), hostLeft, nodeLeft,hostLeft + scrollTolerance > nodeLeft, hostLeft - (scrollTolerance + width) < nodeLeft, )
+              return hostLeft + scrollTolerance > nodeLeft && hostLeft - (scrollTolerance + width) < nodeLeft
             }))
-          : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) && (activeChild = Array.from(this.section.children).find(node => {
+          : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) !== undefined && (activeChild = 
+            Array.from(this.section.children).find(node => {
               const nodeLeft = Math.round(node.getBoundingClientRect().left)
               return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
             }))) {
+          console.log(activeChild)
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
             node.classList.remove('active')
             node.setAttribute('aria-hidden', 'true')
@@ -403,7 +406,7 @@ export default class CarouselTwo extends Mutation() {
         z-index: 3;
       }
       :host > section + div > #index {
-        align-self: center;
+        margin: var(--index-margin);
       }
       :host > section + div {
         display: flex;
@@ -745,6 +748,23 @@ export default class CarouselTwo extends Mutation() {
 
   previous (focus) {
     if (this.getAttribute('namespace') === 'carousel-two-teaser-') return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1], focus)
+    //console.log(!!this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling, !!this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling, !!this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling)
+    if (this.getAttribute('namespace') === 'carousel-two-3-column-') 
+      return this.scrollIntoView(
+    (
+      this.activeSlide &&
+      this.activeSlide.previousElementSibling &&
+      this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling &&
+      (
+        this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling ? 
+        (
+          this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling ||
+          this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling
+        ) :
+        Array.from(this.section.children)[0]
+      ) 
+    ) || 
+      Array.from(this.section.children)[this.section.children.length - 1], focus)
     return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1], focus)
   }
 

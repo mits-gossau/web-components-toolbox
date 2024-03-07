@@ -12,14 +12,39 @@
   --carousel-two-image-section-gap: 1em;
   --carousel-two-image-section-nav-separate-margin-mobile: var(--content-spacing-mobile);
   --carousel-two-image-section-nav-separate-margin: var(--content-spacing);
-  --carousel-two-image-p-margin: 0;
-  --carousel-two-image-section-child-a-picture-margin: 0;
   --carousel-two-image-nav-margin-mobile: 0;
   --carousel-two-image-nav-margin: 0;
+  --carousel-two-image-p-font-family: var(--mdx-sys-font-flex-large-custom1);
+  --carousel-two-image-p-margin: 0 0 var(--mdx-sys-spacing-fix-s);
+  --carousel-two-image-section-child-a-picture-margin: 0 0 var(--mdx-sys-spacing-fix-s);
+  --carousel-two-image-span-height: var(--mdx-sys-sizing-fix-2xs);
+  --carousel-two-image-span-width: var(--mdx-sys-sizing-fix-3xl);
+  --carousel-two-image-span-color: var(--mdx-sys-color-accent-1-default);
+  --carousel-two-image-span-margin: var(--mdx-sys-spacing-fix-2xs);
+  --carousel-two-image-index-margin: var(--mdx-sys-spacing-fix-2xs) 0 0 0;
 }
-:host > section + div > *.arrow-nav {
-  --carousel-two-image-color: var(--m-white);
+
+:host > section > ks-m-figure {
+  width: 100%;
+  justify-content: start;
+  --picture-cover-display: block;
 }
-:host > section + div > *.arrow-nav > *:hover {
-  --carousel-two-image-color: var(--color-hover);
+
+:host > section + div {
+  margin-top: var(--mdx-sys-spacing-fix-s) !important;
+}
+
+@media only screen and (max-width: _max-width_) {
+  :host > section + div,
+  :host > section > ks-m-figure {
+    /* margin: var(--any-content-spacing-mobile, var(--content-spacing-mobile, var(--content-spacing, unset))) auto;
+    width: var(--any-content-width-mobile, var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2))); */
+  }
+  :host([namespace='carousel-two-image-']) > section {
+    margin: var(--any-content-spacing-mobile) -1rem;
+    width: 100vw !important;
+  }
+  :host {
+    --button-padding-mobile-custom: var(--mdx-comp-button-primary-small-padding-vertical-default);
+  }
 }
