@@ -22,9 +22,16 @@
     margin-top: 1rem;
 }
 :host .topline a {
-    align-items: center;
+    align-items: flex-start;
     display: inline-flex;
     width: 100%;
+}
+:host .topline > a > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 :host .topline ks-m-favorite-button {
     display: none;
