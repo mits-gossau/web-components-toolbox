@@ -285,6 +285,9 @@ export default class Form extends Shadow() {
         height: 1.5em;
         width: 1.5em;
       }
+      input[type=checkbox] {
+        min-width: 1.5em;
+      }
       *.steps__title {
         color: var(--background-color) !important;
         background-color: var(--color-secondary) !important;

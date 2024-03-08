@@ -54,6 +54,7 @@
 :host > form > section input,
 :host > form > section textarea,
 :host > form > section select {
+    caret-color: var(--simple-form-default-section-background-color, var(--section-background-color, black));
     --color: var(--simple-form-default-section-input-color, var(--section-input-color, inherit));
     --color-secondary: var(--simple-form-default-section-input-color-secondary, var(--section-input-color-secondary, inherit));
     --color-hover: var(--simple-form-default-section-input-color-hover, var(--section-input-color-hover, inherit));
