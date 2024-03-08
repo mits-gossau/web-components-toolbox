@@ -16,7 +16,18 @@ import { Hover } from '../../prototypes/Hover.js'
  *  {string} [base-url='../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/']
  *  {string} [icon-name='AddedToList']
  *  {string} [icon-size='56x56']
- * }
+ *  {string} [custom-notification=`{
+      'color': undefined,
+      'outline': undefined,
+      'height': 0,
+      'width': 0,
+      'borderRadius': 0,
+      'top': 0,
+      'bottom': 0,
+      'left': 0,
+      'right': 0,
+     }`]
+ *  }
  */
 export default class IconMdx extends Hover() {
   static get observedAttributes () {
@@ -25,6 +36,10 @@ export default class IconMdx extends Hover() {
 
   connectedCallback () {
     super.connectedCallback()
+    if(this.getAttribute('custom-notification')) {
+      this.customNotification = JSON.parse(this.getAttribute('custom-notification'))
+    }
+
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
   }
@@ -83,6 +98,25 @@ export default class IconMdx extends Hover() {
           }
         `
       }
+      ${this.hasAttribute('custom-notification')
+        ? /* css */`
+        :host::after {
+          content: "";
+          position: absolute;
+          display: block;
+          height: ${this.customNotification.height};
+          width: ${this.customNotification.width};
+          background: ${this.customNotification.background};
+          border-radius: ${this.customNotification.borderRadius};
+          outline: ${this.customNotification.outline};
+          right: ${this.customNotification.right};
+          left: ${this.customNotification.left};
+          top: ${this.customNotification.top};
+          bottom: ${this.customNotification.bottom};
+        }
+      `
+        : ''
+      }
       :host(:active), :host(.active) {
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
@@ -93,6 +127,7 @@ export default class IconMdx extends Hover() {
         transition: opacity 0.3s ease-out;
       }
       :host > svg {
+        position: relative;
         height: var(--svg-height, var(--svg-size, 1.5em));
         width: var(--svg-width, var(--svg-size, 1.5em));
         transition: var(--transition, var(--a-transition, all 0.3s ease-out));
