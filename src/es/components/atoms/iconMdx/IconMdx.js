@@ -37,7 +37,8 @@ export default class IconMdx extends Hover() {
   connectedCallback () {
     super.connectedCallback()
     if(this.getAttribute('custom-notification')) {
-      this.customNotification = JSON.parse(this.getAttribute('custom-notification'))
+      // @ts-ignore
+      this.customNotification = IconMdx.parseAttribute(this.getAttribute('custom-notification'))
     }
 
     if (this.shouldRenderCSS()) this.renderCSS()
