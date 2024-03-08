@@ -181,6 +181,8 @@ export default class MultiLevelNavigation extends Mutation() {
         }
       }, 75);
     }
+
+    this.closeEventListener = event => this.selfClickListener()
   }
 
   connectedCallback() {
@@ -201,6 +203,7 @@ export default class MultiLevelNavigation extends Mutation() {
     })
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
+    if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     this.addCustomColors()
     super.connectedCallback()
   }
@@ -208,6 +211,7 @@ export default class MultiLevelNavigation extends Mutation() {
   disconnectedCallback() {
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
+    if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     Array.from(this.root.querySelectorAll('a')).forEach(a => a.removeEventListener('click', this.aLinkClickListener))
     super.disconnectedCallback()
   }

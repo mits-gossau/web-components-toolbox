@@ -16,7 +16,7 @@ export default class Dialog extends Shadow() {
      * @param {'show'|'showModal'} [command='show']
      */
     this.show = (command = this.getAttribute('command-show') || 'show-modal') => {
-      if (this.hasAttribute('close-other-flyout')) this.closeOtherFlyouts()
+      if (this.hasAttribute('close-other-flyout')) this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', { bubbles: true, cancelable: true, composed: true }))
       // @ts-ignore
       command = command.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
       this.dispatchEvent(new CustomEvent('no-scroll', { detail: { hasNoScroll: true }, bubbles: true, cancelable: true, composed: true }))
@@ -58,20 +58,6 @@ export default class Dialog extends Shadow() {
     }
     this.showEventListener = event => this.show(event.detail.command)
     this.closeEventListener = () => this.close()
-    this.closeOtherFlyouts = () => {
-      const header = document.getElementsByTagName('o-header')[0]
-      const navWrapper = header.shadowRoot?.querySelector('m-multi-level-navigation')
-      const loginWrapper = header.shadowRoot?.querySelector('ks-m-login')
-      const navTag = navWrapper?.shadowRoot?.querySelector('nav')
-      const languageSwitcherButtonWrapper = loginWrapper?.shadowRoot?.querySelector('ks-m-sort')
-      // @ts-ignore
-      const openedLanguageSwitcherButtonFlyout = languageSwitcherButtonWrapper?.shadowRoot.querySelector('.m-sort__tooltip-open')
-      const isNavTagOpen = navTag && navTag.getAttribute('aria-expanded') === 'true'
-      const isLanguageSwitcherButtonOpen = languageSwitcherButtonWrapper && openedLanguageSwitcherButtonFlyout
-      // @ts-ignore
-      if (isNavTagOpen) navWrapper.selfClickListener()
-      if (isLanguageSwitcherButtonOpen) openedLanguageSwitcherButtonFlyout.classList.remove('m-sort__tooltip-open')
-    }
   }
 
   connectedCallback() {
