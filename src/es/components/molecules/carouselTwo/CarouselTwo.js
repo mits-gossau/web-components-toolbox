@@ -313,13 +313,11 @@ export default class CarouselTwo extends Mutation() {
       :host > section:not(.scrolling) > *:not(.active) {
         opacity: var(--section-child-opacity-not-active, 0);
       }
-      :host > section + div {
-        margin: var(--nav-margin);
-      }
       :host > section + div > p {
         align-self: center;
       }
       :host > section + div {
+        margin: var(--nav-margin);
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -628,7 +626,12 @@ export default class CarouselTwo extends Mutation() {
       case 'carousel-two-image-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-two-default-',
+            flags: 'g',
+            replacement: '--carousel-two-3-column-'
+          }]
         }, {
           path: `${this.importMetaUrl}./image-/image-.css`, // apply namespace since it is specific and no fallback
           namespace: false
