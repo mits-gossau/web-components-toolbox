@@ -17,13 +17,12 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * @type {CustomElementConstructor}
  */
 export default class CarouselTwo extends Mutation() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { subtree: true, childList: true },
       ...options
     }, ...args)
-    this.currentIndex = 1;
 
     if (this.hasAttribute('open-modal')) this.setAttribute('aria-haspopup', 'true')
     // on click anchor scroll to the image with the matching id or previous/next
@@ -35,15 +34,11 @@ export default class CarouselTwo extends Mutation() {
         if ((sectionChild = this.section.querySelector(target.getAttribute('href')))) {
           this.scrollIntoView(sectionChild)
         } else if (target.getAttribute('href') === '#previous') {
-          this.currentIndex = this.currentIndex === 1 ? this.section.children.length : this.currentIndex - 1
           this.previous()
         } else if (target.getAttribute('href') === '#next') {
-          this.currentIndex = (this.currentIndex % this.section.children.length) + 1
           this.next()
         }
-        if (this.indicator) {
-          this.indicator.innerHTML = `${this.currentIndex} / ${this.section.children.length}`
-        }
+        this.setSlideIndicator()
       }
       if (this.hasAttribute('open-modal')) {
         if (!this.hasAttribute('open')) event.stopPropagation()
@@ -85,17 +80,17 @@ export default class CarouselTwo extends Mutation() {
         let hostLeft, activeChild
         if (this.getAttribute('namespace') === 'carousel-two-teaser-' || this.getAttribute('namespace') === 'carousel-two-3-column-'
           ? (hostLeft = Math.round(this.section.getBoundingClientRect().right)) && (activeChild = Array.from(this.section.children).find(node => {
-              const nodeLeft = Math.round(node.getBoundingClientRect().right)
-              const width = this.getAttribute('namespace') === 'carousel-two-3-column-' ? Math.round(node.getBoundingClientRect().width) : Math.round(node.getBoundingClientRect().width) / 2
-              console.log(node, width, Math.round(node.getBoundingClientRect().width), hostLeft, nodeLeft,hostLeft + scrollTolerance > nodeLeft, hostLeft - (scrollTolerance + width) < nodeLeft, )
-              return hostLeft + scrollTolerance > nodeLeft && hostLeft - (scrollTolerance + width) < nodeLeft
-            }))
-          : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) !== undefined && (activeChild = 
-            Array.from(this.section.children).find(node => {
+            const nodeLeft = Math.round(node.getBoundingClientRect().right)
+            const width = this.getAttribute('namespace') === 'carousel-two-3-column-' && window.innerWidth > 767 ? Math.round(node.getBoundingClientRect().width) : Math.round(node.getBoundingClientRect().width) / 2
+            return hostLeft + scrollTolerance > nodeLeft && hostLeft - (scrollTolerance + width) < nodeLeft
+          }))
+          : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) !== undefined && (activeChild =
+            Array.from(this.section.children).find((node, index) => {
               const nodeLeft = Math.round(node.getBoundingClientRect().left)
-              return hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
+              const isActiveChild = hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
+              if (isActiveChild) this.currentIndex = index + 1;
+              return isActiveChild
             }))) {
-          console.log(activeChild)
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
             node.classList.remove('active')
             node.setAttribute('aria-hidden', 'true')
@@ -113,6 +108,7 @@ export default class CarouselTwo extends Mutation() {
             node.classList.add('active')
           })
           this.section.classList.remove('scrolling')
+          this.setSlideIndicator()
           this.setInterval()
           // adjust the history
           if (this.hasAttribute('history') && !this.hasAttribute('interval') && !self.location.hash.includes(activeChild.getAttribute('id'))) {
@@ -145,7 +141,7 @@ export default class CarouselTwo extends Mutation() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     this.hidden = true
     const showPromises = []
@@ -177,7 +173,7 @@ export default class CarouselTwo extends Mutation() {
     if (this.hasAttribute('history') && !this.hasAttribute('interval')) self.addEventListener('hashchange', this.hashchangeEventListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     this.removeEventListener('click', this.clickListener)
     if (!this.hasAttribute('no-keydown')) document.removeEventListener('keydown', this.keydownListener)
@@ -191,7 +187,7 @@ export default class CarouselTwo extends Mutation() {
   }
 
   // incase a child would manipulate itself, expl. teaser or wrapper wrapping themself with an a tag when they get an href
-  mutationCallback (mutationList, observer) {
+  mutationCallback(mutationList, observer) {
     if (mutationList[0] && mutationList[0].type === 'childList') {
       this.setAttribute('count-section-children', this.section.children.length)
       mutationList[0].addedNodes.forEach(node => {
@@ -214,7 +210,7 @@ export default class CarouselTwo extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -223,7 +219,7 @@ export default class CarouselTwo extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.section || !this.nav || !this.arrowNav
   }
 
@@ -232,7 +228,7 @@ export default class CarouselTwo extends Mutation() {
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         background-color: var(--background-color, transparent);
@@ -332,37 +328,37 @@ export default class CarouselTwo extends Mutation() {
       :host > nav {
         align-items: center;
         align-self: ${this.hasAttribute('nav-separate')
-          ? 'center'
-          : this.hasAttribute('nav-align-self')
-            ? this.getAttribute('nav-align-self')
-            : 'var(--nav-align-self, end)'};
+        ? 'center'
+        : this.hasAttribute('nav-align-self')
+          ? this.getAttribute('nav-align-self')
+          : 'var(--nav-align-self, end)'};
           display: ${this.hasAttribute('no-default-nav') ? 'none' : 'flex'};
           gap: var(--nav-gap);
           height: fit-content;
           margin: var(--nav-margin);
           justify-content: center;
           ${this.hasAttribute('nav-flex-wrap')
-            ? 'flex-wrap: wrap;'
-            : 'max-height: 20%;'}
+        ? 'flex-wrap: wrap;'
+        : 'max-height: 20%;'}
       }
       :host > section + div > nav {
         align-items: center;
         align-self: ${this.hasAttribute('nav-separate')
-          ? 'center'
-          : this.hasAttribute('nav-align-self')
-            ? this.getAttribute('nav-align-self')
-            : 'var(--nav-align-self, end)'};
+        ? 'center'
+        : this.hasAttribute('nav-align-self')
+          ? this.getAttribute('nav-align-self')
+          : 'var(--nav-align-self, end)'};
         display: flex;
         gap: var(--nav-gap);
         height: fit-content;
         margin: var(--nav-margin);
         justify-content:  ${this.hasAttribute('nav-justify-content')
-          ? this.getAttribute('nav-justify-content')
-          : 'var(--nav-justify-content, center)'};
+        ? this.getAttribute('nav-justify-content')
+        : 'var(--nav-justify-content, center)'};
         ${this.hasAttribute('nav-flex-wrap')
-          ? 'flex-wrap: wrap;'
-          : 'max-height: 20%;'
-        }
+        ? 'flex-wrap: wrap;'
+        : 'max-height: 20%;'
+      }
         z-index: 2;
       }
       :host > nav > * ,
@@ -512,7 +508,7 @@ export default class CarouselTwo extends Mutation() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     // attribute controlled styles
     const setAttributeStyles = () => {
       if (this.hasAttribute('background-color')) {
@@ -647,12 +643,10 @@ export default class CarouselTwo extends Mutation() {
    *
    * @return {Promise<void>}
    */
-  renderHTML () {
+  renderHTML() {
     this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
     this.indicator = this.root.querySelector('#index')
-    if (this.indicator) {
-      this.indicator.innerHTML = `${this.currentIndex} / ${this.section.children.length}`
-    }
+    this.setSlideIndicator()
     this.nav = this.root.querySelector(this.cssSelector + ' > nav') || this.root.querySelector(this.cssSelector + ' section + div > nav') || document.createElement('nav')
     if (!this.hasAttribute('no-default-arrow-nav')) {
       this.arrowNav = this.root.querySelector(this.cssSelector + ' > .arrow-nav') || document.createElement('span')
@@ -746,34 +740,37 @@ export default class CarouselTwo extends Mutation() {
     })
   }
 
-  previous (focus) {
+  previous(focus) {
     if (this.getAttribute('namespace') === 'carousel-two-teaser-') return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1], focus)
-    //console.log(!!this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling, !!this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling, !!this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling)
-    if (this.getAttribute('namespace') === 'carousel-two-3-column-') 
+    if (this.getAttribute('namespace') === 'carousel-two-3-column-')
       return this.scrollIntoView(
-    (
-      this.activeSlide &&
-      this.activeSlide.previousElementSibling &&
-      this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling &&
-      (
-        this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling ? 
         (
-          this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling ||
-          this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling
-        ) :
-        Array.from(this.section.children)[0]
-      ) 
-    ) || 
-      Array.from(this.section.children)[this.section.children.length - 1], focus)
+          this.activeSlide &&
+          this.activeSlide.previousElementSibling &&
+          this.activeSlide.previousElementSibling.previousElementSibling &&
+          (
+            this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling ?
+              (
+                this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling ?
+                  (
+                    this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling ||
+                    this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling
+                  ) :
+                  Array.from(this.section.children)[0]
+              ) :
+              Array.from(this.section.children)[0]
+          )
+        ) ||
+        Array.from(this.section.children)[this.section.children.length - 1], focus)
     return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1], focus)
   }
 
-  next (focus) {
+  next(focus) {
     return this.scrollIntoView((this.activeSlide && this.activeSlide.nextElementSibling) || Array.from(this.section.children)[0], focus)
   }
 
   // NOTE: keep focus default on false, since this focus action can have bad side effects. Now, no other function calls this with focus=true. The original idea was, that a focus=false would set focus on the picture and for that support tab navigation.
-  scrollIntoView (node, focus = false, force = false) {
+  scrollIntoView(node, focus = false, force = false) {
     if (typeof node === 'string') node = this.section.querySelector(node) || this.section.children[0]
     if (!node) return console.warn('CarouselTwo.js can not scrollIntoView this node: ', { node, sectionChildren: this.section.children, carousel: this })
     if (force || !node.classList.contains('active')) {
@@ -800,18 +797,18 @@ export default class CarouselTwo extends Mutation() {
     return node
   }
 
-  setInterval () {
+  setInterval() {
     if (this.hasAttribute('interval') && !this.isFocused) {
       clearInterval(this.interval)
       this.interval = setInterval(() => this.next(false), Number(this.getAttribute('interval')))
     }
   }
 
-  clearInterval () {
+  clearInterval() {
     if (this.hasAttribute('interval')) clearInterval(this.interval)
   }
 
-  getRandomString () {
+  getRandomString() {
     if (self.crypto && self.crypto.getRandomValues && navigator.userAgent.indexOf('Safari') === -1) {
       const a = self.crypto.getRandomValues(new Uint32Array(3))
       let token = ''
@@ -824,11 +821,18 @@ export default class CarouselTwo extends Mutation() {
     }
   }
 
-  get activeSlide () {
+  setSlideIndicator() {
+   if (this.indicator) {
+     this.indicator.innerHTML = `${this.currentIndex} / ${this.section.children.length}`
+   }
+  }
+
+  get activeSlide() {
     return this.section.querySelector('.active')
   }
 
-  get id () {
+
+  get id() {
     return this._id
       ? this._id
       : this.getAttribute('id')
@@ -836,7 +840,7 @@ export default class CarouselTwo extends Mutation() {
         : (this._id = `${this.idPefix}${this.getRandomString()}`)
   }
 
-  get idPefix () {
+  get idPefix() {
     return 'img-'
   }
 }
