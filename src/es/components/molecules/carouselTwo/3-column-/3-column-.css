@@ -29,17 +29,15 @@
   margin-left:  calc(-1 * var(--content-spacing));
 }
 :host > section > *:first-child {
-  border-left: var(--content-spacing) solid transparent;
+  padding-left: var(--content-spacing);
   box-sizing: content-box;
 }
 :host > section > *:last-child {
-  margin-right: var(--content-spacing);
+  padding-right: calc(var(--content-spacing) * 2);
+  box-sizing: content-box;
 }
 :host > section + div {
   margin-right: var(--content-spacing);
-}
-:host > section + div > nav {
-  margin-left: auto;
 }
 @media only screen and (max-width: _max-width_) {
   :host {

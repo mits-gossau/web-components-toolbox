@@ -407,6 +407,12 @@ export default class CarouselTwo extends Mutation() {
         flex-direction: row;
         justify-content: space-between;
       }
+      :host > section + div > nav {
+        margin-left: auto;
+      }
+      :host > section + div > p + nav {
+        margin-left: 0;
+      }
       :host(.has-default-arrow-nav) > *.arrow-nav {
         align-items: center;
         display: flex;
@@ -479,7 +485,7 @@ export default class CarouselTwo extends Mutation() {
           padding: var(--section-div-padding-mobile, var(--section-div-padding, var(--nav-margin-mobile, var(--nav-margin))));
         }
         :host > nav,
-        :host > section + div > nav {
+        :host > section + div {
           gap: var(--nav-gap-mobile, var(--nav-gap));
           margin: var(--nav-margin-mobile, var(--nav-margin));
         }
