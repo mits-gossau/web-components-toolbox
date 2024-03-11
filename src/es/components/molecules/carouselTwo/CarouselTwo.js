@@ -79,9 +79,9 @@ export default class CarouselTwo extends Mutation() {
       scrollTimeoutId = setTimeout(() => {
         let hostLeft, activeChild
         if (this.getAttribute('namespace') === 'carousel-two-teaser-' || this.getAttribute('namespace') === 'carousel-two-3-column-'
-          ? (hostLeft = Math.round(this.section.getBoundingClientRect().right)) && (activeChild = Array.from(this.section.children).find(node => {
+          ? (hostLeft = Math.round(this.section.getBoundingClientRect().right)) !== undefined && (activeChild = Array.from(this.section.children).find(node => {
             const nodeLeft = Math.round(node.getBoundingClientRect().right)
-            const width = this.getAttribute('namespace') === 'carousel-two-3-column-' && window.innerWidth > 767 ? Math.round(node.getBoundingClientRect().width) : Math.round(node.getBoundingClientRect().width) / 2
+            const width = this.getAttribute('namespace') === 'carousel-two-3-column-' && window.innerWidth > 767 ? Math.round(node.getBoundingClientRect().width) / 4: Math.round(node.getBoundingClientRect().width) / 2
             return hostLeft + scrollTolerance > nodeLeft && hostLeft - (scrollTolerance + width) < nodeLeft
           }))
           : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) !== undefined && (activeChild =

@@ -9,7 +9,7 @@
   --carousel-two-3-column-nav-gap: var(--content-spacing);
   --carousel-two-3-column-nav-margin-mobile: var(--carousel-two-3-column-nav-margin-mobile-custom, var(--content-spacing-mobile));
   --carousel-two-3-column-nav-margin: var(--carousel-two-3-column-nav-margin-custom, var(--content-spacing));
-  --carousel-two-3-column-section-gap: 1em;
+  --carousel-two-3-column-section-gap: var(--mdx-sys-spacing-flex-large-xs , var(--content-spacing));
   --carousel-two-3-column-section-nav-separate-margin-mobile: var(--content-spacing-mobile);
   --carousel-two-3-column-section-nav-separate-margin: var(--content-spacing);
   --carousel-two-3-column-p-margin: 0;
@@ -33,7 +33,7 @@
   box-sizing: content-box;
 }
 :host > section > *:last-child {
-  padding-right: calc(var(--content-spacing) * 2);
+  padding-right: var(--content-spacing);
   box-sizing: content-box;
 }
 :host > section + div {
