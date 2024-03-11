@@ -751,26 +751,24 @@ export default class CarouselTwo extends Mutation() {
 
   previous(focus) {
     if (this.getAttribute('namespace') === 'carousel-two-teaser-') return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1], focus)
-    if (this.getAttribute('namespace') === 'carousel-two-3-column-')
+    if (this.getAttribute('namespace') === 'carousel-two-3-column-') {
+      const jumpToLastElement = Array.from(this.section.children)[this.section.children.length - 1];
+      const jumpToFirstElement = Array.from(this.section.children)[0];
+
+      let result = jumpToLastElement
+      // check if it is first Item
+      if (!!this.activeSlide?.previousElementSibling?.previousElementSibling?.previousElementSibling) {
+        const previousElement = this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling
+        // jump back available nodes -> or if there are not enough jump to beginning
+        result = previousElement.previousElementSibling?.previousElementSibling || previousElement?.previousElementSibling || previousElement || jumpToFirstElement
+      }
+
+
       return this.scrollIntoView(
-        (
-          this.activeSlide &&
-          this.activeSlide.previousElementSibling &&
-          this.activeSlide.previousElementSibling.previousElementSibling &&
-          (
-            this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling ?
-              (
-                this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling ?
-                  (
-                    this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling ||
-                    this.activeSlide.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling
-                  ) :
-                  Array.from(this.section.children)[0]
-              ) :
-              Array.from(this.section.children)[0]
-          )
-        ) ||
-        Array.from(this.section.children)[this.section.children.length - 1], focus)
+        result, 
+        focus
+      )
+    }
     return this.scrollIntoView((this.activeSlide && this.activeSlide.previousElementSibling) || Array.from(this.section.children)[this.section.children.length - 1], focus)
   }
 
