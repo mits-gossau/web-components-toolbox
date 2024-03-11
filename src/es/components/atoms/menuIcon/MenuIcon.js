@@ -52,7 +52,7 @@ export default class MenuIcon extends Shadow() {
     if (this.shouldRenderHTML()) this.renderHTML()
     if (!this.hasAttribute('no-click') || this.getAttribute('click-event-name')) this.addEventListener('click', this.clickListener)
 
-    this.isCheckout = this.parentElement.getAttribute('is-checkout') === 'true'
+    this.isCheckout = this.parentElement?.getAttribute('is-checkout') === 'true'
      if (this.isCheckout) this.style.display = 'none'
   }
 
