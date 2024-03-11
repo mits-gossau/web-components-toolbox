@@ -216,6 +216,9 @@ export default class MultiLevelNavigation extends Mutation() {
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     this.addCustomColors()
     super.connectedCallback()
+
+    this.isCheckout = this.parentElement.getAttribute('is-checkout') === 'true'
+    if (this.isCheckout) this.root.querySelector('nav').style.display = 'none'
   }
 
   disconnectedCallback() {
