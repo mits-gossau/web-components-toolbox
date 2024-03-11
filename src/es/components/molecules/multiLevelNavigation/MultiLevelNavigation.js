@@ -181,6 +181,18 @@ export default class MultiLevelNavigation extends Mutation() {
         }
       }, 75);
     }
+
+    this.closeEventListener = event => {
+      let currentAriaExpandedAttribute = this.nav.getAttribute('aria-expanded') === 'true'
+      if (this.isDesktop && event.composedPath()[0].tagName !== 'M-MULTI-LEVEL-NAVIGATION') this.nav.setAttribute('aria-expanded', 'false')
+      if (this.isDesktop && this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
+      if (this.isDesktop && currentAriaExpandedAttribute) this.hideAndClearDesktopSubNavigation(event)
+      if (!this.isDesktop && this.getRootNode().host?.shadowRoot?.querySelector('header')?.classList.contains('open')) {
+        this.getRootNode().host.shadowRoot.querySelector('a-menu-icon').click()
+        this.setScrollOnBody(true, event)
+        this.hideAndClearMobileSubNavigation()
+      }
+    }
   }
 
   connectedCallback() {
@@ -201,13 +213,18 @@ export default class MultiLevelNavigation extends Mutation() {
     })
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
+    if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     this.addCustomColors()
     super.connectedCallback()
+
+    this.isCheckout = this.parentElement.getAttribute('is-checkout') === 'true'
+    if (this.isCheckout) this.root.querySelector('nav').style.display = 'none'
   }
 
   disconnectedCallback() {
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
+    if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     Array.from(this.root.querySelectorAll('a')).forEach(a => a.removeEventListener('click', this.aLinkClickListener))
     super.disconnectedCallback()
   }
@@ -853,6 +870,7 @@ export default class MultiLevelNavigation extends Mutation() {
       this.nav.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
       isFlyoutOpen = Array.from(this.root.querySelector('nav > ul').querySelectorAll(':scope > li')).some(el => el.classList.contains('open'))
+      if (this.hasAttribute('close-other-flyout')) this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', { bubbles: true, cancelable: true, composed: true }))
       this.addBackgroundDivPosition(event, isFlyoutOpen)
       this.hideAndClearDesktopSubNavigation(event)
     }

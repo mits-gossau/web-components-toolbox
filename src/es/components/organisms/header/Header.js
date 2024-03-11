@@ -31,6 +31,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  * @attribute {
  *  {boolean} [show]
+ *  {boolean} [is-checkout=false]
  *  {string} mobile-breakpoint
  *  {boolean} [menu-icon=false]
  *  {string} [no-scroll="no-scroll"]
@@ -38,7 +39,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Header extends Shadow() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.setAttribute('role', 'banner')
@@ -50,13 +51,13 @@ export default class Header extends Shadow() {
         // is top
         if (self.scrollY <= this.offsetHeight + 5) {
           this.classList.add('top')
-        // is scrolled down
+          // is scrolled down
         } else {
           this.classList.remove('top')
           // scrolling up and show header
           if ((Math.abs(self.scrollY - lastScroll) > 30 && self.scrollY <= lastScroll)) {
             this.classList.add('show')
-          // scrolling down and hide header
+            // scrolling down and hide header
           } else if (Math.abs(self.scrollY - lastScroll) > 30) {
             // if (this.mNavigation) Array.from(this.mNavigation.root.querySelectorAll('.open')).forEach(node => node.classList.remove('open'))
             this.classList.remove('show')
@@ -102,7 +103,7 @@ export default class Header extends Shadow() {
     this.observer = new MutationObserver(this.mutationCallback)
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -121,9 +122,12 @@ export default class Header extends Shadow() {
     self.addEventListener('resize', this.mutationCallback)
     document.addEventListener('keyup', this.keyupListener)
     this.observer.observe(this.header, { attributes: true })
+
+    this.isCheckout = this.getAttribute('is-checkout') === 'true'
+    if (this.isCheckout)this.root.querySelector('header').setAttribute('is-checkout', this.isCheckout)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     if (this.hasAttribute('sticky')) self.removeEventListener('scroll', this.scrollListener)
     this.removeEventListener('click', this.clickAnimationListener)
     this.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorListener)
@@ -139,7 +143,7 @@ export default class Header extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -148,7 +152,7 @@ export default class Header extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.header
   }
 
@@ -157,7 +161,7 @@ export default class Header extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         grid-area: header;
@@ -207,9 +211,9 @@ export default class Header extends Shadow() {
         padding: var(--padding, 0);
         margin: var(--margin, 0);
         ${this.previousElementSibling && this.previousElementSibling.tagName === 'MSRC-LOGIN'
-          ? 'margin-top: 0;'
-          : ''
-        }
+        ? 'margin-top: 0;'
+        : ''
+      }
         width: var(--width, 100%);
         position: var(--header-position, relative);
         transition: var(--transition, all 0.2s ease);
@@ -304,9 +308,9 @@ export default class Header extends Shadow() {
           flex-wrap: nowrap;
           margin: var(--margin-mobile, var(--margin, 0));
           ${this.previousElementSibling && this.previousElementSibling.tagName === 'MSRC-LOGIN'
-            ? 'margin-top: 0;'
-            : ''
-          }
+        ? 'margin-top: 0;'
+        : ''
+      }
           width: var(--width-mobile, var(--width, 100%));
         }
         :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'}{
@@ -401,7 +405,7 @@ export default class Header extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     switch (this.getAttribute('namespace')) {
       case 'header-default-':
         return this.fetchCSS([{
@@ -421,19 +425,19 @@ export default class Header extends Shadow() {
           path: `${this.importMetaUrl}./nav-right-/nav-right-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }], false)
-        case 'header-nav-grid-':
-          return this.fetchCSS([{
-            path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-            namespace: false,
-            replaces: [{
-              pattern: '--header-default-',
-              flags: 'g',
-              replacement: '--header-nav-grid-'
-            }]
-          }, {
-            path: `${this.importMetaUrl}./nav-grid-/nav-grid-.css`, // apply namespace since it is specific and no fallback
-            namespace: false
-          }], false)
+      case 'header-nav-grid-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--header-default-',
+            flags: 'g',
+            replacement: '--header-nav-grid-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./nav-grid-/nav-grid-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
       default:
         return Promise.resolve()
     }
@@ -444,7 +448,7 @@ export default class Header extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderHTML () {
+  renderHTML() {
     this.header = this.root.querySelector(this.cssSelector + ' > header') || document.createElement('header')
     Array.from(this.root.children).forEach(node => {
       if (node === this.header || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
@@ -469,7 +473,7 @@ export default class Header extends Shadow() {
           name: 'a-menu-icon'
         }
       ]).then(children => {
-          this.MenuIcon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
+        this.MenuIcon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
         this.MenuIcon.addEventListener('click', event => {
           this.header.classList.toggle('open')
           const prop = this.header.classList.contains('open') ? 'add' : 'remove'
@@ -494,15 +498,15 @@ export default class Header extends Shadow() {
       })
       : Promise.resolve()
   }
-  get mNavigation () {
+  get mNavigation() {
     return this.root.querySelector(this.getAttribute('m-navigation') || 'm-navigation')
   }
 
-  get aLogo () {
+  get aLogo() {
     return this.root.querySelector(this.getAttribute('a-logo') || 'a-logo')
   }
 
-  setStickyOffsetHeight () {
+  setStickyOffsetHeight() {
     this.style.textContent = ''
     self.requestAnimationFrame(timeStamp => {
       this.setCss(/* CSS */`
@@ -519,11 +523,11 @@ export default class Header extends Shadow() {
     })
   }
 
-  getMedia () {
+  getMedia() {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 
-  get style () {
+  get style() {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')

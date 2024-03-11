@@ -64,6 +64,12 @@
         width: calc(var(--any-content-width, var(--content-width, 55%)) + 1rem);
     }
 
+    :host>header[is-checkout="true"] {
+        grid-template-areas:
+            'logo login';
+        grid-template-columns: auto 1fr;
+    }
+
     :host>header.open {
         width: calc(var(--any-content-width, var(--content-width, 55%)) + 1rem);
     }
