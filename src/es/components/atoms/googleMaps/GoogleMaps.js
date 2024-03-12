@@ -184,7 +184,7 @@ export default class GoogleMaps extends Shadow() {
       iframe.src = this.iframeUrl
       iframe.name = 'map'
       element = iframe
-			htmlContent += element.outerHTML // Add the iframe to the HTML content
+      htmlContent += element.outerHTML // Add the iframe to the HTML content
     } else {
       const mapDiv = document.createElement('div')
       mapDiv.setAttribute('id', 'map')
@@ -193,11 +193,10 @@ export default class GoogleMaps extends Shadow() {
         this.setMarker(googleMap, map, this.lat, this.lng)
       })
       element = mapDiv
-			htmlContent = element
     }
   
     // Set the final HTML content to the container element
-    this.html = htmlContent
+    this.html = this.iframeUrl ? htmlContent : element
   }
 
   /**
