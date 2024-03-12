@@ -168,21 +168,23 @@ export default class GoogleMaps extends Shadow() {
   }
 
   renderHTML () {
-	let element = null
-  	let htmlContent = '' // Initialize the HTML content as an empty string
-	
-	  if (this.iframeUrl) {
-		  if (this.scrollZoom) {
-  			const overlayDiv = document.createElement('div')
-  			overlayDiv.setAttribute('class', 'mapOverlay')
-  			overlayDiv.setAttribute('onClick', "style.pointerEvents='none'")
-  			htmlContent += overlayDiv.outerHTML // Add the overlayDiv to the HTML content
-		  }
+    let element = null
+
+    let htmlContent = '' // Initialize the HTML content as an empty string
+
+    if (this.iframeUrl) {
+      if (this.scrollZoom) {
+        const overlayDiv = document.createElement('div')
+        overlayDiv.setAttribute('class', 'mapOverlay')
+        overlayDiv.setAttribute('onClick', "style.pointerEvents='none'")
+        htmlContent += overlayDiv.outerHTML // Add the overlayDiv to the HTML content
+      }
+
       const iframe = document.createElement('iframe')
-  	  iframe.src = this.iframeUrl
-  	  iframe.name = 'map'
-  	  element = iframe	
-  	  htmlContent += element.outerHTML 
+      iframe.src = this.iframeUrl
+      iframe.name = 'map'
+      element = iframe
+			htmlContent += element.outerHTML // Add the iframe to the HTML content
     } else {
       const mapDiv = document.createElement('div')
       mapDiv.setAttribute('id', 'map')
@@ -191,10 +193,11 @@ export default class GoogleMaps extends Shadow() {
         this.setMarker(googleMap, map, this.lat, this.lng)
       })
       element = mapDiv
-	    htmlContent = element
+			htmlContent = element
     }
-    	
-	this.html = htmlContent
+  
+    // Set the final HTML content to the container element
+    this.html = htmlContent
   }
 
   /**
