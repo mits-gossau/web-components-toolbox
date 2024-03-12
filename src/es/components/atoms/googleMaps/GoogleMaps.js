@@ -168,11 +168,11 @@ export default class GoogleMaps extends Shadow() {
   }
 
   renderHTML () {
-    let element = null
-	  let htmlContent = '' // Initialize the HTML content as an empty string
+	let element = null
+  	let htmlContent = '' // Initialize the HTML content as an empty string
 	
 	  if (this.iframeUrl) {
-		  if (!!this.scrollZoom) {
+		  if (this.scrollZoom) {
   			const overlayDiv = document.createElement('div')
   			overlayDiv.setAttribute('class', 'mapOverlay')
   			overlayDiv.setAttribute('onClick', "style.pointerEvents='none'")
@@ -194,7 +194,7 @@ export default class GoogleMaps extends Shadow() {
 	    htmlContent = element
     }
     	
-	this.html = htmlContent;
+	this.html = htmlContent
   }
 
   /**
