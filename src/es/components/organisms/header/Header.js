@@ -275,7 +275,7 @@ export default class Header extends Shadow() {
         left: calc((100% - var(--content-width, 55%)) / 2);
         z-index: 1001;
         transform: translate(0, -50%);
-        top: 50%;
+        top: var(--logo-position-top, 50%);
         transition: top 0.2s ease-out;
       }
       @keyframes backgroundAnimation {
@@ -391,6 +391,7 @@ export default class Header extends Shadow() {
           flex-grow: 1;
           left: auto;
           right: var(--content-spacing-mobile, var(--content-spacing));
+          top: var(--logo-position-top-mobile, 50%);
         }
         :host > header::before {
           order: 1;
