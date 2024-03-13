@@ -73,18 +73,16 @@ export default class MultiLevelNavigation extends Mutation() {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') this.setDesktopMainNavItems(event)
           else if (event.currentTarget.getAttribute('href').includes('#')) this.handleAnchorClickOnNavItems(event)
           else if (event.currentTarget.getAttribute('href')) this.handleNewTabNavigationOnNavItems(event)
-        }
-        // If desktop and use-hover-listener attribute NOT exists
-        else if (this.isDesktop && !this.useHoverListener) {
+        } else if (this.isDesktop && !this.useHoverListener) {
+          // If desktop and use-hover-listener attribute NOT exists
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             this.setDesktopMainNavItems(event)
             // Click event logic
             if (event.currentTarget.parentNode.hasAttribute('sub-nav')) this.handleOnClickOnDesktopSubNavItems(event)
           } else if (event.currentTarget.getAttribute('href').includes('#')) this.handleAnchorClickOnNavItems(event)
           else if (event.currentTarget.getAttribute('href')) this.handleNewTabNavigationOnNavItems(event)
-        }
-        // if mobile
-        else {
+        } else {
+          // if mobile
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
             event.preventDefault()
             event.stopPropagation()
@@ -821,10 +819,10 @@ export default class MultiLevelNavigation extends Mutation() {
           let wrapperSection
           wrapper.parentElement.classList.remove('open')
           wrapper.parentElement.classList.remove('active')
-          if (closeIcon = wrapper.querySelector('section a.close-icon')) closeIcon.parentElement.removeChild(closeIcon)
-          if (wrapperSection = wrapper.querySelector('section')) {
+          if ((closeIcon = wrapper.querySelector('section a.close-icon'))) closeIcon.parentElement.removeChild(closeIcon)
+          if ((wrapperSection = wrapper.querySelector('section'))) {
             const subNavigationDivs = Array.from(wrapperSection.querySelectorAll('div[nav-level]'))
-            if (subNavigationDivs.length > 0) subNavigationDivs.forEach(div => div.hidden = false)
+            if (subNavigationDivs.length > 0) subNavigationDivs.forEach(div => (div.hidden = false))
             wrapper.parentElement.appendChild(wrapperSection)
             wrapper.parentElement.removeChild(wrapper)
           }
@@ -922,9 +920,7 @@ export default class MultiLevelNavigation extends Mutation() {
       subUl.style.display = 'block'
       subUl.scrollTo(0, 0)
       if (wrapperDivSecondNextSiblingDiv) wrapperDivSecondNextSiblingDiv.hidden = true
-      if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => ul.style.display = 'none')
-    } else {
-
+      if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => (ul.style.display = 'none'))
     }
   }
 
@@ -952,7 +948,7 @@ export default class MultiLevelNavigation extends Mutation() {
     let wrapperDivSecondNextSiblingDiv = null
     let wrapperDivSecondNextSiblingDivUls = null
     if (wrapperDivNextSiblingDiv.nextSibling) wrapperDivSecondNextSiblingDiv = wrapperDivNextSiblingDiv.nextSibling
-    if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul')).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul'))
+    if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul')).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul')) // eslint-disable-line
 
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
 
@@ -972,8 +968,6 @@ export default class MultiLevelNavigation extends Mutation() {
       wrapperDiv.classList.add('close-left-slide')
       wrapperDivNextSiblingDiv.className = ''
       wrapperDivNextSiblingDiv.classList.add('open-right-slide')
-    } else {
-
     }
   }
 
@@ -996,8 +990,7 @@ export default class MultiLevelNavigation extends Mutation() {
         li.setAttribute('aria-controls', 'nav-level-1')
       })
       Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
-        const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
-        // eslint-disable-line
+        const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
         wrapper.setAttribute('id', `nav-section-${i}`)
         const sectionChildren = Array.from(section.children)
         sectionChildren.forEach((node) => {
@@ -1116,8 +1109,7 @@ export default class MultiLevelNavigation extends Mutation() {
             const expandedElements = Array.from(event.currentTarget.parentNode.parentNode.querySelector('ul').querySelectorAll('[aria-expanded="true"]'))
             if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
             // @ts-ignore
-            // remove element after animation is done => TODO create global animation duration variable
-            setTimeout(() => clonedNode.hidden = true, this.removeElementAfterAnimationDurationMs)
+            setTimeout(() => (clonedNode.hidden = true), this.removeElementAfterAnimationDurationMs)
           })
           clonedNode.prepend(newNavBackATag)
         }
@@ -1157,7 +1149,7 @@ export default class MultiLevelNavigation extends Mutation() {
     // set aria-attributes for nav tag
     setTimeout(() => {
       let menuIconElement = null
-      if (menuIconElement = this.getRootNode().host?.shadowRoot?.querySelector('header > a-menu-icon')) {
+      if ((menuIconElement = this.getRootNode().host?.shadowRoot?.querySelector('header > a-menu-icon'))) {
         menuIconElement.addEventListener('click', (event) => {
           if (event.currentTarget.getAttribute('aria-expanded') === 'true') {
             this.root.querySelector('nav')?.setAttribute('aria-expanded', 'true')

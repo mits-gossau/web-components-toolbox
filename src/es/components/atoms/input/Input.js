@@ -96,7 +96,7 @@ export default class Input extends Shadow() {
       if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
       if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
 
-      if ((this.hasAttribute('submit-search') || this.search && this.searchButton) && !this.readonly && !this.disabled && !this.error) {
+      if ((this.hasAttribute('submit-search') || (this.search && this.searchButton)) && !this.readonly && !this.disabled && !this.error) {
         if (this.hasAttribute('delete-listener')) {
           this.addEventListener('click', this.clickListener)
         } else if (this.searchButton) {
@@ -109,13 +109,13 @@ export default class Input extends Shadow() {
       }
       this.hidden = false
     })
-    if ((this.hasAttribute('submit-search') || this.search && this.searchButton) && !this.readonly && !this.disabled && !this.error) {
+    if ((this.hasAttribute('submit-search') || (this.search && this.searchButton)) && !this.readonly && !this.disabled && !this.error) {
       document.addEventListener('keydown', this.keydownListener)
     }
   }
 
   disconnectedCallback () {
-    if ((this.hasAttribute('submit-search') || this.search && this.searchButton) && !this.readonly && !this.disabled && !this.error) {
+    if ((this.hasAttribute('submit-search') || (this.search && this.searchButton)) && !this.readonly && !this.disabled && !this.error) {
       if (this.hasAttribute('delete-listener')) {
         this.removeEventListener('click', this.clickListener)
       } else if (this.searchButton) {
