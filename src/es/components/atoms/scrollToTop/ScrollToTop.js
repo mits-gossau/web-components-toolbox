@@ -7,40 +7,41 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class ScrollToTop extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-    this.button = this.root.children[0];
-    this.handleScroll = this.handleScroll.bind(this);
+    this.button = this.root.children[0]
+    this.handleScroll = this.handleScroll.bind(this)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
-    this.button.addEventListener('click', this.handleClick);
-    self.addEventListener("scroll", this.handleScroll);
-    this.handleScroll();
+    this.button.addEventListener('click', this.handleClick)
+    self.addEventListener('scroll', this.handleScroll)
+    this.handleScroll()
   }
 
-  disconnectedCallback() {
-    self.removeEventListener("scroll", this.handleScroll);
-    this.button.removeEventListener('click', this.handleClick);
+  disconnectedCallback () {
+    self.removeEventListener('scroll', this.handleScroll)
+    this.button.removeEventListener('click', this.handleClick)
   }
+
   /**
    * Handles scroll event
    */
-  handleScroll() {
+  handleScroll () {
     if (document.body.scrollTop > 10 || document.documentElement.scrollTop >= 10) {
-      this.button.style.display = 'block';
-      this.button.style.opacity = 1;
+      this.button.style.display = 'block'
+      this.button.style.opacity = 1
     } else {
-      this.button.style.display = 'none';
+      this.button.style.display = 'none'
     }
   }
 
   /**
    * Handles click event
    */
-  handleClick() {
-    self.scrollTo({ top: 0, behavior: 'smooth' });
+  handleClick () {
+    self.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   /**
@@ -48,33 +49,32 @@ export default class ScrollToTop extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
    * Renders the css
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
         :host {
             z-index: var(--scroll-to-top-host-z-index, 1000); 
         }
-        `;
-    return this.fetchTemplate();
+        `
+    return this.fetchTemplate()
   }
 
   /**
    * Fetches the template
    */
-  fetchTemplate() {
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'scroll-to-top-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        },]);
+        }])
     }
   }
-
 }
