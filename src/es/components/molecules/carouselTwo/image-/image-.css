@@ -1,0 +1,45 @@
+:host {
+  --carousel-two-image-close-btn-background-color: var(--color-secondary);
+  --carousel-two-image-close-btn-bottom: var(--content-spacing);
+  --carousel-two-image-close-btn-right: var(--content-spacing);
+  --carousel-two-image-nav-background-color-active: var(--carousel-two-image-nav-background-color-active-custom, var(--color-hover));
+  --carousel-two-image-nav-background-color-hover: var(--carousel-two-image-nav-background-color-hover-custom, var(--color-hover));
+  --carousel-two-image-nav-background-color: var(--carousel-two-image-nav-background-color-custom, var(--color-secondary));
+  --carousel-two-image-nav-gap-mobile: var(--content-spacing-mobile);
+  --carousel-two-image-nav-gap: var(--content-spacing);
+  --carousel-two-image-nav-margin-mobile: var(--carousel-two-image-nav-margin-mobile-custom, var(--content-spacing-mobile));
+  --carousel-two-image-nav-margin: var(--carousel-two-image-nav-margin-custom, var(--content-spacing));
+  --carousel-two-image-section-gap: 1em;
+  --carousel-two-image-section-nav-separate-margin-mobile: var(--content-spacing-mobile);
+  --carousel-two-image-section-nav-separate-margin: var(--content-spacing);
+  --carousel-two-image-nav-margin-mobile: 0;
+  --carousel-two-image-nav-margin: 0;
+  --carousel-two-image-p-font-family: var(--mdx-sys-font-flex-large-custom1);
+  --carousel-two-image-p-margin: 0 0 var(--mdx-sys-spacing-fix-s);
+  --carousel-two-image-section-child-a-picture-margin: 0 0 var(--mdx-sys-spacing-fix-s);
+  --carousel-two-image-span-height: var(--mdx-sys-sizing-fix-2xs);
+  --carousel-two-image-span-width: var(--mdx-sys-sizing-fix-3xl);
+  --carousel-two-image-span-color: var(--mdx-sys-color-accent-1-default);
+  --carousel-two-image-span-margin: var(--mdx-sys-spacing-fix-2xs);
+  --carousel-two-image-index-margin: var(--mdx-sys-spacing-fix-2xs) 0 0 0;
+}
+
+:host > section > ks-m-figure {
+  width: 100%;
+  justify-content: start;
+  --picture-cover-display: block;
+}
+
+:host > section + div {
+  margin-top: var(--mdx-sys-spacing-fix-s) !important;
+}
+
+@media only screen and (max-width: _max-width_) {
+  :host([namespace='carousel-two-image-']) > section {
+    margin: var(--any-content-spacing-mobile) -1rem;
+    width: 100vw !important;
+  }
+  :host {
+    --button-padding-mobile-custom: var(--mdx-comp-button-primary-small-padding-vertical-default);
+  }
+}

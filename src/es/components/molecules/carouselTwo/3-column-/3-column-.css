@@ -1,0 +1,59 @@
+:host {
+  --carousel-two-3-column-close-btn-background-color: var(--color-secondary);
+  --carousel-two-3-column-close-btn-bottom: var(--content-spacing);
+  --carousel-two-3-column-close-btn-right: var(--content-spacing);
+  --carousel-two-3-column-nav-background-color-active: var(--carousel-two-3-column-nav-background-color-active-custom, var(--color-hover));
+  --carousel-two-3-column-nav-background-color-hover: var(--carousel-two-3-column-nav-background-color-hover-custom, var(--color-hover));
+  --carousel-two-3-column-nav-background-color: var(--carousel-two-3-column-nav-background-color-custom, var(--color-secondary));
+  --carousel-two-3-column-nav-gap-mobile: var(--content-spacing-mobile);
+  --carousel-two-3-column-nav-gap: var(--content-spacing);
+  --carousel-two-3-column-nav-margin-mobile: var(--carousel-two-3-column-nav-margin-mobile-custom, var(--content-spacing-mobile));
+  --carousel-two-3-column-nav-margin: var(--carousel-two-3-column-nav-margin-custom, var(--content-spacing));
+  --carousel-two-3-column-section-gap: var(--mdx-sys-spacing-flex-large-xs , var(--content-spacing));
+  --carousel-two-3-column-section-nav-separate-margin-mobile: var(--content-spacing-mobile);
+  --carousel-two-3-column-section-nav-separate-margin: var(--content-spacing);
+  --carousel-two-3-column-p-margin: 0;
+  --carousel-two-3-column-section-child-a-picture-margin: 0;
+  --carousel-two-3-column-nav-margin-mobile: 0;
+  --carousel-two-3-column-nav-margin: 0;
+
+  --button-primary-background-color: var(--color-tertiary);
+}
+:host {
+  --carousel-two-3-column-section-child-min-width: calc((100%) / 3 - var(--carousel-two-3-column-section-gap) - var(--content-spacing) / 2);
+  --carousel-two-3-column-section-child-max-width: calc((100%) / 3 - var(--carousel-two-3-column-section-gap) - var(--content-spacing) / 2);
+  --carousel-two-3-column-section-child-opacity-not-active: 1;
+}
+:host > section {
+  width: 100vw;
+  margin-left:  calc(-1 * var(--content-spacing));
+}
+:host > section > *:first-child {
+  padding-left: var(--content-spacing);
+  box-sizing: content-box;
+}
+:host > section > *:last-child {
+  padding-right: var(--content-spacing);
+  box-sizing: content-box;
+}
+:host > section + div {
+  margin-right: var(--content-spacing);
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --carousel-two-3-column-section-child-min-width: 85%;
+    --carousel-two-3-column-section-child-max-width: 85%;
+  }
+  :host > section + div {
+    display: none;
+  }
+
+  :host > section {
+    margin-left:  0;
+    width: calc(100vw - var(--content-spacing-mobile));
+  }
+
+  :host > section > *:first-child {
+    border-left: 0;
+  }
+}
