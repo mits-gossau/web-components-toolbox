@@ -244,8 +244,9 @@ export default class Navigation extends Mutation() {
         padding: var(--padding-${this.getAttribute('no-scroll') || 'no-scroll'}, calc(var(--content-spacing, 40px) / 2) 0);
       }
       :host > nav > ul > li{
-        display: block;
+        display: var(--li-display, block);
         padding: var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4));
+        max-width: var(--li-max-width, unset)
       }
       :host > nav > ul li > a-arrow {
         display: none;
