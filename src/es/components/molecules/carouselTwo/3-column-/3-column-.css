@@ -33,6 +33,7 @@
 }
 :host > section {
   width: 100%;
+  scroll-padding-left: calc((100% - var(--carousel-two-3-column-width)) / 2);
 }
 
 :host > section > *:first-child {
@@ -60,6 +61,7 @@
   :host > section {
     margin-left:  0;
     width: 100%;
+    scroll-padding-left: var(--content-spacing-mobile);
   }
 
   :host > section > *:first-child {
