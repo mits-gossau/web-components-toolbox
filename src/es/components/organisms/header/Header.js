@@ -39,7 +39,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Header extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.setAttribute('role', 'banner')
@@ -103,7 +103,7 @@ export default class Header extends Shadow() {
     this.observer = new MutationObserver(this.mutationCallback)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -124,10 +124,10 @@ export default class Header extends Shadow() {
     this.observer.observe(this.header, { attributes: true })
 
     this.isCheckout = this.getAttribute('is-checkout') === 'true'
-    if (this.isCheckout)this.root.querySelector('header').setAttribute('is-checkout', this.isCheckout)
+    if (this.isCheckout) this.root.querySelector('header').setAttribute('is-checkout', this.isCheckout)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     if (this.hasAttribute('sticky')) self.removeEventListener('scroll', this.scrollListener)
     this.removeEventListener('click', this.clickAnimationListener)
     this.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorListener)
@@ -143,7 +143,7 @@ export default class Header extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -152,7 +152,7 @@ export default class Header extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.header
   }
 
@@ -161,7 +161,7 @@ export default class Header extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         grid-area: header;
@@ -405,7 +405,7 @@ export default class Header extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate() {
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'header-default-':
         return this.fetchCSS([{
@@ -448,7 +448,7 @@ export default class Header extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderHTML() {
+  renderHTML () {
     this.header = this.root.querySelector(this.cssSelector + ' > header') || document.createElement('header')
     Array.from(this.root.children).forEach(node => {
       if (node === this.header || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
@@ -498,15 +498,16 @@ export default class Header extends Shadow() {
       })
       : Promise.resolve()
   }
-  get mNavigation() {
+
+  get mNavigation () {
     return this.root.querySelector(this.getAttribute('m-navigation') || 'm-navigation')
   }
 
-  get aLogo() {
+  get aLogo () {
     return this.root.querySelector(this.getAttribute('a-logo') || 'a-logo')
   }
 
-  setStickyOffsetHeight() {
+  setStickyOffsetHeight () {
     this.style.textContent = ''
     self.requestAnimationFrame(timeStamp => {
       this.setCss(/* CSS */`
@@ -523,11 +524,11 @@ export default class Header extends Shadow() {
     })
   }
 
-  getMedia() {
+  getMedia () {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 
-  get style() {
+  get style () {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')

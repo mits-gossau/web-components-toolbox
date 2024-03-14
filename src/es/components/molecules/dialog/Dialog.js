@@ -9,7 +9,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class Dialog extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     /**
@@ -60,7 +60,7 @@ export default class Dialog extends Shadow() {
     this.closeEventListener = () => this.close()
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -80,7 +80,7 @@ export default class Dialog extends Shadow() {
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     // From web components the event does not bubble up to this host
     this.showNodes.forEach(node => node.removeEventListener('click', this.showClickEventListener))
     this.closeNodes.forEach(node => node.removeEventListener('click', this.closeClickEventListener))
@@ -94,7 +94,7 @@ export default class Dialog extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -103,14 +103,14 @@ export default class Dialog extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.dialog
   }
 
   /**
    * renders the css
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host > dialog {
         background-color: var(--background-color, canvas);x
@@ -122,7 +122,7 @@ export default class Dialog extends Shadow() {
   /**
    * fetches the template
    */
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -164,7 +164,7 @@ export default class Dialog extends Shadow() {
    * Render HTML
    * @returns Promise<void>
    */
-  renderHTML() {
+  renderHTML () {
     this.dialog = this.root.querySelector(this.cssSelector + ' > dialog') || document.createElement('dialog')
     if (this.hasAttribute('autofocus')) this.dialog.setAttribute('autofocus', '')
     Array.from(this.root.children).forEach(node => {
@@ -177,11 +177,11 @@ export default class Dialog extends Shadow() {
     return Promise.resolve()
   }
 
-  get showNodes() {
+  get showNodes () {
     return Array.from(this.root.querySelectorAll('[id^=show],[id=open]'))
   }
 
-  get closeNodes() {
+  get closeNodes () {
     return Array.from(this.root.querySelectorAll('[id^=close]'))
   }
 }
