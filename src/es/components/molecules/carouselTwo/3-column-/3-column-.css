@@ -18,11 +18,13 @@
   --carousel-two-3-column-section-nav-separate-margin: var(--content-spacing);
   --carousel-two-3-column-p-margin: 0;
   --carousel-two-3-column-section-child-a-picture-margin: 0;
-  --carousel-two-3-column-nav-margin-mobile: 0;
   --carousel-two-3-column-nav-margin: 0;
+  --carousel-two-3-column-nav-wrapper-margin: var(--mdx-sys-spacing-flex-large-s, var(--content-spacing)) auto;
+  --carousel-two-3-column-nav-margin-mobile: 0;
   --carousel-two-3-column-width: var(--carousel-two-3-column-width-custom, 80%);
 
   --button-primary-background-color: var(--color-tertiary);
+  --teaser-story-figcaption-background-color: var(--color-tertiary);
 
   width: 100% !important;
 }
@@ -47,7 +49,7 @@
 
 :host > section + div {
   width: var(--carousel-two-3-column-width);
-  margin: auto;
+  margin: var(--carousel-two-3-column-nav-wrapper-margin);
 }
 @media only screen and (max-width: _max-width_) {
   :host {

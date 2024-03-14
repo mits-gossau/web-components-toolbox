@@ -14,14 +14,11 @@
   --carousel-two-image-section-nav-separate-margin: var(--content-spacing);
   --carousel-two-image-nav-margin-mobile: 0;
   --carousel-two-image-nav-margin: 0;
-  --carousel-two-image-p-font-family: var(--mdx-sys-font-flex-large-custom1);
-  --carousel-two-image-p-margin: 0 0 var(--mdx-sys-spacing-fix-s);
-  --carousel-two-image-section-child-a-picture-margin: 0 0 var(--mdx-sys-spacing-fix-s);
-  --carousel-two-image-span-height: var(--mdx-sys-sizing-fix-2xs);
-  --carousel-two-image-span-width: var(--mdx-sys-sizing-fix-3xl);
-  --carousel-two-image-span-color: var(--mdx-sys-color-accent-1-default);
-  --carousel-two-image-span-margin: var(--mdx-sys-spacing-fix-2xs);
-  --carousel-two-image-index-margin: var(--mdx-sys-spacing-fix-2xs) 0 0 0;
+  --carousel-two-image-p-font-family: var(--mdx-sys-font-flex-large-custom1, var(--font-family));
+  --carousel-two-image-p-margin: 0 0 var(--mdx-sys-spacing-fix-s, var(--content-spacing));
+  --carousel-two-image-section-child-a-picture-margin: 0 0 var(--mdx-sys-spacing-fix-s, auto);
+  --carousel-two-image-index-margin: var(--mdx-sys-spacing-fix-2xs, 0) 0 0 0;
+  --carousel-two-image-p-margin-mobile: var(--content-spacing) var(--content-spacing-mobile);
 }
 
 :host > section > ks-m-figure {
@@ -36,7 +33,7 @@
 
 @media only screen and (max-width: _max-width_) {
   :host([namespace='carousel-two-image-']) > section {
-    margin: var(--any-content-spacing-mobile) -1rem;
+    margin: var(--any-content-spacing-mobile, var(--content-spacing-mobile)) -1rem;
     width: 100vw !important;
   }
   :host {
