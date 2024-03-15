@@ -66,15 +66,6 @@
 :host form > section > div:last-of-type {
     padding-bottom: 0;
 }
-:host form > section:not(:has(~section:not([hidden]))) [trash] {
-    display: none;
-}
-:host form > section:not([hidden]) ~section [trash] {
-    display: inherit;
-}
-:host form > section:has(~section:not([hidden])) [add] {
-    display: none;
-}
 :host > form o-grid > section > div {
     justify-content: var(--simple-form-default-o-grid-div-justify-content-custom, space-between);
     gap: var(--simple-form-default-o-grid-div-gap-custom, 1em);

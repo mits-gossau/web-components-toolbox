@@ -36,7 +36,7 @@ export default class IconMdx extends Hover() {
 
   connectedCallback () {
     super.connectedCallback()
-    if(this.getAttribute('custom-notification')) {
+    if (this.getAttribute('custom-notification')) {
       // @ts-ignore
       this.customNotification = IconMdx.parseAttribute(this.getAttribute('custom-notification'))
     }
@@ -157,7 +157,7 @@ export default class IconMdx extends Hover() {
     this.html = ''
     this.html = '<svg></svg>' // placeholder for keeping the size
     const iconPath = this.getAttribute('icon-url')
-      ? `${this.getAttribute('icon-url').substring(0,1) === '.'
+      ? `${this.getAttribute('icon-url').substring(0, 1) === '.'
         ? this.importMetaUrl + this.getAttribute('icon-url')
         : this.getAttribute('icon-url')}`
       : `${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${(this.lastFetchedIconName = this.iconName)}/Size_${this.getAttribute('icon-size') || '56x56'}.svg`
