@@ -26,6 +26,7 @@
 }
 
 :host>header>ks-m-login {
+    --sort-default-a-color: var(--color);
     grid-area: login;
     width: 100%;
 }
