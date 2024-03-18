@@ -1,0 +1,19 @@
+:host {
+    --language-switcher-delica-grid-area: var(--language-switcher-delica-grid-area-custom, "login");
+    --language-switcher-delica-content-spacing: var(--content-spacing);
+    --language-switcher-delica-content-spacing-mobile: var(--content-spacing-mobile);
+    --language-switcher-delica-ul-list-style: var(--language-switcher-delica-ul-list-style-custom, none);
+    --language-switcher-delica-ul-display: var(--language-switcher-delica-ul-display-custom, flex);
+    --language-switcher-delica-ul-justify-content: var(--language-switcher-delica-ul-justify-content-custom, flex-end);
+    --language-switcher-delica-ul-flex-direction: var(--language-switcher-delica-ul-flex-direction-custom, row);
+    --language-switcher-delica-ul-text-align: var(--language-switcher-delica-ul-text-align-custom, right);
+    --language-switcher-delica-ul-margin: var(--language-switcher-delica-ul-margin-custom, 0);
+    --language-switcher-delica-a-text-decoration: var(--language-switcher-delica-a-text-decoration-custom, none);
+    --language-switcher-delica-content-width: var(--language-switcher-delica-content-width-custom, 84%);    
+}
+
+@media only screen and (max-width: _max-width_) {
+    :host {
+        display: none; /* hide language-switcher when hamburger pops up. under 1201px */
+    }
+}
