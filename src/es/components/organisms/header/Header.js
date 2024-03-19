@@ -434,6 +434,19 @@ export default class Header extends Shadow() {
             path: `${this.importMetaUrl}./nav-grid-/nav-grid-.css`, // apply namespace since it is specific and no fallback
             namespace: false
           }], false)
+          case 'header-nav-grid-delica-':
+            return this.fetchCSS([{
+              path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--header-default-',
+                flags: 'g',
+                replacement: '--header-nav-grid-delica-'
+              }]
+            }, {
+              path: `${this.importMetaUrl}./nav-grid-delica-/nav-grid-delica-.css`, // apply namespace since it is specific and no fallback
+              namespace: false
+            }], false)
       default:
         return Promise.resolve()
     }
