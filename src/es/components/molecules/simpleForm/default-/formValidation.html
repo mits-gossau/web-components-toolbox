@@ -1,0 +1,56 @@
+<m-simple-form load-form-styles namespace="simple-form-default-">
+  <form action="/some-action" enctype="multipart/form-data" method="post">
+    <input m-v-rules="" type="hidden" name="xp_sendBackParams" value="0" />
+    <div class="inline">
+      <label for="anrede1">Herr</label>
+      <input id="anrede1" name="Anrede" type="radio" value="2" checked />
+      <label for="anrede2">Frau</label>
+      <input id="anrede2" name="Anrede" type="radio" value="1" />
+      <label for="anrede3">Other</label>
+      <input id="anrede3" name="Anrede" type="radio" value="3" />
+    </div>
+    <div>
+      <label for="Name">Name</label>
+      <input id="Name" m-v-rules="[{name: required, error-message: Bitte diese Feld ausfüllen}, {name: max-length, value: 5, error-message: Bitte diese Feld ausfüllen}]" type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off" />
+  </div>
+    <div>
+      <label for="Firstname">Vorname</label>
+      <input id="Firstname" m-v-rules="" type="text" value="" name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="Email">E-Mail</label>
+      <input id="Email" m-v-rules="" type="email" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="pets">Choose a pet:</label>
+      <select name="pets" id="pets">
+        <option value="">--Please choose an option--</option>
+        <option value="dog">Dog</option>
+        <option value="cat">Cat</option>
+        <option value="hamster">Hamster</option>
+        <option value="parrot">Parrot</option>
+        <option value="spider">Spider</option>
+        <option value="goldfish">Goldfish</option>
+      </select>
+    </div>
+    <div class="center">
+      <div>
+        <div>
+          <div>
+            <a-icon-paperclip></a-icon-paperclip>
+            <span class="type-file-label">&nbsp;Datei auswählen</span>
+          </div>
+          <input name="File" multiple type="file" remove-file-title="Datei entfernen" />
+        </div>
+      </div>
+    </div>
+    <div class="inline">
+      <label for="Policy">Ich bestätige, dass ich die <a href="https://www.migros.ch/de/datenschutz.html" target="_blank">Datenschutzerklärung</a> und die darin umschriebene Bearbeitung meiner Personendaten zur Kenntnis genommen haben.</label>
+      <input id="Policy" name="Policy" type="checkbox" />
+    </div>
+    <input type="submit" value="Registrieren" />
+  </form>
+</m-simple-form>
+
+<script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=SimpleForm.js"></script>

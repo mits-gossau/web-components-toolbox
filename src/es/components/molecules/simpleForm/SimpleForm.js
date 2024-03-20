@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Validation } from '../../prototypes/Validation.js'
 
 /* global FileReader */
 /* global self */
@@ -22,7 +22,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *
  * }
  */
-export default class SimpleForm extends Shadow() {
+export default class SimpleForm extends Validation() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
