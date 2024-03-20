@@ -1,6 +1,7 @@
 <m-simple-form load-form-styles namespace="simple-form-default-">
   <form action="/some-action" enctype="multipart/form-data" method="post">
-    <input m-v-rules="" type="hidden" name="xp_sendBackParams" value="0" />
+    <input data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"}}' type="hidden"
+      name="xp_sendBackParams" value="0" />
     <div class="inline">
       <label for="anrede1">Herr</label>
       <input id="anrede1" name="Anrede" type="radio" value="2" checked />
@@ -11,15 +12,19 @@
     </div>
     <div>
       <label for="Name">Name</label>
-      <input id="Name" m-v-rules="[{name: required, error-message: Bitte diese Feld ausfüllen}, {name: max-length, value: 5, error-message: Bitte diese Feld ausfüllen}]" type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off" />
-  </div>
+      <input id="Name" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "max-length": {"value": "5", "error-message": "Bitte diese Feld ausfüllen"}
+     }' type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off" />
+    </div>
     <div>
       <label for="Firstname">Vorname</label>
-      <input id="Firstname" m-v-rules="" type="text" value="" name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" />
+      <input id="Firstname" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"}}'
+        type="text" value="" name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="Email">E-Mail</label>
-      <input id="Email" m-v-rules="" type="email" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"}}'
+        type="email" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="pets">Choose a pet:</label>
@@ -45,7 +50,9 @@
       </div>
     </div>
     <div class="inline">
-      <label for="Policy">Ich bestätige, dass ich die <a href="https://www.migros.ch/de/datenschutz.html" target="_blank">Datenschutzerklärung</a> und die darin umschriebene Bearbeitung meiner Personendaten zur Kenntnis genommen haben.</label>
+      <label for="Policy">Ich bestätige, dass ich die <a href="https://www.migros.ch/de/datenschutz.html"
+          target="_blank">Datenschutzerklärung</a> und die darin umschriebene Bearbeitung meiner Personendaten zur
+        Kenntnis genommen haben.</label>
       <input id="Policy" name="Policy" type="checkbox" />
     </div>
     <input type="submit" value="Registrieren" />
