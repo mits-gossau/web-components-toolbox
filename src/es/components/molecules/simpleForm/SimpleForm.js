@@ -93,6 +93,7 @@ export default class SimpleForm extends Validation() {
       this.hidden = false
     })
     this.addEventListener(this.getAttribute('submit-disabled') || 'submit-disabled', this.submitDisabledEventListener)
+    super.connectedCallback()
   }
 
   disconnectedCallback () {
@@ -100,6 +101,7 @@ export default class SimpleForm extends Validation() {
     this.form.removeEventListener('change', this.changeListener)
     this.form.removeEventListener('submit', this.submitEventListener)
     this.removeEventListener(this.getAttribute('submit-disabled') || 'submit-disabled', this.submitDisabledEventListener)
+    super.disconnectedCallback()
   }
 
   /**
