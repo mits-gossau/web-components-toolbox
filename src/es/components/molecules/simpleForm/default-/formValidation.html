@@ -11,20 +11,63 @@
       <input id="anrede3" name="Anrede" type="radio" value="3" />
     </div>
     <div>
-      <label for="Name">Name</label>
+      <label for="Name">Simply required => required</label>
+      <input id="Name" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"}}' 
+      type="text" value="" name="SimplyRequired" placeholder="Name hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="Name">Name => required + max-length:10</label>
       <input id="Name" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
-      "max-length": {"value": "5", "error-message": "Bitte diese Feld ausfüllen"}
+      "max-length": {"value": "10", "error-message": "Bitte maximum 10 Character eingeben"}
      }' type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off" />
     </div>
     <div>
-      <label for="Firstname">Vorname</label>
-      <input id="Firstname" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"}}'
+      <label for="Firstname">Vorname => required + min-length:3</label>
+      <input id="Firstname" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben"}}'
         type="text" value="" name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" />
     </div>
     <div>
-      <label for="Email">E-Mail</label>
-      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"}}'
+      <label for="Email">E-Mail => required + email</label>
+      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "email": {"error-message": "Bitte richtige e-mail eingeben."}}'
         type="email" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="Email">Age => required + min-value:18</label>
+      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "min-value": {"value": "18", "error-message": "Bitte richtige e-mail eingeben."}}'
+        type="number" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="Email">Age => required + max-value:80</label>
+      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "max-value": {"value": "80", "error-message": "Bitte richtige e-mail eingeben."}}'
+        type="number" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="Email">Age => required + min-max-value:80</label>
+      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "min-max-value": {"value": "18-80", "error-message": "Bitte richtige e-mail eingeben."}}'
+        type="number" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="Email">Bank Account => format-helper-value:??</label>
+      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "min-max-value": {"value": "18-80", "error-message": "Bitte richtige e-mail eingeben."}}'
+        type="text" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="Email">Telephone => format-helper-value:??</label>
+      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "min-max-value": {"value": "18-80", "error-message": "Bitte richtige e-mail eingeben."}}'
+        type="text" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="Email">Birthday => format-helper-value:??</label>
+      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "min-max-value": {"value": "18-80", "error-message": "Bitte richtige e-mail eingeben."}}'
+        type="text" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="pets">Choose a pet:</label>

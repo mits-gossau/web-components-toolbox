@@ -15,26 +15,22 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     // TODO what if we had more forms? how to solve?
 
     this.validationChangeEventListener = (event) => {
-      console.log("event", event)
-      // implement the validator here
+      const inputField = event.currentTarget
+      const inputFieldName = event.currentTarget.getAttribute('name')
+      this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
     }
 
     this.submitButton = this.form.querySelector('input[type="submit"]')
     this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
-    // TODO create new Validation class here
-    this. proxyHandler = {
-      set: function whenChange(obj, prop, value) {
-        obj[prop] = value
-        return true
-      }
-    }
-    this.validationValues = new Proxy({}, this.proxyHandler);
+    this.validationValues = {}
     if (this.allValidationNodes.length > 0) {
       this.allValidationNodes.forEach(node => {
         // TODO if type radio we need other logic
-        const errorText = document.createElement('div')
-        errorText.classList.add('custom-error-text')
-        node.after(errorText)
+        const errorTextWrapper = document.createElement('div')
+        const errorText = document.createElement('p')
+        errorTextWrapper.appendChild(errorText)
+        errorTextWrapper.classList.add('custom-error-text')
+        node.after(errorTextWrapper)
         node.addEventListener('change', this.validationChangeEventListener)
         // IMPORTANT name attribute has to be unique and always available
         if (node.hasAttribute('name')) {
@@ -61,7 +57,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    */
   connectedCallback() {
     super.connectedCallback()
-    this.validate('Email')
+    // this.validate('Name')
   }
 
   /**
@@ -79,24 +75,57 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       const currentValidatedInput = this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName)
       this.validator(this.validationValues[inputFieldName], currentValidatedInput, inputFieldName)
     } else {
-      console.log(this.validationValues)
       // implement if all needs to be validated
     }
   }
 
   validator(validationRules, currentInput, inputFieldName) {
     const validationNames = Object.keys(validationRules)
+    // @ts-ignore
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
-        if(currentInput.value.trim()){
+        if (currentInput.value && currentInput.value.trim().length > 0) {
+          console.log("no value", currentInput.value)
+          this.setValidity(inputFieldName, validationName, true)
+        } else {
           this.setValidity(inputFieldName, validationName, false)
-
-        }else{
-          this.setValidity(inputFieldName, validationName, false)
+          return
+          
         }
       }
       if (validationName === 'max-length') {
-
+        if (currentInput.value.trim().length < validationRules['max-length'].value) {
+          console.log("hi")
+          this.setValidity(inputFieldName, validationName, true)
+        } else {
+          this.setValidity(inputFieldName, validationName, false)
+          
+        }
+      }
+      if (validationName === 'min-length') {
+        if (currentInput.value.trim().length !== 0 && currentInput.value.trim().length < validationRules['min-length'].value) {
+          console.log("hi1")
+          this.setValidity(inputFieldName, validationName, false)
+          
+        } else {
+          this.setValidity(inputFieldName, validationName, true)
+        }
+      }
+      if (validationName === 'max-number-value') {
+        if (+currentInput.value > +validationRules['max-length'].value) {
+          this.setValidity(inputFieldName, validationName, true)
+        } else {
+          this.setValidity(inputFieldName, validationName, false)
+          
+        }
+      }
+      if (validationName === 'min-number-value') {
+        if (+currentInput.value < +validationRules['max-length'].value) {
+          this.setValidity(inputFieldName, validationName, true)
+        } else {
+          this.setValidity(inputFieldName, validationName, false)
+          
+        }
       } else {
         return
       }
@@ -105,5 +134,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
   setValidity(inputFieldName, validationName, isValid) {
     this.validationValues[inputFieldName][validationName].isValid = isValid
+    const currentValidatedInput = this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName)
+    const currentValidatedInputErrorTextPlaceholder = currentValidatedInput.parentElement.querySelector('div.custom-error-text')
+    if (isValid === false) {
+      currentValidatedInputErrorTextPlaceholder.querySelector('p').textContent = this.validationValues[inputFieldName][validationName]['error-message']
+    }
+    // if (isValid === true) {
+    //   currentValidatedInputErrorTextPlaceholder.querySelector('p').textContent = ''
+    // }
   }
 }
