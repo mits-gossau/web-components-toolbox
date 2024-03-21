@@ -11,13 +11,14 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Favorite extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-
+    this.isInitial = true
     this.isActive = false
 
     this.answerEventNameListener = event => {
       event.detail.fetch.then(data => {
         if (data && data?.requestSuccess) {
           this.isActive = data.response
+          this.isInitial = false
           this.setCss(/* CSS */`
             a-tooltip::part(tooltip) {
               fill: ${this.isActive ? 'var(--svg-fill-active)' : 'var(--svg-fill-default)'};
@@ -28,10 +29,14 @@ export default class Favorite extends Shadow() {
     }
 
     this.clickListener = () => {
+      const currentState = this.isInitial ? this.getAttribute('favorite-state') : this.isActive
+      const action = currentState ? 'remove' : 'add'
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-favorite-event-name') || 'request-favorite-event-name',
         {
           detail: {
-            id: this.id
+            id: this.id,
+            tags: [this.id],
+            action: action
           },
           bubbles: true,
           cancelable: true,
