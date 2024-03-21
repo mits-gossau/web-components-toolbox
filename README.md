@@ -30,6 +30,7 @@ JS Rules:
 - run the linter from time to time.
 - use as much jsdocs annotations as possible.
 - for nice appearance use this.hidden boolean. See more at Shadow.js.
+- added event listeners must be timely removed. This means calling addEventListener should not be async especially if the event target is outside of the web component.
 
 CSS Rules:
 - no inline style tags / styles with css properties outside of a web component or a template which is loaded by a web component (allowed are only inline style tags with css variable settings)

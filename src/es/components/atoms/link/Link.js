@@ -96,6 +96,7 @@ export default class Link extends Hover() {
         : ''}
       :host {
         cursor: pointer;
+        --color-hover: var(--border-color-active);
       }
       :host > a, :host > ${this.hitAreaTagName} {
         box-sizing: border-box;

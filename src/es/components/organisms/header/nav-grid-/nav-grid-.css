@@ -1,0 +1,120 @@
+:host {
+    --header-nav-grid-background-color: white;
+    --header-nav-grid-a-menu-icon-background-color-custom: var(--color);
+    --header-nav-grid-margin: 2rem 1.5rem;
+    --header-nav-grid-justify-content: none;
+    --logo-default-justify-content: start;
+    background-color: white;
+}
+
+:host>header {
+    width: var(--any-content-width, var(--content-width, 55%));
+    display: grid;
+    grid-template-areas:
+        'logo login'
+        'logo navigation';
+    grid-template-columns: auto 1fr;
+}
+
+:host>header>a-logo {
+    --logo-default-justify-content: start;
+    grid-area: logo;
+    position: relative;
+    transform: none;
+    left: 0;
+    top: 0;
+}
+
+:host>header>ks-m-login {
+    --sort-default-a-color: var(--color);
+    grid-area: login;
+    width: 100%;
+}
+
+:host>header>m-multi-level-navigation {
+    grid-area: navigation;
+    max-width: none;
+    margin-right: calc(0px - var(--multi-level-navigation-default-a-main-content-spacing))
+}
+
+@media only screen and (max-width:1025px) {
+    :host>header>a-menu-icon {
+        grid-area: menu-icon;
+        order: 0;
+        --header-nav-grid-a-menu-icon-padding: 1.5rem 0 1.5rem 1rem;
+    }
+    :host > header > m-multi-level-navigation {
+        animation: closeRight .4s ease-in;
+        left: auto;
+        right: -100vw;
+    }
+    :host > header.open > m-multi-level-navigation {
+        animation: openRight .3s ease-out;
+        left: auto;
+        right: 0;
+    }
+}
+
+@media only screen and (max-width: _max-width_) {
+    :host>header {
+        grid-template-areas:
+            'logo login menu-icon';
+        grid-template-columns: auto 1fr auto;
+        margin: 1rem;
+        height: 4.5rem;
+        width: calc(var(--any-content-width, var(--content-width, 55%)) + 1rem);
+    }
+
+    :host>header[is-checkout="true"] {
+        grid-template-areas:
+            'logo login';
+        grid-template-columns: auto 1fr;
+    }
+
+    :host>header.open {
+        width: calc(var(--any-content-width, var(--content-width, 55%)) + 1rem);
+    }
+
+    :host>header>a-logo {
+        --logo-default-height-mobile: 4rem;
+        --logo-default-width-mobile: 4rem;
+        margin: auto 0;
+    }
+
+    :host>header>a-menu-icon {
+        grid-area: menu-icon;
+        order: 0;
+        --header-nav-grid-a-menu-icon-padding: 1.5rem 0 1.5rem 1rem;
+        --header-nav-grid-a-menu-icon-padding-open: 1.5rem 0 1.5rem 1rem;
+    }
+
+    :host>header.open>m-multi-level-navigation {
+        --m-multi-level-navigation-height-open-mobile: calc(100svh - 4.5rem);
+        grid-area: none;
+        top:0;
+        left: -1rem;
+        right: 0;
+        width: unset;
+    }
+    :host > header > m-multi-level-navigation {
+        animation: closeRight .4s ease-in;
+        left: auto;
+        right: -100vw;
+    }
+    :host > header.open > m-multi-level-navigation {
+        animation: openRight .3s ease-out;
+        left: auto;
+        right: 0;
+    }
+}
+
+@keyframes openRight {
+    0% {right: -100vw}
+    100% {right: 0}
+}
+@keyframes closeRight {
+    0% {right: 0}
+    100% {right: -100vw}
+}
+
+

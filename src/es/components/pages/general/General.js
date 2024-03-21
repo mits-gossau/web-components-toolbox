@@ -74,6 +74,8 @@ export default class General extends Shadow() {
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
         word-break: var(--word-break, normal);
+        /*on Safari still not supported but all other browser does*/
+        scrollbar-gutter: var(--scrollbar-gutter-desktop, auto);
       }
       /* to counteract initial.css */
       /* hide component stuff before it is rendered to avoid the blitz (flashing white) also set the --background-color in the variables...css */
@@ -94,16 +96,18 @@ export default class General extends Shadow() {
       }
       /* sticky footer */
       body {
-        margin: 0;
-        min-height: var(--min-height, 100vh);
+        margin: var(--body-margin, 0);
+        max-width: var(--body-max-width, none);
+        min-height: var(--body-min-height, var(--min-height, 100vh));
         overflow-x: hidden;
+        padding: var(--body-padding, 0);
       }
       /* navigation open */
       :root.${this.getAttribute('no-scroll') || 'no-scroll'} {
-        overflow: hidden;
+        overflow: var(--root-no-scroll-overflow, hidden);
       }
       :root.${this.getAttribute('no-scroll') || 'no-scroll'} body {
-        overflow: hidden;
+        overflow: var(--body-no-scroll-overflow, hidden);
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -115,6 +119,11 @@ export default class General extends Shadow() {
           font-weight: var(--font-weight-mobile, var(--font-weight, normal));
           line-height: var(--line-height-mobile, var(--line-height, normal));
           word-break: var(--word-break-mobile, var(--word-break, normal));
+        }
+      }
+      @media only screen and (max-width: 1200px) {
+        :root {
+          scrollbar-gutter: var(--scrollbar-gutter-mobile, auto);
         }
       }
     `

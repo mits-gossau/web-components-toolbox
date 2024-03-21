@@ -1,0 +1,14 @@
+:host {
+  --button-transparent-background-color-disabled: transparent;
+  --button-transparent-background-color-hover: transparent;
+  --button-transparent-background-color: transparent;
+  --button-transparent-border-color-hover: transparent;
+  --button-transparent-border-color: transparent;
+  --button-transparent-border-width: var(--button-transparent-border-width-custom, 2px);
+  --button-transparent-color-disabled:var(--button-transparent-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
+  --button-transparent-color-hover: var(--button-transparent-color-hover-custom, var(--color-secondary, var(--m-orange-600)));
+  --button-transparent-color: var(--button-transparent-color-custom, var(--color-secondary, var(--m-orange-600)));
+  --button-transparent-font-family: var(--button-transparent-font-family-custom, var(--font-family));
+  --button-transparent-padding: var(--button-transparent-padding-custom, 0.75em);
+  --button-transparent-transition: var(--button-transparent-transition-custom, var(--transition));
+}

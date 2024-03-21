@@ -59,14 +59,17 @@ export default class Tabs extends Shadow() {
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     const tabs = this.root.querySelectorAll('.tab-navigation li')
+    const activeNavigationTab = this.root.querySelector('.tab-navigation li.active')
+
     tabs.forEach(tab => {
       if (tab.classList.contains('active')) {
         tab.click() // set initial tab
       }
     })
 
-    const activeNavigationTab = this.root.querySelector('.tab-navigation li.active')
-    activeNavigationTab.scrollIntoView({ behavior: 'smooth', inline: 'center' })
+    if (this.hasAttribute('scroll-to-view')) {
+      activeNavigationTab.scrollIntoView({ behavior: 'smooth', inline: 'center' })
+    }
   }
 
   shouldRenderCSS () {

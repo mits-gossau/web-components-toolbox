@@ -1,0 +1,27 @@
+:host {
+    --color: #262626;
+    --multi-level-navigation-default-main-ul-align-items: end;
+    --multi-level-navigation-default-main-ul-justify-content: right;
+    --multi-level-navigation-default-main-ul-display: flex;
+    --multi-level-navigation-default-a-main-content-spacing: 1em;
+    --multi-level-navigation-default-a-main-font-size: 1.25em;
+    --multi-level-navigation-default-a-main-mobile-font-size: 1em;
+    --multi-level-navigation-default-a-main-font-weight: 500;
+    --multi-level-navigation-default-a-main-border-width: 3px;
+    --multi-level-navigation-default-a-main-border-style: solid;
+    --multi-level-navigation-default-desktop-main-wrapper-height: 55dvh;
+    --multi-level-navigation-default-desktop-main-wrapper-border-width: 1px; 
+    --multi-level-navigation-default-desktop-main-wrapper-border-style: solid; 
+    --multi-level-navigation-default-desktop-main-wrapper-border-color: #E0E0E0; 
+    --multi-level-navigation-default-desktop-main-wrapper-background-color: white;
+    --multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-background-color: #E0E0E0;
+    --multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-thumb-background-color: #c1c1c1; 
+    --multi-level-navigation-default-mobile-main-wrapper-height: 60dvh;
+    --multi-level-navigation-default-mobile-icon-background-color: #262626;
+    --multi-level-navigation-default-mobile-wrapper-border-width: 1px; 
+    --multi-level-navigation-default-mobile-wrapper-border-style: solid; 
+    --multi-level-navigation-default-mobile-wrapper-border-color: #E0E0E0;
+    --multi-level-navigation-default-line-height-mobile: 1.5; 
+    --ul-list-style: none;
+    --a-text-decoration: none;
+  }

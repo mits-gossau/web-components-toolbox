@@ -39,6 +39,7 @@ export const WebWorker = (ChosenHTMLElement = HTMLElement) => class WebWorker ex
       return newPromise
     }
     func = func.replace(/this\./g, '')
+    func = func.replace(new RegExp(`${this.constructor.name}\.`, 'g'), '') // eslint-disable-line
     func = /^.*?=>.*?/.test(func) ? `(${func})` : !/^function/.test(func) ? `function ${func}` : func
     const response = `onmessage=(event)=>{postMessage(${func}(...event.data))}`
     let blob

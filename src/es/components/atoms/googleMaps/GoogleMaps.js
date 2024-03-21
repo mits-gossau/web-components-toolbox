@@ -92,12 +92,12 @@ export default class GoogleMaps extends Shadow() {
       margin:6px 0 6px 6px;
     }
     :host .mapOverlay{
-      background:transparent; 
-      position:relative; 
+      background: transparent; 
+      position:var(--map-overlay-position, absolute); 
       width:var(--width, 100%);
       height:var(--height, 75vh);
-      margin-top: - var(--height, 75vh);
-      top: var(--height, 75vh);
+      margin-top: - var(--map-overlay-margin-top, 75vh);
+      top: var(--map-overlay-top, 0);
       pointer-events: auto;
       
     }
@@ -184,6 +184,7 @@ export default class GoogleMaps extends Shadow() {
       iframe.src = this.iframeUrl
       iframe.name = 'map'
       element = iframe
+      htmlContent += element.outerHTML // Add the iframe to the HTML content
     } else {
       const mapDiv = document.createElement('div')
       mapDiv.setAttribute('id', 'map')
@@ -193,11 +194,9 @@ export default class GoogleMaps extends Shadow() {
       })
       element = mapDiv
     }
-
-    htmlContent += element.outerHTML // Add the iframe or mapDiv to the HTML content
-
+  
     // Set the final HTML content to the container element
-    this.html = htmlContent
+    this.html = this.iframeUrl ? htmlContent : element
   }
 
   /**

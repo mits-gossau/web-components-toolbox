@@ -1,0 +1,53 @@
+// @ts-check
+
+/* global AbortController */
+/* global CustomEvent */
+/* global fetch */
+/* global history */
+/* global location */
+/* global self */
+
+/**
+* @export 
+* @class <%= name %>
+* @type {CustomElementConstructor}
+*/
+export default class <%= name %> extends HTMLElement {
+  constructor () {
+    super()
+    this.abortController = null
+  }
+
+  connectedCallback () {
+    this.addEventListener(this.getAttribute('request-<%= nameSpace %>-event-name') || 'request-<%= nameSpace %>-event-name', this.request<%= name %>Listener)
+  }
+
+  disconnectedCallback () {
+    this.removeEventListener(this.getAttribute('request-<%= nameSpace %>-event-name') || 'request-<%= nameSpace %>-event-name', this.request<%= name %>Listener)
+  }
+
+  /**
+   * Fetch <%= name %>
+   * @param {{ detail: any; }} event
+   */
+  request<%= name %>Listener = async (event) => {
+    if (this.abortController) this.abortController.abort()
+    this.abortController = new AbortController()
+    const fetchOptions = {
+      method: 'GET',
+      signal: this.abortController.signal
+    }
+    const endpoint = ''
+    this.dispatchEvent(new CustomEvent(this.getAttribute('update-<%= nameSpace %>') || 'update-<%= nameSpace %>', {
+      detail: {
+        fetch: fetch(endpoint, fetchOptions).then(async response => {
+          if (response.status >= 200 && response.status <= 299) return await response.json()
+          throw new Error(response.statusText)
+        })
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
+  }
+}

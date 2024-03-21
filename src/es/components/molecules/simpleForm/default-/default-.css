@@ -1,5 +1,6 @@
 :host {
     --simple-form-default-border-radius: var(--simple-form-default-border-radius-custom, var(--border-radius, 0.5em));
+    --simple-form-default-color-error: var(--color-error, var(--color-secondary, red));
 }
 :host #response {
     color: var(--color-error, var(--color-secondary, red));
@@ -15,20 +16,67 @@
     display: flex;
     gap: 1em;
     justify-content: flex-start;
+    flex-wrap: wrap;
+}
+:host > form div.inline:has(> div) {
+    justify-content: space-between;
 }
 :host > form div.inline > label {
     text-align: justify;
 }
-:host > form div.inline > input, :host > form div.inline > select {
+:host > form div.inline > input, :host > form div.inline > select, :host > form div.inline > textarea {
     flex-shrink: 0;
+}
+:host > form div.inline > div, :host > form o-grid > section > div, :host > form o-wrapper > section > div {
+    display: flex;
+    align-items: center;
+}
+:host > form div > input:has(~ div.inline) {
+    margin-bottom: 0.1em;
+}
+:host > form > section {
+    border: var(--simple-form-default-section-border, var(--section-border, none));
+    border-radius: var(--simple-form-default-section-border-radius, var(--section-border-radius, 0));
+    background-color: var(--simple-form-default-section-background-color, var(--section-background-color, transparent));
+    padding: var(--simple-form-default-section-padding, var(--section-padding, 0));
+    overflow: auto;
+    --h-color: var(--simple-form-default-section-h-color, var(--section-h-color, inherit));
+    --hr-color: var(--simple-form-default-section-hr-color, var(--section-hr-color, inherit));
+    --color: var(--simple-form-default-section-color, var(--section-color, inherit));
+    --color-secondary: var(--simple-form-default-section-color-secondary, var(--section-color-secondary, inherit));
+    --color-hover: var(--simple-form-default-section-color-hover, var(--section-color-hover, inherit));
+    color: var(--simple-form-default-section-color, var(--section-color, inherit));
+}
+:host > form > section[hidden] {
+    animation: hide .3s ease-out;
+    overflow: hidden;
+}
+:host > form > section input,
+:host > form > section textarea,
+:host > form > section select {
+    caret-color: var(--simple-form-default-section-background-color, var(--section-background-color, black));
+    --color: var(--simple-form-default-section-input-color, var(--section-input-color, inherit));
+    --color-secondary: var(--simple-form-default-section-input-color-secondary, var(--section-input-color-secondary, inherit));
+    --color-hover: var(--simple-form-default-section-input-color-hover, var(--section-input-color-hover, inherit));
+    color: var(--simple-form-default-section-input-color, var(--section-input-color, inherit));
+}
+:host > form > section ~ section {
+    margin-top: var(--simple-form-default-content-spacing, var(--content-spacing));
+}
+:host form > section > div:last-of-type {
+    padding-bottom: 0;
+}
+:host > form o-grid > section > div {
+    justify-content: var(--simple-form-default-o-grid-div-justify-content-custom, space-between);
+    gap: var(--simple-form-default-o-grid-div-gap-custom, 1em);
 }
 :host > form *[inset] {
     padding-left: var(--content-spacing);
 }
-:host input, :host select, :host div {
+:host input, :host select, :host textarea, :host div {
     transition: border-color 0.3s ease-out, outline 0.3s ease-out;
 }
-:host([dirty]) input:not(:valid), :host([dirty]) div:has(input[type=file]:not(:valid)), :host([dirty]) select:not(:valid) {
+:host([dirty]) input:not(:valid), :host([dirty]) div:has(input[type=file]:not(:valid)), :host([dirty]) select:not(:valid), :host([dirty]) textarea:not(:valid) {
     border-color: var(--color-error, var(--color-secondary, red));
 }
 :host([dirty]) input[type=checkbox]:not(:valid) {
@@ -38,9 +86,10 @@
     outline-width: var(--outline-width, 0.125em);
     outline-offset: var(--outline-offset, 1px);
 }
-:host input + label::after, :host label:has(+ input)::after, :host select + label::after, :host label:has(+ select)::after, :host input[type=file] + div::after, :host div:has(+ input[type=file])::after {
+:host input + label::after, :host label:has(+ input)::after, :host select + label::after, :host label:has(+ select)::after, :host textarea + label::after, :host label:has(+ textarea)::after, :host input[type=file] + div::after, :host div:has(+ input[type=file])::after {
     color: var(--color-error, var(--color-secondary, red));
     content: attr(validation-message);
+    display: none;
     float: right;
     font-size: 0.875em;
     opacity: 0;
@@ -49,18 +98,39 @@
     transition: opacity 0.3s ease-out;
 }
 :host input[type=file] + div::after, :host div:has(+ input[type=file])::after {
-    display: none;
     transition: display 0.3s ease-out;
 }
 :host([dirty]) input[type=checkbox] + label::after, :host([dirty]) label:has(+ input[type=checkbox])::after {
     padding: 0 0 0 0.625em;
 }
-:host([dirty]) input:not(:valid) + label::after, :host([dirty]) label:has(+ input:not(:valid))::after, :host([dirty]) select:not(:valid) + label::after, :host([dirty]) label:has(+ select:not(:valid))::after, :host([dirty]) input[type=file]:not(:valid) + div::after, :host([dirty]) div:has(+ input[type=file]:not(:valid))::after {
+:host([dirty]) input:not(:valid) + label::after, :host([dirty]) label:has(+ input:not(:valid))::after, :host([dirty]) select:not(:valid) + label::after, :host([dirty]) label:has(+ select:not(:valid))::after, :host([dirty]) textarea:not(:valid) + label::after, :host([dirty]) label:has(+ textarea:not(:valid))::after, :host([dirty]) input[type=file]:not(:valid) + div::after, :host([dirty]) div:has(+ input[type=file]:not(:valid))::after {
     display: inline-block;
     opacity: 1;
 }
 @media only screen and (max-width: _max-width_) {
     :host > form *[inset] {
         padding-left: var(--content-spacing-mobile, var(--content-spacing));
+    }
+    :host > form > section {
+        border: var(--simple-form-default-section-border-mobile, var(--simple-form-default-section-border, var(--section-border, none)));
+        border-radius: var(--simple-form-default-section-border-radius-mobile, var(--simple-form-default-section-border-radius, var(--section-border-radius, 0)));
+        background-color: var(--simple-form-default-section-background-color-mobile, var(--simple-form-default-section-background-color, var(--section-background-color, transparent)));
+        padding: var(--simple-form-default-section-padding-mobile, var(--simple-form-default-section-padding, var(--section-padding, 0)));
+    }
+    :host > form > section ~ section {
+        margin-top: var(--simple-form-default-content-spacing-mobile, var(--simple-form-default-content-spacing, var(--content-spacing-mobile, var(--content-spacing))));
+    }
+}
+
+@keyframes hide {
+    0% {
+        display: inherit;
+        max-height: 100vh;
+    }
+    100% {
+        display: none;
+        max-height: 0;
+        margin: 0;
+        padding: 0;
     }
 }

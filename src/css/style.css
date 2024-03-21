@@ -2,7 +2,6 @@
 /* h-tags */
 /* IMPORTANT: This file will often be processed by namespace-fallback regex function src/es/components/web-components-toolbox/src/es/components/prototypes/Shadow.js:L244, which has trouble to detect proper closings with calc() functions. Be careful to use any factors before variables within calc! */
 :host h1, :host h2, :host h3, :host h4, :host h5, :host h6 {
-  hyphens: var(--h-hyphens, unset);
   transition: var(--h-transition, color 0.3s ease-out);
 }  
 :host h1 {
@@ -12,7 +11,7 @@
   line-height: var(--h1-line-height, var(--h-line-height, 1.286em));
   font-family: var(--h1-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h1-font-weight, var(--h-font-weight, normal));
-  hyphens: var(--h1-hyphens, var(--h-hyphens, unset));
+  hyphens: var(--h1-hyphens, var(--h-hyphens, manual));
   text-align: var(--h1-text-align, var(--h-text-align, start));
   word-break: var(--h1-word-break, var(--h-word-break, normal));
   text-transform: var(--h1-text-transform, var(--h-text-transform, none));
@@ -32,7 +31,7 @@
   line-height: var(--h2-line-height, var(--h-line-height, 1.334em));
   font-family: var(--h2-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h2-font-weight, var(--h-font-weight, normal));
-  hyphens: var(--h2-hyphens, var(--h-hyphens, unset));
+  hyphens: var(--h2-hyphens, var(--h-hyphens, manual));
   text-align: var(--h2-text-align, var(--h-text-align, start));
   word-break: var(--h2-word-break, var(--h-word-break, normal));
   text-transform: var(--h2-text-transform, var(--h-text-transform, none));
@@ -52,7 +51,7 @@
   line-height: var(--h3-line-height, var(--h-line-height, 1.4em));
   font-family: var(--h3-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h3-font-weight, var(--h-font-weight, normal));
-  hyphens: var(--h3-hyphens, var(--h-hyphens, unset));
+  hyphens: var(--h3-hyphens, var(--h-hyphens, manual));
   text-align: var(--h3-text-align, var(--h-text-align, start));
   word-break: var(--h3-word-break, var(--h-word-break, normal));
   text-transform: var(--h3-text-transform, var(--h-text-transform, none));
@@ -72,7 +71,7 @@
   line-height: var(--h4-line-height, var(--h-line-height, 1.334em));
   font-family: var(--h4-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h4-font-weight, var(--h-font-weight, normal));
-  hyphens: var(--h4-hyphens, var(--h-hyphens, unset));
+  hyphens: var(--h4-hyphens, var(--h-hyphens, manual));
   text-align: var(--h4-text-align, var(--h-text-align, start));
   word-break: var(--h4-word-break, var(--h-word-break, normal));
   text-transform: var(--h4-text-transform, var(--h-text-transform, none));
@@ -92,7 +91,7 @@
   line-height: var(--h5-line-height, var(--h-line-height, 1.334em));
   font-family: var(--h5-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit))));
   font-weight: var(--h5-font-weight, var(--h-font-weight, normal));
-  hyphens: var(--h5-hyphens, var(--h-hyphens, unset));
+  hyphens: var(--h5-hyphens, var(--h-hyphens, manual));
   text-align: var(--h5-text-align, var(--h-text-align, start));
   word-break: var(--h5-word-break, var(--h-word-break, normal));
   text-transform: var(--h5-text-transform, var(--h-text-transform, none));
@@ -112,7 +111,7 @@
   line-height: var(--h6-line-height, var(--h1-line-height, var(--h-line-height, 1.286em)));
   font-family: var(--h6-font-family, var(--h1-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit)))));
   font-weight: var(--h6-font-weight, var(--h1-font-weight, var(--h-font-weight, normal)));
-  hyphens: var(--h6-hyphens, var(--h-hyphens, unset));
+  hyphens: var(--h6-hyphens, var(--h-hyphens, manual));
   text-align: var(--h6-text-align, var(--h1-text-align, var(--h-text-align, start)));
   word-break: var(--h6-word-break, var(--h1-word-break, var(--h-word-break, normal)));
   text-transform: var(--h6-text-transform, var(--h1-text-transform, var(--h-text-transform, none)));
@@ -124,19 +123,6 @@
 }
 :host h6.font-family-tertiary {
   font-family: var(--h6-font-family-tertiary, var(--h1-font-family-tertiary, var(--font-family-tertiary, var(--font-family-bold, var(--font-family, inherit)))));
-}
-:host h1.title-border::before, 
-:host h2.title-border::before, 
-:host h3.title-border::before, 
-:host h4.title-border::before, 
-:host h5.title-border::before, 
-:host h6.title-border::before {
-  background-color: var(--h-border-top-color, var(--mdx-base-color-klubschule-red-600));
-  content: '';
-  display: block;
-  margin-bottom: var(--h-border-margin-bottom, 16px);
-  height: var(--h-border-top-height, 4px);
-  width: var(--h-border-top-width, 32px);
 }
 /* text stylings */
 :host .font-family-secondary {
@@ -168,16 +154,19 @@
   font-weight: var(--font-weight-strong, bold);
   text-transform: var(--text-transform-strong, none);
 }
+:host .italic {
+  font-style: italic;
+}
 :host .line-height-one-em {
   line-height: 1em;
 }
 :host .title-border:before {
-  width: 1.5em;
-  height: 0.25em;
-  background-color: var(--color-secondary);
+  width: var(--title-border-width, 1.5em);
+  height: var(--title-border-height, 0.25em);
+  background-color: var(--title-border-background-color, var(--color-secondary));
   content: '';
   display: var(--title-border-display, block);
-  margin-bottom: 0.3em;
+  margin-bottom: var(--title-border-margin-bottom, 0.3em);
 }
 :host .h-color {
   color: var(--h-color, var(--color-secondary, var(--color, black)));
@@ -292,6 +281,18 @@
   text-transform: var(--p-text-transform, none);
   margin: var(--p-margin, 0 auto var(--content-spacing));
 }
+:host .columns-one {
+  columns: var(--columns-one, 1);
+}
+:host .columns-two {
+  columns: var(--columns-two, 2);
+}
+:host .columns-three {
+  columns: var(--columns-three, 3);
+}
+:host .columns-four {
+  columns: var(--columns-four, 4);
+}
 /* a-tag */
 :host a {
   cursor: pointer;
@@ -371,7 +372,9 @@
   border-width: var(--hr-border-width, 0 0 1px);
   margin: var(--hr-margin, var(--content-spacing) auto);
   opacity: var(--hr-opacity, 0.5);
-  width: 100%;
+}
+:host hr.full-width, :host hr.primary.full-width, :host hr.secondary.full-width {
+  width: var(--hr-width, 100%);
 }
 :host hr.secondary {
   border: var(--hr-secondary-border, var(--hr-border, 0));
@@ -429,9 +432,12 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   display: var(--ul-display, var(--ol-display, block));
   flex-direction: var(--ul-flex-direction, var(--ol-flex-direction, column));
   list-style: var(--ul-list-style, disc);
-  padding-left: var(--ul-margin, 1.5em);
+  padding-left: var(--ul-padding-left, 1.5em);
   text-align: var(--ul-text-align, var(--ol-text-align, start));
   margin: var(--ul-margin, 0 auto var(--content-spacing));
+}
+:host ol {
+  list-style: var(--ol-list-style, decimal);
 }
 :host ul > li,
 :host ol > li {
@@ -495,10 +501,20 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   list-style: var(--ul-icon-list-style, none);
   padding: var(--ul-icon-padding, 0);
 }
-/* table-tags */
-:host table thead {
-  display: table-header-group;
+/* list-style */
+:host :where(ul, ol):is(.decimal), :host .list-style-decimal {
+  list-style-type: decimal;
 }
+:host :where(ul, ol):is(.square), :host .list-style-square {
+  list-style-type: square;
+}
+:host :where(ul, ol):is(.upper-alpha), :host .list-style-upper-alpha {
+  list-style-type: upper-alpha;
+}
+:host :where(ul, ol):is(.circle), :host .list-style-circle {
+  list-style-type: circle;
+}
+/* table-tags */
 :host table tbody {
   display: table;
 }
@@ -511,7 +527,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   border: var(--table-border, 0);
   border-collapse: var(--table-border-collapse, collapse);
   border-spacing: var(--table-border-spacing, 0);
-  height: var(--table-height, auto) !important;
+  height: var(--table-height, auto);
   max-width: var(--table-max-width, 100%);
   word-break: var(--table-word-break, normal);
   margin: var(--table-margin, 0 auto var(--content-spacing));
@@ -525,11 +541,14 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   background-color: var(--table-odd-background-color, transparent);
 }
 :host table thead {
-  display: table;
+  display: var(--table-thead-display, table-header-group);
   width: var(--table-thead-width, 100%);
 }
-:host table thead tr {
-  background-color: var(--table-thead-tr-background-color, transparent) !important;
+:host table th {
+  font-weight: var(--table-th-font-weight, inherit);
+}
+:host table thead tr:first-child {
+  background-color: var(--table-thead-tr-background-color, transparent);
   width: var(--table-thead-tr-width, var(--table-thead-width, 100%));
 }
 :host table td, :host table th {
@@ -659,6 +678,18 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     text-transform: var(--p-text-transform-mobile, var(--p-text-transform, none));
     margin: var(--p-margin-mobile, var(--p-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
   }
+  :host .columns-one-mobile {
+    columns: var(--columns-one-mobile, var(--columns-one, 1));
+  }
+  :host .columns-two-mobile {
+    columns: var(--columns-two-mobile, var(--columns-two, 2));
+  }
+  :host .columns-three-mobile {
+    columns: var(--columns-three-mobile, var(--columns-three, 3));
+  }
+  :host .columns-four-mobile {
+    columns: var(--columns-four-mobile, var(--columns-four, 4));
+  }
   /* a-tag */
   :host a {
     font-size: var(--a-font-size-mobile, var(--a-font-size, 1em));
@@ -669,8 +700,14 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     display: var(--any-a-display-mobile, var(--any-a-display, var(--a-display-mobile, var(--a-display, inline))));
   }
   /* hr-tag */
-  :host hr {
+  :host hr, :host hr.primary {
     margin: var(--hr-margin-mobile, var(--hr-margin, var(--content-spacing-mobile) auto));
+  }
+  :host hr.full-width, :host hr.primary.full-width, :host hr.secondary.full-width {
+    width: var(--hr-width-mobile, var(--hr-width, 100%));
+  }
+  :host hr.secondary {
+    margin: var(--hr-secondary-margin-mobile, var(--hr-margin-mobile, var(--hr-secondary-margin, var(--hr-margin, var(--content-spacing-mobile) auto))));
   }
   /* img-tag */
   img[style="float: left;"], img[style="float:left;"], img[style="float: left"], img[style="float:left"], img[style="float: right;"], img[style="float:right;"], img[style="float: right"], img[style="float:right"] {
@@ -709,5 +746,24 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   }
   .spacer-four {
     height: var(--spacer-four-height-mobile, var(--spacer-four-height, calc(4 * var(--content-spacing-mobile, var(--content-spacing)))));
+  }
+}
+@container style(--h-border-after: true) {
+  h1{
+    text-align: var(--h-border-after-text-align, center) !important;
+    position: relative;
+  }
+  h1::after {
+    background: var(--h-border-after-background-color, var(--h1-color, var(--color, black))); 
+    content: '';
+    display: block; 
+    height: var(--h-border-after-height, auto); 
+    position: absolute;
+    left: var(--h-border-after-left, auto);
+    transform: translateX(var(--h-border-after-transform, 0)); 
+    margin-top: var(--h-border-after-margin-top, 0.5em);
+    width: var(--h-border-after-width, auto);
+    min-width: var(--h-border-after-min-width, 2em);
+    max-width: var(--h-border-after-max-width, 100%); 
   }
 }

@@ -38,14 +38,16 @@ export default class Button extends Hover() {
       if (this.hasAttribute('disabled')) event.preventDefault()
       if (this.getAttribute('request-event-name')) {
         event.preventDefault()
-        this.button.classList.toggle('active')
-        this.button.setAttribute('aria-pressed', this.button.classList.contains('active')) // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-pressed
-        this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+        if (!this.hasAttribute('click-no-toggle-active')) {
+          this.button.classList.toggle('active')
+          this.button.setAttribute('aria-pressed', this.button.classList.contains('active')) // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-pressed
+        }
+        this.getAttribute('request-event-name').split(',').forEach(eventName => this.dispatchEvent(new CustomEvent(eventName, {
           detail: this.getEventDetail(event),
           bubbles: true,
           cancelable: true,
           composed: true
-        }))
+        })))
       }
     }
     this.answerEventListener = async event => {
@@ -184,6 +186,7 @@ export default class Button extends Hover() {
         display: inline-block;
         padding: var(--label-padding, 0);
         margin: var(--label-margin, 0);
+        ${this.hasAttribute('no-pointer-events') ? 'pointer-events: none;' : ''}
         position: relative;
         text-align: var(--label-text-align, center);
         white-space: var(--label-white-space, inherit);
@@ -346,6 +349,13 @@ export default class Button extends Hover() {
         return this.fetchCSS([{
           // @ts-ignore
           path: `${this.importMetaUrl}./tertiary-/tertiary-.css`,
+          namespace: false,
+          replaces
+        }])
+      case 'button-transparent-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./transparent-/transparent-.css`,
           namespace: false,
           replaces
         }])

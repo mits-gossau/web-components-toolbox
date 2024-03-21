@@ -130,6 +130,7 @@ export default class Login extends Prototype() {
       }
       :host([profile-flyout]) {
           max-height: 2.5em !important;
+          z-index: 9999;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
