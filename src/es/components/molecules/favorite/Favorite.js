@@ -29,7 +29,7 @@ export default class Favorite extends Shadow() {
     }
 
     this.clickListener = () => {
-      const currentState = this.isInitial ? this.getAttribute('favorite-state') : this.isActive
+      const currentState = this.isInitial ? this.getAttribute('favorite-state').trim().toLowerCase() === 'true' : this.isActive
       const action = currentState ? 'remove' : 'add'
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-favorite-event-name') || 'request-favorite-event-name',
         {
