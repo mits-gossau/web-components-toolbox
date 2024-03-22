@@ -22,10 +22,17 @@
      }' type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off" />
     </div>
     <div>
-      <label for="Firstname">Vorname => required + min-length:3</label>
+      <label for="Firstname">Vorname => required + min-length:3 </label>
       <input id="Firstname" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
       "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben"}}'
         type="text" value="" name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" />
+    </div>
+    <div>
+      <label for="FirstnameTwo">VornameTwo => required + min-length:3 + max-length:10</label>
+      <input id="FirstnameTwo" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben"},
+      "max-length": {"value": "10", "error-message": "Bitte maximum 10 Character eingeben"}}'
+        type="text" value="" name="VornameTwo" placeholder="VornameTwo hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="Email">E-Mail => required + email</label>

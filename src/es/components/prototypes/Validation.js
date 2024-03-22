@@ -27,8 +27,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       this.allValidationNodes.forEach(node => {
         // TODO if type radio we need other logic
         const errorTextWrapper = document.createElement('div')
-        const errorText = document.createElement('p')
-        errorTextWrapper.appendChild(errorText)
         errorTextWrapper.classList.add('custom-error-text')
         node.after(errorTextWrapper)
         node.addEventListener('change', this.validationChangeEventListener)
@@ -85,30 +83,31 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
         if (currentInput.value && currentInput.value.trim().length > 0) {
-          console.log("no value", currentInput.value)
           this.setValidity(inputFieldName, validationName, true)
         } else {
           this.setValidity(inputFieldName, validationName, false)
-          return
-          
         }
       }
       if (validationName === 'max-length') {
         if (currentInput.value.trim().length < validationRules['max-length'].value) {
-          console.log("hi")
           this.setValidity(inputFieldName, validationName, true)
         } else {
           this.setValidity(inputFieldName, validationName, false)
-          
+
         }
       }
       if (validationName === 'min-length') {
-        if (currentInput.value.trim().length !== 0 && currentInput.value.trim().length < validationRules['min-length'].value) {
-          console.log("hi1")
+        if (currentInput.value.trim().length < validationRules['min-length'].value) {
           this.setValidity(inputFieldName, validationName, false)
-          
         } else {
           this.setValidity(inputFieldName, validationName, true)
+        }
+      }
+      if (validationName === 'email') {
+        if (currentInput.value.includes('@')) {
+          this.setValidity(inputFieldName, validationName, true)
+        } else {
+          this.setValidity(inputFieldName, validationName, false)
         }
       }
       if (validationName === 'max-number-value') {
@@ -116,7 +115,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           this.setValidity(inputFieldName, validationName, true)
         } else {
           this.setValidity(inputFieldName, validationName, false)
-          
+
         }
       }
       if (validationName === 'min-number-value') {
@@ -124,7 +123,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           this.setValidity(inputFieldName, validationName, true)
         } else {
           this.setValidity(inputFieldName, validationName, false)
-          
+
         }
       } else {
         return
@@ -135,12 +134,26 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   setValidity(inputFieldName, validationName, isValid) {
     this.validationValues[inputFieldName][validationName].isValid = isValid
     const currentValidatedInput = this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName)
-    const currentValidatedInputErrorTextPlaceholder = currentValidatedInput.parentElement.querySelector('div.custom-error-text')
-    if (isValid === false) {
-      currentValidatedInputErrorTextPlaceholder.querySelector('p').textContent = this.validationValues[inputFieldName][validationName]['error-message']
+    const currentValidatedInputErrorTextWrapper = currentValidatedInput.parentElement.querySelector('div.custom-error-text')
+    const sameValidationMessage = currentValidatedInputErrorTextWrapper.querySelector(`p[error-text-id=${validationName}]`)
+    const errorText = document.createElement('p')
+    errorText.setAttribute('error-text-id', validationName)
+    errorText.hidden = true
+    errorText.textContent = this.validationValues[inputFieldName][validationName]['error-message']
+    if (!sameValidationMessage) currentValidatedInputErrorTextWrapper.appendChild(errorText)
+    
+    if(isValid === false){
+      currentValidatedInputErrorTextWrapper.querySelector(`p[error-text-id=${validationName}]`).hidden = false
+    }else{
+      currentValidatedInputErrorTextWrapper.querySelector(`p[error-text-id=${validationName}]`).hidden = true
     }
-    // if (isValid === true) {
-    //   currentValidatedInputErrorTextPlaceholder.querySelector('p').textContent = ''
-    // }
+
+    const errorMessages = Array.from(currentValidatedInputErrorTextWrapper.querySelectorAll('p'))
+    const hasMoreThenOneError = errorMessages.filter(p => !p.hasAttribute('hidden')).length > 1
+
+    if(hasMoreThenOneError){
+      errorMessages.forEach(p => p.hidden = true)
+      errorMessages[0].hidden = false
+    }
   }
 }
