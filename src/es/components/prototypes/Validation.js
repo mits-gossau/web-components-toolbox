@@ -104,25 +104,44 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       }
       if (validationName === 'email') {
-        if (currentInput.value.includes('@')) {
+        if (currentInput.value.match(
+          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )) {
           this.setValidity(inputFieldName, validationName, true)
         } else {
           this.setValidity(inputFieldName, validationName, false)
         }
       }
       if (validationName === 'max-number-value') {
-        if (+currentInput.value > +validationRules['max-length'].value) {
+        if (+currentInput.value > +validationRules['max-number-value'].value) {
+          this.setValidity(inputFieldName, validationName, false)
+        } else {
+          this.setValidity(inputFieldName, validationName, true)
+
+        }
+      }
+      if (validationName === 'min-number-value') {
+        if (+currentInput.value < +validationRules['min-number-value'].value) {
+          this.setValidity(inputFieldName, validationName, false)
+        } else {
+          this.setValidity(inputFieldName, validationName, true)
+
+        }
+      } if (validationName === 'min-max-number-value') {
+        const minNumberValue = +validationRules['min-max-number-value'].value.split('-')[0]
+        const maxNumberValue = +validationRules['min-max-number-value'].value.split('-')[1]
+
+        if ((+currentInput.value > minNumberValue) && (+currentInput.value < maxNumberValue)) {
           this.setValidity(inputFieldName, validationName, true)
         } else {
           this.setValidity(inputFieldName, validationName, false)
 
         }
-      }
-      if (validationName === 'min-number-value') {
-        if (+currentInput.value < +validationRules['max-length'].value) {
-          this.setValidity(inputFieldName, validationName, true)
-        } else {
+      } if (validationName === 'phone') {
+        if (+currentInput.value < +validationRules['min-number-value'].value) {
           this.setValidity(inputFieldName, validationName, false)
+        } else {
+          this.setValidity(inputFieldName, validationName, true)
 
         }
       } else {
@@ -141,19 +160,20 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     errorText.hidden = true
     errorText.textContent = this.validationValues[inputFieldName][validationName]['error-message']
     if (!sameValidationMessage) currentValidatedInputErrorTextWrapper.appendChild(errorText)
-    
-    if(isValid === false){
+
+    if (isValid === false) {
       currentValidatedInputErrorTextWrapper.querySelector(`p[error-text-id=${validationName}]`).hidden = false
-    }else{
+    } else {
       currentValidatedInputErrorTextWrapper.querySelector(`p[error-text-id=${validationName}]`).hidden = true
     }
 
     const errorMessages = Array.from(currentValidatedInputErrorTextWrapper.querySelectorAll('p'))
     const hasMoreThenOneError = errorMessages.filter(p => !p.hasAttribute('hidden')).length > 1
 
-    if(hasMoreThenOneError){
+    if (hasMoreThenOneError) {
       errorMessages.forEach(p => p.hidden = true)
       errorMessages[0].hidden = false
     }
+    console.log("validation-obj",this.validationValues)
   }
 }
