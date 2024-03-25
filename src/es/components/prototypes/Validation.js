@@ -13,11 +13,43 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     super(options, ...args)
     // TODO What if dont have submit button but only one validation field
     // TODO what if we had more forms? how to solve?
+    this.ableToAddSpecialCharacter = true
 
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = event.currentTarget.getAttribute('name')
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
+    }
+
+    this.validationPatternInputEventListener = (event) => {
+      const inputField = event.currentTarget
+      const splitterMaskPattern = this.validationValues[event.currentTarget.getAttribute('name')]['pattern']['mask-value'].split('')
+      const splittedInputValue = inputField.value.split('')
+      if (splittedInputValue.length <= splitterMaskPattern.length) {
+        splittedInputValue.forEach((input, index) => {
+          if (splitterMaskPattern[index]) {
+            if (splitterMaskPattern[index] === 'C') {
+              splittedInputValue[index] = splittedInputValue[index].toUpperCase()
+            }
+            else if (splitterMaskPattern[index] === 'U') {
+              splittedInputValue[index] = splittedInputValue[index].toLowerCase()
+            }
+            else if (splitterMaskPattern[index + 1] !== 'C' && splitterMaskPattern[index + 1] !== 'U' && splitterMaskPattern[index + 1] !== '#') {
+              if (this.oldValueLength - 1 < index) {
+                splittedInputValue[index + 1] = splitterMaskPattern[index + 1]
+                this.ableToAddSpecialCharacter = false
+              }
+            }
+            else {
+              return
+            }
+          }
+        })
+        inputField.value = splittedInputValue.join("")
+        this.oldValueLength = inputField.value.length
+      } else {
+        inputField.value = inputField.value.slice(0, splitterMaskPattern.length)
+      }
     }
 
     this.submitButton = this.form.querySelector('input[type="submit"]')
@@ -37,6 +69,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             Object.keys(parsedRules).forEach(key => {
               this.validationValues[node.getAttribute('name')] = this.validationValues[node.getAttribute('name')] ? Object.assign(this.validationValues[node.getAttribute('name')]) : {}
               this.validationValues[node.getAttribute('name')][key] = Object.assign(parsedRules[key], { isValid: false })
+              if (this.validationValues[node.getAttribute('name')]['pattern'] && this.validationValues[node.getAttribute('name')]['pattern'].hasOwnProperty('mask-value')) {
+                node.addEventListener('input', this.validationPatternInputEventListener)
+              }
             })
           }
         }
@@ -135,13 +170,14 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           this.setValidity(inputFieldName, validationName, true)
         } else {
           this.setValidity(inputFieldName, validationName, false)
-
         }
-      } if (validationName === 'phone') {
-        if (+currentInput.value < +validationRules['min-number-value'].value) {
-          this.setValidity(inputFieldName, validationName, false)
-        } else {
+      } if (validationName === 'pattern') {
+        const re = new RegExp(`${validationRules['pattern'].value}`)
+        const regExpValid = re.test(currentInput.value)
+        if (regExpValid) {
           this.setValidity(inputFieldName, validationName, true)
+        } else {
+          this.setValidity(inputFieldName, validationName, false)
 
         }
       } else {
@@ -174,6 +210,5 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       errorMessages.forEach(p => p.hidden = true)
       errorMessages[0].hidden = false
     }
-    console.log("validation-obj",this.validationValues)
   }
 }

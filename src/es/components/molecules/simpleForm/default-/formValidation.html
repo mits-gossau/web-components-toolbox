@@ -59,15 +59,15 @@
         type="number" value="" name="AgeThree" placeholder="AgeThree hier eingeben..." autocomplete="off" />
     </div>
     <div>
-      <label for="BankAccount">Bank Account => format-helper-value:??</label>
+      <label for="BankAccount">IBAN => format-helper-value:CC## #### #### #### ####</label>
       <input id="BankAccount" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
-      "min-max-value": {"value": "18-80", "error-message": "Bitte richtige e-mail eingeben."}}'
-        type="text" value="" name="BankAccount" placeholder="BankAccount hier eingeben..." autocomplete="off" />
+      "pattern": {"value":"", "mask-value": "CC## #### #### #### ####", "error-message": "Bitte richtige IBAN eingeben."}}'
+        type="text" value="" name="BankAccount" placeholder="CH34 3456 7890 1234 1234" autocomplete="off" />
     </div>
     <div>
-      <label for="Phone">Telephone => format-helper-value:??</label>
+      <label for="Phone">Telephone => format-helper-value:### ###-##-##</label>
       <input id="Phone" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
-      "phone": {"value": "", "error-message": "Bitte richtige Phonenummer eingeben."}}'
+      "pattern": {"value":"", "mask-value": "###/###-##-##", "error-message": "Bitte richtige Phonenummer eingeben."}}'
         type="text" value="" name="Phone" placeholder="Phone hier eingeben..." autocomplete="off" />
     </div>
     <div>
