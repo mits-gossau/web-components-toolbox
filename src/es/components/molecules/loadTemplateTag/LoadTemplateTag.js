@@ -85,6 +85,7 @@ export default class LoadTemplateTag extends Intersection() {
    * @return {void} final render function with a default of 200ms timeout
    */
   renderHTML () {
+    if(!this.template) return
     const templateContent = this.template.content
     this.template.remove()
     this.html = templateContent
