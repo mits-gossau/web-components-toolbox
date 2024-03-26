@@ -25,6 +25,7 @@
     align-items: flex-start;
     display: inline-flex;
     width: 100%;
+    text-decoration: none;
 }
 :host .topline > a > span {
     overflow: hidden;
