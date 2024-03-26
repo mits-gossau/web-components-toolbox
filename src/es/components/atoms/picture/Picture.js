@@ -141,7 +141,7 @@ export default class Picture extends Intersection(Hover()) {
         display: var(--img-display, block);
         filter: var(--filter, none);
         height: var(--img-height, auto);
-        image-rendering: var(--image-rendering, -webkit-optimize-contrast); /* fix blurred image on webkit: https://www.betriebsrestaurants-migros.ch/landingpages/swissgrid/info-menuplan/ */
+        image-rendering: var(--image-rendering, auto); /* changed default value from -webkit-optimize-contrast to auto, see comments on MUTOBOTEAM-2131 */
         margin: var(--img-margin, auto);
         max-height: var(--img-max-height, 75vh);
         max-width: var(--img-max-width, 100%); /* max-content would have been nice to not scale up the image, but in general make the editor use big enough images and this must stay at 100% default value, otherwise there are several side effects */
