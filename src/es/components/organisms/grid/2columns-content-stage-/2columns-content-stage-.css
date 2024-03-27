@@ -115,7 +115,7 @@
     min-height: var(--grid-2columns-content-stage-image-min-height, 280px);
 }
 :host([first-container-vertical][with-border]) > section > *:nth-child(2) {
-    border-left: var(--content-section-border-left-custom, 1px solid var(--mdx-sys-color-brand-neutral-300));
+    border-left: var(--content-section-border-left-custom, 1px solid rgb(224, 224, 224));
 }
 :host([first-container-vertical][count-section-children="2"]) > section > *:nth-child(2) {
     grid-row: 1 / span 2;
