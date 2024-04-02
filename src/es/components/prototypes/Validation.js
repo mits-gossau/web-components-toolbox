@@ -51,7 +51,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             }
           }
         })
-        inputField.value = splittedInputValue.join("")
+        inputField.value = splittedInputValue.join('')
         this.oldValueLength = inputField.value.length
       } else {
         inputField.value = inputField.value.slice(0, splittedMaskPattern.length)
@@ -66,6 +66,14 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
 
     this.baseInputChangeListener = (event) => {
+      const shouldIgnoreFirstSpace = event.currentTarget.hasAttribute('ignore-first-space')
+      let inputFieldValue = event.currentTarget.value.split('')
+      const isFirstCharacterSpace = inputFieldValue[0] === " "
+      if (shouldIgnoreFirstSpace && isFirstCharacterSpace) {
+        inputFieldValue = inputFieldValue.slice(0, -1)
+        event.currentTarget.value = inputFieldValue.join('')
+      }
+
       const inputFieldName = event.currentTarget.getAttribute('name')
       this.validationValues[inputFieldName].isTouched = true
     }
@@ -200,6 +208,15 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             this.setValidity(inputFieldName, validationName, false)
           }
         }
+        if (validationRules['pattern']['mask-value']) {
+          const isValid = this.validationPatternEnd(inputFieldName, validationName, currentInput.value.trim())
+          console.log("isValid", isValid)
+          if (isValid) {
+            this.setValidity(inputFieldName, validationName, true)
+          } else {
+            this.setValidity(inputFieldName, validationName, false)
+          }
+        }
       } else {
         return
       }
@@ -218,8 +235,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     if (!sameValidationMessage) currentValidatedInputErrorTextWrapper.appendChild(errorText)
 
     if (isValid === false) {
+      currentValidatedInputErrorTextWrapper.classList.add('error-active')
       currentValidatedInputErrorTextWrapper.querySelector(`p[error-text-id=${validationName}]`).hidden = false
     } else {
+      currentValidatedInputErrorTextWrapper.classList.remove('error-active')
       currentValidatedInputErrorTextWrapper.querySelector(`p[error-text-id=${validationName}]`).hidden = true
     }
 
@@ -230,5 +249,36 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       errorMessages.forEach(p => p.hidden = true)
       errorMessages[0].hidden = false
     }
+  }
+
+  validationPatternEnd(inputFieldName, validationName, currentValue) {
+    const validationMask = this.validationValues[inputFieldName][validationName]['mask-value']
+    const validationMaskSplitted = validationMask.split('')
+    const currentValueSplitted = currentValue.split('')
+    const hasSameLength = validationMaskSplitted.length === currentValueSplitted.length
+    let isValuesValid = []
+    if (!hasSameLength) return
+    currentValueSplitted.forEach((char, index) => {
+      if (validationMaskSplitted[index] !== 'N' && validationMaskSplitted[index] !== 'U' && validationMaskSplitted[index] !== 'C' && validationMaskSplitted[index] !== '#') {
+        if (validationMaskSplitted[index] === char) {
+          isValuesValid.push(true)
+        } else {
+          isValuesValid.push(false)
+        }
+      }
+      else if (validationMaskSplitted[index] === 'N') {
+        const currentInputIsNumber = +char >= 0 && +char <= 9
+        currentInputIsNumber ? isValuesValid.push(true) : isValuesValid.push(false)
+      }
+      else if (validationMaskSplitted[index] === 'C') {
+        const currentInputIsLetterAndCapitalCase = /[a-zA-Z]/.test(char) && char === char.toUpperCase()
+        currentInputIsLetterAndCapitalCase ? isValuesValid.push(true) : isValuesValid.push(false)
+      }
+      else if (validationMaskSplitted[index] === 'U') {
+        const currentInputIsLetterAndLowerCase = /[a-zA-Z]/.test(char) && char === char.toLowerCase()
+        currentInputIsLetterAndLowerCase ? isValuesValid.push(true) : isValuesValid.push(false)
+      }
+    })
+    return !isValuesValid.includes(false)
   }
 }
