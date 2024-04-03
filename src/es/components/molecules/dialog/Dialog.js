@@ -58,6 +58,9 @@ export default class Dialog extends Shadow() {
     }
     this.showEventListener = event => this.show(event.detail.command)
     this.closeEventListener = () => this.close()
+    this.keyupListener = event => {
+      if (event.key === 'Escape') this.close()
+    }
   }
 
   connectedCallback () {
@@ -78,6 +81,7 @@ export default class Dialog extends Shadow() {
     this.addEventListener('click', this.clickEventListener)
     if (this.getAttribute('show-event-name')) document.body.addEventListener(this.getAttribute('show-event-name'), this.showEventListener)
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
+    document.addEventListener('keyup', this.keyupListener)
   }
 
   disconnectedCallback () {
@@ -87,6 +91,7 @@ export default class Dialog extends Shadow() {
     this.removeEventListener('click', this.clickEventListener)
     if (this.getAttribute('show-event-name')) document.body.removeEventListener(this.getAttribute('show-event-name'), this.showEventListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
+    document.removeEventListener('keyup', this.keyupListener)
   }
 
   /**
