@@ -160,6 +160,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const validationNames = Object.keys(validationRules) || []
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
+        const isRequiredValidationValid = currentInput.value && currentInput.value.trim().length > 0
         if (currentInput.value && currentInput.value.trim().length > 0) {
           this.setValidity(inputFieldName, validationName, true)
         } else {
@@ -167,6 +168,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       }
       if (validationName === 'max-length') {
+        const isMaxLengthValidationValid = currentInput.value.trim().length < validationRules['max-length'].value
         if (currentInput.value.trim().length < validationRules['max-length'].value) {
           this.setValidity(inputFieldName, validationName, true)
         } else {
@@ -175,6 +177,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       }
       if (validationName === 'min-length') {
+        const isMinLengthValidationValid = currentInput.value.trim().length < validationRules['min-length'].value
+
         if (currentInput.value.trim().length < validationRules['min-length'].value) {
           this.setValidity(inputFieldName, validationName, false)
         } else {
@@ -182,6 +186,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       }
       if (validationName === 'email') {
+        const isEmailValidationValid = currentInput.value.match(
+          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        )
         if (currentInput.value.match(
           /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         )) {
@@ -191,6 +198,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       }
       if (validationName === 'max-number-value') {
+        const isMaxNumberValueValidationValid = +currentInput.value > +validationRules['max-number-value'].value
         if (+currentInput.value > +validationRules['max-number-value'].value) {
           this.setValidity(inputFieldName, validationName, false)
         } else {
@@ -199,6 +207,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       }
       if (validationName === 'min-number-value') {
+        const isMinNumberValueValidationValid = +currentInput.value < +validationRules['min-number-value'].value
         if (+currentInput.value < +validationRules['min-number-value'].value) {
           this.setValidity(inputFieldName, validationName, false)
         } else {
@@ -208,6 +217,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       } if (validationName === 'min-max-number-value') {
         const minNumberValue = +validationRules['min-max-number-value'].value.split('-')[0]
         const maxNumberValue = +validationRules['min-max-number-value'].value.split('-')[1]
+        const isMinMaxNumberValueValidationValid = (+currentInput.value > minNumberValue) && (+currentInput.value < maxNumberValue)
 
         if ((+currentInput.value > minNumberValue) && (+currentInput.value < maxNumberValue)) {
           this.setValidity(inputFieldName, validationName, true)
@@ -218,6 +228,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (validationRules['pattern']['pattern-value']) {
           const re = new RegExp(`${validationRules['pattern']['pattern-value']}`)
           const regExpValid = re.test(currentInput.value)
+          const isPatternValueValidationValid = re.test(currentInput.value)
           if (regExpValid) {
             this.setValidity(inputFieldName, validationName, true)
           } else {
@@ -225,8 +236,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           }
         }
         if (validationRules['pattern']['mask-value']) {
-          const isValid = this.validationPatternEnd(inputFieldName, validationName, currentInput.value.trim())
-          if (isValid) {
+         const isPatternMaskValueValidationValid = this.validationPatternEnd(inputFieldName, validationName, currentInput.value.trim())
+          if (isPatternMaskValueValidationValid) {
             this.setValidity(inputFieldName, validationName, true)
           } else {
             this.setValidity(inputFieldName, validationName, false)
