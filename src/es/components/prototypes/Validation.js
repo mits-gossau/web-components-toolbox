@@ -11,13 +11,15 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    */
   constructor(options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
-    // TODO What if dont have submit button but only one validation field
-    // TODO what if we had more forms? how to solve?
 
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = event.currentTarget.getAttribute('name')
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
+      if (this.realTimeSubmitButton) {
+
+        this.checkIfFormValid()
+      }
     }
 
     this.validationPatternInputEventListener = (event) => {
@@ -67,6 +69,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const inputFieldName = node.getAttribute('name')
         if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
       })
+      const formHasError = this.root.querySelector('form').querySelector('.has-error')
+      if (formHasError) this.scrollToFirstError()
     }
 
     this.baseInputChangeListener = (event) => {
@@ -87,7 +91,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.validationValues = {}
     if (this.allValidationNodes.length > 0) {
       this.allValidationNodes.forEach(node => {
-        // TODO if type radio we need other logic
         const errorTextWrapper = document.createElement('div')
         errorTextWrapper.classList.add('custom-error-text')
         node.after(errorTextWrapper)
@@ -121,7 +124,17 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    */
   connectedCallback() {
     super.connectedCallback()
-    // this.validate('Name')
+    this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
+    this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
+    if (this.shouldValidateOnInitiate) {
+      this.allValidationNodes.forEach(node => {
+        const inputFieldName = node.getAttribute('name')
+        if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
+      })
+    }
+    if (this.realTimeSubmitButton) {
+      this.checkIfFormValid()
+    }
   }
 
   /**
@@ -144,8 +157,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   validator(validationRules, currentInput, inputFieldName) {
-    const validationNames = Object.keys(validationRules)
-    // @ts-ignore
+    const validationNames = Object.keys(validationRules) || []
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
         if (currentInput.value && currentInput.value.trim().length > 0) {
@@ -292,5 +304,22 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       }
     })
     return !isValuesValid.includes(false)
+  }
+
+  scrollToFirstError() {
+    const firstNodeWithError = this.allValidationNodes.find(node => node.classList.contains('has-error'))
+    firstNodeWithError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+
+  checkIfFormValid() {
+    let allIsValidValue = []
+    Object.keys(this.validationValues).forEach(key => {
+      Object.keys(this.validationValues[key]).forEach(subKey => {
+        if (this.validationValues[key][subKey].hasOwnProperty('isValid')) {
+          allIsValidValue.push(this.validationValues[key][subKey].isValid)
+        }
+      })
+    })
+    if (this.submitButton) this.submitButton.disabled = allIsValidValue.includes(false)
   }
 }
