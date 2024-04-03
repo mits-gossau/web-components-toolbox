@@ -11,8 +11,8 @@
       <input id="anrede3" name="Anrede" type="radio" value="3" />
     </div>
     <div>
-      <label for="Name">Simply required => required + attribute(ignore-first-space)</label>
-      <input id="Name" ignore-first-space data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."}}' 
+      <label for="Name">Simply required => required + attribute(ignore-first-space) + <strong>live-input-validation</strong></label>
+      <input id="Name" live-input-validation="true" ignore-first-space data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."}}' 
       type="text" value="" name="SimplyRequired" placeholder="Name hier eingeben..." autocomplete="off" />
     </div>
     <div>
@@ -21,8 +21,8 @@
       type="text" value="" name="SimplyRequired2" placeholder="Name2 hier eingeben..." autocomplete="off" maxlength="5"/>
     </div>
     <div>
-      <label for="Name">Name => required + max-length:10</label>
-      <input id="Name" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
+      <label for="Name">Name => required + max-length:10 + <strong>live-input-validation</strong></label>
+      <input id="Name" live-input-validation="true" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
       "max-length": {"value": "10", "error-message": "Bitte maximum 10 Character eingeben."}
      }' type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off"/>
     </div>
@@ -33,15 +33,15 @@
         type="text" value="" name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" />
     </div>
     <div>
-      <label for="FirstnameTwo">VornameTwo => required + min-length:3 + max-length:10</label>
-      <input id="FirstnameTwo" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
+      <label for="FirstnameTwo">VornameTwo => required + min-length:3 + max-length:10 + <strong>live-input-validation</strong></label>
+      <input id="FirstnameTwo" live-input-validation="true" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
       "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben."},
       "max-length": {"value": "10", "error-message": "Bitte maximum 10 Character eingeben."}}'
         type="text" value="" name="VornameTwo" placeholder="VornameTwo hier eingeben..." autocomplete="off" />
     </div>
     <div>
-      <label for="Email">E-Mail => required + email</label>
-      <input id="Email" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      <label for="Email">E-Mail => required + email + <strong>live-input-validation</strong></label>
+      <input id="Email" live-input-validation="true" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
       "email": {"error-message": "Bitte richtige e-mail eingeben."}}'
         type="email" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
     </div>

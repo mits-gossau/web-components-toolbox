@@ -17,7 +17,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       const inputFieldName = event.currentTarget.getAttribute('name')
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
       if (this.realTimeSubmitButton) {
-
         this.checkIfFormValid()
       }
     }
@@ -89,12 +88,42 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.submitButton = this.form.querySelector('input[type="submit"]')
     this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
     this.validationValues = {}
+
+    if (this.submitButton) {
+      this.submitButton.addEventListener('click', this.submitFormValidation)
+    }
+  }
+
+  /**
+   * Lifecycle callback, triggered when node is attached to the dom
+   *
+   * @return {void}
+   */
+  connectedCallback() {
+    super.connectedCallback()
+    this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
+    this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
+   
+    if (this.shouldValidateOnInitiate) {
+      this.allValidationNodes.forEach(node => {
+        const inputFieldName = node.getAttribute('name')
+        if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
+      })
+    }
+    if (this.realTimeSubmitButton) {
+      this.checkIfFormValid()
+    }
     if (this.allValidationNodes.length > 0) {
       this.allValidationNodes.forEach(node => {
         const errorTextWrapper = document.createElement('div')
+        const nodeHasLiveValidation = node.getAttribute('live-input-validation') === 'true'
         errorTextWrapper.classList.add('custom-error-text')
         node.after(errorTextWrapper)
-        node.addEventListener('change', this.validationChangeEventListener)
+        if (nodeHasLiveValidation) {
+          node.addEventListener('input', this.validationChangeEventListener)
+        } else {
+          node.addEventListener('change', this.validationChangeEventListener)
+        }
         node.addEventListener('input', this.baseInputChangeListener)
         // IMPORTANT name attribute has to be unique and always available
         if (node.hasAttribute('name')) {
@@ -111,30 +140,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       })
     }
-
-    if (this.submitButton) {
-      this.submitButton.addEventListener('click', this.submitFormValidation)
-    }
-  }
-
-  /**
-   * Lifecycle callback, triggered when node is attached to the dom
-   *
-   * @return {void}
-   */
-  connectedCallback() {
-    super.connectedCallback()
-    this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
-    this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
-    if (this.shouldValidateOnInitiate) {
-      this.allValidationNodes.forEach(node => {
-        const inputFieldName = node.getAttribute('name')
-        if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
-      })
-    }
-    if (this.realTimeSubmitButton) {
-      this.checkIfFormValid()
-    }
   }
 
   /**
@@ -144,16 +149,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    */
   disconnectedCallback() {
     super.disconnectedCallback()
-  }
-
-  validate(inputFieldName) {
-    if (inputFieldName) {
-      // implement if only one imput field has to be validated
-      const currentValidatedInput = this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName)
-      this.validator(this.validationValues[inputFieldName], currentValidatedInput, inputFieldName)
-    } else {
-      // implement if all needs to be validated
-    }
   }
 
   validator(validationRules, currentInput, inputFieldName) {
@@ -197,6 +192,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
         if (validationRules['pattern']['mask-value']) {
           const isPatternMaskValueValidationValid = this.validationPatternEnd(inputFieldName, validationName, currentInput.value.trim())
+          console.log("w", isPatternMaskValueValidationValid)
           this.setValidity(inputFieldName, validationName, isPatternMaskValueValidationValid)
         }
       } else {
@@ -248,7 +244,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const currentValueSplitted = currentValue.split('')
     const hasSameLength = validationMaskSplitted.length === currentValueSplitted.length
     let isValuesValid = []
-    if (!hasSameLength) return
+    if (!hasSameLength) return false
     currentValueSplitted.forEach((char, index) => {
       if (validationMaskSplitted[index] !== 'N' && validationMaskSplitted[index] !== 'U' && validationMaskSplitted[index] !== 'C' && validationMaskSplitted[index] !== '#') {
         if (validationMaskSplitted[index] === char) {
