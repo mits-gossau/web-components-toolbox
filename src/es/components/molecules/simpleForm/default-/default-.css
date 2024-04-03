@@ -153,3 +153,6 @@
   padding: var(--error-text-padding, 0 0 0 0.2rem);
   font-size: var(--error-font-size, 1rem);
 }
+:host .has-error {
+  border: var(--error-input-border-width, 1px) solid var(--error-input-border-color, red) !important;
+}
