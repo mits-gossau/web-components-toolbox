@@ -1,7 +1,7 @@
 <m-simple-form load-form-styles namespace="simple-form-default-">
-  <form real-time-submit-button="false" validate-on-initiate="false" action="/some-action" enctype="multipart/form-data" method="post">
-    <input type="hidden"
-      name="xp_sendBackParams" value="0" />
+  <form real-time-submit-button="false" validate-on-initiate="false" action="/some-action" enctype="multipart/form-data"
+    method="post">
+    <input type="hidden" name="xp_sendBackParams" value="0" />
     <div class="inline">
       <label for="anrede1">Herr</label>
       <input id="anrede1" name="Anrede" type="radio" value="2" checked />
@@ -11,51 +11,55 @@
       <input id="anrede3" name="Anrede" type="radio" value="3" />
     </div>
     <div>
-      <label for="Name">Simply required => required + attribute(ignore-first-space) + <strong>live-input-validation</strong></label>
-      <input id="Name" live-input-validation="true" ignore-first-space data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."}}' 
-      type="text" value="" name="SimplyRequired" placeholder="Name hier eingeben..." autocomplete="off" />
+      <label for="Name">Simply required => required + attribute(ignore-first-space) +
+        <strong>live-input-validation</strong></label>
+      <input id="Name" live-input-validation="true" ignore-first-space
+        data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."}}' type="text" value=""
+        name="SimplyRequired" placeholder="Name hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="Name2">Simply required => required + WebAPI max-length: 5 + attribute(ignore-first-space)</label>
-      <input id="Name2" ignore-first-space data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."}}' 
-      type="text" value="" name="SimplyRequired2" placeholder="Name2 hier eingeben..." autocomplete="off" maxlength="5"/>
+      <input id="Name2" ignore-first-space
+        data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."}}' type="text" value=""
+        name="SimplyRequired2" placeholder="Name2 hier eingeben..." autocomplete="off" maxlength="5" />
     </div>
     <div>
       <label for="Name">Name => required + max-length:10 + <strong>live-input-validation</strong></label>
       <input id="Name" live-input-validation="true" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
       "max-length": {"value": "10", "error-message": "Bitte maximum 10 Character eingeben."}
-     }' type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off"/>
+     }' type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="Firstname">Vorname => required + min-length:3 </label>
       <input id="Firstname" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
-      "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben."}}'
-        type="text" value="" name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" />
+      "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben."}}' type="text" value=""
+        name="Vorname" placeholder="Vorname hier eingeben..." autocomplete="off" />
     </div>
     <div>
-      <label for="FirstnameTwo">VornameTwo => required + min-length:3 + max-length:10 + <strong>live-input-validation</strong></label>
+      <label for="FirstnameTwo">VornameTwo => required + min-length:3 + max-length:10 +
+        <strong>live-input-validation</strong></label>
       <input id="FirstnameTwo" live-input-validation="true" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
       "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben."},
-      "max-length": {"value": "10", "error-message": "Bitte maximum 10 Character eingeben."}}'
-        type="text" value="" name="VornameTwo" placeholder="VornameTwo hier eingeben..." autocomplete="off" />
+      "max-length": {"value": "10", "error-message": "Bitte maximum 10 Character eingeben."}}' type="text" value=""
+        name="VornameTwo" placeholder="VornameTwo hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="Email">E-Mail => required + email + <strong>live-input-validation</strong></label>
       <input id="Email" live-input-validation="true" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
-      "email": {"error-message": "Bitte richtige e-mail eingeben."}}'
-        type="email" value="" name="Email" placeholder="Email hier eingeben..." autocomplete="off" />
+      "email": {"error-message": "Bitte richtige e-mail eingeben."}}' type="email" value="" name="Email"
+        placeholder="Email hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="AgeOne">Age => required + min-number-value:18</label>
       <input id="AgeOne" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
-      "min-number-value": {"value": "18", "error-message": "Bitte grössere Zahl als 18 eingeben."}}'
-        type="number" value="" name="AgeOne" placeholder="AgeOne hier eingeben..." autocomplete="off" />
+      "min-number-value": {"value": "18", "error-message": "Bitte grössere Zahl als 18 eingeben."}}' type="number"
+        value="" name="AgeOne" placeholder="AgeOne hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="AgeTwo">Age => required + max-value:80</label>
       <input id="AgeTwo" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
-      "max-number-value": {"value": "80", "error-message": "Bitte kleinere Zahl als 80 eingeben."}}'
-        type="number" value="" name="AgeTwo" placeholder="AgeTwo hier eingeben..." autocomplete="off" />
+      "max-number-value": {"value": "80", "error-message": "Bitte kleinere Zahl als 80 eingeben."}}' type="number"
+        value="" name="AgeTwo" placeholder="AgeTwo hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="AgeThree">Age => required + min-max-value:18-80</label>
@@ -66,30 +70,37 @@
     <div>
       <label for="Phone">OnlyPattern [a-zA-Z] Text => no mask value</label>
       <input id="Phone" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
-      "pattern": {"pattern-value":"[a-zA-Z]", "error-message": "Bitte richtige Text eingeben."}}'
-        type="text" value="" name="Text" placeholder="NUR Text hier eingeben..." autocomplete="off" />
+      "pattern": {"pattern-value":"[a-zA-Z]", "error-message": "Bitte richtige Text eingeben."}}' type="text" value=""
+        name="Text" placeholder="NUR Text hier eingeben..." autocomplete="off" />
     </div>
     <div>
       <label for="Phone">OnlyPattern ^\d{1,4}$ Text[Number] => no mask value</label>
       <input id="Phone" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
-      "pattern": {"pattern-value":"^\\d{1,4}$", "error-message": "Bitte richtige Text eingeben."}}'
-        type="text" value="" name="NumberText" placeholder="Nur und max vier Nummer hier eingeben(3456)..." autocomplete="off" />
+      "pattern": {"pattern-value":"^\\d{1,4}$", "error-message": "Bitte richtige Text eingeben."}}' type="text"
+        value="" name="NumberText" placeholder="Nur und max vier Nummer hier eingeben(3456)..." autocomplete="off" />
     </div>
     <div>
       <label for="BankAccount">IBAN => format-helper-value:CCNN NNNN NNNN UU## NNNN</label>
-      <input id="BankAccount" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      <input id="BankAccount"
+        data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
       "pattern": {"pattern-value":"", "mask-value": "CCNN NNNN NNNN UU## NNNN", "error-message": "Bitte richtige IBAN eingeben."}}'
         type="text" value="" name="BankAccount" placeholder="CH34 3456 7890 1234 1234" autocomplete="off" />
     </div>
     <div>
       <label for="Phone">Telephone => format-helper-value:NNN/NNN-NN-NN</label>
-      <input id="Phone" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      <input id="Phone"
+        data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
       "pattern": {"pattern-value":"", "mask-value": "NNN/NNN-NN-NN", "error-message": "Bitte richtige Phonenummer eingeben."}}'
         type="text" value="" name="Phone" placeholder="Phone hier eingeben..." autocomplete="off" />
     </div>
     <div>
+      <label for="acceptTerms">Bitte die Terms & Conditions akzeptieren!</label>
+      <input id="acceptTerms" name="acceptTerms" type="checkbox"
+        data-m-v-rules='{"required": {"error-message": "Bitte Terms & Conditions akzeptieren."}}' />
+    </div>
+    <div>
       <label for="pets">Choose a pet:</label>
-      <select name="pets" id="pets">
+      <select name="pets" id="pets" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."}}'>
         <option value="">--Please choose an option--</option>
         <option value="dog">Dog</option>
         <option value="cat">Cat</option>
@@ -114,7 +125,17 @@
       <label for="Policy">Ich bestätige, dass ich die <a href="https://www.migros.ch/de/datenschutz.html"
           target="_blank">Datenschutzerklärung</a> und die darin umschriebene Bearbeitung meiner Personendaten zur
         Kenntnis genommen haben.</label>
-      <input id="Policy" name="Policy" type="checkbox" />
+      <input id="Policy" name="Policy" type="checkbox"
+        data-m-v-rules='{"required": {"error-message": "Bitte Policy akzeptieren."}}' />
+    </div>
+    <div>
+      <label for="description">Textarea => required + min-length(50) + max-length(20)WebAPI +
+        <strong>live-input-validation</strong></label>
+      <textarea id="Description" live-input-validation="true" rows="4" maxlength="50" value=""
+        data-m-v-rules='{"required": {"error-message": "Bitte diese textarea ausfüllen."},
+        "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben."}}' name="Description"
+        placeholder="Beschreibung hier eingeben..."></textarea>
+    </div>
     </div>
     <input type="submit" value="Registrieren" />
   </form>

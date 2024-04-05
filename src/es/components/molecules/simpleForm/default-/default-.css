@@ -155,4 +155,5 @@
 }
 :host .has-error {
   border: var(--error-input-border-width, 1px) solid var(--error-input-border-color, red) !important;
+  outline-color: var(--error-input-border-color, red) !important;
 }

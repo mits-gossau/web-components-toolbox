@@ -103,7 +103,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     super.connectedCallback()
     this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
     this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
-   
+
     if (this.shouldValidateOnInitiate) {
       this.allValidationNodes.forEach(node => {
         const inputFieldName = node.getAttribute('name')
@@ -155,8 +155,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const validationNames = Object.keys(validationRules) || []
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
-        const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
-        this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
+        const isCheckboxInput = currentInput.getAttribute('type') === 'checkbox'
+        if (isCheckboxInput) {
+          this.setValidity(inputFieldName, validationName, currentInput.checked)
+        } else {
+          const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
+          this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
+        }
       }
       if (validationName === 'max-length') {
         const isMaxLengthValidationValid = !!(currentInput.value.trim().length < validationRules['max-length'].value)
@@ -192,7 +197,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
         if (validationRules['pattern']['mask-value']) {
           const isPatternMaskValueValidationValid = this.validationPatternEnd(inputFieldName, validationName, currentInput.value.trim())
-          console.log("w", isPatternMaskValueValidationValid)
           this.setValidity(inputFieldName, validationName, isPatternMaskValueValidationValid)
         }
       } else {
