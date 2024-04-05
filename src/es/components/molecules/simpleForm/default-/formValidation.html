@@ -112,12 +112,13 @@
     </div>
     <div class="center">
       <div>
-        <div>
+        <div new-error-message-reference-point="true">
           <div>
             <a-icon-paperclip></a-icon-paperclip>
             <span class="type-file-label">&nbsp;Datei auswählen</span>
           </div>
-          <input name="File" multiple type="file" remove-file-title="Datei entfernen" />
+          <input name="File" multiple type="file" remove-file-title="Datei entfernen" error-message-reference-point-changed="true"
+            data-m-v-rules='{"required": {"error-message": "Bitte File hochladen."}}' />
         </div>
       </div>
     </div>
@@ -131,8 +132,7 @@
     <div>
       <label for="description">Textarea => required + min-length(50) + max-length(20)WebAPI +
         <strong>live-input-validation</strong></label>
-      <textarea id="Description" live-input-validation="true" rows="4" maxlength="50" value=""
-        data-m-v-rules='{"required": {"error-message": "Bitte diese textarea ausfüllen."},
+      <textarea id="Description" live-input-validation="true" rows="4" maxlength="50" data-m-v-rules='{"required": {"error-message": "Bitte diese textarea ausfüllen."},
         "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben."}}' name="Description"
         placeholder="Beschreibung hier eingeben..."></textarea>
     </div>
