@@ -60,6 +60,21 @@ export default class Tabs extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     const tabs = this.root.querySelectorAll('.tab-navigation li')
     const activeNavigationTab = this.root.querySelector('.tab-navigation li.active')
+    const subContainers = this.root.querySelectorAll('.container-distributoren')
+
+
+    if(subContainers){
+      this.checkWindow()
+      subContainers.forEach(subContainer => {
+        var widthSubContainer = subContainer.getAttribute("width");
+        subContainer.style.width = widthSubContainer;
+        if(subContainer.querySelector("a-picture")){
+          subContainer.classList.add("imgContainer");
+        }
+      })
+      window.addEventListener('resize', this.checkWindow.bind(this));
+    
+    }
 
     tabs.forEach(tab => {
       if (tab.classList.contains('active')) {
@@ -73,6 +88,20 @@ export default class Tabs extends Shadow() {
     
   }
 
+  checkWindow(){
+    const tabs = this.root.querySelectorAll('.tab-navigation li')
+    if (window.innerWidth <= 767) {
+    tabs.forEach(tab => {
+          var textWithSpaces = tab.innerHTML;
+          if (textWithSpaces.length > 11) {
+              var shortenedText = textWithSpaces.substring(0, 11) + "...";
+              tab.dataset.originalText = textWithSpaces; 
+              tab.innerHTML = shortenedText;
+          }
+      });
+  } 
+  }
+
   shouldRenderCSS () {
     return !this.shadowRoot.querySelector(
       `:host > style[_css], ${this.tagName} > style[_css]`
@@ -83,11 +112,11 @@ export default class Tabs extends Shadow() {
     this.css = /* css */ `
         :host {
             /*--background-color: var(--m-orange-300);*/ /* removed according laurin */
-            --color-active: var(--m-orange-600);
+            --color-active: var(--m-orange-600, orange);
             font-family: var(--font-family);
         }
         :host .tab-navigation {
-            border-top: var(--border-bottom, 1px solid var(--m-gray-300));
+            border-top: var(--border-bottom, 1px solid var(--m-gray-300, grey));
             list-style: none;
             display: flex;
             justify-content: var(--tab-justify-content, none);
@@ -96,19 +125,20 @@ export default class Tabs extends Shadow() {
             margin-bottom: var(--margin-bottom, 3em);
             overflow-x: auto;
             transform:rotateX(180deg);
+            
         }
         :host .tab-navigation::-webkit-scrollbar {
           width: 4px;
           height: 4px;
         }
         :host .tab-navigation::-webkit-scrollbar-thumb{
-          background: var(--m-gray-400);
+          background: var(--m-gray-400, grey);
           -webkit-appearance: none;
         }
         :host .tab-navigation li {
             border-top-left-radius: var(--border-radius, 0.5em);
             border-top-right-radius: var(--border-radius, 0.5em);
-            color: var(--color);
+            color: var(--color, var(--color-secondary, black));
             cursor: pointer;
             padding: 10px;
             position: relative;
@@ -118,7 +148,7 @@ export default class Tabs extends Shadow() {
             content: '';
             width: 100%;
             height: 3px;
-            background-color: var(--background-color, var(--color-disabled));
+            background-color: var(--background-color, var(--color-disabled, #A4A4A4));
             display: none;
             position: absolute;
             bottom: 0;
@@ -127,17 +157,17 @@ export default class Tabs extends Shadow() {
             border-top-right-radius: var(--border-radius, 0.5em);
         }
         :host .tab-navigation li:hover {
-            background-color: var(--background-color-hover, var(--m-orange-100));
+            background-color: var(--background-color-hover, var(--m-orange-100, var(--color-secondary, orange)));
         }
         :host .tab-navigation li:hover::after {
             display: block;
         }
         :host .tab-navigation li.active {
-            color: var(--color-active, var(--color-secondary));
+            color: var(--color-active, var(--color-secondary, orange));
             font-family: var(--font-family-bold);
         }
         :host .tab-navigation li.active::after {
-            background-color: var(--background-color-active, var(--color-secondary));
+            background-color: var(--background-color-active, var(--color-secondary, orange));
             display: block;
         }
         :host .tab-navigation li a {
@@ -151,5 +181,37 @@ export default class Tabs extends Shadow() {
             display: block;
         }
     `
+    return this.fetchTemplate()
+
   }
+
+  
+  /**
+   * fetches the template
+   *
+   * @return {Promise<void>}
+   */
+  fetchTemplate () {
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+        {
+            path: `${this.importMetaUrl}../../../../css/reset.css`,
+            namespace: false
+        },
+        {
+            path: `${this.importMetaUrl}../../../../css/style.css`,
+            namespaceFallback: true
+        }
+    ]
+    switch (this.getAttribute('namespace')) {
+        case 'tabs-container-':
+            return this.fetchCSS([{
+                path: `${this.importMetaUrl}./container-/container-.css`, // apply namespace since it is specific and no fallback
+                namespace: false
+            }, ...styles], false)
+        default:
+            return Promise.resolve(); 
+    }
+}
+
 }

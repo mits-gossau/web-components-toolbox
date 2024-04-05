@@ -662,6 +662,16 @@ export default class MultiLevelNavigation extends Mutation() {
             replacement: '--multi-level-navigation-default-'
           }]
         }, ...styles], false)
+        case 'multi-level-navigation-delica-':
+          return this.fetchCSS([{
+            path: `${this.importMetaUrl}./delica-/delica-.css`, // apply namespace since it is specific and no fallback
+            namespace: false,
+            replaces: [{
+              pattern: '--multi-level-navigation-delica-',
+              flags: 'g',
+              replacement: '--multi-level-navigation-delica-'
+            }]
+          }, ...styles], false)
       default:
         return Promise.resolve()
     }

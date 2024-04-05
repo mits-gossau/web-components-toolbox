@@ -106,7 +106,9 @@ export default class Teaser extends Intersection() {
         width: var(--width, 100%);
         overflow: var(--overflow, visible);
         position: var(--position, static);
-        overflow: hidden;
+        overflow: var(--overflow, hidden);
+        overflow-x: var(--overflow-x, hidden);
+        overflow-y: var(--overflow-y, hidden);
         box-shadow: var(--box-shadow, none);
       }
       :host figure a-picture, :host figure m-picture-with-picture {

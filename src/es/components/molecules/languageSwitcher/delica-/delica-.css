@@ -9,7 +9,9 @@
     --language-switcher-delica-ul-text-align: var(--language-switcher-delica-ul-text-align-custom, right);
     --language-switcher-delica-ul-margin: var(--language-switcher-delica-ul-margin-custom, 0);
     --language-switcher-delica-a-text-decoration: var(--language-switcher-delica-a-text-decoration-custom, none);
-    --language-switcher-delica-content-width: var(--language-switcher-delica-content-width-custom, 84%);    
+    --language-switcher-delica-content-width: var(--language-switcher-delica-content-width-custom, 84%);
+    --language-switcher-delica-margin: none;
+    --language-switcher-delica-width: none;
 }
 
 @media only screen and (max-width: _max-width_) {

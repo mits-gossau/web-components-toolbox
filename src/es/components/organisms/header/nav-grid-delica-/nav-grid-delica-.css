@@ -6,6 +6,8 @@
     --logo-default-justify-content: start;
     background-color: white;
     --multi-level-navigation-default-o-nav-wrapper-padding: 2em;
+    --multi-level-navigation-delica-padding: padding: 0 1em 0 0;
+
 }
 
 :host>header {
@@ -19,13 +21,13 @@
 
 :host>header>a-logo {
     --logo-default-height: auto;
-    --logo-default-width: 7rem;
+    --logo-default-width: 10rem;
     --logo-default-justify-content: start;
     grid-area: logo;
     position: relative;
     transform: none;
-    left: 0;
-    top: 0;
+    left: 1rem;
+    top: 1rem;
 }
 
 :host>header>m-language-switcher {
@@ -35,27 +37,41 @@
 
 :host>header>m-multi-level-navigation {
     --o-nav-wrapper-top: 3.5rem;
-    --logo-default-width: 8rem;
+    --logo-default-width: 11rem;
     grid-area: navigation;
     max-width: none;
-    margin-right: calc(0px - var(--multi-level-navigation-default-a-main-content-spacing))
+    margin-right: -1rem;
 }
 
-@media only screen and (max-width:1025px) {
+@media only screen and (max-width: 1200px) {
+    :host>header>a-menu-icon {
+        right: 1.5rem;
+        position: relative;
+        top: -0.2rem;
+    }
     :host>header>a-menu-icon {
         grid-area: menu-icon;
         order: 0;
         --header-nav-grid-delica-a-menu-icon-padding: 1.5rem 0 1.5rem 1rem;
     }
-    :host > header > m-multi-level-navigation {
+
+    :host>header>m-multi-level-navigation {
         animation: closeRight .4s ease-in;
         left: auto;
         right: -100vw;
     }
-    :host > header.open > m-multi-level-navigation {
+
+    :host>header.open>m-multi-level-navigation {
         animation: openRight .3s ease-out;
         left: auto;
         right: 0;
+    }
+
+    :host>header>a-logo {
+        --logo-default-height-mobile: auto;
+        --logo-default-width-mobile: 7rem !important;
+        left: 0;
+        top: -0.2rem;
     }
 }
 
@@ -94,12 +110,14 @@
         right: 0;
         width: calc(100% + 2rem);
     }
-    :host > header > m-multi-level-navigation {
+
+    :host>header>m-multi-level-navigation {
         animation: closeRight .4s ease-in;
         left: auto;
         right: -100vw;
     }
-    :host > header.open > m-multi-level-navigation {
+
+    :host>header.open>m-multi-level-navigation {
         animation: openRight .3s ease-out;
         left: -1rem;
         right: 0;
@@ -107,12 +125,21 @@
 }
 
 @keyframes openRight {
-    0% {right: -100vw}
-    100% {right: 0}
+    0% {
+        right: -100vw
+    }
+
+    100% {
+        right: 0
+    }
 }
+
 @keyframes closeRight {
-    0% {right: 0}
-    100% {right: -100vw}
+    0% {
+        right: 0
+    }
+
+    100% {
+        right: -100vw
+    }
 }
-
-
