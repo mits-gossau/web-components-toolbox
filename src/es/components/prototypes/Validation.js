@@ -12,6 +12,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   constructor(options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
 
+    this.renderValidationCSS()
+
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = event.currentTarget.getAttribute('name')
@@ -43,10 +45,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             }
             if (splittedMaskPattern[index] === 'N') {
               const currentInputIsNumber = +splittedInputValue[index] >= 0 && +splittedInputValue[index] <= 9
-              if (!currentInputIsNumber) splittedInputValue = splittedInputValue.slice(0, -1)
+              if (!currentInputIsNumber) {
+                splittedInputValue = splittedInputValue.filter(char => char !== splittedInputValue[index])
+              }
             }
             if (splittedMaskPattern[index + 1] !== 'C' && splittedMaskPattern[index + 1] !== 'U' && splittedMaskPattern[index + 1] !== '#' && splittedMaskPattern[index + 1] !== 'N') {
-              if (this.oldValueLength - 1 < index) {
+              if (this.oldValueLength - 1 < index && splittedInputValue[index]) {
                 splittedInputValue[index + 1] = splittedMaskPattern[index + 1]
               }
             }
@@ -54,7 +58,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         })
         inputField.value = splittedInputValue.join('')
         this.oldValueLength = inputField.value.length
-      } else {
+      }
+      else {
         inputField.value = inputField.value.slice(0, splittedMaskPattern.length)
       }
     }
@@ -120,7 +125,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const nodeHasLiveValidation = node.getAttribute('live-input-validation') === 'true'
         errorTextWrapper.classList.add('custom-error-text')
         currentNodeHasNewErrorReferencePoint ? node.closest('[new-error-message-reference-point="true"]').after(errorTextWrapper) : node.after(errorTextWrapper)
-        
+
         if (nodeHasLiveValidation) {
           node.addEventListener('input', this.validationChangeEventListener)
         } else {
@@ -291,5 +296,47 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       })
     })
     if (this.submitButton) this.submitButton.disabled = allIsValidValue.includes(false)
+  }
+
+  /**
+* renders the css
+*/
+  renderValidationCSS() {
+    this.style.textContent = /* css */`
+    :host .custom-error-text {
+      margin: var(--error-border-radius, 3px 0 0 0);
+      height: calc(var(--error-font-size, 1rem) * 1.55);
+      width: var(--error-width, fit-content);
+      background-color: var(--error-background-color, rgb(252, 169, 169));
+    }
+    :host .custom-error-text.error-active {
+      border-radius: var(--error-border-radius, 5px);
+      border: var(--error-border-width, 0px) solid var(--error-border-color, transparent);
+    }
+    :host .custom-error-text p {
+      color: var(--error-color, red);
+      font-weight: var(--error-font-weight, 400);
+      margin: var(--error-text-margin, 0);
+      padding: var(--error-text-padding, 0 0 0 0.2rem);
+      font-size: var(--error-font-size, 1rem);
+    }
+    :host .has-error {
+      border: var(--error-input-border-width, 1px) solid var(--error-input-border-color, red) !important;
+      outline-color: var(--error-input-border-color, red) !important;
+    }
+    `
+    this.html = this.style
+  }
+
+  get style() {
+    return (
+      this._style ||
+      (this._style = (() => {
+        const style = document.createElement('style')
+        style.setAttribute('protected', 'true')
+        style.setAttribute('validation-style', '')
+        return style
+      })())
+    )
   }
 }

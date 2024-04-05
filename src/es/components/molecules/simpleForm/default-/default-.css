@@ -135,25 +135,4 @@
     }
 }
 
-/* Default error CSS */
-:host .custom-error-text {
-  margin: var(--error-border-radius, 3px 0 0 0);
-  height: calc(var(--error-font-size, 1rem) * 1.55);
-  width: var(--error-width, fit-content);
-  background-color: var(--error-background-color, rgb(252, 169, 169));
-}
-:host .custom-error-text.error-active {
-  border-radius: var(--error-border-radius, 5px);
-  border: var(--error-border-width, 0px) solid var(--error-border-color, transparent);
-}
-:host .custom-error-text p {
-  color: var(--error-color, red);
-  font-weight: var(--error-font-weight, 400);
-  margin: var(--error-text-margin, 0);
-  padding: var(--error-text-padding, 0 0 0 0.2rem);
-  font-size: var(--error-font-size, 1rem);
-}
-:host .has-error {
-  border: var(--error-input-border-width, 1px) solid var(--error-input-border-color, red) !important;
-  outline-color: var(--error-input-border-color, red) !important;
-}
+
