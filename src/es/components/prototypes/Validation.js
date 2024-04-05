@@ -115,10 +115,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
     if (this.allValidationNodes.length > 0) {
       this.allValidationNodes.forEach(node => {
+        const currentNodeHasNewErrorReferencePoint = node.getAttribute('error-message-reference-point-changed') === 'true'
         const errorTextWrapper = document.createElement('div')
         const nodeHasLiveValidation = node.getAttribute('live-input-validation') === 'true'
         errorTextWrapper.classList.add('custom-error-text')
-        node.after(errorTextWrapper)
+        currentNodeHasNewErrorReferencePoint ? node.closest('[new-error-message-reference-point="true"]').after(errorTextWrapper) : node.after(errorTextWrapper)
+        
         if (nodeHasLiveValidation) {
           node.addEventListener('input', this.validationChangeEventListener)
         } else {
@@ -208,7 +210,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   setValidity(inputFieldName, validationName, isValid) {
     this.validationValues[inputFieldName][validationName].isValid = isValid
     const currentValidatedInput = this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName)
-    const currentValidatedInputErrorTextWrapper = currentValidatedInput.parentElement.querySelector('div.custom-error-text')
+    const currentValidatedInputHasNewErrorReferencePoint = currentValidatedInput.getAttribute('error-message-reference-point-changed') === 'true'
+    const currentValidatedInputErrorTextWrapper = currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
     let isValidValues = []
     Object.keys(this.validationValues[inputFieldName]).forEach(key => {
