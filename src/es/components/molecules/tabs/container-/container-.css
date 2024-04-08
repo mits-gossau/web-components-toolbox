@@ -16,19 +16,19 @@
 }
 
 :host .tab-navigation{
-    flex-direction: row !important;
+    flex-direction: var(--tabs-container-flex-direction, row) !important;
 }
 
 :host .tab-content.active{
-    justify-content: space-between;
-    display: flex !important;
-    flex-direction: row;
-    height: fit-content;
-    align-items: center;
+    justify-content: var(--tabs-container-tab-content-active-justify-content, space-between);
+    display: var(--tabs-container-tab-content-active-display, flex) !important;
+    flex-direction: var(--tabs-container-tab-content-active-flex-direction, row);
+    height: var(--tabs-container-tab-content-active-height, fit-content);
+    align-items: var(--tabs-container-tab-content-active-align-items, center);
 }
 
 :host .container-distributoren{
-    height: fit-content !important;
+    height: 100% !important;
     box-sizing: border-box;
 }
 
