@@ -160,7 +160,9 @@
     border-radius: 1em;
     margin-top: 2%;
     padding: 1em;
-    margin-left: 2.5%;
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    
+    margin-left: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    
+
 
   }
 
@@ -174,7 +176,8 @@
     position: absolute;
     border-top: var(--multi-level-navigation-delica-mobile-wrapper-border-width, var(--mobile-wrapper-border-width, 1px)) var(--multi-level-navigation-delica-mobile-wrapper-border-style, var(--mobile-wrapper-border-style, solid)) var(--multi-level-navigation-delica-mobile-wrapper-border-color, var(--mobile-wrapper-border-color, black));
     width: var(--multi-level-navigation-delica-nav-wrapper-width-var, 95%);
-    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    height: fit-content;
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    
+    height: fit-content;
     background-color: white;
     margin-top: 2%;
     padding: 1em;
