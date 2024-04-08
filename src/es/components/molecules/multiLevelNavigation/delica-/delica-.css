@@ -33,9 +33,8 @@
 
 }
 
-:host a-icon-mdx {
-  --icon-link-list-color: var(--multi-level-navigation-delica-icon-color, white);
-  --icon-link-list-color-hover: var(--multi-level-navigation-delica-icon-color-hover, var(--color-tertiary, white));
+:host .close-icon a-icon-mdx{
+  color: var(--multi-level-navigation-delica-close-icon-color, white) !important;
 }
 
 :host .intersecting {
