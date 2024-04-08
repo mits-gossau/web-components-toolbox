@@ -26,6 +26,14 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.validationPatternInputEventListener = (event) => {
       const inputField = event.currentTarget
       const splittedMaskPattern = this.validationValues[event.currentTarget.getAttribute('name')]['pattern']['mask-value'].split('')
+      const indexOfSpecialChars = []
+      let copySplittedMaskPattern = [...splittedMaskPattern]
+      splittedMaskPattern.filter(char => char !== 'C' && char !== 'U' && char !== '#' && char !== 'N')?.forEach((specialChar) => {
+        let index = copySplittedMaskPattern.findIndex(char => char === specialChar)
+        indexOfSpecialChars.push(index)
+        copySplittedMaskPattern[index] = undefined
+      })
+      console.log("indexOfSpecialChars", indexOfSpecialChars)
       let splittedInputValue = inputField.value.split('')
       if (splittedInputValue.length <= splittedMaskPattern.length) {
         splittedInputValue.forEach((input, index) => {
