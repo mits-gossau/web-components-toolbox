@@ -29,6 +29,7 @@
   --header-nav-grid-delica-a-menu-icon-padding-open: 1.5rem 1em 1.5rem 1rem !important;
   --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-border-color: white;
   --multi-level-navigation-delica-nav-wrapper-width-var: 95%;
+  --mobileOpenLeft-animation-right: 2.5%;
 
 
 }
@@ -120,6 +121,7 @@
 
 
 
+
 @media only screen and (max-width: 1200px) {
   .li-seperator {
     --multi-level-navigation-delica-hr-margin-mobile: none;
@@ -146,7 +148,7 @@
   :host>nav {
     background-color: #172445;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: flex-start;
   }
 
@@ -158,6 +160,7 @@
     border-radius: 1em;
     margin-top: 2%;
     padding: 1em;
+    margin-left: 2.5%;
 
   }
 

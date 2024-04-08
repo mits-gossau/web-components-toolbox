@@ -583,7 +583,7 @@ export default class MultiLevelNavigation extends Mutation() {
           pointer-events: none;
         }
         100% { 
-          right: 0;
+          right: var(--mobileOpenLeft-animation-right, 0);
           overflow: auto;
           pointer-events: auto;
         }
