@@ -60,11 +60,10 @@ export default class Tabs extends Shadow() {
     if (this.shouldRenderCSS()) this.renderCSS()
     const tabs = this.root.querySelectorAll('.tab-navigation li')
     const activeNavigationTab = this.root.querySelector('.tab-navigation li.active')
-    const subContainers = this.root.querySelectorAll('.container-distributoren')
+    const subContainers = this.root.querySelectorAll('.container-distributors')
 
 
     if(subContainers){
-      this.checkWindow()
       subContainers.forEach(subContainer => {
         var widthSubContainer = subContainer.getAttribute("width");
         subContainer.style.width = widthSubContainer;
@@ -87,21 +86,7 @@ export default class Tabs extends Shadow() {
     } 
     
   }
-
-  checkWindow(){
-    const tabs = this.root.querySelectorAll('.tab-navigation li')
-    if (window.innerWidth <= 767) {
-    tabs.forEach(tab => {
-          var textWithSpaces = tab.innerHTML;
-          if (textWithSpaces.length > 11) {
-              var shortenedText = textWithSpaces.substring(0, 11) + "...";
-              tab.dataset.originalText = textWithSpaces; 
-              tab.innerHTML = shortenedText;
-          }
-      });
-  } 
-  }
-
+  
   shouldRenderCSS () {
     return !this.shadowRoot.querySelector(
       `:host > style[_css], ${this.tagName} > style[_css]`
