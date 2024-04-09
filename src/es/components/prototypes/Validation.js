@@ -26,53 +26,59 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.validationPatternInputEventListener = (event) => {
       const inputField = event.currentTarget
       const splittedMaskPattern = this.validationValues[event.currentTarget.getAttribute('name')]['pattern']['mask-value'].split('')
-      const indexOfSpecialChars = []
-      const cursorPos = event.target.selectionStart
+      const cursorPos = event.target.selectionStart - 1
       const isBackspace = (event?.data == null) ? true : false
-      let copySplittedMaskPattern = [...splittedMaskPattern]
-      splittedMaskPattern.filter(char => char !== 'C' && char !== 'U' && char !== '#' && char !== 'N')?.forEach((specialChar) => {
-        let index = copySplittedMaskPattern.findIndex(char => char === specialChar)
-        indexOfSpecialChars.push(index)
-        copySplittedMaskPattern[index] = undefined
-      })
+      let hasWrongCharacter = false
+
 
       let splittedInputValue = inputField.value.split('')
-      console.log("cursorPos", splittedMaskPattern[cursorPos - 1])
       if (splittedInputValue.length <= splittedMaskPattern.length) {
-        splittedInputValue.forEach((input, index) => {
-          if (splittedMaskPattern[index]) {
-            if (splittedMaskPattern[index] === 'C' || splittedMaskPattern[index] === 'U') {
-              const currentInputIsLetter = /[a-zA-Z]/.test(splittedInputValue[index])
-              if (!currentInputIsLetter && !isBackspace) {
-                splittedInputValue = this.oldValue.split('')
-              } else {
-                if (splittedMaskPattern[index] === 'C') {
-                  splittedInputValue[index] = splittedInputValue[index].toUpperCase()
-                }
-                else if (splittedMaskPattern[index] === 'U') {
-                  splittedInputValue[index] = splittedInputValue[index].toLowerCase()
-                }
-              }
+        if (isBackspace && splittedMaskPattern[cursorPos + 1] !== 'C' && splittedMaskPattern[cursorPos] !== 'U' && splittedMaskPattern[cursorPos + 1] !== '#' && splittedMaskPattern[cursorPos + 1] !== 'N') {
+          // add the logic here
+
+        }
+
+        if (splittedMaskPattern[cursorPos] === 'C' || splittedMaskPattern[cursorPos] === 'U') {
+          const currentInputIsLetter = /[a-zA-Z]/.test(splittedInputValue[cursorPos])
+          if (!currentInputIsLetter) {
+            hasWrongCharacter = true
+            splittedInputValue = this.oldValue.split('')
+
+          } else {
+            if (splittedMaskPattern[cursorPos] === 'C') {
+              splittedInputValue[cursorPos] = splittedInputValue[cursorPos].toUpperCase()
             }
-            if (splittedMaskPattern[index] === 'N') {
-              const currentInputIsNumber = +splittedInputValue[index] >= 0 && +splittedInputValue[index] <= 9
-              if (!currentInputIsNumber && !isBackspace) {
-                // splittedInputValue = splittedInputValue.filter(char => char !== splittedInputValue[index])
-                splittedInputValue = this.oldValue.split('')
-              }
-            }
-            if (splittedMaskPattern[index + 1] !== 'C' && splittedMaskPattern[index + 1] !== 'U' && splittedMaskPattern[index + 1] !== '#' && splittedMaskPattern[index + 1] !== 'N') {
-              if (this.oldValue.length - 1 < index && splittedInputValue[index]) {
-                splittedInputValue[index + 1] = splittedMaskPattern[index + 1]
-              }
+            else if (splittedMaskPattern[cursorPos] === 'U') {
+              splittedInputValue[cursorPos] = splittedInputValue[cursorPos].toLowerCase()
             }
           }
-        })
+        }
+
+        if (splittedMaskPattern[cursorPos] === 'N') {
+          const currentInputIsNumber = +splittedInputValue[cursorPos] >= 0 && +splittedInputValue[cursorPos] <= 9
+          if (!currentInputIsNumber) {
+            hasWrongCharacter = true
+            splittedInputValue = this.oldValue.split('')
+          }
+        }
+
+        if (splittedMaskPattern[cursorPos + 1] !== 'C' && splittedMaskPattern[cursorPos + 1] !== 'U' && splittedMaskPattern[cursorPos + 1] !== '#' && splittedMaskPattern[cursorPos + 1] !== 'N') {
+          if (this.oldValue.length - 1 < cursorPos && splittedInputValue[cursorPos]) {
+            splittedInputValue[cursorPos + 1] = splittedMaskPattern[cursorPos + 1]
+          }
+        }
+
         inputField.value = splittedInputValue.join('')
+
+        if (hasWrongCharacter) {
+          event.target.setSelectionRange(cursorPos, cursorPos);
+        }
         this.oldValue = inputField.value
       }
       else {
         inputField.value = this.oldValue
+        event.target.setSelectionRange(cursorPos, cursorPos);
+
       }
     }
 
