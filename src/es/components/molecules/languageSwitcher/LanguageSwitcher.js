@@ -33,14 +33,14 @@ export default class LanguageSwitcher extends Shadow() {
     this.css = /* css */`
     :host {
       grid-area: var(--grid-area, "login");
-      margin: calc(var(--content-spacing, unset) / 2) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
-      width: var(--content-width, max(calc(_max-width_ - var(--content-spacing) * 2), 55%)); /* Environment.js mobileBreakpoint must correspond to the calc 1200px */
+      margin: var(--margin, calc(var(--content-spacing, unset) / 2) auto); /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
+      width: var(--width, var(--content-width, max(calc(_max-width_ - var(--content-spacing) * 2), 55%))); /* Environment.js mobileBreakpoint must correspond to the calc 1200px */
       }
       :host > ul {
         width: 100%;
         display: flex;
         align-items: center;
-        justify-content: end;
+        justify-content: var(--justify-content, end);
         gap: calc(var(--content-spacing, 1em) * 2);
       }
       @media only screen and (max-width: _max-width_) {

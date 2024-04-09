@@ -312,7 +312,7 @@ export default class MultiLevelNavigation extends Mutation() {
     :host > nav > ul > li > o-nav-wrapper {
       display: none !important;
       position: absolute;
-      top: 2em;
+      top: var(--o-nav-wrapper-top, 2em);
       left: calc(0 - var(--logo-default-width,var(--width, auto)));
       right: 0;
       width: calc(100% + var(--logo-default-width,var(--width, auto)));
@@ -344,7 +344,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
     :host > nav > ul > li > o-nav-wrapper > section {
       --gap: 1.25em;
-     padding: 2em 0 1.5em 0;
+     padding: var(--multi-level-navigation-default-o-nav-wrapper-padding, 2em 0 1.5em 0);
     }
     :host > nav > ul > li > o-nav-wrapper > section > div {
       /* this setting is quite fragile here, we need to improve it for reusability */
@@ -672,6 +672,16 @@ export default class MultiLevelNavigation extends Mutation() {
             replacement: '--multi-level-navigation-default-'
           }]
         }, ...styles], false)
+        case 'multi-level-navigation-delica-':
+          return this.fetchCSS([{
+            path: `${this.importMetaUrl}./delica-/delica-.css`, // apply namespace since it is specific and no fallback
+            namespace: false,
+            replaces: [{
+              pattern: '--multi-level-navigation-delica-',
+              flags: 'g',
+              replacement: '--multi-level-navigation-delica-'
+            }]
+          }, ...styles], false)
       default:
         return Promise.resolve()
     }

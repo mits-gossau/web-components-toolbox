@@ -1,0 +1,185 @@
+:host {
+  --color: #262626;
+  --multi-level-navigation-delica-main-ul-align-items: end;
+  --multi-level-navigation-delica-main-ul-justify-content: right;
+  --multi-level-navigation-delica-main-ul-display: flex;
+  --multi-level-navigation-delica-a-main-content-spacing: 1em;
+  --multi-level-navigation-delica-a-main-font-size: 1.25em;
+  --multi-level-navigation-delica-a-main-mobile-font-size: 1em;
+  --multi-level-navigation-delica-a-main-font-weight: 500;
+  --multi-level-navigation-delica-a-main-border-width: 3px;
+  --multi-level-navigation-delica-a-main-border-style: solid;
+  --multi-level-navigation-delica-desktop-main-wrapper-height: 55dvh;
+  --multi-level-navigation-delica-desktop-main-wrapper-border-width: 1px;
+  --multi-level-navigation-delica-desktop-main-wrapper-border-style: solid;
+  --multi-level-navigation-delica-desktop-main-wrapper-border-color: #E0E0E0;
+  --multi-level-navigation-delica-m-gray-500: none;
+  --multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-background-color: #E0E0E0;
+  --multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-thumb-background-color: #c1c1c1;
+  --multi-level-navigation-delica-mobile-main-wrapper-height: 60dvh;
+  --multi-level-navigation-delica-mobile-icon-background-color: #262626;
+  --multi-level-navigation-delica-mobile-wrapper-border-width: 1px;
+  --multi-level-navigation-delica-mobile-wrapper-border-style: solid;
+  --multi-level-navigation-delica-mobile-wrapper-border-color: #E0E0E0;
+  --multi-level-navigation-delica-line-height-mobile: 1.5;
+  --ul-list-style: none;
+  --a-text-decoration: none;
+  --header-nav-grid-delica-a-menu-icon-padding: 1.5rem 1em 1.5rem 1rem !important;
+  --header-nav-grid-delica-a-menu-icon-padding-open: 1.5rem 1em 1.5rem 1rem !important;
+  --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-border-color: white;
+  --multi-level-navigation-delica-nav-wrapper-width-var: 95%;
+  --mobileOpenLeft-animation-right: 2.5%;
+
+
+}
+
+:host .close-icon a-icon-mdx{
+  color: var(--multi-level-navigation-delica-close-icon-color, white) !important;
+}
+
+:host .intersecting {
+  height: var(--multi-level-navigation-delica-intersecting, 100%);
+}
+
+:host m-teaser {
+  --teaser-tile-rounded-overflow-x: hidden;
+  --teaser-tile-rounded-overflow-y: auto;
+  --picture-scale-up-img-max-height: 12em;
+  --picture-scale-up-height: auto;
+  --picture-scale-up-img-object-fit: cover;
+  --teaser-tile-rounded-figcaption-padding-custom: 4%;
+  --teaser-tile-rounded-border-radius-custom: 1em;
+  --teaser-tile-rounded-height: 100%;
+}
+
+#nav-section-1>section>*:nth-child(3) {
+  width: calc(33.3333% - 0.9375em);
+}
+
+#nav-section-2>section>*:nth-child(3) {
+  width: calc(33.3333% - 0.9375em);
+}
+
+#nav-section-3>section>*:nth-child(3) {
+  width: calc(33.3333% - 0.9375em);
+}
+
+#nav-section-4>section>*:nth-child(3) {
+  width: calc(33.3333% - 0.9375em);
+}
+
+#nav-section-2 a .close-icon {
+  color: var(--multi-level-navigation-delica-close-icon-color, white);
+}
+
+
+
+:host m-teaser {
+  --underline-after-height: , 0.15em;
+}
+
+:host .ul-title {
+  font-weight: bold;
+  font-size: large;
+}
+
+:host .nav-wrapper {
+  border-radius: 1em;
+
+}
+
+:host .nav-wrapper>ul {
+  padding: 4% !important;
+
+}
+
+:host .wrapper-background {
+  --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-background-color: #172445;
+}
+
+
+:host>nav>ul {
+  padding-right: 1em;
+}
+
+:host .mobile-only-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+:host a-icon-mdx {
+  --icon-link-list-color: var(--multi-level-navigation-delica-icon-color, black);
+  --icon-link-list-color-hover: var(--multi-level-navigation-delica-icon-color-hover, var(--color-tertiary, white));
+}
+
+:host li m-nav-level-item {
+  --nav-level-item-default-hover-color: var(--color-tertiary, blue);
+}
+
+
+
+
+@media only screen and (max-width: 1200px) {
+  .li-seperator {
+    --multi-level-navigation-delica-hr-margin-mobile: none;
+  }
+
+  :host a-input {
+    width: 100%;
+  }
+
+  hr {
+    border-style: dotted;
+    size: 1px;
+  }
+
+  :host m-language-switcher {
+    --language-switcher-delica-justify-content: center;
+    --language-switcher-delica-ul-margin-mobile: 0 0 1em 0;
+  }
+
+  :host m-teaser {
+    display: none;
+  }
+
+  :host>nav {
+    background-color: #172445;
+    display: flex;
+    /* justify-content: center; */
+    align-items: flex-start;
+  }
+
+  :host>nav>ul {
+    width: 95%;
+    height: fit-content;
+    overflow: auto;
+    background-color: white;
+    border-radius: 1em;
+    margin-top: 2%;
+    padding: 1em;
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    
+    margin-left: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    
+
+
+  }
+
+  :host .nav-wrapper {
+    width: var(--multi-level-navigation-delica-nav-wrapper-width-var, 95%);
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );
+
+  }
+
+  :host>nav>div {
+    position: absolute;
+    border-top: var(--multi-level-navigation-delica-mobile-wrapper-border-width, var(--mobile-wrapper-border-width, 1px)) var(--multi-level-navigation-delica-mobile-wrapper-border-style, var(--mobile-wrapper-border-style, solid)) var(--multi-level-navigation-delica-mobile-wrapper-border-color, var(--mobile-wrapper-border-color, black));
+    width: var(--multi-level-navigation-delica-nav-wrapper-width-var, 95%);
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    
+    height: fit-content;
+    background-color: white;
+    margin-top: 2%;
+    padding: 1em;
+    border-radius: 1em;
+  }
+}
