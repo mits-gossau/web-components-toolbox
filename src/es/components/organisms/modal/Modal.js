@@ -91,7 +91,7 @@ export default class Modal extends Shadow() {
           if (event.detail.child.root && (closeBtn = event.detail.child.root.querySelector('.close-btn'))) {
             this.style.textContent = ''
             this.setCss(/* CSS */`
-              :host([open]) > section > div > #close.close-btn {
+              :host([open]) > section > div > button#close.close-btn {
                 background-color: ${self.getComputedStyle(closeBtn).getPropertyValue('background-color')};
               }
             `, undefined, undefined, true, this.style)
@@ -255,6 +255,7 @@ export default class Modal extends Shadow() {
         opacity: 1;
         padding: var(--padding, min(var(--content-spacing), 4vw));
         position: var(--position, fixed);
+        left: var(--left, 0);
         top: var(--top, 0);
         transition: var(--transition, opacity .3s);
         width: var(--width, 100%);
@@ -276,7 +277,7 @@ export default class Modal extends Shadow() {
         left: var(--close-left, auto);
         margin: var(--close-margin, 0 0 var(--content-spacing)) 0;
       }
-      :host([open]) > section > div > #close.close-btn {
+      :host([open]) > section > div > button#close.close-btn {
         background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
         border-radius: 50%;
         border: 0;
@@ -293,7 +294,7 @@ export default class Modal extends Shadow() {
         right: 1em;
         z-index: 2;
       }
-      :host([open]) > section > div > #close.close-btn span {
+      :host([open]) > section > div > button#close.close-btn span {
         height: 14px;
         width: 14px;
       }

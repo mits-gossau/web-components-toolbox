@@ -104,6 +104,10 @@
   white-space: nowrap;
 }
 
+:host .dialog-header > a-button::part(button) {
+  background-color: var(--color-white, #fff);
+}
+
 :host .dialog-header>#close {
   align-items: center;
   cursor: pointer;

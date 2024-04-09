@@ -41,11 +41,10 @@ export default class Link extends Hover() {
     if (this.a) this.a.setAttribute('tabindex', '0')
   }
 
-connectedCallback () {
+  connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-
   }
 
   /**

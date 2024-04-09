@@ -425,7 +425,7 @@ export default class SimpleForm extends Shadow() {
         return obj
       }
       const schema = SimpleForm.parseAttribute(this.getAttribute('schema'))
-      if (typeof schema === 'object') {
+      if (typeof schema === 'object' && schema !== null) {
         body = await loop(schema)
       } else {
         console.error('the attribute schema is invalid: ', (body = schema), this)

@@ -81,10 +81,9 @@ export default class Tabs extends Shadow() {
       }
     })
 
-    if (this.hasAttribute("scroll-to-view")){
+    if (this.hasAttribute('scroll-to-view')) {
       activeNavigationTab.scrollIntoView({ behavior: 'smooth', inline: 'center' })
-    } 
-    
+    }
   }
   
   shouldRenderCSS () {

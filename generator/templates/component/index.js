@@ -11,7 +11,7 @@ const inquirer = require('inquirer')
  * @param templatePath - The path where the rendered templates will be saved. It is a string that represents the directory path where the output files will be created.
  */
 const renderTemplates = (data, templatePath) => {
-  if(data?.typeShort === 'c') return
+  if (data?.typeShort === 'c') return
   const defaults = [
     { file: path.join(__dirname, './defaultHtml.ejs'), out: 'default-.html' },
     { file: path.join(__dirname, './defaultJs.ejs'), out: 'default-.js' },
@@ -111,7 +111,7 @@ const main = () => {
 
       const directoryPath = `./src/es/components/${data.type}/${data.folderName}/`
       const templatePath = data.typeShort === 'c' ? `${directoryPath}/` : `${directoryPath}/default-/`
-      const template = data.typeShort === 'c' ? './controller.ejs' :'./component.ejs' 
+      const template = data.typeShort === 'c' ? './controller.ejs' : './component.ejs'
       const filename = path.join(__dirname, template)
 
       makeFolder(directoryPath, templatePath)

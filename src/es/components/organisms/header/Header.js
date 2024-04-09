@@ -31,6 +31,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  * @attribute {
  *  {boolean} [show]
+ *  {boolean} [is-checkout=false]
  *  {string} mobile-breakpoint
  *  {boolean} [menu-icon=false]
  *  {string} [no-scroll="no-scroll"]
@@ -50,13 +51,13 @@ export default class Header extends Shadow() {
         // is top
         if (self.scrollY <= this.offsetHeight + 5) {
           this.classList.add('top')
-        // is scrolled down
+          // is scrolled down
         } else {
           this.classList.remove('top')
           // scrolling up and show header
           if ((Math.abs(self.scrollY - lastScroll) > 30 && self.scrollY <= lastScroll)) {
             this.classList.add('show')
-          // scrolling down and hide header
+            // scrolling down and hide header
           } else if (Math.abs(self.scrollY - lastScroll) > 30) {
             // if (this.mNavigation) Array.from(this.mNavigation.root.querySelectorAll('.open')).forEach(node => node.classList.remove('open'))
             this.classList.remove('show')
@@ -121,6 +122,9 @@ export default class Header extends Shadow() {
     self.addEventListener('resize', this.mutationCallback)
     document.addEventListener('keyup', this.keyupListener)
     this.observer.observe(this.header, { attributes: true })
+
+    this.isCheckout = this.getAttribute('is-checkout') === 'true'
+    if (this.isCheckout) this.root.querySelector('header').setAttribute('is-checkout', this.isCheckout)
   }
 
   disconnectedCallback () {
@@ -207,9 +211,9 @@ export default class Header extends Shadow() {
         padding: var(--padding, 0);
         margin: var(--margin, 0);
         ${this.previousElementSibling && this.previousElementSibling.tagName === 'MSRC-LOGIN'
-          ? 'margin-top: 0;'
-          : ''
-        }
+        ? 'margin-top: 0;'
+        : ''
+      }
         width: var(--width, 100%);
         position: var(--header-position, relative);
         transition: var(--transition, all 0.2s ease);
@@ -304,9 +308,9 @@ export default class Header extends Shadow() {
           flex-wrap: nowrap;
           margin: var(--margin-mobile, var(--margin, 0));
           ${this.previousElementSibling && this.previousElementSibling.tagName === 'MSRC-LOGIN'
-            ? 'margin-top: 0;'
-            : ''
-          }
+        ? 'margin-top: 0;'
+        : ''
+      }
           width: var(--width-mobile, var(--width, 100%));
         }
         :host > header > ${this.getAttribute('m-navigation') || 'm-navigation'}{
@@ -482,7 +486,7 @@ export default class Header extends Shadow() {
           name: 'a-menu-icon'
         }
       ]).then(children => {
-          this.MenuIcon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
+        this.MenuIcon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
         this.MenuIcon.addEventListener('click', event => {
           this.header.classList.toggle('open')
           const prop = this.header.classList.contains('open') ? 'add' : 'remove'
@@ -507,6 +511,7 @@ export default class Header extends Shadow() {
       })
       : Promise.resolve()
   }
+
   get mNavigation () {
     return this.root.querySelector(this.getAttribute('m-navigation') || 'm-navigation')
   }
