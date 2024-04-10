@@ -35,30 +35,23 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
       splittedInputValue.forEach((valueChar, index) => {
         if (!isBackspace && (index + 1 === splittedInputValue.length) && (splittedMaskPattern[index] !== 'C' && splittedMaskPattern[index] !== 'U' && splittedMaskPattern[index] !== '#' && splittedMaskPattern[index] !== 'N')) {
-          console.log("splittedInputValue.length", splittedInputValue.length)
-
           if (splittedMaskPattern[index + 2]) {
             if (splittedMaskPattern[index + 2] === 'C' || splittedMaskPattern[index + 2] === 'U') {
               let isInputLetterCharacter = /[a-zA-Z]/.test(valueChar)
-              console.log("here shit 1")
               if (isInputLetterCharacter) {
                 splittedInputValue = [...splittedInputValue.slice(0, index), splittedMaskPattern[index], ...splittedInputValue.splice(index)]
                 charPositionsBooleans.push(true)
               } else {
                 charPositionsBooleans.push(false)
-
               }
             }
             else if (splittedMaskPattern[index + 2] === 'N') {
               let isInputNumber = +valueChar >= 0 && +valueChar <= 9
-              console.log("here shit 1")
-
               if (isInputNumber) {
                 splittedInputValue = [...splittedInputValue.slice(0, index), splittedMaskPattern[index], ...splittedInputValue.splice(index)]
                 charPositionsBooleans.push(true)
               } else {
                 charPositionsBooleans.push(false)
-
               }
             }
             else if (splittedMaskPattern[index + 2] !== 'C' && splittedMaskPattern[index + 2] !== 'U' && splittedMaskPattern[index + 2] !== '#' && splittedMaskPattern[index + 2] !== 'N') {
@@ -78,7 +71,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             charPositionsBooleans.push(+valueChar >= 0 && +valueChar <= 9)
           }
           if (splittedMaskPattern[index] !== 'C' && splittedMaskPattern[index] !== 'U' && splittedMaskPattern[index] !== '#' && splittedMaskPattern[index] !== 'N') {
-            charPositionsBooleans.push(splittedMaskPattern[index] === valueChar)
+            // charPositionsBooleans.push(splittedMaskPattern[index] === valueChar)
           }
         }
       })
@@ -123,7 +116,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
 
         inputField.value = splittedInputValue.join('')
-        console.log("end cp", cursorPos)
 
         if (hasWrongCharacter) {
           if (!allowToRemoveSpecialChar) {
