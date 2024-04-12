@@ -29,7 +29,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       const cursorPosition = event.target.selectionStart
       const isBackspace = (event?.data == null) ? true : false
       let inputValue = inputField.value
-      const newValue = this.applyMask(inputValue, maskPattern)
+      const newValue = this.applyMask(inputValue, maskPattern, isBackspace, cursorPosition)
 
       if (newValue !== inputValue) {
         event.currentTarget.value = newValue;
@@ -38,7 +38,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       }
     }
 
-    this.applyMask = (value, maskPattern) => {
+    this.applyMask = (value, maskPattern, isBackspace, cursorPosition) => {
       let result = '';
       let valueIndex = 0;
       for (let i = 0; i < maskPattern.length && valueIndex < value.length; i++) {
@@ -47,35 +47,62 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const valueChar = value[valueIndex];
 
         if (maskPatternChar === '#') {
+          console.log("#")
           result += valueChar || '';
           valueIndex++;
         } else if (maskPatternChar === 'N') {
+          console.log("N")
+
           if (/\d/.test(valueChar)) {
             result += valueChar;
           }
           valueIndex++;
         } else if (maskPatternChar === 'C') {
+          console.log("C")
+
           if (/[A-Za-z]/.test(valueChar)) {
             result += valueChar.toUpperCase();
           }
           valueIndex++;
         } else if (maskPatternChar === 'L') {
+          console.log("L")
+
           if (/[A-Za-z]/.test(valueChar)) {
             result += valueChar.toLowerCase();
           }
           valueIndex++;
-        } else {
-          // If the current maskPattern character is not a placeholder,
-          // insert it into the result string
-          result += maskPatternChar;
-          // Move to the next character in the maskPattern only if the current value character matches the maskPattern
-          if (maskPatternChar === valueChar) {
-            valueIndex++;
+        }
+        if (!isBackspace && nextMaskPatternChar && this.isCharSpecial(nextMaskPatternChar)) {
+          result += nextMaskPatternChar
+
+          if (result.length === value.length) {
+            result += value.slice(-1)
           }
+          valueIndex++;
+        }
+        if (isBackspace && this.isCharSpecial(maskPattern[cursorPosition])) {
+          if (cursorPosition < value.length) {
+            result = value.slice(0, cursorPosition) + maskPattern[cursorPosition] + value.slice(cursorPosition)
+          }
+          if (cursorPosition === value.length) {
+            result = value
+          }
+          valueIndex++;
+        }
+        if (isBackspace && !this.isCharSpecial(maskPattern[cursorPosition])) {
+          result = value
         }
       }
       return result;
     }
+
+    this.isCharSpecial = character => {
+      if (character !== '#' && character !== 'C' && character !== 'N' && character !== 'L') {
+        return true
+      }
+      return false
+    }
+
 
     this.submitFormValidation = (event) => {
       event.preventDefault()
