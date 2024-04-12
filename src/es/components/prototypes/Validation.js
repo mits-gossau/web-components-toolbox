@@ -25,111 +25,56 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
     this.validationPatternInputEventListener = (event) => {
       const inputField = event.currentTarget
-      const splittedMaskPattern = this.validationValues[event.currentTarget.getAttribute('name')]['pattern']['mask-value'].split('')
-      const cursorPos = event.target.selectionStart - 1
+      const maskPattern = this.validationValues[event.currentTarget.getAttribute('name')]['pattern']['mask-value']
+      const cursorPosition = event.target.selectionStart
       const isBackspace = (event?.data == null) ? true : false
-      let splittedInputValue = inputField.value.split('')
-      let hasWrongCharacter = false
-      let charPositionsBooleans = []
-      let allowToRemoveSpecialChar = cursorPos + 1 === splittedInputValue.length
+      let inputValue = inputField.value
+      const newValue = this.applyMask(inputValue, maskPattern)
 
-      splittedInputValue.forEach((valueChar, index) => {
-        if (!isBackspace && (index + 1 === splittedInputValue.length) && (splittedMaskPattern[index] !== 'C' && splittedMaskPattern[index] !== 'U' && splittedMaskPattern[index] !== '#' && splittedMaskPattern[index] !== 'N')) {
-          if (splittedMaskPattern[index + 2]) {
-            if (splittedMaskPattern[index + 2] === 'C' || splittedMaskPattern[index + 2] === 'U') {
-              let isInputLetterCharacter = /[a-zA-Z]/.test(valueChar)
-              if (isInputLetterCharacter) {
-                splittedInputValue = [...splittedInputValue.slice(0, index), splittedMaskPattern[index], ...splittedInputValue.splice(index)]
-                charPositionsBooleans.push(true)
-              } else {
-                charPositionsBooleans.push(false)
-              }
-            }
-            else if (splittedMaskPattern[index + 2] === 'N') {
-              let isInputNumber = +valueChar >= 0 && +valueChar <= 9
-              if (isInputNumber) {
-                splittedInputValue = [...splittedInputValue.slice(0, index), splittedMaskPattern[index], ...splittedInputValue.splice(index)]
-                charPositionsBooleans.push(true)
-              } else {
-                charPositionsBooleans.push(false)
-              }
-            }
-            else if (splittedMaskPattern[index + 2] !== 'C' && splittedMaskPattern[index + 2] !== 'U' && splittedMaskPattern[index + 2] !== '#' && splittedMaskPattern[index + 2] !== 'N') {
-              // if there is 2 special character after each other
-              console.log("there is 2 special character after each other")
-            }
-          }
-        }
-        else if (isBackspace) {
-          charPositionsBooleans.push(true)
-        }
-        else {
-          if (splittedMaskPattern[index] === 'C' || splittedMaskPattern[index] === 'U') {
-            charPositionsBooleans.push(/[a-zA-Z]/.test(valueChar))
-          }
-          if (splittedMaskPattern[index] === 'N') {
-            charPositionsBooleans.push(+valueChar >= 0 && +valueChar <= 9)
-          }
-          if (splittedMaskPattern[index] !== 'C' && splittedMaskPattern[index] !== 'U' && splittedMaskPattern[index] !== '#' && splittedMaskPattern[index] !== 'N') {
-            // charPositionsBooleans.push(splittedMaskPattern[index] === valueChar)
-          }
-        }
-      })
-      let isAllCharsHasRightPosition = charPositionsBooleans.every(elem => elem === true)
-
-
-      if (splittedInputValue.length <= splittedMaskPattern.length && isAllCharsHasRightPosition) {
-        if (isBackspace && splittedMaskPattern[cursorPos + 1] !== 'C' && splittedMaskPattern[cursorPos + 1] !== 'U' && splittedMaskPattern[cursorPos + 1] !== '#' && splittedMaskPattern[cursorPos + 1] !== 'N') {
-          if (!allowToRemoveSpecialChar) {
-            hasWrongCharacter = true
-            splittedInputValue = this.oldValue.split('')
-          }
-        }
-
-        if (splittedMaskPattern[cursorPos] === 'C' || splittedMaskPattern[cursorPos] === 'U') {
-          const currentInputIsLetter = /[a-zA-Z]/.test(splittedInputValue[cursorPos])
-          if (!currentInputIsLetter) {
-            hasWrongCharacter = true
-            splittedInputValue = this.oldValue.split('')
-          } else {
-            if (splittedMaskPattern[cursorPos] === 'C') {
-              splittedInputValue[cursorPos] = splittedInputValue[cursorPos].toUpperCase()
-            }
-            else if (splittedMaskPattern[cursorPos] === 'U') {
-              splittedInputValue[cursorPos] = splittedInputValue[cursorPos].toLowerCase()
-            }
-          }
-        }
-
-        if (splittedMaskPattern[cursorPos] === 'N') {
-          const currentInputIsNumber = +splittedInputValue[cursorPos] >= 0 && +splittedInputValue[cursorPos] <= 9
-          if (!currentInputIsNumber) {
-            hasWrongCharacter = true
-            splittedInputValue = this.oldValue.split('')
-          }
-        }
-
-        if (splittedMaskPattern[cursorPos + 1] !== 'C' && splittedMaskPattern[cursorPos + 1] !== 'U' && splittedMaskPattern[cursorPos + 1] !== '#' && splittedMaskPattern[cursorPos + 1] !== 'N') {
-          if ((this.oldValue.length - 1 < cursorPos) && splittedInputValue[cursorPos]) {
-            if (splittedMaskPattern[cursorPos + 1]) splittedInputValue[cursorPos + 1] = splittedMaskPattern[cursorPos + 1]
-          }
-        }
-
-        inputField.value = splittedInputValue.join('')
-
-        if (hasWrongCharacter) {
-          if (!allowToRemoveSpecialChar) {
-            event.target.setSelectionRange(cursorPos + 1, cursorPos + 1)
-          }
-          else event.target.setSelectionRange(cursorPos, cursorPos);
-        }
-        this.oldValue = inputField.value
+      if (newValue !== inputValue) {
+        event.currentTarget.value = newValue;
+      } else {
+        event.preventDefault();
       }
-      else {
-        inputField.value = this.oldValue
-        event.target.setSelectionRange(cursorPos, cursorPos);
+    }
 
+    this.applyMask = (value, maskPattern) => {
+      let result = '';
+      let valueIndex = 0;
+      for (let i = 0; i < maskPattern.length && valueIndex < value.length; i++) {
+        const maskPatternChar = maskPattern[i];
+        const nextMaskPatternChar = maskPattern[i + 1];
+        const valueChar = value[valueIndex];
+
+        if (maskPatternChar === '#') {
+          result += valueChar || '';
+          valueIndex++;
+        } else if (maskPatternChar === 'N') {
+          if (/\d/.test(valueChar)) {
+            result += valueChar;
+          }
+          valueIndex++;
+        } else if (maskPatternChar === 'C') {
+          if (/[A-Za-z]/.test(valueChar)) {
+            result += valueChar.toUpperCase();
+          }
+          valueIndex++;
+        } else if (maskPatternChar === 'L') {
+          if (/[A-Za-z]/.test(valueChar)) {
+            result += valueChar.toLowerCase();
+          }
+          valueIndex++;
+        } else {
+          // If the current maskPattern character is not a placeholder,
+          // insert it into the result string
+          result += maskPatternChar;
+          // Move to the next character in the maskPattern only if the current value character matches the maskPattern
+          if (maskPatternChar === valueChar) {
+            valueIndex++;
+          }
+        }
       }
+      return result;
     }
 
     this.submitFormValidation = (event) => {
@@ -326,7 +271,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     let isValuesValid = []
     if (!hasSameLength) return false
     currentValueSplitted.forEach((char, index) => {
-      if (validationMaskSplitted[index] !== 'N' && validationMaskSplitted[index] !== 'U' && validationMaskSplitted[index] !== 'C' && validationMaskSplitted[index] !== '#') {
+      if (validationMaskSplitted[index] !== 'N' && validationMaskSplitted[index] !== 'L' && validationMaskSplitted[index] !== 'C' && validationMaskSplitted[index] !== '#') {
         if (validationMaskSplitted[index] === char) {
           isValuesValid.push(true)
         } else {
@@ -341,7 +286,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const currentInputIsLetterAndCapitalCase = /[a-zA-Z]/.test(char) && char === char.toUpperCase()
         currentInputIsLetterAndCapitalCase ? isValuesValid.push(true) : isValuesValid.push(false)
       }
-      else if (validationMaskSplitted[index] === 'U') {
+      else if (validationMaskSplitted[index] === 'L') {
         const currentInputIsLetterAndLowerCase = /[a-zA-Z]/.test(char) && char === char.toLowerCase()
         currentInputIsLetterAndLowerCase ? isValuesValid.push(true) : isValuesValid.push(false)
       }
