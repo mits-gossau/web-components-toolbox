@@ -378,7 +378,7 @@ export default class Picture extends Intersection(Hover()) {
     }
     let img = this.img
     // if loading eager and if bad quality pic available load the picture first with bad quality and then improve it
-    if (this.getAttribute('loading') === 'eager') {
+    if (!this.hasAttribute('no-bad-quality') && this.getAttribute('loading') === 'eager') {
       const src = Picture.newUrl(this.img.getAttribute('data-src'))
       if (src.searchParams.get(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality')) {
         this.sources.forEach(source => {
