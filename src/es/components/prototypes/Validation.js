@@ -9,7 +9,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    * @param {{ValidationInit: {level?: number|undefined, selector?: string|undefined}|undefined}} options
    * @param {*} args
    */
-  constructor (options = { ValidationInit: undefined }, ...args) {
+  constructor(options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
 
     this.submitButton = this.form.querySelector('input[type="submit"]')
@@ -137,7 +137,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    *
    * @return {void}
    */
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
     this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
@@ -189,11 +189,11 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    *
    * @return {void}
    */
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
   }
 
-  validator (validationRules, currentInput, inputFieldName) {
+  validator(validationRules, currentInput, inputFieldName) {
     const validationNames = Object.keys(validationRules) || []
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
@@ -250,7 +250,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     })
   }
 
-  setValidity (inputFieldName, validationName, isValid) {
+  setValidity(inputFieldName, validationName, isValid) {
     this.validationValues[inputFieldName][validationName].isValid = isValid
     const currentValidatedInput = this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName)
     const currentValidatedInputHasNewErrorReferencePoint = currentValidatedInput.getAttribute('error-message-reference-point-changed') === 'true'
@@ -290,13 +290,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
   }
 
-  validationPatternEnd (inputFieldName, validationName, currentValue) {
+  validationPatternEnd(inputFieldName, validationName, currentValue) {
     const validationMask = this.validationValues[inputFieldName][validationName]['mask-value']
     const validationMaskSplitted = validationMask.split('')
     const currentValueSplitted = currentValue.split('')
     const hasSameLength = validationMaskSplitted.length === currentValueSplitted.length
     const isValuesValid = []
-    console.log('inputFieldName', this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName).value)
     if (!hasSameLength) return false
     currentValueSplitted.forEach((char, index) => {
       if (validationMaskSplitted[index] !== 'N' && validationMaskSplitted[index] !== 'L' && validationMaskSplitted[index] !== 'C' && validationMaskSplitted[index] !== '#') {
@@ -319,12 +318,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     return !isValuesValid.includes(false)
   }
 
-  scrollToFirstError () {
+  scrollToFirstError() {
     const firstNodeWithError = this.allValidationNodes.find(node => node.classList.contains('has-error'))
     firstNodeWithError.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
-  checkIfFormValid () {
+  checkIfFormValid() {
     const allIsValidValue = []
     Object.keys(this.validationValues).forEach(key => {
       Object.keys(this.validationValues[key]).forEach(subKey => {
@@ -339,7 +338,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   /**
 * renders the css
 */
-  renderValidationCSS () {
+  renderValidationCSS() {
     this.style.textContent = /* css */`
     :host .custom-error-text {
       margin: var(--error-border-radius, 3px 0 0 0);
@@ -366,7 +365,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.html = this.style
   }
 
-  get style () {
+  get style() {
     return (
       this._style ||
       (this._style = (() => {
