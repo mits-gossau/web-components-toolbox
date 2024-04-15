@@ -74,8 +74,9 @@
         name="Text" placeholder="NUR Text hier eingeben..." autocomplete="off" />
     </div>
     <div>
-      <label for="Phone">OnlyPattern ^\d{1,4}$ Text[Number] => no mask value</label>
-      <input id="Phone" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
+      <label for="Phone">OnlyPattern ^\d{1,4}$ Text[Number] => no mask value +
+        <strong>live-input-validation</strong></label>
+      <input id="Phone2" live-input-validation="true" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
       "pattern": {"pattern-value":"^\\d{1,4}$", "error-message": "Bitte richtige Text eingeben."}}' type="text"
         value="" name="NumberText" placeholder="Nur und max vier Nummer hier eingeben(3456)..." autocomplete="off" />
     </div>

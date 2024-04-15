@@ -70,7 +70,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
         if (!isBackspace && nextMaskPatternChar && this.isCharSpecial(nextMaskPatternChar)) {
           result += nextMaskPatternChar
-
           if (result.length === value.length) {
             result += value.slice(-1)
           }
@@ -159,12 +158,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         node.addEventListener('input', this.baseInputChangeListener)
         // IMPORTANT name attribute has to be unique and always available
         if (node.hasAttribute('name')) {
-          if (!this.validationValues.hasOwnProperty(node.getAttribute('name'))) {
+          if (!Object.prototype.hasOwnProperty.call(this.validationValues, node.getAttribute('name'))) {
             const parsedRules = JSON.parse(node.getAttribute('data-m-v-rules'))
             Object.keys(parsedRules).forEach(key => {
               this.validationValues[node.getAttribute('name')] = this.validationValues[node.getAttribute('name')] ? Object.assign(this.validationValues[node.getAttribute('name')], { isTouched: false }) : {}
               this.validationValues[node.getAttribute('name')][key] = Object.assign(parsedRules[key], { isValid: false })
-              if (this.validationValues[node.getAttribute('name')].pattern && this.validationValues[node.getAttribute('name')].pattern.hasOwnProperty('mask-value')) {
+              if (this.validationValues[node.getAttribute('name')].pattern && Object.prototype.hasOwnProperty.call(this.validationValues[node.getAttribute('name')].pattern, 'mask-value')) {
                 node.addEventListener('input', this.validationPatternInputEventListener)
               }
             })
@@ -216,7 +215,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       }
       if (validationName === 'email') {
         const isEmailValidationValid = !!(currentInput.value.match(
-          /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         ))
         this.setValidity(inputFieldName, validationName, isEmailValidationValid)
       }
@@ -239,11 +238,14 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           this.setValidity(inputFieldName, validationName, isPatternValueValidationValid)
         }
         if (validationRules.pattern['mask-value']) {
-          const isPatternMaskValueValidationValid = this.validationPatternEnd(inputFieldName, validationName, currentInput.value.trim())
+          const maskValue = validationRules.pattern['mask-value']
+          let currentInputValue = currentInput.value
+
+          if (maskValue.length < currentInputValue.length) currentInputValue = currentInputValue.slice(0, -1)
+
+          const isPatternMaskValueValidationValid = this.validationPatternEnd(inputFieldName, validationName, currentInputValue)
           this.setValidity(inputFieldName, validationName, isPatternMaskValueValidationValid)
         }
-      } else {
-
       }
     })
   }
@@ -256,9 +258,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
     const isValidValues = []
     Object.keys(this.validationValues[inputFieldName]).forEach(key => {
-      if (this.validationValues[inputFieldName][key].hasOwnProperty('isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
+      if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
       if (!isCurrentValidatedInputErrorTextWrapperFilled) {
-        if (this.validationValues[inputFieldName][key].hasOwnProperty('error-message')) {
+        if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
           const errorText = document.createElement('p')
           errorText.setAttribute('error-text-id', validationName)
           errorText.hidden = true
@@ -280,7 +282,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const currentErrorMessageIndex = isValidValues.findIndex(elem => elem === false)
 
     if (errorMessages) {
-      errorMessages.forEach(p => p.hidden = true)
+      errorMessages.forEach(p => {
+        p.hidden = true
+      })
       if (+currentErrorMessageIndex === -1) return
       errorMessages[currentErrorMessageIndex].hidden = false
     }
@@ -292,6 +296,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const currentValueSplitted = currentValue.split('')
     const hasSameLength = validationMaskSplitted.length === currentValueSplitted.length
     const isValuesValid = []
+    console.log('inputFieldName', this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName).value)
     if (!hasSameLength) return false
     currentValueSplitted.forEach((char, index) => {
       if (validationMaskSplitted[index] !== 'N' && validationMaskSplitted[index] !== 'L' && validationMaskSplitted[index] !== 'C' && validationMaskSplitted[index] !== '#') {
@@ -323,7 +328,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const allIsValidValue = []
     Object.keys(this.validationValues).forEach(key => {
       Object.keys(this.validationValues[key]).forEach(subKey => {
-        if (this.validationValues[key][subKey].hasOwnProperty('isValid')) {
+        if (Object.prototype.hasOwnProperty.call(this.validationValues[key][subKey], 'isValid')) {
           allIsValidValue.push(this.validationValues[key][subKey].isValid)
         }
       })
