@@ -12,11 +12,14 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   constructor(options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
 
+    this.submitButton = this.form.querySelector('input[type="submit"]')
+    this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
+    this.validationValues = {}
     this.renderValidationCSS()
 
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
-      const inputFieldName = event.currentTarget.getAttribute('name')
+      const inputFieldName = inputField.getAttribute('name')
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
       if (this.realTimeSubmitButton) {
         this.checkIfFormValid()
@@ -51,7 +54,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           valueIndex++;
         } else if (maskPatternChar === 'N') {
 
-          if (/\d/.test(valueChar)) {
+          if (+valueChar >= 0 && +valueChar <= 9) {
             result += valueChar;
           }
           valueIndex++;
@@ -101,34 +104,35 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
 
     this.submitFormValidation = (event) => {
+      const formHasError = this.root.querySelector('form').querySelector('.has-error')
       event.preventDefault()
+
       Object.keys(this.validationValues).forEach(key => {
         this.validationValues[key].isTouched = true
       })
+
       this.allValidationNodes.forEach(node => {
         const inputFieldName = node.getAttribute('name')
         if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
       })
-      const formHasError = this.root.querySelector('form').querySelector('.has-error')
+
       if (formHasError) this.scrollToFirstError()
     }
 
     this.baseInputChangeListener = (event) => {
       const shouldIgnoreFirstSpace = event.currentTarget.hasAttribute('ignore-first-space')
-      let inputFieldValue = event.currentTarget.value.split('')
-      const isFirstCharacterSpace = inputFieldValue[0] === " "
+      let inputFieldSplittedValue = event.currentTarget.value.split('')
+      const isFirstCharacterSpace = inputFieldSplittedValue[0] === " "
       if (shouldIgnoreFirstSpace && isFirstCharacterSpace) {
-        inputFieldValue = inputFieldValue.slice(0, -1)
-        event.currentTarget.value = inputFieldValue.join('')
+        inputFieldSplittedValue = inputFieldSplittedValue.slice(0, -1)
+        event.currentTarget.value = inputFieldSplittedValue.join('')
       }
 
       const inputFieldName = event.currentTarget.getAttribute('name')
       this.validationValues[inputFieldName].isTouched = true
-    }
 
-    this.submitButton = this.form.querySelector('input[type="submit"]')
-    this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
-    this.validationValues = {}
+
+    }
 
     if (this.submitButton) {
       this.submitButton.addEventListener('click', this.submitFormValidation)
@@ -145,15 +149,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
     this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
 
-    if (this.shouldValidateOnInitiate) {
-      this.allValidationNodes.forEach(node => {
-        const inputFieldName = node.getAttribute('name')
-        if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
-      })
-    }
-    if (this.realTimeSubmitButton) {
-      this.checkIfFormValid()
-    }
     if (this.allValidationNodes.length > 0) {
       this.allValidationNodes.forEach(node => {
         const currentNodeHasNewErrorReferencePoint = node.getAttribute('error-message-reference-point-changed') === 'true'
@@ -182,6 +177,17 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           }
         }
       })
+    }
+
+    if (this.shouldValidateOnInitiate) {
+      this.allValidationNodes.forEach(node => {
+        const inputFieldName = node.getAttribute('name')
+        if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
+      })
+    }
+
+    if (this.realTimeSubmitButton) {
+      this.checkIfFormValid()
     }
   }
 
