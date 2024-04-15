@@ -80,11 +80,12 @@
         value="" name="NumberText" placeholder="Nur und max vier Nummer hier eingeben(3456)..." autocomplete="off" />
     </div>
     <div>
-      <label for="BankAccount">IBAN => format-helper-value:CCNN NNNN NNNN UU## NNNN</label>
-      <input id="BankAccount"
+      <label for="BankAccount">IBAN => format-helper-value:CCNN NNNN NNNN LL## NNNN +
+        <strong>live-input-validation</strong></label>
+      <input id="BankAccount" live-input-validation="true"
         data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen"},
-      "pattern": {"pattern-value":"", "mask-value": "CCNN-NNNN-NNNN-LL##-NNNN", "error-message": "Bitte richtige IBAN eingeben."}}'
-        type="text" value="" name="BankAccount" placeholder="CH34 3456 7890 1234 1234" autocomplete="off" />
+      "pattern": {"pattern-value":"", "mask-value": "CCNN-NNNN-NNNN-LL##-NNNN", "error-message": "Bitte richtige IBAN eingeben."}}' type="text" value=""
+        name="BankAccount" placeholder="CH34 3456 7890 1234 1234" autocomplete="off" />
     </div>
     <div>
       <label for="Phone">Telephone => format-helper-value:NNN/NNN-NN-NN</label>

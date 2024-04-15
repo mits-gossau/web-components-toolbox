@@ -47,25 +47,21 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const valueChar = value[valueIndex];
 
         if (maskPatternChar === '#') {
-          console.log("#")
           result += valueChar || '';
           valueIndex++;
         } else if (maskPatternChar === 'N') {
-          console.log("N")
 
           if (/\d/.test(valueChar)) {
             result += valueChar;
           }
           valueIndex++;
         } else if (maskPatternChar === 'C') {
-          console.log("C")
 
           if (/[A-Za-z]/.test(valueChar)) {
             result += valueChar.toUpperCase();
           }
           valueIndex++;
         } else if (maskPatternChar === 'L') {
-          console.log("L")
 
           if (/[A-Za-z]/.test(valueChar)) {
             result += valueChar.toLowerCase();
