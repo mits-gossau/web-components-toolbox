@@ -27,10 +27,8 @@ export default class Dialog extends Shadow() {
     }
     this.close = () => {
       this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
-      this.dialog.classList.add('closed')
-      setTimeout(() => this.dialog.close(), this.getAttribute('namespace') === 'dialog-top-slide-in-' || this.getAttribute('namespace') === 'dialog-left-slide-in-'
-        ? 300
-        : 0)
+      this.dialog.classList.add('closed')      
+      this.dialog.close() 
     }
 
     this.clickEventListener = event => {
@@ -123,7 +121,7 @@ export default class Dialog extends Shadow() {
     `
     return this.fetchTemplate()
   }
-
+  
   /**
    * fetches the template
    */

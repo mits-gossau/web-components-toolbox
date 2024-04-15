@@ -11,7 +11,7 @@
   opacity: 1;
   position: fixed;
   transform: translateX(-100%);
-  transition: 0.3s;
+  transition: all 0.3s allow-discrete;
   padding: var(--dialog-left-slide-in-padding-custom, 0);
   height: 100%;
   max-height: 100%;
