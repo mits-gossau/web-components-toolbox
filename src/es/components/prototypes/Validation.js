@@ -9,7 +9,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    * @param {{ValidationInit: {level?: number|undefined, selector?: string|undefined}|undefined}} options
    * @param {*} args
    */
-  constructor(options = { ValidationInit: undefined }, ...args) {
+  constructor (options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
 
     this.submitButton = this.form.querySelector('input[type="submit"]')
@@ -28,48 +28,45 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
     this.validationPatternInputEventListener = (event) => {
       const inputField = event.currentTarget
-      const maskPattern = this.validationValues[event.currentTarget.getAttribute('name')]['pattern']['mask-value']
+      const maskPattern = this.validationValues[event.currentTarget.getAttribute('name')].pattern['mask-value']
       const cursorPosition = event.target.selectionStart
-      const isBackspace = (event?.data == null) ? true : false
-      let inputValue = inputField.value
+      const isBackspace = (event?.data == null)
+      const inputValue = inputField.value
       const newValue = this.applyMask(inputValue, maskPattern, isBackspace, cursorPosition)
 
       if (newValue !== inputValue) {
-        event.currentTarget.value = newValue;
+        event.currentTarget.value = newValue
       } else {
-        event.preventDefault();
+        event.preventDefault()
       }
     }
 
     this.applyMask = (value, maskPattern, isBackspace, cursorPosition) => {
-      let result = '';
-      let valueIndex = 0;
+      let result = ''
+      let valueIndex = 0
       for (let i = 0; i < maskPattern.length && valueIndex < value.length; i++) {
-        const maskPatternChar = maskPattern[i];
-        const nextMaskPatternChar = maskPattern[i + 1];
-        const valueChar = value[valueIndex];
+        const maskPatternChar = maskPattern[i]
+        const nextMaskPatternChar = maskPattern[i + 1]
+        const valueChar = value[valueIndex]
 
         if (maskPatternChar === '#') {
-          result += valueChar || '';
-          valueIndex++;
+          result += valueChar || ''
+          valueIndex++
         } else if (maskPatternChar === 'N') {
-
           if (+valueChar >= 0 && +valueChar <= 9) {
-            result += valueChar;
+            result += valueChar
           }
-          valueIndex++;
+          valueIndex++
         } else if (maskPatternChar === 'C') {
-
           if (/[A-Za-z]/.test(valueChar)) {
-            result += valueChar.toUpperCase();
+            result += valueChar.toUpperCase()
           }
-          valueIndex++;
+          valueIndex++
         } else if (maskPatternChar === 'L') {
-
           if (/[A-Za-z]/.test(valueChar)) {
-            result += valueChar.toLowerCase();
+            result += valueChar.toLowerCase()
           }
-          valueIndex++;
+          valueIndex++
         }
         if (!isBackspace && nextMaskPatternChar && this.isCharSpecial(nextMaskPatternChar)) {
           result += nextMaskPatternChar
@@ -77,7 +74,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           if (result.length === value.length) {
             result += value.slice(-1)
           }
-          valueIndex++;
+          valueIndex++
         }
         if (isBackspace && this.isCharSpecial(maskPattern[cursorPosition])) {
           if (cursorPosition < value.length) {
@@ -86,13 +83,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           if (cursorPosition === value.length) {
             result = value
           }
-          valueIndex++;
+          valueIndex++
         }
         if (isBackspace && !this.isCharSpecial(maskPattern[cursorPosition])) {
           result = value
         }
       }
-      return result;
+      return result
     }
 
     this.isCharSpecial = character => {
@@ -101,7 +98,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       }
       return false
     }
-
 
     this.submitFormValidation = (event) => {
       const formHasError = this.root.querySelector('form').querySelector('.has-error')
@@ -122,7 +118,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.baseInputChangeListener = (event) => {
       const shouldIgnoreFirstSpace = event.currentTarget.hasAttribute('ignore-first-space')
       let inputFieldSplittedValue = event.currentTarget.value.split('')
-      const isFirstCharacterSpace = inputFieldSplittedValue[0] === " "
+      const isFirstCharacterSpace = inputFieldSplittedValue[0] === ' '
       if (shouldIgnoreFirstSpace && isFirstCharacterSpace) {
         inputFieldSplittedValue = inputFieldSplittedValue.slice(0, -1)
         event.currentTarget.value = inputFieldSplittedValue.join('')
@@ -130,8 +126,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
       const inputFieldName = event.currentTarget.getAttribute('name')
       this.validationValues[inputFieldName].isTouched = true
-
-
     }
 
     if (this.submitButton) {
@@ -144,7 +138,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    *
    * @return {void}
    */
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
     this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
@@ -170,7 +164,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             Object.keys(parsedRules).forEach(key => {
               this.validationValues[node.getAttribute('name')] = this.validationValues[node.getAttribute('name')] ? Object.assign(this.validationValues[node.getAttribute('name')], { isTouched: false }) : {}
               this.validationValues[node.getAttribute('name')][key] = Object.assign(parsedRules[key], { isValid: false })
-              if (this.validationValues[node.getAttribute('name')]['pattern'] && this.validationValues[node.getAttribute('name')]['pattern'].hasOwnProperty('mask-value')) {
+              if (this.validationValues[node.getAttribute('name')].pattern && this.validationValues[node.getAttribute('name')].pattern.hasOwnProperty('mask-value')) {
                 node.addEventListener('input', this.validationPatternInputEventListener)
               }
             })
@@ -196,11 +190,11 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    *
    * @return {void}
    */
-  disconnectedCallback() {
+  disconnectedCallback () {
     super.disconnectedCallback()
   }
 
-  validator(validationRules, currentInput, inputFieldName) {
+  validator (validationRules, currentInput, inputFieldName) {
     const validationNames = Object.keys(validationRules) || []
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
@@ -239,28 +233,28 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const isMinMaxNumberValueValidationValid = !!((+currentInput.value > minNumberValue) && (+currentInput.value < maxNumberValue))
         this.setValidity(inputFieldName, validationName, isMinMaxNumberValueValidationValid)
       } if (validationName === 'pattern') {
-        if (validationRules['pattern']['pattern-value']) {
-          const re = new RegExp(`${validationRules['pattern']['pattern-value']}`)
+        if (validationRules.pattern['pattern-value']) {
+          const re = new RegExp(`${validationRules.pattern['pattern-value']}`)
           const isPatternValueValidationValid = re.test(currentInput.value)
           this.setValidity(inputFieldName, validationName, isPatternValueValidationValid)
         }
-        if (validationRules['pattern']['mask-value']) {
+        if (validationRules.pattern['mask-value']) {
           const isPatternMaskValueValidationValid = this.validationPatternEnd(inputFieldName, validationName, currentInput.value.trim())
           this.setValidity(inputFieldName, validationName, isPatternMaskValueValidationValid)
         }
       } else {
-        return
+
       }
     })
   }
 
-  setValidity(inputFieldName, validationName, isValid) {
+  setValidity (inputFieldName, validationName, isValid) {
     this.validationValues[inputFieldName][validationName].isValid = isValid
     const currentValidatedInput = this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName)
     const currentValidatedInputHasNewErrorReferencePoint = currentValidatedInput.getAttribute('error-message-reference-point-changed') === 'true'
     const currentValidatedInputErrorTextWrapper = currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
-    let isValidValues = []
+    const isValidValues = []
     Object.keys(this.validationValues[inputFieldName]).forEach(key => {
       if (this.validationValues[inputFieldName][key].hasOwnProperty('isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
       if (!isCurrentValidatedInputErrorTextWrapperFilled) {
@@ -292,12 +286,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
   }
 
-  validationPatternEnd(inputFieldName, validationName, currentValue) {
+  validationPatternEnd (inputFieldName, validationName, currentValue) {
     const validationMask = this.validationValues[inputFieldName][validationName]['mask-value']
     const validationMaskSplitted = validationMask.split('')
     const currentValueSplitted = currentValue.split('')
     const hasSameLength = validationMaskSplitted.length === currentValueSplitted.length
-    let isValuesValid = []
+    const isValuesValid = []
     if (!hasSameLength) return false
     currentValueSplitted.forEach((char, index) => {
       if (validationMaskSplitted[index] !== 'N' && validationMaskSplitted[index] !== 'L' && validationMaskSplitted[index] !== 'C' && validationMaskSplitted[index] !== '#') {
@@ -306,16 +300,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         } else {
           isValuesValid.push(false)
         }
-      }
-      else if (validationMaskSplitted[index] === 'N') {
+      } else if (validationMaskSplitted[index] === 'N') {
         const currentInputIsNumber = +char >= 0 && +char <= 9
         currentInputIsNumber ? isValuesValid.push(true) : isValuesValid.push(false)
-      }
-      else if (validationMaskSplitted[index] === 'C') {
+      } else if (validationMaskSplitted[index] === 'C') {
         const currentInputIsLetterAndCapitalCase = /[a-zA-Z]/.test(char) && char === char.toUpperCase()
         currentInputIsLetterAndCapitalCase ? isValuesValid.push(true) : isValuesValid.push(false)
-      }
-      else if (validationMaskSplitted[index] === 'L') {
+      } else if (validationMaskSplitted[index] === 'L') {
         const currentInputIsLetterAndLowerCase = /[a-zA-Z]/.test(char) && char === char.toLowerCase()
         currentInputIsLetterAndLowerCase ? isValuesValid.push(true) : isValuesValid.push(false)
       }
@@ -323,13 +314,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     return !isValuesValid.includes(false)
   }
 
-  scrollToFirstError() {
+  scrollToFirstError () {
     const firstNodeWithError = this.allValidationNodes.find(node => node.classList.contains('has-error'))
     firstNodeWithError.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
-  checkIfFormValid() {
-    let allIsValidValue = []
+  checkIfFormValid () {
+    const allIsValidValue = []
     Object.keys(this.validationValues).forEach(key => {
       Object.keys(this.validationValues[key]).forEach(subKey => {
         if (this.validationValues[key][subKey].hasOwnProperty('isValid')) {
@@ -343,7 +334,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   /**
 * renders the css
 */
-  renderValidationCSS() {
+  renderValidationCSS () {
     this.style.textContent = /* css */`
     :host .custom-error-text {
       margin: var(--error-border-radius, 3px 0 0 0);
@@ -370,7 +361,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.html = this.style
   }
 
-  get style() {
+  get style () {
     return (
       this._style ||
       (this._style = (() => {
