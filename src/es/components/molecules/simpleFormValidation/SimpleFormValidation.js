@@ -15,7 +15,7 @@ import { Validation } from '../../prototypes/Validation.js'
  *
  * @export
  * @class SimpleFormValidation
- * @type {*}
+ * @type {CustomElementConstructor}
  * @attribute {
  *
  * }
@@ -23,4 +23,4 @@ import { Validation } from '../../prototypes/Validation.js'
  *
  * }
  */
-export default class SimpleFormValidation extends SimpleForm(Validation()) {}
+export default class SimpleFormValidation extends SimpleForm(Validation()) { }

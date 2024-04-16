@@ -5,6 +5,7 @@ import { Shadow } from './Shadow.js'
 export const Validation = (ChosenClass = Shadow()) => class Validation extends ChosenClass {
   /**
    * Creates an instance of Shadow. The constructor will be called for every custom element using this class when initially created.
+   * Validation is a helper used for frontend-side validation. It facilitates the addition of customized error messages at customized HTML locations and times, such as upon input or change.
    *
    * @param {{ValidationInit: {level?: number|undefined, selector?: string|undefined}|undefined}} options
    * @param {*} args
