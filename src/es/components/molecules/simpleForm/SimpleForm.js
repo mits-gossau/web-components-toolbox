@@ -1,5 +1,5 @@
 // @ts-check
-import { Validation } from '../../prototypes/Validation.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global FileReader */
 /* global self */
@@ -16,7 +16,7 @@ import { Validation } from '../../prototypes/Validation.js'
  * @class SimpleForm
  * @type {CustomElementConstructor | *}
  */
-export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm extends ChosenHTMLElement {
+export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
     // @ts-ignore
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
