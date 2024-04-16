@@ -14,16 +14,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *
  * @export
  * @class SimpleForm
- * @type {CustomElementConstructor}
- * @attribute {
- *
- * }
- * @css {
- *
- * }
+ * @type {CustomElementConstructor | *}
  */
-export default class SimpleForm extends Shadow() {
+export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
+    // @ts-ignore
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.clickEventListener = event => {
@@ -93,6 +88,7 @@ export default class SimpleForm extends Shadow() {
       this.hidden = false
     })
     this.addEventListener(this.getAttribute('submit-disabled') || 'submit-disabled', this.submitDisabledEventListener)
+    super.connectedCallback()
   }
 
   disconnectedCallback () {
@@ -100,6 +96,7 @@ export default class SimpleForm extends Shadow() {
     this.form.removeEventListener('change', this.changeListener)
     this.form.removeEventListener('submit', this.submitEventListener)
     this.removeEventListener(this.getAttribute('submit-disabled') || 'submit-disabled', this.submitDisabledEventListener)
+    super.disconnectedCallback()
   }
 
   /**
@@ -253,7 +250,7 @@ export default class SimpleForm extends Shadow() {
             SimpleForm.readFile(file, true).then(([base64, typeMatch]) => {
               const div = document.createElement('div')
               switch (typeMatch[1]) {
-              // video-, pdf- preview
+                // video-, pdf- preview
                 case 'image':
                   div.innerHTML = /* html */`
                   <a-picture alt="${file.name}" defaultSource="${base64}"></a-picture>
@@ -268,7 +265,7 @@ export default class SimpleForm extends Shadow() {
                   li.prepend(div.children[0])
                   break
                 case 'video':
-                // with fallback without type, then it would try to play video/mp4
+                  // with fallback without type, then it would try to play video/mp4
                   div.innerHTML = /* html */`
                   <a-video muted autoplay loop controls sources="[{'src':'${base64}', 'type':'${typeMatch[1]}/${typeMatch[2]}'}, {'src':'${base64}'}]"></a-video>
                 `
@@ -537,8 +534,8 @@ export default class SimpleForm extends Shadow() {
   checkCondition (conditionalNode, targetNode, attributeName) {
     if (targetNode.getAttribute('type') === 'checkbox') return conditionalNode.getAttribute(attributeName) === String(targetNode.checked)
     return conditionalNode.getAttribute(attributeName) === targetNode.value ||
-    (conditionalNode.getAttribute(attributeName) === 'truthy' && targetNode.value) ||
-    (conditionalNode.getAttribute(attributeName) === 'falsy' && !targetNode.value)
+      (conditionalNode.getAttribute(attributeName) === 'truthy' && targetNode.value) ||
+      (conditionalNode.getAttribute(attributeName) === 'falsy' && !targetNode.value)
   }
 
   static readFile (file, returnTypeMatch = false) {
@@ -599,7 +596,7 @@ export default class SimpleForm extends Shadow() {
   static walksUpDomQuerySelector (el, selector, root = document.documentElement) {
     if (typeof el.matches === 'function' && el.matches(selector)) return el
     if (el.querySelector(selector)) return el.querySelector(selector)
-  while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
+    while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
       if (typeof el.matches === 'function' && el.matches(selector)) return el
       if (el.querySelector(selector)) return el.querySelector(selector)
     }
