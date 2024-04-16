@@ -1,8 +1,6 @@
 // @ts-check
 import { Validation } from '../../prototypes/Validation.js'
 
-
-
 /* global FileReader */
 /* global self */
 /* global CustomEvent */
@@ -19,7 +17,7 @@ import { Validation } from '../../prototypes/Validation.js'
  * @type {CustomElementConstructor | *}
  */
 export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm extends ChosenHTMLElement {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     // @ts-ignore
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
@@ -69,7 +67,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -93,7 +91,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
     super.connectedCallback()
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     if (this.inputSubmit) this.inputSubmit.removeEventListener('click', this.clickEventListener)
     this.form.removeEventListener('change', this.changeListener)
     this.form.removeEventListener('submit', this.submitEventListener)
@@ -106,7 +104,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
@@ -115,7 +113,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.hasRendered
   }
 
@@ -124,7 +122,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    *
    * @return {Promise<[void, void]>}
    */
-  renderCSS() {
+  renderCSS () {
     let formPromise = Promise.resolve()
     // grab the styles form Form.js
     if (this.hasAttribute('load-form-styles')) {
@@ -194,7 +192,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    *
    * @return {Promise<void>}
    */
-  fetchTemplate() {
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'simple-form-default-':
         return this.fetchCSS([{
@@ -212,7 +210,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
   *
   * @return {Promise<void>}
   */
-  renderHTML() {
+  renderHTML () {
     this.hasRendered = true
     return Promise.all([
       this.fetchModules([
@@ -232,7 +230,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
   }
 
   // do the whole file pick, delete and preview stuff
-  fileHandling(target) {
+  fileHandling (target) {
     const files = Array.from(target.files) // eslint-disable-line
     let label // eslint-disable-line
     if ((label = target.parentNode.querySelector('.type-file-label'))) {
@@ -318,7 +316,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
   }
 
   // deal with the visibility and multiply aka. clone conditions
-  conditionalHandling(target) {
+  conditionalHandling (target) {
     // selector target has to be as low as possible to not affect other clones including clones
     // only reach up to the multiply, clone boundary if possible
     let el = SimpleForm.walksUpDomQuerySelecting(target, '[multiply-condition]', this.root)
@@ -378,7 +376,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
     }
   }
 
-  async fetchOrDispatch() {
+  async fetchOrDispatch () {
     if (this.abortController) this.abortController.abort()
     this.abortController = new AbortController()
     let body = {}
@@ -416,8 +414,8 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
               obj[key] = typeof obj[key] === 'object'
                 ? await loop(obj[key])
                 : ((input = inputs.find(input => input.getAttribute('name') === key || input.getAttribute('id') === key)))
-                  ? await this.getInputValue(input)
-                  : obj[key]
+                    ? await this.getInputValue(input)
+                    : obj[key]
             }
           }
         }
@@ -448,8 +446,8 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
         headers: this.hasAttribute('headers')
           ? SimpleForm.parseAttribute(this.getAttribute('headers'))
           : {
-            'Content-Type': 'application/json'
-          },
+              'Content-Type': 'application/json'
+            },
         redirect: this.getAttribute('follow') || 'follow',
         body: JSON.stringify(body),
         signal: this.abortController.signal
@@ -464,8 +462,8 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
           headers: this.hasAttribute('headers')
             ? SimpleForm.parseAttribute(this.getAttribute('headers'))
             : {
-              'Content-Type': 'application/json'
-            },
+                'Content-Type': 'application/json'
+              },
           redirect: this.getAttribute('follow') || 'follow',
           body,
           resolve
@@ -493,7 +491,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    * @param {HTMLInputElement} input
    * @return {boolean}
    */
-  isInputValueNode(input) {
+  isInputValueNode (input) {
     return input.nodeName === 'INPUT' || input.nodeName === 'SELECT'
   }
 
@@ -501,7 +499,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    * @param {HTMLInputElement} input
    * @return {Promise<boolean | string | string[]>}
    */
-  getInputValue(input) {
+  getInputValue (input) {
     switch (input.getAttribute('type')) {
       case 'file':
         // @ts-ignore
@@ -517,7 +515,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
     }
   }
 
-  hide(node, initial = false) {
+  hide (node, initial = false) {
     node.setAttribute('hidden', 'true')
     Array.from(node.querySelectorAll('input,select')).forEach(node => {
       if (initial && !node.hasAttribute('data-disabled')) node.setAttribute('data-disabled', node.hasAttribute('disabled'))
@@ -525,7 +523,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
     })
   }
 
-  show(node) {
+  show (node) {
     node.removeAttribute('hidden')
     // check for if right parent triggering this by walksUpDomQueryMatches
     Array.from(node.querySelectorAll('input[disabled],select[disabled]')).forEach(input => {
@@ -533,14 +531,14 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
     })
   }
 
-  checkCondition(conditionalNode, targetNode, attributeName) {
+  checkCondition (conditionalNode, targetNode, attributeName) {
     if (targetNode.getAttribute('type') === 'checkbox') return conditionalNode.getAttribute(attributeName) === String(targetNode.checked)
     return conditionalNode.getAttribute(attributeName) === targetNode.value ||
       (conditionalNode.getAttribute(attributeName) === 'truthy' && targetNode.value) ||
       (conditionalNode.getAttribute(attributeName) === 'falsy' && !targetNode.value)
   }
 
-  static readFile(file, returnTypeMatch = false) {
+  static readFile (file, returnTypeMatch = false) {
     return new Promise(resolve => { // eslint-disable-line
       const reader = new FileReader()
       reader.readAsDataURL(file)
@@ -561,7 +559,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    * @param {HTMLElement} [root=document.documentElement]
    * @return {any}
    */
-  static walksUpDomQuerySelecting(el, selector, root = document.documentElement) {
+  static walksUpDomQuerySelecting (el, selector, root = document.documentElement) {
     if (el.querySelector(selector)) return el
     while ((el = el.parentNode || root) && el !== root) { // eslint-disable-line
       if (el.querySelector(selector)) return el
@@ -578,7 +576,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    * @param {HTMLElement} [root=document.documentElement]
    * @return {any}
    */
-  static walksUpDomQueryMatches(el, selector, root = document.documentElement) {
+  static walksUpDomQueryMatches (el, selector, root = document.documentElement) {
     if (el.matches(selector)) return el
     while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
       if (typeof el.matches === 'function' && el.matches(selector)) return el
@@ -595,7 +593,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    * @param {HTMLElement} [root=document.documentElement]
    * @return {HTMLElement}
    */
-  static walksUpDomQuerySelector(el, selector, root = document.documentElement) {
+  static walksUpDomQuerySelector (el, selector, root = document.documentElement) {
     if (typeof el.matches === 'function' && el.matches(selector)) return el
     if (el.querySelector(selector)) return el.querySelector(selector)
     while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
@@ -605,24 +603,24 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
     return el
   }
 
-  get form() {
+  get form () {
     return this.root.querySelector('form')
   }
 
-  get inputs() {
+  get inputs () {
     return this.getInputs(this.form)
   }
 
-  getInputs(target) {
+  getInputs (target) {
     if (!target) return []
     return Array.from(target.querySelectorAll('input')).concat(Array.from(target.querySelectorAll('select'))).concat(Array.from(target.querySelectorAll('textarea')))
   }
 
-  get inputSubmit() {
+  get inputSubmit () {
     return this.form.querySelector('[type=submit]')
   }
 
-  get response() {
+  get response () {
     return this.root.querySelector('#response')
   }
 
@@ -633,7 +631,7 @@ export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm
    *
    * @returns {Promise<any>}
    */
-  loadGrecaptchaDependency() {
+  loadGrecaptchaDependency () {
     if (!this.getAttribute('grecaptcha-key')) return Promise.resolve(null)
     // @ts-ignore
     if (self.grecaptcha) return Promise.resolve(self.grecaptcha)
