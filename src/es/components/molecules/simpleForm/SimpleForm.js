@@ -14,7 +14,7 @@ import { Validation } from '../../prototypes/Validation.js'
  *
  * @export
  * @class SimpleForm
- * @type {CustomElementConstructor}
+ * @type {*}
  * @attribute {
  *
  * }
@@ -22,8 +22,9 @@ import { Validation } from '../../prototypes/Validation.js'
  *
  * }
  */
-export default class SimpleForm extends Validation() {
+export const SimpleForm = (ChosenHTMLElement = Validation()) => class SimpleForm extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
+    // @ts-ignore
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.clickEventListener = event => {
