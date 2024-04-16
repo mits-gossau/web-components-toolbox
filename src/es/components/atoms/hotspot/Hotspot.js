@@ -150,7 +150,7 @@ export default class Hotspot extends Shadow() {
           top: 50%;
           transform: scale(0) translate(-50%,-50%);
           transition: transform 250ms cubic-bezier(.755,.05,.855,.06);
-          width: var(--content-width, 22rem);
+          width: var(--hotspot-width, var(--content-width, 22rem));
         }
         :host(.active) .content{
           transition: transform .4s 250ms cubic-bezier(.755,.05,.855,.06);
