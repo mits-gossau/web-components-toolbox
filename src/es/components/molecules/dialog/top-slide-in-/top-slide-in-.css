@@ -10,7 +10,7 @@
   opacity: 1;
   position: fixed;
   transform: translateY(-100%);
-  transition: 0.3s;
+  transition: all 0.3s allow-discrete;
   width: 100%;
   max-width: 100%;
   z-index: 99;
