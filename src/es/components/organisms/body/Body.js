@@ -1,5 +1,5 @@
 // @ts-check
-import { Shadow } from '../../prototypes/Shadow.js'
+import { Anchor } from '../../prototypes/Anchor.js'
 
 /* global location */
 /* global self */
@@ -21,61 +21,15 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  --font-family-secondary
  * }
  */
-export default class Body extends Shadow() {
+export default class Body extends Anchor() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
-
-    this.timeout = null
-    this.clickAnchorEventListener = event => {
-      let element = null
-      if ((element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash || null))) {
-        this.dispatchEvent(new CustomEvent(this.getAttribute('scroll-to-anchor') || 'scroll-to-anchor', {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-          detail: {
-            child: element
-          }
-        }))
-        element.scrollIntoView({ behavior: 'smooth' })
-        // @ts-ignore
-        clearTimeout(this.timeout)
-        this.timeout = setTimeout(() => {
-          element.scrollIntoView({ behavior: 'auto' })
-          this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-            detail: {
-              hasNoScroll: false,
-              origEvent: event,
-              this: this
-            },
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        }, 500) // lazy loading pics make this necessary to reach target
-        self.removeEventListener('hashchange', this.clickAnchorEventListener)
-        location.hash = location.hash.replace('_scrolled', '') + '_scrolled'
-        self.addEventListener('hashchange', this.clickAnchorEventListener)
-      }
-    }
   }
 
   connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-    document.body.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
-    if (location.hash) {
-      self.addEventListener('load', event => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), { once: true })
-      document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => setTimeout(() => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), 1000), { once: true })
-    }
-    self.addEventListener('hashchange', this.clickAnchorEventListener)
-  }
-
-  disconnectedCallback () {
-    super.disconnectedCallback()
-    document.body.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
-    self.removeEventListener('hashchange', this.clickAnchorEventListener)
   }
 
   /**
