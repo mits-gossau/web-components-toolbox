@@ -53,6 +53,7 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
    * @return {void}
    */
   connectedCallback () {
+    super.connectedCallback()
     document.body.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
     if (location.hash) {
       self.addEventListener('load', event => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), { once: true })
@@ -67,6 +68,7 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
    * @return {void}
    */
   disconnectedCallback () {
+    super.disconnectedCallback()
     document.body.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
     self.removeEventListener('hashchange', this.clickAnchorEventListener)
   }
