@@ -356,7 +356,14 @@ export default class Picture extends Intersection(Hover()) {
       let naturalWidth
       if ((naturalWidth = src.searchParams.get(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width'))) {
         if (this.img.naturalWidth) naturalWidth = this.img.naturalWidth
-        src.searchParams.delete(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height') // height is not needed in query
+        let naturalHeight = null
+        let naturalAspectRatio = null
+        if (this.hasAttribute('sources-keep-query-aspect-ratio')) {
+          naturalHeight = Number(src.searchParams.get(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height'))
+          naturalAspectRatio = naturalHeight / naturalWidth
+        } else {
+          src.searchParams.delete(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height') // height is not needed in query
+        }
         if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) src.searchParams.set(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format', 'webp') // force webp as format
         if (src.searchParams.get(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality')) src.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '80') // force quality as 80
         const step = 50
@@ -365,11 +372,12 @@ export default class Picture extends Intersection(Hover()) {
         let nextWidth = 0
         while (width < naturalWidth) {
           nextWidth = width + step < naturalWidth ? width + step : 0
-          nextWidth ? src.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width)) : src.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
+          nextWidth || naturalAspectRatio ? src.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width)) : src.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
+          if (naturalAspectRatio) src.searchParams.set(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height', String(width * naturalAspectRatio))
           const source = document.createElement('source')
           source.setAttribute('data-srcset', src.href)
           if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) source.setAttribute('type', 'image/webp') // force webp as format
-          source.setAttribute('media', `${prevWidth ? `(min-width: ${prevWidth + 1}px)` : ''}${prevWidth && nextWidth ? ' and ' : ''}${nextWidth ? `(max-width: ${width}px)` : ''}`)
+          source.setAttribute('media', `${prevWidth ? `(min-width: ${prevWidth + 1}px)` : ''}${prevWidth && (nextWidth || naturalAspectRatio) ? ' and ' : ''}${nextWidth || naturalAspectRatio ? `(max-width: ${width}px)` : ''}`)
           this.sources.push(source)
           prevWidth = width
           width += step
