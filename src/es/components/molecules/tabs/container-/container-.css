@@ -43,7 +43,7 @@
     padding: 2%;
 }
 
-@media screen and (max-width: 767px) {
+@media screen and (max-width: _max-width_) {
     :host .tab-content.active {
         flex-direction: column-reverse;
     }
