@@ -48,6 +48,9 @@
     position: relative;
     top: 0.125em;
 }
+:host a:hover a-icon-mdx {
+    color: var(--grid-2columns-content-stage-address-icon-color-hover-custom, var(--a-color-hover, #333));
+}
 :host p.intro {
     font: var(--grid-2columns-content-stage-paragraph-font-custom) !important;
 }
