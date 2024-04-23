@@ -18,6 +18,14 @@
 :host([with-border]) > section {
     border-bottom: var(--content-section-border-bottom-custom, 1px solid var(--mdx-sys-color-brand-neutral-300));
 }
+:host > section a {
+    --a-text-decoration: underline;
+}
+:host > section a:hover {
+    --a-text-decoration-hover: underline;
+    text-decoration-line: var(--a-text-decoration-hover);
+}
+
 /* ****************************************** first-container-vertical ****************************************** */
 /* filter left */
 :host([first-container-vertical]) > section > *:nth-child(1) {
