@@ -26,6 +26,13 @@
     display: inline-flex;
     width: 100%;
 }
+:host .topline.link-underline a:hover {
+    color: var(--grid-2columns-content-stage-back-link-color-custom, white);
+    text-decoration: underline;
+}
+:host .topline.link-underline a-icon-mdx {
+    color: var(--grid-2columns-content-stage-icon-color-custom, white);
+}
 :host .topline > a > span {
     overflow: hidden;
     text-overflow: ellipsis;
