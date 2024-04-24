@@ -1,4 +1,11 @@
 :host {
   --picture-scale-up-transform-hover: scale(1.05,1.05);
   --picture-scale-up-transition: transform .5s ease-out;
+  --picture-scale-up-close-btn-background-color: var(--picture-scale-up-close-btn-background-color-custom, var(--color-secondary));
+  --picture-scale-up-content-spacing: var(--picture-scale-up-content-spacing-custom, var(--content-spacing, 1em));
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --picture-scale-up-content-spacing: var(--picture-scale-up-content-spacing-mobile-custom, var(--picture-scale-up-content-spacing-custom, var(--content-spacing-mobile, var(--content-spacing, 1em))));
+  }
 }
