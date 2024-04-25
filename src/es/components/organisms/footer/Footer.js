@@ -131,6 +131,10 @@ export default class Footer extends Shadow() {
       :host > footer .footer-links > ul {
         flex-direction: row;
         justify-content: var(--justify-content-custom, start);
+        align-items: var(--align-items, start);
+      }
+      :host > footer .footer-links > ul > li:last-child {
+        align-self: var(--footer-copyright-align-self-custom, end);
       }
       :host > footer .language-switcher > ul > li, :host > footer .footer-links > ul > li {
         border: 0;
@@ -196,6 +200,8 @@ export default class Footer extends Shadow() {
         }
         :host > footer .footer-links > ul {
           flex-direction: column;
+          justify-content: var(--justify-content-mobile-custom, start);
+          align-items: var(--align-items-mobile, start);
         }
         :host > footer > .copyright-and-language .footer-links ~ .language-switcher > ul {
           gap: var(--content-spacing-mobile, var(--content-spacing));
@@ -297,6 +303,7 @@ export default class Footer extends Shadow() {
             sectionChildChildren.splice(0, 1)
             sectionChildChildren.forEach(child => {
               const clone = child.cloneNode(true)
+              // @ts-ignore
               clone.classList.add('clone')
               arr[i - 1].appendChild(clone)
             })
@@ -324,6 +331,7 @@ export default class Footer extends Shadow() {
             // replace the placeholders with its clones
             clones.forEach((clone, i) => {
               let placeholderNode
+              // @ts-ignore
               if ((placeholderNode = detailsDiv.children[0].root.querySelector(`.placeholder-node-${i}`))) placeholderNode.replaceWith(clone)
             })
             // set the details
