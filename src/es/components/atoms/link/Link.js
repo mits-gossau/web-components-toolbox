@@ -282,7 +282,7 @@ export default class Link extends Hover() {
       this.a.innerHTML = `&nbsp;${this.a.innerHTML}`
       this.a.prepend(Array.from(div.children)[0])
     }
-    if (!Array.from(this.root.childNodes).includes(this.a)) this.html = this.a
+    if (this._a && !Array.from(this.root.childNodes).includes(this.a)) this.html = this.a
     if (this.hitArea) {
       this.hitArea.innerHTML = this.a.innerHTML
       this.hitArea.setAttribute('data-href', this.a.getAttribute('href'))

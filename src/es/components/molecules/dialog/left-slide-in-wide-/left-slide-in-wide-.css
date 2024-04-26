@@ -12,16 +12,17 @@
   position: fixed;
   transform: translateX(-100%);
   transition: all 0.3s allow-discrete;
-  padding: var(--dialog-left-slide-in-padding-custom, 0);
+  padding: var(--dialog-left-slide-in-wide-padding-custom, 0);
   height: 100%;
   max-height: 100%;
   width: 100%;
-  max-width: var(--dialog-left-slide-in-max-width-custom, min(100%, 1120px));
-  z-index: var(--dialog-left-slide-in-z-index-custom, 99);
-  gap: var(--dialog-left-slide-in-gap-custom, normal);
-  justify-content: var(--dialog-left-slide-in-justify-content-custom, normal);
-  align-items: var(--dialog-left-slide-in-align-items-custom, normal);
-  flex-direction: var(--dialog-left-slide-in-flex-direction-custom, column);
+  max-width: var(--dialog-left-slide-in-wide-max-width-custom, min(100%, 1120px));
+  z-index: var(--dialog-left-slide-in-wide-z-index-custom, 99);
+  display: flex;
+  gap: var(--dialog-left-slide-in-wide-gap-custom, normal);
+  justify-content: var(--dialog-left-slide-in-wide-justify-content-custom, normal);
+  align-items: var(--dialog-left-slide-in-wide-align-items-custom, normal);
+  flex-direction: var(--dialog-left-slide-in-wide-flex-direction-custom, column);
 }
 
 :host>dialog.closed {
@@ -123,6 +124,7 @@
   padding: 0;
   position: relative;
   z-index: 1;
+  padding: var(--mdx-sys-spacing-flex-large-xs) var(--mdx-sys-spacing-flex-large-xs) var(--mdx-sys-spacing-flex-large-l);
 }
 
 :host .dialog-content .sub-content {
@@ -145,8 +147,11 @@
 :host .dialog-footer {
   background-color: var(--color-white, #fff);
   border-top: 1px solid var(--color-gray-300, rgba(224, 224, 224, 1));
-  justify-content: flex-end;
+  align-items: stretch;
   display: flex;
+  justify-content: flex-end;
+  position: sticky;
+  bottom: 0;
   z-index: 2;
 }
 
