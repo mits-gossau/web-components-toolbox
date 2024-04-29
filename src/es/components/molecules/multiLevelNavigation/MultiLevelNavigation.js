@@ -24,11 +24,11 @@ export default class MultiLevelNavigation extends Mutation() {
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
       ...options
     }, ...args)
-
     this.isDesktop = this.checkMedia('desktop')
     this.useHoverListener = this.hasAttribute('use-hover-listener')
     this.animationDurationMs = this.getAttribute('animation-duration') || 300
     this.removeElementAfterAnimationDurationMs = this.animationDurationMs + 50
+
 
     this.resizeListener = event => {
       const oldIsDesktopValue = this.isDesktop
@@ -190,6 +190,19 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   connectedCallback () {
+    const preventDefaultInputSearch = this.root.querySelectorAll(".preventDefaultInputSearch");
+    if (preventDefaultInputSearch.length > 0) {
+      function noScroll(event) {
+        const body = document.body; 
+         if (event.type === 'blur') {
+          window.scroll(0,0)
+        }
+      }
+      preventDefaultInputSearch.forEach(input => {
+        input.addEventListener('blur', noScroll);
+      });
+    }
+
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -252,6 +265,10 @@ export default class MultiLevelNavigation extends Mutation() {
       color: black;
       overscroll-behavior: contain;
     }
+    .no-scroll {
+      overflow: hidden;
+    }
+    
     :host > nav > ul {
       position: relative;
       align-items: var(--main-ul-align-items, normal);
