@@ -183,14 +183,11 @@
     padding: 1em;
     margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
     margin-left: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
-
-
   }
 
   :host .nav-wrapper {
     width: var(--multi-level-navigation-delica-nav-wrapper-width-var, 95%);
     margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
-
   }
 
   :host>nav>div {

@@ -29,7 +29,6 @@ export default class MultiLevelNavigation extends Mutation() {
     this.animationDurationMs = this.getAttribute('animation-duration') || 300
     this.removeElementAfterAnimationDurationMs = this.animationDurationMs + 50
 
-
     this.resizeListener = event => {
       const oldIsDesktopValue = this.isDesktop
       const oldAriaExpandedAttribute = this.nav.getAttribute('aria-expanded')
