@@ -53,8 +53,6 @@
   height: fit-content;
 }
 
-
-
 :host m-teaser {
   --teaser-tile-rounded-overflow-x: hidden;
   --teaser-tile-rounded-overflow-y: visible;
@@ -85,8 +83,6 @@
 #nav-section-2 a .close-icon {
   color: var(--multi-level-navigation-delica-close-icon-color, white);
 }
-
-
 
 :host m-teaser {
   --underline-after-height: , 0.15em;

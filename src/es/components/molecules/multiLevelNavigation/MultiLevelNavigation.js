@@ -190,19 +190,15 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   connectedCallback () {
-    const preventDefaultInputSearch = this.root.querySelectorAll(".preventDefaultInputSearch");
+    const preventDefaultInputSearch = this.root.querySelectorAll("a-input[prevent-default-input-search='true']")
     if (preventDefaultInputSearch.length > 0) {
-      function noScroll(event) {
-        const body = document.body; 
-         if (event.type === 'blur') {
+      const noScroll = ()  => {
           window.scroll(0,0)
-        }
       }
       preventDefaultInputSearch.forEach(input => {
         input.addEventListener('blur', noScroll);
-      });
+      })
     }
-
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
