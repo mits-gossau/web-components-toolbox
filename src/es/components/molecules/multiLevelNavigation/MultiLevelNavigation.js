@@ -191,11 +191,11 @@ export default class MultiLevelNavigation extends Mutation() {
   connectedCallback () {
     const preventDefaultInputSearch = this.root.querySelectorAll("a-input[prevent-default-input-search='true']")
     if (preventDefaultInputSearch.length > 0) {
-      const noScroll = ()  => {
+      const noScroll = () => {
           window.scroll(0,0)
       }
       preventDefaultInputSearch.forEach(input => {
-        input.addEventListener('blur', noScroll);
+        input.addEventListener('blur', noScroll)
       })
     }
     this.hidden = true
