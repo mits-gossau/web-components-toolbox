@@ -265,9 +265,6 @@ export default class MultiLevelNavigation extends Mutation() {
       color: black;
       overscroll-behavior: contain;
     }
-    .no-scroll {
-      overflow: hidden;
-    }
     
     :host > nav > ul {
       position: relative;
