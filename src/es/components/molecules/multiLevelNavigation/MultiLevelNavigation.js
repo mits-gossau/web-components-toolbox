@@ -24,6 +24,7 @@ export default class MultiLevelNavigation extends Mutation() {
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
       ...options
     }, ...args)
+    this.noScroll = () => { window.scroll(0,0) }
     this.isDesktop = this.checkMedia('desktop')
     this.useHoverListener = this.hasAttribute('use-hover-listener')
     this.animationDurationMs = this.getAttribute('animation-duration') || 300
@@ -191,11 +192,8 @@ export default class MultiLevelNavigation extends Mutation() {
   connectedCallback () {
     const preventDefaultInputSearch = this.root.querySelectorAll("a-input[prevent-default-input-search='true']")
     if (preventDefaultInputSearch.length > 0) {
-      const noScroll = () => {
-          window.scroll(0,0)
-      }
       preventDefaultInputSearch.forEach(input => {
-        input.addEventListener('blur', noScroll)
+        input.addEventListener('blur', this.noScroll)
       })
     }
     this.hidden = true
@@ -224,6 +222,7 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   disconnectedCallback () {
+    self.removeEventListener('blur', this.noScroll)
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
