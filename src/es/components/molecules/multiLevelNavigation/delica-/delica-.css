@@ -30,24 +30,36 @@
   --multi-level-navigation-delica-nav-wrapper-width-var: 95%;
   --mobileOpenLeft-animation-right: 2.5%;
 
+}
+
+:host>nav>ul>li>o-nav-wrapper>section>div:not(:last-of-type):after {
+  display: none;
 
 }
 
-:host .close-icon a-icon-mdx{
+:host .close-icon a-icon-mdx {
   color: var(--multi-level-navigation-delica-close-icon-color, white) !important;
+
 }
 
 :host .intersecting {
   height: var(--multi-level-navigation-delica-intersecting, 100%);
+  
+}
+
+#nav-section-1,
+#nav-section-2,
+#nav-section-3 {
+  height: fit-content;
 }
 
 :host m-teaser {
   --teaser-tile-rounded-overflow-x: hidden;
-  --teaser-tile-rounded-overflow-y: auto;
+  --teaser-tile-rounded-overflow-y: visible;
   --picture-scale-up-img-max-height: 12em;
   --picture-scale-up-height: auto;
   --picture-scale-up-img-object-fit: cover;
-  --teaser-tile-rounded-figcaption-padding-custom: 4%;
+  --teaser-tile-rounded-figcaption-padding-custom: 1.5em;
   --teaser-tile-rounded-border-radius-custom: 1em;
   --teaser-tile-rounded-height: 100%;
 }
@@ -72,8 +84,6 @@
   color: var(--multi-level-navigation-delica-close-icon-color, white);
 }
 
-
-
 :host m-teaser {
   --underline-after-height: , 0.15em;
 }
@@ -89,7 +99,7 @@
 }
 
 :host .nav-wrapper>ul {
-  padding: 4% !important;
+  padding: 1.5em !important;
 
 }
 
@@ -118,7 +128,20 @@
   --nav-level-item-default-hover-color: var(--color-tertiary, blue);
 }
 
+.no-scroll {
+  overflow: hidden;
+}
 
+
+@media only screen and (min-width: 1200px) {
+  :host>nav>ul>li>o-nav-wrapper>section>div {
+    height: fit-content;
+  }
+
+  :host .nav-wrapper {
+    height: 100%;
+  }
+}
 
 
 @media only screen and (max-width: 1200px) {
@@ -147,7 +170,6 @@
   :host>nav {
     background-color: #172445;
     display: flex;
-    /* justify-content: center; */
     align-items: flex-start;
   }
 
@@ -159,23 +181,20 @@
     border-radius: 1em;
     margin-top: 2%;
     padding: 1em;
-    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    
-    margin-left: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    
-
-
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
+    margin-left: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
   }
 
   :host .nav-wrapper {
     width: var(--multi-level-navigation-delica-nav-wrapper-width-var, 95%);
-    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );
-
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
   }
 
   :host>nav>div {
     position: absolute;
     border-top: var(--multi-level-navigation-delica-mobile-wrapper-border-width, var(--mobile-wrapper-border-width, 1px)) var(--multi-level-navigation-delica-mobile-wrapper-border-style, var(--mobile-wrapper-border-style, solid)) var(--multi-level-navigation-delica-mobile-wrapper-border-color, var(--mobile-wrapper-border-color, black));
     width: var(--multi-level-navigation-delica-nav-wrapper-width-var, 95%);
-    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2 );    
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
     height: fit-content;
     background-color: white;
     margin-top: 2%;
