@@ -190,12 +190,6 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   connectedCallback () {
-    const preventDefaultInputSearch = this.root.querySelectorAll("a-input[prevent-default-input-search='true']")
-    if (preventDefaultInputSearch.length > 0) {
-      preventDefaultInputSearch.forEach(input => {
-        input.addEventListener('blur', this.noScroll)
-      })
-    }
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -219,14 +213,16 @@ export default class MultiLevelNavigation extends Mutation() {
 
     this.isCheckout = this.parentElement.getAttribute('is-checkout') === 'true'
     if (this.isCheckout) this.root.querySelector('nav').style.display = 'none'
+
+    this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.addEventListener('blur', this.noScroll))
   }
 
   disconnectedCallback () {
-    self.removeEventListener('blur', this.noScroll)
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     Array.from(this.root.querySelectorAll('a')).forEach(a => a.removeEventListener('click', this.aLinkClickListener))
+    this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.removeEventListener('blur', this.noScroll))
     super.disconnectedCallback()
   }
 
