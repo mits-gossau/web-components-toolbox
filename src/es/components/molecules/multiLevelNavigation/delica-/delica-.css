@@ -9,7 +9,7 @@
   --multi-level-navigation-delica-a-main-font-weight: 500;
   --multi-level-navigation-delica-a-main-border-width: 3px;
   --multi-level-navigation-delica-a-main-border-style: solid;
-  --multi-level-navigation-delica-desktop-main-wrapper-height: 55dvh;
+  --multi-level-navigation-delica-desktop-main-wrapper-height: fit-content;
   --multi-level-navigation-delica-desktop-main-wrapper-border-width: 1px;
   --multi-level-navigation-delica-desktop-main-wrapper-border-style: solid;
   --multi-level-navigation-delica-desktop-main-wrapper-border-color: #E0E0E0;
@@ -29,7 +29,7 @@
   --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-border-color: white;
   --multi-level-navigation-delica-nav-wrapper-width-var: 95%;
   --mobileOpenLeft-animation-right: 2.5%;
-
+  --any-padding-bottom-last-child: 1.5em
 }
 
 :host>nav>ul>li>o-nav-wrapper>section>div:not(:last-of-type):after {
