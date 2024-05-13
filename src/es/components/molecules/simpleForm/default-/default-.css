@@ -73,7 +73,14 @@
 :host > form *[inset] {
     padding-left: var(--content-spacing);
 }
+:host label {
+    color: var(--simple-form-default-label-color, var(--label-color, var(--color, inherit)));
+    display: var(--simple-form-default-label-display, inline-block);
+    font: var(--simple-form-default-label-font, var(--label-font, inherit));
+    margin-bottom: var(--simple-form-default-label-margin-bottom, var(--label-margin-bottom, 0.5em));
+}
 :host input, :host select, :host textarea, :host div {
+    font: var(--simple-form-default-input-font, var(--input-font, inherit));
     transition: border-color 0.3s ease-out, outline 0.3s ease-out;
 }
 :host([dirty]) input:not(:valid), :host([dirty]) div:has(input[type=file]:not(:valid)), :host([dirty]) select:not(:valid), :host([dirty]) textarea:not(:valid) {
