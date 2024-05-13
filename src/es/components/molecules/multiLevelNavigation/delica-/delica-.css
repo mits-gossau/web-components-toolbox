@@ -82,6 +82,12 @@
 
 #nav-section-2 a .close-icon {
   color: var(--multi-level-navigation-delica-close-icon-color, white);
+
+}
+
+:host .close-icon{
+  top: 0.6em !important;
+  right: 0.5em !important;
 }
 
 :host m-teaser {
