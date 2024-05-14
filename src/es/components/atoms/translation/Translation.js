@@ -9,8 +9,8 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class Translation extends Shadow() {
-  constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, mode:"false",  ...options }, ...args)
+  constructor(options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, mode: "false", ...options }, ...args)
   }
 
   connectedCallback() {
@@ -26,7 +26,7 @@ export default class Translation extends Shadow() {
       composed: true
     }
     )))).then(async ({ getTranslation }) => {
-      this.renderHTML(await getTranslation(this.key))
+      if (this.key) this.renderHTML(await getTranslation(this.key))
     }).finally(() => {
       this.hidden = false
     })
