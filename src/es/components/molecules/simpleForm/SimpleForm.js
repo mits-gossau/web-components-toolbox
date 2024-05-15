@@ -30,6 +30,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
       }
       // once the form was touched, resp. tried to submit, it is dirty. The dirty attribute signals the css to do the native validation
       this.setAttribute('dirty', 'true')
+      this.form.setAttribute('dirty', 'true')
     }
 
     this.changeListener = event => {
