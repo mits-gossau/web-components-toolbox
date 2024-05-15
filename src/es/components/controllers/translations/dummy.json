@@ -112,5 +112,9 @@
     "CP.cpAppointmentNoSubscriptionsAvailable": "Keine Termine und Abonnemente vorhanden.",
     "CP.cpAppointmentDwnCalendar": "Termin in Kalender exportieren",
     "CP.cpDatePickerMaxDisplay": "Maximale Anzeige 14 Tage ab heute",
-    "CP.cpAppointmentListFilterByLocations": "Standort"
+    "CP.cpAppointmentListFilterByLocations": "Standort",
+    "CP.cpBookAppointment": "[DE | Termin buchen]",
+    "CP.cpBookAppointmentNow": "[DE | Jetzt Termin buchen]",
+    "CP.cpCancelAppointment": "[DE | Termin stornieren]",
+    "CP.cpCancelAppointmentNow": "[DE | Jetzt Termin stornieren]"
 }
