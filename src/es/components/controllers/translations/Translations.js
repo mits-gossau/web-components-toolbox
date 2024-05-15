@@ -22,14 +22,10 @@ export default class Translations extends HTMLElement {
 
   connectedCallback () {
     this.addEventListener(this.getAttribute('request-translations') || 'request-translations', this.requestTranslationsListener)
-    // TODO: higher order component, remove once adjusted
-    document.body.addEventListener('request-translations', this.requestTranslationsListener)
   }
 
   disconnectedCallback () {
     this.removeEventListener(this.getAttribute('request-translations') || 'request-translations', this.requestTranslationsListener)
-    // TODO: higher order component, remove once adjusted
-    document.body.removeEventListener('request-translations', this.requestTranslationsListener)
   }
 
   /**
