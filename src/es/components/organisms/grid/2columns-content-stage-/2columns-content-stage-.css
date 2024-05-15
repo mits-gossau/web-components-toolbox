@@ -45,6 +45,13 @@
 :host .topline ks-m-favorite-button {
     display: none;
 }
+:host aside > img {
+    width: 100%;
+    height: 100%;
+    min-height: var(--grid-2columns-content-stage-image-min-height, 280px);
+    object-fit: cover;
+    object-position: center center;
+}
 :host aside ks-m-favorite-button {
     display: inline-block;
 }
@@ -181,9 +188,6 @@
     :host(:not([no-mobile])) > section {
         border-bottom: 0 none;
         grid-template-columns: auto;
-    }
-    :host(:not([image-src])) aside {
-        display: none;
     }
     :host > section > * {
         padding: var(--grid-2columns-content-stage-padding-mobile-custom, var(--grid-2columns-content-stage-padding-custom, var(--content-spacing-mobile, var(--content-spacing))));
