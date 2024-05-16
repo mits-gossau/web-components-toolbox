@@ -5,3 +5,16 @@
     border-bottom: var(--simple-form-miduweb-hr-border-bottom, var(--hr-border-bottom, 1px solid var(--color)));
     margin: var(--simple-form-miduweb-hr-margin, var(--content-spacing) auto);
 }
+:host label {
+    color: var(--simple-form-miduweb-label-color, var(--simple-form-default-label-color, var(--label-color, var(--color, inherit))));
+    display: var(--simple-form-miduweb-label-display, var(--simple-form-default-label-display, inline-block));
+    font: var(--simple-form-miduweb-label-font, var(--simple-form-default-label-font, var(--label-font, inherit)));
+    margin-bottom: var(--simple-form-miduweb-label-margin-bottom, var(--simple-form-default-label-margin-bottom, var(--label-margin-bottom, 0.5em)));
+}
+:host input, 
+:host select, 
+:host textarea, 
+:host div {
+    font: var(--simple-form-default-input-font, var(--input-font, inherit));
+    transition: border-color 0.3s ease-out, outline 0.3s ease-out;
+}

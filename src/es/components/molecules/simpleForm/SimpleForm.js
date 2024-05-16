@@ -194,6 +194,16 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
    * @return {Promise<void>}
    */
   fetchTemplate () {
+    const styles = [
+      {
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
     switch (this.getAttribute('namespace')) {
       case 'simple-form-default-':
         return this.fetchCSS([{
@@ -206,7 +216,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
           // @ts-ignore
           path: `${this.importMetaUrl}./miduweb-/miduweb-.css`,
           namespace: false
-        }], false)
+        }, ...styles], false)
       default:
         return Promise.resolve()
     }
