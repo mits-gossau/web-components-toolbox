@@ -469,7 +469,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
         body: JSON.stringify(body),
         signal: this.abortController.signal
       }).then(async response => {
-        if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399)) return response.json()
+        if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399) || response.status === 422) return response.json() // Umbraco forms response with 422 on a validation error
         throw new Error(this.response.textContent = response.statusText)
       })
       : new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('dispatch-event-name'), {
@@ -492,16 +492,20 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
     ).then(json => {
       let response
       let redirectUrl
-      if ((response = json[this.getAttribute('response-property-name')] || json.response) && this.response) {
+      if ((response = this.getPropertyByKey(json, this.getAttribute('response-property-name') || 'response')) && this.response) {
         this.response.innerHTML = response
         let onclick
-        if ((onclick = json[this.getAttribute('onclick-property-name')] || json.onclick)) this.response.setAttribute('onclick', onclick)
-        if (json[this.getAttribute('success-property-name')] === true || json.success === true) this.response.classList.add('success')
-        if (json[this.getAttribute('clear-property-name')] === true || json.clear === true) this.form.remove()
-      } else if ((redirectUrl = json[this.getAttribute('redirect-url-property-name')] || json.redirectUrl)) {
-        self.open(redirectUrl, json[this.getAttribute('target-property-name')] || json.target, json[this.getAttribute('features-property-name')] || json.features)
+        if ((onclick = this.getPropertyByKey(json, this.getAttribute('onclick-property-name') || 'onclick'))) this.response.setAttribute('onclick', onclick)
+        if (this.getPropertyByKey(json, this.getAttribute('success-property-name') || 'success')) this.response.classList.add('success')
+        if (this.getPropertyByKey(json, this.getAttribute('clear-property-name') || 'clear')) this.form.remove()
       }
+      if ((redirectUrl = this.getPropertyByKey(json, this.getAttribute('redirect-url-property-name') || 'redirectUrl'))) self.open(redirectUrl, this.getPropertyByKey(json, this.getAttribute('target-property-name') || 'target'), this.getPropertyByKey(json, this.getAttribute('features-property-name') || 'features'))
     })
+  }
+
+  getPropertyByKey (obj, key) {
+    let result = null
+    return key.split(',').some(keyEl => (result = keyEl.split(':').reduce((accumulator, propertyName) => accumulator ? accumulator[propertyName] : null, obj))) && result
   }
 
   /**
