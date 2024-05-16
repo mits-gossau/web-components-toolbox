@@ -30,6 +30,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
       }
       // once the form was touched, resp. tried to submit, it is dirty. The dirty attribute signals the css to do the native validation
       this.setAttribute('dirty', 'true')
+      this.form.setAttribute('dirty', 'true')
     }
 
     this.changeListener = event => {
@@ -85,6 +86,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
           composed: true
         }))
       })
+      if (this.response) this.response.hidden = true
       this.hidden = false
     })
     this.addEventListener(this.getAttribute('submit-disabled') || 'submit-disabled', this.submitDisabledEventListener)
@@ -193,11 +195,27 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
    * @return {Promise<void>}
    */
   fetchTemplate () {
+    const styles = [
+      {
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: true
+      }
+    ]
     switch (this.getAttribute('namespace')) {
       case 'simple-form-default-':
         return this.fetchCSS([{
           // @ts-ignore
           path: `${this.importMetaUrl}./default-/default-.css`,
+          namespace: false
+        }], false)
+      case 'simple-form-miduweb-':
+        return this.fetchCSS([...styles, {
+          // @ts-ignore
+          path: `${this.importMetaUrl}./miduweb-/miduweb-.css`,
           namespace: false
         }], false)
       default:
@@ -452,7 +470,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
         body: JSON.stringify(body),
         signal: this.abortController.signal
       }).then(async response => {
-        if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399)) return response.json()
+        if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399) || response.status === 422) return response.json() // Umbraco forms response with 422 on a validation error
         throw new Error(this.response.textContent = response.statusText)
       })
       : new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('dispatch-event-name'), {
@@ -475,16 +493,29 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
     ).then(json => {
       let response
       let redirectUrl
-      if ((response = json[this.getAttribute('response-property-name')] || json.response) && this.response) {
-        this.response.innerHTML = response
+      if ((response = this.getPropertyByKey(json, this.getAttribute('response-property-name') || 'response')) && this.response) {
+        let responseTextNodes = Array.from(this.response.querySelectorAll(this.getAttribute('response-text-node-selector')))
+        if (!responseTextNodes.length) responseTextNodes = [this.response]
+        responseTextNodes.forEach(responseTextNode => (responseTextNode.innerHTML = response))
         let onclick
-        if ((onclick = json[this.getAttribute('onclick-property-name')] || json.onclick)) this.response.setAttribute('onclick', onclick)
-        if (json[this.getAttribute('success-property-name')] === true || json.success === true) this.response.classList.add('success')
-        if (json[this.getAttribute('clear-property-name')] === true || json.clear === true) this.form.remove()
-      } else if ((redirectUrl = json[this.getAttribute('redirect-url-property-name')] || json.redirectUrl)) {
-        self.open(redirectUrl, json[this.getAttribute('target-property-name')] || json.target, json[this.getAttribute('features-property-name')] || json.features)
+        if ((onclick = this.getPropertyByKey(json, this.getAttribute('onclick-property-name') || 'onclick'))) this.response.setAttribute('onclick', onclick)
+        if (this.getPropertyByKey(json, this.getAttribute('success-property-name') || 'success')) {
+          this.response.classList.add('success')
+          this.response.classList.remove('failure')
+        } else {
+          this.response.classList.add('failure')
+          this.response.classList.remove('success')
+        }
+        this.response.hidden = false
+        if (this.getPropertyByKey(json, this.getAttribute('clear-property-name') || 'clear')) this.form.remove()
       }
+      if ((redirectUrl = this.getPropertyByKey(json, this.getAttribute('redirect-url-property-name') || 'redirectUrl'))) self.open(redirectUrl, this.getPropertyByKey(json, this.getAttribute('target-property-name') || 'target'), this.getPropertyByKey(json, this.getAttribute('features-property-name') || 'features'))
     })
+  }
+
+  getPropertyByKey (obj, key) {
+    let result = null
+    return key.split(',').some(keyEl => (result = keyEl.split(':').reduce((accumulator, propertyName) => accumulator ? accumulator[propertyName] : null, obj))) && result
   }
 
   /**

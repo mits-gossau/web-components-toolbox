@@ -70,9 +70,7 @@ export default class Tabs extends Shadow() {
         if(subContainer.querySelector("a-picture")){
           subContainer.classList.add("imgContainer");
         }
-      })
-      window.addEventListener('resize', this.checkWindow.bind(this));
-    
+      })    
     }
 
     tabs.forEach(tab => {

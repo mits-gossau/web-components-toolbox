@@ -30,10 +30,14 @@ export default class Input extends Shadow() {
     if (!this.children.length) this.labelText = this.textContent.trim()
 
     this.lastValue = ''
-    this.clickListener = (event, retry = true, force = this.hasAttribute('force')) => {
+    this.clickListener = (event, retry = true, force = this.hasAttribute('force'), type = 'click') => {
       if (!force && this.lastValue === this.inputField.value) {
         // when delete native icon is pushed the value is not updated when the event hits here
-        if (retry && event.composedPath()[0] === this.inputField) setTimeout(() => this.clickListener(event, false), 50)
+        let isSearchButton = false
+        if (retry && (event.composedPath()[0] === this.inputField || (isSearchButton = event.composedPath()[0] === this.searchButton || this.searchButton.contains(event.composedPath()[0])))) {
+          event.stopPropagation()
+          setTimeout(() => this.clickListener(event, false, isSearchButton ? true : false, isSearchButton ? 'search-click' : 'delete'), 50)
+        }
         return
       }
       this.lastValue = this.inputField.value
@@ -47,20 +51,21 @@ export default class Input extends Shadow() {
           composed: true,
           detail: {
             key: this.inputId,
-            value: this.inputField.value
+            value: this.inputField.value,
+            type
           }
         }))
       }
     }
-    this.changeListener = event => this.clickListener(event)
-    this.focusListener = event => this.clickListener(event, undefined, true)
+    this.changeListener = event => this.clickListener(event, undefined, undefined, 'change')
+    this.focusListener = event => this.clickListener(event, undefined, true, 'focus')
     this.keydownTimeoutId = null
     this.keydownListener = event => {
       if (this.root.querySelector(':focus') !== this.inputField) return
       if (!this.hasAttribute('any-key-listener') && event.keyCode !== 13) return
       // @ts-ignore
       clearTimeout(this.keydownTimeoutId)
-      this.keydownTimeoutId = setTimeout(() => this.clickListener(event), event.keyCode === 13 ? 0 : 1000) // no timeout on enter
+      this.keydownTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13 ? true : false, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : 1000) // no timeout on enter
     }
     this.answerEventListener = async event => {
       let searchTerm = event.detail.searchTerm
@@ -97,11 +102,8 @@ export default class Input extends Shadow() {
       if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
 
       if ((this.hasAttribute('submit-search') || (this.search && this.searchButton)) && !this.readonly && !this.disabled && !this.error) {
-        if (this.hasAttribute('delete-listener')) {
-          this.addEventListener('click', this.clickListener)
-        } else if (this.searchButton) {
-          this.searchButton.addEventListener('click', this.clickListener)
-        }
+        if (this.hasAttribute('delete-listener')) this.addEventListener('click', this.clickListener)
+        if (this.searchButton) this.searchButton.addEventListener('click', this.clickListener)
         if (this.hasAttribute('change-listener') && this.inputField) this.inputField.addEventListener('change', this.changeListener)
         if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.addEventListener('focus', this.focusListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
