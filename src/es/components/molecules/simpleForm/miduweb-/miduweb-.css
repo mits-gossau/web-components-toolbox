@@ -5,3 +5,10 @@
     border-bottom: var(--simple-form-miduweb-hr-border-bottom, var(--hr-border-bottom, 1px solid var(--color)));
     margin: var(--simple-form-miduweb-hr-margin, var(--content-spacing) auto);
 }
+
+:host > form input[type="date"]::-webkit-datetime-edit-text,
+:host > form input[type="date"]::-webkit-datetime-edit-month-field,
+:host > form input[type="date"]::-webkit-datetime-edit-day-field,
+:host > form input[type="date"]::-webkit-datetime-edit-year-field {
+    color: var(--simple-form-miduweb-input-date-color, var(--input-date-color, var(--color)));
+}
