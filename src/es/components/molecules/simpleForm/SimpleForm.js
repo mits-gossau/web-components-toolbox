@@ -86,6 +86,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
           composed: true
         }))
       })
+      if (this.response) this.response.hidden = true
       this.hidden = false
     })
     this.addEventListener(this.getAttribute('submit-disabled') || 'submit-disabled', this.submitDisabledEventListener)
@@ -505,6 +506,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
           this.response.classList.add('failure')
           this.response.classList.remove('success')
         }
+        this.response.hidden = false
         if (this.getPropertyByKey(json, this.getAttribute('clear-property-name') || 'clear')) this.form.remove()
       }
       if ((redirectUrl = this.getPropertyByKey(json, this.getAttribute('redirect-url-property-name') || 'redirectUrl'))) self.open(redirectUrl, this.getPropertyByKey(json, this.getAttribute('target-property-name') || 'target'), this.getPropertyByKey(json, this.getAttribute('features-property-name') || 'features'))
