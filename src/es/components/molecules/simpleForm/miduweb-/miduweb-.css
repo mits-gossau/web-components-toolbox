@@ -1,0 +1,7 @@
+:host > form p {
+    margin: var(--simple-form-miduweb-p-margin, var(--p-margin, 0 auto var(--content-spacing)));
+}
+:host > form hr {
+    border-bottom: var(--simple-form-miduweb-hr-border-bottom, var(--hr-border-bottom, 1px solid var(--color)));
+    margin: var(--simple-form-miduweb-hr-margin, var(--content-spacing) auto);
+}
