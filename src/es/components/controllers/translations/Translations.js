@@ -16,7 +16,6 @@ export default class Translations extends HTMLElement {
 
   constructor () {
     super()
-
     this.translations =  this.getAttribute('translations') || this.getAttribute('translation')
   }
 
@@ -36,9 +35,7 @@ export default class Translations extends HTMLElement {
     const fetchOptions = {
       method: 'GET'
     }
-    // @ts-ignore
-    // const endpoint = `${self.Environment.getApiBaseUrl('customer-portal').translations}`
-    const endpoint = '../../es/components/web-components-toolbox/src/es/components/controllers/translations/dummy.json'
+    const endpoint = this.getAttribute('translation-api-url') || ''
     const detail = {
       fetch: (this.#translationsPromise = this.translations ? Promise.resolve(this.translations) : fetch(endpoint, fetchOptions).then(async response => {
         if (response.status >= 200 && response.status <= 299) {
