@@ -32,6 +32,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @attribute {
  *  {boolean} [show]
  *  {boolean} [is-checkout=false]
+ *  {boolean} [is-easy-portal-header=false]
  *  {string} mobile-breakpoint
  *  {boolean} [menu-icon=false]
  *  {string} [no-scroll="no-scroll"]
@@ -126,7 +127,11 @@ export default class Header extends Shadow() {
     this.observer.observe(this.header, { attributes: true })
 
     this.isCheckout = this.getAttribute('is-checkout') === 'true'
+    this.isEasyPortalHeader = this.getAttribute('is-easy-portal-header') === 'true'
+
     if (this.isCheckout) this.root.querySelector('header').setAttribute('is-checkout', this.isCheckout)
+    if (this.isEasyPortalHeader) this.root.querySelector('header').setAttribute('is-easy-portal-header', this.isEasyPortalHeader)
+
   }
 
   disconnectedCallback () {

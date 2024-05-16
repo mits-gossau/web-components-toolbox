@@ -16,6 +16,12 @@
     grid-template-columns: auto 1fr;
 }
 
+:host>header[is-easy-portal-header="true"] {
+    grid-template-areas:
+    'logo login navigation';
+    grid-template-columns: auto 1fr 0px;
+}
+
 :host>header[is-checkout="true"] {
     grid-template-areas:
         'logo login';
@@ -47,6 +53,10 @@
     margin-right: calc(0px - var(--multi-level-navigation-default-a-main-content-spacing))
 }
 
+:host>header[is-easy-portal-header="true"]>m-multi-level-navigation{
+    visibility: hidden;
+}
+
 :host>header[is-checkout="true"]>m-multi-level-navigation {
     display: none;
 }
@@ -74,6 +84,19 @@
 }
 
 @media only screen and (max-width: _max-width_) {
+    :host>header[is-easy-portal-header="true"] {
+        grid-template-areas:
+        'logo login menu-icon';
+        grid-template-columns: auto 1fr auto;
+    }
+    :host>header[is-easy-portal-header="true"]>m-multi-level-navigation{
+        visibility: visible;
+    }
+    :host>header[is-checkout="true"] {
+        grid-template-areas:
+        'logo login';
+        grid-template-columns: auto 1fr;
+    }
     :host>header {
         grid-template-areas:
             'logo login menu-icon';
