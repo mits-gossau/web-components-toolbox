@@ -493,10 +493,18 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
       let response
       let redirectUrl
       if ((response = this.getPropertyByKey(json, this.getAttribute('response-property-name') || 'response')) && this.response) {
-        this.response.innerHTML = response
+        let responseTextNodes = Array.from(this.response.querySelectorAll(this.getAttribute('response-text-node-selector')))
+        if (!responseTextNodes.length) responseTextNodes = [this.response]
+        responseTextNodes.forEach(responseTextNode => (responseTextNode.innerHTML = response))
         let onclick
         if ((onclick = this.getPropertyByKey(json, this.getAttribute('onclick-property-name') || 'onclick'))) this.response.setAttribute('onclick', onclick)
-        if (this.getPropertyByKey(json, this.getAttribute('success-property-name') || 'success')) this.response.classList.add('success')
+        if (this.getPropertyByKey(json, this.getAttribute('success-property-name') || 'success')) {
+          this.response.classList.add('success')
+          this.response.classList.remove('failure')
+        } else {
+          this.response.classList.add('failure')
+          this.response.classList.remove('success')
+        }
         if (this.getPropertyByKey(json, this.getAttribute('clear-property-name') || 'clear')) this.form.remove()
       }
       if ((redirectUrl = this.getPropertyByKey(json, this.getAttribute('redirect-url-property-name') || 'redirectUrl'))) self.open(redirectUrl, this.getPropertyByKey(json, this.getAttribute('target-property-name') || 'target'), this.getPropertyByKey(json, this.getAttribute('features-property-name') || 'features'))
