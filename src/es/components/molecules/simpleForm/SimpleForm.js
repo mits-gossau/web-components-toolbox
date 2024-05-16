@@ -212,11 +212,11 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
           namespace: false
         }], false)
       case 'simple-form-miduweb-':
-        return this.fetchCSS([{
+        return this.fetchCSS([...styles, {
           // @ts-ignore
           path: `${this.importMetaUrl}./miduweb-/miduweb-.css`,
           namespace: false
-        }, ...styles], false)
+        }], false)
       default:
         return Promise.resolve()
     }
