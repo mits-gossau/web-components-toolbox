@@ -281,6 +281,9 @@
   text-transform: var(--p-text-transform, none);
   margin: var(--p-margin, 0 auto var(--content-spacing));
 }
+:host .form p {
+  margin: var(--p-form-margin, var(--p-margin, 0 auto var(--content-spacing)));
+}
 :host .columns-one {
   columns: var(--columns-one, 1);
 }
@@ -372,6 +375,14 @@
   border-width: var(--hr-border-width, 0 0 1px);
   margin: var(--hr-margin, var(--content-spacing) auto);
   opacity: var(--hr-opacity, 0.5);
+}
+:host .form hr {
+  border: var(--hr-form-border, 0);
+  background: var(--hr-form-background, 0);
+  border-bottom: var(--hr-form-border-bottom, 1px solid var(--color));
+  border-width: var(--hr-form-border-width, 0 0 1px);
+  margin: var(--hr-form-margin, var(--content-spacing) auto);
+  opacity: var(--hr-form-opacity, 1);
 }
 :host hr.full-width, :host hr.primary.full-width, :host hr.secondary.full-width {
   width: var(--hr-width, 100%);
