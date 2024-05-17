@@ -143,7 +143,7 @@ export default class Video extends Shadow() {
     this.video.innerHTML = Array.from(this.attributes).reduce((acc, attribute) => {
       if (attribute.name && attribute.name !== 'sources' && attribute.name !== 'namespace' && !attribute.name.includes('hidden')) return `${acc} ${attribute.name}="${attribute.value || 'true'}"${!this.hasAttribute('playsinline') && attribute.name === 'autoplay' && attribute.value !== 'false' ? ' playsinline' : ''}`
       return acc
-    }, '<video') + '></video'
+    }, '<video') + '></video>'
     this.video = this.video.children[0] // workaround, since autoplay did not trigger, when document.createElement('video')
 
     // in case someone adds sources directly instead of using the attributes
