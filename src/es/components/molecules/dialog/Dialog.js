@@ -160,6 +160,11 @@ export default class Dialog extends Shadow() {
           path: `${this.importMetaUrl}./left-slide-in-without-background-/left-slide-in-without-background-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
+      case 'dialog-left-slide-in-checkout-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./left-slide-in-checkout-/left-slide-in-checkout-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
       default:
         return this.fetchCSS(styles)
     }
