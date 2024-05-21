@@ -17,9 +17,19 @@
 }
 
 :host .tab-navigation li {
-    text-overflow: ellipsis;
-    overflow: hidden;
     white-space: nowrap;
+}
+:host .tab-navigation::-webkit-scrollbar-thumb {
+    background: grey;
+}
+:host .tab-navigation::-webkit-scrollbar-track {
+    background: rgb(170, 170, 170);
+}
+:host .tab-navigation:hover::-webkit-scrollbar-thumb {
+    background: var(--color-tertiary, grey);
+}
+:host .tab-navigation:hover::-webkit-scrollbar-track {
+    background: var(--color-secondary, rgb(170, 170, 170));
 }
 
 :host .tab-navigation {
