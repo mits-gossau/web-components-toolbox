@@ -194,7 +194,7 @@ export default class GoogleMaps extends Shadow() {
       })
       element = mapDiv
     }
-  
+
     // Set the final HTML content to the container element
     this.html = this.iframeUrl ? htmlContent : element
   }

@@ -36,7 +36,7 @@ export default class Favorite extends Shadow() {
           detail: {
             id: this.id,
             tags: [this.id],
-            action: action
+            action
           },
           bubbles: true,
           cancelable: true,

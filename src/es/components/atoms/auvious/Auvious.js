@@ -3,7 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * https://docs.auvious.com/docs/get-started/widget/
- * 
+ *
  * @export
  * @class Auvious
  * @type {CustomElementConstructor}

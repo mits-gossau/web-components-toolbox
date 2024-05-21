@@ -9,11 +9,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class Translation extends Shadow() {
-  constructor(options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, mode: "false", ...options }, ...args)
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, mode: 'false', ...options }, ...args)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.hidden = true
     this.key = this.getAttribute('data-trans-key') || this.getAttribute('key')
     this.renderHTML();
@@ -36,7 +36,7 @@ export default class Translation extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML(text = this.key || '[No translation key]') {
+  renderHTML (text = this.key || '[No translation key]') {
     this.html = ''
     this.html = text
   }

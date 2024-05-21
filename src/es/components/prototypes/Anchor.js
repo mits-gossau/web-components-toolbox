@@ -11,7 +11,7 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
    */
   constructor (...args) {
     super(...args)
-    
+
     this.anchorTimeout = null
     this.clickAnchorEventListener = event => {
       let element = null

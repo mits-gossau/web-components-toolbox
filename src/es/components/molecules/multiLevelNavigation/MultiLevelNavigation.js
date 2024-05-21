@@ -24,7 +24,7 @@ export default class MultiLevelNavigation extends Mutation() {
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
       ...options
     }, ...args)
-    this.noScroll = () => { window.scroll(0,0) }
+    this.noScroll = () => { window.scroll(0, 0) }
     this.isDesktop = this.checkMedia('desktop')
     this.useHoverListener = this.hasAttribute('use-hover-listener')
     this.animationDurationMs = this.getAttribute('animation-duration') || 300
@@ -676,16 +676,16 @@ export default class MultiLevelNavigation extends Mutation() {
             replacement: '--multi-level-navigation-default-'
           }]
         }, ...styles], false)
-        case 'multi-level-navigation-delica-':
-          return this.fetchCSS([{
-            path: `${this.importMetaUrl}./delica-/delica-.css`, // apply namespace since it is specific and no fallback
-            namespace: false,
-            replaces: [{
-              pattern: '--multi-level-navigation-delica-',
-              flags: 'g',
-              replacement: '--multi-level-navigation-delica-'
-            }]
-          }, ...styles], false)
+      case 'multi-level-navigation-delica-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./delica-/delica-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--multi-level-navigation-delica-',
+            flags: 'g',
+            replacement: '--multi-level-navigation-delica-'
+          }]
+        }, ...styles], false)
       default:
         return Promise.resolve()
     }

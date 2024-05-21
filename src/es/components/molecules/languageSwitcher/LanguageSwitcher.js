@@ -80,14 +80,14 @@ export default class LanguageSwitcher extends Shadow() {
     switch (this.getAttribute('namespace')) {
       case 'language-switcher-default-':
         return this.fetchCSS([{
-          path: `${this.importMetaUrl}./default-/default-.css`, 
+          path: `${this.importMetaUrl}./default-/default-.css`,
           namespace: false
         }, ...styles])
-        case 'language-switcher-delica-':
-          return this.fetchCSS([{
-            path: `${this.importMetaUrl}./delica-/delica-.css`, 
-            namespace: false
-          }, ...styles])
+      case 'language-switcher-delica-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./delica-/delica-.css`,
+          namespace: false
+        }, ...styles])
       default:
         return this.fetchCSS(styles)
     }

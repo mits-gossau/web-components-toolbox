@@ -16,7 +16,7 @@ export default class Translations extends HTMLElement {
 
   constructor () {
     super()
-    this.translations =  this.getAttribute('translations') || this.getAttribute('translation')
+    this.translations = this.getAttribute('translations') || this.getAttribute('translation')
   }
 
   connectedCallback () {
@@ -37,13 +37,15 @@ export default class Translations extends HTMLElement {
     }
     const endpoint = this.getAttribute('translation-api-url') || ''
     const detail = {
-      fetch: (this.#translationsPromise = this.translations ? Promise.resolve(this.translations) : fetch(endpoint, fetchOptions).then(async response => {
-        if (response.status >= 200 && response.status <= 299) {
-          this.translations =  await response.json()
-          return this.translations
-        }
-        throw new Error(response.statusText)
-      })),
+      fetch: (this.#translationsPromise = this.translations
+        ? Promise.resolve(this.translations)
+        : fetch(endpoint, fetchOptions).then(async response => {
+          if (response.status >= 200 && response.status <= 299) {
+            this.translations = await response.json()
+            return this.translations
+          }
+          throw new Error(response.statusText)
+        })),
       getTranslation: async key => {
         await this.#translationsPromise
         return this.translations[key] || key
@@ -79,6 +81,6 @@ export default class Translations extends HTMLElement {
   }
 
   get translations () {
-    return  this.#translations
+    return this.#translations
   }
 }

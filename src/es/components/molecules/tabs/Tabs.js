@@ -6,7 +6,7 @@ export default class Tabs extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     const tabs = this.root.querySelectorAll('.tab-navigation li')
     const sections = this.root.querySelectorAll('section.tab-content')
-    const anchorTagName = this.getAttribute("quote") ? `${this.getAttribute("quote")}_tab` : "tab"
+    const anchorTagName = this.getAttribute('quote') ? `${this.getAttribute('quote')}_tab` : 'tab'
 
     // get parameter from url and set tab active
     const urlParams = new URLSearchParams(window.location.search)
@@ -63,14 +63,14 @@ export default class Tabs extends Shadow() {
     const activeNavigationTab = this.root.querySelector('.tab-navigation li.active')
     const subContainers = this.root.querySelectorAll('.container-distributors')
 
-    if(subContainers){
+    if (subContainers) {
       subContainers.forEach(subContainer => {
-        var widthSubContainer = subContainer.getAttribute("width");
-        subContainer.style.width = widthSubContainer;
-        if(subContainer.querySelector("a-picture")){
-          subContainer.classList.add("imgContainer");
+        const widthSubContainer = subContainer.getAttribute('width')
+        subContainer.style.width = widthSubContainer
+        if (subContainer.querySelector('a-picture')) {
+          subContainer.classList.add('imgContainer')
         }
-      })    
+      })
     }
 
     tabs.forEach(tab => {
@@ -83,7 +83,7 @@ export default class Tabs extends Shadow() {
       activeNavigationTab.scrollIntoView({ behavior: 'smooth', inline: 'center' })
     }
   }
-  
+
   shouldRenderCSS () {
     return !this.shadowRoot.querySelector(
       `:host > style[_css], ${this.tagName} > style[_css]`
@@ -164,10 +164,8 @@ export default class Tabs extends Shadow() {
         }
     `
     return this.fetchTemplate()
-
   }
 
-  
   /**
    * fetches the template
    *
@@ -176,24 +174,23 @@ export default class Tabs extends Shadow() {
   fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
-        {
-            path: `${this.importMetaUrl}../../../../css/reset.css`,
-            namespace: false
-        },
-        {
-            path: `${this.importMetaUrl}../../../../css/style.css`,
-            namespaceFallback: true
-        }
+      {
+        path: `${this.importMetaUrl}../../../../css/reset.css`,
+        namespace: false
+      },
+      {
+        path: `${this.importMetaUrl}../../../../css/style.css`,
+        namespaceFallback: true
+      }
     ]
     switch (this.getAttribute('namespace')) {
-        case 'tabs-container-':
-            return this.fetchCSS([{
-                path: `${this.importMetaUrl}./container-/container-.css`, // apply namespace since it is specific and no fallback
-                namespace: false
-            }, ...styles], false)
-        default:
-            return Promise.resolve(); 
+      case 'tabs-container-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./container-/container-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
+      default:
+        return Promise.resolve()
     }
-}
-
+  }
 }

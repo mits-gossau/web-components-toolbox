@@ -36,7 +36,7 @@ export default class Input extends Shadow() {
         let isSearchButton = false
         if (retry && (event.composedPath()[0] === this.inputField || (isSearchButton = event.composedPath()[0] === this.searchButton || this.searchButton.contains(event.composedPath()[0])))) {
           event.stopPropagation()
-          setTimeout(() => this.clickListener(event, false, isSearchButton ? true : false, isSearchButton ? 'search-click' : 'delete'), 50)
+          setTimeout(() => this.clickListener(event, false, !!isSearchButton, isSearchButton ? 'search-click' : 'delete'), 50)
         }
         return
       }
@@ -65,7 +65,7 @@ export default class Input extends Shadow() {
       if (!this.hasAttribute('any-key-listener') && event.keyCode !== 13) return
       // @ts-ignore
       clearTimeout(this.keydownTimeoutId)
-      this.keydownTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13 ? true : false, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : 1000) // no timeout on enter
+      this.keydownTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : 1000) // no timeout on enter
     }
     this.answerEventListener = async event => {
       let searchTerm = event.detail.searchTerm

@@ -31,7 +31,7 @@ export default class ScrollToTop extends Shadow() {
    * Handles scroll event
    */
   handleScroll () {
-    if (document.documentElement.scrollTop > 600 ) {
+    if (document.documentElement.scrollTop > 600) {
       this.button.style.display = 'block'
       this.button.style.opacity = 1
     } else {

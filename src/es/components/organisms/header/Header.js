@@ -43,7 +43,7 @@ export default class Header extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
-    this.noScroll = () => { window.scroll(0,0) }
+    this.noScroll = () => { window.scroll(0, 0) }
     this.setAttribute('role', 'banner')
     this.setAttribute('aria-label', 'Header')
     this.scrollListener = event => {
@@ -131,7 +131,6 @@ export default class Header extends Shadow() {
 
     if (this.isCheckout) this.root.querySelector('header').setAttribute('is-checkout', this.isCheckout)
     if (this.isEasyPortalHeader) this.root.querySelector('header').setAttribute('is-easy-portal-header', this.isEasyPortalHeader)
-
   }
 
   disconnectedCallback () {
@@ -432,32 +431,32 @@ export default class Header extends Shadow() {
           path: `${this.importMetaUrl}./nav-right-/nav-right-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }], false)
-        case 'header-nav-grid-':
-          return this.fetchCSS([{
-            path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-            namespace: false,
-            replaces: [{
-              pattern: '--header-default-',
-              flags: 'g',
-              replacement: '--header-nav-grid-'
-            }]
-          }, {
-            path: `${this.importMetaUrl}./nav-grid-/nav-grid-.css`, // apply namespace since it is specific and no fallback
-            namespace: false
-          }], false)
-          case 'header-nav-grid-delica-':
-            return this.fetchCSS([{
-              path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-              namespace: false,
-              replaces: [{
-                pattern: '--header-default-',
-                flags: 'g',
-                replacement: '--header-nav-grid-delica-'
-              }]
-            }, {
-              path: `${this.importMetaUrl}./nav-grid-delica-/nav-grid-delica-.css`, // apply namespace since it is specific and no fallback
-              namespace: false
-            }], false)
+      case 'header-nav-grid-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--header-default-',
+            flags: 'g',
+            replacement: '--header-nav-grid-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./nav-grid-/nav-grid-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
+      case 'header-nav-grid-delica-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--header-default-',
+            flags: 'g',
+            replacement: '--header-nav-grid-delica-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./nav-grid-delica-/nav-grid-delica-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }], false)
       default:
         return Promise.resolve()
     }
