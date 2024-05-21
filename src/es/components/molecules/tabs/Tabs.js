@@ -6,10 +6,11 @@ export default class Tabs extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     const tabs = this.root.querySelectorAll('.tab-navigation li')
     const sections = this.root.querySelectorAll('section.tab-content')
+    const anchorTagName = this.getAttribute("quote") ? `${this.getAttribute("quote")}_tab` : "tab"
 
     // get parameter from url and set tab active
     const urlParams = new URLSearchParams(window.location.search)
-    const tabParam = urlParams.get('tab')
+    const tabParam = urlParams.get(anchorTagName)
 
     if (tabParam) {
       tabs.forEach((tab, index) => {
@@ -38,7 +39,7 @@ export default class Tabs extends Shadow() {
           // add parameter to url for active tab
           const urlParams = new URLSearchParams(window.location.search)
           const tabParam = tab.getAttribute('data-tab') ? tab.getAttribute('data-tab').toString() : ''
-          urlParams.set('tab', tabParam)
+          urlParams.set(anchorTagName, tabParam)
           window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`)
 
           tabs.forEach((tab) => {
@@ -61,7 +62,6 @@ export default class Tabs extends Shadow() {
     const tabs = this.root.querySelectorAll('.tab-navigation li')
     const activeNavigationTab = this.root.querySelector('.tab-navigation li.active')
     const subContainers = this.root.querySelectorAll('.container-distributors')
-
 
     if(subContainers){
       subContainers.forEach(subContainer => {
