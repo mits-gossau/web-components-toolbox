@@ -7,7 +7,7 @@ export default class Tabs extends Shadow() {
     const tabs = this.root.querySelectorAll('.tab-navigation li')
     const sections = this.root.querySelectorAll('section.tab-content')
     const anchorTagName = this.getAttribute("quote") ? `${this.getAttribute("quote")}_tab` : "tab"
-    console.log(anchorTagName)
+
     // get parameter from url and set tab active
     const urlParams = new URLSearchParams(window.location.search)
     const tabParam = urlParams.get(anchorTagName)
