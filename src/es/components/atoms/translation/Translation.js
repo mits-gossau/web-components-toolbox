@@ -38,6 +38,17 @@ export default class Translation extends Shadow() {
    */
   renderHTML (text = this.key || '[No translation key]') {
     this.html = ''
+
+    if (this.hasAttribute('replace-line-breaks')) {
+      text = text.replaceAll('\n', '<br />')
+    }
+    if (this.hasAttribute('params')) {
+      const params = JSON.parse(this.getAttribute('params')) ?? {};
+      Object.keys(params).forEach(key => {
+        text = text.replaceAll(`{${key}}`, params[key])
+      })
+    }
+
     this.html = text
   }
 }

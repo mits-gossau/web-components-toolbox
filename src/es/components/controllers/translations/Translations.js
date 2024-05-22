@@ -29,9 +29,10 @@ export default class Translations extends HTMLElement {
 
   /**
    * Get translations
-   * @param {CustomEventInit} event
+   * @param {CustomEventInit | any} event
    */
   requestTranslationsListener = async (event) => {
+    event.stopPropagation()
     const fetchOptions = {
       method: 'GET'
     }
