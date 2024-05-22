@@ -293,15 +293,6 @@ export default class Form extends Shadow() {
         background-color: var(--color-secondary) !important;
         padding: 0.625em !important;
       }
-      .checkboxlist {
-        align-items: center;
-        display: flex;
-        flex-wrap: wrap;
-      }
-      .checkboxlist img {
-        padding: 0 var(--content-spacing);
-        max-width: 30vw !important;
-      }
       .umbraco-forms-field-wrapper{
         display: grid;
         grid-template-columns: auto;
