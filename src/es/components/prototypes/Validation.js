@@ -13,24 +13,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   constructor (options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
 
-    const undefinedElements = this.form.querySelectorAll(":not(:defined)");
-    const promises = [...undefinedElements].map((button) =>
-      customElements.whenDefined(button.localName),
-    );
-  
-    // Wait for all the children to be upgraded
-    Promise.all(promises).then(() => {
-      this.submitButton = this.form.querySelector('[type="submit"]')
-
-      if (this.submitButton) {
-        this.submitButton.addEventListener('click', this.submitFormValidation)
-      }
-    });
-
-    this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
     this.validationValues = {}
-    if (!this.hasAttribute('no-validation-error-css')) this.renderValidationCSS()
-
+    
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = inputField.getAttribute('name')
@@ -123,7 +107,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const inputFieldName = node.getAttribute('name')
         if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
       })
-
       if (formHasError) {
         this.scrollToFirstError()
         event.preventDefault()
@@ -153,6 +136,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     super.connectedCallback()
     this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
     this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
+
+    this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
+    if (!this.hasAttribute('no-validation-error-css')) this.renderValidationCSS()
 
     if (this.allValidationNodes.length > 0) {
       this.allValidationNodes.forEach(node => {
@@ -201,6 +187,26 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     if (this.realTimeSubmitButton) {
       this.checkIfFormValid()
     }
+
+    const addClickEventListenerOnSubmit = () => {
+      if (!this.submitButton) this.submitButton = this.form.querySelector('[type="submit"]')
+
+      if (this.submitButton) {
+        this.submitButton.addEventListener('click', this.submitFormValidation)
+      }
+    }
+
+    if ((this.submitButton = this.form.querySelector('[type="submit"]'))) {
+      addClickEventListenerOnSubmit()
+    } else {
+      const undefinedElements = this.form.querySelectorAll(":not(:defined)")
+      const promises = [...undefinedElements].map((button) =>
+        customElements.whenDefined(button.localName),
+      )
+    
+      // Wait for all the children to be upgraded
+      Promise.all(promises).then(addClickEventListenerOnSubmit)
+    } 
   }
 
   /**
@@ -210,6 +216,31 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    */
   disconnectedCallback () {
     super.disconnectedCallback()
+    if (this.allValidationNodes.length > 0) {
+      this.allValidationNodes.forEach(node => {
+        const nodeHasLiveValidation = node.getAttribute('live-input-validation') === 'true'
+        if (nodeHasLiveValidation) {
+          node.removeEventListener('input', this.validationChangeEventListener)
+        } else {
+          node.removeEventListener('change', this.validationChangeEventListener)
+        }
+        node.removeEventListener('input', this.baseInputChangeListener)
+        // IMPORTANT name attribute has to be unique and always available
+        if (node.hasAttribute('name')) {
+          if (!Object.prototype.hasOwnProperty.call(this.validationValues, node.getAttribute('name'))) {
+            const parsedRules = JSON.parse(node.getAttribute('data-m-v-rules'))
+            Object.keys(parsedRules).forEach(key => {
+              if (this.validationValues[node.getAttribute('name')].pattern && Object.prototype.hasOwnProperty.call(this.validationValues[node.getAttribute('name')].pattern, 'mask-value')) {
+                node.removeEventListener('input', this.validationPatternInputEventListener)
+              }
+            })
+          }
+        }
+      })
+    }
+    if (this.submitButton) {
+      this.submitButton.removeEventListener('click', this.submitFormValidation)
+    }
   }
 
   validator (validationRules, currentInput, inputFieldName) {
