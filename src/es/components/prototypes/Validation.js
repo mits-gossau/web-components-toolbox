@@ -13,7 +13,20 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   constructor (options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
 
-    this.submitButton = this.form.querySelector('input[type="submit"]')
+    const undefinedElements = this.form.querySelectorAll(":not(:defined)");
+    const promises = [...undefinedElements].map((button) =>
+      customElements.whenDefined(button.localName),
+    );
+  
+    // Wait for all the children to be upgraded
+    Promise.all(promises).then(() => {
+      this.submitButton = this.form.querySelector('[type="submit"]')
+
+      if (this.submitButton) {
+        this.submitButton.addEventListener('click', this.submitFormValidation)
+      }
+    });
+
     this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
     this.validationValues = {}
     if (!this.hasAttribute('no-validation-error-css')) this.renderValidationCSS()
@@ -126,10 +139,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
       const inputFieldName = event.currentTarget.getAttribute('name')
       this.validationValues[inputFieldName].isTouched = true
-    }
-
-    if (this.submitButton) {
-      this.submitButton.addEventListener('click', this.submitFormValidation)
     }
   }
 
