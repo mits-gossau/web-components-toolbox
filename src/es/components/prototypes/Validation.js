@@ -114,7 +114,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
     this.submitFormValidation = (event) => {
       const formHasError = this.root.querySelector('form').querySelector('.has-error')
-      event.preventDefault()
 
       Object.keys(this.validationValues).forEach(key => {
         this.validationValues[key].isTouched = true
@@ -125,7 +124,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
       })
 
-      if (formHasError) this.scrollToFirstError()
+      if (formHasError) {
+        this.scrollToFirstError()
+        event.preventDefault()
+      }
     }
 
     this.baseInputChangeListener = (event) => {
