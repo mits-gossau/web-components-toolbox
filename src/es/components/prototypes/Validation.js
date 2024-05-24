@@ -152,6 +152,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           if (!errorMessageContainerSelect) errorMessageContainerSelect = node.closest('[new-error-message-reference-point="true"]')
           if (errorMessageContainerSelect) errorMessageContainer = errorMessageContainerSelect
         }
+        if (node.getAttribute('type') === 'radio') {
+          errorMessageContainer = node.parentElement
+        }
         errorMessageContainer.after(errorTextWrapper)
         node.errorTextWrapper = errorTextWrapper
 
