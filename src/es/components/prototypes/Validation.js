@@ -315,16 +315,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   setValidity (inputFieldName, validationName, isValid) {
-    console.log('inputFieldName', inputFieldName, validationName, isValid)
     this.validationValues[inputFieldName][validationName].isValid = isValid
     const currentValidatedInput = this.allValidationNodes?.find(node => node.getAttribute('name') === inputFieldName)
     const currentValidatedInputHasNewErrorReferencePoint = currentValidatedInput.getAttribute('error-message-reference-point-changed') === 'true'
     const currentValidatedInputErrorTextWrapper = currentValidatedInput.errorTextWrapper ? currentValidatedInput.errorTextWrapper : currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
     const isValidValues = []
-    Object.keys(this.validationValues[inputFieldName]).forEach(key => {
-      console.log("🚀 ~ Validation ~ Object.keys ~ key:", key)
-      
+    Object.keys(this.validationValues[inputFieldName]).forEach(key => {      
       if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
       if (!isCurrentValidatedInputErrorTextWrapperFilled) {
         if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
@@ -342,7 +339,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       }
     })
-    console.log('isValidValues', isValidValues)
     if (isValidValues.includes(false)) {
       currentValidatedInputErrorTextWrapper.classList.add('error-active')
       currentValidatedInputErrorTextWrapper.previousSibling.classList.add('has-error')
