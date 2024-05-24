@@ -103,7 +103,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         this.validationValues[key].isTouched = true
       })
 
-      this.allValidationNodes.forEach(node => {
+      this.allValidationNodes?.forEach(node => {
         const inputFieldName = node.getAttribute('name')
         if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
       })
@@ -219,8 +219,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    */
   disconnectedCallback () {
     super.disconnectedCallback()
+    // @ts-ignore
     if (this.allValidationNodes.length > 0) {
-      this.allValidationNodes.forEach(node => {
+      this.allValidationNodes?.forEach(node => {
         const nodeHasLiveValidation = node.getAttribute('live-input-validation') === 'true'
         if (nodeHasLiveValidation) {
           node.removeEventListener('input', this.validationChangeEventListener)
@@ -232,6 +233,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (node.hasAttribute('name')) {
           if (!Object.prototype.hasOwnProperty.call(this.validationValues, node.getAttribute('name'))) {
             const parsedRules = JSON.parse(node.getAttribute('data-m-v-rules'))
+            // @ts-ignore
             Object.keys(parsedRules).forEach(key => {
               if (this.validationValues[node.getAttribute('name')].pattern && Object.prototype.hasOwnProperty.call(this.validationValues[node.getAttribute('name')].pattern, 'mask-value')) {
                 node.removeEventListener('input', this.validationPatternInputEventListener)
@@ -254,8 +256,17 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (isCheckboxInput) {
           this.setValidity(inputFieldName, validationName, currentInput.checked)
         } else {
-          const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
-          this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
+          // check if input is type radio
+          const isRadioInput = currentInput.getAttribute('type') === 'radio'
+          if (isRadioInput) {
+            const radioInputName = currentInput.getAttribute('name')
+            const radioInputs = this.form.querySelectorAll(`input[name="${radioInputName}"]`)
+            const isRadioInputChecked = Array.from(radioInputs).some(radioInput => radioInput.checked)
+            this.setValidity(radioInputName, validationName, isRadioInputChecked)
+          } else {
+            const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
+            this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
+          }
         }
       }
       if (validationName === 'max-length') {
@@ -304,13 +315,16 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   setValidity (inputFieldName, validationName, isValid) {
+    console.log('inputFieldName', inputFieldName, validationName, isValid)
     this.validationValues[inputFieldName][validationName].isValid = isValid
-    const currentValidatedInput = this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName)
+    const currentValidatedInput = this.allValidationNodes?.find(node => node.getAttribute('name') === inputFieldName)
     const currentValidatedInputHasNewErrorReferencePoint = currentValidatedInput.getAttribute('error-message-reference-point-changed') === 'true'
     const currentValidatedInputErrorTextWrapper = currentValidatedInput.errorTextWrapper ? currentValidatedInput.errorTextWrapper : currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
     const isValidValues = []
     Object.keys(this.validationValues[inputFieldName]).forEach(key => {
+      console.log("🚀 ~ Validation ~ Object.keys ~ key:", key)
+      
       if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
       if (!isCurrentValidatedInputErrorTextWrapperFilled) {
         if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
@@ -328,6 +342,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       }
     })
+    console.log('isValidValues', isValidValues)
     if (isValidValues.includes(false)) {
       currentValidatedInputErrorTextWrapper.classList.add('error-active')
       currentValidatedInputErrorTextWrapper.previousSibling.classList.add('has-error')
@@ -379,6 +394,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   scrollToFirstError () {
+    // @ts-ignore
     const firstNodeWithError = this.allValidationNodes.find(node => node.classList.contains('has-error'))
     firstNodeWithError.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
