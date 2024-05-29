@@ -97,8 +97,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
 
     this.submitFormValidation = (event) => {
-      const formHasError = this.root.querySelector('form').querySelector('.has-error')
-
       Object.keys(this.validationValues).forEach(key => {
         this.validationValues[key].isTouched = true
       })
@@ -107,9 +105,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const inputFieldName = node.getAttribute('name')
         if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
       })
-      if (formHasError) {
+      if (this.root.querySelector('form').querySelector('.has-error')) {
         this.scrollToFirstError()
         event.preventDefault()
+        event.stopPropagation()
       }
     }
 
@@ -342,9 +341,11 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     if (isValidValues.includes(false)) {
       currentValidatedInputErrorTextWrapper.classList.add('error-active')
       currentValidatedInputErrorTextWrapper.previousSibling.classList.add('has-error')
+      currentValidatedInput.classList.add('has-error')
     } else {
       currentValidatedInputErrorTextWrapper.classList.remove('error-active')
       currentValidatedInputErrorTextWrapper.previousSibling.classList.remove('has-error')
+      currentValidatedInput.classList.remove('has-error')
     }
 
     const errorMessages = Array.from(currentValidatedInputErrorTextWrapper.querySelectorAll('[error-text-id]'))
