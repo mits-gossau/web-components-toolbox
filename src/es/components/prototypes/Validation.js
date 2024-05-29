@@ -149,6 +149,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (currentNodeHasNewErrorReferencePoint) {
           let errorMessageContainerSelect = node.parentElement.querySelector('[new-error-message-reference-point="true"]')
           if (!errorMessageContainerSelect) errorMessageContainerSelect = node.closest('[new-error-message-reference-point="true"]')
+          if (!errorMessageContainerSelect) errorMessageContainerSelect = Validation.walksUpDomQuerySelector(node, '[new-error-message-reference-point="true"]')
           if (errorMessageContainerSelect) errorMessageContainer = errorMessageContainerSelect
         }
         if (node.getAttribute('type') === 'radio') {
@@ -448,5 +449,24 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         return style
       })())
     )
+  }
+
+  /**
+   * find html element by id or class
+   * return the element of whose parent finds the query
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @param {HTMLElement} [root=document.documentElement]
+   * @return {HTMLElement}
+   */
+  static walksUpDomQuerySelector (el, selector, root = document.documentElement) {
+    if (typeof el.matches === 'function' && el.matches(selector)) return el
+    if (el.querySelector(selector)) return el.querySelector(selector)
+    while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
+      if (typeof el.matches === 'function' && el.matches(selector)) return el
+      if (el.querySelector(selector)) return el.querySelector(selector)
+    }
+    return el
   }
 }
