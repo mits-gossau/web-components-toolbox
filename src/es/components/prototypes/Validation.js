@@ -145,15 +145,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const errorTextWrapper = node.hasAttribute('error-text-tag-name') ? document.createElement(node.getAttribute('error-text-tag-name')) : document.createElement('div')
         const nodeHasLiveValidation = node.getAttribute('live-input-validation') === 'true'
         errorTextWrapper.classList.add('custom-error-text')
-        let errorMessageContainer = node
+        let errorMessageContainer = node.getAttribute('type') === 'radio' ? node.parentElement : node
         if (currentNodeHasNewErrorReferencePoint) {
           let errorMessageContainerSelect = node.parentElement.querySelector('[new-error-message-reference-point="true"]')
           if (!errorMessageContainerSelect) errorMessageContainerSelect = node.closest('[new-error-message-reference-point="true"]')
           if (!errorMessageContainerSelect) errorMessageContainerSelect = Validation.walksUpDomQuerySelector(node, '[new-error-message-reference-point="true"]')
           if (errorMessageContainerSelect) errorMessageContainer = errorMessageContainerSelect
-        }
-        if (node.getAttribute('type') === 'radio') {
-          errorMessageContainer = node.parentElement
         }
         errorMessageContainer.after(errorTextWrapper)
         node.errorTextWrapper = errorTextWrapper
