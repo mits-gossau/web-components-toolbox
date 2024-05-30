@@ -180,6 +180,12 @@
     grid-column: 2 / 2;
 }
 @media only screen and (max-width: _max-width_) {
+    :host {
+        min-height: var(--grid-2columns-content-stage-min-height-mobile, var(--grid-2columns-content-stage-min-height, 300px));
+    }
+    :host > section {
+        min-height: var(--grid-2columns-content-stage-min-height-mobile, var(--grid-2columns-content-stage-min-height, 300px));
+    }
     :host(:not([no-mobile])) {
         margin-left: 0 !important;
         margin-right: 0 !important;
