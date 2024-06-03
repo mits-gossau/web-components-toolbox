@@ -442,6 +442,10 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 :host ul > li,
 :host ol > li {
   padding-left: var(--ul-li-padding-left, 0);
+  font-family: var(--ul-li-font-family, var(--font-family, inherit));
+  font-size: var(--ul-li-font-size, 1em);
+  line-height: var(--ul-li-line-height, var(--line-height, normal));
+  font-weight: var(--ul-li-font-weight, var(--font-weight, normal));
 }
 /* overwrite abuse of o-wrapper with simulate-children="1" src/es/components/pages/Home.html */
 :host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
