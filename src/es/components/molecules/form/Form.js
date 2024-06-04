@@ -250,7 +250,7 @@ export default class Form extends Shadow() {
       .umbraco-forms-indicator {
         color: var(--color-secondary);
       }
-      :host form > div, :host form > section > div, :host form > div > section > div, .umbraco-forms-field {
+      :host form > div, :host form > section > div, :host form > div > section > div, .umbraco-forms-field, :host form > ks-m-checkout-additional-input > div > div {
         padding-bottom: var(--content-spacing);
       }
       :host form > div > *:has(+ section:not([hidden])) {
