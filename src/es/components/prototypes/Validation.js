@@ -13,11 +13,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   constructor (options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
 
-    this.submitButton = this.form.querySelector('input[type="submit"]')
-    this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
     this.validationValues = {}
-    if (!this.hasAttribute('no-validation-error-css')) this.renderValidationCSS()
-
+    
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = inputField.getAttribute('name')
@@ -100,19 +97,19 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
 
     this.submitFormValidation = (event) => {
-      const formHasError = this.root.querySelector('form').querySelector('.has-error')
-      event.preventDefault()
-
       Object.keys(this.validationValues).forEach(key => {
         this.validationValues[key].isTouched = true
       })
 
-      this.allValidationNodes.forEach(node => {
+      this.allValidationNodes?.forEach(node => {
         const inputFieldName = node.getAttribute('name')
         if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
       })
-
-      if (formHasError) this.scrollToFirstError()
+      if (this.root.querySelector('form').querySelector('.has-error')) {
+        this.scrollToFirstError()
+        event.preventDefault()
+        event.stopPropagation()
+      }
     }
 
     this.baseInputChangeListener = (event) => {
@@ -127,10 +124,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       const inputFieldName = event.currentTarget.getAttribute('name')
       this.validationValues[inputFieldName].isTouched = true
     }
-
-    if (this.submitButton) {
-      this.submitButton.addEventListener('click', this.submitFormValidation)
-    }
   }
 
   /**
@@ -143,16 +136,20 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
     this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
 
+    this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
+    if (!this.hasAttribute('no-validation-error-css')) this.renderValidationCSS()
+
     if (this.allValidationNodes.length > 0) {
       this.allValidationNodes.forEach(node => {
         const currentNodeHasNewErrorReferencePoint = node.getAttribute('error-message-reference-point-changed') === 'true'
         const errorTextWrapper = node.hasAttribute('error-text-tag-name') ? document.createElement(node.getAttribute('error-text-tag-name')) : document.createElement('div')
         const nodeHasLiveValidation = node.getAttribute('live-input-validation') === 'true'
         errorTextWrapper.classList.add('custom-error-text')
-        let errorMessageContainer = node
+        let errorMessageContainer = node.getAttribute('type') === 'radio' ? node.parentElement : node
         if (currentNodeHasNewErrorReferencePoint) {
           let errorMessageContainerSelect = node.parentElement.querySelector('[new-error-message-reference-point="true"]')
           if (!errorMessageContainerSelect) errorMessageContainerSelect = node.closest('[new-error-message-reference-point="true"]')
+          if (!errorMessageContainerSelect) errorMessageContainerSelect = Validation.walksUpDomQuerySelector(node, '[new-error-message-reference-point="true"]')
           if (errorMessageContainerSelect) errorMessageContainer = errorMessageContainerSelect
         }
         errorMessageContainer.after(errorTextWrapper)
@@ -190,6 +187,26 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     if (this.realTimeSubmitButton) {
       this.checkIfFormValid()
     }
+
+    const addClickEventListenerOnSubmit = () => {
+      if (!this.submitButton) this.submitButton = this.form.querySelector('[type="submit"]')
+
+      if (this.submitButton) {
+        this.submitButton.addEventListener('click', this.submitFormValidation)
+      }
+    }
+
+    if ((this.submitButton = this.form.querySelector('[type="submit"]'))) {
+      addClickEventListenerOnSubmit()
+    } else {
+      const undefinedElements = this.form.querySelectorAll(":not(:defined)")
+      const promises = [...undefinedElements].map((button) =>
+        customElements.whenDefined(button.localName),
+      )
+    
+      // Wait for all the children to be upgraded
+      Promise.all(promises).then(addClickEventListenerOnSubmit)
+    } 
   }
 
   /**
@@ -199,6 +216,33 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    */
   disconnectedCallback () {
     super.disconnectedCallback()
+    // @ts-ignore
+    if (this.allValidationNodes.length > 0) {
+      this.allValidationNodes?.forEach(node => {
+        const nodeHasLiveValidation = node.getAttribute('live-input-validation') === 'true'
+        if (nodeHasLiveValidation) {
+          node.removeEventListener('input', this.validationChangeEventListener)
+        } else {
+          node.removeEventListener('change', this.validationChangeEventListener)
+        }
+        node.removeEventListener('input', this.baseInputChangeListener)
+        // IMPORTANT name attribute has to be unique and always available
+        if (node.hasAttribute('name')) {
+          if (!Object.prototype.hasOwnProperty.call(this.validationValues, node.getAttribute('name'))) {
+            const parsedRules = JSON.parse(node.getAttribute('data-m-v-rules'))
+            // @ts-ignore
+            Object.keys(parsedRules).forEach(key => {
+              if (this.validationValues[node.getAttribute('name')].pattern && Object.prototype.hasOwnProperty.call(this.validationValues[node.getAttribute('name')].pattern, 'mask-value')) {
+                node.removeEventListener('input', this.validationPatternInputEventListener)
+              }
+            })
+          }
+        }
+      })
+    }
+    if (this.submitButton) {
+      this.submitButton.removeEventListener('click', this.submitFormValidation)
+    }
   }
 
   validator (validationRules, currentInput, inputFieldName) {
@@ -209,8 +253,17 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (isCheckboxInput) {
           this.setValidity(inputFieldName, validationName, currentInput.checked)
         } else {
-          const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
-          this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
+          // check if input is type radio
+          const isRadioInput = currentInput.getAttribute('type') === 'radio'
+          if (isRadioInput) {
+            const radioInputName = currentInput.getAttribute('name')
+            const radioInputs = this.form.querySelectorAll(`input[name="${radioInputName}"]`)
+            const isRadioInputChecked = Array.from(radioInputs).some(radioInput => radioInput.checked)
+            this.setValidity(radioInputName, validationName, isRadioInputChecked)
+          } else {
+            const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
+            this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
+          }
         }
       }
       if (validationName === 'max-length') {
@@ -260,12 +313,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
   setValidity (inputFieldName, validationName, isValid) {
     this.validationValues[inputFieldName][validationName].isValid = isValid
-    const currentValidatedInput = this.allValidationNodes.find(node => node.getAttribute('name') === inputFieldName)
+    const currentValidatedInput = this.allValidationNodes?.find(node => node.getAttribute('name') === inputFieldName)
     const currentValidatedInputHasNewErrorReferencePoint = currentValidatedInput.getAttribute('error-message-reference-point-changed') === 'true'
     const currentValidatedInputErrorTextWrapper = currentValidatedInput.errorTextWrapper ? currentValidatedInput.errorTextWrapper : currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
     const isValidValues = []
-    Object.keys(this.validationValues[inputFieldName]).forEach(key => {
+    Object.keys(this.validationValues[inputFieldName]).forEach(key => {      
       if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
       if (!isCurrentValidatedInputErrorTextWrapperFilled) {
         if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
@@ -286,9 +339,11 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     if (isValidValues.includes(false)) {
       currentValidatedInputErrorTextWrapper.classList.add('error-active')
       currentValidatedInputErrorTextWrapper.previousSibling.classList.add('has-error')
+      currentValidatedInput.classList.add('has-error')
     } else {
       currentValidatedInputErrorTextWrapper.classList.remove('error-active')
       currentValidatedInputErrorTextWrapper.previousSibling.classList.remove('has-error')
+      currentValidatedInput.classList.remove('has-error')
     }
 
     const errorMessages = Array.from(currentValidatedInputErrorTextWrapper.querySelectorAll('[error-text-id]'))
@@ -334,6 +389,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   scrollToFirstError () {
+    // @ts-ignore
     const firstNodeWithError = this.allValidationNodes.find(node => node.classList.contains('has-error'))
     firstNodeWithError.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
@@ -390,5 +446,24 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         return style
       })())
     )
+  }
+
+  /**
+   * find html element by id or class
+   * return the element of whose parent finds the query
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @param {HTMLElement} [root=document.documentElement]
+   * @return {HTMLElement}
+   */
+  static walksUpDomQuerySelector (el, selector, root = document.documentElement) {
+    if (typeof el.matches === 'function' && el.matches(selector)) return el
+    if (el.querySelector(selector)) return el.querySelector(selector)
+    while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
+      if (typeof el.matches === 'function' && el.matches(selector)) return el
+      if (el.querySelector(selector)) return el.querySelector(selector)
+    }
+    return el
   }
 }

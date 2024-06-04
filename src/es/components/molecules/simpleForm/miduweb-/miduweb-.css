@@ -5,3 +5,31 @@
     border-bottom: var(--simple-form-miduweb-hr-border-bottom, var(--hr-border-bottom, 1px solid var(--color)));
     margin: var(--simple-form-miduweb-hr-margin, var(--content-spacing) auto);
 }
+
+/** Temporary copied form Form.js, TODO: Please adjust */
+select{
+    font-family: var(--font-family, inherit);
+    border-radius: var(--border-radius, 0.5em);
+    background-color: var(--background-color, transparent);
+    box-sizing: border-box;
+    border: 1px solid var(--m-gray-400);
+    color: var(--color);
+    padding: 0.625em;
+    font-size: var(--font-size);
+    width: 100%;
+    outline: none;
+}
+select:hover {
+    border-color: var(--m-gray-600);
+}
+select:focus {
+    border-color: var(--color-secondary);
+}
+@media only screen and (max-width: _max-width_) {
+    select {
+        font-size: var(--input-font-size-mobile, var(--font-size-mobile, 16px));
+    }
+    select {
+        border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
+    }
+}

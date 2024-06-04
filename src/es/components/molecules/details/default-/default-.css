@@ -7,11 +7,11 @@
     --details-default-child-margin: var(--details-default-child-margin-custom, var(--content-spacing) auto);
     --details-default-content-spacing-mobile: var(--details-default-content-spacing-mobile-custom, var(--content-spacing-mobile));
     --details-default-content-spacing: var(--details-default-content-spacing-custom, var(--content-spacing));
-    --details-default-icon-align-items:flex-start;
+    --details-default-icon-align-items:var(--details-default-icon-align-items-custom, flex-start);
     --details-default-icon-justify-content: flex-end;
     --details-default-icon-margin: 0 0.875em 0 0;
     --details-default-icon-row: row-reverse;
-    --details-default-summary-border-bottom-open: var(--hr-border-bottom, 1px dotted var(--color));
+    --details-default-summary-border-bottom-open: var(--details-default-summary-border-bottom-open-custom, var(--hr-border-bottom, 1px dotted var(--color)));
     --details-default-summary-child-color-hover: var(--details-default-summary-child-color-hover-custom, var(--color-hover));
     --details-default-summary-child-color: var(--details-default-summary-child-color-custom, var(--color-secondary));
     --details-default-summary-padding: 0.875em 0;

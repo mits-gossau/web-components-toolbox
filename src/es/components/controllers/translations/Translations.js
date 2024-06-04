@@ -29,9 +29,10 @@ export default class Translations extends HTMLElement {
 
   /**
    * Get translations
-   * @param {CustomEventInit} event
+   * @param {CustomEventInit | any} event
    */
   requestTranslationsListener = async (event) => {
+    event.stopPropagation()
     const fetchOptions = {
       method: 'GET'
     }
@@ -72,9 +73,9 @@ export default class Translations extends HTMLElement {
       }
     }
     // if translation is delivered as []enum expl.: [{key: hi, value: 123}]
-    if (Array.isArray(this.#translations) && this.#translations[0].key && this.#translations[0].value) {
+    if (Array.isArray(this.#translations) && this.#translations[0].Key && this.#translations[0].Value) {
       this.#translations = this.#translations.reduce((acc, curr) => {
-        acc[curr.key] = curr.value
+        acc[curr.Key] = curr.Value
         return acc
       }, {})
     }
