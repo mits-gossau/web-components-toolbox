@@ -230,7 +230,7 @@ export default class Button extends Hover() {
         outline-offset: var(--outline-offset, 2px);
       }
       ${this.buttonTagName} > *:not(#label) {
-        flex-grow: 1;
+        flex-grow: var(--not-label-flex-grow, 1);
       }
       :host a {
         box-sizing: border-box;
