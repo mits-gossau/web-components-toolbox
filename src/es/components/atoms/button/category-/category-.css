@@ -21,6 +21,7 @@
     white-space: break-spaces;
     word-break: break-word;
     width:100%;
+    hyphens: auto;
 }
 @media only screen and (max-width: _max-width_) {
     :host {
