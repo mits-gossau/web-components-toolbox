@@ -176,3 +176,11 @@
   position: relative;
   top: 0.2rem;
 }
+
+:host label.headline {
+  color: var(--mdx-sys-color-primary-default);
+  font: var(--mdx-sys-font-fix-label0);
+  display: block;
+  margin-top: calc(40rem/18); 
+  margin-bottom: calc(24rem/18); 
+}
