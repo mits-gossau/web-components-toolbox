@@ -86,6 +86,10 @@
         order: -1;
         padding-bottom: 0 !important;
     }
+    :host([no-border-on-mobile]:not([switch-aside-order-mobile])) > section > aside {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
     :host > section > * {
         padding: var(--grid-2columns-content-section-padding-mobile-custom, var(--grid-2columns-content-section-padding-custom, var(--content-spacing-mobile, var(--content-spacing))));
     }
