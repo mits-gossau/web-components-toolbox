@@ -96,18 +96,19 @@ export default class Flatpickr extends Shadow() {
         cursor: var(--cursor, pointer);
       }
       :host > div {
-        border: 1px solid black;
+        border: var(--border, 1px solid black);
         border-radius: var(--border-radius, 2.5rem);
-        padding: 6px 24px;
+        padding: var(--padding, 6px 24px);
       }
       :host .label {
-        align-items: center;
-        display: flex;
-        gap: 1em;
+        align-items: var(--align-items, center);
+        display: var(--label-display, flex);
+        gap: var(--label-gap, 1em);
+        justify-content: var(--justify-content, flex-start);
       }
-      :host input.flatpickr-input.active {
-        background-color: transparent;
-        border-color: var(--color-secondary)
+      :host .flatpickr-input.active {
+        background-color: var(--background-color-active, transparent);
+        border-color: var(--border-color-active, 1px solid black);
       }
     `
     // TODO: https://npmcdn.com/flatpickr@4.6.13/dist/themes/material_orange.css
