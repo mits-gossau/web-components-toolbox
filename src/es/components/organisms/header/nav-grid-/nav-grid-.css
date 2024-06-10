@@ -127,7 +127,7 @@
         width: var(--header-easy-portal-content-width-mobile, var(--any-content-width, 55%));
         grid-template-areas:
         'logo login menu-icon';
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: auto 1fr 3rem;
     }
     :host>header[is-easy-portal-header="true"]>m-multi-level-navigation{
         visibility: visible;
