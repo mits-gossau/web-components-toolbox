@@ -225,7 +225,6 @@ export default class Flatpickr extends Shadow() {
       if (this.getAttribute('default-date')) {
         this.flatpickrInstance.setDate(this.getAttribute('default-date'))
       }
-
       this.html = this.labelNode
       document.head.appendChild(this.style)
       // https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.css
@@ -237,9 +236,10 @@ export default class Flatpickr extends Shadow() {
    *
    * @returns {Promise<any>}
    */
-  loadDependency () {
+  loadDependency() {
+    // debugger
     // make it global to self so that other components can know when it has been loaded
-    return this.flatpickr || (this.flatpickr = Promise.all([
+    return this.flatpickr = Promise.all([
       new Promise((resolve, reject) => {
         const script = document.createElement('script')
         script.setAttribute('type', 'text/javascript')
@@ -263,7 +263,7 @@ export default class Flatpickr extends Shadow() {
         style.onload = () => resolve()
         document.head.appendChild(style)
       })
-    ]))
+    ])
   }
 
   setLabel (text) {
