@@ -155,6 +155,17 @@
   z-index: 2;
 }
 
+@media screen and (max-width: _max-width_) {
+  :host .dialog-footer {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+  :host .dialog-footer a-button::part(button),
+  :host .dialog-footer ks-a-number-of-offers-button::part(button) {
+    width: 100%;
+  }
+}
+
 :host .reset-link {
   margin-top: 1rem;
   text-align: right;
