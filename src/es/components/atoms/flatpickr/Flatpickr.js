@@ -304,8 +304,10 @@ export default class Flatpickr extends Shadow() {
   get locale () {
     switch (document.documentElement.getAttribute('lang')) {
       case 'fr':
+      case 'fr-CH':
         return this.french
       case 'it':
+      case 'it-CH':
         return this.italian
       case 'en':
         return {
