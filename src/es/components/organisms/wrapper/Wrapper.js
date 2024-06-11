@@ -213,6 +213,11 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
           path: `${this.importMetaUrl}./teaser-/teaser-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => this.calcColumnWidth())
+        case 'wrapper-headshot-':
+          return this.fetchCSS([{
+            path: `${this.importMetaUrl}./headshot-/headshot-.css`, // apply namespace since it is specific and no fallback
+            namespace: false
+          }, ...styles], false).then(() => this.calcColumnWidth())
       case 'wrapper-teaser-recipe-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./teaser-recipe-/teaser-recipe-.css`, // apply namespace since it is specific and no fallback

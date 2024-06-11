@@ -1,0 +1,17 @@
+:host {
+  --wrapper-headshot-align-items: var(--wrapper-headshot-align-items-custom, center);
+  --wrapper-headshot-flex-direction: column;
+  --wrapper-headshot-h3-text-align: center;
+  --wrapper-headshot-p-text-align: center;
+  
+  --hr-border-top: var(--hr-border-top-custom, 1px solid black);
+  --hr-margin: var(--hr-margin-custom, 20px 0);
+}
+
+:host a-picture {
+  --wrapper-headshot-any-1-width: 20em;
+}
+
+:host > section {
+  flex-wrap: nowrap;
+}
