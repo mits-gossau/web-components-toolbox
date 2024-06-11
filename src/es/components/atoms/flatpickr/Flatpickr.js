@@ -103,6 +103,7 @@ export default class Flatpickr extends Shadow() {
       :host .label {
         align-items: var(--align-items, center);
         display: var(--label-display, flex);
+        font-weight: var(--label-font-weight, normal);
         gap: var(--label-gap, 1em);
         justify-content: var(--justify-content, flex-start);
       }
@@ -303,8 +304,10 @@ export default class Flatpickr extends Shadow() {
   get locale () {
     switch (document.documentElement.getAttribute('lang')) {
       case 'fr':
+      case 'fr-CH':
         return this.french
       case 'it':
+      case 'it-CH':
         return this.italian
       case 'en':
         return {
