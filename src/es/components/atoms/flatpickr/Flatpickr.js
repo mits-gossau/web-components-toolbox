@@ -103,6 +103,7 @@ export default class Flatpickr extends Shadow() {
       :host .label {
         align-items: var(--align-items, center);
         display: var(--label-display, flex);
+        font-weight: var(--label-font-weight, normal);
         gap: var(--label-gap, 1em);
         justify-content: var(--justify-content, flex-start);
       }
