@@ -24,6 +24,7 @@ export default class Dialog extends Shadow() {
       dialog.classList.remove('closed')
       // @ts-ignore
       dialog[command]()
+      // @ts-ignore
       Array.from(dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
     }
     this.close = async () => {
