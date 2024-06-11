@@ -1,3 +1,7 @@
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
 :host>dialog[open] {
   /* open */
   opacity: 1;
@@ -17,6 +21,7 @@
   max-height: 100%;
   width: 100%;
   max-width: var(--dialog-left-slide-in-max-width-custom, min(100%, 560px));
+  overflow: hidden;
   z-index: var(--dialog-left-slide-in-z-index-custom, 99);
   display: flex;
   gap: var(--dialog-left-slide-in-gap-custom, normal);
