@@ -203,7 +203,9 @@ export default class Flatpickr extends Shadow() {
         onChange: (selectedDates, dateStr, instance) => {
           dateStr = this.setLabel(dateStr.replace(' to ', this.dateStrSeparator))
           if (this.getAttribute('request-event-name') && !this.gotCleared) {
-            this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+            // there are some timing issues with the dom connection of the component
+            // note the following: in case of problems, change the event lister in your controller from ‘this’ to 'document.body'
+            (this.isConnected ? this : document.body).dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
               detail: {
                 origEvent: { selectedDates, dateStr, instance },
                 tags: [dateStr],
