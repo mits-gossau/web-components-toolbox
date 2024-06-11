@@ -239,7 +239,6 @@ export default class Flatpickr extends Shadow() {
    * @returns {Promise<any>}
    */
   loadDependency() {
-    // debugger
     // make it global to self so that other components can know when it has been loaded
     return this.flatpickr = Promise.all([
       new Promise((resolve, reject) => {
