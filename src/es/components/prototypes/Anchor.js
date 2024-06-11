@@ -1,6 +1,8 @@
 // @ts-check
-
 import { Shadow } from './Shadow.js'
+
+/* global location */
+/* global self */
 
 export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenClass {
   /**

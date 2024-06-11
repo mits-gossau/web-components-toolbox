@@ -73,7 +73,7 @@ export default class Flatpickr extends Shadow() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return this.hasAttribute('id') ? !this.root.querySelector(`:host > style[_css], #${this.getAttribute('id')} > style[_css]`) : !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`) 
+    return this.hasAttribute('id') ? !this.root.querySelector(`:host > style[_css], #${this.getAttribute('id')} > style[_css]`) : !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
@@ -239,9 +239,9 @@ export default class Flatpickr extends Shadow() {
    *
    * @returns {Promise<any>}
    */
-  loadDependency() {
+  loadDependency () {
     // make it global to self so that other components can know when it has been loaded
-    return this.flatpickr = Promise.all([
+    return Promise.all([
       new Promise((resolve, reject) => {
         const script = document.createElement('script')
         script.setAttribute('type', 'text/javascript')

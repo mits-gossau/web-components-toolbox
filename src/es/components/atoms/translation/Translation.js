@@ -43,7 +43,7 @@ export default class Translation extends Shadow() {
       text = text.replaceAll('\n', '<br />')
     }
     if (this.hasAttribute('params')) {
-      const params = JSON.parse(this.getAttribute('params')) ?? {};
+      const params = JSON.parse(this.getAttribute('params')) ?? {}
       Object.keys(params).forEach(key => {
         text = text.replaceAll(`{${key}}`, params[key])
       })

@@ -1,6 +1,7 @@
 // @ts-check
-
 import { Shadow } from './Shadow.js'
+
+/* global customElements */
 
 export const Validation = (ChosenClass = Shadow()) => class Validation extends ChosenClass {
   /**
@@ -14,7 +15,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     super(options, ...args)
 
     this.validationValues = {}
-    
+
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = inputField.getAttribute('name')
@@ -199,14 +200,14 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     if ((this.submitButton = this.form.querySelector('[type="submit"]'))) {
       addClickEventListenerOnSubmit()
     } else {
-      const undefinedElements = this.form.querySelectorAll(":not(:defined)")
+      const undefinedElements = this.form.querySelectorAll(':not(:defined)')
       const promises = [...undefinedElements].map((button) =>
-        customElements.whenDefined(button.localName),
+        customElements.whenDefined(button.localName)
       )
-    
+
       // Wait for all the children to be upgraded
       Promise.all(promises).then(addClickEventListenerOnSubmit)
-    } 
+    }
   }
 
   /**
@@ -318,7 +319,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const currentValidatedInputErrorTextWrapper = currentValidatedInput.errorTextWrapper ? currentValidatedInput.errorTextWrapper : currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
     const isValidValues = []
-    Object.keys(this.validationValues[inputFieldName]).forEach(key => {      
+    Object.keys(this.validationValues[inputFieldName]).forEach(key => {
       if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
       if (!isCurrentValidatedInputErrorTextWrapperFilled) {
         if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {

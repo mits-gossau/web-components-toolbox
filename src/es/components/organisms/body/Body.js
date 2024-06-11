@@ -1,10 +1,6 @@
 // @ts-check
 import { Anchor } from '../../prototypes/Anchor.js'
 
-/* global location */
-/* global self */
-/* global CustomEvent */
-
 /**
  * Defines a body body for content and maps variables to global tags
  * Example at: /src/es/components/pages/General.html
@@ -38,7 +34,7 @@ export default class Body extends Anchor() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return this.hasAttribute('id') ? !this.root.querySelector(`:host > style[_css], #${this.getAttribute('id')} > style[_css]`) : !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`) 
+    return this.hasAttribute('id') ? !this.root.querySelector(`:host > style[_css], #${this.getAttribute('id')} > style[_css]`) : !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**

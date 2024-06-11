@@ -30,8 +30,8 @@ export default class Dialog extends Shadow() {
     this.close = async () => {
       const dialog = await this.dialogPromise
       this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
-      dialog.classList.add('closed')     
-      dialog.close() 
+      dialog.classList.add('closed')
+      dialog.close()
     }
 
     this.clickEventListener = async event => {
@@ -113,7 +113,7 @@ export default class Dialog extends Shadow() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return this.hasAttribute('id') ? !this.root.querySelector(`:host > style[_css], #${this.getAttribute('id')} > style[_css]`) : !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`) 
+    return this.hasAttribute('id') ? !this.root.querySelector(`:host > style[_css], #${this.getAttribute('id')} > style[_css]`) : !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
   /**
