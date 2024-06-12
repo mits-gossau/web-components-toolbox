@@ -117,10 +117,11 @@ export default class TagFilter extends Mutation() {
       }
     ])
     this.html = ''
+    const buttonNamespace = this.hasAttribute('custom-button-namespace') ? this.getAttribute('custom-button-namespace') : 'button-category-'
     tagList.forEach(tagItem => {
       // TODO: fix attribute naming to harmonize with api
       this.html = `<${tagItem.customElementName || 'a-button'}
-          namespace="${tagItem.namespace || 'button-category-'}"
+          namespace="${tagItem.namespace || buttonNamespace}"
           tag="${tagItem.code || tagItem.tag}"
           answer-event-name="${this.getAttribute('answer-event-name') || ''}"
           request-event-name="${this.getAttribute('request-event-name') || ''}"
