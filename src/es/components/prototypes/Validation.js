@@ -250,20 +250,25 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const validationNames = Object.keys(validationRules) || []
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
-        const isCheckboxInput = currentInput.getAttribute('type') === 'checkbox'
-        if (isCheckboxInput) {
-          this.setValidity(inputFieldName, validationName, currentInput.checked)
+        if (this.parentHidden(currentInput)) {
+          // avoid validation if parent container is hidden
+          return false;
         } else {
-          // check if input is type radio
-          const isRadioInput = currentInput.getAttribute('type') === 'radio'
-          if (isRadioInput) {
-            const radioInputName = currentInput.getAttribute('name')
-            const radioInputs = this.form.querySelectorAll(`input[name="${radioInputName}"]`)
-            const isRadioInputChecked = Array.from(radioInputs).some(radioInput => radioInput.checked)
-            this.setValidity(radioInputName, validationName, isRadioInputChecked)
+          const isCheckboxInput = currentInput.getAttribute('type') === 'checkbox'
+          if (isCheckboxInput) {
+            this.setValidity(inputFieldName, validationName, currentInput.checked)
           } else {
-            const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
-            this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
+            // check if input is type radio
+            const isRadioInput = currentInput.getAttribute('type') === 'radio'
+            if (isRadioInput) {
+              const radioInputName = currentInput.getAttribute('name')
+              const radioInputs = this.form.querySelectorAll(`input[name="${radioInputName}"]`)
+              const isRadioInputChecked = Array.from(radioInputs).some(radioInput => radioInput.checked)
+              this.setValidity(radioInputName, validationName, isRadioInputChecked)
+            } else {
+              const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
+              this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
+            }
           }
         }
       }
@@ -407,6 +412,24 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     if (this.submitButton) this.submitButton.disabled = allIsValidValue.includes(false)
   }
 
+  /**
+   * Check if the parent container is hidden to avoid validation
+   * @param {*} currentInput 
+   * @returns 
+   */
+  parentHidden (currentInput) {
+    let parent = currentInput.parentElement;
+
+    while (parent && !parent.hasAttribute('hidden')) {
+      parent = parent.parentElement;
+    }
+
+    if (parent) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   /**
 * renders the css
 */
