@@ -159,11 +159,6 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
     }
     // only the most essential css, which is true for all templates
     this.css = /* css */`
-      :host {
-        display: inline-block !important;
-        width: 100% !important;
-        margin: 0 !important;
-      }
       :host *:has(> input[type=file]) > *:not(input) {
         gap: 1em;
       }

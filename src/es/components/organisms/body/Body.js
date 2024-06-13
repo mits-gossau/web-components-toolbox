@@ -66,7 +66,7 @@ export default class Body extends Anchor() {
       :host > main > *:not(style):not(script) {
         display: var(--any-display, block);
       }
-      :host > main > * {
+      :host > main > *:not(m-simple-form-validation) {
         margin: var(--any-content-spacing, var(--content-spacing, unset)) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--any-content-width, var(--content-width, 55%));
       }
