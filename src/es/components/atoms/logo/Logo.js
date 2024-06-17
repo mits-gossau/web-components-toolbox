@@ -125,6 +125,7 @@ export default class Logo extends Shadow() {
       :host a{
         height: var(--a-height, auto);
         width: var(--a-width, auto);
+        display: var(--a-display, inline);
       }
       :host img{
         display: block;
@@ -134,6 +135,11 @@ export default class Logo extends Shadow() {
         width: var(--width, auto);
         max-width: var(--max-width, 80vw);
         margin: var(--img-margin, 0);
+        position: var(--img-position, unset);
+        top: var(--img-position-top, unset);
+        bottom: var(--img-position-bottom, unset);
+        right: var(--img-position-right, unset);
+        left: var(--img-position-left, unset);
       }
       :host > ${this.textSelector}{
         font-family: var(--text-font-family);
