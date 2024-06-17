@@ -1,6 +1,5 @@
 // @ts-check
 
-/* global AbortController */
 /* global CustomEvent */
 /* global fetch */
 /* global HTMLElement */

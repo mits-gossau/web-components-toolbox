@@ -1,3 +1,7 @@
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
 :host {
   /* button margin and padding */
   --margin: auto 0;
@@ -23,6 +27,7 @@
   max-height: 100%;
   width: 100%;
   max-width: min(100%, 560px);
+  overflow: hidden;
   z-index: 99;
   display: flex;
   flex-direction: column;
@@ -161,6 +166,17 @@
   position: sticky;
   bottom: 0;
   z-index: 2;
+}
+
+@media screen and (max-width: _max-width_) {
+  :host .dialog-footer {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+  :host .dialog-footer a-button::part(button),
+  :host .dialog-footer ks-a-number-of-offers-button::part(button) {
+    width: 100%;
+  }
 }
 
 :host .reset-link {

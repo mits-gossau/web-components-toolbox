@@ -15,26 +15,30 @@ export default class Dialog extends Shadow() {
     /**
      * @param {'show'|'showModal'} [command='show']
      */
-    this.show = (command = this.getAttribute('command-show') || 'show-modal') => {
+    this.show = async (command = this.getAttribute('command-show') || 'show-modal') => {
+      const dialog = await this.dialogPromise
       if (this.hasAttribute('close-other-flyout')) this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', { bubbles: true, cancelable: true, composed: true }))
       // @ts-ignore
       command = command.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
       this.dispatchEvent(new CustomEvent('no-scroll', { detail: { hasNoScroll: true }, bubbles: true, cancelable: true, composed: true }))
-      this.dialog.classList.remove('closed')
+      dialog.classList.remove('closed')
       // @ts-ignore
-      this.dialog[command]()
-      Array.from(this.dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
+      dialog[command]()
+      // @ts-ignore
+      Array.from(dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
     }
-    this.close = () => {
+    this.close = async () => {
+      const dialog = await this.dialogPromise
       this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
-      this.dialog.classList.add('closed')
-      this.dialog.close()
+      dialog.classList.add('closed')
+      dialog.close()
     }
 
-    this.clickEventListener = event => {
+    this.clickEventListener = async event => {
+      const dialog = await this.dialogPromise
       // click on backdrop
-      if (!this.hasAttribute('no-backdrop-close') && event.composedPath()[0] === this.dialog) {
-        const rect = this.dialog.getBoundingClientRect()
+      if (!this.hasAttribute('no-backdrop-close') && event.composedPath()[0] === dialog) {
+        const rect = dialog.getBoundingClientRect()
         if (event.clientY < rect.top || event.clientY > rect.bottom || event.clientX < rect.left || event.clientX > rect.right) {
           event.stopPropagation()
           this.close()
@@ -59,23 +63,34 @@ export default class Dialog extends Shadow() {
     this.keyupListener = event => {
       if (event.key === 'Escape') this.close()
     }
+
+    /** @type {(any)=>void} */
+    this.dialogResolve = map => map
+    /** @type {Promise<HTMLDialogElement>} */
+    this.dialogPromise = new Promise(resolve => (this.dialogResolve = resolve))
   }
 
   connectedCallback () {
     this.hidden = true
+    this.showNodes.forEach(node => (node.style.display = 'none'))
+    this.closeNodes.forEach(node => (node.style.display = 'none'))
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     Promise.all(showPromises).then(() => {
-      this.hidden = false
-      if (this.hasAttribute('open')) {
-        this.show(this.getAttribute('open') || undefined)
-        this.removeAttribute('open')
-      }
-      // From web components the event does not bubble up to this host
-      this.showNodes.forEach(node => node.addEventListener('click', this.showClickEventListener))
-      this.closeNodes.forEach(node => node.addEventListener('click', this.closeClickEventListener))
+      if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+      Promise.all(showPromises).then(() => {
+        this.hidden = false
+        this.showNodes.forEach(node => (node.style.display = ''))
+        this.closeNodes.forEach(node => (node.style.display = ''))
+        if (this.hasAttribute('open')) {
+          this.show(this.getAttribute('open') || undefined)
+          this.removeAttribute('open')
+        }
+      })
     })
+    // From web components the event does not bubble up to this host
+    this.showNodes.forEach(node => node.addEventListener('click', this.showClickEventListener))
+    this.closeNodes.forEach(node => node.addEventListener('click', this.closeClickEventListener))
     this.addEventListener('click', this.clickEventListener)
     if (this.getAttribute('show-event-name')) document.body.addEventListener(this.getAttribute('show-event-name'), this.showEventListener)
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
@@ -98,7 +113,7 @@ export default class Dialog extends Shadow() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+    return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
   /**
@@ -178,7 +193,7 @@ export default class Dialog extends Shadow() {
    * @returns Promise<void>
    */
   renderHTML () {
-    this.dialog = this.root.querySelector(this.cssSelector + ' > dialog') || document.createElement('dialog')
+    this.dialogResolve(this.dialog = this.root.querySelector(this.cssSelector + ' > dialog') || document.createElement('dialog'))
     if (this.hasAttribute('autofocus')) this.dialog.setAttribute('autofocus', '')
     Array.from(this.root.children).forEach(node => {
       if (node === this.dialog || node.getAttribute('slot') || node.nodeName === 'STYLE') return false

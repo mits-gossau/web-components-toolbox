@@ -73,7 +73,7 @@ export default class Flatpickr extends Shadow() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+    return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
   /**
@@ -103,6 +103,7 @@ export default class Flatpickr extends Shadow() {
       :host .label {
         align-items: var(--align-items, center);
         display: var(--label-display, flex);
+        font-weight: var(--label-font-weight, normal);
         gap: var(--label-gap, 1em);
         justify-content: var(--justify-content, flex-start);
       }
@@ -203,7 +204,9 @@ export default class Flatpickr extends Shadow() {
         onChange: (selectedDates, dateStr, instance) => {
           dateStr = this.setLabel(dateStr.replace(' to ', this.dateStrSeparator))
           if (this.getAttribute('request-event-name') && !this.gotCleared) {
-            this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
+            // there are some timing issues with the dom connection of the component
+            // note the following: in case of problems, change the event lister in your controller from ‘this’ to 'document.body'
+            (this.isConnected ? this : document.body).dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
               detail: {
                 origEvent: { selectedDates, dateStr, instance },
                 tags: [dateStr],
@@ -225,7 +228,6 @@ export default class Flatpickr extends Shadow() {
       if (this.getAttribute('default-date')) {
         this.flatpickrInstance.setDate(this.getAttribute('default-date'))
       }
-
       this.html = this.labelNode
       document.head.appendChild(this.style)
       // https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.css
@@ -239,7 +241,7 @@ export default class Flatpickr extends Shadow() {
    */
   loadDependency () {
     // make it global to self so that other components can know when it has been loaded
-    return this.flatpickr || (this.flatpickr = Promise.all([
+    return Promise.all([
       new Promise((resolve, reject) => {
         const script = document.createElement('script')
         script.setAttribute('type', 'text/javascript')
@@ -263,7 +265,7 @@ export default class Flatpickr extends Shadow() {
         style.onload = () => resolve()
         document.head.appendChild(style)
       })
-    ]))
+    ])
   }
 
   setLabel (text) {
@@ -302,8 +304,10 @@ export default class Flatpickr extends Shadow() {
   get locale () {
     switch (document.documentElement.getAttribute('lang')) {
       case 'fr':
+      case 'fr-CH':
         return this.french
       case 'it':
+      case 'it-CH':
         return this.italian
       case 'en':
         return {

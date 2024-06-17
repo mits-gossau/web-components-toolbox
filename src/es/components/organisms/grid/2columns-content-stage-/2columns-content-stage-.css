@@ -229,3 +229,13 @@
         grid-column: auto;
     }
 }
+
+/* brand adjustments */
+@media only screen and (min-width: 1024px) {
+    :host([brand=ibaw]) aside {
+        /* the shape should be aligned to the bottom to match the border on the split section on content pages
+        this path defines a polygon that is aligned to the bottom and creates a shape with height of 1477px, 
+        theoretically the shape would get cropped if higher */
+        clip-path: polygon(0% 100%, 100% 100%, 100% calc(100% - 1477px), 480px calc(100% - 1477px));
+    }
+}

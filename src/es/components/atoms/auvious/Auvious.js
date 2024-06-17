@@ -1,6 +1,9 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global customElements */
+/* global self */
+
 /**
  * https://docs.auvious.com/docs/get-started/widget/
  *
@@ -29,7 +32,7 @@ export default class Auvious extends Shadow() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+    return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
   /**
