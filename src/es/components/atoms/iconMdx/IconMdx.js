@@ -88,6 +88,18 @@ export default class IconMdx extends Hover() {
           `
           : ''
         }
+        ${this.getAttribute('mobile-size')
+          ? `
+            --svg-size-mobile: ${this.getAttribute('mobile-size') ?? this.getAttribute('size')};
+          `
+          : ''
+        }
+        ${this.getAttribute('color')
+          ? `
+            --color: ${this.getAttribute('color')};
+          `
+          : ''
+        }
         color: var(--color, #777);
       }
       ${this.hasAttribute('no-hover')
@@ -136,6 +148,13 @@ export default class IconMdx extends Hover() {
       :host([no-hover][rotate]) > svg, :host([no-hover-transform][rotate]) > svg, :host([disabled][rotate]) > svg, :host([rotate]:hover:not([disabled]):not([no-hover-transform])) > svg, :host([rotate].hover:not([disabled]):not([no-hover-transform])) > svg {
         transform: rotate(${this.getAttribute('rotate')});
       }
+      /* Mobile layout */
+    @media only screen and (max-width: _max-width_) {
+      :host > svg {
+        height: var(--svg-height-mobile, var(--svg-size-mobile, 1.5em));
+        width: var(--svg-width-mobile, var(--svg-size-mobile, 1.5em));
+      }
+    }
     `
     // TODO: check if the part below is needed!?
     // font-family can have an effect on size on the bounding h-tag with .bg-color
