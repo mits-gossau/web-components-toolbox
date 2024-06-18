@@ -98,7 +98,7 @@ export default class Body extends Anchor() {
         :host > main {
           padding: var(--main-padding-mobile, var(--main-padding, 0));
         }
-        :host > main > * {
+        :host > main > *:not(m-simple-form-validation) {
           margin: var(--any-content-spacing-mobile, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--any-content-width-mobile, var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)));
         }
