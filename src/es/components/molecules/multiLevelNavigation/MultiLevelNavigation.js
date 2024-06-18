@@ -179,7 +179,6 @@ export default class MultiLevelNavigation extends Mutation() {
     this.closeEventListener = event => {
       const currentAriaExpandedAttribute = this.nav.getAttribute('aria-expanded') === 'true'
       if (this.isDesktop && event.composedPath()[0].tagName !== 'M-MULTI-LEVEL-NAVIGATION') this.nav.setAttribute('aria-expanded', 'false')
-      if (this.isDesktop && this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
       if (this.isDesktop && currentAriaExpandedAttribute) this.hideAndClearDesktopSubNavigation(event)
       if (!this.isDesktop && this.getRootNode().host?.shadowRoot?.querySelector('header')?.classList.contains('open')) {
         this.getRootNode().host.shadowRoot.querySelector('a-menu-icon').click()
