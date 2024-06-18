@@ -454,7 +454,9 @@ export default class Button extends Hover() {
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </${this.buttonTagName}>
     `
-    alreadyIncludedNodes.forEach(node => this.button.appendChild(node))
+    alreadyIncludedNodes.forEach(node => {
+      if (this.button !== node && !this.button.contains(node) && !node.contains(this.button)) this.button.appendChild(node)
+    })
     if (this.getAttribute('namespace') === 'button-download-') {
       this.button.prepend(this.downloadIcon)
     }
