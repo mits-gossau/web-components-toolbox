@@ -10,10 +10,10 @@
     padding: var(--grid-2columns-content-section-padding-custom, var(--content-spacing));
 }
 :host > section p.intro {
-    font-family: var(--font-family);
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 23.4px;
+    font-family: var(--intro-font-family, var(--font-family));
+    font-size: var(--intro-font-size, 20px);
+    font-weight: var(--intro-font-weight, 500);
+    line-height: var(--intro-line-height, 23.4px);
 }
 :host([with-border]) > section {
     border-bottom: var(--content-section-border-bottom-custom, 1px solid var(--mdx-sys-color-brand-neutral-300));
@@ -94,7 +94,7 @@
         padding: var(--grid-2columns-content-section-padding-mobile-custom, var(--grid-2columns-content-section-padding-custom, var(--content-spacing-mobile, var(--content-spacing))));
     }
     :host > section p.intro {
-        font-size: 18px;
+        font-size: var(--intro-font-size-mobile, var(--intro-font-size, 18px));
     }
     :host([first-container-vertical]) > section > *:nth-child(1) {
         padding: var(--grid-2columns-content-section-first-column-padding-mobile-custom, var(--grid-2columns-content-section-padding-mobile-custom));
