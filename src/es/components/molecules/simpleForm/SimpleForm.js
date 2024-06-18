@@ -540,7 +540,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
       case 'checkbox':
         return input.value && input.value !== 'on' && input.checked ? Promise.resolve(input.value) : Promise.resolve(input.checked)
       case 'radio':
-        return Promise.resolve(Array.from(this.root.querySelectorAll(`[name="${input.getAttribute('name')}"]`)).find(input => input.checked).value)
+        return Promise.resolve(Array.from(this.root.querySelectorAll(`[name="${input.getAttribute('name')}"]`)).find(input => input.checked)?.value || '')
       default:
         return Promise.resolve(input.value)
     }
