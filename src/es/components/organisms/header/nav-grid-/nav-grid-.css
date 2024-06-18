@@ -70,6 +70,7 @@
 }
 
 :host>header>m-multi-level-navigation {
+    display: grid;
     grid-area: navigation;
     max-width: none;
     margin-right: calc(0px - var(--multi-level-navigation-default-a-main-content-spacing));
@@ -188,6 +189,7 @@
 
     :host > header > m-multi-level-navigation {
         animation: closeRight .3s ease-in forwards;
+        display: none;
         }
 }
 
