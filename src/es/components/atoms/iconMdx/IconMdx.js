@@ -128,6 +128,7 @@ export default class IconMdx extends Hover() {
         transition: opacity 0.3s ease-out;
       }
       :host > svg {
+        display: block;
         position: relative;
         height: var(--svg-height, var(--svg-size, 1.5em));
         width: var(--svg-width, var(--svg-size, 1.5em));
