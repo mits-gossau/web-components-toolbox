@@ -29,6 +29,8 @@ export default class MultiLevelNavigation extends Mutation() {
     this.useHoverListener = this.hasAttribute('use-hover-listener')
     this.animationDurationMs = this.getAttribute('animation-duration') || 300
     this.removeElementAfterAnimationDurationMs = this.animationDurationMs + 50
+    this.desktopHeightBreakpoint = 800
+    this.isHigherDevice = window.innerHeight > this.desktopHeightBreakpoint
 
     this.resizeListener = event => {
       const oldIsDesktopValue = this.isDesktop
@@ -56,6 +58,12 @@ export default class MultiLevelNavigation extends Mutation() {
 
       // make some change on html to be mobile or desktop layout compatible if the screen-width changes between mobile and desktop
       if (oldIsDesktopValue !== this.isDesktop) this.htmlReBuilderByLayoutChange()
+
+      // update navigation hight if the window-height changes
+      if (this.isHigherDevice !== window.innerHeight > this.desktopHeightBreakpoint) {
+        this.recalculateNavigationHeight()
+        this.isHigherDevice = window.innerHeight > this.desktopHeightBreakpoint
+      }
     }
 
     this.selfClickListener = (event) => {
@@ -214,6 +222,8 @@ export default class MultiLevelNavigation extends Mutation() {
     if (this.isCheckout) this.root.querySelector('nav').style.display = 'none'
 
     this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.addEventListener('blur', this.noScroll))
+
+    this.recalculateNavigationHeight()
   }
 
   disconnectedCallback() {
@@ -424,13 +434,15 @@ export default class MultiLevelNavigation extends Mutation() {
       text-decoration: underline;
       color: var(--color-active) !important;
     }
-    @media only screen and (min-height: 701px) {
-      :host > nav > ul > li > o-nav-wrapper {
+    @media only screen and (min-height: ${this.desktopHeightBreakpoint + 'px'}) {
+      :host > nav > ul > li > o-nav-wrapper,
+      :host > nav > ul > li > o-nav-wrapper div.wrapper-background {
         height: var(--desktop-main-wrapper-height, 50vh);
       }
     }
-    @media only screen and (max-height: 700px) {
-      :host > nav > ul > li > o-nav-wrapper {
+    @media only screen and (max-height: ${this.desktopHeightBreakpoint + 'px'}) {
+      :host > nav > ul > li > o-nav-wrapper,
+      :host > nav > ul > li > o-nav-wrapper div.wrapper-background {
         height: var(--mobile-main-wrapper-height, 60vh);
       }
     }
@@ -1189,5 +1201,28 @@ export default class MultiLevelNavigation extends Mutation() {
 
   getMedia() {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
+  }
+
+  recalculateNavigationHeight(isInitialCalc) {
+      setTimeout(() => {
+        this.headerHeight = this.getRootNode().host.offsetHeight
+        this.restOfHeight = window.screen.height * 0.9 - this.headerHeight
+        this.oNavWrappers = this.root.querySelectorAll('o-nav-wrapper')
+        if (this.oNavWrappers.length) {
+          this.oNavWrappers.forEach(wrapper => {
+            let allLiChildren = wrapper.querySelectorAll("div[nav-level='1'] > ul > li")
+            if (allLiChildren.length > 9 && window.innerHeight < this.desktopHeightBreakpoint) {
+              let wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
+              wrapper.setAttribute('style', `--multi-level-navigation-default-mobile-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
+              if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
+            }
+            if (allLiChildren.length > 9 && window.innerHeight > this.desktopHeightBreakpoint) {
+              let wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
+              wrapper.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
+              if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
+            }
+          })
+        }
+      }, 1000);
   }
 }
