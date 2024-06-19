@@ -250,6 +250,7 @@ export default class Input extends Shadow() {
         margin-top: 1.25rem;
       }
       :host([search]) input {
+        font-size: var(--search-input-font-size, var(--font-size));
         background-color: var(--search-input-background-color, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color, var(--m-gray-300));
         color: var(--search-input-color);
@@ -257,6 +258,7 @@ export default class Input extends Shadow() {
         padding-right: max(2.5em, 35px);
         border-radius: var(--search-input-border-radius, var(--border-radius, 0.5em));
         width: var(--search-input-width-big, var(--search-input-width, 100%));
+        height: var(--search-input-height, auto);
         min-width: 9.7em;
       }
       :host([search]) input:hover,
@@ -281,7 +283,7 @@ export default class Input extends Shadow() {
 
       :host([search]) button {
         position: absolute;
-        right: 1em;
+        right: var(--search-icon-right, 1em);
         padding: 0;
         border: 0;
         background: transparent;
@@ -356,11 +358,13 @@ export default class Input extends Shadow() {
           border-radius: var(--border-radius-mobile, var(--border-radius, 0.571em));
         }
         :host([search]) input {
+          font-size: var(--search-input-font-size-mobile, var(--search-input-font-size));
           padding: var(--search-input-padding-mobile, var(--search-input-padding, 0.75em var(--content-spacing-mobile)));
           border-radius: var(--search-input-border-radius-mobile, var(--search-input-border-radius, var(--border-radius-mobile, var(--border-radius, 0.571em))));
+          height: var(--search-input-height-mobile, var(--search-input-height, auto));
         }
         :host([search]) button {
-          right: var(--content-spacing-mobile);
+          right: var(--search-icon-right-mobile, var(--content-spacing-mobile));
         }
         .mui-form-group {
           max-width: var(--max-width-mobile, var(--max-width, none));
