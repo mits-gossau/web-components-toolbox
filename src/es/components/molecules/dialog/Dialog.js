@@ -131,7 +131,13 @@ export default class Dialog extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host > dialog {
-        background-color: var(--background-color, canvas);x
+        background-color: var(--background-color, canvas);
+      }
+      :host > dialog {
+        cursor: var(--dialog-cursor, auto);
+      }
+      :host > dialog::backdrop {
+        cursor: var(--dialog-backdrop-cursor, pointer);
       }
     `
     return this.fetchTemplate()

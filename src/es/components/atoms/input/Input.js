@@ -328,6 +328,10 @@ export default class Input extends Shadow() {
         background: var(--input-color-bg-error, var(--m-yellow-300));
       }
 
+      :host input.pointer, :host button.pointer {
+        cursor: pointer !important;
+      }
+
       @media (hover: hover) {
         input:hover:not(:disabled):not(:read-only):not(:invalid) {
           border-color: var(--border-color-hover, var(--border-color, var(--m-gray-500)));
@@ -409,7 +413,7 @@ export default class Input extends Shadow() {
     ]).then(([labelHtml, searchHtml]) => {
       this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml)
       this.divWrapper.innerHTML += /* html */`
-          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} ${this.hasAttribute('disabled') ? 'disabled' : ''} />
+          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} ${this.hasAttribute('disabled') ? 'disabled' : ''} ${this.hasAttribute('pointer') ? 'class="pointer"' : ''} />
           ${searchHtml}
       `
       if (this.hasAttribute('autofocus')) this.removeAttribute('autofocus')
@@ -430,7 +434,7 @@ export default class Input extends Shadow() {
     if (!this.search) return Promise.resolve('')
     if (!this.iconName) {
       return Promise.resolve(/* html */`
-      <button type="button" title="Search">
+      <button type="button" title="Search" ${this.hasAttribute('pointer') ? 'class="pointer"' : ''}>
         <svg width="100%" height="100%" viewBox="0 0 24 24" stroke="currentColor" fill="none" xmlns="http://www.w3.org/2000/svg" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
         <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" class="icon-stroke-width" stroke-linecap="round" stroke-linejoin="round"></path>
         <path d="M21 21L16.65 16.65" class="icon-stroke-width" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -438,7 +442,7 @@ export default class Input extends Shadow() {
       </button>
     `)
     }
-    return (this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`], true).then(htmls => `<button type="button" title="${this.iconName}">${htmls[0]}</button>`))
+    return (this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`], true).then(htmls => `<button type="button" title="${this.iconName}" ${this.hasAttribute('pointer') ? 'class="pointer"' : ''}>${htmls[0]}</button>`))
   }
 
   focus () {
