@@ -314,6 +314,14 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           this.setValidity(inputFieldName, validationName, isPatternMaskValueValidationValid)
         }
       }
+      if (validationName === 'min-date-value') {
+        const isMiDateValidationValid = !!(new Date(currentInput.value) > new Date(validationRules['min-date-value'].value))
+        this.setValidity(inputFieldName, validationName, isMiDateValidationValid)
+      }
+      if (validationName === 'max-date-value') {
+        const isMiDateValidationValid = !!(new Date(currentInput.value) < new Date(validationRules['max-date-value'].value))
+        this.setValidity(inputFieldName, validationName, isMiDateValidationValid)
+      }
     })
   }
 
