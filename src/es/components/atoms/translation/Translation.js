@@ -9,6 +9,10 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class Translation extends Shadow() {
+  static get observedAttributes () {
+    return ['data-trans-key', 'key']
+  }
+
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, mode: 'false', ...options }, ...args)
   }
@@ -30,6 +34,10 @@ export default class Translation extends Shadow() {
     }).finally(() => {
       this.hidden = false
     })
+  }
+
+  attributeChangedCallback (name, oldValue, newValue) {
+    this.connectedCallback()
   }
 
   /**
