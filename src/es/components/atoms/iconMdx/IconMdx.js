@@ -88,7 +88,7 @@ export default class IconMdx extends Hover() {
           `
           : ''
         }
-        ${this.getAttribute('mobile-size')
+        ${this.hasAttribute('size') || this.hasAttribute('mobile-size')
           ? `
             --svg-size-mobile: ${this.getAttribute('mobile-size') ?? this.getAttribute('size')};
           `
