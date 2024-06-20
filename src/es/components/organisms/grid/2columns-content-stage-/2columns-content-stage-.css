@@ -45,7 +45,12 @@
 :host .topline ks-m-favorite-button {
     display: none;
 }
+:host aside {
+    position: relative;
+}
 :host aside > img {
+    position: absolute; /* needs to be undone on mobile!!! */
+    inset: 0;
     width: 100%;
     height: 100%;
     min-height: var(--grid-2columns-content-stage-image-min-height, 280px);
@@ -224,6 +229,10 @@
     :host([first-container-vertical]:not([no-mobile])) > section > *:nth-child(3) {
         grid-row: auto;
         grid-column: auto;
+    }
+    :host aside > img {
+        position: relative;
+        aspect-ratio: 4/3;
     }
 }
 
