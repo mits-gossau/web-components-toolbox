@@ -11,7 +11,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    * @param {{ValidationInit: {level?: number|undefined, selector?: string|undefined}|undefined}} options
    * @param {*} args
    */
-  constructor (options = { ValidationInit: undefined }, ...args) {
+  constructor(options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
 
     this.validationValues = {}
@@ -132,7 +132,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    *
    * @return {void}
    */
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
     this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
@@ -215,7 +215,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    *
    * @return {void}
    */
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     // @ts-ignore
     if (this.allValidationNodes.length > 0) {
@@ -246,7 +246,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
   }
 
-  validator (validationRules, currentInput, inputFieldName) {
+  validator(validationRules, currentInput, inputFieldName) {
     const validationNames = Object.keys(validationRules) || []
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
@@ -308,6 +308,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           const isPatternMaskValueValidationValid = this.validationPatternEnd(inputFieldName, validationName, currentInputValue)
           this.setValidity(inputFieldName, validationName, isPatternMaskValueValidationValid)
         }
+        if (!currentInput.value && !validationRules.required) {
+          this.setValidity(inputFieldName, validationName, true)
+        }
       }
       if (validationName === 'min-date-value') {
         const isMinDateValidationValid = !!(new Date(currentInput.value) > new Date(validationRules['min-date-value'].value))
@@ -320,7 +323,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     })
   }
 
-  setValidity (inputFieldName, validationName, isValid) {
+  setValidity(inputFieldName, validationName, isValid) {
     this.validationValues[inputFieldName][validationName].isValid = isValid
     const currentValidatedInput = this.allValidationNodes?.find(node => node.getAttribute('name') === inputFieldName)
     const currentValidatedInputHasNewErrorReferencePoint = currentValidatedInput.getAttribute('error-message-reference-point-changed') === 'true'
@@ -365,11 +368,11 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         p.hidden = true
       })
       if (+currentErrorMessageIndex === -1) return
-      errorMessages[currentErrorMessageIndex].hidden = false
+      //errorMessages[currentErrorMessageIndex].hidden = false
     }
   }
 
-  validationPatternEnd (inputFieldName, validationName, currentValue) {
+  validationPatternEnd(inputFieldName, validationName, currentValue) {
     const validationMask = this.validationValues[inputFieldName][validationName]['mask-value']
     const validationMaskSplitted = validationMask.split('')
     const currentValueSplitted = currentValue.split('')
@@ -397,13 +400,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     return !isValuesValid.includes(false)
   }
 
-  scrollToFirstError () {
+  scrollToFirstError() {
     // @ts-ignore
     const firstNodeWithError = this.allValidationNodes.find(node => node.classList.contains('has-error'))
     firstNodeWithError.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
-  checkIfFormValid () {
+  checkIfFormValid() {
     const allIsValidValue = []
     Object.keys(this.validationValues).forEach(key => {
       Object.keys(this.validationValues[key]).forEach(subKey => {
@@ -418,7 +421,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   /**
 * renders the css
 */
-  renderValidationCSS () {
+  renderValidationCSS() {
     this.style.textContent = /* css */`
     :host .custom-error-text {
       margin: var(--error-border-radius, 3px 0 0 0);
@@ -445,7 +448,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.html = this.style
   }
 
-  get style () {
+  get style() {
     return (
       this._style ||
       (this._style = (() => {
@@ -466,7 +469,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    * @param {HTMLElement} [root=document.documentElement]
    * @return {HTMLElement}
    */
-  static walksUpDomQuerySelector (el, selector, root = document.documentElement) {
+  static walksUpDomQuerySelector(el, selector, root = document.documentElement) {
     if (typeof el.matches === 'function' && el.matches(selector)) return el
     if (el.querySelector(selector)) return el.querySelector(selector)
     while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
