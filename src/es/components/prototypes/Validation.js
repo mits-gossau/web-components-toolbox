@@ -250,25 +250,20 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const validationNames = Object.keys(validationRules) || []
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
-        if (this.parentHidden(currentInput)) {
-          // avoid validation if parent container is hidden
-          return false;
+        const isCheckboxInput = currentInput.getAttribute('type') === 'checkbox'
+        if (isCheckboxInput) {
+          this.setValidity(inputFieldName, validationName, currentInput.checked)
         } else {
-          const isCheckboxInput = currentInput.getAttribute('type') === 'checkbox'
-          if (isCheckboxInput) {
-            this.setValidity(inputFieldName, validationName, currentInput.checked)
+          // check if input is type radio
+          const isRadioInput = currentInput.getAttribute('type') === 'radio'
+          if (isRadioInput) {
+            const radioInputName = currentInput.getAttribute('name')
+            const radioInputs = this.form.querySelectorAll(`input[name="${radioInputName}"]`)
+            const isRadioInputChecked = Array.from(radioInputs).some(radioInput => radioInput.checked)
+            this.setValidity(radioInputName, validationName, isRadioInputChecked)
           } else {
-            // check if input is type radio
-            const isRadioInput = currentInput.getAttribute('type') === 'radio'
-            if (isRadioInput) {
-              const radioInputName = currentInput.getAttribute('name')
-              const radioInputs = this.form.querySelectorAll(`input[name="${radioInputName}"]`)
-              const isRadioInputChecked = Array.from(radioInputs).some(radioInput => radioInput.checked)
-              this.setValidity(radioInputName, validationName, isRadioInputChecked)
-            } else {
-              const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
-              this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
-            }
+            const isRequiredValidationValid = !!(currentInput.value && currentInput.value.trim().length > 0)
+            this.setValidity(inputFieldName, validationName, isRequiredValidationValid)
           }
         }
       }
@@ -324,7 +319,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const currentValidatedInputErrorTextWrapper = currentValidatedInput.errorTextWrapper ? currentValidatedInput.errorTextWrapper : currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
     const isValidValues = []
-    Object.keys(this.validationValues[inputFieldName]).forEach(key => {
+    if (!currentValidatedInput.hasAttribute('disabled')) Object.keys(this.validationValues[inputFieldName]).forEach(key => {
       if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
       if (!isCurrentValidatedInputErrorTextWrapperFilled) {
         if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
@@ -412,24 +407,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     if (this.submitButton) this.submitButton.disabled = allIsValidValue.includes(false)
   }
 
-  /**
-   * Check if the parent container is hidden to avoid validation
-   * @param {*} currentInput 
-   * @returns 
-   */
-  parentHidden (currentInput) {
-    let parent = currentInput.parentElement;
-
-    while (parent && !parent.hasAttribute('hidden')) {
-      parent = parent.parentElement;
-    }
-
-    if (parent) {
-      return true;
-    } else {
-      return false;
-    }
-  }
   /**
 * renders the css
 */
