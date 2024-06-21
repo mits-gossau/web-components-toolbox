@@ -70,7 +70,12 @@ export default class Body extends Anchor() {
         width: 100%;
         margin: 0;
       }
-      
+      :host > main > .full-width {
+        width: 100%;
+      }
+      :host > main > .no-margin {
+        margin: 0;
+      }
       :host > main > * {
         margin: var(--any-content-spacing, var(--content-spacing, unset)) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--any-content-width, var(--content-width, 55%));
