@@ -71,6 +71,11 @@ export default class MultiLevelNavigation extends Mutation() {
       if (this.isDesktop) this.nav.setAttribute('aria-expanded', 'false')
       if (this.isDesktop && this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
       if (this.isDesktop && currentAriaExpandedAttribute) this.hideAndClearDesktopSubNavigation(event)
+      if (this.isDesktop) {
+        setTimeout(() => {
+          this.setActiveNavigationItemBasedOnUrl()
+        }, 150);
+      }
       if (!this.isDesktop) this.hideAndClearMobileSubNavigation()
     }
 
@@ -224,6 +229,7 @@ export default class MultiLevelNavigation extends Mutation() {
     this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.addEventListener('blur', this.noScroll))
 
     this.recalculateNavigationHeight()
+    this.setActiveNavigationItemBasedOnUrl()
   }
 
   disconnectedCallback() {
@@ -296,6 +302,9 @@ export default class MultiLevelNavigation extends Mutation() {
     :host > nav > ul > li > div.main-background.hide {
       animation: FadeOutBackground 0.3s ease-in-out forwards !important;
     }
+    :host > nav > ul > li.active > a:hover > span {
+      color: var(--color-hover);
+    }
     :host > nav > ul > li.active > a > span {
       border-bottom: 3px solid var(--color-active);
       color: var(--color-active);
@@ -317,7 +326,7 @@ export default class MultiLevelNavigation extends Mutation() {
     :host > nav > ul > li > a:hover,
     :host > nav > ul > li > a:active,
     :host > nav > ul > li > a:focus {
-      color: var(--color-active);
+      color: var(--color-hover);
     }
     :host > nav > ul > li > a:hover > span {
       border-bottom:  var(--a-main-border-width)  var(--a-main-border-style); var(--color-active);
@@ -745,6 +754,10 @@ export default class MultiLevelNavigation extends Mutation() {
     Array.from(this.root.querySelectorAll('li')).forEach(li => {
       if (li.hasAttribute('main-color')) {
         li.style.setProperty('--multi-level-navigation-default-color-active', li.getAttribute('main-color'))
+        li.style.setProperty('--multi-level-navigation-default-color-hover', li.getAttribute('main-color'))
+      }
+      if (li.hasAttribute('hover-color')) {
+        li.style.setProperty('--multi-level-navigation-default-color-hover', li.getAttribute('hover-color'))
       }
     })
   }
@@ -1203,26 +1216,43 @@ export default class MultiLevelNavigation extends Mutation() {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 
-  recalculateNavigationHeight(isInitialCalc) {
-      setTimeout(() => {
-        this.headerHeight = this.getRootNode().host.offsetHeight
-        this.restOfHeight = window.screen.height * 0.9 - this.headerHeight
-        this.oNavWrappers = this.root.querySelectorAll('o-nav-wrapper')
-        if (this.oNavWrappers.length) {
-          this.oNavWrappers.forEach(wrapper => {
-            let allLiChildren = wrapper.querySelectorAll("div[nav-level='1'] > ul > li")
-            if (allLiChildren.length > 9 && window.innerHeight < this.desktopHeightBreakpoint) {
-              let wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
-              wrapper.setAttribute('style', `--multi-level-navigation-default-mobile-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
-              if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
-            }
-            if (allLiChildren.length > 9 && window.innerHeight > this.desktopHeightBreakpoint) {
-              let wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
-              wrapper.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
-              if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
-            }
-          })
-        }
-      }, 1000);
+  recalculateNavigationHeight() {
+    setTimeout(() => {
+      this.headerHeight = this.getRootNode().host.offsetHeight
+      this.restOfHeight = window.screen.height * 0.9 - this.headerHeight
+      this.oNavWrappers = this.root.querySelectorAll('o-nav-wrapper')
+      if (this.oNavWrappers.length) {
+        this.oNavWrappers.forEach(wrapper => {
+          let allLiChildren = wrapper.querySelectorAll("div[nav-level='1'] > ul > li")
+          if (allLiChildren.length > 9 && window.innerHeight < this.desktopHeightBreakpoint) {
+            let wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
+            wrapper.setAttribute('style', `--multi-level-navigation-default-mobile-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
+            if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
+          }
+          if (allLiChildren.length > 9 && window.innerHeight > this.desktopHeightBreakpoint) {
+            let wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
+            wrapper.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
+            if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
+          }
+        })
+      }
+    }, 1000);
+  }
+
+  setActiveNavigationItemBasedOnUrl() {
+    let subUrls = []
+    let navigationItemsUrlNames = []
+    let navigationItems = Array.from(this.root.querySelectorAll('nav > ul > li[url-name]'))
+
+    // get first 2 subdomain of current url
+    window.location.pathname.split('/')?.filter((subUrl) => subUrl).slice(0, 2).forEach((urlName) => subUrls.push(urlName.toLowerCase()))
+    // get the url name attributes of the main li navigation items
+    navigationItems.forEach(li => navigationItemsUrlNames.push(li.getAttribute('url-name').toLowerCase()))
+
+    if (subUrls.length > 0 && navigationItemsUrlNames.length > 0) {
+      let activeNavigationName = navigationItemsUrlNames.filter((navUrl) => subUrls.includes(navUrl))[0]
+      let activeNavigationItem = navigationItems?.filter((item) => item.getAttribute('url-name').toLowerCase() === activeNavigationName)[0]
+      activeNavigationItem?.classList.add('active')
+    }
   }
 }
