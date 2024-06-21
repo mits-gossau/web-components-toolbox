@@ -9,7 +9,8 @@
   --multi-level-navigation-delica-a-main-font-weight: 500;
   --multi-level-navigation-delica-a-main-border-width: 3px;
   --multi-level-navigation-delica-a-main-border-style: solid;
-  --multi-level-navigation-delica-desktop-main-wrapper-height: fit-content;
+  --multi-level-navigation-delica-desktop-main-wrapper-height: auto;
+  --multi-level-navigation-delica-desktop-main-wrapper-background-color: var(--color-secondary, white);
   --multi-level-navigation-delica-desktop-main-wrapper-border-width: 1px;
   --multi-level-navigation-delica-desktop-main-wrapper-border-style: solid;
   --multi-level-navigation-delica-desktop-main-wrapper-border-color: #E0E0E0;
