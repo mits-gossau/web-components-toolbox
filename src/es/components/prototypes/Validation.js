@@ -368,7 +368,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         p.hidden = true
       })
       if (+currentErrorMessageIndex === -1) return
-      //errorMessages[currentErrorMessageIndex].hidden = false
+      errorMessages[currentErrorMessageIndex].hidden = false
     }
   }
 
