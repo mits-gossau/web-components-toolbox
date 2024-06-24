@@ -433,11 +433,14 @@ export default class MultiLevelNavigation extends Mutation() {
       --a-color: var(--color-active);
       --a-color-hover: var(--color-active);
     }
+    :host > nav > ul > li > o-nav-wrapper > section ul li {
+      --ul-li-padding-left: 0;
+    }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a > span {
       font-size: 0.8em !important;
       color: var(--color) !important;
       font-weight: 300 !important;
-      padding-left: 0.2em;
+      padding-left: 0.5rem;
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a:hover > span {
       text-decoration: underline;
@@ -476,7 +479,7 @@ export default class MultiLevelNavigation extends Mutation() {
       :host .navigation-back {
         display: flex;
         width: fit-content;
-        padding: var(--content-spacing-mobile);
+        padding: var(--a-main-mobile-padding);
         color: var(--color);
         font-weight: 500;
         margin: 0;
@@ -500,6 +503,7 @@ export default class MultiLevelNavigation extends Mutation() {
         font-weight: 300;
         font-size: 0.8em;
         color: var(--color);
+        padding: 0.3rem;
       }
       :host > nav {
         position: relative;
@@ -534,12 +538,16 @@ export default class MultiLevelNavigation extends Mutation() {
         width: 100%;
         margin: 2px 0;
       }
+      :host > nav > div[nav-level] ul {
+        padding-left: 0.5rem;
+      }
       :host > nav > ul > li > a {
         display: flex;
         justify-content: space-between;
         margin: 0;
         font-weight: 500;
         font-size: var(--a-main-mobile-font-size, 1rem);
+        padding: var(--a-main-mobile-padding);
       }
       :host > nav > ul > li > a > span {
        padding: 0;
@@ -645,7 +653,7 @@ export default class MultiLevelNavigation extends Mutation() {
     :host li m-nav-level-item {
       --nav-level-item-default-font-size: 1em;
       --nav-level-item-default-height: 2.75em;
-      --nav-level-item-default-margin: 2px;
+      --nav-level-item-default-margin: 2px 2px 2px 0;
       --nav-level-item-default-font-weight: 500;
       --nav-level-item-default-hover-background-color: #E0F0FF;
       --color: var(--a-color);
@@ -1060,7 +1068,11 @@ export default class MultiLevelNavigation extends Mutation() {
 
         // Add class for title li a element
         const subTitleLiTags = Array.from(wrapper.querySelectorAll('li')).filter(li => !li.querySelector('m-nav-level-item'))
-        subTitleLiTags.forEach(li => li.classList.add('list-title'))
+        subTitleLiTags.forEach(li => {
+          li.classList.add('list-title')
+          li.childNodes[0].nextElementSibling.firstChild.textContent = li.childNodes[0].nextElementSibling.firstChild.textContent.trim()
+        }
+        )
 
         // add subUl id based on sub-nav-id to have aria-controls connection
         const subUlElements = Array.from(wrapper.querySelectorAll('ul')).filter(ul => ul.hasAttribute('sub-nav-id'))
