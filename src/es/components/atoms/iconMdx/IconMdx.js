@@ -44,7 +44,12 @@ export default class IconMdx extends Hover() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.hasAttribute('request-event-name')) this.addEventListener('click', this.clickListener)
     Promise.all(showPromises).then(() => (this.hidden = false))
+  }
+
+  disconnectedCallback () {
+    if (this.hasAttribute('request-event-name')) this.removeEventListener('click', this.clickListener)
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -188,6 +193,18 @@ export default class IconMdx extends Hover() {
       this.html = ''
       this.html = html
       this.root.querySelector('svg')?.setAttribute('part', 'svg')
+    })))
+  }
+
+  clickListener = event => {
+    this.getAttribute('request-event-name').split(',').forEach(eventName => this.dispatchEvent(new CustomEvent(eventName, {
+      detail: {
+        origEvent: event,
+        this: this
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
     })))
   }
 
