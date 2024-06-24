@@ -40,9 +40,11 @@ export default class IconMdx extends Hover() {
       // @ts-ignore
       this.customNotification = IconMdx.parseAttribute(this.getAttribute('custom-notification'))
     }
-
-    if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
+    this.hidden = true
+    const showPromises = []
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -76,7 +78,7 @@ export default class IconMdx extends Hover() {
   /**
    * renders the css
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderCSS () {
     this.css = /* css */`
@@ -160,6 +162,7 @@ export default class IconMdx extends Hover() {
     // TODO: check if the part below is needed!?
     // font-family can have an effect on size on the bounding h-tag with .bg-color
     // if (this.parentElement && this.parentElement.children.length === 1) this.parentElement.setAttribute('style', 'font-family: inherit')
+    return Promise.resolve()
   }
 
   // TODO: Templates
@@ -171,7 +174,7 @@ export default class IconMdx extends Hover() {
   /**
    * renders the html
    *
-   * @return {void}
+   * @return {Promise<void>}
    */
   renderHTML () {
     this.html = ''
@@ -181,11 +184,11 @@ export default class IconMdx extends Hover() {
         ? this.importMetaUrl + this.getAttribute('icon-url')
         : this.getAttribute('icon-url')}`
       : `${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${(this.lastFetchedIconName = this.iconName)}/Size_${this.getAttribute('icon-size') || '56x56'}.svg`
-    this.fetch = this.fetchHTML([iconPath], true).then(htmls => htmls.forEach(html => {
+    return (this.fetch = this.fetchHTML([iconPath], true).then(htmls => htmls.forEach(html => {
       this.html = ''
       this.html = html
       this.root.querySelector('svg')?.setAttribute('part', 'svg')
-    }))
+    })))
   }
 
   get iconName () {
