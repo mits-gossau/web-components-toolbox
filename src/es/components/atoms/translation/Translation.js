@@ -13,31 +13,15 @@ export default class Translation extends Shadow() {
     return ['data-trans-key', 'key']
   }
 
-  constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, mode: 'false', ...options }, ...args)
-  }
-
   connectedCallback () {
     this.hidden = true
-    this.key = this.getAttribute('data-trans-key') || this.getAttribute('key')
     this.renderHTML();
-    (new Promise(resolve => this.dispatchEvent(new CustomEvent('request-translations', {
-      detail: {
-        resolve
-      },
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }
-    )))).then(async ({ getTranslation }) => {
-      if (this.key) this.renderHTML(await getTranslation(this.key))
-    }).finally(() => {
-      this.hidden = false
-    })
+    this.getTranslationAndRenderHTML().finally(() => (this.hidden = false))
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
-    this.connectedCallback()
+    if (oldValue === null || oldValue === newValue) return
+    this.getTranslationAndRenderHTML()
   }
 
   /**
@@ -47,9 +31,7 @@ export default class Translation extends Shadow() {
   renderHTML (text = this.key || '[No translation key]') {
     this.html = ''
 
-    if (this.hasAttribute('replace-line-breaks')) {
-      text = text.replaceAll('\n', '<br />')
-    }
+    if (this.hasAttribute('replace-line-breaks')) text = text.replaceAll('\n', '<br />')
     if (this.hasAttribute('params')) {
       const params = JSON.parse(this.getAttribute('params')) ?? {}
       Object.keys(params).forEach(key => {
@@ -58,5 +40,25 @@ export default class Translation extends Shadow() {
     }
 
     this.html = text
+  }
+
+  getTranslationAndRenderHTML () {
+    if (this.key) {
+      return (new Promise(resolve => this.dispatchEvent(new CustomEvent('request-translations', {
+        detail: {
+          resolve
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }
+      )))).then(async ({ getTranslation }) => this.renderHTML(await getTranslation(this.key)))
+    } else {
+      return Promise.reject()
+    }
+  }
+
+  get key () {
+    return this.getAttribute('data-trans-key') || this.getAttribute('key')
   }
 }
