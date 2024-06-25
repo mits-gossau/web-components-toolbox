@@ -106,28 +106,23 @@ export default class Input extends Shadow() {
         if (this.searchButton) this.searchButton.addEventListener('click', this.clickListener)
         if (this.hasAttribute('change-listener') && this.inputField) this.inputField.addEventListener('change', this.changeListener)
         if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.addEventListener('focus', this.focusListener)
+        document.addEventListener('keydown', this.keydownListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
-        if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
       }
+      if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
       this.hidden = false
     })
-    if ((this.hasAttribute('submit-search') || (this.search && this.searchButton)) && !this.readonly && !this.disabled && !this.error) {
-      document.addEventListener('keydown', this.keydownListener)
-    }
   }
 
   disconnectedCallback () {
     if ((this.hasAttribute('submit-search') || (this.search && this.searchButton)) && !this.readonly && !this.disabled && !this.error) {
-      if (this.hasAttribute('delete-listener')) {
-        this.removeEventListener('click', this.clickListener)
-      } else if (this.searchButton) {
-        this.searchButton.removeEventListener('click', this.clickListener)
-      }
+      if (this.hasAttribute('delete-listener')) this.removeEventListener('click', this.clickListener)
+      if (this.searchButton) this.searchButton.removeEventListener('click', this.clickListener)
       if (this.hasAttribute('change-listener') && this.inputField) this.inputField.removeEventListener('change', this.changeListener)
       if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.removeEventListener('focus', this.focusListener)
       document.removeEventListener('keydown', this.keydownListener)
-      if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     }
+    if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
 
   attributeChangedCallback (name) {
