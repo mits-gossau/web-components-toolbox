@@ -6,6 +6,17 @@
     margin: var(--simple-form-miduweb-hr-margin, var(--content-spacing) auto);
 }
 
+label {
+    color: var(--mdx-comp–inputfield-label-color-default);
+    font: var(--mdx-comp-inputfield-font-label);
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
 /** Temporary copied form Form.js, TODO: Please adjust */
 select{
     font-family: var(--font-family, inherit);
