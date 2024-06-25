@@ -321,7 +321,7 @@ export default class MultiLevelNavigation extends Mutation() {
       content: "";
       display: block;
       height: var(--a-main-border-width);
-      width: 95%;
+      width: 90%;
       transform: translate(50%,50%);
     }
     :host > nav > ul > li > a:hover:after {
