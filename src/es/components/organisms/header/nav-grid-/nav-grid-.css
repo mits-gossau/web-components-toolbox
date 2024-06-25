@@ -169,7 +169,7 @@
         position: absolute;
         grid-area: menu-icon;
         order: 0;
-        --header-nav-grid-a-menu-icon-padding: 1.3rem 2rem;
+        --header-nav-grid-a-menu-icon-padding: 1.3rem 0.5rem 1.3rem 2rem;
         --header-nav-grid-a-menu-icon-padding-open: 1.5rem;
         --header-nav-grid-a-menu-icon-margin: 0 -2rem 0 0;
     }
