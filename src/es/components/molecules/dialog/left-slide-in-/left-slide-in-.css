@@ -22,12 +22,13 @@ body:has(dialog[open]) {
   width: 100%;
   max-width: var(--dialog-left-slide-in-max-width-custom, min(100%, 560px));
   overflow: hidden;
-  z-index: var(--dialog-left-slide-in-z-index-custom, 99);
+  z-index: var(--dialog-left-slide-in-z-index-custom, 9999);
   display: flex;
   gap: var(--dialog-left-slide-in-gap-custom, normal);
   justify-content: var(--dialog-left-slide-in-justify-content-custom, normal);
   align-items: var(--dialog-left-slide-in-align-items-custom, normal);
   flex-direction: var(--dialog-left-slide-in-flex-direction-custom, column);
+  top: 0;
 }
 
 :host>dialog.closed {

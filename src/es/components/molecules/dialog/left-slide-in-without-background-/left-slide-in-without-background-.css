@@ -28,9 +28,10 @@ body:has(dialog[open]) {
   width: 100%;
   max-width: min(100%, 560px);
   overflow: hidden;
-  z-index: 99;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
+  top: 0;
 }
 
 :host>dialog.closed {
