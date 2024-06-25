@@ -130,6 +130,10 @@ export default class Dialog extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+      :host {
+        --outline-style: none;
+        outline: none;
+      }
       :host > dialog {
         background-color: var(--background-color, canvas);
       }

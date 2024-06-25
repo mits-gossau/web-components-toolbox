@@ -156,6 +156,8 @@ export default class Input extends Shadow() {
       }
 
       :host {
+        --outline-style: none;
+        outline: none;
         display: block;
         ${this.getAttribute('icon-size')
           ? `
