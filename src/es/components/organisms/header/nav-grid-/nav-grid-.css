@@ -38,15 +38,17 @@
 }
 
 :host>header>a-logo {
+    position: relative;
+    --logo-default-a-display: flex;
     --logo-default-a-height: 100px;
     --logo-default-max-height: 100px;
-    --logo-default-img-position: absolute;
-    --logo-default-img-position-bottom: 0;
+    --logo-default-max-width: 300px;
     --logo-default-width: auto;
+    --logo-default-img-position: unset;
     --logo-default-justify-content: start;
     --logo-default-object-fit: contain;
+    --logo-default-img-margin: auto 0 0 0;
     grid-area: logo;
-    position: relative;
     transform: none;
     left: 0;
     top: 0;
@@ -169,7 +171,7 @@
         position: absolute;
         grid-area: menu-icon;
         order: 0;
-        --header-nav-grid-a-menu-icon-padding: 1.3rem 2rem;
+        --header-nav-grid-a-menu-icon-padding: 1.3rem 0.5rem 1.3rem 2rem;
         --header-nav-grid-a-menu-icon-padding-open: 1.5rem;
         --header-nav-grid-a-menu-icon-margin: 0 -2rem 0 0;
     }

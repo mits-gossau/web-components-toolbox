@@ -286,6 +286,7 @@ export default class MultiLevelNavigation extends Mutation() {
       display: block;
       padding: var(--li-padding, 0);
       --a-transition: none;
+      --a-main-content-spacing:  1rem 1rem 0 1rem;
     }
     :host > nav > ul > li > div.main-background {
       display: none;
@@ -306,11 +307,29 @@ export default class MultiLevelNavigation extends Mutation() {
     :host > nav > ul > li.active > a:hover > span {
       color: var(--color-hover);
     }
+    :host > nav > ul > li.active > a:after {
+      background-color: var(--color-active);
+    }
     :host > nav > ul > li.active > a > span {
-      border-bottom: 3px solid var(--color-active);
       color: var(--color-active);
     }
+    :host > nav > ul > li > a:after {
+      position: absolute;
+      bottom: -0.75rem;
+      right: 50%;
+      background-color: transparent;
+      content: "";
+      display: block;
+      height: var(--a-main-border-width);
+      width: 90%;
+      transform: translate(50%,50%);
+    }
+    :host > nav > ul > li > a:hover:after {
+      background-color: var(--color-active);
+    }
     :host > nav > ul > li > a {
+      position:relative;
+      display: var(--a-main-display, inline);
       color: var(--color);
       padding: var(--a-main-content-spacing, 14px 10px);
       font-size: var(--a-main-font-size, 1rem);
@@ -319,18 +338,17 @@ export default class MultiLevelNavigation extends Mutation() {
       text-transform: var(--a-main-text-transform);
       font-family: var(--a-main-font-family, var(--font-family));
       font-weight: var(--a-font-weight, var(--font-weight, normal));
+      text-align: var(--a-text-align, center);
+      --content-spacing: 0;
     }
     :host > nav > ul > li > a > span {
-      padding: 0 0 0.5em 0;
+      padding: 0 0 0.75rem 0;
       font-weight: var(--a-main-font-weight, 400);
     }
     :host > nav > ul > li > a:hover,
     :host > nav > ul > li > a:active,
     :host > nav > ul > li > a:focus {
       color: var(--color-hover);
-    }
-    :host > nav > ul > li > a:hover > span {
-      border-bottom:  var(--a-main-border-width)  var(--a-main-border-style); var(--color-active);
     }
     :host > nav > ul > li > o-nav-wrapper {
       display: none !important;
@@ -523,9 +541,6 @@ export default class MultiLevelNavigation extends Mutation() {
         height: 100%;
         overflow: auto;
       }
-      :host > nav > ul > li > a:hover > span {
-        border-bottom: none;
-      }
       :host > nav > div {
         position: absolute;
         border-top: var(--mobile-wrapper-border-width, 1px) var(--mobile-wrapper-border-style, solid) var(--mobile-wrapper-border-color, black);
@@ -551,6 +566,9 @@ export default class MultiLevelNavigation extends Mutation() {
         font-weight: 500;
         font-size: var(--a-main-mobile-font-size, 1rem);
         padding: var(--a-main-mobile-padding);
+      }
+      :host > nav > ul > li > a:after{
+        display: none;
       }
       :host > nav > ul > li > a > span {
        padding: 0;
@@ -911,9 +929,14 @@ export default class MultiLevelNavigation extends Mutation() {
 
     // clean state between main li switching
     if (event.currentTarget.parentNode?.parentNode?.parentNode?.tagName === 'NAV') {
+      let logoWidth = Math.ceil(this.parentElement.querySelector('a-logo').getBoundingClientRect()['width']) + 'px'
+      let currentUlElement = this.root.querySelector('nav > ul')
+      let ulPositionObj = currentUlElement.getBoundingClientRect()
+      currentUlElement.style.setProperty('--multi-level-navigation-default-o-nav-wrapper-top', `calc(1.25rem + ${ulPositionObj['height'] + 1}px)`)
+      currentUlElement.style.setProperty('--multi-level-navigation-default-logo-default-width', `${logoWidth}`)
       this.nav.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
-      isFlyoutOpen = Array.from(this.root.querySelector('nav > ul').querySelectorAll(':scope > li')).some(el => el.classList.contains('open'))
+      isFlyoutOpen = Array.from(currentUlElement.querySelectorAll(':scope > li')).some(el => el.classList.contains('open'))
       if (this.hasAttribute('close-other-flyout')) this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', { bubbles: true, cancelable: true, composed: true }))
       this.addBackgroundDivPosition(event, isFlyoutOpen)
       this.hideAndClearDesktopSubNavigation(event)
@@ -1219,7 +1242,7 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   addBackgroundDivPosition(event, isFlyoutOpen) {
-    const backgroundTopPosition = event.pageY + 50
+    const backgroundTopPosition = event.pageY + 150
     const mainFlyoutBackgroundDiv = event.currentTarget.parentElement.querySelector('.main-background')
     if (mainFlyoutBackgroundDiv) {
       mainFlyoutBackgroundDiv.style.top = `${backgroundTopPosition}px`
