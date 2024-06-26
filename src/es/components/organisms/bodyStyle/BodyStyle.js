@@ -129,7 +129,7 @@ export default class BodyStyle extends Intersection(Body) {
     this.css = /* css */`
       :host {
         ${Array.from(this.attributes).reduce((acc, attribute) => {
-          if (!attribute || !attribute.name || !attribute.value || attribute.name.includes('aria') || attribute.name.includes('tabindex') || attribute.name.includes('id') || attribute.name.includes('class') || attribute.name.includes('style')) return acc
+          if (!attribute || !attribute.name || !attribute.value || attribute.name.includes('aria') || attribute.name.includes('tabindex') || attribute.name === 'id' || attribute.name.includes('class') || attribute.name.includes('style')) return acc
           if (attribute.name.includes('-before')) {
             if (attribute.name.includes('-mobile')) {
               attributesBeforeMobile.push(attribute)
