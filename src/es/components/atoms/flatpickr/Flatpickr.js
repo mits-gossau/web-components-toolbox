@@ -106,6 +106,7 @@ export default class Flatpickr extends Shadow() {
         font-weight: var(--label-font-weight, normal);
         gap: var(--label-gap, 1em);
         justify-content: var(--justify-content, flex-start);
+        line-height: var(--label-line-height, normal);
       }
       :host .flatpickr-input.active {
         background-color: var(--background-color-active, transparent);
