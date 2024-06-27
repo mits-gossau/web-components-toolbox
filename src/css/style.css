@@ -613,6 +613,10 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     font-size: calc(0.75 * var(--p-font-size, 1em));
     line-height: var(--line-height, normal);
   }
+  /*conditional rendering*/
+  *:where([show-only-mobile]) {
+    display: none !important;
+  }
 }
 @media only screen and (max-width: _max-width_) {
   /* h-tags */
@@ -750,6 +754,10 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   }
   .spacer-four {
     height: var(--spacer-four-height-mobile, var(--spacer-four-height, calc(4 * var(--content-spacing-mobile, var(--content-spacing)))));
+  }
+  /*conditional rendering*/
+  :where([show-only-desktop]) {
+    display: none !important;
   }
 }
 @container style(--h-border-after: true) {
