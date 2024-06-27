@@ -31,7 +31,7 @@ export default class MultiLevelNavigation extends Mutation() {
     this.removeElementAfterAnimationDurationMs = this.animationDurationMs + 50
     this.desktopHeightBreakpoint = 800
     this.isHigherDevice = window.innerHeight > this.desktopHeightBreakpoint
-    this.hoverDelay = this.hasAttribute('navigation-hover-delay') || 85
+    this.hoverDelay = this.hasAttribute('navigation-hover-delay') || 100
 
     this.resizeListener = event => {
       const oldIsDesktopValue = this.isDesktop
