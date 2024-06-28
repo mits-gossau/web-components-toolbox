@@ -567,6 +567,7 @@ export default class MultiLevelNavigation extends Mutation() {
         font-weight: 500;
         font-size: var(--a-main-mobile-font-size, 1rem);
         padding: var(--a-main-mobile-padding);
+        line-height: var(--a-main-mobile-line-height);
       }
       :host > nav > ul > li > a:after{
         display: none;
@@ -574,6 +575,7 @@ export default class MultiLevelNavigation extends Mutation() {
       :host > nav > ul > li > a > span {
        padding: 0;
        color: var(--color) !important;
+       align-self: center;
       }
     }
     /*Animations */
