@@ -156,12 +156,12 @@ export default class Dialog extends Shadow() {
         cursor: var(--dialog-backdrop-cursor, pointer);
       }
       :host > dialog:modal {
-        height: var(--dialog-height, auto);
+        height: var(--dialog-height, fit-content);
       }
       /* Mobile layout */
     @media only screen and (max-width: _max-width_) {
       :host > dialog:modal {
-        height: var(--dialog-mobile-height, var(--dialog-height, auto));
+        height: var(--dialog-mobile-height, var(--dialog-height, fit-content));
       }
     }
       
