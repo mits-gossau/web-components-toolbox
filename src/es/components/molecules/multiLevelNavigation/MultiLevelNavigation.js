@@ -65,7 +65,6 @@ export default class MultiLevelNavigation extends Mutation() {
         this.recalculateNavigationHeight()
         this.isHigherDevice = window.innerHeight > this.desktopHeightBreakpoint
       }
-      // this.resizeMainNavItemATags()
     }
 
     this.selfClickListener = (event) => {
@@ -1295,16 +1294,4 @@ export default class MultiLevelNavigation extends Mutation() {
       activeNavigationItem?.classList.add('active')
     }
   }
-
-  // resizeMainNavItemATags() {
-  //   let mainATags = Array.from(this.root.querySelectorAll('nav > ul > li:not([only-mobile],[show-only-mobile]) > a'))
-  //   if (mainATags.length > 0) {
-  //       mainATags.forEach((aTag) => {
-  //         aTag.style.width = 'auto'
-  //         // let aTagWidth = aTag.offsetWidth
-  //         let childSpanWidth = aTag.querySelector('span').offsetWidth + 20 +'px'
-  //         aTag.style.width = childSpanWidth
-  //       })
-  //   }
-  // }
 }
