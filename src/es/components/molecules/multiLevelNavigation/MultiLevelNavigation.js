@@ -575,6 +575,7 @@ export default class MultiLevelNavigation extends Mutation() {
       :host > nav > ul > li > a > span {
        padding: 0;
        color: var(--color) !important;
+       align-self: center;
       }
     }
     /*Animations */
