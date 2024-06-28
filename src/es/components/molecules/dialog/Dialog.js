@@ -28,7 +28,6 @@ export default class Dialog extends Shadow() {
       Array.from(dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
     }
     this.close = async () => {
-      this.root.querySelector('dialog a-input').root.querySelector('div > input').blur()
       const dialog = await this.dialogPromise
       this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
       dialog.classList.add('closed')
@@ -50,9 +49,9 @@ export default class Dialog extends Shadow() {
     this.showClickEventListener = event => {
       event.stopPropagation()
       if (event.target.getAttribute('id') === 'show') {
-        this.show().then(() => this.detectIOSAutofocusInput())
+        this.show()
       } else {
-        this.show('showModal').then(() => this.detectIOSAutofocusInput())
+        this.show('showModal')
       }
     }
     this.closeClickEventListener = event => {
@@ -214,35 +213,6 @@ export default class Dialog extends Shadow() {
     })
     this.html = this.dialog
     return Promise.resolve()
-  }
-
-  detectIOSAutofocusInput () {
-    // @ts-ignore
-    let customInput = this.constructor.isIOS && this.root.querySelector('dialog [autofocus], dialog [autofocus-helper]')
-    if (customInput) {
-      // console.log("customInput before",  customInput)
-      // customInput.dispatchEvent(new KeyboardEvent('touchstart',{
-      //   bubbles: true,
-      //   cancelable: true,
-      //   composed: true
-      // }))
-      if (customInput.root) customInput = customInput.root.querySelector(':host input')
-      const tmpElement = document.createElement('input')
-      tmpElement.style.width = '0'
-      tmpElement.style.height = '0'
-      tmpElement.style.margin = '0'
-      tmpElement.style.padding = '0'
-      tmpElement.style.border = '0'
-      tmpElement.style.opacity = '0'
-      document.body.appendChild(tmpElement)
-      tmpElement.focus()
-
-      setTimeout(() => {
-        // Focus the main (input) element, thus opening iOS keyboard
-        customInput.focus()
-        tmpElement.remove()
-      }, 0)
-    }
   }
 
   get showNodes () {
