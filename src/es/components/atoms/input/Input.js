@@ -417,7 +417,10 @@ export default class Input extends Shadow() {
           <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} ${this.hasAttribute('disabled') ? 'disabled' : ''} ${this.hasAttribute('pointer') ? 'class="pointer"' : ''} />
           ${searchHtml}
       `
-      if (this.hasAttribute('autofocus')) this.removeAttribute('autofocus')
+      if (this.hasAttribute('autofocus')) {
+        this.setAttribute('autofocus-helper', '')
+        this.removeAttribute('autofocus')
+      }
       this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint')
         ? this.getAttribute('enterkeyhint')
         : this.search
