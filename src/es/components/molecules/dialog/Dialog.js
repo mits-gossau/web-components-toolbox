@@ -48,7 +48,7 @@ export default class Dialog extends Shadow() {
       }
     }
     this.showClickEventListener = event => {
-      //event.stopPropagation()
+      event.stopPropagation()
       if (event.target.getAttribute('id') === 'show') {
         this.show().then(() => this.detectIOSAutofocusInput())
       } else {
@@ -237,7 +237,6 @@ export default class Dialog extends Shadow() {
       document.body.appendChild(tmpElement)
       tmpElement.focus()
 
-      console.log("customInput", customInput)
       setTimeout(() => {
          // Focus the main (input) element, thus opening iOS keyboard
         customInput.focus()
