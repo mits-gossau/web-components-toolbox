@@ -9,7 +9,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class Dialog extends Shadow() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     /**
@@ -28,6 +28,7 @@ export default class Dialog extends Shadow() {
       Array.from(dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
     }
     this.close = async () => {
+      this.root.querySelector('dialog a-input').root.querySelector('div > input').blur()
       const dialog = await this.dialogPromise
       this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
       dialog.classList.add('closed')
@@ -47,11 +48,11 @@ export default class Dialog extends Shadow() {
       }
     }
     this.showClickEventListener = event => {
-      event.stopPropagation()
+      //event.stopPropagation()
       if (event.target.getAttribute('id') === 'show') {
-        this.show()
+        this.show().then(() => this.detectIOSAutofocusInput())
       } else {
-        this.show('showModal')
+        this.show('showModal').then(() => this.detectIOSAutofocusInput())
       }
     }
     this.closeClickEventListener = event => {
@@ -70,7 +71,7 @@ export default class Dialog extends Shadow() {
     this.dialogPromise = new Promise(resolve => (this.dialogResolve = resolve))
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.hidden = true
     this.showNodes.forEach(node => (node.style.display = 'none'))
     this.closeNodes.forEach(node => (node.style.display = 'none'))
@@ -97,7 +98,7 @@ export default class Dialog extends Shadow() {
     document.addEventListener('keyup', this.keyupListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     // From web components the event does not bubble up to this host
     this.showNodes.forEach(node => node.removeEventListener('click', this.showClickEventListener))
     this.closeNodes.forEach(node => node.removeEventListener('click', this.closeClickEventListener))
@@ -112,7 +113,7 @@ export default class Dialog extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -121,14 +122,14 @@ export default class Dialog extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.dialog
   }
 
   /**
    * renders the css
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         --outline-style: none;
@@ -150,7 +151,7 @@ export default class Dialog extends Shadow() {
   /**
    * fetches the template
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -202,7 +203,7 @@ export default class Dialog extends Shadow() {
    * Render HTML
    * @returns Promise<void>
    */
-  renderHTML () {
+  renderHTML() {
     this.dialogResolve(this.dialog = this.root.querySelector(this.cssSelector + ' > dialog') || document.createElement('dialog'))
     if (this.hasAttribute('autofocus')) this.dialog.setAttribute('autofocus', '')
     Array.from(this.root.children).forEach(node => {
@@ -215,11 +216,41 @@ export default class Dialog extends Shadow() {
     return Promise.resolve()
   }
 
-  get showNodes () {
+  detectIOSAutofocusInput() {
+    // @ts-ignore
+    let customInput = this.constructor.isIOS && this.root.querySelector('dialog [autofocus], dialog [autofocus-helper]')
+    if (customInput) {
+      // console.log("customInput before",  customInput)
+      // customInput.dispatchEvent(new KeyboardEvent('touchstart',{
+      //   bubbles: true,
+      //   cancelable: true,
+      //   composed: true
+      // }))
+      if (customInput.root) customInput = customInput.root.querySelector(':host input')
+      const tmpElement = document.createElement('input')
+      tmpElement.style.width = '0'
+      tmpElement.style.height = '0'
+      tmpElement.style.margin = '0'
+      tmpElement.style.padding = '0'
+      tmpElement.style.border = '0'
+      tmpElement.style.opacity = '0'
+      document.body.appendChild(tmpElement)
+      tmpElement.focus()
+
+      console.log("customInput", customInput)
+      setTimeout(() => {
+         // Focus the main (input) element, thus opening iOS keyboard
+        customInput.focus()
+        tmpElement.remove()
+      }, 0);
+    }
+  }
+
+  get showNodes() {
     return Array.from(this.root.querySelectorAll('[id^=show],[id=open]'))
   }
 
-  get closeNodes () {
+  get closeNodes() {
     return Array.from(this.root.querySelectorAll('[id^=close]'))
   }
 }
