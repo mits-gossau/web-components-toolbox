@@ -65,7 +65,7 @@ export default class Input extends Shadow() {
       if (!this.hasAttribute('any-key-listener') && event.keyCode !== 13) return
       // @ts-ignore
       clearTimeout(this.keydownTimeoutId)
-      this.keydownTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : (this.getAttribute("any-key-listener") || 1000)) // no timeout on enter
+      this.keydownTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : (this.getAttribute('any-key-listener') || 1000)) // no timeout on enter
     }
     this.answerEventListener = async event => {
       let searchTerm = event.detail.searchTerm

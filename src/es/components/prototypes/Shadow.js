@@ -379,23 +379,23 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     return navigator.userAgent.includes('Mac')
   }
 
-    /**
+  /**
    * check if is IOS device
    *
    * @static
    * @readonly
    * @return {boolean}
    */
-    static get isIOS () {
-      return [
-        'iPad Simulator',
-        'iPhone Simulator',
-        'iPod Simulator',
-        'iPad',
-        'iPhone',
-        'iPod'
-      ].includes(navigator.platform) 
-    }
+  static get isIOS () {
+    return [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod'
+    ].includes(navigator.platform)
+  }
 
   /**
    * fetches any css and applies namespace, etc.

@@ -15,7 +15,7 @@ export default class Translation extends Shadow() {
 
   connectedCallback () {
     this.hidden = true
-    this.renderHTML();
+    this.renderHTML()
     this.getTranslationAndRenderHTML().finally(() => (this.hidden = false))
   }
 
@@ -54,7 +54,7 @@ export default class Translation extends Shadow() {
       }
       )))).then(async ({ getTranslation }) => this.renderHTML(await getTranslation(this.key)))
     } else {
-      return Promise.reject()
+      return Promise.reject() // eslint-disable-line prefer-promise-reject-errors
     }
   }
 

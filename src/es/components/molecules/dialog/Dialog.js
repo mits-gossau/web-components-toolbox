@@ -9,7 +9,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class Dialog extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     /**
@@ -71,7 +71,7 @@ export default class Dialog extends Shadow() {
     this.dialogPromise = new Promise(resolve => (this.dialogResolve = resolve))
   }
 
-  connectedCallback() {
+  connectedCallback () {
     this.hidden = true
     this.showNodes.forEach(node => (node.style.display = 'none'))
     this.closeNodes.forEach(node => (node.style.display = 'none'))
@@ -98,7 +98,7 @@ export default class Dialog extends Shadow() {
     document.addEventListener('keyup', this.keyupListener)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     // From web components the event does not bubble up to this host
     this.showNodes.forEach(node => node.removeEventListener('click', this.showClickEventListener))
     this.closeNodes.forEach(node => node.removeEventListener('click', this.closeClickEventListener))
@@ -113,7 +113,7 @@ export default class Dialog extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -122,14 +122,14 @@ export default class Dialog extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.dialog
   }
 
   /**
    * renders the css
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         --outline-style: none;
@@ -151,7 +151,7 @@ export default class Dialog extends Shadow() {
   /**
    * fetches the template
    */
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -203,7 +203,7 @@ export default class Dialog extends Shadow() {
    * Render HTML
    * @returns Promise<void>
    */
-  renderHTML() {
+  renderHTML () {
     this.dialogResolve(this.dialog = this.root.querySelector(this.cssSelector + ' > dialog') || document.createElement('dialog'))
     if (this.hasAttribute('autofocus')) this.dialog.setAttribute('autofocus', '')
     Array.from(this.root.children).forEach(node => {
@@ -216,7 +216,7 @@ export default class Dialog extends Shadow() {
     return Promise.resolve()
   }
 
-  detectIOSAutofocusInput() {
+  detectIOSAutofocusInput () {
     // @ts-ignore
     let customInput = this.constructor.isIOS && this.root.querySelector('dialog [autofocus], dialog [autofocus-helper]')
     if (customInput) {
@@ -238,18 +238,18 @@ export default class Dialog extends Shadow() {
       tmpElement.focus()
 
       setTimeout(() => {
-         // Focus the main (input) element, thus opening iOS keyboard
+        // Focus the main (input) element, thus opening iOS keyboard
         customInput.focus()
         tmpElement.remove()
-      }, 0);
+      }, 0)
     }
   }
 
-  get showNodes() {
+  get showNodes () {
     return Array.from(this.root.querySelectorAll('[id^=show],[id=open]'))
   }
 
-  get closeNodes() {
+  get closeNodes () {
     return Array.from(this.root.querySelectorAll('[id^=close]'))
   }
 }

@@ -11,7 +11,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    * @param {{ValidationInit: {level?: number|undefined, selector?: string|undefined}|undefined}} options
    * @param {*} args
    */
-  constructor(options = { ValidationInit: undefined }, ...args) {
+  constructor (options = { ValidationInit: undefined }, ...args) {
     super(options, ...args)
 
     this.validationValues = {}
@@ -132,7 +132,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    *
    * @return {void}
    */
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     this.shouldValidateOnInitiate = this.root.querySelector('form').getAttribute('validate-on-initiate') === 'true'
     this.realTimeSubmitButton = this.root.querySelector('form').getAttribute('real-time-submit-button') === 'true'
@@ -215,7 +215,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    *
    * @return {void}
    */
-  disconnectedCallback() {
+  disconnectedCallback () {
     super.disconnectedCallback()
     // @ts-ignore
     if (this.allValidationNodes.length > 0) {
@@ -246,7 +246,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
   }
 
-  validator(validationRules, currentInput, inputFieldName) {
+  validator (validationRules, currentInput, inputFieldName) {
     const validationNames = Object.keys(validationRules) || []
     validationNames.forEach(validationName => {
       if (validationName === 'required') {
@@ -323,31 +323,33 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     })
   }
 
-  setValidity(inputFieldName, validationName, isValid) {
+  setValidity (inputFieldName, validationName, isValid) {
     this.validationValues[inputFieldName][validationName].isValid = isValid
     const currentValidatedInput = this.allValidationNodes?.find(node => node.getAttribute('name') === inputFieldName)
     const currentValidatedInputHasNewErrorReferencePoint = currentValidatedInput.getAttribute('error-message-reference-point-changed') === 'true'
     const currentValidatedInputErrorTextWrapper = currentValidatedInput.errorTextWrapper ? currentValidatedInput.errorTextWrapper : currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
     const isValidValues = []
-    if (!currentValidatedInput.hasAttribute('disabled')) Object.keys(this.validationValues[inputFieldName]).forEach(key => {
-      if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
-      if (!isCurrentValidatedInputErrorTextWrapperFilled) {
-        if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
-          if (currentValidatedInput.hasAttribute('no-error-text-p')) {
-            currentValidatedInputErrorTextWrapper.setAttribute('error-text-id', validationName)
-            currentValidatedInputErrorTextWrapper.hidden = true
-            currentValidatedInputErrorTextWrapper.textContent = this.validationValues[inputFieldName][key]['error-message']
-          } else {
-            const errorText = document.createElement('p')
-            errorText.setAttribute('error-text-id', validationName)
-            errorText.hidden = true
-            errorText.textContent = this.validationValues[inputFieldName][key]['error-message']
-            currentValidatedInputErrorTextWrapper.appendChild(errorText)
+    if (!currentValidatedInput.hasAttribute('disabled')) {
+      Object.keys(this.validationValues[inputFieldName]).forEach(key => {
+        if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
+        if (!isCurrentValidatedInputErrorTextWrapperFilled) {
+          if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
+            if (currentValidatedInput.hasAttribute('no-error-text-p')) {
+              currentValidatedInputErrorTextWrapper.setAttribute('error-text-id', validationName)
+              currentValidatedInputErrorTextWrapper.hidden = true
+              currentValidatedInputErrorTextWrapper.textContent = this.validationValues[inputFieldName][key]['error-message']
+            } else {
+              const errorText = document.createElement('p')
+              errorText.setAttribute('error-text-id', validationName)
+              errorText.hidden = true
+              errorText.textContent = this.validationValues[inputFieldName][key]['error-message']
+              currentValidatedInputErrorTextWrapper.appendChild(errorText)
+            }
           }
         }
-      }
-    })
+      })
+    }
     if (isValidValues.includes(false)) {
       currentValidatedInputErrorTextWrapper.classList.add('error-active')
       currentValidatedInputErrorTextWrapper.previousSibling.classList.add('has-error')
@@ -372,7 +374,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
   }
 
-  validationPatternEnd(inputFieldName, validationName, currentValue) {
+  validationPatternEnd (inputFieldName, validationName, currentValue) {
     const validationMask = this.validationValues[inputFieldName][validationName]['mask-value']
     const validationMaskSplitted = validationMask.split('')
     const currentValueSplitted = currentValue.split('')
@@ -400,13 +402,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     return !isValuesValid.includes(false)
   }
 
-  scrollToFirstError() {
+  scrollToFirstError () {
     // @ts-ignore
     const firstNodeWithError = this.allValidationNodes.find(node => node.classList.contains('has-error'))
     firstNodeWithError.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
-  checkIfFormValid() {
+  checkIfFormValid () {
     const allIsValidValue = []
     Object.keys(this.validationValues).forEach(key => {
       Object.keys(this.validationValues[key]).forEach(subKey => {
@@ -421,7 +423,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   /**
 * renders the css
 */
-  renderValidationCSS() {
+  renderValidationCSS () {
     this.style.textContent = /* css */`
     :host .custom-error-text {
       margin: var(--error-border-radius, 3px 0 0 0);
@@ -448,7 +450,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.html = this.style
   }
 
-  get style() {
+  get style () {
     return (
       this._style ||
       (this._style = (() => {
@@ -469,7 +471,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
    * @param {HTMLElement} [root=document.documentElement]
    * @return {HTMLElement}
    */
-  static walksUpDomQuerySelector(el, selector, root = document.documentElement) {
+  static walksUpDomQuerySelector (el, selector, root = document.documentElement) {
     if (typeof el.matches === 'function' && el.matches(selector)) return el
     if (el.querySelector(selector)) return el.querySelector(selector)
     while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
