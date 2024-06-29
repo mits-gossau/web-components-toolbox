@@ -124,7 +124,7 @@ body:has(dialog[open]) {
 :host .dialog-content {
   background-color: var(--color-white, #fff);
   align-items: start;
-  flex: 1;
+  flex: 0 1 auto;
   flex-direction: column;
   overflow: auto;
   padding: 0;
