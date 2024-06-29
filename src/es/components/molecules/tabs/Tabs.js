@@ -86,7 +86,7 @@ export default class Tabs extends Shadow() {
 
   shouldRenderCSS () {
     return !this.shadowRoot.querySelector(
-      `:host > style[_css], ${this.tagName} > style[_css]`
+      `${this.cssSelector} > style[_css]`
     )
   }
 
