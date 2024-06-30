@@ -692,7 +692,7 @@ export default class MultiLevelNavigation extends Mutation() {
       :host li m-nav-level-item {
         --nav-level-item-default-height: 3.25em;
         --nav-level-item-default-padding: 0 0.75em 0 0;
-        --nav-level-item-default-margin: 2px 0;
+        --nav-level-item-default-margin: 1px 0;
         --nav-level-item-default-hover-background-color: white;
         --nav-level-item-default-hover-color: var(--color);
       }
