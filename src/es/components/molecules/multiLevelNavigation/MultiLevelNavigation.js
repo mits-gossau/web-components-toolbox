@@ -1304,16 +1304,18 @@ export default class MultiLevelNavigation extends Mutation() {
 
   setMainNavigationFontSize() {
     const mainNavigation = this.root.querySelector('nav > ul')
-    const fontSizeBreakPoint = Number(mainNavigation.getAttribute('font-size-breakpoint') || 1200)
+    const fontSizeBreakPoint = Number(mainNavigation.getAttribute('font-size-breakpoint'))
     const mainNavigationSpans = mainNavigation.querySelectorAll('li > a > span')
-    if (window.innerWidth > fontSizeBreakPoint) {
-      mainNavigationSpans.forEach((span) => {
-        span.style.fontSize = 'inherit'
-      })
-    } else {
-      mainNavigationSpans.forEach((span) => {
-        span.style.fontSize = '18px'
-      })
+    if (fontSizeBreakPoint || fontSizeBreakPoint !== 0) {
+      if (window.innerWidth > fontSizeBreakPoint) {
+        mainNavigationSpans.forEach((span) => {
+          span.style.fontSize = 'inherit'
+        })
+      } else {
+        mainNavigationSpans.forEach((span) => {
+          span.style.fontSize = '18px'
+        })
+      }
     }
   }
 }
