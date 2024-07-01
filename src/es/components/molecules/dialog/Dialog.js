@@ -85,6 +85,9 @@ export default class Dialog extends Shadow() {
         if (this.hasAttribute('open')) {
           this.show(this.getAttribute('open') || undefined)
           this.removeAttribute('open')
+          document.body.style.overflow = 'hidden'
+        } else {
+          document.body.style.overflow = ''
         }
       })
     })
