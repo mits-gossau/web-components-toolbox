@@ -13,7 +13,7 @@
   transform: translateX(-100%);
   transition: all 0.3s allow-discrete;
   padding: var(--dialog-left-slide-in-padding-custom, 0);
-  height: 100%;
+  height: 100% !important;
   max-height: 100%;
   width: 100%;
   max-width: var(--dialog-left-slide-in-max-width-custom, min(100%, 560px));
@@ -121,12 +121,20 @@
 :host .dialog-content {
   background-color: var(--color-white, #fff);
   align-items: start;
-  flex: 0 1 auto;
+  flex: 1;
   flex-direction: column;
   overflow: auto;
   padding: 0;
   position: relative;
   z-index: 1;
+}
+
+/* iOS specific styles */
+@media only screen and (min-device-width: 320px) and (max-device-width: 812px) and (orientation: portrait) and (-webkit-min-device-pixel-ratio: 2),
+       only screen and (min-device-width: 320px) and (max-device-width: 812px) and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 2) {
+    :host .dialog-content {
+    flex: 1;
+  }
 }
 
 :host .dialog-content .sub-content {
