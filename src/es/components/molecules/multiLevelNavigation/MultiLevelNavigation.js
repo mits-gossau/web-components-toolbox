@@ -1305,7 +1305,7 @@ export default class MultiLevelNavigation extends Mutation() {
   setMainNavigationFontSize() {
     const mainNavigation = this.root.querySelector('nav > ul')
     const fontSizeBreakPoint = Number(mainNavigation.getAttribute('font-size-breakpoint'))
-    const mainNavigationSpans = mainNavigation.querySelectorAll('li > a > span')
+    const mainNavigationSpans = Array.from(this.root.querySelectorAll('nav > ul > li:not([only-mobile], [show-only-mobile]) > a > span'))
     if (fontSizeBreakPoint || fontSizeBreakPoint !== 0) {
       if (window.innerWidth > fontSizeBreakPoint) {
         mainNavigationSpans.forEach((span) => {
