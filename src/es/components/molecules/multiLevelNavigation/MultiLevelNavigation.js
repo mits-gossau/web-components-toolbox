@@ -1307,13 +1307,19 @@ export default class MultiLevelNavigation extends Mutation() {
     const fontSizeBreakPoint = Number(mainNavigation.getAttribute('font-size-breakpoint'))
     const mainNavigationSpans = Array.from(this.root.querySelectorAll('nav > ul > li:not([only-mobile], [show-only-mobile]) > a > span'))
     if (fontSizeBreakPoint || fontSizeBreakPoint !== 0) {
-      if (window.innerWidth > fontSizeBreakPoint) {
-        mainNavigationSpans.forEach((span) => {
-          span.style.fontSize = 'inherit'
-        })
+      if (!this.isDesktop) {
+        if (window.innerWidth > fontSizeBreakPoint) {
+          mainNavigationSpans.forEach((span) => {
+            span.style.fontSize = 'inherit'
+          })
+        } else {
+          mainNavigationSpans.forEach((span) => {
+            span.style.fontSize = '18px'
+          })
+        }
       } else {
         mainNavigationSpans.forEach((span) => {
-          span.style.fontSize = '18px'
+          span.style.fontSize = 'inherit'
         })
       }
     }
