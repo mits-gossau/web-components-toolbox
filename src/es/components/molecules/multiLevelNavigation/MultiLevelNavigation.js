@@ -560,7 +560,7 @@ export default class MultiLevelNavigation extends Mutation() {
       }
       :host > nav > ul > li {
         width: 100%;
-        margin: 2px 0;
+        margin: 1px 0;
       }
       :host > nav > div[nav-level] ul {
         padding-left: 0.5rem;
