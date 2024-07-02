@@ -9,7 +9,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class Dialog extends Shadow() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     /**
@@ -49,9 +49,15 @@ export default class Dialog extends Shadow() {
     this.showClickEventListener = event => {
       event.stopPropagation()
       if (event.target.getAttribute('id') === 'show') {
-        this.show()
+        this.show().then(() => {
+          const dialogHasAutofocusInputElement = this.root.querySelector('a-input[autofocus-helper]')
+          if (dialogHasAutofocusInputElement) this.setAutofocus()
+        })
       } else {
-        this.show('showModal')
+        this.show('showModal').then(() => {
+          const dialogHasAutofocusInputElement = this.root.querySelector('a-input[autofocus-helper]')
+          if (dialogHasAutofocusInputElement) this.setAutofocus()
+        })
       }
     }
     this.closeClickEventListener = event => {
@@ -70,7 +76,7 @@ export default class Dialog extends Shadow() {
     this.dialogPromise = new Promise(resolve => (this.dialogResolve = resolve))
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.hidden = true
     this.showNodes.forEach(node => (node.style.display = 'none'))
     this.closeNodes.forEach(node => (node.style.display = 'none'))
@@ -97,7 +103,7 @@ export default class Dialog extends Shadow() {
     document.addEventListener('keyup', this.keyupListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     // From web components the event does not bubble up to this host
     this.showNodes.forEach(node => node.removeEventListener('click', this.showClickEventListener))
     this.closeNodes.forEach(node => node.removeEventListener('click', this.closeClickEventListener))
@@ -112,7 +118,7 @@ export default class Dialog extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -121,14 +127,14 @@ export default class Dialog extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.dialog
   }
 
   /**
    * renders the css
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host {
       --outline-style: none;
@@ -158,10 +164,23 @@ export default class Dialog extends Shadow() {
       :host > dialog:modal {
         height: var(--dialog-height, fit-content);
       }
+      :host > dialog > input.hided-input {
+        display:none;
+        position: absolute;
+        opacity:0;
+        z-index: -1;
+      }
       /* Mobile layout */
     @media only screen and (max-width: _max-width_) {
       :host > dialog:modal {
         height: var(--dialog-mobile-height, var(--dialog-height, fit-content));
+      }
+
+      :host > dialog > input.hided-input {
+        display: block;
+        position: absolute;
+        opacity:0;
+        z-index: -1;
       }
     }
       
@@ -172,7 +191,7 @@ export default class Dialog extends Shadow() {
   /**
    * fetches the template
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -224,24 +243,37 @@ export default class Dialog extends Shadow() {
    * Render HTML
    * @returns Promise<void>
    */
-  renderHTML () {
+  renderHTML() {
     this.dialogResolve(this.dialog = this.root.querySelector(this.cssSelector + ' > dialog') || document.createElement('dialog'))
     if (this.hasAttribute('autofocus')) this.dialog.setAttribute('autofocus', '')
+
     Array.from(this.root.children).forEach(node => {
       if (node === this.dialog || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
       if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open') return false
       if (node.getAttribute('id') === 'close') return this.dialog.prepend(node)
       this.dialog.appendChild(node)
     })
+
     this.html = this.dialog
     return Promise.resolve()
   }
 
-  get showNodes () {
+  get showNodes() {
     return Array.from(this.root.querySelectorAll('[id^=show],[id=open]'))
   }
 
-  get closeNodes () {
+  get closeNodes() {
     return Array.from(this.root.querySelectorAll('[id^=close]'))
+  }
+
+  setAutofocus() {
+    const tmpElement = document.createElement('input')
+    tmpElement.classList.add('hided-input')
+    this.root.querySelector('dialog').prepend(tmpElement)
+    tmpElement.focus()
+    setTimeout(() => {
+      this.root.querySelector('a-input').root.querySelector('div > input').focus()
+      tmpElement.remove()
+    }, 0);
   }
 }

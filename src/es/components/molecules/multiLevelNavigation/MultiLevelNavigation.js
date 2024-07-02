@@ -560,7 +560,7 @@ export default class MultiLevelNavigation extends Mutation() {
       }
       :host > nav > ul > li {
         width: 100%;
-        margin: 2px 0;
+        margin: 1px 0;
       }
       :host > nav > div[nav-level] ul {
         padding-left: 0.5rem;
@@ -1307,13 +1307,19 @@ export default class MultiLevelNavigation extends Mutation() {
     const fontSizeBreakPoint = Number(mainNavigation.getAttribute('font-size-breakpoint'))
     const mainNavigationSpans = Array.from(this.root.querySelectorAll('nav > ul > li:not([only-mobile], [show-only-mobile]) > a > span'))
     if (fontSizeBreakPoint || fontSizeBreakPoint !== 0) {
-      if (window.innerWidth > fontSizeBreakPoint) {
-        mainNavigationSpans.forEach((span) => {
-          span.style.fontSize = 'inherit'
-        })
+      if (!this.isDesktop) {
+        if (window.innerWidth > fontSizeBreakPoint) {
+          mainNavigationSpans.forEach((span) => {
+            span.style.fontSize = 'inherit'
+          })
+        } else {
+          mainNavigationSpans.forEach((span) => {
+            span.style.fontSize = '18px'
+          })
+        }
       } else {
         mainNavigationSpans.forEach((span) => {
-          span.style.fontSize = '18px'
+          span.style.fontSize = 'inherit'
         })
       }
     }
