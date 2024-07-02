@@ -200,7 +200,7 @@ export default class Button extends Hover() {
         border-radius: var(--border-radius, 0.5em);
         border: var(--border-width, 0px) solid var(--border-color, transparent);
         color: var(--color, black);
-        cursor: pointer;
+        cursor: var(--cursor, pointer);
         display: var(--display, flex);
         font-family: var(--font-family, unset);
         font-size: var(--font-size, 1em);
@@ -278,6 +278,9 @@ export default class Button extends Hover() {
       ${this.buttonTagName} > * {
         color: var(--color, black);
         transition: var(--transition, background-color 0.3s ease-out, border-color 0.3s ease-out, color 0.3s ease-out);
+      }
+      ${this.buttonTagName} > a-icon-mdx {
+        color:  var(--icon-color, var(--color, black));
       }
       ${this.buttonTagName}:active > *, ${this.buttonTagName}.active > * {
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
