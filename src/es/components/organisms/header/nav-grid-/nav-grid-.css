@@ -214,6 +214,7 @@
 }
 @media only screen and (max-width: 450px) {
     :host>header>a-logo {
+        --logo-default-img-margin: auto;
         --logo-default-max-width-mobile: 130px;
     }
 }
