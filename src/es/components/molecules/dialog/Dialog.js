@@ -138,7 +138,7 @@ export default class Dialog extends Shadow() {
     this.css = /* css */`
     :host {
       --outline-style: none;
-      outline: none;
+      outline: none !important;
       ${this.hasAttribute('dialog-desktop-height')
         ? `
           --dialog-height: ${this.getAttribute('dialog-desktop-height')};
