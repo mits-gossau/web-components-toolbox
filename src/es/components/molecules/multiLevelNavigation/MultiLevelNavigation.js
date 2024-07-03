@@ -66,9 +66,7 @@ export default class MultiLevelNavigation extends Mutation() {
         this.isHigherDevice = window.innerHeight > this.desktopHeightBreakpoint
       }
       // update main navigation lis font-size
-      if (this.isDesktop) {
-        this.setMainNavigationFontSize()
-      }
+      this.setMainNavigationFontSize()
     }
 
     this.selfClickListener = (event) => {
@@ -1307,7 +1305,7 @@ export default class MultiLevelNavigation extends Mutation() {
     const fontSizeBreakPoint = Number(mainNavigation.getAttribute('font-size-breakpoint'))
     const mainNavigationSpans = Array.from(this.root.querySelectorAll('nav > ul > li:not([only-mobile], [show-only-mobile]) > a > span'))
     if (fontSizeBreakPoint || fontSizeBreakPoint !== 0) {
-      if (!this.isDesktop) {
+      if (this.isDesktop) {
         if (window.innerWidth > fontSizeBreakPoint) {
           mainNavigationSpans.forEach((span) => {
             span.style.fontSize = 'inherit'
