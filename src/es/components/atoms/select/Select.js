@@ -10,11 +10,12 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Select extends Shadow() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super(Object.assign(options, { mode: 'open' }), ...args)
 
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']
     this.setAttribute('role', 'listbox')
+    this.isReadonly = this.hasAttribute('readonly') || this.getAttribute('readonly') === 'true'
 
     this.changeListener = event => {
       this.dispatchEvent(new CustomEvent(this.getAttribute('selected') || 'selected', {
@@ -40,9 +41,13 @@ export default class Select extends Shadow() {
         this.selectField.addEventListener('change', this.changeListener)
       })
     }
+
+    if (this.isReadonly) {
+      this.root.querySelector('select').setAttribute('readonly', '')
+    }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.selectField) this.selectField.addEventListener('change', this.changeListener)
     if (this.hasAttribute('render-event-name')) document.body.addEventListener(this.getAttribute('render-event-name') || 'render-event-name', this.renderEventNameListener)
@@ -55,7 +60,7 @@ export default class Select extends Shadow() {
     }
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.selectField.removeEventListener('change', this.changeListener)
     if (this.hasAttribute('render-event-name')) document.body.removeEventListener(this.getAttribute('render-event-name') || 'render-event-name', this.renderEventNameListener)
   }
@@ -65,11 +70,11 @@ export default class Select extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         height: calc(var(--select-line-height, 1.4) * 1em + var(--select-padding-top, 0.75em) + var(--select-padding-bottom, 0.75em)); /* workaround IOS */
@@ -96,6 +101,15 @@ export default class Select extends Shadow() {
       select > option {
         cursor: pointer;
       }
+      select[readonly] {     
+        cursor:no-drop;     
+        user-select: none;     
+        pointer-events: none;     
+        opacity: 0.7; 
+      } 
+      select[readonly] option:not([selected]) {
+        display:none; 
+      }
       @media only screen and (max-width: _max-width_) {
         select {
           border-radius: var(--select-border-radius-mobile, var(--select-border-radius, var(--border-radius-mobile, var(--border-radius, 0.571em))));
@@ -107,7 +121,7 @@ export default class Select extends Shadow() {
     `
   }
 
-  get selectField () {
+  get selectField() {
     return this.root.querySelector('select')
   }
 }
