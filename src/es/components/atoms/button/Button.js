@@ -281,12 +281,16 @@ export default class Button extends Hover() {
       }
       ${this.buttonTagName} > a-icon-mdx {
         color:  var(--icon-color, var(--color, black));
+        cursor: var(--icon-cursor, var(--cursor, inherit));
       }
       ${this.buttonTagName}:active > *, ${this.buttonTagName}.active > * {
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
       ${this.buttonTagName}:hover > *, :host(.hover) ${this.buttonTagName} > * {
         color: var(--color-hover, var(--color, #FFFFFF));
+      }
+      ${this.buttonTagName}:hover > a-icon-mdx, :host(.hover) ${this.buttonTagName} > a-icon-mdx {
+        color:  var(--icon-color-hover, var(--color-hover, var(--color, #FFFFFF)));
       }
       :host ${this.buttonTagName}[disabled] > * {
         color: var(--color-disabled, var(--color, #FFFFFF));
