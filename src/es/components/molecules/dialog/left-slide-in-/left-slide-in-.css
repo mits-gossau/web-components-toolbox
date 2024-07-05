@@ -106,12 +106,12 @@
   align-items: center;
   cursor: pointer;
   display: flex;
-  height: var(--close-height, 2.25em);
+  height: var(--left-slide-in-close-height, var(--close-height, 2.25em));
   justify-content: flex-end;
   margin-bottom: 0;
   position: relative;
   right: 0;
-  width: var(--close-width, var(--close-height, 2.25em));
+  width: var(--left-slide-in-close-width, var(--close-width, var(--left-slide-in-close-height, var(--close-height, 2.25em))));
 }
 
 :host .dialog-header #close a-icon-mdx[icon-name="Plus"]::part(svg) {
