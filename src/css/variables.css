@@ -27,6 +27,8 @@
   --line-height: 1.5;
   --navigation-default-content-width: var(--header-default-content-width);
   --outline-color: var(--color-hover);
+  --icon-color: #3d3d3d;
+
 }
 /*
 @media (prefers-color-scheme: dark) {
