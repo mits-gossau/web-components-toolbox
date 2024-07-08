@@ -32,6 +32,16 @@ export default class Dialog extends Shadow() {
       this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
       dialog.classList.add('closed')
       dialog.close()
+      
+      // remove focus-visibility if dialog closes 
+      let dialogButtons = Array.from(this.root.querySelectorAll('ks-a-button, a-button, button'))
+      if (dialogButtons.length > 0) {
+        setTimeout(() => {
+          dialogButtons.forEach((button) => {
+            button.blur()
+          })
+        }, 50);
+      }
     }
 
     this.clickEventListener = async event => {
@@ -139,6 +149,7 @@ export default class Dialog extends Shadow() {
     :host {
       --outline-style: none;
       outline: none !important;
+      position: relative;
       ${this.hasAttribute('dialog-desktop-height')
         ? `
           --dialog-height: ${this.getAttribute('dialog-desktop-height')};
@@ -249,7 +260,7 @@ export default class Dialog extends Shadow() {
 
     Array.from(this.root.children).forEach(node => {
       if (node === this.dialog || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
-      if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open') return false
+      if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open' || node.getAttribute('id') === 'clear-input') return false
       if (node.getAttribute('id') === 'close') return this.dialog.prepend(node)
       this.dialog.appendChild(node)
     })

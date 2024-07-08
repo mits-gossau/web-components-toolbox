@@ -277,12 +277,14 @@ export default class Input extends Shadow() {
       }
       :host([search]) input::-webkit-search-cancel-button {
         -webkit-appearance: none;
-        height: 14px;
-        width: 14px;
+        height: 1.5rem;
+        width: 1.5rem;
         display: block;
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAn0lEQVR42u3UMQrDMBBEUZ9WfQqDmm22EaTyjRMHAlM5K+Y7lb0wnUZPIKHlnutOa+25Z4D++MRBX98MD1V/trSppLKHqj9TTBWKcoUqffbUcbBBEhTjBOV4ja4l4OIAZThEOV6jHO8ARXD+gPPvKMABinGOrnu6gTNUawrcQKNCAQ7QeTxORzle3+sDfjJpPCqhJh7GixZq4rHcc9l5A9qZ+WeBhgEuAAAAAElFTkSuQmCC);
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE4IDZMNiAxOE02IDZMMTggMTgiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==);
         background-repeat: no-repeat;
-        background-size: 14px;
+        background-size: 1.5rem;
+        cursor: pointer;
+        margin-right: 1rem;
       }
 
       :host([search]) button {
@@ -374,7 +376,15 @@ export default class Input extends Shadow() {
           max-width: var(--max-width-mobile, var(--max-width, none));
         }
         :host([search]) input::-webkit-search-cancel-button {
-          margin-right: 2.5em;
+          -webkit-appearance: none;
+          height: 1.25rem;
+          width: 1.25rem;
+          display: block;
+          background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE4IDZMNiAxOE02IDZMMTggMTgiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==);
+          background-repeat: no-repeat;
+          background-size: 1.25rem;
+          cursor: pointer;
+          margin-right: 2.25em;
         }
         label, :host([search]) button {
           font-size: var(--font-size-mobile, var(--font-size));

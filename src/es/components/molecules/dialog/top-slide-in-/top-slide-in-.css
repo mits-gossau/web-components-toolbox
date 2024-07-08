@@ -64,12 +64,12 @@ body:has(dialog[open]) {
     align-items: center;
     cursor: pointer;
     display: flex;
-    height: var(--close-height, 2.25em);
-    justify-content: center;;
+    height: var(--top-slide-in-close-height, var(--close-height, 2.25em));
+    justify-content: center;
     margin-bottom: 0;
     position: absolute;
     right: 1.25em;
-    width: var(--close-width, var(--close-height, 2.25em));
+    width: var(--top-slide-in-close-width, var(--close-width, var(--top-slide-in-close-height, var(--close-height, 2.25em))));
 }
 .container #close a-icon-mdx[icon-name="Plus"]::part(svg) {
     transform: rotate(45deg);
