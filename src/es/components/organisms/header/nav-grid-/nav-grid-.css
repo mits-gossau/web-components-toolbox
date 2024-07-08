@@ -1,6 +1,6 @@
 :host {
     --header-nav-grid-background-color: white;
-    --header-nav-grid-a-menu-icon-background-color-custom: var(--icon-color);
+    --header-nav-grid-a-menu-icon-background-color-custom: var(--icon-color, var(--color, 'black'));
     --header-nav-grid-margin: 1.25rem;
     --header-nav-grid-justify-content: none;
     --logo-default-justify-content: start;
