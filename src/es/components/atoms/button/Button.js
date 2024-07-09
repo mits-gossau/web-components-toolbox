@@ -194,6 +194,12 @@ export default class Button extends Hover() {
       #label.hide {
         display: none;
       }
+      #label.ellipsis-text {
+        overflow: hidden;
+        white-space: nowrap;
+        display: block;
+        text-overflow: ellipsis;
+      }
       ${this.buttonTagName} {
         align-items: var(--align-items, center);
         background-color: var(--background-color, transparent);
