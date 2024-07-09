@@ -111,6 +111,7 @@ export default class Dialog extends Shadow() {
     if (this.getAttribute('show-event-name')) document.body.addEventListener(this.getAttribute('show-event-name'), this.showEventListener)
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     document.addEventListener('keyup', this.keyupListener)
+    this.addEventListener('close-dialog', this.close)
   }
 
   disconnectedCallback() {
