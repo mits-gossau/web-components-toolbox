@@ -205,6 +205,20 @@ export default class Flatpickr extends Shadow() {
         onChange: (selectedDates, dateStr, instance) => {
           dateStr = this.setLabel(dateStr.replace(' to ', this.dateStrSeparator))
           if (this.getAttribute('request-event-name') && !this.gotCleared) {
+            /**
+             * What is this all about?
+             * There is the case that the end date should be set automatically. 
+             * So the desired end date is set as an attribute and read and set here. 
+             * Is that good? 
+             * I have no idea. 
+             * But the MIDUWEB-1301 ticket needs this.
+             */
+            if (this.getAttribute('force-end-date')) {
+              const [year, month, day] = this.getAttribute('force-end-date').split('-')
+              const date = new Date(`${year}-${month}-${day}T00:00:00.000Z`)
+              selectedDates.push(date)
+              this.flatpickrInstance.close()
+            }
             // there are some timing issues with the dom connection of the component
             // note the following: in case of problems, change the event lister in your controller from ‘this’ to 'document.body'
             (this.isConnected ? this : document.body).dispatchEvent(new CustomEvent(this.getAttribute('request-event-name'), {
