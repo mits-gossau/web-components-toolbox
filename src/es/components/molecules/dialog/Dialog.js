@@ -260,7 +260,7 @@ export default class Dialog extends Shadow() {
 
     Array.from(this.root.children).forEach(node => {
       if (node === this.dialog || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
-      if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open' || node.getAttribute('id') === 'clear-input') return false
+      if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open' || node.getAttribute('id') === 'clear') return false
       if (node.getAttribute('id') === 'close') return this.dialog.prepend(node)
       this.dialog.appendChild(node)
     })
