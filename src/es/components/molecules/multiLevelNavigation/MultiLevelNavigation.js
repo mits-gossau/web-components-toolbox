@@ -851,6 +851,7 @@ export default class MultiLevelNavigation extends Mutation() {
     const navElement = this.root.querySelector('nav')
     const navElementChildren = Array.from(navElement.children)
     if (this.getAttribute('aria-expanded') === 'false' && navElementChildren.length) {
+      this.classList.remove('open')
       navElement.querySelector('ul').classList.remove('open-left-slide')
       setTimeout(() => {
         navElementChildren.forEach(childEl => {
