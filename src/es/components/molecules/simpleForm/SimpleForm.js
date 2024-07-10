@@ -493,7 +493,6 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
     ).then(json => {
       let response
       let redirectUrl
-      let form = this.root.querySelector('form section#main')
       if ((response = this.getPropertyByKey(json, this.getAttribute('response-property-name') || 'response')) && this.response) {
         let responseTextNodes = Array.from(this.response.querySelectorAll(this.getAttribute('response-text-node-selector')))
         if (!responseTextNodes.length) responseTextNodes = [this.response]
@@ -503,11 +502,9 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
         if (this.getPropertyByKey(json, this.getAttribute('success-property-name') || 'success')) {
           this.response.classList.add('success')
           this.response.classList.remove('failure')
-          form.hidden = true;
         } else {
           this.response.classList.add('failure')
           this.response.classList.remove('success')
-          form.hidden = false;
         }
         this.response.hidden = false
         if (this.getPropertyByKey(json, this.getAttribute('clear-property-name') || 'clear')) this.form.remove()
