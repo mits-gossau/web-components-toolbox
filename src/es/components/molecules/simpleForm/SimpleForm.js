@@ -460,7 +460,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
     (this.getAttribute('endpoint')
       ? fetch(this.getAttribute('endpoint'), {
         method: this.getAttribute('method') || 'GET',
-        mode: this.getAttribute('mode') || 'cors',
+        mode: this.getAttribute('form-mode') || 'cors',
         headers: this.hasAttribute('headers')
           ? SimpleForm.parseAttribute(this.getAttribute('headers'))
           : {
@@ -476,7 +476,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
       : new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('dispatch-event-name'), {
         detail: {
           method: this.getAttribute('method') || 'GET',
-          mode: this.getAttribute('mode') || 'no-cors',
+          mode: this.getAttribute('form-mode') || 'no-cors',
           headers: this.hasAttribute('headers')
             ? SimpleForm.parseAttribute(this.getAttribute('headers'))
             : {
