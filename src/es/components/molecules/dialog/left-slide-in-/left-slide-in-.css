@@ -2,6 +2,7 @@
   /* open */
   opacity: 1;
   transform: translateX(0);
+  display: flex;
 }
 
 :host>dialog {
@@ -19,7 +20,7 @@
   max-width: var(--dialog-left-slide-in-max-width-custom, min(100%, 560px));
   overflow: hidden;
   z-index: var(--dialog-left-slide-in-z-index-custom, 9999);
-  display: flex;
+  /* DO NOT USE "display: flex" HERE -> CAUSES MAJOR PERFORMANCE ISSUES ON SAFARI */
   gap: var(--dialog-left-slide-in-gap-custom, normal);
   justify-content: var(--dialog-left-slide-in-justify-content-custom, normal);
   align-items: var(--dialog-left-slide-in-align-items-custom, normal);
