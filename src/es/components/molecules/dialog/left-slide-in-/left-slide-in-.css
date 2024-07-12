@@ -1,3 +1,9 @@
+:host {
+  /* button margin and padding */
+  --margin: auto 0;
+  --padding: calc(24rem/18);
+}
+
 :host>dialog[open] {
   /* open */
   opacity: 1;
@@ -82,12 +88,13 @@
   align-items: stretch;
   display: flex;
   justify-content: space-between;
+  padding: 0;
   position: sticky;
   top: 0;
   z-index: 2;
 }
 
-:host .dialog-header>* {
+:host .dialog-header > * {
   align-items: center;
   display: flex;
   flex: 1;
@@ -95,7 +102,7 @@
   margin: 0;
 }
 
-:host .dialog-header>h3 {
+:host .dialog-header > h3 {
   justify-content: center;
   flex: 3;
   overflow: hidden;
@@ -103,11 +110,24 @@
   white-space: nowrap;
 }
 
-:host .dialog-header>#close {
+:host .dialog-header > a-button {
+  height: 100%;
+}
+:host .dialog-header > a-button::part(button) {
+  background-color: var(--color-white, #fff);
+}
+:host .dialog-header > a-button:first-child::part(button) {
+  padding: var(--padding) 0 var(--padding) var(--padding);
+}
+:host .dialog-header > a-button:last-child::part(button) {
+  padding: var(--padding) var(--padding) var(--padding) 0;
+}
+
+:host .dialog-header > #close {
   align-items: center;
   cursor: pointer;
   display: flex;
-  height: var(--left-slide-in-close-height, var(--close-height, 2.25em));
+  /* height: var(--left-slide-in-close-height, var(--close-height, 2.25em)); */
   justify-content: flex-end;
   margin-bottom: 0;
   position: relative;

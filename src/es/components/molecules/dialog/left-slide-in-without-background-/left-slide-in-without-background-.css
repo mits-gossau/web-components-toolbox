@@ -8,6 +8,7 @@
   /* open */
   opacity: 1;
   transform: translateX(0);
+  display: flex;
 }
 
 :host>dialog {
@@ -25,7 +26,6 @@
   max-width: min(100%, 560px);
   overflow: hidden;
   z-index: 9999;
-  display: flex;
   flex-direction: column;
   top: 0;
 }
@@ -90,7 +90,7 @@
   z-index: 2;
 }
 
-:host .dialog-header>* {
+:host .dialog-header > * {
   align-items: center;
   display: flex;
   flex: 1;
@@ -98,7 +98,7 @@
   margin: 0;
 }
 
-:host .dialog-header>h3 {
+:host .dialog-header > h3 {
   justify-content: center;
   flex: 3;
   overflow: hidden;
@@ -106,15 +106,24 @@
   white-space: nowrap;
 }
 
+:host .dialog-header > a-button {
+  height: 100%;
+}
 :host .dialog-header > a-button::part(button) {
   background-color: var(--color-white, #fff);
 }
+:host .dialog-header > a-button:first-child::part(button) {
+  padding: var(--padding) 0 var(--padding) var(--padding);
+}
+:host .dialog-header > a-button:last-child::part(button) {
+  padding: var(--padding) var(--padding) var(--padding) 0;
+}
 
-:host .dialog-header>#close {
+:host .dialog-header > #close {
   align-items: center;
   cursor: pointer;
   display: flex;
-  height: var(--close-height, 2.25em);
+  /* height: var(--close-height, 2.25em); */
   justify-content: flex-end;
   margin-bottom: 0;
   position: relative;
