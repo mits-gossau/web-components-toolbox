@@ -497,7 +497,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
       if ((response = this.getPropertyByKey(json, this.getAttribute('response-property-name') || 'response')) && this.response) {
         let responseTextNodes = Array.from(this.response.querySelectorAll(this.getAttribute('response-text-node-selector')))
         if (!responseTextNodes.length) responseTextNodes = [this.response]
-        //responseTextNodes.forEach(responseTextNode => (responseTextNode.innerHTML = response))
+        responseTextNodes.forEach(responseTextNode => (responseTextNode.innerHTML = response))
         let onclick
         if ((onclick = this.getPropertyByKey(json, this.getAttribute('onclick-property-name') || 'onclick'))) this.response.setAttribute('onclick', onclick)
         if (this.getPropertyByKey(json, this.getAttribute('success-property-name') || 'success')) {
