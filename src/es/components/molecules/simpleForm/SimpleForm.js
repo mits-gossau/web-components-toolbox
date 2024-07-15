@@ -7,7 +7,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global location */
 /* global grecaptcha */
 
-export const LOADING_FINISHED_EVENT = 'loading-finished'
+export const FINISH_LOADING_EVENT = 'finish-loading'
 
 
 /**
@@ -477,7 +477,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
         if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399) || response.status === 422) return response.json() // Umbraco forms response with 422 on a validation error
         throw new Error(this.response.textContent = response.statusText)
       }).finally(() => {
-        this.dispatchEvent(new CustomEvent(LOADING_FINISHED_EVENT, {
+        this.dispatchEvent(new CustomEvent(FINISH_LOADING_EVENT, {
           bubbles: true,
           cancelable: true,
           composed: true
