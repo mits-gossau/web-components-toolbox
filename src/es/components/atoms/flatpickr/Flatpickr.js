@@ -216,7 +216,11 @@ export default class Flatpickr extends Shadow() {
             if (this.getAttribute('force-end-date')) {
               const [year, month, day] = this.getAttribute('force-end-date').split('-')
               const date = new Date(`${year}-${month}-${day}T00:00:00.000Z`)
-              selectedDates.push(date)
+              // returns the value twice if the end date is selected
+              // in this case do nothing
+              if (selectedDates.length === 1) {
+                selectedDates.push(date)
+              }
               this.flatpickrInstance.close()
             }
             // there are some timing issues with the dom connection of the component
