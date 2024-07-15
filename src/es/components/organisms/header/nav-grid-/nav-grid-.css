@@ -112,7 +112,7 @@
         --header-nav-grid-a-menu-icon-one-transform: rotate(-44deg) translateY(12px) translateX(0px);
         --header-nav-grid-a-menu-icon-two-transform: rotate(45deg) translateY(-12px) translateX(1px);
     }
-    :host > header.open > m-multi-level-navigation {
+    :host > header > m-multi-level-navigation.open {
         animation: openRight .3s ease-out forwards;
         left: auto;
     }
@@ -176,23 +176,25 @@
         --header-nav-grid-a-menu-icon-margin: 0 -2rem 0 0;
     }
 
-    :host>header.open>m-multi-level-navigation {
-        --m-multi-level-navigation-height-open-mobile: calc(100svh - 60px);
-        grid-area: none;
-        top: 4.25rem;
-        left: -1rem;
-        right: 0;
-        width: unset;
-    }
-    :host > header.open > m-multi-level-navigation {
+    :host>header >m-multi-level-navigation.open {
         animation: openRight .3s ease-out forwards;
-        left: auto;
-        }
+    }
 
     :host > header > m-multi-level-navigation {
         animation: closeRight .3s ease-in forwards;
+        --m-multi-level-navigation-height-open-mobile: calc(100svh - 60px);
+        grid-area: none;
+        top: 4.25rem;
+        left: auto;
+        right: 0;
+        width: unset;
+        display: block;
+        height: 100vh;
+    }
+
+    :host > header > m-multi-level-navigation.hide {
         display: none;
-        }
+    }
 }
 
 @media only screen and (max-width: 800px) {
