@@ -127,3 +127,6 @@ a[href^="mailto:"] {
   /* height: auto; */
   max-width: 100%;
 }
+:where(o-grid):focus-visible {
+  outline: none !important;
+}
