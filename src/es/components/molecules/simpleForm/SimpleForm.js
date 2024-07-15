@@ -7,6 +7,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global location */
 /* global grecaptcha */
 
+export const LOADING_FINISHED_EVENT = 'loading-finished'
+
+
 /**
  * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior, send it to an api endpoint or emit a custom event
  * Expose Internals does not work with native :valid selector... https://dev.to/stuffbreaker/custom-forms-with-web-components-and-elementinternals-4jaj, solution to turn off the shadow dom of child components
@@ -473,6 +476,12 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
       }).then(async response => {
         if ((response.status >= 200 && response.status <= 299) || (response.status >= 300 && response.status <= 399) || response.status === 422) return response.json() // Umbraco forms response with 422 on a validation error
         throw new Error(this.response.textContent = response.statusText)
+      }).finally(() => {
+        this.dispatchEvent(new CustomEvent(LOADING_FINISHED_EVENT, {
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
       })
       : new Promise(resolve => this.dispatchEvent(new CustomEvent(this.getAttribute('dispatch-event-name'), {
         detail: {
