@@ -99,6 +99,9 @@
 }
 
 :host .dialog-header > h3 {
+  display: block;
+  margin: auto;
+  text-align: center;
   justify-content: center;
   flex: 3;
   overflow: hidden;
