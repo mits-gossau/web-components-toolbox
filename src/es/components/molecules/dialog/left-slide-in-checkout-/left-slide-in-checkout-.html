@@ -2,13 +2,13 @@
   namespace="dialog-left-slide-in-checkout-"
 >
   <div class="container dialog-header">
-    <div id="back">
-      <a-icon-mdx icon-name="ChevronLeft" size="2em" ></a-icon-mdx>
-    </div>
+    <a-button id="close-back">
+    <a-icon-mdx icon-name="ChevronLeft" size="2em" ></a-icon-mdx>
+  </a-button>
     <h3>Filter</h3>
-    <div id="close">
-      <a-icon-mdx icon-name="Plus" size="2em" ></a-icon-mdx>
-    </div>
+    <a-button request-event-name="backdrop-clicked" id="close">
+    <a-icon-mdx icon-name="Plus" size="2em" rotate="45deg" no-hover-transform></a-icon-mdx>
+  </a-button>
   </div>
   <div class="container dialog-content">
     <p class="reset-link"><a>Alles zur&uuml;cksetzen <a-icon-mdx icon-name="RotateLeft" size="1em"></a-icon-mdx></a></p>
