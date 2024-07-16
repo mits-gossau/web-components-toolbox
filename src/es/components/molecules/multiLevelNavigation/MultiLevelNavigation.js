@@ -929,16 +929,18 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   setScrollOnBody(isScrollOnBodyEnabled, event) {
-    this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-      detail: {
-        hasNoScroll: isScrollOnBodyEnabled,
-        origEvent: event,
-        this: this
-      },
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
+    if (event.target.nodeName !== 'O-BODY') {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+        detail: {
+          hasNoScroll: isScrollOnBodyEnabled,
+          origEvent: event,
+          this: this
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
   }
 
   setDesktopMainNavItems(event) {
