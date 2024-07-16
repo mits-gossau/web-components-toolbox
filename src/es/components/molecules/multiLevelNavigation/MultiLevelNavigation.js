@@ -33,6 +33,8 @@ export default class MultiLevelNavigation extends Mutation() {
     this.isHigherDevice = window.innerHeight > this.desktopHeightBreakpoint
     this.hoverDelay = this.hasAttribute('navigation-hover-delay') || 100
 
+    this.hideMobileNavigation()
+
     this.resizeListener = event => {
       const oldIsDesktopValue = this.isDesktop
       const oldAriaExpandedAttribute = this.nav.getAttribute('aria-expanded')
@@ -67,6 +69,7 @@ export default class MultiLevelNavigation extends Mutation() {
       }
       // update main navigation lis font-size
       this.setMainNavigationFontSize()
+      this.hideMobileNavigation()
     }
 
     this.selfClickListener = (event) => {
@@ -761,8 +764,16 @@ export default class MultiLevelNavigation extends Mutation() {
       this.nav.appendChild(node)
     })
     this.html = this.nav
-    if (this.isDesktop) this.renderDesktopHTML()
-    else this.renderMobileHTML()
+    if (this.isDesktop) {
+      setTimeout(() => {
+        this.renderDesktopHTML()
+      }, 0);
+    }
+    else {
+      setTimeout(() => {
+        this.renderMobileHTML()
+      }, 0);
+    }
   }
 
   /**
@@ -862,7 +873,10 @@ export default class MultiLevelNavigation extends Mutation() {
             childEl.hidden = true
           }
         })
+        this.hideMobileNavigation()
       }, this.removeElementAfterAnimationDurationMs)
+    } else {
+      this.showMobileNavigation()
     }
   }
 
@@ -1321,6 +1335,18 @@ export default class MultiLevelNavigation extends Mutation() {
           span.style.fontSize = 'inherit'
         })
       }
+    }
+  }
+
+  hideMobileNavigation() {
+    if (!this.isDesktop && !this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.contains('hide')) {
+      this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.add('hide')
+    }
+  }
+
+  showMobileNavigation() {
+    if (!this.isDesktop && this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.contains('hide')) {
+      this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.remove('hide')
     }
   }
 }
