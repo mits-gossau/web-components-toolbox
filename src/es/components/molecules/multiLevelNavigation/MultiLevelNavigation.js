@@ -875,7 +875,7 @@ export default class MultiLevelNavigation extends Mutation() {
         })
         this.hideMobileNavigation()
       }, this.removeElementAfterAnimationDurationMs)
-    } else {
+    } else if (this.getAttribute('aria-expanded') === 'true') {
       this.showMobileNavigation()
     }
   }
