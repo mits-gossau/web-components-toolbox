@@ -11,40 +11,54 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
    *
    * @param {*} args
    */
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
 
     this.anchorTimeout = null
     this.clickAnchorEventListener = event => {
       let element = null
       if ((element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash || null))) {
-        this.dispatchEvent(new CustomEvent(this.getAttribute('scroll-to-anchor') || 'scroll-to-anchor', {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-          detail: {
-            child: element
-          }
-        }))
-        element.scrollIntoView({ behavior: 'smooth' })
-        // @ts-ignore
-        clearTimeout(this.anchorTimeout)
-        this.anchorTimeout = setTimeout(() => {
-          element.scrollIntoView({ behavior: 'auto' })
-          this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
-            detail: {
-              hasNoScroll: false,
-              origEvent: event,
-              this: this
-            },
+        const isElementScrolled = element.getAttribute('scrolled') === 'true'
+        if (!isElementScrolled) {
+          element.setAttribute('scrolled', 'true')
+          this.dispatchEvent(new CustomEvent(this.getAttribute('scroll-to-anchor') || 'scroll-to-anchor', {
             bubbles: true,
             cancelable: true,
-            composed: true
+            composed: true,
+            detail: {
+              child: element
+            }
           }))
-        }, 500) // lazy loading pics make this necessary to reach target
-        self.removeEventListener('hashchange', this.clickAnchorEventListener)
-        location.hash = location.hash.replace('_scrolled', '') + '_scrolled'
-        self.addEventListener('hashchange', this.clickAnchorEventListener)
+          element.scrollIntoView({ behavior: 'smooth' })
+          // @ts-ignore
+          clearTimeout(this.anchorTimeout)
+          this.anchorTimeout = setTimeout(() => {
+            element.scrollIntoView({ behavior: 'auto' })
+            this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
+              detail: {
+                hasNoScroll: false,
+                origEvent: event,
+                this: this
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          }, 500) // lazy loading pics make this necessary to reach target
+          self.removeEventListener('hashchange', this.clickAnchorEventListener)
+          location.hash = location.hash.replace('_scrolled', '') + '_scrolled'
+          self.addEventListener('hashchange', this.clickAnchorEventListener)
+        } else {
+          element.setAttribute('scrolled', 'false')
+          // @ts-ignore
+          history.replaceState(null, null, ' ');
+          if (window.history.length > 1) {
+            window.history.go(-2)
+          } else {
+            window.history.go(-1)
+          }
+          return false
+        }
       }
     }
   }
@@ -54,7 +68,7 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
    *
    * @return {void}
    */
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     document.body.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
     if (location.hash) {
@@ -69,7 +83,7 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
    *
    * @return {void}
    */
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     document.body.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
     self.removeEventListener('hashchange', this.clickAnchorEventListener)
