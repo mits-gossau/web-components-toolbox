@@ -43,7 +43,7 @@ export default class Header extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
-    this.noScroll = () => { window.scroll(0, 0), console.log("header") }
+    this.noScroll = () => { window.scroll(0, 0) }
     this.setAttribute('role', 'banner')
     this.setAttribute('aria-label', 'Header')
     this.scrollListener = event => {
