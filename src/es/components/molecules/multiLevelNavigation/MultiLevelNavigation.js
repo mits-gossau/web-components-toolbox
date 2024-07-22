@@ -24,7 +24,7 @@ export default class MultiLevelNavigation extends Mutation() {
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
       ...options
     }, ...args)
-    this.noScroll = () => { window.scroll(0, 0) }
+    this.noScroll = () => { window.scroll(0, 0), console.log("multi nav") }
     this.isDesktop = this.checkMedia('desktop')
     this.useHoverListener = this.hasAttribute('use-hover-listener')
     this.animationDurationMs = this.getAttribute('animation-duration') || 300
