@@ -43,7 +43,7 @@ export default class Header extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
-    this.noScroll = () => { window.scroll(0, 0), console.log("header") }
+    this.noScroll = () => { window.scroll(0, 0) }
     this.setAttribute('role', 'banner')
     this.setAttribute('aria-label', 'Header')
     this.scrollListener = event => {
@@ -70,9 +70,8 @@ export default class Header extends Shadow() {
     }
 
     this.clickAnimationListener = event => {
-      console.log("animation listener")
-      // this.noScroll()
       if (this.header.classList.contains('open')) {
+        this.noScroll()
         this.mNavigation.classList.add('open')
         if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', 'true')
       } else if (event && event.animationName === 'close') {
