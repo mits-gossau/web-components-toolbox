@@ -678,14 +678,13 @@ export default class MultiLevelNavigation extends Mutation() {
 
     this.setCss(/* css */`
     :host li.hover-active m-nav-level-item {
-      --nav-level-item-default-background-color: #E0F0FF;
+      --nav-level-item-default-background-color: var(--nav-level-item-default-hover-background-color);
     }
     :host li m-nav-level-item {
       --nav-level-item-default-font-size: 1rem;
       --nav-level-item-default-height: 2.75em;
       --nav-level-item-default-margin: 2px 2px 2px 0;
       --nav-level-item-default-font-weight: 500;
-      --nav-level-item-default-hover-background-color: #E0F0FF;
       --color: var(--a-color);
     }
     :host > nav > ul > li > o-nav-wrapper {
