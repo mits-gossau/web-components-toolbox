@@ -98,8 +98,7 @@
     --logo-default-img-position: unset;
     --logo-default-img-position-bottom: unset;
 }
-
-@media only screen and (max-width:1025px) {
+@media only screen and (max-width: calc(_max-width_ + 5px)) {
     :host>header>a-menu-icon {
         grid-area: menu-icon;
         order: 0;
