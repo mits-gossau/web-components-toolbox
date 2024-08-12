@@ -10,7 +10,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Select extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super(Object.assign(options, { mode: 'open' }), ...args)
 
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']

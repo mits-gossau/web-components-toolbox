@@ -207,10 +207,10 @@ export default class Flatpickr extends Shadow() {
           if (this.getAttribute('request-event-name') && !this.gotCleared) {
             /**
              * What is this all about?
-             * There is the case that the end date should be set automatically. 
-             * So the desired end date is set as an attribute and read and set here. 
-             * Is that good? 
-             * I have no idea. 
+             * There is the case that the end date should be set automatically.
+             * So the desired end date is set as an attribute and read and set here.
+             * Is that good?
+             * I have no idea.
              * But the MIDUWEB-1301 ticket needs this.
              */
             if (this.getAttribute('force-end-date')) {

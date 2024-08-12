@@ -9,7 +9,6 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export const FINISH_LOADING_EVENT = 'finish-loading'
 
-
 /**
  * SimpleForm is a wrapper for a form html tag and allows to choose to ether post the form by default behavior, send it to an api endpoint or emit a custom event
  * Expose Internals does not work with native :valid selector... https://dev.to/stuffbreaker/custom-forms-with-web-components-and-elementinternals-4jaj, solution to turn off the shadow dom of child components
@@ -459,7 +458,7 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
         return acc
       }, Promise.resolve({}))
     }
-    console.info('submitting', body);
+    console.info('submitting', body)
     const mode = this.getAttribute('mode');
     (this.getAttribute('endpoint')
       ? fetch(this.getAttribute('endpoint'), {
@@ -505,8 +504,8 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
       let redirectUrl
       if ((response = this.getPropertyByKey(json, this.getAttribute('response-property-name') || 'response')) && this.response) {
         let responseTextNodes = Array.from(this.response.querySelectorAll(this.getAttribute('response-text-node-selector')))
-        //if (!responseTextNodes.length) responseTextNodes = [this.response]
-        //responseTextNodes.forEach(responseTextNode => (responseTextNode.innerHTML = response))
+        // if (!responseTextNodes.length) responseTextNodes = [this.response]
+        // responseTextNodes.forEach(responseTextNode => (responseTextNode.innerHTML = response))
         if (!responseTextNodes.length) {
           responseTextNodes = this.response
         } else {
