@@ -372,11 +372,21 @@ export default class Picture extends Intersection(Hover()) {
         let prevWidth = 0
         let nextWidth = 0
         while (width < naturalWidth) {
+          const src2 = Picture.newUrl(src.href);
           nextWidth = width + step < naturalWidth ? width + step : 0
-          nextWidth || naturalAspectRatio ? src.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width)) : src.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
-          if (naturalAspectRatio) src.searchParams.set(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height', String(width * naturalAspectRatio))
+          if (nextWidth || naturalAspectRatio) {
+            src.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width))
+            src2.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width * 2))
+          } else {
+            src.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
+            src2.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
+          }
+          if (naturalAspectRatio) {
+            src.searchParams.set(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height', String(width * naturalAspectRatio))
+            src2.searchParams.set(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height', String(width * 2 * naturalAspectRatio))
+          }
           const source = document.createElement('source')
-          source.setAttribute('data-srcset', src.href)
+          source.setAttribute('data-srcset', `${src.href}, ${src2.href} 2x`)
           if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) source.setAttribute('type', 'image/webp') // force webp as format
           source.setAttribute('media', `${prevWidth ? `(min-width: ${prevWidth + 1}px)` : ''}${prevWidth && (nextWidth || naturalAspectRatio) ? ' and ' : ''}${nextWidth || naturalAspectRatio ? `(max-width: ${width}px)` : ''}`)
           this.sources.push(source)
