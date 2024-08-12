@@ -367,12 +367,12 @@ export default class Picture extends Intersection(Hover()) {
         if (this.hasAttribute('sources-delete-query-keys')) this.getAttribute('sources-delete-query-keys').split(',').forEach(keys => src.searchParams.delete(keys))
         if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) src.searchParams.set(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format', 'webp') // force webp as format
         if (src.searchParams.get(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality')) src.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '80') // force quality as 80
+        const src2 = Picture.newUrl(src.href)
         const step = 50
         let width = step
         let prevWidth = 0
         let nextWidth = 0
         while (width < naturalWidth) {
-          const src2 = Picture.newUrl(src.href);
           nextWidth = width + step < naturalWidth ? width + step : 0
           if (nextWidth || naturalAspectRatio) {
             src.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width))
