@@ -58,6 +58,7 @@ export default class Input extends Shadow() {
       }
     }
     this.changeListener = event => this.clickListener(event, undefined, undefined, 'change')
+    this.blurListener = event => this.clickListener(event, undefined, undefined, 'blur')
     this.focusListener = event => this.clickListener(event, undefined, true, 'focus')
     this.keydownTimeoutId = null
     this.keydownListener = event => {
@@ -105,6 +106,7 @@ export default class Input extends Shadow() {
         if (this.hasAttribute('delete-listener')) this.addEventListener('click', this.clickListener)
         if (this.searchButton) this.searchButton.addEventListener('click', this.clickListener)
         if (this.hasAttribute('change-listener') && this.inputField) this.inputField.addEventListener('change', this.changeListener)
+        if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.addEventListener('blur', this.blurListener)
         if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.addEventListener('focus', this.focusListener)
         document.addEventListener('keydown', this.keydownListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
@@ -120,6 +122,7 @@ export default class Input extends Shadow() {
       if (this.hasAttribute('delete-listener')) this.removeEventListener('click', this.clickListener)
       if (this.searchButton) this.searchButton.removeEventListener('click', this.clickListener)
       if (this.hasAttribute('change-listener') && this.inputField) this.inputField.removeEventListener('change', this.changeListener)
+      if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.removeEventListener('blur', this.blurListener)
       if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.removeEventListener('focus', this.focusListener)
       document.removeEventListener('keydown', this.keydownListener)
     }
