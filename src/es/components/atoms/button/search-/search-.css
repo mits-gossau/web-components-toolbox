@@ -17,8 +17,6 @@
   --button-search-icon-color: var(--button-search-icon-search-color-custom);
   --button-search-icon-color-hover: var(--button-search-icon-search-color-hover-custom);
   --button-search-icon-right-margin: var(--button-search-icon-right-margin, 0 0 0 1.5rem);
-  /* --button-search-icon-color: var(--mdx-sys-color-primary-default);
-  --button-search-icon-color-hover: var(--mdx-sys-color-primary-default); */
   --button-search-justify-content: var(--button-search-justify-content-custom, space-between);
   --button-search-padding: var(--button-search-padding-custom ,0.5rem 1.5rem);
   --button-search-transition: var(--button-search-transition-custom, var(--transition));
