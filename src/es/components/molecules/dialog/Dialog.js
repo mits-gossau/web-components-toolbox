@@ -100,7 +100,7 @@ export default class Dialog extends Shadow() {
         this.closeNodes.forEach(node => (node.style.display = ''))
         if (this.hasAttribute('open')) {
           this.show(this.getAttribute('open') || undefined)
-          this.removeAttribute('open')
+          if (!this.hasAttribute('open-on-every-connect')) this.removeAttribute('open')
         }
       })
     })
