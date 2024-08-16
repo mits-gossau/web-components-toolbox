@@ -1,0 +1,35 @@
+:host {
+  --button-search-background-color-disabled: var(--button-search-background-color-disabled-custom, var(--m-white, transparent));
+  --button-search-background-color-hover: var(--button-search-background-color-disabled-custom, var(--m-white, transparent));
+  --button-search-background-color: var(--button-search-background-color-disabled-custom, var(--m-white, transparent));
+  --button-search-border-color-disabled: var(--button-search-border-color-disabled-custom, var(--m-gray-700));
+  --button-search-border-color-hover: var(--button-search-border-color-hover-custom, var(--m-gray-700));
+  --button-search-border-color: var(--button-search-border-color-custom, var(--m-gray-700));
+  --button-search-border-width: var(--button-search-border-width-custom, 1px);
+  --button-search-color-disabled: var(--button-search-color-disabled-custom, var(--m-gray-700));
+  --button-search-color-hover: var(--button-search-color-hover-custom, var(--m-gray-700));
+  --button-search-color: var(--button-search-color-custom, var(--m-gray-700));
+  --button-search-cursor: var(--button-search-cursor-custom, text);
+  --button-search-font-family: var(--button-search-font-family-custom, var(--font-family));
+  --button-search-font-size: var(--button-search-font-size-custom, 1.15rem);
+  --button-search-font-weight: var(--button-search-font-weight-custom, 400);
+  --button-search-height: var(--button-search-height, 2.88rem);
+  --button-search-icon-color: var(--button-search-icon-search-color-custom);
+  --button-search-icon-color-hover: var(--button-search-icon-search-color-hover-custom);
+  --button-search-icon-right-margin: var(--button-search-icon-right-margin, 0 0 0 1.5rem);
+  --button-search-justify-content: var(--button-search-justify-content-custom, space-between);
+  --button-search-padding: var(--button-search-padding-custom ,0.5rem 1.5rem);
+  --button-search-transition: var(--button-search-transition-custom, var(--transition));
+  --button-search-width: 100%;
+  --svg-size: var(--button-search-svg-size-custom, 1.5rem);
+  --svg-size-mobile: var(--button-search-svg-size-mobile-custom, 1.2rem);
+  width: 100%;
+}
+
+@media only screen and (max-width: 767px) {
+  :host {
+    --button-search-font-size: var(--button-search-font-size-mobile-custom, 1rem);
+    --button-search-height: var(--button-search-height-mobile-custom, 2.5rem);
+    --button-search-padding: var(--button-search-padding-mobile-custom, 0.5rem 0.9rem);
+  }
+}

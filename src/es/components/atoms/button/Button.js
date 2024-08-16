@@ -444,6 +444,13 @@ export default class Button extends Hover() {
           namespace: false,
           replaces
         }])
+      case 'button-search-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./search-/search-.css`,
+          namespace: false,
+          replaces
+        }])
       default:
         return Promise.resolve()
     }
