@@ -52,7 +52,7 @@ export default class LoadTemplateTag extends Intersection() {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector(
+    return !this.hasAttribute('no-css') && !this.root.querySelector(
       `${this.cssSelector} > style[_css]`
     )
   }
