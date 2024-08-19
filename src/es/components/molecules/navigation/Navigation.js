@@ -246,7 +246,7 @@ export default class Navigation extends Mutation() {
       :host > nav > ul > li{
         display: var(--li-display, block);
         padding: var(--li-padding, 0 calc(var(--content-spacing, 40px) / 4));
-        max-width: var(--li-max-width, unset)
+        max-width: var(--li-max-width, unset);
       }
       :host > nav > ul li > a-arrow {
         display: none;
