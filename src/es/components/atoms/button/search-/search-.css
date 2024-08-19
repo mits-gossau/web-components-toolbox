@@ -1,7 +1,7 @@
 :host {
   --button-search-background-color-disabled: var(--button-search-background-color-disabled-custom, var(--m-white, transparent));
-  --button-search-background-color-hover: var(--button-search-background-color-disabled-custom, var(--m-white, transparent));
-  --button-search-background-color: var(--button-search-background-color-disabled-custom, var(--m-white, transparent));
+  --button-search-background-color-hover: var(--button-search-background-color-hover-custom, var(--m-white, transparent));
+  --button-search-background-color: var(--button-search-background-color-custom, var(--m-white, transparent));
   --button-search-border-color-disabled: var(--button-search-border-color-disabled-custom, var(--m-gray-700));
   --button-search-border-color-hover: var(--button-search-border-color-hover-custom, var(--m-gray-700));
   --button-search-border-color: var(--button-search-border-color-custom, var(--m-gray-700));
