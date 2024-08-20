@@ -1116,13 +1116,9 @@ export default class MultiLevelNavigation extends Mutation() {
         // Add class for title li a element
         const subTitleLiTags = Array.from(wrapper.querySelectorAll('li')).filter(li => !li.querySelector('m-nav-level-item'))
         subTitleLiTags.forEach(li => {
-          li.classList.add('list-title')
-          // original solution: li.childNodes[0].nextElementSibling.firstChild.textContent = li.childNodes[0].nextElementSibling.firstChild.textContent.trim()
-          // possible solution: li.childNodes[0].nextElementSibling?.firstChild?.textContent = li.childNodes[0].nextElementSibling?.firstChild?.textContent.trim();
-          const sibling = li.childNodes[0].nextElementSibling;
-          if (sibling !== null && sibling.firstChild !== null) {
-            sibling.firstChild.textContent = sibling.firstChild.textContent.trim();
-          }
+          li.classList.add('list-title')       
+          li.childNodes[0].nextElementSibling && li.childNodes[0].nextElementSibling.firstChild ?
+          li.childNodes[0].nextElementSibling.firstChild.textContent = li.childNodes[0].nextElementSibling.firstChild.textContent.trim() : null
         }
         )
 
