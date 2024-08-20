@@ -18,7 +18,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * }
  */
 export default class MultiLevelNavigation extends Mutation() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
@@ -207,7 +207,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -239,7 +239,7 @@ export default class MultiLevelNavigation extends Mutation() {
     this.setMainNavigationFontSize()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
@@ -253,7 +253,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -262,7 +262,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.nav
   }
 
@@ -271,7 +271,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {Promise<void>|void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host {
       color: black;
@@ -711,7 +711,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import('../../prototypes/Shadow.js').fetchCSSParams[]} */
     const styles = [
       {
@@ -754,7 +754,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {Promise<void>|void}
    */
-  renderHTML (clonedNav) {
+  renderHTML(clonedNav) {
     this.nav = clonedNav || this.root.querySelector('nav') || document.createElement('nav')
     this.nav.setAttribute('aria-labelledby', 'hamburger')
     this.nav.setAttribute('aria-expanded', 'false')
@@ -781,12 +781,12 @@ export default class MultiLevelNavigation extends Mutation() {
    * @returns {boolean}
    * @memberof IntersectionScrollEffect
    */
-  checkMedia (media = this.getAttribute('media')) {
+  checkMedia(media = this.getAttribute('media')) {
     const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
     return (isMobile ? 'mobile' : 'desktop') === media
   }
 
-  get style () {
+  get style() {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
@@ -794,7 +794,7 @@ export default class MultiLevelNavigation extends Mutation() {
     })())
   }
 
-  addCustomColors () {
+  addCustomColors() {
     Array.from(this.root.querySelectorAll('li')).forEach(li => {
       if (li.hasAttribute('main-color')) {
         li.style.setProperty('--multi-level-navigation-default-color-active', li.getAttribute('main-color'))
@@ -806,7 +806,7 @@ export default class MultiLevelNavigation extends Mutation() {
     })
   }
 
-  hideAndClearDesktopSubNavigation (event) {
+  hideAndClearDesktopSubNavigation(event) {
     const navWrappers = Array.from(this.root.querySelectorAll('o-nav-wrapper'))
     const allOpenLiTags = Array.from(this.root.querySelectorAll('li.open'))
     const allActiveLiTags = Array.from(this.root.querySelectorAll('li.active'))
@@ -856,7 +856,7 @@ export default class MultiLevelNavigation extends Mutation() {
     allActiveLiTags.forEach(li => li.classList.remove('active'))
   }
 
-  hideAndClearMobileSubNavigation () {
+  hideAndClearMobileSubNavigation() {
     const navElement = this.root.querySelector('nav')
     const navElementChildren = Array.from(navElement.children)
     if (this.getAttribute('aria-expanded') === 'false' && navElementChildren.length) {
@@ -878,7 +878,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  htmlReBuilderByLayoutChange () {
+  htmlReBuilderByLayoutChange() {
     const currentNav = this.root.querySelector('nav')
     if (this.isDesktop) {
       // set nav element from mobile to desktop compatible
@@ -926,7 +926,7 @@ export default class MultiLevelNavigation extends Mutation() {
     this.renderHTML(currentNav)
   }
 
-  setScrollOnBody (isScrollOnBodyEnabled, event) {
+  setScrollOnBody(isScrollOnBodyEnabled, event) {
     if (event.target.nodeName !== 'O-BODY') {
       this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
         detail: {
@@ -941,7 +941,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  setDesktopMainNavItems (event) {
+  setDesktopMainNavItems(event) {
     const isOpen = event.currentTarget.classList.contains('open')
     let isFlyoutOpen = false
     event.preventDefault()
@@ -968,7 +968,7 @@ export default class MultiLevelNavigation extends Mutation() {
     if (isFlyoutOpen) event.currentTarget.parentElement.querySelector('o-nav-wrapper').classList.add('no-animation')
   }
 
-  setMobileMainNavItems (event) {
+  setMobileMainNavItems(event) {
     // set the currently clicked/touched aria expanded attribute
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
 
@@ -983,7 +983,7 @@ export default class MultiLevelNavigation extends Mutation() {
     activeFirstLevelSubNav.classList.add('open-right-slide')
   }
 
-  handleOnClickOnDesktopSubNavItems (event) {
+  handleOnClickOnDesktopSubNavItems(event) {
     const wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
     const wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
     const wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll('ul'))
@@ -1018,7 +1018,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  handleAnchorClickOnNavItems (event) {
+  handleAnchorClickOnNavItems(event) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
       detail: {
         selector: event.currentTarget.getAttribute('href')
@@ -1029,13 +1029,13 @@ export default class MultiLevelNavigation extends Mutation() {
     }))
   }
 
-  handleNewTabNavigationOnNavItems (event) {
+  handleNewTabNavigationOnNavItems(event) {
     event.preventDefault()
     setTimeout(() => this.removeAttribute('style'), 3000)
     self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
   }
 
-  handleOnClickOnMobileSubNavItems (event) {
+  handleOnClickOnMobileSubNavItems(event) {
     const wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
     const wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
     const wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll('ul'))
@@ -1065,7 +1065,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  renderDesktopHTML () {
+  renderDesktopHTML() {
     return this.fetchModules([
       {
         path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
@@ -1117,7 +1117,12 @@ export default class MultiLevelNavigation extends Mutation() {
         const subTitleLiTags = Array.from(wrapper.querySelectorAll('li')).filter(li => !li.querySelector('m-nav-level-item'))
         subTitleLiTags.forEach(li => {
           li.classList.add('list-title')
-          li.childNodes[0].nextElementSibling.firstChild.textContent = li.childNodes[0].nextElementSibling.firstChild.textContent.trim()
+          // original solution: li.childNodes[0].nextElementSibling.firstChild.textContent = li.childNodes[0].nextElementSibling.firstChild.textContent.trim()
+          // possible solution: li.childNodes[0].nextElementSibling?.firstChild?.textContent = li.childNodes[0].nextElementSibling?.firstChild?.textContent.trim();
+          const sibling = li.childNodes[0].nextElementSibling;
+          if (sibling !== null && sibling.firstChild !== null) {
+            sibling.firstChild.textContent = sibling.firstChild.textContent.trim();
+          }
         }
         )
 
@@ -1144,7 +1149,7 @@ export default class MultiLevelNavigation extends Mutation() {
     })
   }
 
-  renderMobileHTML () {
+  renderMobileHTML() {
     Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
     Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
       node.style.display = 'block'
@@ -1262,7 +1267,7 @@ export default class MultiLevelNavigation extends Mutation() {
     this.html = this.style
   }
 
-  addBackgroundDivPosition (event, isFlyoutOpen) {
+  addBackgroundDivPosition(event, isFlyoutOpen) {
     const backgroundTopPosition = event.pageY + 150
     const mainFlyoutBackgroundDiv = event.currentTarget.parentElement.querySelector('.main-background')
     if (mainFlyoutBackgroundDiv) {
@@ -1271,11 +1276,11 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  getMedia () {
+  getMedia() {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 
-  recalculateNavigationHeight () {
+  recalculateNavigationHeight() {
     setTimeout(() => {
       this.headerHeight = this.getRootNode().host.offsetHeight
       this.restOfHeight = window.screen.height * 0.9 - this.headerHeight
@@ -1298,7 +1303,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }, 1000)
   }
 
-  setActiveNavigationItemBasedOnUrl () {
+  setActiveNavigationItemBasedOnUrl() {
     const subUrls = []
     const navigationItemsUrlNames = []
     const navigationItems = Array.from(this.root.querySelectorAll('nav > ul > li[url-name]'))
@@ -1315,7 +1320,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  setMainNavigationFontSize () {
+  setMainNavigationFontSize() {
     const mainNavigation = this.root.querySelector('nav > ul')
     const fontSizeBreakPoint = Number(mainNavigation.getAttribute('font-size-breakpoint'))
     const mainNavigationSpans = Array.from(this.root.querySelectorAll('nav > ul > li:not([only-mobile], [show-only-mobile]) > a > span'))
@@ -1338,13 +1343,13 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  hideMobileNavigation () {
+  hideMobileNavigation() {
     if (!this.isDesktop && !this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.contains('hide')) {
       this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.add('hide')
     }
   }
 
-  showMobileNavigation () {
+  showMobileNavigation() {
     if (!this.isDesktop && this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.contains('hide')) {
       this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.remove('hide')
     }
