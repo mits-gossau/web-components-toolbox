@@ -45,7 +45,7 @@
 
 :host .intersecting {
   height: var(--multi-level-navigation-delica-intersecting, 100%);
-  
+
 }
 
 #nav-section-1,
@@ -86,7 +86,7 @@
 
 }
 
-:host .close-icon{
+:host .close-icon {
   top: 0.6em !important;
   right: 0.5em !important;
 }
@@ -180,7 +180,7 @@
     align-items: flex-start;
   }
 
-  :host>nav>div{
+  :host>nav>div {
     padding: 1.5em !important;
     padding-top: 2.5em !important;
   }
@@ -202,15 +202,14 @@
     margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
   }
 
-  :host > nav > ul > li{
+  :host>nav>ul>li {
     --multi-level-navigation-delica-li-padding: 0.7em;
-
   }
 
-  :host > nav > div[nav-level] ul {
+  :host>nav>div[nav-level] ul {
     padding: 1.5em;
-}
-}
+  }
+
   :host>nav>div {
     position: absolute;
     border-top: var(--multi-level-navigation-delica-mobile-wrapper-border-width, var(--mobile-wrapper-border-width, 1px)) var(--multi-level-navigation-delica-mobile-wrapper-border-style, var(--mobile-wrapper-border-style, solid)) var(--multi-level-navigation-delica-mobile-wrapper-border-color, var(--mobile-wrapper-border-color, black));
