@@ -35,17 +35,14 @@
 
 :host>nav>ul>li>o-nav-wrapper>section>div:not(:last-of-type):after {
   display: none;
-
 }
 
 :host .close-icon a-icon-mdx {
   color: var(--multi-level-navigation-delica-close-icon-color, white) !important;
-
 }
 
 :host .intersecting {
   height: var(--multi-level-navigation-delica-intersecting, 100%);
-
 }
 
 #nav-section-1,
@@ -83,7 +80,6 @@
 
 #nav-section-2 a .close-icon {
   color: var(--multi-level-navigation-delica-close-icon-color, white);
-
 }
 
 :host .close-icon {
@@ -102,18 +98,15 @@
 
 :host .nav-wrapper {
   border-radius: 1em;
-
 }
 
 :host .nav-wrapper>ul {
   padding: 1.5em !important;
-
 }
 
 :host .wrapper-background {
   --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-background-color: #172445;
 }
-
 
 :host>nav>ul {
   padding-right: 1em;
@@ -139,7 +132,6 @@
   overflow: hidden;
 }
 
-
 @media only screen and (min-width: 1200px) {
   :host>nav>ul>li>o-nav-wrapper>section>div {
     height: fit-content;
@@ -149,7 +141,6 @@
     height: 100%;
   }
 }
-
 
 @media only screen and (max-width: 1200px) {
   .li-seperator {
