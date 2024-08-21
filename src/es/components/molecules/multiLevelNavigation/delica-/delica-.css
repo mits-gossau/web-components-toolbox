@@ -180,14 +180,19 @@
     align-items: flex-start;
   }
 
+  :host>nav>div{
+    padding: 1.5em !important;
+    padding-top: 2.5em !important;
+  }
+
   :host>nav>ul {
     width: 95%;
     height: fit-content;
     overflow: auto;
     background-color: white;
     border-radius: 1em;
-    margin-top: 2%;
-    padding: 1em;
+    margin-top: 3%;
+    padding: 1.5em;
     margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
     margin-left: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
   }
@@ -197,6 +202,15 @@
     margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
   }
 
+  :host > nav > ul > li{
+    --multi-level-navigation-delica-li-padding: 0.7em;
+
+  }
+
+  :host > nav > div[nav-level] ul {
+    padding: 1.5em;
+}
+}
   :host>nav>div {
     position: absolute;
     border-top: var(--multi-level-navigation-delica-mobile-wrapper-border-width, var(--mobile-wrapper-border-width, 1px)) var(--multi-level-navigation-delica-mobile-wrapper-border-style, var(--mobile-wrapper-border-style, solid)) var(--multi-level-navigation-delica-mobile-wrapper-border-color, var(--mobile-wrapper-border-color, black));
