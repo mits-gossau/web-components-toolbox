@@ -32,7 +32,7 @@ export default class Dialog extends Shadow() {
       this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
       dialog.classList.add('closed')
       dialog.close()
-      if (this.hasAttribute('closed-event-name')) this.dispatchEvent(new CustomEvent(this.getAttribute('closed-event-name') || 'dialog-close-event', { bubbles: true, cancelable: true, composed: true }))
+      if (this.hasAttribute('closed-event-name')) this.dispatchEvent(new CustomEvent(this.getAttribute('closed-event-name') || 'dialog-closed-event', { bubbles: true, cancelable: true, composed: true }))
 
       // remove focus-visibility if dialog closes
       const dialogButtons = Array.from(this.root.querySelectorAll('ks-a-button, a-button, button'))
