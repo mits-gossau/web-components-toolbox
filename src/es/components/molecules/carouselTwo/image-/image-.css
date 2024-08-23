@@ -35,6 +35,7 @@
   :host([namespace='carousel-two-image-']) > section {
     margin: var(--any-content-spacing-mobile, var(--content-spacing-mobile)) -1rem;
     width: 100vw !important;
+    overflow-x: hidden;
   }
   :host {
     --button-padding-mobile-custom: var(--mdx-comp-button-primary-small-padding-vertical-default);
