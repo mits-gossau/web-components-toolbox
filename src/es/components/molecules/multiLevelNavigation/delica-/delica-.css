@@ -198,7 +198,9 @@
   }
 
   :host>nav>div[nav-level] ul {
-    padding: 1.5em;
+    padding: var(--multi-level-navigation-delica-padding-var, 1.5em);
+    overflow-y: var(--multi-level-navigation-delica-overflow-y-var, scroll);
+    max-height: var(--multi-level-navigation-delica-max-height-var, 72vh);
   }
 
   :host>nav>div {
