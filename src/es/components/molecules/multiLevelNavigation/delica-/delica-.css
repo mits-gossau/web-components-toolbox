@@ -28,7 +28,7 @@
   --header-nav-grid-delica-a-menu-icon-padding: 1.5rem 1em 1.5rem 1rem !important;
   --header-nav-grid-delica-a-menu-icon-padding-open: 1.5rem 1em 1.5rem 1rem !important;
   --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-border-color: white;
-  --multi-level-navigation-delica-nav-wrapper-width-var: 95%;
+  --multi-level-navigation-delica-nav-wrapper-width: 95%;
   --mobileOpenLeft-animation-right: 2.5%;
   --any-padding-bottom-last-child: 1.5em
 }
@@ -184,13 +184,13 @@
     border-radius: 1em;
     margin-top: 3%;
     padding: 1.5em;
-    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
-    margin-left: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width)) / 2);
+    margin-left: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width)) / 2);
   }
 
   :host .nav-wrapper {
-    width: var(--multi-level-navigation-delica-nav-wrapper-width-var, 95%);
-    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
+    width: var(--multi-level-navigation-delica-nav-wrapper-width, 95%);
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width)) / 2);
   }
 
   :host>nav>ul>li {
@@ -198,18 +198,26 @@
   }
 
   :host>nav>div[nav-level] ul {
-    padding: 1.5em;
+    padding: var(--multi-level-navigation-delica-ul-padding, 1.5em);
+    overflow-y: var(--multi-level-navigation-delica-ul-overflow-y, scroll);
+    max-height: var(--multi-level-navigation-delica-ul-max-height, 72vh);
   }
 
   :host>nav>div {
     position: absolute;
     border-top: var(--multi-level-navigation-delica-mobile-wrapper-border-width, var(--mobile-wrapper-border-width, 1px)) var(--multi-level-navigation-delica-mobile-wrapper-border-style, var(--mobile-wrapper-border-style, solid)) var(--multi-level-navigation-delica-mobile-wrapper-border-color, var(--mobile-wrapper-border-color, black));
-    width: var(--multi-level-navigation-delica-nav-wrapper-width-var, 95%);
-    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width-var)) / 2);
+    width: var(--multi-level-navigation-delica-nav-wrapper-width, 95%);
+    margin-right: calc((100% - var(--multi-level-navigation-delica-nav-wrapper-width)) / 2);
     height: fit-content;
     background-color: white;
     margin-top: 2%;
     padding: 1em;
     border-radius: 1em;
+  }
+}
+
+@media only screen and (max-height: 800px) {
+  :host > nav > ul > li > o-nav-wrapper, :host > nav > ul > li > o-nav-wrapper div.wrapper-background {
+      --multi-level-navigation-delica-mobile-main-wrapper-height: auto;
   }
 }
