@@ -58,7 +58,7 @@ export default class Input extends Shadow() {
       }
     }
     this.changeListener = event => this.clickListener(event, undefined, undefined, 'change')
-    this.blurListener = event => this.clickListener(event, undefined, undefined, 'blur')
+    this.blurListener = event => this.clickListener(event, undefined, undefined, this.hasAttribute('enter-on-blur') ? 'enter' : 'blur')
     this.focusListener = event => this.clickListener(event, undefined, true, 'focus')
     this.keydownTimeoutId = null
     this.keydownListener = event => {
