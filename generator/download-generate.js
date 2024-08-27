@@ -1,8 +1,8 @@
-var request = require("request");
+var request = require("request")
 
 request(
     { uri: "https://www.klubschule.ch" },
-    function(error, response, body) {
-        console.log(body);
+    (error, response, body) => {
+        console.log(body)
     }
-);
+)
