@@ -52,4 +52,8 @@
     :host > section > *:last-child {
         margin-right: 1px;
     }
+    /* visually hide scrollbar without impacting scrolling */
+    :host > section::-webkit-scrollbar {
+        display: none;
+    }
 }
