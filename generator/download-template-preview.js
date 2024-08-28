@@ -1,9 +1,11 @@
 // script command: "uriDefault=https://www.klubschule.ch/kreativitaet/ path=../../pages/generator/ node download-template-preview.js"
 
-const request = require('request')
 const inquirer = require('inquirer')
+const request = require('request')
 const fs = require('fs-extra')
 const path = require('path')
+
+const indexJsonFileName = 'index.json'
 
 const init = async () => {
   if (!process.env.path) return console.error('Define env.path! Example Command: "path=../../pages/generator/ node download-template-preview.js"')
@@ -11,21 +13,20 @@ const init = async () => {
     case 0:
       return fetchNewPage()
     case 1:
-      return console.log('update')
+      return promptUpdate()
     case 2:
-      return console.log('delete')
+      return promptDelete()
   }
 }
 
-const fetchNewPage = async () => {
-  const uri = await promptWhichUri()
+const fetchNewPage = async (uri = null) => {
+  if (!uri) uri = await promptWhichUri()
   try {
     console.log('Generating page based on...', uri)
     request(
       { uri },
       (error, response, body) => {
         if (!error) {
-          const indexJsonFileName = 'index.json'
           let indexArray = []
           const htmlFileName = uri.replace(/[^a-zA-Z0-9-_]/g, '-').replace(/-$/g, '') + '.html'
           const cleanedBody = body.replace(/(.|\n|\r)*<o-body.*?>/gm, '').replace(/<\/o-body>(.|\n|\r)*/gm, '').trim()
@@ -36,10 +37,10 @@ const fetchNewPage = async () => {
           // write test
           fs.writeFile(process.env.path + htmlFileName + '.spec.js', writeVisualRegressionTest(htmlFileName, './' + htmlFileName), 'utf8', error => {if(error) console.error(error)})
           // read existing index json
-          if (fs.existsSync(process.env.path + indexJsonFileName)) indexArray = JSON.parse(fs.readFileSync(process.env.path + indexJsonFileName, 'utf8'))
+          indexArray = readIndexJsonFile(process.env.path + indexJsonFileName, indexArray)
           // write json
           let indexObj
-          if ((indexObj = indexArray.find(index => index.uri === uri))) {
+          if ((indexObj = indexArray.find(indexObj => indexObj.uri === uri))) {
             indexObj.timestamp = Date.now()
           } else {
             indexArray = [...indexArray, {htmlFileName, uri, timestamp: Date.now()}]
@@ -84,6 +85,49 @@ const promptWhichUri = () => {
       }
     }
   ]).then(({uri}) => uri)
+}
+
+const promptDelete = () => {
+  let indexArray
+  const choices = (indexArray = readIndexJsonFile(process.env.path + indexJsonFileName)).map(indexObj => indexObj.uri)
+  return inquirer.prompt([
+    {
+      name: 'deleteList',
+      message: 'Which page/uri do you want to delete locally?',
+      type: 'checkbox',
+      choices
+    }
+  ]).then(({deleteList}) => deleteList.forEach(deleteKey => {
+    let indexObj
+    if ((indexObj = indexArray.find(indexObj => indexObj.uri === deleteKey))) {
+      console.log('deleting: ', process.env.path + indexObj.htmlFileName)
+      fs.rmSync(process.env.path + indexObj.htmlFileName, { recursive: true, force: true })
+      fs.rmSync(process.env.path + indexObj.htmlFileName + '.spec.js', { recursive: true, force: true })
+      indexArray.splice(indexArray.indexOf(indexObj), 1)
+      fs.writeFile(process.env.path + indexJsonFileName, JSON.stringify(indexArray), 'utf8', error => {if(error) console.error(error)})
+    }
+  }))
+}
+
+const promptUpdate = () => {
+  let indexArray
+  const choices = (indexArray = readIndexJsonFile(process.env.path + indexJsonFileName)).map(indexObj => `${indexObj.uri} | Last Updated: ${(new Date(indexObj.timestamp)).toLocaleString('en-US')}`)
+  return inquirer.prompt([
+    {
+      name: 'updateList',
+      message: 'Which page/uri do you want to update?',
+      type: 'checkbox',
+      choices
+    }
+  ]).then(({updateList}) => updateList.forEach(updateKey => {
+    let indexObj
+    if ((indexObj = indexArray.find(indexObj => indexObj.uri === updateKey.replace(/\s\|.*/g, '')))) fetchNewPage(indexObj.uri)
+  }))
+}
+
+const readIndexJsonFile = (path, array = []) => {
+  if (fs.existsSync(path)) array = JSON.parse(fs.readFileSync(path, 'utf8'))
+  return array
 }
 
 const writeVisualRegressionTest = (name, htmlPath) => {
