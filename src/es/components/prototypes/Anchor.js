@@ -42,9 +42,6 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
             composed: true
           }))
         }, 500) // lazy loading pics make this necessary to reach target
-        self.removeEventListener('hashchange', this.clickAnchorEventListener)
-        location.hash = location.hash.replace('_scrolled', '') + '_scrolled'
-        self.addEventListener('hashchange', this.clickAnchorEventListener)
       }
     }
   }
