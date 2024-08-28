@@ -22,20 +22,24 @@ const fetchNewPage = async () => {
       { uri },
       (error, response, body) => {
         if (!error) {
-          const indexFileName = 'index.json'
-          const htmlFileName = uri.replace(/[^a-zA-Z0-9-_]/g, '-') + '.html'
-          let index = []
+          const indexJsonFileName = 'index.json'
+          let indexArray = []
+          const htmlFileName = uri.replace(/[^a-zA-Z0-9-_]/g, '-').replace(/-$/g, '') + '.html'
           const cleanedBody = body.replace(/(.|\n|\r)*<o-body.*?>/gm, '').replace(/<\/o-body>(.|\n|\r)*/gm, '').trim()
           // create dirs if not applicable
           fs.mkdir(process.env.path, { recursive: true }, error => {if(error) console.error(error)})
           // write html
           fs.writeFile(process.env.path + htmlFileName, cleanedBody, 'utf8', error => {if(error) console.error(error)})
+          // read existing index json
+          if (fs.existsSync(process.env.path + indexJsonFileName)) indexArray = JSON.parse(fs.readFileSync(process.env.path + indexJsonFileName, 'utf8'))
           // write json
-          if (fs.existsSync(process.env.path + indexFileName)) {
-            index = JSON.parse(fs.readFileSync(process.env.path + indexFileName, 'utf8'))
+          let indexObj
+          if ((indexObj = indexArray.find(index => index.uri === uri))) {
+            indexObj.timestamp = Date.now()
+          } else {
+            indexArray = [...indexArray, {htmlFileName, uri, timestamp: Date.now()}]
           }
-          index = [...index, {htmlFileName, uri}]
-          fs.writeFile(process.env.path + indexFileName, JSON.stringify(index), 'utf8', error => {if(error) console.error(error)})
+          fs.writeFile(process.env.path + indexJsonFileName, JSON.stringify(indexArray), 'utf8', error => {if(error) console.error(error)})
         } else {
           console.error(error)
         }
