@@ -1,0 +1,583 @@
+<ks-m-stage namespace="stage-default-" brand="ks">
+
+			<a-picture namespace="" alt="Individuelle Sprachkurse" picture-load="" defaultSource="https://www.klubschule.ch/media/il3hv1oi/sprachen-so-vielfaeltig-wie-du.png?cc=0.12083333333333333,0.08121052007999204,0.004166666666666667,0.4224294534474732&amp;width=2500&amp;height=1071&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1daefbd4ac590d0" aspect-ratio="0.42857143" sources-keep-query-aspect-ratio="" style="--img-object-position: 72.7046% 16.4437%"></a-picture>
+			<ks-a-heading tag="h1" display-2><h1>So vielf&#xE4;ltig wie Du</h1></ks-a-heading>
+			<ks-c-auto-complete disabled
+								endpoint-auto-complete="https://www.klubschule.ch/Umbraco/Api/Autocomplete/search?portal=29&mandant=111&lang=d"
+								reset-input-value-based-url="q"
+								search-url="https://www.klubschule.ch/suche/">
+
+				<m-dialog namespace="dialog-top-slide-in-" id="keyword-search" close-event-name="close-search-dialog" dialog-mobile-height="100vh" dialog-desktop-height="40%">
+					<div class="container">
+						<a-input inputid="home-page-input-search"
+								 autofocus
+								 placeholder="Veranstaltung suchen..."
+								 icon-name="Search"
+								 icon-size="1.25em"
+								 submit-search="request-auto-complete"
+								 type="search"
+								 answer-event-name="search-change"
+								 delete-listener
+								 search
+								 autocomplete="off">
+						</a-input>
+						<div id="close">
+							<a-icon-mdx icon-name="Plus" size="2em" color="#3d3d3d"></a-icon-mdx>
+						</div>
+					</div>
+					<div class="container">
+						<ks-m-auto-complete-list auto-complete-selection="auto-complete-selection">
+						</ks-m-auto-complete-list>
+					</div>
+
+					<style>
+						:host > ks-a-button {
+							width: 100%;
+							--button-secondary-background-color: var(--m-white);
+							--button-secondary-background-color-hover: var(--m-white);
+							--button-secondary-width: 100%;
+							--button-secondary-border-color: var(--m-gray-700);
+							--button-secondary-border-color-hover: var(--m-gray-700);
+							--button-secondary-color: var(--m-gray-700);
+							--button-secondary-color-hover:  var(--m-gray-700);
+							--button-secondary-cursor: text;
+							--button-secondary-justify-content: space-between;
+							--button-secondary-padding: 0.5rem 1.5rem;
+							--button-secondary-font-size: 1.15rem;
+							--button-secondary-height: 2.88rem;
+							--svg-size: 1.5rem;
+							--svg-size-mobile: 1.2rem;
+							--button-secondary-icon-color: var(--mdx-sys-color-primary-default);
+							--button-secondary-font-weight: 400;
+						}
+						@media only screen and (max-width: 767px) {
+							:host > ks-a-button {
+							--button-secondary-padding: 0.5rem 0.9rem;
+							--button-secondary-font-size: 1rem;
+							--button-secondary-height: 2.22rem;
+							}
+						}
+					</style>
+					<ks-a-button id="show-modal" namespace="button-secondary-" answer-event-name="search-change" default-label="Veranstaltung suchen...">
+						<a-icon-mdx icon-name="Search" class="icon-right">
+						</a-icon-mdx>
+					</ks-a-button>
+
+				</m-dialog>
+
+			</ks-c-auto-complete>
+
+	</ks-m-stage>
+
+		<!-- Sparteneinstieg mobile start -->
+		<ks-o-body-section no-margin-y variant="default" has-background background-color="var(--mdx-sys-color-accent-6-subtle1)" display="none" display-mobile="block">
+			<ks-a-heading tag="h2" style-as="h1">Finden Sie Ihr n&#xE4;chstes Abenteuer</ks-a-heading>
+			<div class="extended-container-mobile">
+				<o-grid namespace="grid-12er-" gap=".5rem">
+						<div col-sm="4" col-md="4" col-lg="4">
+							<ks-m-teaser namespace="teaser-link-box-" color="ks-pink" href="https://www.klubschule.ch/sprachen/">
+								<h3>Sprachen</h3>
+								<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx>
+							</ks-m-teaser>
+						</div>
+						<div col-sm="4" col-md="4" col-lg="4">
+							<ks-m-teaser namespace="teaser-link-box-" color="ks-orange" href="https://www.klubschule.ch/kreativitaet/">
+								<h3>Kreativit&#xE4;t</h3>
+								<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx>
+							</ks-m-teaser>
+						</div>
+						<div col-sm="4" col-md="4" col-lg="4">
+							<ks-m-teaser namespace="teaser-link-box-" color="ks-green" href="https://www.klubschule.ch/gesundheit/">
+								<h3>Gesundheit</h3>
+								<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx>
+							</ks-m-teaser>
+						</div>
+						<div col-sm="4" col-md="4" col-lg="4">
+							<ks-m-teaser namespace="teaser-link-box-" color="ks-blue" href="https://www.klubschule.ch/entdecken/">
+								<h3>Entdecken</h3>
+								<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx>
+							</ks-m-teaser>
+						</div>
+						<div col-sm="4" col-md="4" col-lg="4">
+							<ks-m-teaser namespace="teaser-link-box-" color="ks-blue" href="https://www.klubschule.ch/raeume/">
+								<h3>Vermietung</h3>
+								<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx>
+							</ks-m-teaser>
+						</div>
+						<div col-sm="4" col-md="4" col-lg="4">
+							<ks-m-teaser namespace="teaser-link-box-" color="ks-companies" href="https://www.klubschule.ch/firmenkurse/">
+								<h3>Firmenkurse</h3>
+								<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx>
+							</ks-m-teaser>
+						</div>
+				</o-grid>
+			</div>
+		</ks-o-body-section>
+		<!-- Sparteneinstieg mobile end -->
+
+
+		<ks-o-body-section variant="default">
+
+
+
+
+<!-- Check Content alias and render o-body-section if not on home -->
+
+
+	<ks-a-heading tag="h2" style-as="h1">
+		<h2>Kurse f&#xFC;r K&#xF6;rper, Geist und Lebensfreude</h2>
+	</ks-a-heading>
+
+
+	<m-carousel-two namespace=carousel-two-3-column- nav-flex-wrap separate nav-justify-content="end" nav-align-self="end" no-default-arrow-nav no-default-nav no-default-nav-linking>
+		<section>
+				<ks-m-teaser namespace="teaser-tile-content-" inverse color="ks-green" href="https://www.klubschule.ch/gesundheit/yoga/?center=2673-2678-2680-2699-2674-2684-2661-2658-2660-2679-2663-2683-2698-2659-2682-1012-1013-2052-1014-1017-1018-1016-1019-1020" target="_self" title="Jetzt entspannen" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Yoga</strong>
+
+								<h3>Leichter durchs Leben</h3>
+
+								<p>Den Körper stärken und gleichzeitig den Geist zur Ruhe kommen lassen: Yoga macht es möglich.</p>
+
+								<span>
+									Jetzt entspannen
+									<a-icon-mdx icon-name="ArrowRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Yoga" picture-load="" defaultSource="https://www.klubschule.ch/media/detfrt4l/g-yoga-01.jpg?width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dae1878c86ccd0" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+					</figure>
+				</ks-m-teaser>
+				<ks-m-teaser namespace="teaser-tile-content-" inverse color="ks-pink" href="https://www.klubschule.ch/sprachen/?center=2673-2678-2680-2699-2674-2684-2661-2658-2660-2679-2663-2683-2698-2659-2682-1012-1013-2052-1014-1017-1018-1016-1019-1020" target="_self" title="Jetzt entdecken" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Sprachkurse</strong>
+
+								<h3>Sprachen lernen leicht gemacht!</h3>
+
+								<p>Sprachkurse für jedes Niveau</p>
+
+								<span>
+									Jetzt entdecken
+									<a-icon-mdx icon-name="ArrowRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Haupt Orts Sprachen" picture-load="" defaultSource="https://www.klubschule.ch/media/otopppq5/haupt-orts-sprachen.jpeg?width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1daec8ca2e64ef0" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+					</figure>
+				</ks-m-teaser>
+				<ks-m-teaser namespace="teaser-tile-content-" inverse color="ks-orange" href="https://www.klubschule.ch/kreativitaet/abonnemente/?center=2673-2678-2680-2699-2674-2684-2661-2658-2660-2679-2663-2683-2698-2659-2682-1012-1013-2052-1014-1017-1018-1016-1019-1020&amp;q=kreativit&#xE4;t" target="_self" title="Zu den Abos" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Abo Kreativit&#xE4;t</strong>
+
+								<h3>Mehr Abwechslung im Alltag</h3>
+
+								<p>Sie möchten Kreativkurse zu unterschiedlichen Zeiten an verschiedenen Standorten besuchen? Kein Problem mit dem Wertabo.</p>
+
+								<span>
+									Zu den Abos
+									<a-icon-mdx icon-name="ArrowRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Abonnemente Kreativit&#xE4;t" picture-load="" defaultSource="https://www.klubschule.ch/media/qooplylf/k-abonnemente-02.jpeg?cc=0,0.0785918586218052,0,0.07840814137819474&amp;width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dad6b06dcd2500" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+					</figure>
+				</ks-m-teaser>
+		</section>
+
+		<div>
+
+
+		</div>
+
+	</m-carousel-two>
+
+
+
+				<ks-o-body-section variant="default" background="var(--mdx-sys-color-accent-6-subtle1)" has-background>
+					
+
+
+<!-- Check Content alias and render o-body-section if not on home -->
+
+
+	<ks-a-heading tag="h2" style-as="h1">
+		<h2>Im Spotlight</h2>
+	</ks-a-heading>
+
+
+	<m-carousel-two namespace=carousel-two-3-column- nav-flex-wrap separate nav-justify-content="end" nav-align-self="end" no-default-arrow-nav no-default-nav no-default-nav-linking>
+		<section>
+				<ks-m-teaser namespace="teaser-tile-content-"  color="ks-orange" href="https://www.klubschule.ch/entdecken/intensivklassen-kreativitaet/" target="_self" title="Intensivklassen entdecken" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Intensivklassen Kreativit&#xE4;t</strong>
+
+								<h3>Raum f&#xFC;r Kreativexperimente</h3>
+
+								<p>Setzen Sie sich noch intensiver mit Ihrem kreativen Hobby auseinander. Sie haben das Talent dazu.</p>
+
+								<span>
+									Intensivklassen entdecken
+									<a-icon-mdx icon-name="ArrowRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Malatelier" picture-load="" defaultSource="https://www.klubschule.ch/media/r2rdhgyh/k-intensivklasse.jpeg?width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dad4587aa9a640" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+					</figure>
+				</ks-m-teaser>
+				<ks-m-teaser namespace="teaser-tile-content-"  color="ks-green" href="https://www.klubschule.ch/gesundheit/sport-und-fitnesskurse/?center=2673-2678-2680-2699-2674-2684-2661-2658-2660-2679-2663-2683-2698-2659-2682-1012-1013-2052-1014-1017-1018-1016-1019-1020" target="_self" title="Jetzt einsteigen" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Fitnesskurse</strong>
+
+								<h3>Schwitzen tut gut</h3>
+
+								<p>Ab zum Sport! Finden Sie das geeignete Training, um fit und gesund zu bleiben.</p>
+
+								<span>
+									Jetzt einsteigen
+									<a-icon-mdx icon-name="ArrowRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Dance Fitness" picture-load="" defaultSource="https://www.klubschule.ch/media/nibm4vmz/g-sport-und-fitnesskurse-dance-fitness.jpg?width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dae1878c0bd070" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+					</figure>
+				</ks-m-teaser>
+				<ks-m-teaser namespace="teaser-tile-content-"  color="ks-pink" href="https://www.klubschule.ch/entdecken/snacks/" target="_self" title="Entdecken Sie unsere Snacks" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Sprachkurse</strong>
+
+								<h3>Snacks: Kurze Lerneinheiten</h3>
+
+								<p>Stillen Sie Ihren Lernhunger mit einem sprachlichen Snack.</p>
+
+								<span>
+									Entdecken Sie unsere Snacks
+									<a-icon-mdx icon-name="ArrowRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Sprachlicher Snack" picture-load="" defaultSource="https://www.klubschule.ch/media/dvzdpcwe/snacks.jpeg?rxy=0.6226685796269728,0.3375320601710019&amp;width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dad454ecef5460" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: 62.2669% 33.7532%"></a-picture>
+					</figure>
+				</ks-m-teaser>
+		</section>
+
+		<div>
+
+
+		</div>
+
+	</m-carousel-two>
+
+
+
+
+				</ks-o-body-section>
+		<ks-a-heading tag="h2" border-top brand="ks"><h2> Neue Leidenschaften und Talente entdecken</h2></ks-a-heading>
+		<o-grid namespace="grid-12er-">
+				<div col-sm="12" col-lg="4">
+						<ks-m-teaser namespace=teaser-story- color="ks-orange" href="https://www.klubschule.ch/entdecken/vegane-kueche/" title="Vegane K&#xFC;che" brand="ks">
+		<figure>
+			<figcaption>
+					<strong>Vegane K&#xFC;che</strong>
+				<h3>Es funktioniert auch ohne Fleisch und Ei</h3>
+				<span>Mehr lesen<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx></span>
+			</figcaption>
+
+			<a-picture namespace="picture-teaser-" alt="Vegane K&#xFC;che" picture-load="" defaultSource="https://www.klubschule.ch/media/llbmkigy/k-vegan-hauptbild.jpeg?rxy=0.553768555431256,0.13440157697850322&amp;width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dad458e765ccf0" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: 55.3769% 13.4402%"></a-picture>
+		</figure>
+	</ks-m-teaser>
+
+				</div>
+				<div col-sm="12" col-lg="4">
+						<ks-m-teaser namespace=teaser-story- color="ks-pink" href="https://www.klubschule.ch/entdecken/sprachkurs-fuer-die-reise/" title="Sprachkurs f&#xFC;r die Reise" brand="ks">
+		<figure>
+			<figcaption>
+					<strong>Sprachkurs f&#xFC;r die Reise</strong>
+				<h3>Haben Sie vor, demn&#xE4;chst zu verreisen?</h3>
+				<span>Mehr lesen<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx></span>
+			</figcaption>
+
+			<a-picture namespace="picture-teaser-" alt="Sprachkurs f&#xFC;r die Reise" picture-load="" defaultSource="https://www.klubschule.ch/media/boalmjoy/adobestock-178862105.jpeg?width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dad4546ee69ec0" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+		</figure>
+	</ks-m-teaser>
+
+				</div>
+				<div col-sm="12" col-lg="4">
+						<ks-m-teaser namespace=teaser-story- color="ks-red" href="https://www.klubschule.ch/entdecken/freude-schenken/" title="Freude schenken" brand="ks">
+		<figure>
+			<figcaption>
+					<strong>Geschenkidee</strong>
+				<h3>Schenken Sie Freude mit einem Kurs der Klubschule Migros</h3>
+				<span>Mehr lesen<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx></span>
+			</figcaption>
+
+			<a-picture namespace="picture-teaser-" alt="Geschenkkarte" picture-load="" defaultSource="https://www.klubschule.ch/media/1zqgxv4k/wissen-schenken.jpeg?width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dad459037184c0" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+		</figure>
+	</ks-m-teaser>
+
+				</div>
+				<div col-sm="12" col-lg="4">
+						<ks-m-teaser namespace=teaser-story- color="secondary" href="https://www.klubschule.ch/entdecken/abonnemente/" title="Abonnemente" brand="ks">
+		<figure>
+			<figcaption>
+					<strong>Abonnemente</strong>
+				<h3>Entdecken Sie unsere Kursvielfalt</h3>
+				<span>Mehr lesen<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx></span>
+			</figcaption>
+
+			<a-picture namespace="picture-teaser-" alt="Abokurse" picture-load="" defaultSource="https://www.klubschule.ch/media/wmupimqs/abokurse.jpeg?rxy=0.5581061692969871,0.26907065149538706&amp;width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dac30fcc9714b0" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: 55.8106% 26.9071%"></a-picture>
+		</figure>
+	</ks-m-teaser>
+
+				</div>
+				<div col-sm="12" col-lg="4">
+						<ks-m-teaser namespace=teaser-story- color="secondary" href="https://www.klubschule.ch/entdecken/garantierte-durchfuehrung/" title="Garantierte Durchf&#xFC;hrung" brand="ks">
+		<figure>
+			<figcaption>
+					<strong>Garantierte Durchf&#xFC;hrung</strong>
+				<h3>Auf den Status achten &#x2013; und die Vorfreude geniessen</h3>
+				<span>Mehr lesen<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx></span>
+			</figcaption>
+
+			<a-picture namespace="picture-teaser-" alt="Garantierte Durchf&#xFC;hrung" picture-load="" defaultSource="https://www.klubschule.ch/media/jkrhbgxn/garantierte-durchfuehrung.jpeg?width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dac311a14169d0" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+		</figure>
+	</ks-m-teaser>
+
+				</div>
+				<div col-sm="12" col-lg="4">
+						<ks-m-teaser namespace=teaser-story- color="ks-pink" href="https://www.klubschule.ch/entdecken/sprachtest/" title="Sprachtest" brand="ks">
+		<figure>
+			<figcaption>
+					<strong>Sprachtest</strong>
+				<h3>Kennen Sie Ihr Sprachniveau?</h3>
+				<span>Mehr lesen<a-icon-mdx icon-name="ArrowRight" size="1em" no-hover></a-icon-mdx></span>
+			</figcaption>
+
+			<a-picture namespace="picture-teaser-" alt="Italienischkurse" picture-load="" defaultSource="https://www.klubschule.ch/media/fdzghcqb/s-italienisch-02.jpeg?rxy=0.5162725350728558,0.40304754994667336&amp;width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dac644ec3cbc10" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: 51.6273% 40.3048%"></a-picture>
+		</figure>
+	</ks-m-teaser>
+
+				</div>
+		</o-grid>
+		<div no-margin-y class="center">
+			
+		</div>
+				<ks-o-body-section variant="default" background="var(--mdx-sys-color-accent-6-subtle1)" has-background>
+					
+
+
+
+	<ks-m-teaser namespace="teaser-text-image-"
+				 image-size=small
+				 color="secondary"
+				 text-position="left"
+				 href="https://www.klubschule.ch/ueber-uns/partnerschaften/#bildungspartner"
+				 target="_self"
+				 title="Mehr erfahren"
+				 flex-nowrap-mobile
+				 id="">
+		<a-picture namespace="picture-teaser-" alt="2 Brands Logo" picture-load="" defaultSource="https://www.klubschule.ch/media/ww4d30cr/2-brands-logo.svg" aspect-ratio="NaN" sources-keep-query-aspect-ratio="" style="--img-object-position: Teaser (4/3)"></a-picture>
+
+		<div>
+
+				<h3>Unsere Bildungspartner in der beruflichen Weiterbildung</h3>
+
+				<p>Die Klubschule Migros pflegt eine enge Partnerschaft mit dem Institut f&#252;r berufliche Aus- und Weiterbildung IBAW sowie der Klubschule Pro.</p>
+
+				<ks-a-button namespace="button-secondary-">
+Mehr erfahren				</ks-a-button>
+
+		</div>
+
+	</ks-m-teaser>
+
+
+
+				</ks-o-body-section>
+
+
+
+
+	<ks-m-teaser namespace="teaser-text-image-"
+				 
+				 color="secondary"
+				 text-position="right"
+				 href="https://www.klubschule.ch/raeume/"
+				 target="_self"
+				 title="Zum Angebot"
+				 flex-nowrap-mobile
+				 id="">
+		<a-picture namespace="picture-teaser-" alt="Klubschule Aarau" picture-load="" defaultSource="https://www.klubschule.ch/media/cwzggcca/1-klubschule-aarau-18-45a5053.jpg?width=2500&amp;height=1875&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dabc971207b6f0" aspect-ratio="0.75" sources-keep-query-aspect-ratio="" style="--img-object-position: Teaser (4/3)"></a-picture>
+
+		<div>
+
+				<h3>Suchen Sie zentral gelegene Meeting- &amp; Schulungsr&#xE4;ume?</h3>
+
+				<p>Wir haben sie!<br /><br />W&#228;hlen Sie aus einer Vielzahl an R&#228;umen mit passender Ausstattung: Sitzungszimmer, Informatikr&#228;ume, Fitnessr&#228;ume, K&#252;chen und Ateliers.<br /><br />Unsere R&#228;umlichkeiten finden Sie an &#252;ber 30 Standorten in der Deutschschweiz, in der Ostschweiz, der Romandie und im Tessin. Von Basel bis Lugano und von Genf bis St.Gallen!</p>
+
+				<ks-a-button namespace="button-secondary-">
+Zum Angebot				</ks-a-button>
+
+		</div>
+
+	</ks-m-teaser>
+
+
+				<ks-o-body-section variant="default" background="var(--mdx-sys-color-accent-6-subtle1)" has-background>
+					
+
+
+<!-- Check Content alias and render o-body-section if not on home -->
+
+
+	<ks-a-heading tag="h2" style-as="h1">
+		<h2>Auf Ihre Bed&#xFC;rfnisse zugeschnitten </h2>
+	</ks-a-heading>
+
+
+	<m-carousel-two namespace=carousel-two-3-column- nav-flex-wrap separate nav-justify-content="end" nav-align-self="end" no-default-arrow-nav no-default-nav no-default-nav-linking>
+		<section>
+				<ks-m-teaser namespace="teaser-tile-content-"  color="ks-red" href="https://www.klubschule.ch/ueber-uns/miduca-ag/online-academy/" target="_self" title="Angebot entdecken" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Online Academy</strong>
+
+								<h3>Digital Kurse besuchen</h3>
+
+								<p>Sie wollen orts- und zeitunabhängig lernen? Dann ist die Online Academy die richtige Wahl für Sie.</p>
+
+								<span>
+									Angebot entdecken
+									<a-icon-mdx icon-name="ArrowRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Schwerpunktangebote" picture-load="" defaultSource="https://www.klubschule.ch/media/oiiil03v/s-mehrschwerpunkt02e.jpeg?rxy=0.5001105190091302,0.4336393263331592&amp;width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dac61e9f26f560" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: 50.0111% 43.3639%"></a-picture>
+					</figure>
+				</ks-m-teaser>
+				<ks-m-teaser namespace="teaser-tile-content-" inverse color="ks-companies" href="https://www.klubschule.ch/firmenkurse/" target="_self" title="Mehr erfahren" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Firmenkurse</strong>
+
+								<h3>Ihr Weg zum Erfolg</h3>
+
+								<p>Ihre Mitarbeitenden machen den Unterschied. Unterstützen Sie ihre Entwicklung durch gezielte Weiterbildung und sorgen Sie für nachhaltigen Erfolg.</p>
+
+								<span>
+									Mehr erfahren
+									<a-icon-mdx icon-name="ArrowRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Informatikausbildungen f&#xFC;r Firmen" picture-load="" defaultSource="https://www.klubschule.ch/media/cnaf24wc/gettyimages-1146500478.jpg?rxy=0.5483097202295553,0.4117467381932714&amp;width=2500&amp;height=1405&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dabf6a8aebd1c0" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: 54.831% 41.1747%"></a-picture>
+					</figure>
+				</ks-m-teaser>
+				<ks-m-teaser namespace="teaser-tile-content-"  color="ks-red" href="https://engagement.migros.ch/de" target="_blank" title="Migros-Engagement" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Migros-Engagement</strong>
+
+								<h3>Engagiert seit &#xFC;ber 80 Jahren</h3>
+
+								<p>Das gesellschaftliche Engagement der Migros-Gruppe auf einen Blick: Jetzt Events, Projekte und Geschichten entdecken!</p>
+
+								<span>
+									Migros-Engagement
+									<a-icon-mdx icon-name="ArrowUpRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Engagement Migros" picture-load="" defaultSource="https://www.klubschule.ch/media/dnrnlepk/migros-engagement.jpg?width=1200&amp;height=628&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1daf962ea423650" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+					</figure>
+				</ks-m-teaser>
+				<ks-m-teaser namespace="teaser-tile-content-"  color="secondary" href="https://www.welle7.ch/de/workspace" target="_blank" title="Zum Welle7 Workspace" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Welle7 Workspace</strong>
+
+								<h3>Ihre Meeting- und Eventlocation</h3>
+
+								<p>Genuss, Business und Bildung: Besuchen Sie die mehrfach ausgezeichnete Meeting- und Eventlocation im Herzen der Stadt Bern. </p>
+
+								<span>
+									Zum Welle7 Workspace
+									<a-icon-mdx icon-name="ArrowUpRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Raum Deluxe S 2" picture-load="" defaultSource="https://www.klubschule.ch/media/dhmlh1wp/raum-deluxe-s-2.jpg?width=1600&amp;height=900&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1daec9150c19d50" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+					</figure>
+				</ks-m-teaser>
+				<ks-m-teaser namespace="teaser-tile-content-"  color="secondary" href="https://www.tanzwerk101.ch/de" target="_blank" title="Zum Tanzwerk101" brand="ks">
+					<figure>
+						<figcaption>
+								<strong>Tanzwerk101</strong>
+
+								<h3>Tanzerlebnisse und Events auf h&#xF6;chstem Niveau</h3>
+
+								<p>Das Tanzwerk101 bietet mit über 40 Tänzen und Stilrichtungen das grösste Tanzangebot der Schweiz.</p>
+
+								<span>
+									Zum Tanzwerk101
+									<a-icon-mdx icon-name="ArrowUpRight" size="1em" rotate="0" no-hover-transform></a-icon-mdx>
+								</span>
+						</figcaption>
+						<a-picture namespace="picture-teaser-" alt="Tanzwerk101" picture-load="" defaultSource="https://www.klubschule.ch/media/0jidon5i/tanzwerk-eventsaal-konfernz600x400.png?width=600&amp;height=400&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dac31a96833c40" aspect-ratio="0.562" sources-keep-query-aspect-ratio="" style="--img-object-position: Default (16/9)"></a-picture>
+					</figure>
+				</ks-m-teaser>
+		</section>
+
+		<div>
+
+				<nav>
+					<a href="#previous" aria-label="previous slide">
+						<ks-a-button icon namespace="button-primary-" color="tertiary"><a-icon-mdx icon-name="ArrowLeft" size="1em"></a-icon-mdx></ks-a-button>
+					</a>
+					<a href="#next" aria-label="next slide">
+						<ks-a-button icon namespace="button-primary-" color="tertiary"><a-icon-mdx icon-name="ArrowRight" size="1em"></a-icon-mdx></ks-a-button>
+					</a>
+				</nav>
+
+		</div>
+
+	</m-carousel-two>
+
+
+
+
+				</ks-o-body-section>
+	<div>
+		<ks-m-facts>
+
+			<h2>Haben Sie gewusst?</h2>
+
+			<div class="facts">
+						<div class="fact">
+			<div>
+				<a-picture namespace="" alt="Ks Icon Teilnehmer" picture-load="" defaultSource="https://www.klubschule.ch/media/l0oobnbe/ks-icon-teilnehmer.png?width=929&amp;height=929&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dadd49e9edae30" aspect-ratio="1" sources-keep-query-aspect-ratio="" style="--img-object-position: Square (1/1)"></a-picture>
+			</div>
+			<div><span>mehr als 180&#x27;000</span><span>Teilnehmer*innen j&#xE4;hrlich</span></div>
+						</div>
+						<div class="fact">
+			<div>
+				<a-picture namespace="" alt="Ks Icon Kursleiter" picture-load="" defaultSource="https://www.klubschule.ch/media/tutknkgh/ks-icon-kursleiter.png?width=929&amp;height=929&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dadd49e9da4d40" aspect-ratio="1" sources-keep-query-aspect-ratio="" style="--img-object-position: Square (1/1)"></a-picture>
+			</div>
+			<div><span>mehr als 300</span><span>verschiedene Angebote</span></div>
+						</div>
+						<div class="fact">
+			<div>
+				<a-picture namespace="" alt="Ks Icon Standorte" picture-load="" defaultSource="https://www.klubschule.ch/media/nnwjn24v/ks-icon-standorte.png?width=929&amp;height=929&amp;format=webp&amp;quality=80&amp;mode=crop&amp;v=1dadd49e9c25870" aspect-ratio="1" sources-keep-query-aspect-ratio="" style="--img-object-position: Square (1/1)"></a-picture>
+			</div>
+			<div><span>mehr als 30</span><span>Standorte in der Schweiz</span></div>
+						</div>
+			</div>
+
+				<ks-a-button namespace="button-primary-" href="https://www.klubschule.ch/ueber-uns/" color="ks-blue" target="_self" title="&#xDC;ber uns">
+Mehr erfahren				</ks-a-button>
+
+		</ks-m-facts>
+
+	</div>
+		<div class="spacer"></div>
+
+	</ks-o-body-section>
+
+
+
+<script type="text/javascript" src="./loader.js"></script>

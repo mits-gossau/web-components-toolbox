@@ -7,7 +7,9 @@
     "fix": "standard --fix",
     "serve": "live-server --port=4200 --host=localhost",
     "generate": "node generator/bk-generate.js",
-    "make": "node generator/templates/component/index.js"
+    "make": "node generator/templates/component/index.js",
+    "test-template-preview": "live-server --port=2400 --host=localhost --no-browser --ignorePattern=.* & npx playwright test --config=src/es/components/pages/generator/ && killall node",
+    "download-template-preview": "uriDefault=https://www.alnatura.ch/ path=src/es/components/pages/generator/ testUri='./docs/Template.html?login=./src/es/components/msrc/login/default-/default-.html&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/molecules/navigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/pages/generator/' node generator/download-template-preview.js"
   },
   "author": "weedshaker@gmail.com, edx.mgb@gmail.com",
   "license": "MIT",

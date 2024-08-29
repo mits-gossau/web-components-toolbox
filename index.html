@@ -487,6 +487,18 @@
       </ul>
     `
   </script>
+  <h3>Generator Pages</h3>
+  <div id=generator-pages></div>
+  <script>
+    document.querySelector('#generator-pages').innerHTML = /* HTML */`<generator-download-template-preview template-uri="./src/es/components/pages/generator/" href="./docs/Template.html?${headerFooterQuery}"></generator-download-template-preview>`
+    // load web component
+    Promise.all([
+      import('./generator/templates/component/downloadTemplatePreview/DownloadTemplatePreview.js').then(module => ['generator-download-template-preview', module.default])
+    ]).then(elements => elements.forEach(element => {
+      // don't define already existing customElements
+      if (element && !customElements.get(element[0])) customElements.define(...element)
+    }))
+  </script>
   <h1>Contentful</h1>
   <h3>Contentful News</h3>
   <div id=contentful></div>
