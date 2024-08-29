@@ -99,7 +99,13 @@ const promptDelete = () => {
       name: 'deleteList',
       message: 'Which page/uri do you want to delete locally?',
       type: 'checkbox',
-      choices
+      choices,
+      validate: (choices) => {
+        if (choices.length > 1) {
+          return 'Only delete one page after an other.' // JSON gets corrupted when async loop does read, write
+        }
+        return true
+      }
     }
   ]).then(({deleteList}) => deleteList.forEach(deleteKey => {
     let indexObj
@@ -121,7 +127,13 @@ const promptUpdate = () => {
       name: 'updateList',
       message: 'Which page/uri do you want to update?',
       type: 'checkbox',
-      choices
+      choices,
+      validate: (choices) => {
+        if (choices.length > 1) {
+          return 'Only update one page after an other.' // JSON gets corrupted when async loop does read, write
+        }
+        return true
+      }
     }
   ]).then(({updateList}) => updateList.forEach(updateKey => {
     let indexObj
