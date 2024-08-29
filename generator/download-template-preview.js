@@ -29,7 +29,11 @@ const fetchNewPage = async (uri = null) => {
         if (!error) {
           let indexArray = []
           const htmlFileName = uri.replace(/[^a-zA-Z0-9-_]/g, '-').replace(/-$/g, '') + '.html'
-          const cleanedBody = body.replace(/(.|\n|\r)*<o-body.*?>/gm, '').replace(/<\/o-body>(.|\n|\r)*/gm, '').trim()
+          const cleanedBody = body
+            .replace(/(.|\n|\r)*<o-body.*?>/gm, '')
+            .replace(/<\/o-body>(.|\n|\r)*/gm, '')
+            .replace(/=(["']){1}\//gm, `=$1${(new URL(uri)).origin}/`)
+            .trim()
           // write html
           // create dirs if not applicable
           fs.mkdir(process.env.path, { recursive: true }, error => {if(error) console.error(error)})
@@ -126,7 +130,7 @@ const promptUpdate = () => {
 }
 
 const readIndexJsonFile = (path, array = []) => {
-  if (fs.existsSync(path)) array = JSON.parse(fs.readFileSync(path, 'utf8'))
+  if (fs.existsSync(path)) array = JSON.parse(fs.readFileSync(path, 'utf8') || '[]')
   return array
 }
 
