@@ -31,7 +31,7 @@ const fetchNewPage = async (uri = null) => {
           const htmlFileName = uri.replace(/[^a-zA-Z0-9-_]/g, '-').replace(/-$/g, '') + '.html'
           const cleanedBody = body
             .replace(/(.|\n|\r)*<o-body.*?>/gm, '')
-            .replace(/<\/o-body>(.|\n|\r)*/gm, '')
+            .replace(/<\/o-body>(.|\n|\r)*/gm, '<script type="text/javascript" src="./loader.js"></script>')
             .replace(/=(["']){1}\//gm, `=$1${(new URL(uri)).origin}/`)
             .trim()
           // write html
@@ -39,7 +39,10 @@ const fetchNewPage = async (uri = null) => {
           fs.mkdir(process.env.path, { recursive: true }, error => {if(error) console.error(error)})
           fs.writeFile(process.env.path + htmlFileName, cleanedBody, 'utf8', error => {if(error) console.error(error)})
           // write test
-          fs.writeFile(process.env.path + htmlFileName + '.spec.js', writeVisualRegressionTest(htmlFileName, './' + htmlFileName), 'utf8', error => {if(error) console.error(error)})
+          fs.writeFile(process.env.path + htmlFileName + '.spec.js', writeVisualRegressionTest(
+            htmlFileName,
+            `${process.env.testUri}${htmlFileName}`
+          ), 'utf8', error => {if(error) console.error(error)})
           // read existing index json
           indexArray = readIndexJsonFile(process.env.path + indexJsonFileName, indexArray)
           // write json
