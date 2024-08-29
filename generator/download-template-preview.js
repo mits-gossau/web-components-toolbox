@@ -63,7 +63,7 @@ const promptIsWhat = () => {
   return inquirer.prompt([
     {
       name: 'answer',
-      message: 'What do you want to do?',
+      message: 'Hey, what do you want to do?',
       type: 'list',
       choices
     }
@@ -79,7 +79,7 @@ const promptWhichUri = () => {
       default: process.env.uriDefault || '',
       validate: (name) => {
         if (!name.length) {
-          return 'Please provide a ur'
+          return 'Please provide a uri'
         }
         return true
       }
