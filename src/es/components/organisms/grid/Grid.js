@@ -225,6 +225,14 @@ export default class Grid extends Shadow() {
           // make template ${code} accessible aka. set the variables in the literal string
           fetchCSSParams[0].styleNode.textContent = eval(fetchCSSParams[0].style)// eslint-disable-line no-eval
         })
+      case 'grid-x-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./x-columns-/x-columns-.css.js`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[0].styleNode.textContent = eval(fetchCSSParams[0].style)// eslint-disable-line no-eval
+        })
       default:
         return this.fetchCSS(styles, false)
     }
