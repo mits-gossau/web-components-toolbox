@@ -59,7 +59,7 @@ export const Intersection = (ChosenClass = Shadow()) => class Intersection exten
           threshold: 0
         }, intersectionObserverInit)
         /** @type {IntersectionObserver} */
-        const intersectionObserver = new IntersectionObserver(this.intersectionCallback.bind(this), intersectionObserverInit)
+        const intersectionObserver = this.intersectionObserver = new IntersectionObserver(this.intersectionCallback.bind(this), intersectionObserverInit)
         /** @return {void} */
         this.intersectionObserveStart = () => {
           if (!this.isObserving) {

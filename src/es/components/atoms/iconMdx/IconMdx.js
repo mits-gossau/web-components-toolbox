@@ -1,5 +1,6 @@
 // @ts-check
 import { Hover } from '../../prototypes/Hover.js'
+import { Intersection } from '../../prototypes/Intersection.js'
 
 /**
  * IconMdx can host any mdx svg icon
@@ -29,9 +30,25 @@ import { Hover } from '../../prototypes/Hover.js'
      }`]
  *  }
  */
-export default class IconMdx extends Hover() {
+export default class IconMdx extends Hover(Intersection()) {
   static get observedAttributes () {
     return ['size', 'rotate', 'icon-name']
+  }
+
+  constructor (options = {}, ...args) {
+    super({
+      // @ts-ignore
+      intersectionObserverInit: { rootMargin: '0px 0px 0px 0px' },
+      ...options
+    }, ...args)
+
+    this.intersectionObserveStart = () => {
+      if (!this.isObserving) {
+        // @ts-ignore
+        this.intersectionObserver.observe(this.svg)
+        this.isObserving = true
+      }
+    }
   }
 
   connectedCallback () {
@@ -49,6 +66,7 @@ export default class IconMdx extends Hover() {
   }
 
   disconnectedCallback () {
+    super.disconnectedCallback()
     if (this.hasAttribute('request-event-name')) this.removeEventListener('click', this.clickListener)
   }
 
@@ -59,6 +77,18 @@ export default class IconMdx extends Hover() {
     } else {
       this.css = ''
       this.renderCSS()
+    }
+  }
+
+  intersectionCallback (entries, observer) {
+    if ((this.isIntersecting = entries && entries.some(entry => entry.isIntersecting))) {
+      (this.fetch = this.fetchHTML([this.iconPath], true).then(htmls => htmls.forEach(html => {
+        this._svg = null
+        this.html = ''
+        this.html = html
+        this.svg?.setAttribute('part', 'svg')
+      })))
+      this.intersectionObserveStop()
     }
   }
 
@@ -183,17 +213,14 @@ export default class IconMdx extends Hover() {
    */
   renderHTML () {
     this.html = ''
-    this.html = '<svg></svg>' // placeholder for keeping the size
-    const iconPath = this.getAttribute('icon-url')
+    this.html = this.svg // placeholder for keeping the size
+    this.iconPath = this.getAttribute('icon-url')
       ? `${this.getAttribute('icon-url').substring(0, 1) === '.'
         ? this.importMetaUrl + this.getAttribute('icon-url')
         : this.getAttribute('icon-url')}`
       : `${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${(this.lastFetchedIconName = this.iconName)}/Size_${this.getAttribute('icon-size') || '56x56'}.svg`
-    return (this.fetch = this.fetchHTML([iconPath], true).then(htmls => htmls.forEach(html => {
-      this.html = ''
-      this.html = html
-      this.root.querySelector('svg')?.setAttribute('part', 'svg')
-    })))
+    this.intersectionObserveStart()
+    return Promise.resolve()
   }
 
   clickListener = event => {
@@ -210,5 +237,9 @@ export default class IconMdx extends Hover() {
 
   get iconName () {
     return this.getAttribute('icon-name') || 'AddedToList'
+  }
+
+  get svg () {
+    return this._svg || (this._svg = this.root.querySelector('svg') || document.createElement('svg'))
   }
 }
