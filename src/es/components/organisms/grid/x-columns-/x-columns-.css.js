@@ -4,6 +4,7 @@
   --grid-x-gap: ${this.getAttribute('gap') || '1rem'};
   grid-template-columns: repeat(var(--grid-columns), 1fr);
   gap: var(--grid-x-gap);
+  padding-bottom: var(--grid-x-padding-bottom, 0);
 }
 
 :host > section > [vertical-align-bottom] > div {
