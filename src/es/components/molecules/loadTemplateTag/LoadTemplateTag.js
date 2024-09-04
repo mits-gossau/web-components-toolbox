@@ -74,7 +74,7 @@ export default class LoadTemplateTag extends Intersection() {
   renderCSS () {
     this.css = /* css */ `
       :host {
-        display: inline;
+        display: inline !important;
       }
     `
   }
@@ -92,11 +92,22 @@ export default class LoadTemplateTag extends Intersection() {
     // TODO: have wc-config.js load the missing web components by event
     let notDefined
     if ((notDefined = this.root.querySelectorAll(':not(:defined)')) && notDefined.length) {
-      console.error(
-        'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
-        notDefined,
-        this
-      )
+      if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
+        this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
+          detail: {
+            nodes: Array.from(notDefined)
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      } else {
+        console.error(
+          'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+          notDefined,
+          this
+        )
+      }
     }
   }
 
