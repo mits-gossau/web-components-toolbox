@@ -4,6 +4,7 @@
 /* global self */
 /* global CustomEvent */
 
+// extended version 2024-09-04 (dynamic custom element define on event trigger)
 // wc-config is a loader script which finds all not defined nodes / web components, takes their node.tagNames and tries to resolve them by the directory given or url attribute directly set on the web components node
 // the javascript files to be resolved must have a default export to be applied as customElements.define constructor
 
@@ -20,6 +21,7 @@
 //  8) {boolean}[debug=true] assumes we are on debug and does post the result on console.info. Set to 'false' to suppress the console.info
 //  9) {boolean}[resolveImmediately=false] if true, customElements.define all elements immediately after import promise resolved. This can lead to the blitz/flashing when web components already connect while others are not. shadow doms then possibly prevent css rules like ":not(:defined) {display: none;}" to be effective
 //  10) {boolean}[triggerImmediately=false] if true, does not wait for window load event but trigger immediately
+//  11) {string}[loadCustomElementsEventName='load-custom-elements'] the event name which gets added to self (window)
 (function (self, document, baseUrl, directories) {
   /**
    * Directory sets selector and url by which a reference between tagName/selector and url/file can be done (customElements.define(name aka. tagName, constructor))
@@ -119,12 +121,12 @@
     return Promise.resolve(`${tagName} is already defined @load`)
   }
   // @ts-ignore
-  const loadListener = event => {
+  const loadListener = (event, nodes = Array.from(document.querySelectorAll(`${src.searchParams.get('querySelector') || ''}:not(:defined)`)), dispatchWcConfigLoadEvent = true) => {
     /** @type {ImportEl[]} */
     const imports = []
     // finding all not defined web component nodes in the dom and forwarding their tagNames to the load function
     // @ts-ignore
-    Array.from(document.querySelectorAll(`${src.searchParams.get('querySelector') || ''}:not(:defined)`)).reduce((nodes, currentNode) => {
+    nodes.reduce((nodes, currentNode) => {
       // @ts-ignore
       const index = nodes.findIndex(node => node.tagName === currentNode.tagName)
       if (index !== -1) {
@@ -156,7 +158,7 @@
       if (src.searchParams.get('wc-config-load') !== 'false') {
         if (src.searchParams.get('debug') !== 'false') console.info(wcConfigLoad, imports)
         document.body.setAttribute(wcConfigLoad, 'true')
-        document.body.dispatchEvent(new CustomEvent(wcConfigLoad,
+        if (dispatchWcConfigLoadEvent) document.body.dispatchEvent(new CustomEvent(wcConfigLoad,
           {
             detail: { imports },
             bubbles: true,
@@ -167,6 +169,9 @@
       }
     })
   }
+  document.body.setAttribute(src.searchParams.get('loadCustomElementsEventName') || 'load-custom-elements', 'true')
+  // @ts-ignore
+  self.addEventListener(src.searchParams.get('loadCustomElementsEventName') || 'load-custom-elements', event => loadListener(event, event.detail.nodes, false))
   if (src.searchParams.get('triggerImmediately') === 'true') {
     loadListener()
   } else {
