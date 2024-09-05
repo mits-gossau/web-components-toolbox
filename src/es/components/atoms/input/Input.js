@@ -34,7 +34,7 @@ export default class Input extends Shadow() {
       if (!force && this.lastValue === this.inputField.value) {
         // when delete native icon is pushed the value is not updated when the event hits here
         let isSearchButton = false
-        if (retry && (event.composedPath()[0] === this.inputField || (isSearchButton = event.composedPath()[0] === this.searchButton || this.searchButton.contains(event.composedPath()[0])))) {
+        if (retry && (event.composedPath()[0] === this.inputField || (isSearchButton = event.composedPath()[0] === this.searchButton || this.searchButton?.contains(event.composedPath()[0])))) {
           event.stopPropagation()
           setTimeout(() => this.clickListener(event, false, !!isSearchButton, isSearchButton ? 'search-click' : 'delete'), 50)
         }
