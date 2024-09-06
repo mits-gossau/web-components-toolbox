@@ -36,9 +36,9 @@ export default class IconMdx extends Hover() {
 
   connectedCallback () {
     super.connectedCallback()
-    if (this.getAttribute('custom-notification')) {
+    if (this.hasAttribute('custom-notification')) {
       // @ts-ignore
-      this.customNotification = IconMdx.parseAttribute(this.getAttribute('custom-notification'))
+      this.customNotification = this.getAttribute('custom-notification') ? IconMdx.parseAttribute(this.getAttribute('custom-notification')) : {}
     }
     this.hidden = true
     const showPromises = []
@@ -118,24 +118,19 @@ export default class IconMdx extends Hover() {
           }
         `
       }
-      ${this.hasAttribute('custom-notification')
-        ? /* css */`
-        :host::after {
-          content: "";
-          position: absolute;
-          display: block;
-          height: ${this.customNotification.height};
-          width: ${this.customNotification.width};
-          background: ${this.customNotification.background};
-          border-radius: ${this.customNotification.borderRadius};
-          outline: ${this.customNotification.outline};
-          right: ${this.customNotification.right};
-          left: ${this.customNotification.left};
-          top: ${this.customNotification.top};
-          bottom: ${this.customNotification.bottom};
-        }
-      `
-        : ''
+      :host([custom-notification])::after {
+        content: "";
+        position: absolute;
+        display: block;
+        height: ${this.customNotification?.height || '1em'};
+        width: ${this.customNotification?.width || '1em'};
+        background: ${this.customNotification?.background || 'var(--color-secondary, red)'};
+        border-radius: ${this.customNotification?.borderRadius || '50%'};
+        outline: ${this.customNotification?.outline || 'none'};
+        right: ${this.customNotification?.right || 'unset'};
+        left: ${this.customNotification?.left || 'unset'};
+        top: ${this.customNotification?.top || 'unset'};
+        bottom: ${this.customNotification?.bottom || 'unset'};
       }
       :host(:active), :host(.active) {
         color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
