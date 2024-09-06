@@ -295,7 +295,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         this.setValidity(inputFieldName, validationName, isMinMaxNumberValueValidationValid)
       } if (validationName === 'pattern') {
         if (validationRules.pattern['pattern-value']) {
-          const re = new RegExp(`${validationRules.pattern['pattern-value']}`)
+          let re = new RegExp(`${validationRules.pattern['pattern-value']}`)
+          // If it's an email pattern validation, we set the regex to be case-insensitive using the 'i' flag.
+          if (validationRules.email) re = new RegExp(`${validationRules.pattern['pattern-value']}`, 'i')
           const isPatternValueValidationValid = re.test(currentInput.value)
           this.setValidity(inputFieldName, validationName, isPatternValueValidationValid)
         }
@@ -380,7 +382,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         p.hidden = true
       })
       if (+currentErrorMessageIndex === -1) return
-      errorMessages[currentErrorMessageIndex].hidden = false
+      if (errorMessages[currentErrorMessageIndex]) errorMessages[currentErrorMessageIndex].hidden = false
     }
   }
 
