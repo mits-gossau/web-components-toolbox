@@ -88,8 +88,12 @@ export default class LoadTemplateTag extends Intersection() {
     if (!this.template) return
     const templateContent = this.template.content
     this.template.remove()
+    this.css = /* css */ `
+      :host {
+        display: contents !important;
+      }
+    `
     this.html = templateContent
-    // TODO: have wc-config.js load the missing web components by event
     let notDefined
     if ((notDefined = this.root.querySelectorAll(':not(:defined)')) && notDefined.length) {
       if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
