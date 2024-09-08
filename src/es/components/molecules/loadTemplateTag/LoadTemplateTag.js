@@ -88,11 +88,6 @@ export default class LoadTemplateTag extends Intersection() {
     if (!this.template) return
     const templateContent = this.template.content
     this.template.remove()
-    this.css = /* css */ `
-      :host {
-        display: contents !important;
-      }
-    `
     this.html = templateContent
     let notDefined
     if ((notDefined = this.root.querySelectorAll(':not(:defined)')) && notDefined.length) {
