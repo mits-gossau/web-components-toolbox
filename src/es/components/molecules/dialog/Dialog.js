@@ -164,26 +164,30 @@ export default class Dialog extends Shadow() {
         `
         : ''
       }
-      }
-      :host > dialog {
-        background-color: var(--background-color, canvas);
-      }
-      :host > dialog {
-        cursor: var(--dialog-cursor, auto);
-      }
-      :host > dialog::backdrop {
-        cursor: var(--dialog-backdrop-cursor, pointer);
-      }
-      :host > dialog:modal {
-        height: var(--dialog-height, fit-content);
-      }
-      :host > dialog > input.hided-input {
-        display:none;
-        position: absolute;
-        opacity:0;
-        z-index: -1;
-      }
-      /* Mobile layout */
+    }
+    :host > dialog .sticky {
+      position: var(--sticky-position, sticky);
+      top: var(--sticky-top, 0);
+    }
+    :host > dialog {
+      background-color: var(--background-color, canvas);
+    }
+    :host > dialog {
+      cursor: var(--dialog-cursor, auto);
+    }
+    :host > dialog::backdrop {
+      cursor: var(--dialog-backdrop-cursor, pointer);
+    }
+    :host > dialog:modal {
+      height: var(--dialog-height, fit-content);
+    }
+    :host > dialog > input.hided-input {
+      display:none;
+      position: absolute;
+      opacity:0;
+      z-index: -1;
+    }
+    /* Mobile layout */
     @media only screen and (max-width: _max-width_) {
       :host > dialog:modal {
         height: var(--dialog-mobile-height, var(--dialog-height, fit-content));
