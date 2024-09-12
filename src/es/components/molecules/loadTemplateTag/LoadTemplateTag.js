@@ -19,7 +19,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  */
 export default class LoadTemplateTag extends Intersection() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
+    super(Object.assign(options, { mode: 'false', intersectionObserverInit: {} }), ...args)
   }
 
   connectedCallback () {
@@ -74,7 +74,7 @@ export default class LoadTemplateTag extends Intersection() {
   renderCSS () {
     this.css = /* css */ `
       :host {
-        display: inline !important;
+        display: block !important;
       }
     `
   }
@@ -86,13 +86,14 @@ export default class LoadTemplateTag extends Intersection() {
    */
   renderHTML () {
     if (!this.template) return
+    const parentNode = this.parentNode
     const templateContent = this.template.content
     this.template.remove()
-    this.html = templateContent
+    this.replaceWith(templateContent)
     let notDefined
-    if ((notDefined = this.root.querySelectorAll(':not(:defined)')) && notDefined.length) {
+    if ((notDefined = parentNode.querySelectorAll(':not(:defined)')) && notDefined.length) {
       if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
-        this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
+        parentNode.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
           detail: {
             nodes: Array.from(notDefined)
           },
