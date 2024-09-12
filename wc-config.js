@@ -4,6 +4,7 @@
 /* global self */
 /* global CustomEvent */
 
+// extended version 2024-09-12 (allow hash attach for cache clearing)
 // extended version 2024-09-04 (dynamic custom element define on event trigger)
 // wc-config is a loader script which finds all not defined nodes / web components, takes their node.tagNames and tries to resolve them by the directory given or url attribute directly set on the web components node
 // the javascript files to be resolved must have a default export to be applied as customElements.define constructor
@@ -22,6 +23,7 @@
 //  9) {boolean}[resolveImmediately=false] if true, customElements.define all elements immediately after import promise resolved. This can lead to the blitz/flashing when web components already connect while others are not. shadow doms then possibly prevent css rules like ":not(:defined) {display: none;}" to be effective
 //  10) {boolean}[triggerImmediately=false] if true, does not wait for window load event but trigger immediately
 //  11) {string}[loadCustomElementsEventName='load-custom-elements'] the event name which gets added to self (window)
+//  12) {string}[hash=''] to be append on the file extension, eg.: hello.js?{hash}
 (function (self, document, baseUrl, directories) {
   /**
    * Directory sets selector and url by which a reference between tagName/selector and url/file can be done (customElements.define(name aka. tagName, constructor))
@@ -48,6 +50,11 @@
    * @type {string}
    */
   const urlAttributeName = src.searchParams.get('urlAttributeName') || 'url'
+  /**
+   * the loading hash for clearing the cache
+   * @type {string}
+   */
+  const hash = src.searchParams.get('hash') || ''
   /**
    * the event and console.info name used to signal when imports are done
    * @type {string}
@@ -110,7 +117,7 @@
         // @ts-ignore
         const fileName = /.[m]{0,1}js/.test(url) ? '' : `${(tagName.replace(directory.selector, '') || tagName).charAt(0).toUpperCase()}${(tagName.replace(directory.selector, '') || tagName).slice(1).replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())}.${fileEnding}`
         if (directory.separateFolder) url += `${`${fileName.slice(0, 1).toLowerCase()}${fileName.slice(1)}`.replace(`.${fileEnding}`, '')}${directory.separateFolderPlural ? 's' : ''}/`
-        const importPath = `${/[./]{1}/.test(url.charAt(0)) ? '' : baseUrl}${url}${fileName}${query}`
+        const importPath = `${/[./]{1}/.test(url.charAt(0)) ? '' : baseUrl}${url}${fileName}${query}${hash ? query ? `&${hash}` : `?${hash}` : ''}`
         /** @type {ImportEl} */
         const importEl = import(importPath).then(module => /** @returns {[string, CustomElementConstructor]} */ [tagName, module.default || module, undefined, importPath])
         if (src.searchParams.get('resolveImmediately') === 'true') resolve([importEl])
@@ -141,7 +148,7 @@
       let query = ''
       if (node.hasAttribute('query') && node.attributes) {
         for (const key in node.attributes) {
-          if (node.attributes[key] && node.attributes[key].nodeName) query += `${query ? '&' : '?'}${node.attributes[key].nodeName}${node.attributes[key].nodeValue ? `=${self.encodeURIComponent(node.attributes[key].nodeValue)}` : ''}`
+          if (node.attributes[key] && node.attributes[key].nodeName && node.attributes[key].nodeName !== 'query') query += `${query ? '&' : '?'}${node.attributes[key].nodeName}${node.attributes[key].nodeValue ? `=${self.encodeURIComponent(node.attributes[key].nodeValue)}` : ''}`
         }
       }
       imports.push(load(node.tagName.toLowerCase(), node.getAttribute(urlAttributeName) || '', query))
