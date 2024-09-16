@@ -50,7 +50,8 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
     }
 
     this.clickHashEventListener = event => {
-      if (event.composedPath()[0]?.hash) this.clickAnchorEventListener({ detail: { selector: event.composedPath()[0]?.hash } })
+      let hash
+      if ((hash = event.composedPath().slice(0, this.getAttribute("anchor-depth") || 2).find(node => node.hash)?.hash)) this.clickAnchorEventListener({ detail: { selector: hash } })
     }
   }
 
