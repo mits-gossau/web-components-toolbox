@@ -1,5 +1,6 @@
 :host {
   --dialog-clipboard-default-backdrop-backdrop-filter-open: var(--dialog-clipboard-default-backdrop-backdrop-filter-open-custom, blur(0.1em));
+  --dialog-clipboard-default-backdrop-background-color-open: var(--dialog-clipboard-default-backdrop-background-color-open-custom, transparent);
   --dialog-clipboard-default-background-color: var(--dialog-clipboard-default-background-color-custom, transparent);
   --dialog-clipboard-default-h-margin-bottom: 0;
   --dialog-clipboard-default-h-padding: 0;
