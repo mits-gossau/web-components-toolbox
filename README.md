@@ -31,6 +31,7 @@ JS Rules:
 - use as much jsdocs annotations as possible.
 - for nice appearance use this.hidden boolean. See more at Shadow.js.
 - added event listeners must be timely removed. This means calling addEventListener should not be async especially if the event target is outside of the web component.
+- when extending Shadow.js, use this.root instead of this.shadowRoot (this.root is a getter on Shadow.js and exposes the right target according to the shadow mode)
 
 CSS Rules:
 - no double dashes in css selectors or within variables NO:(tile--stuff) or (--var-hi--stuff) [Note: Shadow.js cssNamespaceToVar function does select on double dashes] 
