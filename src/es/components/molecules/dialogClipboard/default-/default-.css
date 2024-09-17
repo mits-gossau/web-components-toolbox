@@ -1,0 +1,17 @@
+:host {
+  --dialog-clipboard-default-backdrop-backdrop-filter-open: var(--dialog-clipboard-default-backdrop-backdrop-filter-open-custom, blur(0.1em));
+  --dialog-clipboard-default-background-color: var(--dialog-clipboard-default-background-color-custom, transparent);
+  --dialog-clipboard-default-h-margin-bottom: 0;
+  --dialog-clipboard-default-h-padding: 0;
+  --dialog-clipboard-default-h-color: var(--dialog-clipboard-default-h-color-custom, var(--background-color, white));
+  --dialog-clipboard-default-color: var(--dialog-clipboard-default-color-custom, var(--background-color, white));
+  --dialog-clipboard-default-backdrop-transition-duration: var(--dialog-clipboard-default-transition-duration);
+  --dialog-clipboard-default-transition-duration: var(----dialog-clipboard-default-transition-duration-custom, 0.3s);
+}
+:host > dialog {
+  border: var(--dialog-clipboard-default-border, transparent);
+}
+:host > dialog > * {
+  padding: 0;
+  margin: 0;
+}

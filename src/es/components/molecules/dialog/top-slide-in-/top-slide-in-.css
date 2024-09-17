@@ -31,17 +31,28 @@ body:has(dialog[open]) {
     transform: translateY(-100%);
   }
 }
+/* Transition the :backdrop when the dialog modal is promoted to the top layer */
 :host > dialog::backdrop {
-  background-color: rgb(0 0 0 / 0);
-  transition: display 0.3s allow-discrete, overlay 0.3s allow-discrete,
-    background-color 0.3s;
+  background-color: var(--dialog-top-slide-in-backdrop-background-color, var(--dialog-background-color, rgb(0 0 0 / 0)));
+  backdrop-filter: var(--dialog-top-slide-in-backdrop-backdrop-filter, var(--dialog-backdrop-filter, none));
+  transition:
+      display var(--dialog-top-slide-in-backdrop-transition-duration, var(--dialog-transition-duration, 0.3s)) allow-discrete,
+      overlay var(--dialog-top-slide-in-backdrop-transition-duration, var(--dialog-transition-duration, 0.3s)) allow-discrete,
+      background-color var(--dialog-top-slide-in-backdrop-transition-duration, var(--dialog-transition-duration, 0.3s)),
+      backdrop-filter var(--dialog-top-slide-in-backdrop-transition-duration, var(--dialog-transition-duration, 0.3s));
+  /* Equivalent to
+  transition: all 0.3s allow-discrete; */
 }
 :host > dialog[open]::backdrop {
-  background-color: rgb(0 0 0 / 0.5);
+  background-color: var(--dialog-top-slide-in-backdrop-background-color-open, var(--dialog-background-color-open, var(--dialog-top-slide-in-backdrop-background-color, var(--dialog-background-color, rgb(0 0 0 / 0.5)))));
+  backdrop-filter: var(--dialog-top-slide-in-backdrop-backdrop-filter-open, var(--dialog-backdrop-filter-open, var(--dialog-top-slide-in-backdrop-backdrop-filter, var(--dialog-backdrop-filter, none))));
 }
+/* This starting-style rule cannot be nested inside the above selector
+because the nesting selector cannot represent pseudo-elements. */
 @starting-style {
   :host > dialog[open]::backdrop {
-    background-color: rgb(0 0 0 / 0);
+    background-color: var(--dialog-top-slide-in-backdrop-background-color, var(--dialog-background-color, rgb(0 0 0 / 0)));
+    backdrop-filter: var(--dialog-top-slide-in-backdrop-backdrop-filter, var(--dialog-backdrop-filter, none));
   }
 }
 @media only screen and (max-width: _max-width_) {
