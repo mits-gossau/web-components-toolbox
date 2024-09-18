@@ -70,7 +70,6 @@ tr:nth-of-type(odd) {
 :host ol li::before {
     font-size: 1.75em;
     position: absolute;
-    top: -0.45em;
     left: calc(-1 * 1.75em);
     width: 2em;
     color: var(--color-secondary);
