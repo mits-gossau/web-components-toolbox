@@ -76,7 +76,7 @@ export default class Body extends Anchor() {
       :host > main > .no-margin {
         margin: 0;
       }
-      :host > main > *:not(ks-c-wish-list) {
+      :host > main > *:not(ks-c-wish-list, ks-o-wish-list) {
         margin: var(--any-content-spacing, var(--content-spacing, unset)) auto;  /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
         width: var(--any-content-width, var(--content-width, 55%));
       }
@@ -112,7 +112,7 @@ export default class Body extends Anchor() {
           width: 100%;
           margin: 0;
         }
-        :host > main > * {
+        :host > main > *:not(ks-c-wish-list, ks-o-wish-list) {
           margin: var(--any-content-spacing-mobile, var(--content-spacing-mobile, var(--content-spacing, unset))) auto; /* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */
           width: var(--any-content-width-mobile, var(--content-width-mobile, calc(100% - var(--content-spacing-mobile, var(--content-spacing)) * 2)));
         }
