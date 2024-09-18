@@ -819,4 +819,21 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           ? self.Environment.mobileBreakpoint
           : '767px'
   }
+
+  /**
+   * find html element by id or class
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @return {HTMLElement}
+   */
+  findByQuerySelector (el, selector) {
+    while ((el = el.parentNode || el.host)) {
+      const parentNode = el.parentNode || el.host
+      if (parentNode && parentNode.querySelector(selector)) {
+        return el
+      }
+    }
+    return document.documentElement
+  }
 }
