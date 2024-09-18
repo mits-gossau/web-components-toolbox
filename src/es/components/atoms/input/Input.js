@@ -100,6 +100,7 @@ export default class Input extends Shadow() {
       this.error = this.hasAttribute('error')
 
       if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
+      if (this.value && this.inputField) this.inputField.setAttribute('value', this.value)
       if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
 
       if ((this.hasAttribute('submit-search') || (this.search && this.searchButton)) && !this.readonly && !this.disabled && !this.error) {
@@ -112,7 +113,8 @@ export default class Input extends Shadow() {
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
       }
       if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
-
+      // set cursor at the end
+      if (this.inputField) this.inputField.setSelectionRange(this.inputField.value.length, this.inputField.value.length)
       this.hidden = false
     })
   }
@@ -499,6 +501,10 @@ export default class Input extends Shadow() {
 
   get placeholder () {
     return this.getAttribute('placeholder')
+  }
+
+  get value () {
+    return this.getAttribute('value')
   }
 
   get autocomplete () {
