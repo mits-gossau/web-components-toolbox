@@ -58,6 +58,8 @@ export default class DialogClipboard extends Dialog {
     this.setCss(/* css */`
       :host > dialog {
         user-select: none;
+        scrollbar-color: var(--scrollbar-color, var(--color) var(--background-color));
+        scrollbar-width: var(--scrollbar-width, thin);
       }
     `, undefined, false)
     return result
