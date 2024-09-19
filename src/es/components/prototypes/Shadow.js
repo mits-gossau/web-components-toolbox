@@ -821,19 +821,19 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   }
 
   /**
-   * find html element by id or class
+   * matches html element by selector
+   * ends and returns root when stepped up all the way but nothing found
    *
    * @param {HTMLElement | any} el
    * @param {string} selector
-   * @return {HTMLElement}
+   * @param {HTMLElement} [root=document.documentElement]
+   * @return {any}
    */
-  findByQuerySelector (el, selector) {
-    while ((el = el.parentNode || el.host)) {
-      const parentNode = el.parentNode || el.host
-      if (parentNode && parentNode.querySelector(selector)) {
-        return el
-      }
+  static walksUpDomQueryMatches (el, selector, root = document.documentElement) {
+    if (el.matches(selector)) return el
+    while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
+      if (typeof el.matches === 'function' && el.matches(selector)) return el
     }
-    return document.documentElement
+    return el
   }
 }
