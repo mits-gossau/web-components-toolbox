@@ -65,7 +65,8 @@
     fetchHTML,
     Shadow.cssTextDecorationShortHandFix,
     html,
-    Shadow.isMac
+    Shadow.isMac,
+    Shadow.walksUpDomQueryMatches
   }
  * @return {CustomElementConstructor | *}
  */
@@ -818,5 +819,22 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           // @ts-ignore ignoring self.Environment error
           ? self.Environment.mobileBreakpoint
           : '767px'
+  }
+
+  /**
+   * matches html element by selector
+   * ends and returns root when stepped up all the way but nothing found
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @param {HTMLElement} [root=document.documentElement]
+   * @return {any}
+   */
+  static walksUpDomQueryMatches (el, selector, root = document.documentElement) {
+    if (el.matches(selector)) return el
+    while ((el = el.parentNode || el.host || root) && el !== root) { // eslint-disable-line
+      if (typeof el.matches === 'function' && el.matches(selector)) return el
+    }
+    return el
   }
 }
