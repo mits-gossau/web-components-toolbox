@@ -65,7 +65,8 @@
     fetchHTML,
     Shadow.cssTextDecorationShortHandFix,
     html,
-    Shadow.isMac
+    Shadow.isMac,
+    Shadow.walksUpDomQueryMatches
   }
  * @return {CustomElementConstructor | *}
  */
