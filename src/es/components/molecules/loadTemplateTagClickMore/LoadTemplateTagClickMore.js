@@ -16,9 +16,13 @@ export default class LoadTemplateTagClickMore extends Shadow() {
 
     this.answerEventListener = event => {
       this.renderHTML()
-      if (!this.template && event?.detail?.this) {
-        event.detail.this.remove()
-        this.remove()
+      if (event?.detail?.this) {
+        if (this.template) {
+          event.detail.this.blur()
+        } else {
+          event.detail.this.remove()
+          this.remove()
+        }
       }
     }
   }
