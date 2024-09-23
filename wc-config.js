@@ -176,7 +176,9 @@
       }
     })
   }
-  document.body.setAttribute(src.searchParams.get('loadCustomElementsEventName') || 'load-custom-elements', 'true')
+  self.addEventListener('load', () => {
+    document.body.setAttribute(src.searchParams.get('loadCustomElementsEventName') || 'load-custom-elements', 'true')
+  }, { once: true })
   // @ts-ignore
   self.addEventListener(src.searchParams.get('loadCustomElementsEventName') || 'load-custom-elements', event => loadListener(event, event.detail.nodes, false))
   if (src.searchParams.get('triggerImmediately') === 'true') {
