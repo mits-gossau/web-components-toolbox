@@ -41,19 +41,28 @@
   }
 }
 
-:host>dialog::backdrop {
-  background-color: rgb(0 0 0 / 0);
-  transition: display 0.3s allow-discrete, overlay 0.3s allow-discrete,
-    background-color 0.3s;
+/* Transition the :backdrop when the dialog modal is promoted to the top layer */
+:host > dialog::backdrop {
+  background-color: var(--dialog-left-slide-in-wide-backdrop-background-color, var(--dialog-background-color, rgb(0 0 0 / 0)));
+  backdrop-filter: var(--dialog-left-slide-in-wide-backdrop-backdrop-filter, var(--dialog-backdrop-filter, none));
+  transition:
+      display var(--dialog-left-slide-in-wide-backdrop-transition-duration, var(--dialog-transition-duration, 0.3s)) allow-discrete,
+      overlay var(--dialog-left-slide-in-wide-backdrop-transition-duration, var(--dialog-transition-duration, 0.3s)) allow-discrete,
+      background-color var(--dialog-left-slide-in-wide-backdrop-transition-duration, var(--dialog-transition-duration, 0.3s)),
+      backdrop-filter var(--dialog-left-slide-in-wide-backdrop-transition-duration, var(--dialog-transition-duration, 0.3s));
+  /* Equivalent to
+  transition: all 0.3s allow-discrete; */
 }
-
-:host>dialog[open]::backdrop {
-  background-color: rgb(0 0 0 / 0.5);
+:host > dialog[open]::backdrop {
+  background-color: var(--dialog-left-slide-in-wide-backdrop-background-color-open, var(--dialog-background-color-open, var(--dialog-left-slide-in-wide-backdrop-background-color, var(--dialog-background-color, rgb(0 0 0 / 0.5)))));
+  backdrop-filter: var(--dialog-left-slide-in-wide-backdrop-backdrop-filter-open, var(--dialog-backdrop-filter-open, var(--dialog-left-slide-in-wide-backdrop-backdrop-filter, var(--dialog-backdrop-filter, none))));
 }
-
+/* This starting-style rule cannot be nested inside the above selector
+because the nesting selector cannot represent pseudo-elements. */
 @starting-style {
-  :host>dialog[open]::backdrop {
-    background-color: rgb(0 0 0 / 0);
+  :host > dialog[open]::backdrop {
+    background-color: var(--dialog-left-slide-in-wide-backdrop-background-color, var(--dialog-background-color, rgb(0 0 0 / 0)));
+    backdrop-filter: var(--dialog-left-slide-in-wide-backdrop-backdrop-filter, var(--dialog-backdrop-filter, none));
   }
 }
 

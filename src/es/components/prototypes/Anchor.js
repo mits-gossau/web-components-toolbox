@@ -15,7 +15,11 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
     super(...args)
 
     this.anchorTimeout = null
+    let isRunning = false
     this.clickAnchorEventListener = event => {
+      if (isRunning) return
+      isRunning = true
+      setTimeout(() => { isRunning = false }, 50)
       let element = null
       if ((element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash || null))) {
         this.dispatchEvent(new CustomEvent(this.getAttribute('scroll-to-anchor') || 'scroll-to-anchor', {
@@ -44,6 +48,11 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
         }, 500) // lazy loading pics make this necessary to reach target
       }
     }
+
+    this.clickHashEventListener = event => {
+      let hash
+      if ((hash = event.composedPath().slice(0, this.getAttribute("anchor-depth") || 2).find(node => node.hash)?.hash)) this.clickAnchorEventListener({ detail: { selector: hash } })
+    }
   }
 
   /**
@@ -54,6 +63,7 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
   connectedCallback () {
     super.connectedCallback()
     document.body.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
+    document.body.addEventListener('click', this.clickHashEventListener)
     if (location.hash) {
       self.addEventListener('load', event => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), { once: true })
       document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', event => setTimeout(() => this.clickAnchorEventListener({ detail: { selector: location.hash.replace('_scrolled', '') } }), 1000), { once: true })
@@ -69,6 +79,7 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
   disconnectedCallback () {
     super.disconnectedCallback()
     document.body.removeEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorEventListener)
+    document.body.removeEventListener('click', this.clickHashEventListener)
     self.removeEventListener('hashchange', this.clickAnchorEventListener)
   }
 }
