@@ -89,7 +89,27 @@ export default class LoadTemplateTag extends Intersection() {
     const parentNode = this.parentNode
     const templateContent = this.template.content
     this.template.remove()
-    this.replaceWith(templateContent)
+    // keep a placeholder with same style attribute (height) until next scroll event, which gives enough time for the templateContent to render
+    if (this.hasAttribute('style') && this.getAttribute('style').includes('height')) {
+      this.after(templateContent)
+      if (this.nextElementSibling) {
+        let counter = 0
+        const removeThisFunc = () => setTimeout(() => {
+          counter++
+          if (counter > 9 || this.nextElementSibling.offsetHeight) {
+            this.remove()
+            if (counter > 9) console.warn('The loaded template tag has no offsetHeight, check the usage of this tag!')
+          } else {
+            removeThisFunc()
+          }
+        }, 20)
+        removeThisFunc()
+      } else {
+        this.remove()
+      }
+    } else {
+      this.replaceWith(templateContent)
+    }
     let notDefined
     if ((notDefined = parentNode.querySelectorAll(':not(:defined)')) && notDefined.length) {
       if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
