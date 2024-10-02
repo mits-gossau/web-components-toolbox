@@ -98,6 +98,7 @@ export default class EasterEgg extends Shadow() {
     return this[`#loadDependency${globalNamespace}`] || (this[`#loadDependency${globalNamespace}`] = new Promise((resolve, reject) => {
       // @ts-ignore
       if (this.getScript(globalNamespace) || self[globalNamespace]) return resolve(self[globalNamespace])
+      // TODO: Add Sha-256 check
       const script = document.createElement('script')
       script.setAttribute('type', 'module')
       script.setAttribute('id', globalNamespace)
@@ -112,7 +113,7 @@ export default class EasterEgg extends Shadow() {
   }
   
   getScript (globalNamespace) {
-    return this.root.querySelector(`#${globalNamespace}`)
+    return this.root.querySelector(`${globalNamespace ? `#${globalNamespace}` : 'script'}`)
   }
 }
 
@@ -171,8 +172,9 @@ const createGameScene = (importMetaUrl, Scene, Phaser) => class Game extends Sce
     super('Game');
   }
   create () {
+    // TODO: - [ ] React on resize and rearrange all assets by viewport change
     // example code ➴ ➴ ➴ 
-    this.add.image(50, 50, 'migi').setOrigin(0)
+    this.add.image(50, 50, 'migi').setOrigin(0).setAlpha(0.5)
     this.add.text(50, 175, `Make something fun!\nand share it with us:\nsupport@phaser.io\n`, {
       fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
       stroke: '#000000', strokeThickness: 8,
