@@ -63,10 +63,11 @@
                 {"Key":"Wishlist.Remember","Value":"Merken"},
                 {"Key":"Wishlist.Remembered","Value":"Gemerkt"},
                 {"Key":"Wishlist.DeleteAll","Value":"Alle löschen"},
-                {"Key":"Wishlist.Error","Value":"Es ist ein Error aufgetreten."}
+                {"Key":"Wishlist.Error","Value":"Es ist ein Error aufgetreten."},
+                {"Key":"WishList.Offers.Title","Value":"Offer title works"}
             ]'
           >
-            <ks-c-wish-list endpoint="https://dev.klubschule.ch/Umbraco/api/watchlistAPI">
+            <ks-c-wish-list endpoint="https://int.klubschule.ch/Umbraco/api/watchlistAPI" guid="3f5217cc-2334-48f7-9d68-1913301ddb32">
               <p-general>
                 <o-header menu-icon="true" namespace="header-nav-grid-" namespace-fallback role="header" m-navigation="m-multi-level-navigation" is-checkout="false" is-easy-portal-header="false">
                   <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/atoms/logo/default-/default-.html -->
@@ -172,7 +173,7 @@
   <script>
     const loadWcConfig = () => {
       const script = document.createElement('script')
-      script.setAttribute('src', location.href.replace(/((src)|(docs))\/.*/, 'wc-config.js?triggerImmediately=false'))
+      script.setAttribute('src', location.href.replace(/((src)|(docs))\/.*/, 'wc-config.js?triggerImmediately=true'))
       document.head.appendChild(script)
     }
     const loadHTML = (path, selector, append = false, rootFolder, setChild = 'appendChild') => {
