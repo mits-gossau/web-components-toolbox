@@ -40,7 +40,7 @@ function replaceProjectName () {
 }
 
 function gitUpdateSubmodule () {
-  shell.exec('git submodule update --init --recursive --remote --force')
+  shell.exec('git submodule update --init --recursive --force')
 }
 
 function gitSetURLOrigin () {
