@@ -1,6 +1,8 @@
 // @ts-check
 import { Intersection } from '../../prototypes/Intersection.js'
 
+/* global customElements */
+
 /**
  * LoadTemplateTag
  * Throw content inside a <template></template> tag into this component and it will load the template content on intersection

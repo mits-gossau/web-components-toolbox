@@ -1,10 +1,12 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global self */
+
 /** @type {(any)=>void} */
-let gameResolve = map => map
+const gameResolve = map => map
 /** @type {Promise<string>} */
-const game = new Promise(resolve => (gameResolve = resolve))
+// const game = new Promise(resolve => (gameResolve = resolve))
 
 /**
 * @export
@@ -20,16 +22,16 @@ export default class EasterEgg extends Shadow() {
       if (event.key === 'Escape' && event.ctrlKey && event.shiftKey && this.shouldRenderHTML()) this.renderHTML()
     }
   }
-  
+
   connectedCallback () {
     // TODO: - [ ] Mobile/Touch-Screen Easter Egg Trigger
     document.addEventListener('keyup', this.keyupListener)
   }
-  
+
   disconnectedCallback () {
     document.removeEventListener('keyup', this.keyupListener)
   }
-  
+
   /**
   * evaluates if a render is necessary
   *
@@ -38,7 +40,7 @@ export default class EasterEgg extends Shadow() {
   shouldRenderHTML () {
     return !this.getScript()
   }
-  
+
   /**
   * Render HTML
   * @returns void
@@ -46,9 +48,9 @@ export default class EasterEgg extends Shadow() {
   renderHTML () {
     // Phaser Bundled expects exports in the global scope
     self.exports = {}
-    // example code ➴ ➴ ➴ 
+    // example code ➴ ➴ ➴
     this.html = '<h1 style="color: red;">Easter Egg - Triggered</h1>'
-    // example code ➶ ➶ ➶ 
+    // example code ➶ ➶ ➶
     this.loadDependency('Phaser', 'https://cdn.jsdelivr.net/npm/phaser@3.85.2/dist/phaser.js').then(Phaser => {
       document.body.setAttribute('style', `${document.body.getAttribute('style') || ''}margin: 0;`)
       const config = {
@@ -70,7 +72,7 @@ export default class EasterEgg extends Shadow() {
         physics: {
           default: 'arcade',
           arcade: {
-            gravity: { y: 300 },
+            gravity: { y: 300 }
           }
         },
         scale: {
@@ -80,14 +82,14 @@ export default class EasterEgg extends Shadow() {
         scene: [
           createBootScene(this.importMetaUrl, Phaser.Scene),
           createPreloaderScene(this.importMetaUrl, Phaser.Scene, Phaser),
-          createGameScene(this.importMetaUrl, Phaser.Scene, Phaser),
+          createGameScene(this.importMetaUrl, Phaser.Scene, Phaser)
         ]
       }
       this.game = new Phaser.Game(config)
       gameResolve(this.game)
     })
   }
-  
+
   /**
   * fetch dependency
   *
@@ -106,12 +108,12 @@ export default class EasterEgg extends Shadow() {
       // @ts-ignore
       script.onload = () => self[globalNamespace]
       // @ts-ignore
-      ? resolve(self[globalNamespace])
-      : reject(new Error(`${globalNamespace} does not load into the global scope!`))
+        ? resolve(self[globalNamespace])
+        : reject(new Error(`${globalNamespace} does not load into the global scope!`))
       this.html = script
     }))
   }
-  
+
   getScript (globalNamespace) {
     return this.root.querySelector(`${globalNamespace ? `#${globalNamespace}` : 'script'}`)
   }
@@ -132,11 +134,13 @@ const createBootScene = (importMetaUrl, Scene) => class Boot extends Scene {
   constructor () {
     super('Boot')
   }
+
   preload () {
-    // example code ➴ ➴ ➴ 
+    // example code ➴ ➴ ➴
     this.load.image('migi', `${importMetaUrl}./assets/migi.png`)
-    // example code ➶ ➶ ➶ 
+    // example code ➶ ➶ ➶
   }
+
   create () {
     this.scene.start('Preloader')
   }
@@ -145,21 +149,24 @@ const createBootScene = (importMetaUrl, Scene) => class Boot extends Scene {
 // PreloaderScene (preload all assets needed for the GameScene)
 const createPreloaderScene = (importMetaUrl, Scene, Phaser) => class Preloader extends Scene {
   constructor () {
-    super('Preloader');
+    super('Preloader')
   }
+
   init () {
-    // example code ➴ ➴ ➴ 
+    // example code ➴ ➴ ➴
     this.add.image(50, 50, 'migi').setOrigin(0)
-    // example code ➶ ➶ ➶ 
+    // example code ➶ ➶ ➶
   }
+
   preload () {
     this.load.setPath(`${importMetaUrl}./assets`)
   }
+
   create () {
     this.load.once(Phaser.Loader.Events.COMPLETE, () => {
-      // example code ➴ ➴ ➴ 
+      // example code ➴ ➴ ➴
       this.add.text(200, 200, 'Loading...', { fill: '#00ff00', fontSize: '60px' })
-      // example code ➶ ➶ ➶ 
+      // example code ➶ ➶ ➶
       this.scene.start('Game')
     })
     this.load.start()
@@ -169,15 +176,19 @@ const createPreloaderScene = (importMetaUrl, Scene, Phaser) => class Preloader e
 // GameScene (the whole scenery and game behavior is in this Game Class)
 const createGameScene = (importMetaUrl, Scene, Phaser) => class Game extends Scene {
   constructor () {
-    super('Game');
+    super('Game')
   }
+
   create () {
     // TODO: - [ ] React on resize and rearrange all assets by viewport change
-    // example code ➴ ➴ ➴ 
+    // example code ➴ ➴ ➴
     this.add.image(50, 50, 'migi').setOrigin(0).setAlpha(0.5)
-    this.add.text(50, 175, `Make something fun!\nand share it with us:\nsupport@phaser.io\n`, {
-      fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-      stroke: '#000000', strokeThickness: 8,
+    this.add.text(50, 175, 'Make something fun!\nand share it with us:\nsupport@phaser.io\n', {
+      fontFamily: 'Arial Black',
+      fontSize: 38,
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 8
     }).setOrigin(0)
     this.emitter = this.add.particles(this.cameras.main.width / 2, this.cameras.main.height / 2, 'migi', {
       lifespan: 4000,
@@ -191,14 +202,17 @@ const createGameScene = (importMetaUrl, Scene, Phaser) => class Game extends Sce
     const migi = this.physics.add.sprite(0, 0, 'migi').setImmovable().setDisplaySize(200, 200)
     migi.body.allowGravity = false
     const name = this.add.text(0, migi.displayHeight / 2 - 16, 'migi', {
-      fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-      stroke: '#000000', strokeThickness: 8,
+      fontFamily: 'Arial Black',
+      fontSize: 38,
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 8,
       align: 'center'
     }).setOrigin(0.5, 1)
     const container = this.add.container(this.cameras.main.width - 350, this.cameras.main.height - 200)
     container.add([migi, name])
     container.setSize(migi.displayWidth, migi.displayHeight)
-    container.setInteractive({ cursor: "pointer" })
+    container.setInteractive({ cursor: 'pointer' })
     this.tweens.add({
       targets: [container],
       y: 250,
@@ -210,14 +224,17 @@ const createGameScene = (importMetaUrl, Scene, Phaser) => class Game extends Sce
     container.on('pointerdown', () => {
       console.log('*****click****')
       this.emitter.explode(32)
-      const followText = this.add.text(this.emitter.x, this.emitter.y, `Thanks for the ...!`, {
-        fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-        stroke: '#000000', strokeThickness: 8
-      }).setOrigin(.5)
+      const followText = this.add.text(this.emitter.x, this.emitter.y, 'Thanks for the ...!', {
+        fontFamily: 'Arial Black',
+        fontSize: 38,
+        color: '#ffffff',
+        stroke: '#000000',
+        strokeThickness: 8
+      }).setOrigin(0.5)
       this.emitter.on('complete', () => {
         followText.destroy()
       })
     }, this)
-    // example code ➶ ➶ ➶ 
+    // example code ➶ ➶ ➶
   }
 }

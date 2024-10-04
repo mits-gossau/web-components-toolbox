@@ -166,13 +166,13 @@
       if (src.searchParams.get('wc-config-load') !== 'false') {
         if (src.searchParams.get('debug') !== 'false') console.info(wcConfigLoad, imports)
         document.body.setAttribute(wcConfigLoad, 'true')
-        if (dispatchWcConfigLoadEvent) { 
+        if (dispatchWcConfigLoadEvent) {
           document.body.dispatchEvent(new CustomEvent(wcConfigLoad, {
             detail: { imports },
             bubbles: true,
             cancelable: true,
             composed: true
-          })) 
+          }))
         }
       }
     })
