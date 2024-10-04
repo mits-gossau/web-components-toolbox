@@ -88,7 +88,7 @@ export default class LoadTemplateTag extends Intersection() {
     if (!this.template) return
     const parentNode = this.parentNode
     const templateContent = this.template.content
-    const notDefined = templateContent.querySelectorAll(':not(:defined)')
+    const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
     this.template.remove()
     // keep a placeholder with same style attribute (height) until next scroll event, which gives enough time for the templateContent to render
     if (this.hasAttribute('style') && this.getAttribute('style').includes('height')) {
@@ -115,7 +115,7 @@ export default class LoadTemplateTag extends Intersection() {
       if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
         parentNode.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
           detail: {
-            nodes: Array.from(notDefined)
+            nodes: notDefined
           },
           bubbles: true,
           cancelable: true,
