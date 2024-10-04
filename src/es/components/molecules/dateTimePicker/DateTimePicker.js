@@ -31,29 +31,26 @@ export default class DateTimePicker extends Shadow() {
     }
 
     this.formAsPattern = (event) => {
-      const currentInput = event.data
-      const currentValue = this.inputField.value
-      const currentValueLength = currentValue.length
-      let currentValueLengthAsIndex = currentValue.length - 1
+      this.currentInput = event.data
+      this.currentValue = this.inputField.value
+      this.currentValueLength = this.currentValue.length
+      this.currentValueLengthAsIndex = this.currentValue.length - 1
 
 
       // from here
-      if (currentInput === null) {
-        console.log('delete', this.pickerFormat[currentValueLength])
-        if (this.pickerFormat[currentValueLength] === this.pickerFormatChar) {
-          console.log('dont remove')
-        }
-      } else if (currentValue.length > 0 && this.pickerFormat[currentValueLengthAsIndex] === 'd') {
-        this.dateState.d = this.dateState.d + currentInput
-      } else if (this.pickerFormat[currentValueLengthAsIndex] === 'm') {
-        console.log("m")
-      } else if (this.pickerFormat[currentValueLengthAsIndex] === 'y') {
-        console.log("y")
+      if (this.currentValue.length > 0 && this.pickerFormat[this.currentValueLengthAsIndex] === 'd') {
+        this.dateState.d = this.dateState.d + this.currentInput
+        this.checkNextChar()
+      } else if (this.pickerFormat[this.currentValueLengthAsIndex] === 'm') {
+        this.dateState.m = this.dateState.m + this.currentInput
+        this.checkNextChar()
+      } else if (this.pickerFormat[this.currentValueLengthAsIndex] === 'y') {
+        this.dateState.y = this.dateState.y + this.currentInput
+        this.checkNextChar()
       } else {
-        console.log('other')
-        console.log('other', this.dateState)
-
+        return
       }
+      console.log("data", this.dateState)
     }
 
     this.setNotAllowedKeys = (event) => {
@@ -61,8 +58,19 @@ export default class DateTimePicker extends Shadow() {
       if (keyCode == 32) {
         event.preventDefault()
         return false
-      }
-      else if (keyCode != 46 && (keyCode < 48 || keyCode > 57)) {
+      } else if (keyCode == 8) {
+        // console.log("currentInput", this.currentInput)
+        // console.log("currentValue", this.currentValue)
+        // console.log("currentValueLength", this.currentValueLength)
+        // console.log("currentValueLengthAsIndex", this.currentValueLengthAsIndex)
+
+        if (this.currentInput === this.pickerFormatChar) {
+          this.inputField.setSelectionRange(this.currentValueLengthAsIndex, this.currentValueLengthAsIndex)
+          event.preventDefault()
+          return false
+        }
+
+      } else if (keyCode != 46 && (keyCode < 48 || keyCode > 57)) {
         event.preventDefault()
         return false
       }
@@ -73,14 +81,14 @@ export default class DateTimePicker extends Shadow() {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-    if (this.inputField) this.inputField.addEventListener('keypress', this.setNotAllowedKeys)
+    if (this.inputField) this.inputField.addEventListener('keydown', this.setNotAllowedKeys)
     if (this.inputField) this.inputField.addEventListener('input', this.formAsPattern)
 
   }
 
   disconnectedCallback() {
     super.disconnectedCallback()
-    if (this.inputField) this.inputField.removeEventListener('keypress', this.setNotAllowedKeys)
+    if (this.inputField) this.inputField.removeEventListener('keydown', this.setNotAllowedKeys)
     if (this.inputField) this.inputField.removeEventListener('input', this.formAsPattern)
 
   }
@@ -169,6 +177,12 @@ export default class DateTimePicker extends Shadow() {
     if (format.includes('.')) return this.pickerFormatChar = '.', format.split('.')
     if (format.includes('-')) return this.pickerFormatChar = '-', format.split('-')
     return
+  }
+
+  checkNextChar() {
+    if (this.pickerFormat[this.currentValueLength] && this.pickerFormat[this.currentValueLength] === this.pickerFormatChar) {
+      this.inputField.value = this.inputField.value + this.pickerFormatChar
+    }
   }
 
   get inputField() {
