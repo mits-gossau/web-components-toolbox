@@ -1,5 +1,6 @@
 // @ts-check
-import { Mutation } from '../../prototypes/Mutation.js'
+// @ts-check
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
  * Navigation hosts uls
@@ -13,25 +14,75 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * }
  */
 
-export default class DateTimePicker extends Mutation() {
+export default class DateTimePicker extends Shadow() {
   constructor(options = {}, ...args) {
-    super({
-      importMetaUrl: import.meta.url,
-      mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
-      ...options
-    }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    // TODO create warning if picker-type doesn't exist
     this.pickerType = this.getAttribute("picker-type")
-    this.pickerPattern = this.getAttribute("picker-pattern")
+    // TODO create warning if picker-format doesn't exist
+    this.pickerFormat = this.getAttribute("picker-format").toLowerCase() ?? 'dd/mm/yyyy'
+    this.pickerFormatChar = "/"
+    this.splittedFormat = this.getSplittedFormat(this.pickerFormat)
+    // TODO fill out if it has default value
+    this.dateState = {
+      d: '',
+      m: '',
+      y: ''
+    }
+
+    this.formAsPattern = (event) => {
+      const currentInput = event.data
+      const currentValue = this.inputField.value
+      const currentValueLength = currentValue.length
+      let currentValueLengthAsIndex = currentValue.length - 1
+
+
+      // from here
+      if (currentInput === null) {
+        console.log('delete', this.pickerFormat[currentValueLength])
+        if (this.pickerFormat[currentValueLength] === this.pickerFormatChar) {
+          console.log('dont remove')
+        }
+      } else if (currentValue.length > 0 && this.pickerFormat[currentValueLengthAsIndex] === 'd') {
+        this.dateState.d = this.dateState.d + currentInput
+      } else if (this.pickerFormat[currentValueLengthAsIndex] === 'm') {
+        console.log("m")
+      } else if (this.pickerFormat[currentValueLengthAsIndex] === 'y') {
+        console.log("y")
+      } else {
+        console.log('other')
+        console.log('other', this.dateState)
+
+      }
+    }
+
+    this.setNotAllowedKeys = (event) => {
+      const keyCode = event.which
+      if (keyCode == 32) {
+        event.preventDefault()
+        return false
+      }
+      else if (keyCode != 46 && (keyCode < 48 || keyCode > 57)) {
+        event.preventDefault()
+        return false
+      }
+    }
   }
 
   connectedCallback() {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+    if (this.inputField) this.inputField.addEventListener('keypress', this.setNotAllowedKeys)
+    if (this.inputField) this.inputField.addEventListener('input', this.formAsPattern)
+
   }
 
   disconnectedCallback() {
     super.disconnectedCallback()
+    if (this.inputField) this.inputField.removeEventListener('keypress', this.setNotAllowedKeys)
+    if (this.inputField) this.inputField.removeEventListener('input', this.formAsPattern)
+
   }
 
   /**
@@ -113,15 +164,14 @@ export default class DateTimePicker extends Mutation() {
     return
   }
 
-  /**
-   *
-   *
-   * @param {'mobile' | 'desktop'} [media=this.getAttribute('media')]
-   * @returns {boolean}
-   * @memberof IntersectionScrollEffect
-   */
-  checkMedia(media = this.getAttribute('media')) {
-    const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
-    return (isMobile ? 'mobile' : 'desktop') === media
+  getSplittedFormat = (format) => {
+    if (format.includes('/')) return this.pickerFormatChar = '/', format.split('/')
+    if (format.includes('.')) return this.pickerFormatChar = '.', format.split('.')
+    if (format.includes('-')) return this.pickerFormatChar = '-', format.split('-')
+    return
+  }
+
+  get inputField() {
+    return this.root.querySelector('input')
   }
 }
