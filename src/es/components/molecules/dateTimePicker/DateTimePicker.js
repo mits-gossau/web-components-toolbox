@@ -24,11 +24,11 @@ export default class DateTimePicker extends Shadow() {
     this.pickerFormatChar = "/"
     this.splittedFormat = this.getSplittedFormat(this.pickerFormat)
     // TODO fill out if it has default value
-    this.dateState = {
-      d: '',
-      m: '',
-      y: ''
-    }
+    // this.dateState = {
+    //   d: '',
+    //   m: '',
+    //   y: ''
+    // }
 
     this.formAsPattern = (event) => {
       this.currentInput = event.data
@@ -39,18 +39,19 @@ export default class DateTimePicker extends Shadow() {
 
       // from here
       if (this.currentValue.length > 0 && this.pickerFormat[this.currentValueLengthAsIndex] === 'd') {
-        this.dateState.d = this.dateState.d + this.currentInput
+        // this.dateState.d = this.dateState.d + this.currentInput
         this.checkNextChar()
       } else if (this.pickerFormat[this.currentValueLengthAsIndex] === 'm') {
-        this.dateState.m = this.dateState.m + this.currentInput
+        //this.dateState.m = this.dateState.m + this.currentInput
         this.checkNextChar()
       } else if (this.pickerFormat[this.currentValueLengthAsIndex] === 'y') {
-        this.dateState.y = this.dateState.y + this.currentInput
+        // this.dateState.y = this.dateState.y + this.currentInput
         this.checkNextChar()
       } else {
-        return
+        console.log("else")
+        //return
       }
-      console.log("data", this.dateState)
+      // console.log("data", this.dateState)
     }
 
     this.setNotAllowedKeys = (event) => {
@@ -59,15 +60,11 @@ export default class DateTimePicker extends Shadow() {
         event.preventDefault()
         return false
       } else if (keyCode == 8) {
-        // console.log("currentInput", this.currentInput)
-        // console.log("currentValue", this.currentValue)
-        // console.log("currentValueLength", this.currentValueLength)
-        // console.log("currentValueLengthAsIndex", this.currentValueLengthAsIndex)
-
-        if (this.currentInput === this.pickerFormatChar) {
-          this.inputField.setSelectionRange(this.currentValueLengthAsIndex, this.currentValueLengthAsIndex)
-          event.preventDefault()
-          return false
+        //console.log("char", this.pickerFormatChar)
+        if (this.currentValue.slice(-2, -1) === this.pickerFormatChar) {
+          // this.inputField.setSelectionRange(this.currentValue.length - 1, this.currentValue.length - 1)
+          // event.preventDefault()
+          //return false
         }
 
       } else if (keyCode != 46 && (keyCode < 48 || keyCode > 57)) {
@@ -163,7 +160,7 @@ export default class DateTimePicker extends Shadow() {
    */
   renderHTML() {
     let inputField = document.createElement('input')
-    if (this.pickerPattern) inputField.setAttribute('pattern', this.pickerPattern)
+    if (this.pickerFormat) inputField.setAttribute('maxlength', `${this.pickerFormat.length}`)
     if (this.pickerType === 'birth') {
       this.html = inputField
     } else {
