@@ -1,6 +1,9 @@
+// https://astexplorer.net/
 const fs = require('fs')
 const path = require('path')
+// https://babeljs.io/docs/babel-parser
 const { parse } = require('@babel/parser')
+// https://babeljs.io/docs/babel-traverse
 const traverse = require('@babel/traverse').default
 const generate = require('@babel/generator').default
 const glob = require('glob')
@@ -64,5 +67,5 @@ glob.sync(`${directory}/**/*.{js,ts,jsx,tsx}`).forEach(file => {
         sourceType: 'module', // Specify source type
     })
     console.log(`manipulated file: ${file}`)
-    console.log(manipulatedCode)
+    //console.log(manipulatedCode)
 });
