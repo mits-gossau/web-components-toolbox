@@ -4,6 +4,7 @@
 /* global self */
 /* global CustomEvent */
 
+// bug fix version 2024-10-03 (set load-custom-elements attribute on body asap.)
 // extended version 2024-09-12 (allow hash attach for cache clearing)
 // extended version 2024-09-04 (dynamic custom element define on event trigger)
 // wc-config is a loader script which finds all not defined nodes / web components, takes their node.tagNames and tries to resolve them by the directory given or url attribute directly set on the web components node
@@ -165,20 +166,24 @@
       if (src.searchParams.get('wc-config-load') !== 'false') {
         if (src.searchParams.get('debug') !== 'false') console.info(wcConfigLoad, imports)
         document.body.setAttribute(wcConfigLoad, 'true')
-        if (dispatchWcConfigLoadEvent) document.body.dispatchEvent(new CustomEvent(wcConfigLoad,
-          {
+        if (dispatchWcConfigLoadEvent) {
+          document.body.dispatchEvent(new CustomEvent(wcConfigLoad, {
             detail: { imports },
             bubbles: true,
             cancelable: true,
             composed: true
-          }
-        ))
+          }))
+        }
       }
     })
   }
-  self.addEventListener('load', () => {
+  if (document && document.body) {
     document.body.setAttribute(src.searchParams.get('loadCustomElementsEventName') || 'load-custom-elements', 'true')
-  }, { once: true })
+  } else {
+    self.addEventListener('load', () => {
+      document.body.setAttribute(src.searchParams.get('loadCustomElementsEventName') || 'load-custom-elements', 'true')
+    }, { once: true })
+  }
   // @ts-ignore
   self.addEventListener(src.searchParams.get('loadCustomElementsEventName') || 'load-custom-elements', event => loadListener(event, event.detail.nodes, false))
   if (src.searchParams.get('triggerImmediately') === 'true') {

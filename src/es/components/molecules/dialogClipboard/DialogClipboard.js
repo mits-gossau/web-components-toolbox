@@ -1,9 +1,11 @@
 // @ts-check
 import Dialog from '../dialog/Dialog.js'
 
+/* global alert */
+
 /**
 * Implements the Web API Clipboard in combination to a dialog field
-* 
+*
 * @export
 * @class Dialog
 * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog
@@ -12,7 +14,7 @@ import Dialog from '../dialog/Dialog.js'
 */
 export default class DialogClipboard extends Dialog {
   constructor (options = {}, ...args) {
-    super({...options }, ...args)
+    super({ ...options }, ...args)
 
     const superShow = this.show
     this.show = command => {
@@ -25,7 +27,7 @@ export default class DialogClipboard extends Dialog {
       clearTimeout(transitionendTimeout)
       transitionendTimeout = setTimeout(() => {
         if (this.dialog.hasAttribute('open')) this.close()
-      }, this.getAttribute('duration') ||1000)
+      }, this.getAttribute('duration') || 1000)
     }
   }
 
@@ -36,7 +38,7 @@ export default class DialogClipboard extends Dialog {
     return showPromises
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.dialog.removeEventListener('animationend', this.transitionendEventListener)
     return super.disconnectedCallback()
   }
@@ -46,14 +48,14 @@ export default class DialogClipboard extends Dialog {
      *
      * @return {boolean}
      */
-  shouldRenderCustomHTML() {
+  shouldRenderCustomHTML () {
     return !this.root.querySelector(this.cssSelector + ' > dialog')
   }
 
   /**
    * renders the css
    */
-  renderCSS() {
+  renderCSS () {
     const result = super.renderCSS()
     this.setCss(/* css */`
       :host > dialog {
@@ -68,7 +70,7 @@ export default class DialogClipboard extends Dialog {
   /**
    * fetches the template
    */
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -103,7 +105,7 @@ export default class DialogClipboard extends Dialog {
    * Render HTML
    * @returns void
    */
-  renderCustomHTML() {
+  renderCustomHTML () {
     this.copyValue = this.template.content.textContent
     this.template.remove()
     this.html = /* html */`

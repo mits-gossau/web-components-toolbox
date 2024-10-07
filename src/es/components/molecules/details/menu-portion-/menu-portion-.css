@@ -23,6 +23,7 @@
 
 :host .nutrients-item{
     margin-right: 1.875rem;
+    min-width: 7.3em;
 }
 
 :host .nutrients-circle {

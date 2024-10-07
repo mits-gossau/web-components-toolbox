@@ -3,7 +3,7 @@
 const inquirer = require('inquirer')
 const request = require('request')
 const fs = require('fs-extra')
-const path = require('path')
+// const path = require('path')
 
 const indexJsonFileName = 'index.json'
 
@@ -36,13 +36,13 @@ const fetchNewPage = async (uri = null) => {
             .trim()
           // write html
           // create dirs if not applicable
-          fs.mkdir(process.env.path, { recursive: true }, error => {if(error) console.error(error)})
-          fs.writeFile(process.env.path + htmlFileName, cleanedBody, 'utf8', error => {if(error) console.error(error)})
+          fs.mkdir(process.env.path, { recursive: true }, error => { if (error) console.error(error) })
+          fs.writeFile(process.env.path + htmlFileName, cleanedBody, 'utf8', error => { if (error) console.error(error) })
           // write test
           fs.writeFile(process.env.path + htmlFileName + '.spec.js', writeVisualRegressionTest(
             htmlFileName,
             `${process.env.testUri}${htmlFileName}`
-          ), 'utf8', error => {if(error) console.error(error)})
+          ), 'utf8', error => { if (error) console.error(error) })
           // read existing index json
           indexArray = readIndexJsonFile(process.env.path + indexJsonFileName, indexArray)
           // write json
@@ -50,9 +50,9 @@ const fetchNewPage = async (uri = null) => {
           if ((indexObj = indexArray.find(indexObj => indexObj.uri === uri))) {
             indexObj.timestamp = Date.now()
           } else {
-            indexArray = [...indexArray, {htmlFileName, uri, timestamp: Date.now()}]
+            indexArray = [...indexArray, { htmlFileName, uri, timestamp: Date.now() }]
           }
-          fs.writeFile(process.env.path + indexJsonFileName, JSON.stringify(indexArray), 'utf8', error => {if(error) console.error(error)})
+          fs.writeFile(process.env.path + indexJsonFileName, JSON.stringify(indexArray), 'utf8', error => { if (error) console.error(error) })
           console.log('Done!')
         } else {
           console.error(error)
@@ -74,7 +74,7 @@ const promptIsWhat = () => {
       type: 'list',
       choices
     }
-  ]).then(({answer}) => choices.indexOf(answer))
+  ]).then(({ answer }) => choices.indexOf(answer))
 }
 
 const promptWhichUri = () => {
@@ -91,7 +91,7 @@ const promptWhichUri = () => {
         return true
       }
     }
-  ]).then(({uri}) => uri)
+  ]).then(({ uri }) => uri)
 }
 
 const promptDelete = () => {
@@ -110,14 +110,14 @@ const promptDelete = () => {
         return true
       }
     }
-  ]).then(({deleteList}) => deleteList.forEach(deleteKey => {
+  ]).then(({ deleteList }) => deleteList.forEach(deleteKey => {
     let indexObj
     if ((indexObj = indexArray.find(indexObj => indexObj.uri === deleteKey))) {
       console.log('deleting: ', process.env.path + indexObj.htmlFileName)
       fs.rmSync(process.env.path + indexObj.htmlFileName, { recursive: true, force: true })
       fs.rmSync(process.env.path + indexObj.htmlFileName + '.spec.js', { recursive: true, force: true })
       indexArray.splice(indexArray.indexOf(indexObj), 1)
-      fs.writeFile(process.env.path + indexJsonFileName, JSON.stringify(indexArray), 'utf8', error => {if(error) console.error(error)})
+      fs.writeFile(process.env.path + indexJsonFileName, JSON.stringify(indexArray), 'utf8', error => { if (error) console.error(error) })
     }
   }))
 }
@@ -138,7 +138,7 @@ const promptUpdate = () => {
         return true
       }
     }
-  ]).then(({updateList}) => updateList.forEach(updateKey => {
+  ]).then(({ updateList }) => updateList.forEach(updateKey => {
     let indexObj
     if ((indexObj = indexArray.find(indexObj => indexObj.uri === updateKey.replace(/\s\|.*/g, '')))) fetchNewPage(indexObj.uri)
   }))
@@ -179,6 +179,5 @@ const writeVisualRegressionTest = (name, htmlPath) => {
     })
   `
 }
-  
+
 init()
-  

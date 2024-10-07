@@ -1,5 +1,7 @@
 // @ts-check
 
+/* global HTMLElement */
+
 /**
 * @export
 * @class DownloadTemplatePreview
@@ -25,7 +27,7 @@ export default class DownloadTemplatePreview extends HTMLElement {
    * @return {boolean}
    */
   shouldRenderCSS () {
-    return !this.root.querySelector(`:host > style[_css]`)
+    return !this.root.querySelector(':host > style[_css]')
   }
 
   /**

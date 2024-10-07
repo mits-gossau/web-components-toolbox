@@ -5,10 +5,60 @@
         <a-button namespace="button-primary-">Hello Button</a-button>
     </template>
 </m-load-template-tag>
+<!-- Test, to define elements within template tag within already defined elements -->
+<m-carousel-two></m-carousel-two>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <m-load-template-tag>
     <template>
-        <p>hello world</p>
+        <p>hello world 2</p>
     </template>
+</m-load-template-tag>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<h2>last stuff</h2>
+<m-load-template-tag intersectionobserverinit="{ 'rootMargin': '0px', 'threshold': 0 }" style="display: block; min-height: 50vh">
+<template>
+<m-carousel-two namespace=carousel-two-3-column- nav-flex-wrap separate nav-justify-content=end nav-align-self=end no-default-arrow-nav no-default-nav no-default-nav-linking>
+<section>
+<m-teaser namespace=teaser-tile- color=ks-red href="https://int.klubschule.ch/raeume/media/jtud3roi/broschuere-raumvermietung-national-de.pdf?la=de-CH" target=_blank title="PDF herunterladen" brand=ks>
+<figure>
+<figcaption>
+<strong>Brosch&#xFC;re</strong>
+<h3>&#xDC;bersicht unserer R&#xE4;ume</h3>
+<p>Erfahren Sie mehr, welche Räume Sie in der Klubschule mieten können.</p>
+<span> PDF herunterladen <a-icon-mdx icon-name=ArrowUpRight size=1em rotate=0 no-hover-transform>
+</a-icon-mdx>
+</span>
+</figcaption>
+</figure>
+</m-teaser>
+<m-teaser namespace=teaser-tile- color=ks-red href="https://form.123formbuilder.com/6455362/raumreservation-klubschule-migros?_gl=1*oautmq*_ga*MjgyNzU5NzQwLjE3MTMyNzY3MDc.*_ga_EXT9MEM6M4*MTcxNjI3NTk2My45OC4xLjE3MTYyNzYwNjQuNjAuMC4w" target=_blank title="Jetzt reservieren" brand=ks>
+<figure>
+<figcaption>
+<strong>Offerte </strong>
+<h3>Mieten Sie Ihren Raum</h3>
+<p>Fordern Sie noch heute Ihre Offerte an.</p>
+<span> Jetzt reservieren <a-icon-mdx icon-name=ArrowUpRight size=1em rotate=0 no-hover-transform>
+</a-icon-mdx>
+</span>
+</figcaption>
+</figure>
+</m-teaser>
+<m-teaser namespace=teaser-tile- color=ks-red href=mailto:events@klubschule.ch target=_blank title="E-Mail schreiben" brand=ks>
+<figure>
+<figcaption>
+<strong>Beratung</strong>
+<h3>Haben Sie Fragen zu unserem R&#xE4;umen?</h3>
+<p>Kontaktieren Sie uns, wir beraten Sie gerne.</p>
+<span> E-Mail schreiben <a-icon-mdx icon-name=ArrowUpRight size=1em rotate=0 no-hover-transform>
+</a-icon-mdx>
+</span>
+</figcaption>
+</figure>
+</m-teaser>
+</section>
+<div>
+</div>
+</m-carousel-two>
+</template>
 </m-load-template-tag>
 <script type="text/javascript" src="../../../../../docs/es/loader.js"></script>

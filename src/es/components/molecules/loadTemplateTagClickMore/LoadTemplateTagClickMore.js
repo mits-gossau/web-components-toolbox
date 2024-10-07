@@ -3,7 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /**
 * LoadTemplateTagClickMore unpacks template tags on event
-* 
+*
 * @export
 * @class LoadTemplateTagClickMore
 * @type {CustomElementConstructor}
@@ -107,7 +107,7 @@ export default class LoadTemplateTagClickMore extends Shadow() {
     if (this.hasAttribute('initial-unpack') && Number(this.getAttribute('initial-unpack')) > 1) {
       this.setAttribute('initial-unpack', Number(this.getAttribute('initial-unpack')) - 1)
       this.renderHTML()
-    } 
+    }
     return true
   }
 

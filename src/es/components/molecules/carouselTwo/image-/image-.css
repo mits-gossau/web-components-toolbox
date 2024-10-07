@@ -12,7 +12,7 @@
   --carousel-two-image-section-gap: 1em;
   --carousel-two-image-section-nav-separate-margin-mobile: var(--content-spacing-mobile);
   --carousel-two-image-section-nav-separate-margin: var(--content-spacing);
-  --carousel-two-image-nav-margin-mobile: 0;
+  --carousel-two-image-nav-margin-mobile: 0 var(--carousel-two-image-nav-margin-top-mobile, 0) 0 0;
   --carousel-two-image-nav-margin: 0;
   --carousel-two-image-p-font-family: var(--mdx-sys-font-flex-large-custom1, var(--font-family));
   --carousel-two-image-p-margin: 0 0 var(--mdx-sys-spacing-fix-s, var(--content-spacing));

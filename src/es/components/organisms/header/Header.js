@@ -111,7 +111,7 @@ export default class Header extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    showPromises.push(new Promise(resolve => this.addEventListener('navigation-load', event => resolve(), { once: true })))
+    if (!this.hasAttribute('no-navigation')) showPromises.push(new Promise(resolve => this.addEventListener('navigation-load', event => resolve(), { once: true })))
     if (this.aLogo && !this.aLogo.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('logo-load', event => resolve(), { once: true })))
     Promise.all(showPromises).then(() => {
       this.hidden = false

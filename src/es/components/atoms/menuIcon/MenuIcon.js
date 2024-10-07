@@ -32,7 +32,7 @@ export default class MenuIcon extends Shadow() {
       this.setAttribute('aria-label', 'show navigation menu')
       this.setAttribute('aria-expanded', 'false')
       if (this.getMedia() === 'desktop') this.setAttribute('aria-hidden', 'true')
-    } 
+    }
     this.openClass = this.getAttribute('openClass') ? this.getAttribute('openClass') : 'open'
     this.barClass = this.getAttribute('barClass') ? this.getAttribute('barClass') : 'bar'
 
