@@ -33,25 +33,21 @@ export default class DateTimePicker extends Shadow() {
     this.formAsPattern = (event) => {
       this.currentInput = event.data
       this.currentValue = this.inputField.value
+      this.currentSelectionStart = this.inputField.selectionStart
+      this.currentSelectionAsIndex = this.inputField.selectionStart - 1
       this.currentValueLength = this.currentValue.length
       this.currentValueLengthAsIndex = this.currentValue.length - 1
+      this.addedDay = ''
+      this.addedMonth = ''
+      this.addedYear = ''
 
 
-      // from here
-      if (this.currentValue.length > 0 && this.pickerFormat[this.currentValueLengthAsIndex] === 'd') {
-        // this.dateState.d = this.dateState.d + this.currentInput
-        this.checkNextChar()
-      } else if (this.pickerFormat[this.currentValueLengthAsIndex] === 'm') {
-        //this.dateState.m = this.dateState.m + this.currentInput
-        this.checkNextChar()
-      } else if (this.pickerFormat[this.currentValueLengthAsIndex] === 'y') {
-        // this.dateState.y = this.dateState.y + this.currentInput
-        this.checkNextChar()
-      } else {
-        console.log("else")
-        //return
-      }
-      // console.log("data", this.dateState)
+      console.log("currentSelectionStart", this.pickerFormat[this.currentSelectionAsIndex])
+
+      if (this.pickerFormat[this.currentSelectionAsIndex] === 'd') { }
+      else if (this.pickerFormat[this.currentSelectionAsIndex] === 'm') { }
+      else if (this.pickerFormat[this.currentSelectionAsIndex] === 'y') { }
+      else { }
     }
 
     this.setNotAllowedKeys = (event) => {
@@ -60,13 +56,6 @@ export default class DateTimePicker extends Shadow() {
         event.preventDefault()
         return false
       } else if (keyCode == 8) {
-        //console.log("char", this.pickerFormatChar)
-        if (this.currentValue.slice(-2, -1) === this.pickerFormatChar) {
-          // this.inputField.setSelectionRange(this.currentValue.length - 1, this.currentValue.length - 1)
-          // event.preventDefault()
-          //return false
-        }
-
       } else if (keyCode != 46 && (keyCode < 48 || keyCode > 57)) {
         event.preventDefault()
         return false
@@ -178,6 +167,7 @@ export default class DateTimePicker extends Shadow() {
 
   checkNextChar() {
     if (this.pickerFormat[this.currentValueLength] && this.pickerFormat[this.currentValueLength] === this.pickerFormatChar) {
+      console.log("checkNextChar()", this.pickerFormat[this.currentValueLength])
       this.inputField.value = this.inputField.value + this.pickerFormatChar
     }
   }
