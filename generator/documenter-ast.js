@@ -8,6 +8,51 @@ const traverse = require('@babel/traverse').default
 const generate = require('@babel/generator').default
 const glob = require('glob')
 
+
+// see traverse at line 12 for 'this.getAttribute' example
+function getAttributeNames(filePath, options = {}) {
+    const functions = []
+    const variables = []
+    const attributes = []
+    try {
+        const content = fs.readFileSync(filePath, 'utf8');
+        const ast = parse(content, {
+            ...options,
+            sourceFilename: filePath,
+            plugins: ['jsx', 'typescript']
+        });
+        traverse(ast, {
+            CallExpression(path) {
+                const callee = path.node.callee;
+                if (callee.type === 'MemberExpression' && callee.object.type === 'ThisExpression' && callee.property.name === 'getAttribute') {
+                    const attributeName = path.node.arguments[0].value
+                    // console.log(`found this.getAttribute('${attributeName}') at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
+                    attributes.push(attributeName)
+                }
+            },
+            MemberExpression(path) {
+                if (path.node.object.type === 'ThisExpression' && path.node.property.name === 'getAttribute') {
+                    // console.log(`Found this.getAttribute at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
+                }
+            },
+            FunctionDeclaration(path) {
+                functions.push(path.node.id.name);
+            },
+            VariableDeclarator(path) {
+                variables.push(path.node.id.name);
+            },
+        })
+        return {
+            functions,
+            variables,
+            attributes
+        }
+    } catch (error) {
+        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`);
+        throw error
+    }
+}
+
 // parse and manipulate a file using Babel AST
 function parseAndManipulateFile(filePath, options = {}) {
     try {
@@ -18,9 +63,10 @@ function parseAndManipulateFile(filePath, options = {}) {
             plugins: ['jsx', 'typescript']
         });
 
-        // traverse and manipulate the AST
+        // traverse and manipulate(!!!) the AST
         traverse(ast, {
-            // example visitor to add a console.log statement at the beginning of each file
+            // example visitor to add a "console.log" statement at the beginning of each file
+            // see log output for result!
             Program(path) {
                 const consoleLogStatement = {
                     type: 'ExpressionStatement',
@@ -58,14 +104,21 @@ function parseAndManipulateFile(filePath, options = {}) {
     }
 }
 
+
 // root directory
 const directory = path.resolve('../src/es/components/')
 
 // glob pattern to find files
 glob.sync(`${directory}/**/*.{js,ts,jsx,tsx}`).forEach(file => {
-    const manipulatedCode = parseAndManipulateFile(file, {
+    // const manipulatedCode = parseAndManipulateFile(file, {
+    //     sourceType: 'module', // Specify source type
+    // })
+    //console.log(`manipulated file: ${file}`)
+    //console.log(manipulatedCode)
+
+    const attributes = getAttributeNames(file, {
         sourceType: 'module', // Specify source type
     })
-    console.log(`manipulated file: ${file}`)
-    //console.log(manipulatedCode)
+    console.log(attributes)
+
 });
