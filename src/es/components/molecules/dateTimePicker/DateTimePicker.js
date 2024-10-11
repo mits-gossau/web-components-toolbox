@@ -23,43 +23,66 @@ export default class DateTimePicker extends Shadow() {
     this.pickerFormat = this.getAttribute("picker-format").toLowerCase() ?? 'dd/mm/yyyy'
     this.pickerFormatChar = "/"
     this.splittedFormat = this.getSplittedFormat(this.pickerFormat)
-    // TODO fill out if it has default value
-    // this.dateState = {
-    //   d: '',
-    //   m: '',
-    //   y: ''
-    // }
+    this.customValidationObj = this.getAttribute("custom-validation-obj") || {
+      d: {
+        max: 31,
+        min: 1,
+        isValid: false,
+        errorMessage: 'Please add a valid day, between 1 and 31.'
+      },
+      m: {
+        max: 12,
+        min: 1,
+        isValid: false,
+        errorMessage: 'Please add a valid month, between 1 and 12.'
+      },
+      y: {
+        max: 2010,
+        min: 1900,
+        isValid: false,
+        errorMessage: 'Please add a valid year, between 1900 and 2010.'
+      },
+      isTouched: false,
+      isValid: false,
+      errorMessage: 'Please add a valid format as dd/mm/yyyy'
+    }
+
+    console.log("fpattern", this.pickerFormatChar, this.pickerFormatChar.charCodeAt(0))
 
     this.formAsPattern = (event) => {
       this.currentInput = event.data
       this.currentValue = this.inputField.value
       this.currentSelectionStart = this.inputField.selectionStart
-      this.currentSelectionAsIndex = this.inputField.selectionStart - 1
       this.currentValueLength = this.currentValue.length
-      this.currentValueLengthAsIndex = this.currentValue.length - 1
-      this.addedDay = ''
-      this.addedMonth = ''
-      this.addedYear = ''
+      this.checkNextChar()
 
-
-      console.log("currentSelectionStart", this.pickerFormat[this.currentSelectionAsIndex])
-
-      if (this.pickerFormat[this.currentSelectionAsIndex] === 'd') { }
-      else if (this.pickerFormat[this.currentSelectionAsIndex] === 'm') { }
-      else if (this.pickerFormat[this.currentSelectionAsIndex] === 'y') { }
-      else { }
+      // if remove
+      if (this.currentInput === null) {
+        if (this.pickerFormat[this.currentSelectionStart] === this.pickerFormatChar && this.currentValue.length === this.currentSelectionStart) {
+          this.inputField.value = this.currentValue
+        }
+        else if (this.pickerFormat[this.currentSelectionStart] === this.pickerFormatChar && this.currentValue.length > this.currentSelectionStart) {
+          this.inputField.value = this.currentValue.slice(0, this.currentSelectionStart) + this.pickerFormatChar + this.currentValue.slice(this.currentSelectionStart)
+          this.inputField.setSelectionRange(this.currentSelectionStart, this.currentSelectionStart)
+        }
+      }
     }
 
     this.setNotAllowedKeys = (event) => {
       const keyCode = event.which
-      if (keyCode == 32) {
+      if (event.key == this.pickerFormatChar) { }
+      else if (keyCode == 32) {
         event.preventDefault()
         return false
-      } else if (keyCode == 8) {
-      } else if (keyCode != 46 && (keyCode < 48 || keyCode > 57)) {
+      } else if (keyCode == 8 || keyCode == 37 || keyCode == 39 || keyCode == 46) {
+      } else if (keyCode < 48 || keyCode > 57) {
         event.preventDefault()
         return false
       }
+    }
+
+    this.customValidation = (event) => {
+      console.log("event validation", event)
     }
   }
 
@@ -67,16 +90,20 @@ export default class DateTimePicker extends Shadow() {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
-    if (this.inputField) this.inputField.addEventListener('keydown', this.setNotAllowedKeys)
-    if (this.inputField) this.inputField.addEventListener('input', this.formAsPattern)
-
+    if (this.inputField) {
+      this.inputField.addEventListener('keydown', this.setNotAllowedKeys)
+      this.inputField.addEventListener('input', this.formAsPattern)
+      this.inputField.addEventListener('change', this.customValidation)
+    }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback()
-    if (this.inputField) this.inputField.removeEventListener('keydown', this.setNotAllowedKeys)
-    if (this.inputField) this.inputField.removeEventListener('input', this.formAsPattern)
-
+    if (this.inputField) {
+      this.inputField.removeEventListener('keydown', this.setNotAllowedKeys)
+      this.inputField.removeEventListener('input', this.formAsPattern)
+      this.inputField.removeEventListener('change', this.customValidation)
+    }
   }
 
   /**
@@ -167,7 +194,6 @@ export default class DateTimePicker extends Shadow() {
 
   checkNextChar() {
     if (this.pickerFormat[this.currentValueLength] && this.pickerFormat[this.currentValueLength] === this.pickerFormatChar) {
-      console.log("checkNextChar()", this.pickerFormat[this.currentValueLength])
       this.inputField.value = this.inputField.value + this.pickerFormatChar
     }
   }
