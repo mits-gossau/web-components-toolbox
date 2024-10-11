@@ -22,6 +22,11 @@ export default class DateTimePicker extends Shadow() {
     // TODO create warning if picker-format doesn't exist
     this.pickerFormat = this.getAttribute("picker-format").toLowerCase() ?? 'dd/mm/yyyy'
     this.pickerFormatChar = "/"
+    this.formIndexes = {
+      d: Array(),
+      m: Array(),
+      y: Array()
+    }
     this.splittedFormat = this.getSplittedFormat(this.pickerFormat)
     this.customValidationObj = this.getAttribute("custom-validation-obj") || {
       d: {
@@ -46,8 +51,7 @@ export default class DateTimePicker extends Shadow() {
       isValid: false,
       errorMessage: 'Please add a valid format as dd/mm/yyyy'
     }
-
-    console.log("fpattern", this.pickerFormatChar, this.pickerFormatChar.charCodeAt(0))
+    this.setFormIndexes()
 
     this.formAsPattern = (event) => {
       this.currentInput = event.data
@@ -65,6 +69,19 @@ export default class DateTimePicker extends Shadow() {
           this.inputField.value = this.currentValue.slice(0, this.currentSelectionStart) + this.pickerFormatChar + this.currentValue.slice(this.currentSelectionStart)
           this.inputField.setSelectionRange(this.currentSelectionStart, this.currentSelectionStart)
         }
+      } else if (this.currentInput === this.pickerFormatChar) {
+        if (this.pickerFormat[this.currentSelectionStart - 1] === 'd') {
+          this.formatInput('d')
+        }
+        else if (this.pickerFormat[this.currentSelectionStart - 1] === 'm') {
+          this.formatInput('m')
+        }
+        else if (this.pickerFormat[this.currentSelectionStart - 1] === 'y') {
+          this.formatInput('y')
+        }
+      } else if (this.pickerFormat.split('')[this.currentValue.length] === this.pickerFormatChar) {
+        // here further
+        console.log("hallo")
       }
     }
 
@@ -192,10 +209,44 @@ export default class DateTimePicker extends Shadow() {
     return
   }
 
-  checkNextChar() {
+  checkNextChar(formatCharTyped) {
     if (this.pickerFormat[this.currentValueLength] && this.pickerFormat[this.currentValueLength] === this.pickerFormatChar) {
       this.inputField.value = this.inputField.value + this.pickerFormatChar
     }
+    if (formatCharTyped && this.pickerFormat[this.currentValueLength + 1] === this.pickerFormatChar) {
+      this.inputField.value = this.inputField.value + this.pickerFormatChar
+    }
+  }
+
+  setFormIndexes() {
+    this.pickerFormat.split('').forEach((char, index) => {
+      if (char === 'd') this.formIndexes.d.push(index)
+      else if (char === 'm') this.formIndexes.m.push(index)
+      else if (char === 'y') this.formIndexes.y.push(index)
+    })
+  }
+
+  formatInput(dateType) {
+    this.currentValue.split('').forEach((char, index) => {
+      if (this.formIndexes[dateType].includes(index)) {
+        if (char === this.pickerFormatChar) {
+          let currentDateTypeValue = Array()
+          this.formIndexes[dateType].forEach(ind => {
+            if (this.currentValue[ind] === this.pickerFormatChar || !this.currentValue[ind]) {
+              currentDateTypeValue.unshift('0')
+            } else {
+              currentDateTypeValue.unshift(this.currentValue[ind])
+            }
+          })
+          let inputFieldValue = this.currentValue.split('')
+          this.formIndexes[dateType].forEach((ind, i) => {
+            inputFieldValue[ind] = currentDateTypeValue[i]
+          })
+          this.inputField.value = inputFieldValue.join('')
+          this.checkNextChar(true)
+        }
+      }
+    })
   }
 
   get inputField() {
