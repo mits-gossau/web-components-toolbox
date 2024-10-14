@@ -12,8 +12,21 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Auvious extends Shadow() {
+  #json
+
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+
+    this.auviousLaunchEventListener = event => this.widget.launch('video')
+
+    this.callEndedEventListener = event => {
+      this.widget.terminate(false)
+      if (this.hasAttribute('reload-on-callEnded')) setTimeout(() => location.reload(), 2000)
+    }
+
+    this.notificationOpenedEventListener = event => {
+      if (event.detail === 'error') this.callEndedEventListener()
+    }
   }
 
   connectedCallback () {
@@ -21,10 +34,26 @@ export default class Auvious extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    Promise.all(showPromises).then(() => (this.hidden = false))
+    document.body.addEventListener('auvious-launch', this.auviousLaunchEventListener)
+    Promise.all(showPromises).then(async () => {
+      this.widget.addEventListener('callEnded', this.callEndedEventListener)
+      this.widget.addEventListener('notificationOpened', this.notificationOpenedEventListener)
+      this.widget.addEventListener('ready', event => Auvious.injectAttributePart(this.widget), { once: true })
+      this.widget.addEventListener('notificationOpened', event => setTimeout(() => {
+        Auvious.injectAttributePart(this.widget)
+        this.hidden = false
+      }, 50), { once: true })
+      self.addEventListener('beforeunload', this.callEndedEventListener, { once: true })
+      // see all translation keys: https://docs.auvious.com/assets/files/de-4eebf6730ba65b91064fb20f6f97234b.json
+      if (this.json.translations) this.widget.setTranslations({...(await fetch(`${this.importMetaUrl}./${this.getAttribute('translations-path') || 'de-4eebf6730ba65b91064fb20f6f97234b.json'}`).then(response => response.json())), ...this.json.translations})
+    })
   }
 
-  disconnectedCallback () {}
+  disconnectedCallback () {
+    document.body.removeEventListener('auvious-launch', this.auviousLaunchEventListener)
+    this.widget.removeEventListener('callEnded', this.callEndedEventListener)
+    this.widget.removeEventListener('notificationOpened', this.notificationOpenedEventListener)
+  }
 
   /**
    * evaluates if a render is necessary
@@ -49,7 +78,24 @@ export default class Auvious extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host {}
+      :host {
+        --av-color-primary: var(--color-secondary);
+        --av-container-round-width: 5em;
+      }
+      :host > app-auvious-widget::part(DIV-av-floating-av-floating-right-av-floating-bottom-av-floating-offset) {
+        position: relative;
+        left: 0;
+        top: 0;
+      }
+      :host > app-auvious-widget::part(APP-LAUNCHER) {
+        display: flex;
+        align-items: center;
+      }
+      :host > app-auvious-widget::part(APP-LAUNCHER)::before {
+        content: "${this.json?.texts?.privacy || 'this.jsontext.privacy is missing!'}";
+        font: var(--mdx-sys-font-fix-body3);
+        margin-right: 1em;
+      }
       @media only screen and (max-width: _max-width_) {
         :host {}
       }
@@ -95,7 +141,22 @@ export default class Auvious extends Shadow() {
     }))
   }
 
+  static injectAttributePart (node) {
+    node.setAttribute('part', Array.from(node.classList).reduce((acc, curr) => `${acc}-${curr}`, node.nodeName))
+    if (node.shadowRoot) node = node.shadowRoot
+    let children
+    if ((children = node.children) && children.length) Array.from(children).forEach(node => Auvious.injectAttributePart(node))
+  }
+
   get widget () {
     return this.root.querySelector('app-auvious-widget')
+  }
+
+  get template () {
+    return this.root.querySelector('template')
+  }
+
+  get json () {
+    return this.#json || (this.#json = JSON.parse(this.template.content.textContent))
   }
 }
