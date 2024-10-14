@@ -14,17 +14,35 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class ImageHotspot extends Shadow() {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
     this.hasRendered = false
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+
+    this.addEventListener('picture-load', event => {
+      let spotContainer = document.createElement('div')
+      let divContainer = document.createElement('div')
+      divContainer.classList.add('img-is-spot-reference-wrapper')
+
+      this.hotspots.forEach(el => {
+        spotContainer.appendChild(el)
+      })
+
+      divContainer.appendChild(spotContainer)
+      if (this.picture) {
+        this.picture.html = divContainer
+        divContainer.prepend(this.picture.picture)
+      }
+
+    }
+    )
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
 
   }
 
@@ -33,7 +51,7 @@ export default class ImageHotspot extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -42,7 +60,7 @@ export default class ImageHotspot extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.hasRendered
   }
 
@@ -51,7 +69,7 @@ export default class ImageHotspot extends Shadow() {
    *
    * @return {void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host{
         width: var(--width, 100vw) !important;
@@ -111,7 +129,7 @@ export default class ImageHotspot extends Shadow() {
    *
    * @return {void}
    */
-  renderHTML () {
+  renderHTML() {
     this.hasRendered = true
 
     this.divWrapper.classList.add('wrapper')
@@ -120,32 +138,32 @@ export default class ImageHotspot extends Shadow() {
     this.divPicture.appendChild(this.picture)
     this.divWrapper.appendChild(this.divPicture)
 
-    this.divHotspot.classList.add('hotspots-container')
-    Array.from(this.hotspots).forEach(node => {
-      this.divHotspot.appendChild(node)
-    })
-    this.divWrapper.appendChild(this.divHotspot)
+    // this.divHotspot.classList.add('hotspots-container')
+    // Array.from(this.hotspots).forEach(node => {
+    //   this.divHotspot.appendChild(node)
+    // })
+    // this.divWrapper.appendChild(this.divHotspot)
 
     this.html = this.divWrapper
   }
 
-  get hotspots () {
+  get hotspots() {
     return this.root.querySelectorAll('a-hotspot')
   }
 
-  get picture () {
+  get picture() {
     return this.root.querySelector('a-picture') || this.root.querySelector('picture')
   }
 
-  get divWrapper () {
+  get divWrapper() {
     return this._divWrapper || (this._divWrapper = document.createElement('div'))
   }
 
-  get divHotspot () {
-    return this._divHotspot || (this._divHotspot = document.createElement('div'))
-  }
+  // get divHotspot() {
+  //   return this._divHotspot || (this._divHotspot = document.createElement('div'))
+  // }
 
-  get divPicture () {
+  get divPicture() {
     return this._divPicture || (this._divPicture = document.createElement('div'))
   }
 }

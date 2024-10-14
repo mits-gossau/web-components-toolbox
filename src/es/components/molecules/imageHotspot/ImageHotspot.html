@@ -7,7 +7,7 @@
 </style>
 <h2>Hotspots refrence point is the m-image-hotspot</h2>
 <m-image-hotspot>
-  <a-picture namespace="hotspot-picture-" alt="Dergarten" defaultSource="./derGarten.jpg">
+  <a-picture picture-load namespace="hotspot-picture-" alt="Dergarten" defaultSource="./derGarten.jpg">
   </a-picture>
   <a-hotspot top="33.777777777777779" left="73" place="bottom">
     <div class="content">
@@ -193,8 +193,9 @@
 </br>
 
 <h2>Hotspots refrence point is the image tag</h2>
+
 <m-image-hotspot img-is-spot-reference>
-  <a-picture namespace="hotspot-picture-" alt="Dergarten" defaultSource="./derGarten.jpg">
+  <a-picture picture-load namespace="hotspot-picture-" alt="Dergarten" defaultSource="./derGarten.jpg">
   </a-picture>
   <a-hotspot top="33.777777777777779" left="73" place="bottom">
     <div class="content">
@@ -372,7 +373,8 @@
       </article>
     </div>
   </a-hotspot>
-  <!-- load web components for Demo Purposes Only -->
-  <script class=template-script type="text/javascript" src="./ImageHotspot.js"></script>
-  <script type="text/javascript" src="../../../../../docs/es/loader.js"></script>
-  <script type="text/javascript" src="../../../../../docs/es/documenter.js?component=ImageHotspot.js"></script>
+</m-image-hotspot>
+
+<!-- load web components for Demo Purposes Only -->
+<script type="text/javascript" src="../../../../../docs/es/loader.js"></script>
+<script type="text/javascript" src="../../../../../docs/es/documenter.js?component=ImageHotspot.js"></script>
