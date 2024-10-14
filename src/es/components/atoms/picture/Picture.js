@@ -284,7 +284,7 @@ export default class Picture extends Intersection(Hover()) {
           path: `${this.importMetaUrl}./cover-/cover-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
-      case 'hotspot-picture-':
+      case 'picture-hotspot-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./hotspot-/hotspot-.css`, // apply namespace since it is specific and no fallback
           namespace: false
