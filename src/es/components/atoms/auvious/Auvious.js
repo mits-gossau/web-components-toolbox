@@ -39,6 +39,7 @@ export default class Auvious extends Shadow() {
       this.widget.addEventListener('callEnded', this.callEndedEventListener)
       this.widget.addEventListener('notificationOpened', this.notificationOpenedEventListener)
       this.widget.addEventListener('ready', event => Auvious.injectAttributePart(this.widget), { once: true })
+      setTimeout(() => (this.hidden = false), 2000)
       this.widget.addEventListener('notificationOpened', event => setTimeout(() => {
         Auvious.injectAttributePart(this.widget)
         this.hidden = false
