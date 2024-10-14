@@ -135,13 +135,6 @@ export default class ImageHotspot extends Shadow() {
     this.divPicture.classList.add('picture')
     this.divPicture.appendChild(this.picture)
     this.divWrapper.appendChild(this.divPicture)
-
-    // this.divHotspot.classList.add('hotspots-container')
-    // Array.from(this.hotspots).forEach(node => {
-    //   this.divHotspot.appendChild(node)
-    // })
-    // this.divWrapper.appendChild(this.divHotspot)
-
     this.html = this.divWrapper
   }
 
@@ -156,10 +149,6 @@ export default class ImageHotspot extends Shadow() {
   get divWrapper() {
     return this._divWrapper || (this._divWrapper = document.createElement('div'))
   }
-
-  // get divHotspot() {
-  //   return this._divHotspot || (this._divHotspot = document.createElement('div'))
-  // }
 
   get divPicture() {
     return this._divPicture || (this._divPicture = document.createElement('div'))
