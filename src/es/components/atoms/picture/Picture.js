@@ -546,17 +546,6 @@ export default class Picture extends Intersection(Hover()) {
       this.html = this.closeBtn
       this.html = this.style
     }
-    // If an a-picture is utilized as a hotspot image and it serves as the reference point for the hotspots
-    if (this.getAttribute('namespace')?.includes('hotspot-picture') && this.getRootNode()?.host?.hasAttribute('img-is-spot-reference') && this.getRootNode().host.shadowRoot?.querySelector('.hotspots-container')) {
-      let divContainer = document.createElement('div')
-      divContainer.classList.add('img-is-spot-reference-wrapper')
-      Array.from(this.root.children).forEach(el => {
-        divContainer.appendChild(el)
-      })
-      let spotsContainer = this.getRootNode().host.shadowRoot.querySelector('.hotspots-container')
-      divContainer.appendChild(spotsContainer)
-      this.html = divContainer
-    }
   }
 
   get alt() {
