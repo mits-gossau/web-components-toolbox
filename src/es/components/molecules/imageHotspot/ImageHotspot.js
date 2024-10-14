@@ -26,11 +26,13 @@ export default class ImageHotspot extends Shadow() {
     this.addEventListener('picture-load', event => {
       let spotContainer = document.createElement('div')
       let divContainer = document.createElement('div')
+
       divContainer.classList.add('img-is-spot-reference-wrapper')
 
       this.hotspots.forEach(el => spotContainer.appendChild(el))
 
       divContainer.appendChild(spotContainer)
+
       if (this.picture) {
         this.picture.html = divContainer
         divContainer.prepend(this.picture.picture)
