@@ -58,12 +58,18 @@ export default class DateTimePicker extends Shadow() {
       this.currentValue = this.inputField.value
       this.currentSelectionStart = this.inputField.selectionStart
       this.currentValueLength = this.currentValue.length
-      this.checkNextChar()
+
+      if (this.currentInput !== null) this.checkNextChar()
+      if (this.currentInput !== null && this.currentInput !== this.pickerFormatChar && this.pickerFormat.split('')[this.currentValue.length - 1] === this.pickerFormatChar) {
+        this.inputField.value = this.currentValue.slice(0, -1) + this.pickerFormatChar + this.currentValue.slice(-1)
+      }
 
       // if remove
       if (this.currentInput === null) {
         if (this.pickerFormat[this.currentSelectionStart] === this.pickerFormatChar && this.currentValue.length === this.currentSelectionStart) {
           this.inputField.value = this.currentValue
+          // this.inputField.value = this.currentValue.slice(0, this.currentSelectionStart) + this.pickerFormatChar + this.currentValue.slice(this.currentSelectionStart)
+          // this.inputField.setSelectionRange(this.currentSelectionStart, this.currentSelectionStart)
         }
         else if (this.pickerFormat[this.currentSelectionStart] === this.pickerFormatChar && this.currentValue.length > this.currentSelectionStart) {
           this.inputField.value = this.currentValue.slice(0, this.currentSelectionStart) + this.pickerFormatChar + this.currentValue.slice(this.currentSelectionStart)
@@ -79,9 +85,6 @@ export default class DateTimePicker extends Shadow() {
         else if (this.pickerFormat[this.currentSelectionStart - 1] === 'y') {
           this.formatInput('y')
         }
-      } else if (this.pickerFormat.split('')[this.currentValue.length] === this.pickerFormatChar) {
-        // here further
-        console.log("hallo")
       }
     }
 
@@ -99,7 +102,7 @@ export default class DateTimePicker extends Shadow() {
     }
 
     this.customValidation = (event) => {
-      console.log("event validation", event)
+      // console.log("event validation", event)
     }
   }
 
