@@ -1,0 +1,7 @@
+:host .img-is-spot-reference-wrapper {
+  --picture-hotspot-img-margin: 0;
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+}
