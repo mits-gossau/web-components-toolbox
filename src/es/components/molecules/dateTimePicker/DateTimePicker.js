@@ -198,7 +198,11 @@ export default class DateTimePicker extends Shadow() {
    */
   renderHTML() {
     let inputField = document.createElement('input')
-    if (this.pickerFormat) inputField.setAttribute('maxlength', `${this.pickerFormat.length}`)
+    if (this.pickerFormat) {
+      inputField.setAttribute('maxlength', `${this.pickerFormat.length}`)
+      inputField.setAttribute('placeholder', `${this.getAttribute("placeholder")}`)
+
+    }
     if (this.pickerType === 'birth') {
       this.html = inputField
     } else {
