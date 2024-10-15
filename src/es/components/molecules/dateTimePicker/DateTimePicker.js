@@ -23,6 +23,7 @@ export default class DateTimePicker extends Shadow() {
     this.pickerFormat = this.getAttribute("picker-format").toLowerCase() ?? 'dd/mm/yyyy'
     this.pickerFormatChar = "/"
     this.formIndexes = {
+      formatChar: Array(),
       d: Array(),
       m: Array(),
       y: Array()
@@ -32,28 +33,24 @@ export default class DateTimePicker extends Shadow() {
       d: {
         max: 31,
         min: 1,
-        isValid: false,
         errorMessage: 'Please add a valid day, between 1 and 31.'
       },
       m: {
         max: 12,
         min: 1,
-        isValid: false,
         errorMessage: 'Please add a valid month, between 1 and 12.'
       },
       y: {
         max: 2010,
         min: 1900,
-        isValid: false,
         errorMessage: 'Please add a valid year, between 1900 and 2010.'
       },
-      isTouched: false,
-      isValid: false,
       errorMessage: 'Please add a valid format as dd/mm/yyyy'
     }
     this.setFormIndexes()
 
     this.formAsPattern = (event) => {
+      this.customValidationObj.inTouched = true
       this.currentInput = event.data
       this.currentValue = this.inputField.value
       this.currentSelectionStart = this.inputField.selectionStart
@@ -102,7 +99,12 @@ export default class DateTimePicker extends Shadow() {
     }
 
     this.customValidation = (event) => {
-      // console.log("event validation", event)
+      if (this.customValidationObj.inTouched) {
+        let mainValidation = this.customMainValidator()
+        let dayValidation = this.customDateValidator('d', +this.customValidationObj.d.min, +this.customValidationObj.d.max)
+        let monthValidation = this.customDateValidator('m', +this.customValidationObj.m.min, +this.customValidationObj.m.max)
+        let yearValidation = this.customDateValidator('y', +this.customValidationObj.y.min, +this.customValidationObj.y.max)
+      }
     }
   }
 
@@ -226,6 +228,8 @@ export default class DateTimePicker extends Shadow() {
       if (char === 'd') this.formIndexes.d.push(index)
       else if (char === 'm') this.formIndexes.m.push(index)
       else if (char === 'y') this.formIndexes.y.push(index)
+      else if (char === this.pickerFormatChar) this.formIndexes.formatChar.push(index)
+
     })
   }
 
@@ -251,6 +255,33 @@ export default class DateTimePicker extends Shadow() {
       }
     })
   }
+
+  customMainValidator() {
+    let mainValidation = true
+    this.formIndexes.formatChar.forEach(ind => {
+      if (this.inputField.value[ind] !== this.pickerFormatChar) mainValidation = false
+    })
+    if (this.inputField.value.length !== this.pickerFormat.length) mainValidation = false
+    return mainValidation
+  }
+
+  customDateValidator(type, min, max) {
+    let currentValueString = ''
+    let currentValueNumber = 0
+
+    this.formIndexes[type].forEach(ind => {
+      if (this.inputField.value[ind]) currentValueString = currentValueString + this.inputField.value[ind]
+    })
+
+    currentValueNumber = +currentValueString || 0
+
+    if (min <= currentValueNumber && currentValueNumber <= max) {
+      console.log("Passt")
+    } else {
+      console.log("FFFF")
+    }
+  }
+
 
   get inputField() {
     return this.root.querySelector('input')
