@@ -100,10 +100,35 @@ export default class DateTimePicker extends Shadow() {
 
     this.customValidation = (event) => {
       if (this.customValidationObj.inTouched) {
-        let mainValidation = this.customMainValidator()
-        let dayValidation = this.customDateValidator('d', +this.customValidationObj.d.min, +this.customValidationObj.d.max)
-        let monthValidation = this.customDateValidator('m', +this.customValidationObj.m.min, +this.customValidationObj.m.max)
-        let yearValidation = this.customDateValidator('y', +this.customValidationObj.y.min, +this.customValidationObj.y.max)
+        let mainValid = this.customMainValidator()
+        let dayValid = this.customDateValidator('d', +this.customValidationObj.d.min, +this.customValidationObj.d.max)
+        let monthValid = this.customDateValidator('m', +this.customValidationObj.m.min, +this.customValidationObj.m.max)
+        let yearValid = this.customDateValidator('y', +this.customValidationObj.y.min, +this.customValidationObj.y.max)
+
+        if (this.root.querySelector('div.error-message-wrapper')) {
+          this.root.removeChild(this.root.querySelector('div.error-message-wrapper'))
+        }
+
+        let errorMessageWrapper = document.createElement('div')
+        errorMessageWrapper.classList.add('error-message-wrapper')
+        let errorMessageText = document.createElement('p')
+        errorMessageText.classList.add('error-message-text')
+        errorMessageWrapper.appendChild(errorMessageText)
+
+        if (!mainValid) {
+          errorMessageText.textContent = this.customValidationObj.errorMessage
+        } else if (!dayValid) {
+          errorMessageText.textContent = this.customValidationObj.d.errorMessage
+        } else if (!monthValid) {
+          errorMessageText.textContent = this.customValidationObj.m.errorMessage
+
+        } else if (!yearValid) {
+          errorMessageText.textContent = this.customValidationObj.y.errorMessage
+
+        } else {
+          errorMessageWrapper.removeChild(errorMessageText)
+        }
+        this.root.appendChild(errorMessageWrapper)
       }
     }
   }
@@ -279,11 +304,8 @@ export default class DateTimePicker extends Shadow() {
 
     currentValueNumber = +currentValueString || 0
 
-    if (min <= currentValueNumber && currentValueNumber <= max) {
-      console.log("Passt")
-    } else {
-      console.log("FFFF")
-    }
+    if (min <= currentValueNumber && currentValueNumber <= max) return true
+    else return false
   }
 
 
