@@ -30,6 +30,13 @@
      }' type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off" />
     </div>
     <div>
+      <label for="Birtday">Birthday => required + date validation</label>
+      <br>
+      <m-date-time-picker validation-form-usage="true" name="birthday-datepicker" picker-type="birth"
+        picker-format="dd.mm.yyyy" placeholder="DD.MM.YYYY">
+      </m-date-time-picker>
+    </div>
+    <div>
       <label for="Firstname">Vorname => required + min-length:3 </label>
       <input id="Firstname" data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
       "min-length": {"value": "3", "error-message": "Bitte minimum 3 Character eingeben."}}' type="text" value=""

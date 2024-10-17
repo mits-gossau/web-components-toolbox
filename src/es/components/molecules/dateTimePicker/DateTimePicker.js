@@ -21,6 +21,9 @@ export default class DateTimePicker extends Shadow() {
     this.pickerType = this.getAttribute("picker-type")
     // TODO create warning if picker-format doesn't exist
     this.pickerFormat = this.getAttribute("picker-format").toLowerCase() ?? 'dd/mm/yyyy'
+    this.isValidationFormElem = this.getAttribute("validation-form-usage") === 'true'
+    if (this.isValidationFormElem) this.validationFormWrapper = this.getRootNode().host // console.log("hi", this.getRootNode().host.setValidity())
+    // implementing into validation js
     this.pickerFormatChar = "/"
     this.formIndexes = {
       formatChar: Array(),
