@@ -106,6 +106,7 @@ export default class DateTimePicker extends Shadow() {
         let yearValid = this.customDateValidator('y', +this.customValidationObj.y.min, +this.customValidationObj.y.max)
 
         if (this.root.querySelector('div.error-message-wrapper')) {
+          this.classList.remove('error')
           this.root.removeChild(this.root.querySelector('div.error-message-wrapper'))
         }
 
@@ -116,16 +117,21 @@ export default class DateTimePicker extends Shadow() {
         errorMessageWrapper.appendChild(errorMessageText)
 
         if (!mainValid) {
+          this.classList.add('error')
           errorMessageText.textContent = this.customValidationObj.errorMessage
         } else if (!dayValid) {
+          this.classList.add('error')
           errorMessageText.textContent = this.customValidationObj.d.errorMessage
         } else if (!monthValid) {
+          this.classList.add('error')
           errorMessageText.textContent = this.customValidationObj.m.errorMessage
 
         } else if (!yearValid) {
+          this.classList.add('error')
           errorMessageText.textContent = this.customValidationObj.y.errorMessage
 
         } else {
+          this.classList.remove('error')
           errorMessageWrapper.removeChild(errorMessageText)
         }
         this.root.appendChild(errorMessageWrapper)
@@ -307,7 +313,6 @@ export default class DateTimePicker extends Shadow() {
     if (min <= currentValueNumber && currentValueNumber <= max) return true
     else return false
   }
-
 
   get inputField() {
     return this.root.querySelector('input')
