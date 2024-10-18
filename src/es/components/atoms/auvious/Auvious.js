@@ -104,7 +104,8 @@ export default class Auvious extends Shadow() {
           :host {
             flex: 0 !important;
           }
-          :host > app-auvious-widget::part(DIV-av-floating-av-floating-right-av-floating-bottom-av-floating-offset) {
+          :host > app-auvious-widget::part(DIV-av-floating-av-floating-right-av-floating-bottom-av-floating-offset),
+          :host > app-auvious-widget::part(DIV-av-floating-av-floating-mobile-av-floating-right-av-floating-bottom-av-floating-offset) {
             position: relative;
             left: 0;
             top: 0;
