@@ -50,6 +50,9 @@ CSS Rules:
 - avoid overly use of reassigning / overwrite variables
 - the default transition is: 0.3s ease-out
 
+HTML Rules:
+- Components which move at initialization (connectedCallback, or any live cycle event) nodes. Expl. ```Array.from(this.root.children).forEach(node => this.section.appendChild(node))``` must be avoided! Or the html must be written as ```<o-grid><section>...</section></o-grid>``` and the component must accept already prefilled children. o-header[header], o-footer[footer], o-navigation[nav], o-body[main], o-grid[section], o-wrapper[section]
+
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css
 
