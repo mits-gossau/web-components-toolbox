@@ -30,11 +30,32 @@
      }' type="text" value="" name="Name" placeholder="Name hier eingeben..." autocomplete="off" />
     </div>
     <div>
-      <label for="Birtday">Birthday => required + date validation</label>
+      <!-- <label for="Birtday">Birthday => required + date validation</label>
       <br>
       <m-date-time-picker validation-form-usage="true" name="birthday-datepicker" picker-type="birth"
         picker-format="dd.mm.yyyy" placeholder="DD.MM.YYYY">
-      </m-date-time-picker>
+      </m-date-time-picker> -->
+      <label for="birth">Birthday</label>
+      <input id="birth" only-number-date-input data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
+      "d": {"max": "31", "min": "1", "error-message": "Please add a valid day, between 1 and 31."},
+      "m": {"max": "12", "min": "1", "error-message": "Please add a valid month, between 1 and 12."},
+      "y": {"max": "2010", "min": "1900", "error-message": "Please add a valid year, between 1900 and 2010."},
+      "pattern": {"mask-value": "dd.mm.yyyy", "error-message": "Please add a valid format as dd.mm.yyyy"}
+     }' type="text" value="" name="birth" placeholder="DD.MM.YYYY" autocomplete="off" />
+    </div>
+    <div>
+      <!-- <label for="Birtday">Birthday => required + date validation</label>
+      <br>
+      <m-date-time-picker validation-form-usage="true" name="birthday-datepicker" picker-type="birth"
+        picker-format="dd.mm.yyyy" placeholder="DD.MM.YYYY">
+      </m-date-time-picker> -->
+      <label for="birth2">Birthday 2</label>
+      <input id="birth2" only-number-date-input data-m-v-rules='{"required": {"error-message": "Bitte diese Feld ausfüllen."},
+      "d": {"max": "31", "min": "1", "error-message": "Please add a valid day, between 1 and 31."},
+      "m": {"max": "12", "min": "1", "error-message": "Please add a valid month, between 1 and 12."},
+      "y": {"max": "2000", "min": "1800", "error-message": "Please add a valid year, between 1800 and 2000."},
+      "pattern": {"mask-value": "dd/mm/yyyy", "error-message": "Please add a valid format as dd/mm/yyyy"}
+     }' type="text" value="" name="birth2" placeholder="DD/MM/YYYY" autocomplete="off" />
     </div>
     <div>
       <label for="Firstname">Vorname => required + min-length:3 </label>
