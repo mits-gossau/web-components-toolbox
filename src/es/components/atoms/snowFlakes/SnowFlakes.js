@@ -4,10 +4,15 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /* global self */
 
 /** @type {(any)=>void} */
-const gameResolve = map => map
+let gameResolve = map => map
 /** @type {Promise<string>} */
-// const game = new Promise(resolve => (gameResolve = resolve))
-
+const game = new Promise(resolve => (gameResolve = resolve))
+// mouse movements
+let movement = [0, 0]
+// passing attributes
+let spawnMin = 3
+let spawnMax = 9
+let disappear = 60000
 /**
 * @export
 * @class SnowFlakes
@@ -17,19 +22,27 @@ export default class SnowFlakes extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
-    this.keyupListener = event => {
-      // ctrl + shift + escape
-      if (event.key === 'Escape' && event.ctrlKey && event.shiftKey && this.shouldRenderHTML()) this.renderHTML()
+    if (this.hasAttribute('spawn-min')) spawnMin = Number(this.getAttribute('spawn-min'))
+    if (this.hasAttribute('spawn-max')) spawnMax = Number(this.getAttribute('spawn-max'))
+    if (this.hasAttribute('disappear')) disappear = Number(this.getAttribute('disappear'))
+
+    let timeout
+    this.mousemoveEventListener = event => {
+      movement = [event.movementX, event.movementY]
+      clearTimeout(timeout)
+      timeout = setTimeout(() => (movement = [0, 0]), 5)
     }
   }
 
   connectedCallback () {
-    // TODO: - [ ] Mobile/Touch-Screen Easter Egg Trigger
-    document.addEventListener('keyup', this.keyupListener)
+    self.addEventListener('click', () => {
+      if (this.shouldRenderHTML()) this.renderHTML()
+    }, { once: true })
+    document.addEventListener('mousemove', this.mousemoveEventListener)
   }
 
   disconnectedCallback () {
-    document.removeEventListener('keyup', this.keyupListener)
+    document.removeEventListener('mousemove', this.mousemoveEventListener)
   }
 
   /**
@@ -48,9 +61,6 @@ export default class SnowFlakes extends Shadow() {
   renderHTML () {
     // Phaser Bundled expects exports in the global scope
     self.exports = {}
-    // example code ➴ ➴ ➴
-    this.html = '<h1 style="color: red;">Easter Egg - Triggered</h1>'
-    // example code ➶ ➶ ➶
     this.loadDependency('Phaser', 'https://cdn.jsdelivr.net/npm/phaser@3.85.2/dist/phaser.js').then(Phaser => {
       document.body.setAttribute('style', `${document.body.getAttribute('style') || ''}margin: 0;`)
       const config = {
@@ -63,17 +73,18 @@ export default class SnowFlakes extends Shadow() {
           left: 0;
           image-rendering: pixelated;
           pointer-events: none;
+          z-index: 100001;
         `,
         width: '100%',
         height: '100%',
         parent: 'game-container',
-        transparent: true,
+        transparent: !this.hasAttribute('debugger'),
         pixelArt: true,
         physics: {
           default: 'matter',
           matter: {
             gravity: { y: 0.05 },
-            debug: true
+            debug: this.hasAttribute('debugger')
           }
         },
         scale: {
@@ -121,15 +132,6 @@ export default class SnowFlakes extends Shadow() {
 }
 
 // Scenes *******************************************************************************************************************************************************
-
-// TODO: - [ ] Load assets dynamically by including a json in a template tag placed inside <a-easter-egg>
-// TODO: - [ ] Design rocket effect with:
-// - [ ] tween for rocket from random edge to center of the screen
-// - [ ] emitter for fire
-// - [ ] rocket sound
-// - [ ] rocket explosion with emitter
-// - [ ] dynamic picture, text + sound (loaded through json as described above), which then ejects out from the rocket eg.: https://hammertime.studio/en/firestarter
-
 // BootScene (is empty but set for preloading PreloaderScene assets eg. loading icon...)
 const createBootScene = (importMetaUrl, Scene) => class Boot extends Scene {
   constructor () {
@@ -151,15 +153,12 @@ const createPreloaderScene = (importMetaUrl, Scene, Phaser) => class Preloader e
   }
 
   preload () {
-    //this.load.spritesheet('snowflakes', `${importMetaUrl}./assets/snowflakes.png`, 17, 17)
-    this.load.spritesheet('snowflakes_large', `${importMetaUrl}./assets/snowflakes_large.png`, 64, 64)
+    this.load.spritesheet('snowflakes', `${importMetaUrl}./assets/snowflakes.png`, { frameWidth: 17, frameHeight: 17 })
+    this.load.spritesheet('snowflakes_large', `${importMetaUrl}./assets/snowflakes_large.png`, { frameWidth: 64, frameHeight: 64 })
   }
 
   create () {
     this.load.once(Phaser.Loader.Events.COMPLETE, () => {
-      // example code ➴ ➴ ➴
-      this.add.text(200, 200, 'Loading...', { fill: '#00ff00', fontSize: '60px' })
-      // example code ➶ ➶ ➶
       this.scene.start('Game')
     })
     this.load.start()
@@ -173,22 +172,50 @@ const createGameScene = (importMetaUrl, Scene, Phaser) => class Game extends Sce
   }
 
   init () {
-    self.addEventListener('click', event => {
-      /*console.log('changed', event);
-      const migi = this.matter.add.image(event.layerX, event.layerY, 'migi', {
-        // https://newdocs.phaser.io/docs/3.60.0/Phaser.Types.Physics.Matter.MatterBodyConfig
-        density: 0.0001,
-        friction: 1,
-        frictionAir: 100
-      })
-      migi.setCircle()
-      migi.setBounce(0)
-      migi.setScale(0.2, 0.2)
-      console.log('changed', migi);*/
+    self.addEventListener('mouseup', event => {
+      for (let i = 0; i < Phaser.Math.Between(spawnMin, spawnMax); i++) {
+        const body = this.emit(event)
+        this.tweens.add({
+          targets: body,
+          alpha: 0,
+          scaleX: 0,
+          scaleY: 0,
+          duration: disappear,
+          ease: 'Sine.easeOut',
+          onComplete: () => body.destroy()
+        })
+      }
+    })
+    let lastScrollHeight = document.body.scrollHeight
+    self.addEventListener('scroll', event => {
+      this.cameras.main.setScroll(0, self.scrollY)
+      if (lastScrollHeight !== document.body.scrollHeight) this.setBound()
+      lastScrollHeight = document.body.scrollHeight
     })
   }
 
   create () {
-    this.matter.world.setBounds(0, 0, this.cameras.main.width, this.cameras.main.height)
+    this.setBound()
+  }
+
+  emit (event) {
+    let isLargeFlake = false
+    const body = this.matter.add.image(event.clientX, event.clientY + this.cameras.main.scrollY, (isLargeFlake = Phaser.Math.Between(0, 1)) ? 'snowflakes_large' : 'snowflakes', Phaser.Math.Between(0, 5), {
+      // https://newdocs.phaser.io/docs/3.60.0/Phaser.Types.Physics.Matter.MatterBodyConfig
+      density: 0.0000001,
+      restitution: 0.001,
+      friction: 1,
+      frictionAir: 100
+    })
+    body.setCircle(isLargeFlake ? 15 : 4)
+    body.setBounce(0)
+    body.setRotation(Phaser.Math.Between(0, 360))
+    body.setVelocityX(movement[0])
+    body.setVelocityY(movement[1])
+    return body
+  }
+
+  setBound () {
+    this.matter.world.setBounds(-50, -50, this.cameras.main.width + 100, document.body.scrollHeight + 50)
   }
 }
