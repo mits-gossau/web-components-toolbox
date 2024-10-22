@@ -15,7 +15,7 @@ function getAttributeNames(filePath, options = {}) {
     const variables = []
     const attributes = []
     try {
-        const content = fs.readFileSync(filePath, 'utf8');
+        const content = fs.readFileSync(filePath, 'utf8')
         const ast = parse(content, {
             ...options,
             sourceFilename: filePath,
@@ -23,7 +23,7 @@ function getAttributeNames(filePath, options = {}) {
         });
         traverse(ast, {
             CallExpression(path) {
-                const callee = path.node.callee;
+                const callee = path.node.callee
                 if (callee.type === 'MemberExpression' && callee.object.type === 'ThisExpression' && callee.property.name === 'getAttribute') {
                     const attributeName = path.node.arguments[0].value
                     // console.log(`found this.getAttribute('${attributeName}') at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
@@ -36,10 +36,10 @@ function getAttributeNames(filePath, options = {}) {
                 }
             },
             FunctionDeclaration(path) {
-                functions.push(path.node.id.name);
+                functions.push(path.node.id.name)
             },
             VariableDeclarator(path) {
-                variables.push(path.node.id.name);
+                variables.push(path.node.id.name)
             },
         })
         return {
@@ -48,7 +48,40 @@ function getAttributeNames(filePath, options = {}) {
             attributes
         }
     } catch (error) {
-        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`);
+        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
+        throw error
+    }
+}
+
+function getCSSproperties(filePath, options = {}) {
+    const cssProperties = []
+    try {
+        const content = fs.readFileSync(filePath, 'utf8')
+        const ast = parse(content, {
+            ...options,
+            sourceFilename: filePath,
+            plugins: ['jsx', 'typescript']
+        });
+
+        traverse(ast, {
+            TemplateLiteral(path) {
+                const templateLiteral = path.node
+                const rawValue = templateLiteral.quasis.map(quasi => quasi.value.cooked).join('')
+                //const regex = /var$$--([a-zA-Z-]+),\s*([a-zA-Z0-9#.-]+)$$/g
+                //const regex = /--([a-zA-Z-]+)/g
+                const regex = /--([a-zA-Z-]+),\s*([a-zA-Z0-9#.-]+)/g
+                let match
+                while ((match = regex.exec(rawValue)) !== null) {
+                    cssProperties.push({ variable: match[1], fallback: match[2] })
+                }
+            },
+        });
+
+        return {
+            cssProperties
+        }
+    } catch (error) {
+        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
         throw error
     }
 }
@@ -56,7 +89,7 @@ function getAttributeNames(filePath, options = {}) {
 // parse and manipulate a file using Babel AST
 function parseAndManipulateFile(filePath, options = {}) {
     try {
-        const content = fs.readFileSync(filePath, 'utf8');
+        const content = fs.readFileSync(filePath, 'utf8')
         const ast = parse(content, {
             ...options,
             sourceFilename: filePath,
@@ -91,7 +124,7 @@ function parseAndManipulateFile(filePath, options = {}) {
                         ],
                     },
                 };
-                path.unshiftContainer('body', consoleLogStatement);
+                path.unshiftContainer('body', consoleLogStatement)
             },
         });
 
@@ -99,7 +132,7 @@ function parseAndManipulateFile(filePath, options = {}) {
         const { code } = generate(ast)
         return code
     } catch (error) {
-        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`);
+        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
         throw error
     }
 }
@@ -119,6 +152,10 @@ glob.sync(`${directory}/**/*.{js,ts,jsx,tsx}`).forEach(file => {
     const attributes = getAttributeNames(file, {
         sourceType: 'module', // Specify source type
     })
-    console.log(attributes)
+    //console.log(attributes)
 
+    const css = getCSSproperties(file, {
+        sourceType: 'module', // Specify source type
+    })
+    console.log(css)
 });
