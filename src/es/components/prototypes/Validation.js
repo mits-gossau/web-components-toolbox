@@ -19,6 +19,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = inputField.getAttribute('name')
+      // here to implement
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
       if (this.realTimeSubmitButton) {
         this.checkIfFormValid()
@@ -63,13 +64,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       } else if (this[`currentInput${currentElemIndex}`] === this[`pickerFormatChar${currentElemIndex}`]) {
         if (this[`pickerFormat${currentElemIndex}`][this[`currentSelectionStart${currentElemIndex}`] - 1] === 'd') {
-          this.formatInput('d')
+          this.formatInput(currentElemIndex, 'd')
         }
         else if (this[`pickerFormat${currentElemIndex}`][this[`currentSelectionStart${currentElemIndex}`] - 1] === 'm') {
-          this.formatInput('m')
+          this.formatInput(currentElemIndex, 'm')
         }
         else if (this[`pickerFormat${currentElemIndex}`][this[`currentSelectionStart${currentElemIndex}`] - 1] === 'y') {
-          this.formatInput('y')
+          this.formatInput(currentElemIndex, 'y')
         }
       }
     }
@@ -227,7 +228,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           this.setFormIndexes(index)
 
           node.setAttribute('maxlength', `${this[`pickerFormat${index}`].length}`)
-          node.addEventListener('keydown', this.setOnlyNumbersInputAllowedKeys)
+          node.addEventListener('keydown', this.setOnlyNumbersInputAllowedKeys(index))
         }
       })
     }
@@ -293,7 +294,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             })
           }
         }
-        if (node.hasAttribute('only-number-date-input')) node.removeEventListener('keydown', this.setOnlyNumbersInputAllowedKeys)
+        if (node.hasAttribute('only-number-date-input')) node.removeEventListener('keydown', this.setOnlyNumbersInputAllowedKeys())
       })
     }
     if (this.submitButton) {
@@ -568,9 +569,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     return el
   }
 
-  setOnlyNumbersInputAllowedKeys = (event) => {
+  setOnlyNumbersInputAllowedKeys = (event, index) => {
     const keyCode = event.which
-    if (event.key == this.pickerFormatChar) { }
+    if (event.key == this[`pickerFormatChar${index}`]) { }
     else if (keyCode == 32) {
       event.preventDefault()
       return false
@@ -620,7 +621,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             inputFieldValue[ind] = currentDateTypeValue[i]
           })
           this.getInputFieldByNodeIndex(index).value = inputFieldValue.join('')
-          this.checkNextChar(true)
+          this.checkNextChar(index, true)
         }
       }
     })
@@ -642,7 +643,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
   customMainDateFormatValidator(index) {
     let mainValidation = true
-    console.log("hey", this[`formIndexes${index}`])
     this[`formIndexes${index}`].formatChar.forEach(ind => {
       if (this.getInputFieldByNodeIndex(index).value[ind] !== this[`pickerFormatChar${index}`]) mainValidation = false
     })
