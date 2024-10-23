@@ -33,6 +33,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
   *  {number} [offset=0] in percentage to self.innerHeight
   *  {string} [transition] set if the effect shall have a transition e.g. "0.2s ease"
   *  {number} [digits=4] for rounding the css value
+  *  {string} [scroll-el-query] the query for the element you want to listen to the scroll event
   * }
   */
 export default class IntersectionScrollEffect extends Intersection() {
@@ -113,7 +114,7 @@ export default class IntersectionScrollEffect extends Intersection() {
           this.intersectionObserveStart()
         } else {
           this.intersectionObserveStop()
-          this[this.direction(3)].removeEventListener('scroll', this.scrollListener)
+          this.getElement(this.direction(3)).removeEventListener('scroll', this.scrollListener)
           this.css = '' // resets css
         }
       }
@@ -151,7 +152,7 @@ export default class IntersectionScrollEffect extends Intersection() {
     if (this.hasRequiredAttributes) {
       if (this.checkMedia()) {
         super.disconnectedCallback() // this.intersectionObserveStop()
-        this[this.direction(3)].removeEventListener('scroll', this.scrollListener)
+        this.getElement(this.direction(3)).removeEventListener('scroll', this.scrollListener)
         this.css = '' // resets css
       }
       self.removeEventListener('resize', this.resizeListener)
@@ -186,9 +187,9 @@ export default class IntersectionScrollEffect extends Intersection() {
     if (entries && entries[0]) {
       this.scrollListener()
       if (entries[0].isIntersecting) {
-        this[this.direction(3)].addEventListener('scroll', this.scrollListener)
+        this.getElement(this.direction(3)).addEventListener('scroll', this.scrollListener)
       } else {
-        this[this.direction(3)].removeEventListener('scroll', this.scrollListener)
+        this.getElement(this.direction(3)).removeEventListener('scroll', this.scrollListener)
       }
     }
   }
@@ -199,7 +200,13 @@ export default class IntersectionScrollEffect extends Intersection() {
       : ['innerHeight', 'height', 'top', 'self'][i]
   }
 
-  get self () {
-    return self
+  getElement (type) {
+    if (this.getAttribute('scroll-el-query')) return this._scrollElement || (this._scrollElement = IntersectionScrollEffect.walksUpDomQueryMatches(this, this.getAttribute('scroll-el-query')))
+    switch (type) {
+      case 'self':
+        return self
+      case 'parentElement':
+        return this.parentElement
+    }
   }
 }

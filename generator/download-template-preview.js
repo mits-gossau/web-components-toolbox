@@ -32,7 +32,7 @@ const fetchNewPage = async (uri = null) => {
           const cleanedBody = body
             .replace(/(.|\n|\r)*<o-body.*?>/gm, '')
             .replace(/<\/o-body>(.|\n|\r)*/gm, '<script type="text/javascript" src="./loader.js"></script>')
-            .replace(/=(["']){1}\//gm, `=$1${(new URL(uri)).origin}/`)
+            .replace(/=(["']){0,1}\//gm, `=$1${(new URL(uri)).origin}/`)
             .trim()
           // write html
           // create dirs if not applicable

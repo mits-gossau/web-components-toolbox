@@ -111,6 +111,9 @@ export default class MenuIcon extends Shadow() {
         transition: var(--transition, all 0.2s ease);
         border-radius: var(--border-radius, 0);
       }
+      :host(:hover) .${this.barClass}1, :host(:hover) .${this.barClass}2, :host(:hover) .${this.barClass}3 {
+        background-color: var(--background-color-hover, var(--background-color, white));
+      }
       .${this.barClass}2 {
         margin: var(--spacing, var(--height, 5px)) 0;
         transition: var(--transition, 0.2s);
