@@ -19,7 +19,14 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = inputField.getAttribute('name')
-      // here to implement
+
+      if (this.validationValues[inputFieldName]['d'] && this.validationValues[inputFieldName]['m'] && this.validationValues[inputFieldName]['y'] && inputField.hasAttribute('node-index')) {
+        const currentNodeIndex = inputField.getAttribute('node-index')
+        this.addZeroIfNeeded('d', currentNodeIndex)
+        this.addZeroIfNeeded('m', currentNodeIndex)
+        this.addZeroIfNeeded('y', currentNodeIndex)
+      }
+
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
       if (this.realTimeSubmitButton) {
         this.checkIfFormValid()
@@ -648,5 +655,20 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     })
     if (this.getInputFieldByNodeIndex(index).value.length !== this[`pickerFormat${index}`].length) mainValidation = false
     return mainValidation
+  }
+
+  addZeroIfNeeded(dateType, index) {
+    let currentDateUnit = this.getInputFieldByNodeIndex(index).value.slice(this[`formIndexes${index}`][dateType][0], this[`formIndexes${index}`][dateType][this[`formIndexes${index}`][dateType].length - 1] + 1)
+    let newCurrentDateUnit = currentDateUnit.split('').filter(el => el !== this[`pickerFormatChar${index}`])
+
+    if (newCurrentDateUnit.length !== this[`formIndexes${index}`][dateType].length) {
+      let lengthDiff = this[`formIndexes${index}`][dateType].length - newCurrentDateUnit.length
+      for (let i = 0; i < lengthDiff; i++) {
+        if (dateType === 'y') newCurrentDateUnit.push('0')
+        else newCurrentDateUnit.unshift('0')
+
+      }
+      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value.slice(0, this[`formIndexes${index}`][dateType][0]) + newCurrentDateUnit.join('') + this.getInputFieldByNodeIndex(index).value.slice(this[`formIndexes${index}`][dateType][this[`formIndexes${index}`][dateType].length - 1])
+    }
   }
 }
