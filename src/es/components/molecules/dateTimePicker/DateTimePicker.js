@@ -103,6 +103,10 @@ export default class DateTimePicker extends Shadow() {
 
     this.customValidation = (event) => {
       if (this.customValidationObj.inTouched) {
+        this.addZeroIfNeeded('d')
+        this.addZeroIfNeeded('m')
+        this.addZeroIfNeeded('y')
+
         let mainValid = this.customMainValidator()
         let dayValid = this.customDateValidator('d', +this.customValidationObj.d.min, +this.customValidationObj.d.max)
         let monthValid = this.customDateValidator('m', +this.customValidationObj.m.min, +this.customValidationObj.m.max)
@@ -315,6 +319,21 @@ export default class DateTimePicker extends Shadow() {
 
     if (min <= currentValueNumber && currentValueNumber <= max) return true
     else return false
+  }
+
+  addZeroIfNeeded(dateType) {
+    let currentDateUnit = this.inputField.value.slice(this.formIndexes[dateType][0], this.formIndexes[dateType][this.formIndexes[dateType].length - 1] + 1)
+    let newCurrentDateUnit = currentDateUnit.split('').filter(el => el !== this.pickerFormatChar)
+
+    if (newCurrentDateUnit.length !== this.formIndexes[dateType].length) {
+      let lengthDiff = this.formIndexes[dateType].length - newCurrentDateUnit.length
+      for (let i = 0; i < lengthDiff; i++) {
+        if (dateType === 'y') newCurrentDateUnit.push('0')
+        else newCurrentDateUnit.unshift('0')
+
+      }
+      this.inputField.value = this.inputField.value.slice(0, this.formIndexes[dateType][0]) + newCurrentDateUnit.join('') + this.inputField.value.slice(this.formIndexes[dateType][this.formIndexes[dateType].length - 1])
+    }
   }
 
   get inputField() {
