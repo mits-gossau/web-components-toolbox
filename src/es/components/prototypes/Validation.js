@@ -19,12 +19,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = inputField.getAttribute('name')
+      const nodeHasLiveValidation = inputField.getAttribute('live-input-validation') === 'true'
 
-      if (this.validationValues[inputFieldName]['d'] && this.validationValues[inputFieldName]['m'] && this.validationValues[inputFieldName]['y'] && inputField.hasAttribute('node-index')) {
+      if (!nodeHasLiveValidation && this.validationValues[inputFieldName]['d'] && this.validationValues[inputFieldName]['m'] && this.validationValues[inputFieldName]['y'] && inputField.hasAttribute('node-index')) {
         const currentNodeIndex = inputField.getAttribute('node-index')
-        this.addZeroIfNeeded('d', currentNodeIndex)
-        this.addZeroIfNeeded('m', currentNodeIndex)
-        this.addZeroIfNeeded('y', currentNodeIndex)
+        if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['d'][0]) this.addZeroIfNeeded('d', currentNodeIndex)
+        if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['m'][0]) this.addZeroIfNeeded('m', currentNodeIndex)
+        if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['y'][0]) this.addZeroIfNeeded('y', currentNodeIndex)
       }
 
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
@@ -666,9 +667,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       for (let i = 0; i < lengthDiff; i++) {
         if (dateType === 'y') newCurrentDateUnit.push('0')
         else newCurrentDateUnit.unshift('0')
-
       }
       this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value.slice(0, this[`formIndexes${index}`][dateType][0]) + newCurrentDateUnit.join('') + this.getInputFieldByNodeIndex(index).value.slice(this[`formIndexes${index}`][dateType][this[`formIndexes${index}`][dateType].length - 1])
+
+      if (this[`pickerFormat${index}`][this.getInputFieldByNodeIndex(index).value.length] === this[`pickerFormatChar${index}`]) {
+        this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`pickerFormatChar${index}`]
+      }
     }
   }
 }
