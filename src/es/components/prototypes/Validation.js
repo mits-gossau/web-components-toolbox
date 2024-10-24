@@ -236,7 +236,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           this.setFormIndexes(index)
 
           node.setAttribute('maxlength', `${this[`pickerFormat${index}`].length}`)
-          node.addEventListener('keydown', this.setOnlyNumbersInputAllowedKeys(index))
+          node.addEventListener('keydown', this.setOnlyNumbersInputAllowedKeys)
         }
       })
     }
@@ -302,7 +302,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             })
           }
         }
-        if (node.hasAttribute('only-number-date-input')) node.removeEventListener('keydown', this.setOnlyNumbersInputAllowedKeys())
+        if (node.hasAttribute('only-number-date-input')) node.removeEventListener('keydown', this.setOnlyNumbersInputAllowedKeys)
       })
     }
     if (this.submitButton) {
@@ -577,9 +577,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     return el
   }
 
-  setOnlyNumbersInputAllowedKeys = (event, index) => {
+  setOnlyNumbersInputAllowedKeys = (event) => {
+    const currentNodeIndex = event.currentTarget.getAttribute('node-index')
     const keyCode = event.which
-    if (event.key == this[`pickerFormatChar${index}`]) { }
+    if (event.key == this[`pickerFormatChar${currentNodeIndex}`]) { }
     else if (keyCode == 32) {
       event.preventDefault()
       return false
