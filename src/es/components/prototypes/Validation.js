@@ -19,9 +19,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = inputField.getAttribute('name')
-      const nodeHasLiveValidation = inputField.getAttribute('live-input-validation') === 'true'
 
-      if (!nodeHasLiveValidation && this.validationValues[inputFieldName]['d'] && this.validationValues[inputFieldName]['m'] && this.validationValues[inputFieldName]['y'] && inputField.hasAttribute('node-index')) {
+      if (event.type === 'change' && this.validationValues[inputFieldName]['d'] && this.validationValues[inputFieldName]['m'] && this.validationValues[inputFieldName]['y'] && inputField.hasAttribute('node-index')) {
         const currentNodeIndex = inputField.getAttribute('node-index')
         if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['d'][0]) this.addZeroIfNeeded('d', currentNodeIndex)
         if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['m'][0]) this.addZeroIfNeeded('m', currentNodeIndex)
@@ -201,6 +200,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
         if (nodeHasLiveValidation) {
           node.addEventListener('input', this.validationChangeEventListener)
+          if (node.hasAttribute('only-number-date-input')) node.addEventListener('change', this.validationChangeEventListener)
         } else {
           node.addEventListener('change', this.validationChangeEventListener)
         }
@@ -664,16 +664,29 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     let newCurrentDateUnit = currentDateUnit.split('').filter(el => el !== this[`pickerFormatChar${index}`])
 
     if (newCurrentDateUnit.length !== this[`formIndexes${index}`][dateType].length) {
+      let currentFormatCharIndexes = []
+      this.getInputFieldByNodeIndex(index).value.split('').forEach((char, index2) => {
+        char === this[`pickerFormatChar${index}`] ? currentFormatCharIndexes.push(index2) : ''
+      })
+
       let lengthDiff = this[`formIndexes${index}`][dateType].length - newCurrentDateUnit.length
       for (let i = 0; i < lengthDiff; i++) {
         if (dateType === 'y') newCurrentDateUnit.push('0')
         else newCurrentDateUnit.unshift('0')
       }
 
-      let isAllZero = true
-      newCurrentDateUnit.forEach(num => +num !== 0 ? isAllZero = false : '')
+      let formatCharsNextToEachOther = currentFormatCharIndexes.find((el, index) => el + 1 === currentFormatCharIndexes[index + 1])
 
-      if (isAllZero) newCurrentDateUnit = ['0', '1']
+      if (formatCharsNextToEachOther || this.getInputFieldByNodeIndex(index).value[0] === this[`pickerFormatChar${index}`]) {
+        newCurrentDateUnit = ['0', '1', this[`pickerFormatChar${index}`]]
+      } else {
+        let isAllZero = true
+        newCurrentDateUnit.forEach(num => +num !== 0 ? isAllZero = false : '')
+
+        if (isAllZero) {
+          newCurrentDateUnit = ['0', '1']
+        }
+      }
 
       this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value.slice(0, this[`formIndexes${index}`][dateType][0]) + newCurrentDateUnit.join('') + this.getInputFieldByNodeIndex(index).value.slice(this[`formIndexes${index}`][dateType][this[`formIndexes${index}`][dateType].length - 1])
 

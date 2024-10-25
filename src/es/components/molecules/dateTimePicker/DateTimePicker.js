@@ -71,7 +71,6 @@ export default class DateTimePicker extends Shadow() {
           this.inputField.value = this.currentValue
         }
         else if (this.pickerFormat[this.currentSelectionStart] === this.pickerFormatChar && this.currentValue.length > this.currentSelectionStart) {
-
           this.inputField.value = this.currentValue.slice(0, this.currentSelectionStart) + this.pickerFormatChar + this.currentValue.slice(this.currentSelectionStart)
           this.inputField.setSelectionRange(this.currentSelectionStart, this.currentSelectionStart)
         }
@@ -325,17 +324,29 @@ export default class DateTimePicker extends Shadow() {
     let currentDateUnit = this.inputField.value.slice(this.formIndexes[dateType][0], this.formIndexes[dateType][this.formIndexes[dateType].length - 1] + 1)
     let newCurrentDateUnit = currentDateUnit.split('').filter(el => el !== this.pickerFormatChar)
     if (newCurrentDateUnit.length !== this.formIndexes[dateType].length) {
+
+      let currentFormatCharIndexes = []
+      this.inputField.value.split('').forEach((char, index) => {
+        char === this.pickerFormatChar ? currentFormatCharIndexes.push(index) : ''
+      })
+
       let lengthDiff = this.formIndexes[dateType].length - newCurrentDateUnit.length
       for (let i = 0; i < lengthDiff; i++) {
         if (dateType === 'y') newCurrentDateUnit.push('0')
         else newCurrentDateUnit.unshift('0')
       }
 
-      let isAllZero = true
-      newCurrentDateUnit.forEach(num => +num !== 0 ? isAllZero = false : '')
+      let formatCharsNextToEachOther = currentFormatCharIndexes.find((el, index) => el + 1 === currentFormatCharIndexes[index + 1])
 
-      if (isAllZero) {
-        newCurrentDateUnit = ['0', '1']
+      if (formatCharsNextToEachOther || this.inputField.value[0] === this.pickerFormatChar) {
+        newCurrentDateUnit = ['0', '1', this.pickerFormatChar]
+      } else {
+        let isAllZero = true
+        newCurrentDateUnit.forEach(num => +num !== 0 ? isAllZero = false : '')
+
+        if (isAllZero) {
+          newCurrentDateUnit = ['0', '1']
+        }
       }
 
       this.inputField.value = this.inputField.value.slice(0, this.formIndexes[dateType][0]) + newCurrentDateUnit.join('') + this.inputField.value.slice(this.formIndexes[dateType][this.formIndexes[dateType].length - 1])
