@@ -669,11 +669,20 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (dateType === 'y') newCurrentDateUnit.push('0')
         else newCurrentDateUnit.unshift('0')
       }
+
+      let isAllZero = true
+      newCurrentDateUnit.forEach(num => +num !== 0 ? isAllZero = false : '')
+
+      if (isAllZero) newCurrentDateUnit = ['0', '1']
+
       this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value.slice(0, this[`formIndexes${index}`][dateType][0]) + newCurrentDateUnit.join('') + this.getInputFieldByNodeIndex(index).value.slice(this[`formIndexes${index}`][dateType][this[`formIndexes${index}`][dateType].length - 1])
 
       if (this[`pickerFormat${index}`][this.getInputFieldByNodeIndex(index).value.length] === this[`pickerFormatChar${index}`]) {
         this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`pickerFormatChar${index}`]
       }
+    }
+    if (this[`pickerFormat${index}`][this.getInputFieldByNodeIndex(index).value.length] === this[`pickerFormatChar${index}`] && this.getInputFieldByNodeIndex(index).value[this.getInputFieldByNodeIndex(index).value.length - 1] !== this[`pickerFormatChar${index}`]) {
+      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`pickerFormatChar${index}`]
     }
   }
 }

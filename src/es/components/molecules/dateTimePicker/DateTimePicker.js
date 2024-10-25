@@ -61,6 +61,7 @@ export default class DateTimePicker extends Shadow() {
 
       if (this.currentInput !== null) this.checkNextChar()
       if (this.currentInput !== null && this.currentInput !== this.pickerFormatChar && this.pickerFormat.split('')[this.currentValue.length - 1] === this.pickerFormatChar) {
+
         this.inputField.value = this.currentValue.slice(0, -1) + this.pickerFormatChar + this.currentValue.slice(-1)
       }
 
@@ -68,10 +69,9 @@ export default class DateTimePicker extends Shadow() {
       if (this.currentInput === null) {
         if (this.pickerFormat[this.currentSelectionStart] === this.pickerFormatChar && this.currentValue.length === this.currentSelectionStart) {
           this.inputField.value = this.currentValue
-          // this.inputField.value = this.currentValue.slice(0, this.currentSelectionStart) + this.pickerFormatChar + this.currentValue.slice(this.currentSelectionStart)
-          // this.inputField.setSelectionRange(this.currentSelectionStart, this.currentSelectionStart)
         }
         else if (this.pickerFormat[this.currentSelectionStart] === this.pickerFormatChar && this.currentValue.length > this.currentSelectionStart) {
+
           this.inputField.value = this.currentValue.slice(0, this.currentSelectionStart) + this.pickerFormatChar + this.currentValue.slice(this.currentSelectionStart)
           this.inputField.setSelectionRange(this.currentSelectionStart, this.currentSelectionStart)
         }
@@ -324,17 +324,29 @@ export default class DateTimePicker extends Shadow() {
   addZeroIfNeeded(dateType) {
     let currentDateUnit = this.inputField.value.slice(this.formIndexes[dateType][0], this.formIndexes[dateType][this.formIndexes[dateType].length - 1] + 1)
     let newCurrentDateUnit = currentDateUnit.split('').filter(el => el !== this.pickerFormatChar)
-
     if (newCurrentDateUnit.length !== this.formIndexes[dateType].length) {
       let lengthDiff = this.formIndexes[dateType].length - newCurrentDateUnit.length
       for (let i = 0; i < lengthDiff; i++) {
         if (dateType === 'y') newCurrentDateUnit.push('0')
         else newCurrentDateUnit.unshift('0')
       }
+
+      let isAllZero = true
+      newCurrentDateUnit.forEach(num => +num !== 0 ? isAllZero = false : '')
+
+      if (isAllZero) {
+        newCurrentDateUnit = ['0', '1']
+      }
+
       this.inputField.value = this.inputField.value.slice(0, this.formIndexes[dateType][0]) + newCurrentDateUnit.join('') + this.inputField.value.slice(this.formIndexes[dateType][this.formIndexes[dateType].length - 1])
+
       if (this.pickerFormat[this.inputField.value.length] === this.pickerFormatChar) {
         this.inputField.value = this.inputField.value + this.pickerFormatChar
       }
+    }
+
+    if (this.pickerFormat[this.inputField.value.length] === this.pickerFormatChar && this.inputField.value[this.inputField.value.length - 1] !== this.pickerFormatChar) {
+      this.inputField.value = this.inputField.value + this.pickerFormatChar
     }
   }
 
