@@ -70,6 +70,12 @@ export default class TagManager extends Shadow() {
    * @return {HTMLScriptElement|false}
    */
   setup (gtmId = this.getAttribute('id') || 'GTM-XXXXXX', testMode = this.getAttribute('test-mode') || false) {
+    // IMPORTANT: Avoid that the tag manager injected code stops page at "beforeunload"
+    /*self._addEventListener = self.addEventListener
+    self.addEventListener = (...args) => {
+      if (args[0] === 'beforeunload') return
+      self._addEventListener(...args)
+    }*/
     // prefetch or pre connect o the iframes src
     if (this.hasAttribute('prefetch')) {
       const linkAnalytics = document.createElement('link')

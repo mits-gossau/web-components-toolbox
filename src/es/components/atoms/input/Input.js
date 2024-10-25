@@ -468,7 +468,7 @@ export default class Input extends Shadow() {
       </button>
     `)
     }
-    return (this.fetch = this.fetchHTML([`${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`], true).then(htmls => `<button type="button" title="${this.iconName}" ${this.hasAttribute('pointer') ? 'class="pointer"' : ''}>${htmls[0]}</button>`))
+    return (this.fetch = this.getIcon(this.iconName, `${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`).then(htmls => `<button type="button" title="${this.iconName}" ${this.hasAttribute('pointer') ? 'class="pointer"' : ''}>${htmls[0]}</button>`))
   }
 
   focus () {
@@ -555,5 +555,15 @@ export default class Input extends Shadow() {
 
   get iconName () {
     return this.getAttribute('icon-name')
+  }
+
+  // ******************** !IMPORTANT: Fetching the icons through Web API Fetch has bad performance impacts, for that reason we include the most common mdx icons below *****************************************************
+  getIcon (iconName, iconPath) {
+    switch (iconName) {
+      case 'Search':
+        return Promise.resolve([/* html */`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none"><path stroke-width="2" d="m21 21-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>`])
+      default:
+        return this.fetchHTML([iconPath], true)
+    }
   }
 }
