@@ -12,8 +12,11 @@ export default class <%= name %> extends Shadow() {
   }
 
   connectedCallback () {
-    if (this.shouldRenderCSS()) this.renderCSS()
-    if (this.shouldRenderHTML()) this.renderHTML()
+    this.hidden = true
+    const showPromises = []
+    if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    Promise.all(showPromises).then(() => (this.hidden = false))
   }
 
   disconnectedCallback () {}
@@ -38,6 +41,7 @@ export default class <%= name %> extends Shadow() {
 
   /**
    * renders the css
+   * @returns Promise<void>
    */
   renderCSS () {
     this.css = /* css */`
@@ -77,10 +81,13 @@ export default class <%= name %> extends Shadow() {
 
   /**
    * Render HTML
-   * @returns void
+   * @returns Promise<void>
    */
   renderHTML () {
-    this.html = 'Content rendered from Component: <%= name %>'
+    this.html = '<div>Content rendered from Component: <%= name %></div>'
   }
 
+  get div () {
+    return this.root.querySelector('div')
+  }
 }
