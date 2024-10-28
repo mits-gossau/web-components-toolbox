@@ -13,6 +13,10 @@ import Dialog from '../dialog/Dialog.js'
 * @type {CustomElementConstructor}
 */
 export default class DialogClipboard extends Dialog {
+  static get observedAttributes () {
+    return ['data']
+  }
+
   constructor (options = {}, ...args) {
     super({ ...options }, ...args)
 
@@ -43,6 +47,10 @@ export default class DialogClipboard extends Dialog {
     return super.disconnectedCallback()
   }
 
+  attributeChangedCallback (name, oldValue, newValue) {
+    if (oldValue !== null && oldValue !== newValue) this.copyValue = this.getAttribute('data')
+  }
+
   /**
      * evaluates if a render is necessary
      *
@@ -58,6 +66,9 @@ export default class DialogClipboard extends Dialog {
   renderCSS () {
     const result = super.renderCSS()
     this.setCss(/* css */`
+      :host {
+        display: contents;
+      }
       :host > dialog {
         user-select: none;
         scrollbar-color: var(--scrollbar-color, var(--color) var(--background-color));
@@ -106,18 +117,27 @@ export default class DialogClipboard extends Dialog {
    * @returns void
    */
   renderCustomHTML () {
-    this.copyValue = this.template.content.textContent
-    this.template.remove()
+    if (this.template) {
+      this.copyValue = this.template.content.textContent
+      this.template.remove()
+    } else {
+      this.copyValue = this.getAttribute('data')
+    }
     this.html = /* html */`
       <dialog>
-        <h4>${this.getAttribute('copied-text') || 'Copied: '}"${this.copyValue}"</h4>
+        <h4></h4>
       </dialog>
     `
+  }
+
+  setTitle (value) {
+    this.title.textContent = `${this.getAttribute('copied-text') || 'Copied: '}"${value}"`
   }
 
   async copy () {
     if (!this.copyValue) return
     try {
+      this.setTitle(this.copyValue)
       await navigator.clipboard.writeText(this.copyValue)
     } catch (error) {
       alert(`${this.getAttribute('copy-manually-text') || 'Copy manually: '}\n${this.copyValue}`)
@@ -126,5 +146,9 @@ export default class DialogClipboard extends Dialog {
 
   get template () {
     return this.root.querySelector('template')
+  }
+
+  get title () {
+    return this.root.querySelector('h4')
   }
 }
