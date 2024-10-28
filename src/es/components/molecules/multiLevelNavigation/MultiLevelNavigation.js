@@ -763,15 +763,17 @@ export default class MultiLevelNavigation extends Mutation() {
       this.nav.appendChild(node)
     })
     this.html = this.nav
-    if (this.isDesktop) {
-      setTimeout(() => {
-        this.renderDesktopHTML()
-      }, 0)
-    } else {
-      setTimeout(() => {
-        this.renderMobileHTML()
-      }, 0)
-    }
+    return new Promise(resolve => {
+      if (this.isDesktop) {
+        setTimeout(() => {
+          resolve(this.renderDesktopHTML())
+        }, 0)
+      } else {
+        setTimeout(() => {
+          resolve(this.renderMobileHTML())
+        }, 0)
+      }
+    })
   }
 
   /**

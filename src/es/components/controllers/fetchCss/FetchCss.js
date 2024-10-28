@@ -21,6 +21,7 @@ import { WebWorker } from '../../prototypes/WebWorker.js'
  * @type {CustomElementConstructor}
  */
 export default class FetchCss extends Shadow(WebWorker()) {
+  #timeout
   constructor (...args) {
     super({ mode: 'false' }, ...args)
 
@@ -35,7 +36,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
      *
      * @type {Map<string, Promise<string>>}
      */
-    this.processedStyleCache = new Map()
+    this.processedStyleCache = new Map(this.loadFromStorage())
     /**
      * Listens to the event 'fetch-css' and resolve it with the fetchCSSParams returned by fetchCSS
      *
@@ -76,6 +77,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
           // @ts-ignore
           const processedStyle = this.processStyle(fetchCSSParamWithDefaultValues, fetchStyle)
           this.processedStyleCache.set(processedStyleCacheKey, processedStyle)
+          this.saveToStorage(this.processedStyleCache)
           return Promise.resolve(fetchCSSParamWithDefaultValues)
         }
       )).then(fetchCSSParams => {
@@ -226,5 +228,34 @@ export default class FetchCss extends Shadow(WebWorker()) {
    */
   static replace (style, pattern, flags, replacement) {
     return style.replace(new RegExp(pattern, flags), replacement)
+  }
+
+  /**
+   * Save all fetched and processed files to local storage
+   * 
+   * @name saveToStorage
+   * @param {Map<string, Promise<string>>} cacheMap
+   * @returns {void}
+   */
+  saveToStorage (cacheMap) {
+    if (this.hasAttribute('no-storage')) return
+    clearTimeout(this.#timeout)
+    this.#timeout = setTimeout(() => Promise.all(Array.from(cacheMap).map(([key, asyncValue]) => asyncValue.then(value => [key, value]))).then(values => sessionStorage.setItem('FetchCssCache', JSON.stringify(values))), 1000)
+  }
+
+  /**
+   * load all fetched and processed files from local storage
+   * 
+   * @name loadFromStorage
+   * @returns {Map<string, Promise<string>> | null}
+   */
+  loadFromStorage () {
+    if (this.hasAttribute('no-storage')) return null
+    try {
+      // @ts-ignore
+      return JSON.parse(sessionStorage.getItem('FetchCssCache')).map(([key, value]) => [key, Promise.resolve(value)])
+    } catch (error) {
+      return null
+    }
   }
 }

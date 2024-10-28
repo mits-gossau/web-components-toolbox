@@ -156,7 +156,7 @@ export default class Auvious extends Shadow() {
    */
   loadDependency (globalNamespace, url) {
     // make it global to self so that other components can know when it has been loaded
-    return this[`#loadDependency${globalNamespace}`] || (this[`#loadDependency${globalNamespace}`] = new Promise((resolve, reject) => {
+    return this[`_loadDependency${globalNamespace}`] || (this[`_loadDependency${globalNamespace}`] = new Promise((resolve, reject) => {
       // @ts-ignore
       if (document.head.querySelector(`#${globalNamespace}`) || self[globalNamespace]) return resolve(self[globalNamespace])
       const script = document.createElement('script')

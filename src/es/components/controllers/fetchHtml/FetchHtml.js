@@ -19,6 +19,7 @@
  * @type {CustomElementConstructor}
  */
 export default class FetchHtml extends HTMLElement {
+  #timeout
   constructor () {
     super()
 
@@ -27,7 +28,7 @@ export default class FetchHtml extends HTMLElement {
      *
      * @type {Map<string, Promise<string>>}
      */
-    this.fetchHtmlCache = new Map()
+    this.fetchHtmlCache = new Map(this.loadFromStorage())
     /**
      * Listens to the event 'fetch-html' and resolve it with the paths returned by fetchHTML
      *
@@ -47,6 +48,7 @@ export default class FetchHtml extends HTMLElement {
             fetchHtml = this.fetchHtmlCache.get(path)
           } else {
             this.fetchHtmlCache.set(path, (fetchHtml = FetchHtml.fetchHtml(path, event.detail.node)))
+            this.saveToStorage(this.fetchHtmlCache)
           }
           // @ts-ignore
           return fetchHtml
@@ -111,5 +113,35 @@ export default class FetchHtml extends HTMLElement {
     const a = document.createElement('a')
     a.href = path
     return a.href
+  }
+
+
+  /**
+   * Save all fetched and processed files to local storage
+   * 
+   * @name saveToStorage
+   * @param {Map<string, Promise<string>>} cacheMap
+   * @returns {void}
+   */
+  saveToStorage (cacheMap) {
+    if (this.hasAttribute('no-storage')) return
+    clearTimeout(this.#timeout)
+    this.#timeout = setTimeout(() => Promise.all(Array.from(cacheMap).map(([key, asyncValue]) => asyncValue.then(value => [key, value]))).then(values => sessionStorage.setItem('FetchHtmlCache', JSON.stringify(values))), 1000)
+  }
+
+  /**
+   * load all fetched and processed files from local storage
+   * 
+   * @name loadFromStorage
+   * @returns {Map<string, Promise<string>> | null}
+   */
+  loadFromStorage () {
+    if (this.hasAttribute('no-storage')) return null
+    try {
+      // @ts-ignore
+      return JSON.parse(sessionStorage.getItem('FetchHtmlCache')).map(([key, value]) => [key, Promise.resolve(value)])
+    } catch (error) {
+      return null
+    }
   }
 }

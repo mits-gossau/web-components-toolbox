@@ -97,7 +97,7 @@ export default class EasterEgg extends Shadow() {
   */
   loadDependency (globalNamespace, url) {
     // make it global to self so that other components can know when it has been loaded
-    return this[`#loadDependency${globalNamespace}`] || (this[`#loadDependency${globalNamespace}`] = new Promise((resolve, reject) => {
+    return this[`_loadDependency${globalNamespace}`] || (this[`_loadDependency${globalNamespace}`] = new Promise((resolve, reject) => {
       // @ts-ignore
       if (this.getScript(globalNamespace) || self[globalNamespace]) return resolve(self[globalNamespace])
       // TODO: Add Sha-256 check
