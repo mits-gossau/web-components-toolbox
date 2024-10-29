@@ -8,8 +8,6 @@ const traverse = require('@babel/traverse').default
 const generate = require('@babel/generator').default
 const glob = require('glob')
 
-
-// see traverse at line 12 for 'this.getAttribute' example
 function getAttributeNames(filePath, options = {}) {
     const functions = []
     const variables = []
@@ -26,13 +24,13 @@ function getAttributeNames(filePath, options = {}) {
                 const callee = path.node.callee
                 if (callee.type === 'MemberExpression' && callee.object.type === 'ThisExpression' && callee.property.name === 'getAttribute') {
                     const attributeName = path.node.arguments[0].value
-                    // console.log(`found this.getAttribute('${attributeName}') at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
+                    console.log(`found this.getAttribute('${attributeName}') at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
                     attributes.push(attributeName)
                 }
             },
             MemberExpression(path) {
                 if (path.node.object.type === 'ThisExpression' && path.node.property.name === 'getAttribute') {
-                    // console.log(`Found this.getAttribute at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
+                    console.log(`Found this.getAttribute at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
                 }
             },
             FunctionDeclaration(path) {
@@ -53,6 +51,25 @@ function getAttributeNames(filePath, options = {}) {
     }
 }
 
+function extractProperty(inputText) {
+    const properties = inputText.split(';').map(line => line.trim()).filter(line => line !== '')[0]
+    if(!properties) return null
+    const property = properties.match(/var\((.*?)\)/)
+    if (property) {
+        const pr1 = property[1].split(',').map(value => value.trim())
+        const cssProp = inputText.split(':')[0].trim()
+        if (cssProp) {
+            return {
+                property: cssProp,
+                variable: pr1[0],
+                fallback: pr1[1]
+            };
+        }
+    }
+    console.log('No property found');
+    return null;
+}
+
 function getCSSproperties(filePath, options = {}) {
     const cssProperties = []
     try {
@@ -64,17 +81,31 @@ function getCSSproperties(filePath, options = {}) {
         });
 
         traverse(ast, {
-            TemplateLiteral(path) {
-                const templateLiteral = path.node
-                const rawValue = templateLiteral.quasis.map(quasi => quasi.value.cooked).join('')
-                //const regex = /var$$--([a-zA-Z-]+),\s*([a-zA-Z0-9#.-]+)$$/g
-                //const regex = /--([a-zA-Z-]+)/g
-                const regex = /--([a-zA-Z-]+),\s*([a-zA-Z0-9#.-]+)/g
+           TemplateLiteral(path) { 
+                const { quasis, expressions } = path.node
+                const rawValue = quasis[0].value.raw
+                const pattern = /([^{]+)\s*{\s*([^}]+?)\s*}/g
                 let match
-                while ((match = regex.exec(rawValue)) !== null) {
-                    cssProperties.push({ variable: match[1], fallback: match[2] })
+                while ((match = pattern.exec(rawValue)) !== null) {
+                    const selector = match[1].trim()
+                    const properties = match[2].trim().split(';').map(property => property.trim())
+                   
+                    const cssData = {
+                        selector,
+                        properties: []
+                    }
+
+                    const cssProperties = []
+                    for (const line of properties) {
+                        const property = extractProperty(line)
+                        if (property) {
+                            cssData.properties = property
+                            cssProperties.push(cssData)
+                        }
+                    }
+                    console.log(cssProperties)
                 }
-            },
+            }
         });
 
         return {
@@ -86,7 +117,6 @@ function getCSSproperties(filePath, options = {}) {
     }
 }
 
-// parse and manipulate a file using Babel AST
 function parseAndManipulateFile(filePath, options = {}) {
     try {
         const content = fs.readFileSync(filePath, 'utf8')
@@ -149,13 +179,13 @@ glob.sync(`${directory}/**/*.{js,ts,jsx,tsx}`).forEach(file => {
     //console.log(`manipulated file: ${file}`)
     //console.log(manipulatedCode)
 
-    const attributes = getAttributeNames(file, {
-        sourceType: 'module', // Specify source type
-    })
+    // const attributes = getAttributeNames(file, {
+    //     sourceType: 'module', // Specify source type
+    // })
     //console.log(attributes)
 
     const css = getCSSproperties(file, {
         sourceType: 'module', // Specify source type
     })
-    console.log(css)
+    //console.log(css)
 });
