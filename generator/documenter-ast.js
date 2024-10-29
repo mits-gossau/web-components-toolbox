@@ -72,6 +72,10 @@ function extractProperty(inputText) {
 
 function getCSSproperties(filePath, options = {}) {
     const cssProperties = []
+    const cssData = {
+        filePath,
+        css: []
+    }
     try {
         const content = fs.readFileSync(filePath, 'utf8')
         const ast = parse(content, {
@@ -81,7 +85,8 @@ function getCSSproperties(filePath, options = {}) {
         });
 
         traverse(ast, {
-           TemplateLiteral(path) { 
+            TemplateLiteral(path) {
+                
                 const { quasis, expressions } = path.node
                 const rawValue = quasis[0].value.raw
                 const pattern = /([^{]+)\s*{\s*([^}]+?)\s*}/g
@@ -89,27 +94,24 @@ function getCSSproperties(filePath, options = {}) {
                 while ((match = pattern.exec(rawValue)) !== null) {
                     const selector = match[1].trim()
                     const properties = match[2].trim().split(';').map(property => property.trim())
-                   
-                    const cssData = {
-                        selector,
-                        properties: []
-                    }
-
-                    const cssProperties = []
+                    const props = []
                     for (const line of properties) {
                         const property = extractProperty(line)
                         if (property) {
-                            cssData.properties = property
-                            cssProperties.push(cssData)
+                            props.push(property)
                         }
                     }
-                    console.log(cssProperties)
+                    const dx = {selector, props }
+                    cssData.css.push(dx)
+                    // console.log(cssData)
+                    cssProperties.push(cssData)
+
                 }
             }
         });
 
         return {
-            cssProperties
+            cssData
         }
     } catch (error) {
         console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
@@ -167,12 +169,12 @@ function parseAndManipulateFile(filePath, options = {}) {
     }
 }
 
-
 // root directory
-const directory = path.resolve('../src/es/components/')
+//const directory = path.resolve('../src/es/components/')
+const directory = '../src/es/components/'
 
 // glob pattern to find files
-glob.sync(`${directory}/**/*.{js,ts,jsx,tsx}`).forEach(file => {
+glob.sync(`${directory}/**/*(*.{js,ts,jsx,tsx})`).forEach(file => {
     // const manipulatedCode = parseAndManipulateFile(file, {
     //     sourceType: 'module', // Specify source type
     // })
@@ -187,5 +189,11 @@ glob.sync(`${directory}/**/*.{js,ts,jsx,tsx}`).forEach(file => {
     const css = getCSSproperties(file, {
         sourceType: 'module', // Specify source type
     })
-    //console.log(css)
+    console.log(css)
+    const jsonData = JSON.stringify(css, null, 2);
+    console.log(jsonData)
+    // const filePath = 'user_profile.json';
+    // fs.writeFileSync(filePath, jsonData);
+    // console.log('JSON data saved to file successfully.');
 });
+console.log("END")
