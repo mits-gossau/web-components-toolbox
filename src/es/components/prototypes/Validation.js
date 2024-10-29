@@ -200,7 +200,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
         if (nodeHasLiveValidation) {
           node.addEventListener('input', this.validationChangeEventListener)
-          if (node.hasAttribute('only-number-date-input')) node.addEventListener('change', this.validationChangeEventListener)
         } else {
           node.addEventListener('change', this.validationChangeEventListener)
         }
@@ -641,8 +640,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     let currentValueNumber = 0
 
     this[`formIndexes${index}`][type].forEach(ind => {
-      if (this.getInputFieldByNodeIndex(index).value[ind]) currentValueString = currentValueString + this.getInputFieldByNodeIndex(index).value[ind]
+      if (this.getInputFieldByNodeIndex(index).value[ind]) {
+        currentValueString = currentValueString + this.getInputFieldByNodeIndex(index).value[ind]
+        let currentValueStringArray = currentValueString.split('').filter(char => char !== this[`pickerFormatChar${index}`])
+        currentValueString = currentValueStringArray.join('')
+      }
     })
+
 
     currentValueNumber = +currentValueString || 0
 
