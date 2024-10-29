@@ -491,7 +491,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
               }
               if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
               // @ts-ignore
-              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style }
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node, replaces) }
             }
           )
           if (hide) this.hidden = false
