@@ -189,11 +189,17 @@ glob.sync(`${directory}/**/*(*.{js,ts,jsx,tsx})`).forEach(file => {
     const css = getCSSproperties(file, {
         sourceType: 'module', // Specify source type
     })
-    console.log(css)
-    const jsonData = JSON.stringify(css, null, 2);
-    console.log(jsonData)
-    // const filePath = 'user_profile.json';
-    // fs.writeFileSync(filePath, jsonData);
-    // console.log('JSON data saved to file successfully.');
-});
+    const jsonData = JSON.stringify(css, null, 2)
+    //console.log(jsonData)
+    const filePath = 'user_profile.json'
+    // Read the existing content of the file
+    let existingData = ''
+    try {
+        existingData = fs.readFileSync(filePath, 'utf-8')
+    } catch (error) {
+        console.error('Error reading file:', error)
+    }
+    const updatedData = existingData ? `${existingData},\n${jsonData}` : `${jsonData},\n`
+    fs.writeFileSync(filePath, updatedData);
+})
 console.log("END")
