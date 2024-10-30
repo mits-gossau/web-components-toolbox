@@ -58,15 +58,16 @@ export default class DateTimePicker extends Shadow() {
       this.currentValue = this.inputField.value
       this.currentSelectionStart = this.inputField.selectionStart
       this.currentValueLength = this.currentValue.length
+      this.isRemovedByInput = false
 
       if (this.currentInput !== null) this.checkNextChar()
       if (this.currentInput !== null && this.currentInput !== this.pickerFormatChar && this.pickerFormat.split('')[this.currentValue.length - 1] === this.pickerFormatChar) {
-
         this.inputField.value = this.currentValue.slice(0, -1) + this.pickerFormatChar + this.currentValue.slice(-1)
       }
 
       // if remove
       if (this.currentInput === null) {
+        this.isRemovedByInput = true
         if (this.pickerFormat[this.currentSelectionStart] === this.pickerFormatChar && this.currentValue.length === this.currentSelectionStart) {
           this.inputField.value = this.currentValue
         }
@@ -106,6 +107,10 @@ export default class DateTimePicker extends Shadow() {
         if (this.inputField.value.length > this.formIndexes['m'][0]) this.addZeroIfNeeded('m')
         if (this.inputField.value.length > this.formIndexes['y'][0]) this.addZeroIfNeeded('y')
 
+        let currentSpecCharLength = this.inputField?.value.split('').filter(char => char === this.pickerFormatChar).length
+        let oldSpecCharLength = this.oldInputValue?.split('').filter(char => char === this.pickerFormatChar).length
+        if (this.isRemovedByInput && oldSpecCharLength > 0 && currentSpecCharLength !== oldSpecCharLength) this.inputField.value = ''
+
         let mainValid = this.customMainValidator()
         let dayValid = this.customDateValidator('d', +this.customValidationObj.d.min, +this.customValidationObj.d.max)
         let monthValid = this.customDateValidator('m', +this.customValidationObj.m.min, +this.customValidationObj.m.max)
@@ -141,6 +146,7 @@ export default class DateTimePicker extends Shadow() {
           errorMessageWrapper.removeChild(errorMessageText)
         }
         this.root.appendChild(errorMessageWrapper)
+        this.oldInputValue = this.inputField.value
       }
     }
   }
