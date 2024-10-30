@@ -19,7 +19,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
       const inputFieldName = inputField.getAttribute('name')
-      const inputFieldIndex = inputField.getAttribute('node-index')
 
       if (event.type === 'change' && this.validationValues[inputFieldName]['d'] && this.validationValues[inputFieldName]['m'] && this.validationValues[inputFieldName]['y'] && inputField.hasAttribute('node-index')) {
         const currentNodeIndex = inputField.getAttribute('node-index')
@@ -27,11 +26,11 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['m'][0]) this.addZeroIfNeeded('m', currentNodeIndex)
         if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['y'][0]) this.addZeroIfNeeded('y', currentNodeIndex)
 
-        let currentSpecCharLength = this.getInputFieldByNodeIndex(inputFieldIndex)?.value.split('').filter(char => char === this[`pickerFormatChar${inputFieldIndex}`]).length
-        let oldSpecCharLength = this[`oldInputValue${inputFieldIndex}`]?.split('').filter(char => char === this[`pickerFormatChar${inputFieldIndex}`]).length
-        if (this[`isRemovedByInput${inputFieldIndex}`] && oldSpecCharLength > 0 && currentSpecCharLength !== oldSpecCharLength) this.getInputFieldByNodeIndex(inputFieldIndex).value = ''
+        let currentSpecCharLength = this.getInputFieldByNodeIndex(currentNodeIndex)?.value.split('').filter(char => char === this[`pickerFormatChar${currentNodeIndex}`]).length
+        let oldSpecCharLength = this[`oldInputValue${currentNodeIndex}`]?.split('').filter(char => char === this[`pickerFormatChar${currentNodeIndex}`]).length
+        if (this[`isRemovedByInput${currentNodeIndex}`] && oldSpecCharLength > 0 && currentSpecCharLength !== oldSpecCharLength) this.getInputFieldByNodeIndex(currentNodeIndex).value = ''
 
-        this[`oldInputValue${inputFieldIndex}`] = this.getInputFieldByNodeIndex(inputFieldIndex).value
+        this[`oldInputValue${currentNodeIndex}`] = this.getInputFieldByNodeIndex(currentNodeIndex).value
       }
 
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
