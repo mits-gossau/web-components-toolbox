@@ -20,17 +20,17 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       const inputField = event.currentTarget
       const inputFieldName = inputField.getAttribute('name')
 
-      if (event.type === 'change' && this.validationValues[inputFieldName]['d'] && this.validationValues[inputFieldName]['m'] && this.validationValues[inputFieldName]['y'] && inputField.hasAttribute('node-index')) {
-        const currentNodeIndex = inputField.getAttribute('node-index')
-        if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['d'][0]) this.addZeroIfNeeded('d', currentNodeIndex)
-        if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['m'][0]) this.addZeroIfNeeded('m', currentNodeIndex)
-        if (inputField.value.length > this[`formIndexes${currentNodeIndex}`]['y'][0]) this.addZeroIfNeeded('y', currentNodeIndex)
+      if (event.type === 'change' && this.validationValues[inputFieldName]['day'] && this.validationValues[inputFieldName]['month'] && this.validationValues[inputFieldName]['year'] && inputField.hasAttribute('node-index')) {
+        const currentDateInputNodeIndex = inputField.getAttribute('node-index')
+        if (inputField.value.length > this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['day'][0]) this.dateInputAddZeroIfNeeded('day', currentDateInputNodeIndex)
+        if (inputField.value.length > this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['month'][0]) this.dateInputAddZeroIfNeeded('month', currentDateInputNodeIndex)
+        if (inputField.value.length > this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['year'][0]) this.dateInputAddZeroIfNeeded('year', currentDateInputNodeIndex)
 
-        let currentSpecCharLength = this.getInputFieldByNodeIndex(currentNodeIndex)?.value.split('').filter(char => char === this[`pickerFormatChar${currentNodeIndex}`]).length
-        let oldSpecCharLength = this[`oldInputValue${currentNodeIndex}`]?.split('').filter(char => char === this[`pickerFormatChar${currentNodeIndex}`]).length
-        if (this[`isRemovedByInput${currentNodeIndex}`] && oldSpecCharLength > 0 && currentSpecCharLength !== oldSpecCharLength) this.getInputFieldByNodeIndex(currentNodeIndex).value = ''
+        let dateInputCurrentFormatCharLength = this.getInputFieldByNodeIndex(currentDateInputNodeIndex)?.value.split('').filter(char => char === this[`dateInputFormatChar${currentDateInputNodeIndex}`]).length
+        let dateInputOldFormatCharLength = this[`oldDateInputValue${currentDateInputNodeIndex}`]?.split('').filter(char => char === this[`dateInputFormatChar${currentDateInputNodeIndex}`]).length
+        if (this[`isDateInputValueRemoved${currentDateInputNodeIndex}`] && dateInputOldFormatCharLength > 0 && dateInputCurrentFormatCharLength !== dateInputOldFormatCharLength) this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value = ''
 
-        this[`oldInputValue${currentNodeIndex}`] = this.getInputFieldByNodeIndex(currentNodeIndex).value
+        this[`oldDateInputValue${currentDateInputNodeIndex}`] = this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value
       }
 
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
@@ -54,38 +54,38 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       }
     }
 
-    this.validationDatePatternInputEventListener = (event) => {
-      const currentElemIndex = event.currentTarget.getAttribute('node-index')
-      this[`currentInput${currentElemIndex}`] = event.data
-      this[`currentValue${currentElemIndex}`] = event.currentTarget.value
-      this[`currentSelectionStart${currentElemIndex}`] = event.currentTarget.selectionStart
-      this[`currentValueLength${currentElemIndex}`] = this[`currentValue${currentElemIndex}`].length
-      this[`isRemovedByInput${currentElemIndex}`] = false
+    this.validationDateInputPatternEventListener = (event) => {
+      const currentDateInputIndex = event.currentTarget.getAttribute('node-index')
+      this[`currentDateInput${currentDateInputIndex}`] = event.data
+      this[`currentDateInputValue${currentDateInputIndex}`] = event.currentTarget.value
+      this[`currentDateInputSelectionStart${currentDateInputIndex}`] = event.currentTarget.selectionStart
+      this[`currentDateInputValueLength${currentDateInputIndex}`] = this[`currentDateInputValue${currentDateInputIndex}`].length
+      this[`isDateInputValueRemoved${currentDateInputIndex}`] = false
 
-      if (this[`currentInput${currentElemIndex}`] !== null) this.checkNextChar(currentElemIndex)
-      if (this[`currentInput${currentElemIndex}`] !== null && this[`currentInput${currentElemIndex}`] !== this[`pickerFormatChar${currentElemIndex}`] && this[`pickerFormat${currentElemIndex}`].split('')[this[`currentValue${currentElemIndex}`].length - 1] === this[`pickerFormatChar${currentElemIndex}`]) {
-        this.getInputFieldByNodeIndex(currentElemIndex).value = this[`currentValue${currentElemIndex}`].slice(0, -1) + this[`pickerFormatChar${currentElemIndex}`] + this[`currentValue${currentElemIndex}`].slice(-1)
+      if (this[`currentInput${currentDateInputIndex}`] !== null) this.checkDateInputNextChar(currentDateInputIndex)
+      if (this[`currentDateInput${currentDateInputIndex}`] !== null && this[`currentDateInput${currentDateInputIndex}`] !== this[`dateInputFormatChar${currentDateInputIndex}`] && this[`dateFormat${currentDateInputIndex}`].split('')[this[`currentDateInputValue${currentDateInputIndex}`].length - 1] === this[`dateInputFormatChar${currentDateInputIndex}`]) {
+        this.getInputFieldByNodeIndex(currentDateInputIndex).value = this[`currentDateInputValue${currentDateInputIndex}`].slice(0, -1) + this[`dateInputFormatChar${currentDateInputIndex}`] + this[`currentDateInputValue${currentDateInputIndex}`].slice(-1)
       }
 
       // if remove
-      if (this[`currentInput${currentElemIndex}`] === null) {
-        this[`isRemovedByInput${currentElemIndex}`] = true
-        if (this[`pickerFormat${currentElemIndex}`][this[`currentSelectionStart${currentElemIndex}`]] === this[`pickerFormatChar${currentElemIndex}`] && this[`currentValue${currentElemIndex}`].length === this[`currentSelectionStart${currentElemIndex}`]) {
-          this.getInputFieldByNodeIndex(currentElemIndex).value = this[`currentValue${currentElemIndex}`]
+      if (this[`currentDateInput${currentDateInputIndex}`] === null) {
+        this[`isDateInputValueRemoved${currentDateInputIndex}`] = true
+        if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`]] === this[`dateInputFormatChar${currentDateInputIndex}`] && this[`currentDateInputValue${currentDateInputIndex}`].length === this[`currentDateInputSelectionStart${currentDateInputIndex}`]) {
+          this.getInputFieldByNodeIndex(currentDateInputIndex).value = this[`currentDateInputValue${currentDateInputIndex}`]
         }
-        else if (this[`pickerFormat${currentElemIndex}`][this[`currentSelectionStart${currentElemIndex}`]] === this[`pickerFormatChar${currentElemIndex}`] && this[`currentValue${currentElemIndex}`].length > this[`currentSelectionStart${currentElemIndex}`]) {
-          this.getInputFieldByNodeIndex(currentElemIndex).value = this[`currentValue${currentElemIndex}`].slice(0, this[`currentSelectionStart${currentElemIndex}`]) + this[`pickerFormatChar${currentElemIndex}`] + this[`currentValue${currentElemIndex}`].slice(this[`currentSelectionStart${currentElemIndex}`])
-          this.getInputFieldByNodeIndex(currentElemIndex).setSelectionRange(this[`currentSelectionStart${currentElemIndex}`], this[`currentSelectionStart${currentElemIndex}`])
+        else if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`]] === this[`dateInputFormatChar${currentDateInputIndex}`] && this[`currentDateInputValue${currentDateInputIndex}`].length > this[`currentDateInputSelectionStart${currentDateInputIndex}`]) {
+          this.getInputFieldByNodeIndex(currentDateInputIndex).value = this[`currentDateInputValue${currentDateInputIndex}`].slice(0, this[`currentDateInputSelectionStart${currentDateInputIndex}`]) + this[`dateInputFormatChar${currentDateInputIndex}`] + this[`currentDateInputValue${currentDateInputIndex}`].slice(this[`currentDateInputSelectionStart${currentDateInputIndex}`])
+          this.getInputFieldByNodeIndex(currentDateInputIndex).setSelectionRange(this[`currentDateInputSelectionStart${currentDateInputIndex}`], this[`currentDateInputSelectionStart${currentDateInputIndex}`])
         }
-      } else if (this[`currentInput${currentElemIndex}`] === this[`pickerFormatChar${currentElemIndex}`]) {
-        if (this[`pickerFormat${currentElemIndex}`][this[`currentSelectionStart${currentElemIndex}`] - 1] === 'd') {
-          this.formatInput(currentElemIndex, 'd')
+      } else if (this[`currentDateInput${currentDateInputIndex}`] === this[`dateInputFormatChar${currentDateInputIndex}`]) {
+        if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`] - 1] === 'day') {
+          this.formatDateInput(currentDateInputIndex, 'day')
         }
-        else if (this[`pickerFormat${currentElemIndex}`][this[`currentSelectionStart${currentElemIndex}`] - 1] === 'm') {
-          this.formatInput(currentElemIndex, 'm')
+        else if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`] - 1] === 'month') {
+          this.formatDateInput(currentDateInputIndex, 'month')
         }
-        else if (this[`pickerFormat${currentElemIndex}`][this[`currentSelectionStart${currentElemIndex}`] - 1] === 'y') {
-          this.formatInput(currentElemIndex, 'y')
+        else if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`] - 1] === 'year') {
+          this.formatDateInput(currentDateInputIndex, 'year')
         }
       }
     }
@@ -220,30 +220,30 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
               this.validationValues[node.getAttribute('name')] = this.validationValues[node.getAttribute('name')] ? Object.assign(this.validationValues[node.getAttribute('name')], { isTouched: false }) : {}
               this.validationValues[node.getAttribute('name')][key] = Object.assign(parsedRules[key], { isValid: false })
               if (this.validationValues[node.getAttribute('name')].pattern && Object.prototype.hasOwnProperty.call(this.validationValues[node.getAttribute('name')].pattern, 'mask-value')) {
-                if (node.hasAttribute('only-number-date-input')) node.addEventListener('input', this.validationDatePatternInputEventListener)
+                if (node.hasAttribute('m-date-input')) node.addEventListener('input', this.validationDateInputPatternEventListener)
                 else node.addEventListener('input', this.validationPatternInputEventListener)
               }
             })
           }
         }
-        if (node.hasAttribute('only-number-date-input') && !node.hasAttribute('node-index')) {
+        if (node.hasAttribute('m-date-input') && !node.hasAttribute('node-index')) {
           node.setAttribute('node-index', index)
-          this[`pickerFormat${index}`] = this.validationValues[node.getAttribute('name')].pattern['mask-value'] ?? 'dd/mm/yyyy'
+          this[`dateFormat${index}`] = this.validationValues[node.getAttribute('name')].pattern['mask-value'] ?? 'dd/mm/yyyy'
 
-          if (this[`pickerFormat${index}`].includes('/')) this[`pickerFormatChar${index}`] = '/'
-          else if (this[`pickerFormat${index}`].includes('.')) this[`pickerFormatChar${index}`] = '.'
-          else if (this[`pickerFormat${index}`].includes('-')) this[`pickerFormatChar${index}`] = '-'
+          if (this[`dateFormat${index}`].includes('/')) this[`dateInputFormatChar${index}`] = '/'
+          else if (this[`dateFormat${index}`].includes('.')) this[`dateInputFormatChar${index}`] = '.'
+          else if (this[`dateFormat${index}`].includes('-')) this[`dateInputFormatChar${index}`] = '-'
 
-          this[`formIndexes${index}`] = {
+          this[`dateInputFormIndexes${index}`] = {
             formatChar: Array(),
-            d: Array(),
-            m: Array(),
-            y: Array()
+            day: Array(),
+            month: Array(),
+            year: Array()
           }
-          this.setFormIndexes(index)
+          this.setDateInputFormIndexes(index)
 
-          node.setAttribute('maxlength', `${this[`pickerFormat${index}`].length}`)
-          node.addEventListener('keydown', this.setOnlyNumbersInputAllowedKeys)
+          node.setAttribute('maxlength', `${this[`dateFormat${index}`].length}`)
+          node.addEventListener('keydown', this.setDateInputAllowedKeys)
         }
       })
     }
@@ -309,7 +309,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
             })
           }
         }
-        if (node.hasAttribute('only-number-date-input')) node.removeEventListener('keydown', this.setOnlyNumbersInputAllowedKeys)
+        if (node.hasAttribute('m-date-input')) {
+          node.removeEventListener('keydown', this.setDateInputAllowedKeys)
+          node.removeEventListener('input', this.validationDateInputPatternEventListener)
+        }
       })
     }
     if (this.submitButton) {
@@ -372,7 +375,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           const isPatternValueValidationValid = re.test(currentInput.value)
           this.setValidity(inputFieldName, validationName, isPatternValueValidationValid)
         }
-        if (validationRules.pattern['mask-value'] && !validationRules.d) {
+        if (validationRules.pattern['mask-value'] && !validationRules['day']) {
           const maskValue = validationRules.pattern['mask-value']
           let currentInputValue = currentInput.value
 
@@ -381,7 +384,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           const isPatternMaskValueValidationValid = this.validationPatternEnd(inputFieldName, validationName, currentInputValue)
           this.setValidity(inputFieldName, validationName, isPatternMaskValueValidationValid)
         }
-        if (validationRules.pattern['mask-value'] && validationRules.d) {
+        if (validationRules.pattern['mask-value'] && validationRules['day']) {
           const currentFieldIndex = currentInput.getAttribute('node-index')
           const mainDateFormatValid = this.customMainDateFormatValidator(currentFieldIndex)
           this.setValidity(inputFieldName, validationName, mainDateFormatValid)
@@ -398,19 +401,19 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const isMaxDateValidationValid = !!(new Date(currentInput.value) < new Date(validationRules['max-date-value'].value))
         this.setValidity(inputFieldName, validationName, isMaxDateValidationValid)
       }
-      if (validationName === 'd') {
+      if (validationName === 'day') {
         const currentFieldIndex = currentInput.getAttribute('node-index')
-        const isDayValidationValid = this.customDateValidator('d', +validationRules['d'].min, +validationRules['d'].max, currentFieldIndex)
+        const isDayValidationValid = this.customDateInputValidator('day', +validationRules['day'].min, +validationRules['day'].max, currentFieldIndex)
         this.setValidity(inputFieldName, validationName, isDayValidationValid)
       }
-      if (validationName === 'm') {
+      if (validationName === 'month') {
         const currentFieldIndex = currentInput.getAttribute('node-index')
-        const isMonthValidationValid = this.customDateValidator('m', +validationRules['m'].min, +validationRules['m'].max, currentFieldIndex)
+        const isMonthValidationValid = this.customDateInputValidator('month', +validationRules['month'].min, +validationRules['month'].max, currentFieldIndex)
         this.setValidity(inputFieldName, validationName, isMonthValidationValid)
       }
-      if (validationName === 'y') {
+      if (validationName === 'year') {
         const currentFieldIndex = currentInput.getAttribute('node-index')
-        const isYearValidationValid = this.customDateValidator('y', +validationRules['y'].min, +validationRules['y'].max, currentFieldIndex)
+        const isYearValidationValid = this.customDateInputValidator('year', +validationRules['year'].min, +validationRules['year'].max, currentFieldIndex)
         this.setValidity(inputFieldName, validationName, isYearValidationValid)
       }
     })
@@ -584,10 +587,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     return el
   }
 
-  setOnlyNumbersInputAllowedKeys = (event) => {
-    const currentNodeIndex = event.currentTarget.getAttribute('node-index')
+  setDateInputAllowedKeys = (event) => {
+    const currentDateInputIndex = event.currentTarget.getAttribute('node-index')
     const keyCode = event.which
-    if (event.key == this[`pickerFormatChar${currentNodeIndex}`]) { }
+    if (event.key == this[`dateInputFormatChar${currentDateInputIndex}`]) { }
     else if (keyCode == 32) {
       event.preventDefault()
       return false
@@ -598,21 +601,21 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
   }
 
-  setFormIndexes(index) {
-    this[`pickerFormat${index}`].split('').forEach((char, index2) => {
-      if (char === 'd') this[`formIndexes${index}`].d.push(index2)
-      else if (char === 'm') this[`formIndexes${index}`].m.push(index2)
-      else if (char === 'y') this[`formIndexes${index}`].y.push(index2)
-      else if (char === this[`pickerFormatChar${index}`]) this[`formIndexes${index}`].formatChar.push(index2)
+  setDateInputFormIndexes(index) {
+    this[`dateFormat${index}`].split('').forEach((char, index2) => {
+      if (char === 'd') this[`dateInputFormIndexes${index}`]['day'].push(index2)
+      else if (char === 'm') this[`dateInputFormIndexes${index}`]['month'].push(index2)
+      else if (char === 'y') this[`dateInputFormIndexes${index}`]['year'].push(index2)
+      else if (char === this[`dateInputFormatChar${index}`]) this[`dateInputFormIndexes${index}`].formatChar.push(index2)
     })
   }
 
-  checkNextChar(index, formatCharTyped) {
-    if (this[`pickerFormat${index}`][this[`currentValueLength${index}`]] && this[`pickerFormat${index}`][this[`currentValueLength${index}`]] === this[`pickerFormatChar${index}`]) {
-      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`pickerFormatChar${index}`]
+  checkDateInputNextChar(index, formatCharTyped) {
+    if (this[`dateFormat${index}`][this[`currentDateInputValueLength${index}`]] && this[`dateFormat${index}`][this[`currentDateInputValueLength${index}`]] === this[`dateInputFormatChar${index}`]) {
+      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`dateInputFormatChar${index}`]
     }
-    if (formatCharTyped && this[`pickerFormat${index}`][this[`currentValueLength${index}`] + 1] === this[`pickerFormatChar${index}`]) {
-      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`pickerFormatChar${index}`]
+    if (formatCharTyped && this[`dateFormat${index}`][this[`currentDateInputValueLength${index}`] + 1] === this[`dateInputFormatChar${index}`]) {
+      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`dateInputFormatChar${index}`]
     }
   }
 
@@ -620,77 +623,77 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     if (this.root.querySelector(`input[node-index="${nodeIndex}"]`)) return this.root.querySelector(`input[node-index="${nodeIndex}"]`)
   }
 
-  formatInput(index, dateType) {
+  formatDateInput(index, dateType) {
     this[`currentValue${index}`].split('').forEach((char, index2) => {
-      if (this[`formIndexes${index}`][dateType].includes(index2)) {
-        if (char === this[`pickerFormatChar${index}`]) {
+      if (this[`dateInputFormIndexes${index}`][dateType].includes(index2)) {
+        if (char === this[`dateInputFormatChar${index}`]) {
           let currentDateTypeValue = Array()
-          this[`formIndexes${index}`][dateType].forEach(ind => {
-            if (this[`currentValue${index}`][ind] === this[`pickerFormatChar${index}`] || !this[`currentValue${index}`][ind]) {
+          this[`dateInputFormIndexes${index}`][dateType].forEach(ind => {
+            if (this[`currentValue${index}`][ind] === this[`dateInputFormatChar${index}`] || !this[`currentValue${index}`][ind]) {
               currentDateTypeValue.unshift('0')
             } else {
               currentDateTypeValue.unshift(this[`currentValue${index}`][ind])
             }
           })
           let inputFieldValue = this[`currentValue${index}`].split('')
-          this[`formIndexes${index}`][dateType].forEach((ind, i) => {
+          this[`dateInputFormIndexes${index}`][dateType].forEach((ind, i) => {
             inputFieldValue[ind] = currentDateTypeValue[i]
           })
           this.getInputFieldByNodeIndex(index).value = inputFieldValue.join('')
-          this.checkNextChar(index, true)
+          this.checkDateInputNextChar(index, true)
         }
       }
     })
   }
 
-  customDateValidator(type, min, max, index) {
-    let currentValueString = ''
-    let currentValueNumber = 0
+  customDateInputValidator(type, min, max, index) {
+    let currentValueAsString = ''
+    let currentValueAsNumber = 0
 
-    this[`formIndexes${index}`][type].forEach(ind => {
+    this[`dateInputFormIndexes${index}`][type].forEach(ind => {
       if (this.getInputFieldByNodeIndex(index).value[ind]) {
-        currentValueString = currentValueString + this.getInputFieldByNodeIndex(index).value[ind]
-        let currentValueStringArray = currentValueString.split('').filter(char => char !== this[`pickerFormatChar${index}`])
-        currentValueString = currentValueStringArray.join('')
+        currentValueAsString = currentValueAsString + this.getInputFieldByNodeIndex(index).value[ind]
+        let currentValueAsStringArray = currentValueAsString.split('').filter(char => char !== this[`dateInputFormatChar${index}`])
+        currentValueAsString = currentValueAsStringArray.join('')
       }
     })
 
 
-    currentValueNumber = +currentValueString || 0
+    currentValueAsNumber = +currentValueAsString || 0
 
-    if (min <= currentValueNumber && currentValueNumber <= max) return true
+    if (min <= currentValueAsNumber && currentValueAsNumber <= max) return true
     else return false
   }
 
   customMainDateFormatValidator(index) {
     let mainValidation = true
-    this[`formIndexes${index}`].formatChar.forEach(ind => {
-      if (this.getInputFieldByNodeIndex(index).value[ind] !== this[`pickerFormatChar${index}`]) mainValidation = false
+    this[`dateInputFormIndexes${index}`].formatChar.forEach(ind => {
+      if (this.getInputFieldByNodeIndex(index).value[ind] !== this[`dateInputFormatChar${index}`]) mainValidation = false
     })
-    if (this.getInputFieldByNodeIndex(index).value.length !== this[`pickerFormat${index}`].length) mainValidation = false
+    if (this.getInputFieldByNodeIndex(index).value.length !== this[`dateFormat${index}`].length) mainValidation = false
     return mainValidation
   }
 
-  addZeroIfNeeded(dateType, index) {
-    let currentDateUnit = this.getInputFieldByNodeIndex(index).value.slice(this[`formIndexes${index}`][dateType][0], this[`formIndexes${index}`][dateType][this[`formIndexes${index}`][dateType].length - 1] + 1)
-    let newCurrentDateUnit = currentDateUnit.split('').filter(el => el !== this[`pickerFormatChar${index}`])
+  dateInputAddZeroIfNeeded(dateType, index) {
+    let currentDateUnit = this.getInputFieldByNodeIndex(index).value.slice(this[`dateInputFormIndexes${index}`][dateType][0], this[`dateInputFormIndexes${index}`][dateType][this[`dateInputFormIndexes${index}`][dateType].length - 1] + 1)
+    let newCurrentDateUnit = currentDateUnit.split('').filter(el => el !== this[`dateInputFormatChar${index}`])
 
-    if (newCurrentDateUnit.length !== this[`formIndexes${index}`][dateType].length) {
+    if (newCurrentDateUnit.length !== this[`dateInputFormIndexes${index}`][dateType].length) {
       let currentFormatCharIndexes = []
       this.getInputFieldByNodeIndex(index).value.split('').forEach((char, index2) => {
-        char === this[`pickerFormatChar${index}`] ? currentFormatCharIndexes.push(index2) : ''
+        char === this[`dateInputFormatChar${index}`] ? currentFormatCharIndexes.push(index2) : ''
       })
 
-      let lengthDiff = this[`formIndexes${index}`][dateType].length - newCurrentDateUnit.length
+      let lengthDiff = this[`dateInputFormIndexes${index}`][dateType].length - newCurrentDateUnit.length
       for (let i = 0; i < lengthDiff; i++) {
-        if (dateType === 'y') newCurrentDateUnit.push('0')
+        if (dateType === 'year') newCurrentDateUnit.push('0')
         else newCurrentDateUnit.unshift('0')
       }
 
       let formatCharsNextToEachOther = currentFormatCharIndexes.find((el, index) => el + 1 === currentFormatCharIndexes[index + 1])
 
-      if (formatCharsNextToEachOther || this.getInputFieldByNodeIndex(index).value[0] === this[`pickerFormatChar${index}`]) {
-        newCurrentDateUnit = ['0', '1', this[`pickerFormatChar${index}`]]
+      if (formatCharsNextToEachOther || this.getInputFieldByNodeIndex(index).value[0] === this[`dateInputFormatChar${index}`]) {
+        newCurrentDateUnit = ['0', '1', this[`dateInputFormatChar${index}`]]
       } else {
         let isAllZero = true
         newCurrentDateUnit.forEach(num => +num !== 0 ? isAllZero = false : '')
@@ -700,14 +703,14 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         }
       }
 
-      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value.slice(0, this[`formIndexes${index}`][dateType][0]) + newCurrentDateUnit.join('') + this.getInputFieldByNodeIndex(index).value.slice(this[`formIndexes${index}`][dateType][this[`formIndexes${index}`][dateType].length - 1])
+      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value.slice(0, this[`dateInputFormIndexes${index}`][dateType][0]) + newCurrentDateUnit.join('') + this.getInputFieldByNodeIndex(index).value.slice(this[`dateInputFormIndexes${index}`][dateType][this[`dateInputFormIndexes${index}`][dateType].length - 1])
 
-      if (this[`pickerFormat${index}`][this.getInputFieldByNodeIndex(index).value.length] === this[`pickerFormatChar${index}`]) {
-        this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`pickerFormatChar${index}`]
+      if (this[`dateFormat${index}`][this.getInputFieldByNodeIndex(index).value.length] === this[`dateInputFormatChar${index}`]) {
+        this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`dateInputFormatChar${index}`]
       }
     }
-    if (this[`pickerFormat${index}`][this.getInputFieldByNodeIndex(index).value.length] === this[`pickerFormatChar${index}`] && this.getInputFieldByNodeIndex(index).value[this.getInputFieldByNodeIndex(index).value.length - 1] !== this[`pickerFormatChar${index}`]) {
-      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`pickerFormatChar${index}`]
+    if (this[`dateFormat${index}`][this.getInputFieldByNodeIndex(index).value.length] === this[`dateInputFormatChar${index}`] && this.getInputFieldByNodeIndex(index).value[this.getInputFieldByNodeIndex(index).value.length - 1] !== this[`dateInputFormatChar${index}`]) {
+      this.getInputFieldByNodeIndex(index).value = this.getInputFieldByNodeIndex(index).value + this[`dateInputFormatChar${index}`]
     }
   }
 }
