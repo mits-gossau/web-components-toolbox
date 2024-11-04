@@ -1,9 +1,9 @@
 // https://astexplorer.net/
+// https://babeljs.io/docs/babel-parser
+// https://babeljs.io/docs/babel-traverse
 const fs = require('fs')
 const path = require('path')
-// https://babeljs.io/docs/babel-parser
 const { parse } = require('@babel/parser')
-// https://babeljs.io/docs/babel-traverse
 const traverse = require('@babel/traverse').default
 const generate = require('@babel/generator').default
 const glob = require('glob')
@@ -41,8 +41,8 @@ function getAttributeNames(filePath, options = {}) {
             },
         })
         return {
-            functions,
-            variables,
+            // functions,
+            // variables,
             attributes
         }
     } catch (error) {
@@ -86,7 +86,6 @@ function getCSSproperties(filePath, options = {}) {
 
         traverse(ast, {
             TemplateLiteral(path) {
-                
                 const { quasis, expressions } = path.node
                 const rawValue = quasis[0].value.raw
                 const pattern = /([^{]+)\s*{\s*([^}]+?)\s*}/g
@@ -170,36 +169,33 @@ function parseAndManipulateFile(filePath, options = {}) {
 }
 
 // root directory
-//const directory = path.resolve('../src/es/components/')
 const directory = '../src/es/components/'
 
 // glob pattern to find files
 glob.sync(`${directory}/**/*(*.{js,ts,jsx,tsx})`).forEach(file => {
+
+    const directoryPath = path.dirname(file);
+    console.log(directoryPath);
+    const filePath = `${directoryPath}/x.json` 
+
     // const manipulatedCode = parseAndManipulateFile(file, {
     //     sourceType: 'module', // Specify source type
     // })
     //console.log(`manipulated file: ${file}`)
     //console.log(manipulatedCode)
 
-    // const attributes = getAttributeNames(file, {
-    //     sourceType: 'module', // Specify source type
-    // })
-    //console.log(attributes)
+    const attributes = getAttributeNames(file, {
+        sourceType: 'module', // Specify source type
+    })
+    console.log(attributes)
 
     const css = getCSSproperties(file, {
         sourceType: 'module', // Specify source type
     })
+    css.attributes = attributes
     const jsonData = JSON.stringify(css, null, 2)
-    //console.log(jsonData)
-    const filePath = 'user_profile.json'
+    console.log(jsonData)
     // Read the existing content of the file
-    let existingData = ''
-    try {
-        existingData = fs.readFileSync(filePath, 'utf-8')
-    } catch (error) {
-        console.error('Error reading file:', error)
-    }
-    const updatedData = existingData ? `${existingData},\n${jsonData}` : `${jsonData},\n`
-    fs.writeFileSync(filePath, updatedData);
+    fs.writeFileSync(filePath, jsonData);
 })
 console.log("END")
