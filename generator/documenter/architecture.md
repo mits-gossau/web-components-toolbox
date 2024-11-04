@@ -1,6 +1,8 @@
-# Architecture
+# Architecture Overview
 
 X
+
+![alt text](./architecture-overview.png)
 
 ## Structure
 
