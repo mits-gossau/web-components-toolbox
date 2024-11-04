@@ -14,7 +14,7 @@ function getCSSproperties(filePath, options = { sourceType: 'module' }) {
             ...options,
             sourceFilename: filePath,
             plugins: ['jsx', 'typescript']
-        });
+        })
 
         traverse(ast, {
             TemplateLiteral(path) {
@@ -39,7 +39,7 @@ function getCSSproperties(filePath, options = { sourceType: 'module' }) {
 
                 }
             }
-        });
+        })
 
         return {
             cssData
