@@ -1,8 +1,16 @@
 # Architecture Overview
 
-X
+This document provides an overview of the process of parsing and traversing JavaScript code with Babel to create an Abstract Syntax Tree (AST), traverse nodes and create a JSON file for documentation or to generate further transformations.
+
+## Workflow
 
 ![alt text](./architecture-overview.png)
+
+1. Parse the JavaScript Code: Use Babel’s parser to convert JavaScript code into an AST.
+2. Traverse the AST: Use Babel’s traverse function to visit each node, collecting data or making modifications as required.
+3. Generate JSON Output: Serialize the collected data in a JSON file or for use in other use cases
+
+
 
 ## Structure
 
