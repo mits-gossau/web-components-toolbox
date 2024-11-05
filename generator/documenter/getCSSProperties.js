@@ -3,10 +3,7 @@ const traverse = require('@babel/traverse').default
 const { parse } = require('@babel/parser')
 
 function getCSSproperties(filePath, options = { sourceType: 'module' }) {
-    const cssData = {
-        filePath,
-        css: []
-    }
+    const css = []
     try {
         const content = fs.readFileSync(filePath, 'utf8')
         const ast = parse(content, {
@@ -32,13 +29,13 @@ function getCSSproperties(filePath, options = { sourceType: 'module' }) {
                         }
                     }
                     const dx = { selector, props }
-                    cssData.css.push(dx)
+                    css.push(dx)
                 }
             }
         })
 
         return {
-            cssData
+            css
         }
     } catch (error) {
         console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)

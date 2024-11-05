@@ -1,4 +1,9 @@
-function generate(filePath, options = {}) {
+const fs = require('fs')
+const { parse } = require('@babel/parser')
+const traverse = require('@babel/traverse').default
+const generate = require('@babel/generator').default
+
+function generateModified(filePath, options = { sourceType: 'module' }) {
     try {
         const content = fs.readFileSync(filePath, 'utf8')
         const ast = parse(content, {
@@ -7,10 +12,8 @@ function generate(filePath, options = {}) {
             plugins: ['jsx', 'typescript']
         });
 
-        // traverse and manipulate(!!!) the AST
         traverse(ast, {
             // example visitor to add a "console.log" statement at the beginning of each file
-            // see log output for result!
             Program(path) {
                 const consoleLogStatement = {
                     type: 'ExpressionStatement',
@@ -39,7 +42,6 @@ function generate(filePath, options = {}) {
             },
         });
 
-        // generate code from the manipulated AST
         const { code } = generate(ast)
         return code
     } catch (error) {
@@ -48,4 +50,4 @@ function generate(filePath, options = {}) {
     }
 }
 
-module.exports = generate 
+module.exports = generateModified 

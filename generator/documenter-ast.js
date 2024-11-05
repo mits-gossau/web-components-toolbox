@@ -2,37 +2,31 @@
 // https://babeljs.io/docs/babel-parser
 // https://babeljs.io/docs/babel-traverse
 const fs = require('fs')
-const path = require('path')
 const glob = require('glob')
+const path = require('path')
 const getAttributeNames =  require('./documenter/getAttributes')
 const getCSSproperties =  require('./documenter/getCSSProperties')
-const generate = require('./documenter/generate')
+const generateModified = require('./documenter/generateModified')
 
-// root directory
 const ROOT_DIR = '../src/es/components/'
 
-// glob pattern to find files
 glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`).forEach(file => {
 
     const directoryPath = path.dirname(file);
     const filePath = `${directoryPath}/x.json` 
+  
+    const manipulatedCode = generateModified(file)
+    // console.log(`manipulated file: ${file}`)
+    // console.log(manipulatedCode)
+    // fs.writeFileSync(file, manipulatedCode);
 
-    // const manipulatedCode = generate(file, {
-    //     sourceType: 'module', // Specify source type
-    // })
-    //console.log(`manipulated file: ${file}`)
-    //console.log(manipulatedCode)
-
-    const attributes = getAttributeNames(file)
-    // console.log(attributes)
-
-    const css = getCSSproperties(file)
-
-    // append
-    css.attributes = attributes
-
-    const jsonData = JSON.stringify(css, null, 2)
+    const data = {
+        path: file,
+        css: getCSSproperties(file).css,
+        attributes: getAttributeNames(file).attributes
+    }
+    
+    const jsonData = JSON.stringify(data, null, 2)
     console.log(jsonData)
-    // Read the existing content of the file
-    // fs.writeFileSync(filePath, jsonData);
+    fs.writeFileSync(filePath, jsonData);
 })

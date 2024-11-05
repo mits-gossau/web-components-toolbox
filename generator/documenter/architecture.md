@@ -18,7 +18,7 @@ X
 
 ```
 documenter
-├── getAttributes.js     - X
-├── getCSSProperties.js  - X
-└── generate.js          - X
+├── getAttributes.js      - X
+├── getCSSProperties.js   - X
+└── generateModified.js   - X
 ```
