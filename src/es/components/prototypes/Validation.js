@@ -27,9 +27,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         let dateInputOldFormatCharLength = this[`oldDateInputValue${currentDateInputNodeIndex}`]?.split('').filter(char => char === this[`dateInputFormatChar${currentDateInputNodeIndex}`]).length
 
         if (this[`isDateInputValueRemoved${currentDateInputNodeIndex}`] && dateInputOldFormatCharLength > 0 && dateInputCurrentFormatCharLength !== dateInputOldFormatCharLength) {
-          let result = this.findDifference(this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value, this[`oldDateInputValue${currentDateInputNodeIndex}`])
-          //console.log("res", result)
-          //this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value = ''
+          this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value = this.setFormatOfDateInput(this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value, this[`oldDateInputValue${currentDateInputNodeIndex}`], currentDateInputNodeIndex, inputFieldName)
         }
         if (inputField.value.length > this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['day'][0]) this.dateInputAddZeroIfNeeded('day', currentDateInputNodeIndex)
         if (inputField.value.length > this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['month'][0]) this.dateInputAddZeroIfNeeded('month', currentDateInputNodeIndex)
@@ -68,7 +66,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       this[`currentDateInputValueLength${currentDateInputIndex}`] = this[`currentDateInputValue${currentDateInputIndex}`].length
       this[`isDateInputValueRemoved${currentDateInputIndex}`] = false
 
-      if (this[`currentInput${currentDateInputIndex}`] !== null) this.checkDateInputNextChar(currentDateInputIndex)
+      if (this[`currentDateInput${currentDateInputIndex}`] !== null) this.checkDateInputNextChar(currentDateInputIndex)
       if (this[`currentDateInput${currentDateInputIndex}`] !== null && this[`currentDateInput${currentDateInputIndex}`] !== this[`dateInputFormatChar${currentDateInputIndex}`] && this[`dateFormat${currentDateInputIndex}`].split('')[this[`currentDateInputValue${currentDateInputIndex}`].length - 1] === this[`dateInputFormatChar${currentDateInputIndex}`]) {
         this.getInputFieldByNodeIndex(currentDateInputIndex).value = this[`currentDateInputValue${currentDateInputIndex}`].slice(0, -1) + this[`dateInputFormatChar${currentDateInputIndex}`] + this[`currentDateInputValue${currentDateInputIndex}`].slice(-1)
       }
@@ -84,13 +82,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           this.getInputFieldByNodeIndex(currentDateInputIndex).setSelectionRange(this[`currentDateInputSelectionStart${currentDateInputIndex}`], this[`currentDateInputSelectionStart${currentDateInputIndex}`])
         }
       } else if (this[`currentDateInput${currentDateInputIndex}`] === this[`dateInputFormatChar${currentDateInputIndex}`]) {
-        if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`] - 1] === 'day') {
+        if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`] - 1] === 'd') {
           this.formatDateInput(currentDateInputIndex, 'day')
         }
-        else if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`] - 1] === 'month') {
+        else if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`] - 1] === 'm') {
           this.formatDateInput(currentDateInputIndex, 'month')
         }
-        else if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`] - 1] === 'year') {
+        else if (this[`dateFormat${currentDateInputIndex}`][this[`currentDateInputSelectionStart${currentDateInputIndex}`] - 1] === 'y') {
           this.formatDateInput(currentDateInputIndex, 'year')
         }
       }
@@ -630,18 +628,18 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   formatDateInput(index, dateType) {
-    this[`currentValue${index}`].split('').forEach((char, index2) => {
+    this[`currentDateInputValue${index}`].split('').forEach((char, index2) => {
       if (this[`dateInputFormIndexes${index}`][dateType].includes(index2)) {
         if (char === this[`dateInputFormatChar${index}`]) {
           let currentDateTypeValue = Array()
           this[`dateInputFormIndexes${index}`][dateType].forEach(ind => {
-            if (this[`currentValue${index}`][ind] === this[`dateInputFormatChar${index}`] || !this[`currentValue${index}`][ind]) {
+            if (this[`currentDateInputValue${index}`][ind] === this[`dateInputFormatChar${index}`] || !this[`currentDateInputValue${index}`][ind]) {
               currentDateTypeValue.unshift('0')
             } else {
-              currentDateTypeValue.unshift(this[`currentValue${index}`][ind])
+              currentDateTypeValue.unshift(this[`currentDateInputValue${index}`][ind])
             }
           })
-          let inputFieldValue = this[`currentValue${index}`].split('')
+          let inputFieldValue = this[`currentDateInputValue${index}`].split('')
           this[`dateInputFormIndexes${index}`][dateType].forEach((ind, i) => {
             inputFieldValue[ind] = currentDateTypeValue[i]
           })
@@ -720,18 +718,23 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
   }
 
-  findDifference(newString, oldString, index) {
-    if (!newString) return
-    let newStringArray = newString.split('.')
-    let oldStringArray = oldString.split('.')
-    let testDiff = oldStringArray.filter(unit => !newStringArray.includes(unit))
-    let newValue = ''
-
-    if (testDiff.length > 0) {
-      // do further from here
-      // newValue = 
+  setFormatOfDateInput(newDateInput, oldDateInput, nodeIndex, inputFieldName) {
+    if (!newDateInput) return ''
+    let newDateInputValue = oldDateInput
+    let newDateInputArray = newDateInput.split(this[`dateInputFormatChar${nodeIndex}`]).filter(unit => unit)
+    let oldDateInputArray = oldDateInput.split(this[`dateInputFormatChar${nodeIndex}`]).filter(unit => unit)
+    let diffBetweenOldAndNewArray = oldDateInputArray.filter(unit => !newDateInputArray.includes(unit)).filter(unit => unit)
+    if ((diffBetweenOldAndNewArray.length === 1 && diffBetweenOldAndNewArray[0].length === 4) || (diffBetweenOldAndNewArray.length === 1 && diffBetweenOldAndNewArray[0] === oldDateInputArray[oldDateInputArray.length - 1]) || (diffBetweenOldAndNewArray.length === 2 && diffBetweenOldAndNewArray[0] === oldDateInputArray[oldDateInputArray.length - 2] && diffBetweenOldAndNewArray[1] === oldDateInputArray[oldDateInputArray.length - 1])) {
+      return newDateInput
     }
-
-
+    if (diffBetweenOldAndNewArray.length > 0) {
+      diffBetweenOldAndNewArray.forEach(el => {
+        let currentContentIndex = oldDateInputArray.findIndex(oldEl => el === oldEl)
+        if (oldDateInputArray[currentContentIndex].length === 2) oldDateInputArray[currentContentIndex] = "01"
+        if (oldDateInputArray[currentContentIndex].length === 4) oldDateInputArray[currentContentIndex] = this.validationValues[inputFieldName]['year']['min']
+        newDateInputValue = oldDateInputArray.join(this[`dateInputFormatChar${nodeIndex}`])
+      })
+    }
+    return newDateInputValue
   }
 }
