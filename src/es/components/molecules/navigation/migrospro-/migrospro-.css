@@ -21,7 +21,6 @@
 }
 
 :host>nav>ul>li ul>li {
-  --navigation-migrospro-color-hover: var(--color-hover);
   --navigation-migrospro-color-active: var(--color-active);
   --navigation-migrospro-text-decoration-hover: none;
   --navigation-migrospro-text-decoration-focus: none;
@@ -49,6 +48,7 @@
     --navigation-migrospro-text-decoration: none;
     --navigation-migrospro-text-decoration-hover: none;
     --navigation-migrospro-text-decoration-focus: none;
+    --navigation-migrospro-color-hover: var(--m-orange-800, white) !important;
   }
 
   :host>nav>ul>li.open>a-arrow {
@@ -61,10 +61,11 @@
 
   :host>nav>ul li.open>o-nav-wrapper>section>ul a-link {
     --navigation-migrospro-font-size: 1rem;
+    --navigation-migrospro-color-hover: var(--m-orange-800, white) !important;
   }
 
   :host>nav>ul>li:not(.open)>a-link {
-    --navigation-migrospro-color-hover: var(--color-hover);
+    --navigation-migrospro-color-hover: var(--m-orange-800, white);
   }
 
   :host>nav>ul.language-switcher li,
