@@ -3,7 +3,6 @@ const traverse = require('@babel/traverse').default
 const { parse } = require('@babel/parser')
 
 function getCSSproperties(filePath, options = { sourceType: 'module' }) {
-    const cssProperties = []
     const cssData = {
         filePath,
         css: []
@@ -34,9 +33,6 @@ function getCSSproperties(filePath, options = { sourceType: 'module' }) {
                     }
                     const dx = { selector, props }
                     cssData.css.push(dx)
-                    // console.log(cssData)
-                    cssProperties.push(cssData)
-
                 }
             }
         })

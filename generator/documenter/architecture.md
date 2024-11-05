@@ -1,6 +1,6 @@
 # Architecture Overview
 
-This document provides an overview of the process of parsing and traversing JavaScript code with Babel to create an Abstract Syntax Tree (AST), traverse nodes and create a JSON file for documentation or to generate further transformations.
+This document provides an overview of the process of parsing and traversing JavaScript / WebComponent code with Babel to create an Abstract Syntax Tree (AST), traverse nodes and create a JSON file for documentation or to generate further transformations.
 
 ## Workflow
 
@@ -18,7 +18,7 @@ X
 
 ```
 documenter
-├── getAttributes     - X
-├── getCSSProperties  - X
-└── generate          - X
+├── getAttributes.js     - X
+├── getCSSProperties.js  - X
+└── generate.js          - X
 ```
