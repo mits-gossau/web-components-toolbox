@@ -1,6 +1,7 @@
 # web-components-toolbox
 The web component toolbox for any CMS but particularly used for [Web Components + Umbraco === Mutobo](http://mutobo.ch/)
 
+## [documentation](https://github.com/mits-gossau/web-components-toolbox/tree/master/docs/README.md)
 ## [organize components](https://wiki.migros.net/display/OCC/Web+Components+CMS+Template)
 
 Install:
