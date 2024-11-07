@@ -28,7 +28,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
       if (isMcsLoaded()) {
         resolve(self.mcs) // eslint-disable-line
       } else {
-        const baseUrl = (self.Environment && self.Environment.mcsBaseUrl) || 'https://digital-campaign-factory.migros.ch'
+        const baseUrl = this.getAttribute('mcs-base-url') || (self.Environment && self.Environment.mcsBaseUrl) || 'https://digital-campaign-factory.migros.ch'
         // prefetch or pre connect o the iframes src
         if (this.hasAttribute('prefetch') && !document.head.querySelector(`link[href="${baseUrl}"]`)) {
           const link = document.createElement('link')
@@ -40,7 +40,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        let version = self.Environment && self.Environment.mcsVersion
+        let version = this.getAttribute('mcs-version') || self.Environment && self.Environment.mcsVersion
         if (!version) {
           try {
             version = (await (await fetch(`${baseUrl}/api/version`)).json()).version
