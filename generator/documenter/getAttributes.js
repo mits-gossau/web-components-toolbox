@@ -14,9 +14,16 @@ function getAttributeNames(filePath, options = { sourceType: 'module' }) {
         traverse(ast, {
             CallExpression(path) {
                 const callee = path.node.callee
+                // If the expression is a call to a method on 'this' and that
+                // method is 'getAttribute', then we know that we're dealing
+                // with an attribute on a web component.
                 if (callee.type === 'MemberExpression' && callee.object.type === 'ThisExpression' && callee.property.name === 'getAttribute') {
+                    // Get the attribute name that is being accessed.
                     const attributeName = path.node.arguments[0].value
+                    // Print out a message so that we can see where in the
+                    // code we're finding the attributes.
                     console.log(`found this.getAttribute('${attributeName}') at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
+                    // Add the attribute name to the list of found attributes.
                     attributes.push(attributeName)
                 }
             }

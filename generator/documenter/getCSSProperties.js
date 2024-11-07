@@ -62,7 +62,7 @@ function extractProperty(inputText) {
         const cssProp = inputText.split(':')[0].trim()
         return cssProp ? { property: cssProp, variable, fallback } : null
     }
-    console.log('No property found')
+    console.log('No property found', inputText)
     return null
 }
 

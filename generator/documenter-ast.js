@@ -28,5 +28,5 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`).forEach(file => {
     
     const jsonData = JSON.stringify(data, null, 2)
     console.log(jsonData)
-    fs.writeFileSync(filePath, jsonData);
+    // fs.writeFileSync(filePath, jsonData);
 })
