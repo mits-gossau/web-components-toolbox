@@ -14,20 +14,23 @@ function getCSSproperties(filePath, options = { sourceType: 'module' }) {
 
         traverse(ast, {
             TemplateLiteral(path) {
-                const { quasis, expressions } = path.node
+                // Destructure the 'quasis' array from the 'path.node' object, which represents template literals in the AST
+                const { quasis } = path.node
+                // Extract the raw content of the first quasi (template element) in the template literal
                 const rawValue = quasis[0].value.raw
-                const pattern = /([^{]+)\s*{\s*([^}]+?)\s*}/g
-                let match
-                while ((match = pattern.exec(rawValue)) !== null) {
+                // Use a regular expression to find all CSS-like blocks within the template string
+                // The regex captures selectors and their corresponding properties
+                const matches = rawValue.matchAll(/([^{]+)\s*{\s*([^}]+?)\s*}/g)
+                // Iterate over all matches found in the template string
+                for (const match of matches) {
+                    // Trim whitespace and obtain the CSS selector from the first capturing group
                     const selector = match[1].trim()
+                    // Split the second capturing group by semicolons to separate properties, and trim each property
                     const properties = match[2].trim().split(';').map(property => property.trim())
-                    const props = []
-                    for (const line of properties) {
-                        const property = extractProperty(line)
-                        if (property) {
-                            props.push(property)
-                        }
-                    }
+                    // Map over the properties, extracting key-value pairs using the 'extractProperty' function
+                    // Filter out any invalid or empty properties
+                    const props = properties.map(property => extractProperty(property)).filter(prop => prop)
+                    // Create an object containing the selector and its properties, and push it to the 'css' array
                     const dx = { selector, props }
                     css.push(dx)
                 }
