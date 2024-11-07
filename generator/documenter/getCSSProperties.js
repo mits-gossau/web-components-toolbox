@@ -46,17 +46,18 @@ function getCSSproperties(filePath, options = { sourceType: 'module' }) {
 function extractProperty(inputText) {
     const properties = inputText.split(';').map(line => line.trim()).filter(line => line !== '')[0]
     if (!properties) return null
-    const property = properties.match(/var\((.*?)\)/)
-    if (property) {
-        const pr1 = property[1].split(',').map(value => value.trim())
+    // It matches the string "var("
+    // followed by any characters(captured in group 1),
+    // followed by ")".
+    // The (.*?) - capture group that matches any characters(including none)
+    // -
+    // used to extract the variable name and fallback value from a CSS property declaration 
+    // that uses the var() function, such as color: var(--my - color, #fff)
+    const match = properties.match(/var\((.*?)\)/)
+    if (match) {
+        const [variable, fallback] = match[1].split(',').map(value => value.trim())
         const cssProp = inputText.split(':')[0].trim()
-        if (cssProp) {
-            return {
-                property: cssProp,
-                variable: pr1[0],
-                fallback: pr1[1]
-            }
-        }
+        return cssProp ? { property: cssProp, variable, fallback } : null
     }
     console.log('No property found')
     return null
