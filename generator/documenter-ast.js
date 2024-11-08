@@ -1,6 +1,3 @@
-// https://astexplorer.net/
-// https://babeljs.io/docs/babel-parser
-// https://babeljs.io/docs/babel-traverse
 const fs = require('fs')
 const glob = require('glob')
 const path = require('path')
