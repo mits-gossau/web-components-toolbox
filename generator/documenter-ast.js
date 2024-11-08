@@ -10,8 +10,6 @@ const generateModified = require('./documenter/generateModified')
 
 const ROOT_DIR = '../src/es/components/'
 
-// Use the glob library to find all files matching the pattern in the ROOT_DIR,
-// excluding paths specified in the ignore array.
 glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
     ignore: [
         `${ROOT_DIR}/prototypes/**`,
