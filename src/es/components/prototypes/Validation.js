@@ -22,7 +22,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
       if (event.type === 'change' && this.validationValues[inputFieldName]['day'] && this.validationValues[inputFieldName]['month'] && this.validationValues[inputFieldName]['year'] && inputField.hasAttribute('node-index')) {
         const currentDateInputNodeIndex = inputField.getAttribute('node-index')
-
         let dateInputCurrentFormatCharLength = this.getInputFieldByNodeIndex(currentDateInputNodeIndex)?.value.split('').filter(char => char === this[`dateInputFormatChar${currentDateInputNodeIndex}`]).length
         let dateInputOldFormatCharLength = this[`oldDateInputValue${currentDateInputNodeIndex}`]?.split('').filter(char => char === this[`dateInputFormatChar${currentDateInputNodeIndex}`]).length
 
@@ -37,9 +36,51 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         this[`oldDateInputValue${currentDateInputNodeIndex}`] = this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value
       }
 
+      if (event.type === 'input' && this.validationValues[inputFieldName]['day'] && this.validationValues[inputFieldName]['month'] && this.validationValues[inputFieldName]['year'] && inputField.hasAttribute('node-index')) {
+        const currentDateInputNodeIndex = inputField.getAttribute('node-index')
+        let currentValueAsStringArray = this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.split(this[`dateInputFormatChar${currentDateInputNodeIndex}`]).filter(char => char !== this[`dateInputFormatChar${currentDateInputNodeIndex}`])
+        if (currentValueAsStringArray[0] && currentValueAsStringArray[0][0] > 3 && this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['day'][1]) {
+          currentValueAsStringArray[0] = '0' + currentValueAsStringArray[0] + this[`dateInputFormatChar${currentDateInputNodeIndex}`]
+        }
+        if (currentValueAsStringArray[1] && currentValueAsStringArray[1][0] > 1 && this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['month'][1]) {
+          currentValueAsStringArray[1] = '0' + currentValueAsStringArray[1] + this[`dateInputFormatChar${currentDateInputNodeIndex}`]
+        }
+        this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value = currentValueAsStringArray.join(this[`dateInputFormatChar${currentDateInputNodeIndex}`])
+      }
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
       if (this.realTimeSubmitButton) {
         this.checkIfFormValid()
+      }
+    }
+
+    this.dateInputFormatterEventListener = (event) => {
+      const inputField = event.currentTarget
+      const currentDateInputNodeIndex = inputField.getAttribute('node-index')
+      let currentValueAsStringArray = this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.split(this[`dateInputFormatChar${currentDateInputNodeIndex}`]).filter(char => char !== this[`dateInputFormatChar${currentDateInputNodeIndex}`])
+      if (currentValueAsStringArray[0] && currentValueAsStringArray[0][0] > 3 && this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['day'][1]) {
+        currentValueAsStringArray[0] = '0' + currentValueAsStringArray[0]
+      }
+      if (currentValueAsStringArray[1] && currentValueAsStringArray[1][0] > 1 && this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['month'][1]) {
+        currentValueAsStringArray[1] = '0' + currentValueAsStringArray[1]
+      }
+      currentValueAsStringArray = currentValueAsStringArray.filter(char => char && char !== this[`dateInputFormatChar${currentDateInputNodeIndex}`])
+      this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value = currentValueAsStringArray.join(this[`dateInputFormatChar${currentDateInputNodeIndex}`])
+    }
+
+    this.dateInputValidationChangeEventListener = (event) => {
+      const inputField = event.currentTarget
+      const currentDateInputNodeIndex = inputField.getAttribute('node-index')
+      const currentValidatedInputHasNewErrorReferencePoint = inputField.getAttribute('error-message-reference-point-changed') === 'true'
+      const currentValidatedInputErrorTextWrapper = inputField.errorTextWrapper ? inputField.errorTextWrapper : currentValidatedInputHasNewErrorReferencePoint ? inputField.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : inputField.parentElement.querySelector('div.custom-error-text')
+      const errorMessages = Array.from(currentValidatedInputErrorTextWrapper.querySelectorAll('[error-text-id]'))
+      const activeErrorTextIndex = errorMessages?.findIndex(errorText => !errorText.hasAttribute('hidden'))
+      const currentErrorMessage = errorMessages[activeErrorTextIndex]
+      const currentErrorMessageId = currentErrorMessage?.getAttribute('error-text-id')
+
+      errorMessages[activeErrorTextIndex]?.setAttribute('hidden', true)
+
+      if (this[`dateInputFormIndexes${currentDateInputNodeIndex}`][currentErrorMessageId] && inputField.value.length > this[`dateInputFormIndexes${currentDateInputNodeIndex}`][currentErrorMessageId][0]) {
+        errorMessages[activeErrorTextIndex].removeAttribute('hidden')
       }
     }
 
@@ -211,9 +252,20 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         node.errorTextWrapper = errorTextWrapper
 
         if (nodeHasLiveValidation) {
+          if (node.hasAttribute('m-date-input')) {
+            node.addEventListener('input', this.validationDateInputPatternEventListener)
+          }
+
           node.addEventListener('input', this.validationChangeEventListener)
+
+          if (node.hasAttribute('m-date-input')) {
+            node.addEventListener('input', this.dateInputValidationChangeEventListener)
+            node.addEventListener('change', this.validationChangeEventListener)
+          }
+
         } else {
           node.addEventListener('change', this.validationChangeEventListener)
+          node.addEventListener('input', this.dateInputFormatterEventListener)
         }
         node.addEventListener('input', this.baseInputChangeListener)
         // IMPORTANT name attribute has to be unique and always available
@@ -430,18 +482,23 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const currentValidatedInputErrorTextWrapper = currentValidatedInput.errorTextWrapper ? currentValidatedInput.errorTextWrapper : currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
     const isValidValues = []
+    if (!this.validationValues[inputFieldName]['required'] && currentValidatedInput.value === '') {
+      Object.keys(this.validationValues[inputFieldName]).forEach(key => {
+        if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) this.validationValues[inputFieldName][key]['isValid'] = true
+      })
+    }
     if (!currentValidatedInput.hasAttribute('disabled')) {
       Object.keys(this.validationValues[inputFieldName]).forEach(key => {
         if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
         if (!isCurrentValidatedInputErrorTextWrapperFilled) {
           if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
             if (currentValidatedInput.hasAttribute('no-error-text-p')) {
-              currentValidatedInputErrorTextWrapper.setAttribute('error-text-id', validationName)
+              currentValidatedInputErrorTextWrapper.setAttribute('error-text-id', key)
               currentValidatedInputErrorTextWrapper.hidden = true
               currentValidatedInputErrorTextWrapper.textContent = this.validationValues[inputFieldName][key]['error-message']
             } else {
               const errorText = document.createElement('p')
-              errorText.setAttribute('error-text-id', validationName)
+              errorText.setAttribute('error-text-id', key)
               errorText.hidden = true
               errorText.textContent = this.validationValues[inputFieldName][key]['error-message']
               currentValidatedInputErrorTextWrapper.appendChild(errorText)
@@ -651,21 +708,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   customDateInputValidator(type, min, max, index) {
-    let currentValueAsString = ''
-    let currentValueAsNumber = 0
-
-    this[`dateInputFormIndexes${index}`][type].forEach(ind => {
-      if (this.getInputFieldByNodeIndex(index).value[ind]) {
-        currentValueAsString = currentValueAsString + this.getInputFieldByNodeIndex(index).value[ind]
-        let currentValueAsStringArray = currentValueAsString.split('').filter(char => char !== this[`dateInputFormatChar${index}`])
-        currentValueAsString = currentValueAsStringArray.join('')
-      }
-    })
-
-
-    currentValueAsNumber = +currentValueAsString || 0
-
-    if (min <= currentValueAsNumber && currentValueAsNumber <= max) return true
+    let currentValueAsStringArray = this.getInputFieldByNodeIndex(index).value.split(this[`dateInputFormatChar${index}`]).filter(char => char !== this[`dateInputFormatChar${index}`])
+    if (type === 'day') return (min <= +currentValueAsStringArray[0] && +currentValueAsStringArray[0] <= max) ? true : false
+    else if (type === 'month') return (min <= +currentValueAsStringArray[1] && +currentValueAsStringArray[1] <= max) ? true : false
+    else if (type === 'year') return (min <= +currentValueAsStringArray[2] && +currentValueAsStringArray[2] <= max) ? true : false
     else return false
   }
 
