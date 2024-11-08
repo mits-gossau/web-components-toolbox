@@ -21,31 +21,31 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       const inputFieldName = inputField.getAttribute('name')
 
       if (event.type === 'change' && this.validationValues[inputFieldName]['day'] && this.validationValues[inputFieldName]['month'] && this.validationValues[inputFieldName]['year'] && inputField.hasAttribute('node-index')) {
-        const currentDateInputNodeIndex = inputField.getAttribute('node-index')
-        let dateInputCurrentFormatCharLength = this.getInputFieldByNodeIndex(currentDateInputNodeIndex)?.value.split('').filter(char => char === this[`dateInputFormatChar${currentDateInputNodeIndex}`]).length
-        let dateInputOldFormatCharLength = this[`oldDateInputValue${currentDateInputNodeIndex}`]?.split('').filter(char => char === this[`dateInputFormatChar${currentDateInputNodeIndex}`]).length
+        let dateInputNodeIndex = inputField.getAttribute('node-index')
+        let dateInputCurrentFormatCharLength = this.getInputFieldByNodeIndex(dateInputNodeIndex)?.value.split('').filter(char => char === this[`dateInputFormatChar${dateInputNodeIndex}`]).length
+        let dateInputOldFormatCharLength = this[`oldDateInputValue${dateInputNodeIndex}`]?.split('').filter(char => char === this[`dateInputFormatChar${dateInputNodeIndex}`]).length
 
-        if (this[`isDateInputValueRemoved${currentDateInputNodeIndex}`] && dateInputOldFormatCharLength > 0 && dateInputCurrentFormatCharLength !== dateInputOldFormatCharLength) {
-          this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value = this.setFormatOfDateInput(this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value, this[`oldDateInputValue${currentDateInputNodeIndex}`], currentDateInputNodeIndex, inputFieldName)
+        if (this[`isDateInputValueRemoved${dateInputNodeIndex}`] && dateInputOldFormatCharLength > 0 && dateInputCurrentFormatCharLength !== dateInputOldFormatCharLength) {
+          this.getInputFieldByNodeIndex(dateInputNodeIndex).value = this.setFormatOfDateInput(this.getInputFieldByNodeIndex(dateInputNodeIndex).value, this[`oldDateInputValue${dateInputNodeIndex}`], dateInputNodeIndex, inputFieldName)
         }
-        if (inputField.value.length > this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['day'][0]) this.dateInputAddZeroIfNeeded('day', currentDateInputNodeIndex)
-        if (inputField.value.length > this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['month'][0]) this.dateInputAddZeroIfNeeded('month', currentDateInputNodeIndex)
-        if (inputField.value.length > this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['year'][0]) this.dateInputAddZeroIfNeeded('year', currentDateInputNodeIndex)
 
+        if (inputField.value.length > this[`dateInputFormIndexes${dateInputNodeIndex}`]['day'][0]) this.dateInputAddZeroIfNeeded('day', dateInputNodeIndex)
+        if (inputField.value.length > this[`dateInputFormIndexes${dateInputNodeIndex}`]['month'][0]) this.dateInputAddZeroIfNeeded('month', dateInputNodeIndex)
+        if (inputField.value.length > this[`dateInputFormIndexes${dateInputNodeIndex}`]['year'][0]) this.dateInputAddZeroIfNeeded('year', dateInputNodeIndex)
 
-        this[`oldDateInputValue${currentDateInputNodeIndex}`] = this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value
+        this[`oldDateInputValue${dateInputNodeIndex}`] = this.getInputFieldByNodeIndex(dateInputNodeIndex).value
       }
 
       if (event.type === 'input' && this.validationValues[inputFieldName]['day'] && this.validationValues[inputFieldName]['month'] && this.validationValues[inputFieldName]['year'] && inputField.hasAttribute('node-index')) {
-        const currentDateInputNodeIndex = inputField.getAttribute('node-index')
-        let currentValueAsStringArray = this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.split(this[`dateInputFormatChar${currentDateInputNodeIndex}`]).filter(char => char !== this[`dateInputFormatChar${currentDateInputNodeIndex}`])
-        if (currentValueAsStringArray[0] && currentValueAsStringArray[0][0] > 3 && this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['day'][1]) {
-          currentValueAsStringArray[0] = '0' + currentValueAsStringArray[0] + this[`dateInputFormatChar${currentDateInputNodeIndex}`]
+        let dateInputNodeIndex = inputField.getAttribute('node-index')
+        let currentValueAsStringArray = this.getInputFieldByNodeIndex(dateInputNodeIndex).value.split(this[`dateInputFormatChar${dateInputNodeIndex}`]).filter(char => char !== this[`dateInputFormatChar${dateInputNodeIndex}`])
+        if (currentValueAsStringArray[0] && currentValueAsStringArray[0][0] > 3 && this.getInputFieldByNodeIndex(dateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${dateInputNodeIndex}`]['day'][1]) {
+          currentValueAsStringArray[0] = '0' + currentValueAsStringArray[0] + this[`dateInputFormatChar${dateInputNodeIndex}`]
         }
-        if (currentValueAsStringArray[1] && currentValueAsStringArray[1][0] > 1 && this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['month'][1]) {
-          currentValueAsStringArray[1] = '0' + currentValueAsStringArray[1] + this[`dateInputFormatChar${currentDateInputNodeIndex}`]
+        if (currentValueAsStringArray[1] && currentValueAsStringArray[1][0] > 1 && this.getInputFieldByNodeIndex(dateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${dateInputNodeIndex}`]['month'][1]) {
+          currentValueAsStringArray[1] = '0' + currentValueAsStringArray[1] + this[`dateInputFormatChar${dateInputNodeIndex}`]
         }
-        this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value = currentValueAsStringArray.join(this[`dateInputFormatChar${currentDateInputNodeIndex}`])
+        this.getInputFieldByNodeIndex(dateInputNodeIndex).value = currentValueAsStringArray.join(this[`dateInputFormatChar${dateInputNodeIndex}`])
       }
       this.validator(this.validationValues[inputFieldName], inputField, inputFieldName)
       if (this.realTimeSubmitButton) {
@@ -54,15 +54,18 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     }
 
     this.dateInputFormatterEventListener = (event) => {
-      const inputField = event.currentTarget
-      const currentDateInputNodeIndex = inputField.getAttribute('node-index')
+      let inputField = event.currentTarget
+      let currentDateInputNodeIndex = inputField.getAttribute('node-index')
       let currentValueAsStringArray = this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.split(this[`dateInputFormatChar${currentDateInputNodeIndex}`]).filter(char => char !== this[`dateInputFormatChar${currentDateInputNodeIndex}`])
+
       if (currentValueAsStringArray[0] && currentValueAsStringArray[0][0] > 3 && this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['day'][1]) {
         currentValueAsStringArray[0] = '0' + currentValueAsStringArray[0]
       }
+
       if (currentValueAsStringArray[1] && currentValueAsStringArray[1][0] > 1 && this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value.length - 1 < this[`dateInputFormIndexes${currentDateInputNodeIndex}`]['month'][1]) {
         currentValueAsStringArray[1] = '0' + currentValueAsStringArray[1]
       }
+
       currentValueAsStringArray = currentValueAsStringArray.filter(char => char && char !== this[`dateInputFormatChar${currentDateInputNodeIndex}`])
       this.getInputFieldByNodeIndex(currentDateInputNodeIndex).value = currentValueAsStringArray.join(this[`dateInputFormatChar${currentDateInputNodeIndex}`])
     }
@@ -252,9 +255,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         node.errorTextWrapper = errorTextWrapper
 
         if (nodeHasLiveValidation) {
-          if (node.hasAttribute('m-date-input')) {
-            node.addEventListener('input', this.validationDateInputPatternEventListener)
-          }
+          // Keep this ranking of event-binding; it's important to trigger this function earlier than the other ones.
+          if (node.hasAttribute('m-date-input')) node.addEventListener('input', this.validationDateInputPatternEventListener)
 
           node.addEventListener('input', this.validationChangeEventListener)
 
