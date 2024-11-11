@@ -238,6 +238,16 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       return (styleNode.textContent = '')
     // use controller to use FetchCSS to handle the regex processing and caching
     } else if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-css') || 'fetch-css')) {
+      /*
+      src/es/components/pages/generator/https---www-klubschule-ch.html - Home Local
+      -------------------
+        2138ms no web worker on this.css and no session cache
+        2053ms with web worker on this.css and no session cache
+        1294ms no web worker on this.css and with session cache
+        1169ms with web worker on this.css and with session cache
+      -------------------
+      it can be considered to insert this change, although possible side effects for this.css being async could exists. In limited tests 100% was solid and nicely rendered but 100ms are not worth the testing yet.
+      */
       return this.fetchCSS([{
         path: '',
         cssSelector,

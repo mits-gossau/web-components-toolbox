@@ -50,7 +50,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
          */
         fetchCSSParam => {
           // clean the path of ./ and ../
-          fetchCSSParam.path = fetchCSSParam.style ? 'set_by_this.css' : FetchCss.pathResolver(fetchCSSParam.path)
+          fetchCSSParam.path = !fetchCSSParam.path && fetchCSSParam.style ? 'set_by_this.css' : FetchCss.pathResolver(fetchCSSParam.path)
           /**
            * add nodes default values
            *
