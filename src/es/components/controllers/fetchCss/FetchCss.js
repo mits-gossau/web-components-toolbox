@@ -50,7 +50,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
          */
         fetchCSSParam => {
           // clean the path of ./ and ../
-          fetchCSSParam.path = FetchCss.pathResolver(fetchCSSParam.path)
+          fetchCSSParam.path = fetchCSSParam.style ? 'set_by_this.css' : FetchCss.pathResolver(fetchCSSParam.path)
           /**
            * add nodes default values
            *
@@ -61,11 +61,17 @@ export default class FetchCss extends Shadow(WebWorker()) {
           if (this.processedStyleCache.has(processedStyleCacheKey)) {
             return Promise.resolve(fetchCSSParamWithDefaultValues)
           }
-          let fetchStyle
-          if (this.fetchStyleCache.has(fetchCSSParamWithDefaultValues.path)) {
-            fetchStyle = this.fetchStyleCache.get(fetchCSSParamWithDefaultValues.path)
+          /** @type {Promise<string> | string | undefined} */
+          let fetchStyle = fetchCSSParamWithDefaultValues.style || ''
+          // skip fetching, if the style gets supplied with the event
+          if (fetchStyle) {
+            fetchStyle = Promise.resolve(fetchStyle)
           } else {
-            this.fetchStyleCache.set(fetchCSSParamWithDefaultValues.path, (fetchStyle = FetchCss.fetchStyle(fetchCSSParamWithDefaultValues.path, event.detail.node)))
+            if (this.fetchStyleCache.has(fetchCSSParamWithDefaultValues.path)) {
+              fetchStyle = this.fetchStyleCache.get(fetchCSSParamWithDefaultValues.path)
+            } else {
+              this.fetchStyleCache.set(fetchCSSParamWithDefaultValues.path, (fetchStyle = FetchCss.fetchStyle(fetchCSSParamWithDefaultValues.path, event.detail.node)))
+            }
           }
           // @ts-ignore
           fetchStyle.catch(
@@ -213,8 +219,8 @@ export default class FetchCss extends Shadow(WebWorker()) {
    * @param {import("../../prototypes/Shadow.js").fetchCSSParams} fetchCSSParam
    * @return {string}
    */
-  static cacheKeyGenerator ({ path, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl, replaces = [] }) {
-    return JSON.stringify({ path, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl, replaces })
+  static cacheKeyGenerator ({ path, style, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl, replaces = [] }) {
+    return JSON.stringify({ path, style, cssSelector, namespace, namespaceFallback, maxWidth, importMetaUrl, replaces })
   }
 
   /**

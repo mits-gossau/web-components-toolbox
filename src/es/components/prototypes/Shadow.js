@@ -222,9 +222,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @param {string} [maxWidth = this.mobileBreakpoint]
    * @param {HTMLElement & Shadow} [node = this]
    * @param {{pattern: string, flags: string, replacement: string}[]} [replaces = []]
-   * @return {string}
+   * @param {boolean} [useController = true]
+   * @return {string | Promise<string>}
    */
-  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true, maxWidth = this.mobileBreakpoint, node = this, replaces = []) {
+  setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true, maxWidth = this.mobileBreakpoint, node = this, replaces = [], useController = true) {
     if (!styleNode) {
     /** @type {HTMLStyleElement} */
       styleNode = document.createElement('style')
@@ -235,6 +236,20 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (appendStyleNode) node.root.appendChild(styleNode)
     if (!style) {
       return (styleNode.textContent = '')
+    // use controller to use FetchCSS to handle the regex processing and caching
+    } else if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-css') || 'fetch-css')) {
+      return this.fetchCSS([{
+        path: '',
+        cssSelector,
+        namespace,
+        namespaceFallback,
+        styleNode,
+        style,
+        appendStyleNode: false,
+        maxWidth,
+        importMetaUrl: this.importMetaUrl,
+        replaces
+      }], false).then(([fetchCSSParam]) => fetchCSSParam.style || '')
     } else {
       // !IMPORTANT: Changes which are made below have to be cloned to src/es/components/web-components-toolbox/src/es/components/controllers/fetchCss/FetchCss.js
       style = Shadow.cssMaxWidth(style, maxWidth)
@@ -491,7 +506,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
               }
               if (appendStyleNode) node.root.appendChild(styleNode) // append the style tag in order to which promise.all resolves
               // @ts-ignore
-              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node, replaces) }
+              return { ...fetchCSSParams[i], styleNode, appendStyleNode, node, style: this.setCss(style, cssSelector, namespace, namespaceFallback, styleNode, appendStyleNode, maxWidth, node, replaces, false) }
             }
           )
           if (hide) this.hidden = false
@@ -783,7 +798,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
           0%{opacity: 0}
           100%{opacity: 1}
         }
-      `, undefined, undefined, undefined, this._cssHidden)
+      `, undefined, undefined, undefined, this._cssHidden, undefined, undefined, undefined, undefined, false)
     super.hidden = value
   }
 
