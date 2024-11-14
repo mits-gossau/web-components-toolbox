@@ -2,7 +2,7 @@ const fs = require('fs')
 const traverse = require('@babel/traverse').default
 const { parse } = require('@babel/parser')
 
-function getCSSproperties(filePath, options = { sourceType: 'module' }) {
+function getCSSProperties(filePath, options = { sourceType: 'module' }) {
     const css = []
     try {
         const content = fs.readFileSync(filePath, 'utf8')
@@ -66,4 +66,4 @@ function extractProperty(inputText) {
     return null
 }
 
-module.exports = getCSSproperties 
+module.exports = getCSSProperties 
