@@ -744,6 +744,16 @@ export default class MultiLevelNavigation extends Mutation() {
             replacement: '--multi-level-navigation-delica-'
           }]
         }, ...styles], false)
+        case 'multi-level-navigation-cafe-royal-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./cafe-royal-/cafe-royal-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--multi-level-navigation-cafe-royal-',
+            flags: 'g',
+            replacement: '--multi-level-navigation-cafe-royal-'
+          }]
+        }, ...styles], false)
       default:
         return Promise.resolve()
     }
