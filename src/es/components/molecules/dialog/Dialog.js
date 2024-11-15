@@ -181,7 +181,7 @@ export default class Dialog extends Shadow() {
     }
     :host > dialog:modal {
       height: var(--dialog-height, fit-content);
-      min-height: var(--dialog-min-height, 470px);
+      min-height: var(--dialog-min-height, auto);
     }
     :host > dialog > input.hided-input {
       display:none;
