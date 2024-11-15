@@ -22,3 +22,9 @@ documenter
 ├── getCSSProperties.js   - X
 └── generateModified.js   - X
 ```
+
+## Resources
+- [AST Explorer](https://astexplorer.net/)
+- [Babel Parser](https://babeljs.io/docs/babel-parser)
+- [Babel Generator](https://babeljs.io/docs/babel-generator)
+- [Babel Traverse](https://babeljs.io/docs/babel-traverse)
