@@ -25,7 +25,7 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
     const data = {
         path: file,
         css: getCSSproperties(file).css, // Extract CSS properties from the file
-        namespaces: attr.namespaces,
+        templates: attr.templates,
         attributes: attr.attributes // Extract attribute names from the file
     }
 
@@ -36,8 +36,8 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
     // - Overwrite the original file with its modified version
     // - Write the JSON data to a new x.json file in the same directory as the original file
     await Promise.all([
-        // fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
-        // fs.promises.writeFile(`${path.dirname(file)}/x.json`, jsonData) // Write the JSON data to a file
+        fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
+        fs.promises.writeFile(`${path.dirname(file)}/x.json`, jsonData) // Write the JSON data to a file
     ])
 
     console.log(`manipulated file: ${file}`)

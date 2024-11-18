@@ -1,11 +1,10 @@
 const fs = require('fs')
 const traverse = require('@babel/traverse').default
-const { parse } = require('@babel/parser');
-const { log } = require('console');
+const { parse } = require('@babel/parser')
 
 function getAttributeNames(filePath, options = { sourceType: 'module' }) {
     const attributes = []
-    const namespaces = [];
+    const templates = []
     try {
         const content = fs.readFileSync(filePath, 'utf8')
         const ast = parse(content, {
@@ -14,6 +13,40 @@ function getAttributeNames(filePath, options = { sourceType: 'module' }) {
             plugins: ['jsx', 'typescript']
         })
         traverse(ast, {
+            ClassMethod(path) {
+                const name = path.node.key.name
+                if (name === 'fetchTemplate') {
+                    const switchCases = path.node.body.body.find(node => node.type === 'SwitchStatement').cases
+                    switchCases.forEach(caseNode => {
+                        let path = ''
+                        let namespace = ''
+                        caseNode.consequent.forEach(consequentNode => {
+                            if (consequentNode.type === 'ReturnStatement' && consequentNode.argument.type === 'CallExpression') { 
+                                const callExpression = consequentNode.argument;
+                                callExpression.arguments.forEach(arg => { 
+                                    if (arg.type === 'ArrayExpression') { 
+                                        arg.elements.forEach(element => { 
+                                            if (element.type === 'ObjectExpression') {
+                                                path = element.properties.find(prop => prop.key.name === 'path').value.quasis[1].value.cooked 
+                                                const d = path
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                        if (caseNode.test?.type === 'StringLiteral') {
+                            namespace = caseNode.test.value;
+                        }
+                        if (path !== '' || namespace !== '') {
+                            templates.push({
+                                namespace,
+                                path
+                            })
+                        }
+                    })
+                }
+            },
             CallExpression(path) {
                 const callee = path.node.callee
                 // If the expression is a call to a method on 'this' and that
@@ -22,36 +55,21 @@ function getAttributeNames(filePath, options = { sourceType: 'module' }) {
                 if (callee.type === 'MemberExpression' && callee.object.type === 'ThisExpression' && callee.property.name === 'getAttribute') {
                     // Get the attribute name that is being accessed.
                     const attributeName = path.node.arguments[0].value
-                    // Print out a message so that we can see where in the
-                    // code we're finding the attributes.
+                    // Print out a message so that we can see where in the code we're finding the attributes.
                     console.log(`found this.getAttribute('${attributeName}') at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
-                    if (attributeName === 'namespace' && path.parent.type === 'SwitchStatement') {
-                        path.parent.cases.forEach(caseNode => { 
-                            const returnStatement = caseNode.consequent.find(node => node.type === 'ReturnStatement');
-                            if (caseNode.test && returnStatement) {
-                                const namespace = caseNode.test.value;
-                                const pathExpression = returnStatement.object?.arguments[0]?.elements[0].properties[0].value.quasis[1].value 
-                                namespaces.push({
-                                    namespace,
-                                    path: pathExpression?.cooked,
-                                })
-                            }
-                        })
-                    }
                     // Add the attribute name to the list of found attributes.
                     attributes.push(attributeName)
                 }
-            } 
+            }
         })
-        console.log("--------",namespaces)
-    return {
-        attributes,
-        namespaces
+        return {
+            attributes,
+            templates
+        }
+    } catch (error) {
+        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
+        throw error
     }
-} catch (error) {
-    console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
-    throw error
-}
 }
 
 module.exports = getAttributeNames 
