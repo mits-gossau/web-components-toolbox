@@ -10,7 +10,7 @@
   --multi-level-navigation-cafe-royal-a-main-border-width: 3px;
   --multi-level-navigation-cafe-royal-a-main-border-style: solid;
   --multi-level-navigation-cafe-royal-desktop-main-wrapper-height: auto;
-  --multi-level-navigation-cafe-royal-desktop-main-wrapper-background-color: var(--background-color, white);
+  --multi-level-navigation-cafe-royal-desktop-main-wrapper-background-color: var(--color-secondary, white);
   --multi-level-navigation-cafe-royal-desktop-main-wrapper-border-width: 1px;
   --multi-level-navigation-cafe-royal-desktop-main-wrapper-border-style: solid;
   --multi-level-navigation-cafe-royal-desktop-main-wrapper-border-color: #E0E0E0;
@@ -125,7 +125,7 @@
 }
 
 :host li m-nav-level-item {
-  --nav-level-item-default-hover-color: var(--color-tertiary, blue);
+  --nav-level-item-default-hover-color: var(--color-active, blue);
 }
 
 .no-scroll {

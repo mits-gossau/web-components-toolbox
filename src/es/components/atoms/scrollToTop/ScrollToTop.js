@@ -75,7 +75,22 @@ export default class ScrollToTop extends Shadow() {
       case 'scroll-to-top-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
+          namespace: false,
+          replaces: [{
+            pattern: '--scroll-to-top-default-',
+            flags: 'g',
+            replacement: '--scroll-to-top-default-'
+          }]
+        }])
+      case 'scroll-to-top-cafe-royal-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./cafe-royal-/cafe-royal-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--scroll-to-top-cafe-royal-',
+            flags: 'g',
+            replacement: '--scroll-to-top-cafe-royal-'
+          }]
         }])
     }
   }
