@@ -304,6 +304,9 @@ export default class MultiLevelNavigation extends Mutation() {
       top: 0;
       opacity: 0;
     }
+    :host > nav > ul > li > template {
+      display: flex;
+    }
     :host > nav > ul > li.open > div.main-background {
       display: block;
     }
@@ -357,7 +360,7 @@ export default class MultiLevelNavigation extends Mutation() {
     :host > nav > ul > li > a:focus {
       color: var(--color-hover);
     }
-    :host > nav > ul > li > o-nav-wrapper {
+    :host > nav > ul > li > template > o-nav-wrapper {
       display: none !important;
       position: absolute;
       top: var(--o-nav-wrapper-top, 2em);
@@ -367,10 +370,10 @@ export default class MultiLevelNavigation extends Mutation() {
       border-top: var(--desktop-main-wrapper-border-width, 1px) var(--desktop-main-wrapper-border-style, solid) var(--desktop-main-wrapper-border-color, black);
       overflow: visible;
     }
-    :host > nav > ul > li.open > o-nav-wrapper {
+    :host > nav > ul > li.open > template > o-nav-wrapper {
       display: flex !important;
     }
-    :host > nav > ul > li > o-nav-wrapper div.wrapper-background {
+    :host > nav > ul > li > template > o-nav-wrapper div.wrapper-background {
       display: none;
       background-color: var(--desktop-main-wrapper-background-color, white);
       width: var(--desktop-main-wrapper-width, 100vw);
@@ -382,38 +385,38 @@ export default class MultiLevelNavigation extends Mutation() {
       margin-left: -50vw;
       margin-right: -50vw;
     }
-    :host > nav > ul > li > o-nav-wrapper.hide {
+    :host > nav > ul > li > template > o-nav-wrapper.hide {
       --show: slideOutToTop 0.3s ease-in-out forwards;
     }
-    :host > nav > ul > li.open > o-nav-wrapper.no-animation {
+    :host > nav > ul > li.open > template > o-nav-wrapper.no-animation {
       --show: none;
     }
-    :host > nav > ul > li.open > o-nav-wrapper div.wrapper-background {
+    :host > nav > ul > li.open > template > o-nav-wrapper div.wrapper-background {
       display: block;
     }
-    :host > nav > ul > li > o-nav-wrapper > section {
+    :host > nav > ul > li > template > o-nav-wrapper > section {
       --gap: 1.25em;
      padding: var(--multi-level-navigation-default-o-nav-wrapper-padding, 2em 0 1.5em 0);
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div {
       /* this setting is quite fragile here, we need to improve it for reusability */
       width: calc(calc(100% - 2 * var(--gap)) / 3) !important;
       position: relative;
       height: 100%;
       background-color: var(--sub-navigation-wrapper-background-color, white);
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div:first-of-type {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div:first-of-type {
       --show: none;
       z-index: 999;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div:not(:first-of-type) {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div:not(:first-of-type) {
       --show: desktopOpenLeft 0.3s ease-in-out forwards;
       z-index: 998;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div:last-of-type {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div:last-of-type {
       z-index: 997;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div:not(:last-of-type):after {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div:not(:last-of-type):after {
       display: block;
       content: '';
       background: var(--multi-level-navigation-default-desktop-main-wrapper-border-color, black);
@@ -423,19 +426,19 @@ export default class MultiLevelNavigation extends Mutation() {
       height: 100%;
       width: var(--multi-level-navigation-default-desktop-main-wrapper-border-width, 1px);
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div > ul {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div > ul {
       height: 100%;
       position: relative;
       overflow-y: auto;
       overflow-x: visible;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar {
       background-color: var(--multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-background-color, black);
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar-thumb {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar-thumb {
       background: var(--multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-thumb-background-color, black);
     }
-    :host > nav > ul > li > o-nav-wrapper > section .close-icon {
+    :host > nav > ul > li > template > o-nav-wrapper > section .close-icon {
       position: absolute;
       right: 0;
       top: 0.25em;
@@ -444,14 +447,14 @@ export default class MultiLevelNavigation extends Mutation() {
       --icon-link-list-color-hover: var(--color);
       --icon-link-list-show: none;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div > ul::-webkit-scrollbar {
       background-color: transparent;
       width: 5px;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar-thumb {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div > ul::-webkit-scrollbar-thumb {
       background: transparent;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div > ul > li.list-title {
       padding: 1em;
       --ul-li-padding-left: 0.75em;
       --a-font-weight: 500;
@@ -460,29 +463,29 @@ export default class MultiLevelNavigation extends Mutation() {
       --a-color-hover: var(--color-active);
       --line-height: 1.375rem;
     }
-    :host > nav > ul > li > o-nav-wrapper > section ul li {
+    :host > nav > ul > li > template > o-nav-wrapper > section ul li {
       --ul-li-padding-left: 0;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a > span {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div > ul > li.list-title > a > span {
       font-size: 0.8em !important;
       color: var(--color) !important;
       font-weight: 300 !important;
       padding-left: 0.5rem;
       line-height: 1.25rem;
     }
-    :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a:hover > span {
+    :host > nav > ul > li > template > o-nav-wrapper > section > div > ul > li.list-title > a:hover > span {
       text-decoration: underline;
       color: var(--color-active) !important;
     }
     @media only screen and (min-height: ${this.desktopHeightBreakpoint + 'px'}) {
-      :host > nav > ul > li > o-nav-wrapper,
-      :host > nav > ul > li > o-nav-wrapper div.wrapper-background {
+      :host > nav > ul > li > template > o-nav-wrapper,
+      :host > nav > ul > li > template > o-nav-wrapper div.wrapper-background {
         height: var(--desktop-main-wrapper-height, 50vh);
       }
     }
     @media only screen and (max-height: ${this.desktopHeightBreakpoint + 'px'}) {
-      :host > nav > ul > li > o-nav-wrapper,
-      :host > nav > ul > li > o-nav-wrapper div.wrapper-background {
+      :host > nav > ul > li > template > o-nav-wrapper,
+      :host > nav > ul > li > template > o-nav-wrapper div.wrapper-background {
         height: var(--mobile-main-wrapper-height, 60vh);
       }
     }
@@ -687,7 +690,7 @@ export default class MultiLevelNavigation extends Mutation() {
       --nav-level-item-default-font-weight: 500;
       --color: var(--a-color);
     }
-    :host > nav > ul > li > o-nav-wrapper {
+    :host > nav > ul > li > template > o-nav-wrapper {
       --show: slideInFromTop 0.3s ease-in-out forwards;
       --justify-content: start;
       --align-items: start;
@@ -1095,12 +1098,15 @@ export default class MultiLevelNavigation extends Mutation() {
             wrapper.root.appendChild(node)
           }
         })
-        section.replaceWith(wrapper)
+        
+        const contentTemplate = document.createElement('template')
+        contentTemplate.appendChild(wrapper)
+        section.replaceWith(contentTemplate)
 
         // add main background color dark if flyout open div
         const mainBackgroundDiv = document.createElement('div')
         mainBackgroundDiv.className = 'main-background'
-        wrapper.parentElement.prepend(mainBackgroundDiv)
+        contentTemplate.parentElement?.prepend(mainBackgroundDiv)
 
         // add full width background with div
         const wrapperBackgroundDiv = document.createElement('div')
