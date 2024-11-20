@@ -4,7 +4,6 @@ const { parse } = require('@babel/parser')
 
 function getAttributeNames(filePath, options = { sourceType: 'module' }) {
     const attributes = []
-    const templates = []
     try {
         const content = fs.readFileSync(filePath, 'utf8')
         const ast = parse(content, {
@@ -13,40 +12,6 @@ function getAttributeNames(filePath, options = { sourceType: 'module' }) {
             plugins: ['jsx', 'typescript']
         })
         traverse(ast, {
-            ClassMethod(path) {
-                const name = path.node.key.name
-                if (name === 'fetchTemplate') {
-                    const switchCases = path.node.body.body.find(node => node.type === 'SwitchStatement').cases
-                    switchCases.forEach(caseNode => {
-                        let path = ''
-                        let namespace = ''
-                        caseNode.consequent.forEach(consequentNode => {
-                            if (consequentNode.type === 'ReturnStatement' && consequentNode.argument.type === 'CallExpression') { 
-                                const callExpression = consequentNode.argument;
-                                callExpression.arguments.forEach(arg => { 
-                                    if (arg.type === 'ArrayExpression') { 
-                                        arg.elements.forEach(element => { 
-                                            if (element.type === 'ObjectExpression') {
-                                                path = element.properties.find(prop => prop.key.name === 'path').value.quasis[1].value.cooked 
-                                                const d = path
-                                            }
-                                        })
-                                    }
-                                })
-                            }
-                        })
-                        if (caseNode.test?.type === 'StringLiteral') {
-                            namespace = caseNode.test.value;
-                        }
-                        if (path !== '' || namespace !== '') {
-                            templates.push({
-                                namespace,
-                                path
-                            })
-                        }
-                    })
-                }
-            },
             CallExpression(path) {
                 const callee = path.node.callee
                 // If the expression is a call to a method on 'this' and that
@@ -62,10 +27,7 @@ function getAttributeNames(filePath, options = { sourceType: 'module' }) {
                 }
             }
         })
-        return {
-            attributes,
-            templates
-        }
+        return { attributes }
     } catch (error) {
         console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
         throw error

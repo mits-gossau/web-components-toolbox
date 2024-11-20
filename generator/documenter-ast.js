@@ -4,6 +4,7 @@ const path = require('path')
 const getAttributeNames = require('./documenter/getAttributes')
 const getCSSproperties = require('./documenter/getCSSProperties')
 const generateModified = require('./documenter/generateModified')
+const getTemplates = require('./documenter/getTemplates')
 
 const ROOT_DIR = '../src/es/components/'
 
@@ -17,7 +18,6 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
         `${ROOT_DIR}/contentful/**`  
     ]
 }).forEach(async file => {
-    const attr = getAttributeNames(file)
     // For each file found, prepare a data object containing:
     // - the file path
     // - CSS properties extracted from the file
@@ -25,8 +25,8 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
     const data = {
         path: file,
         css: getCSSproperties(file).css, // Extract CSS properties from the file
-        templates: attr.templates,
-        attributes: attr.attributes // Extract attribute names from the file
+        templates: getTemplates(file),
+        attributes: getAttributeNames(file).attributes // Extract attribute names from the file
     }
 
     // Convert the data object to a JSON string with indentation for readability
@@ -36,7 +36,7 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
     // - Overwrite the original file with its modified version
     // - Write the JSON data to a new x.json file in the same directory as the original file
     await Promise.all([
-        fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
+        // fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
         fs.promises.writeFile(`${path.dirname(file)}/x.json`, jsonData) // Write the JSON data to a file
     ])
 

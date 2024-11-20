@@ -12,15 +12,17 @@ This document provides an overview of the process of parsing and traversing Java
 
 
 
+
 ## Structure
 
-X
+The structure of the `documenter` is as follows:
 
 ```
 documenter
-├── getAttributes.js      - X
-├── getCSSProperties.js   - X
-└── generateModified.js   - X
+├── getAttributes.js      - Extracts all attributes => this.getAttribute()
+├── getTemplates.js       - Extracts all templates/namespaces from fetchTemplate()
+├── getCSSProperties.js   - Extracts all CSS Properties => :host
+└── generateModified.js   - Generates a modified version of the given web component
 ```
 
 ## Resources
