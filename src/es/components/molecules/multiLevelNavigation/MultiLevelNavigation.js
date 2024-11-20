@@ -833,7 +833,7 @@ export default class MultiLevelNavigation extends Mutation() {
           }
         })
       }
-      if (wrapper.parentElement.classList.contains('open')) {
+      if (wrapper.parentElement.parentElement.classList.contains('open')) {
         wrapper.classList.remove('no-animation')
       }
     })
@@ -884,6 +884,7 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   htmlReBuilderByLayoutChange () {
+    console.log("changes")
     const currentNav = this.root.querySelector('nav')
     if (this.isDesktop) {
       // set nav element from mobile to desktop compatible
