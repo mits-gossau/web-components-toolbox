@@ -105,7 +105,7 @@
 }
 
 :host .wrapper-background {
-  --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-background-color: #172445;
+  --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-background-color: var(--color-tertiary);
 }
 
 :host>nav>ul {
@@ -121,11 +121,11 @@
 
 :host a-icon-mdx {
   --icon-link-list-color: var(--multi-level-navigation-delica-icon-color, black);
-  --icon-link-list-color-hover: var(--multi-level-navigation-delica-icon-color-hover, var(--color-tertiary, white));
+  --icon-link-list-color-hover: var(--multi-level-navigation-delica-icon-color-hover, var(--color-secondary, white));
 }
 
 :host li m-nav-level-item {
-  --nav-level-item-default-hover-color: var(--color-tertiary, blue);
+  --nav-level-item-default-hover-color: var(--color-secondary, blue);
 }
 
 .no-scroll {
@@ -166,7 +166,7 @@
   }
 
   :host>nav {
-    background-color: #172445;
+    background-color: var(--color-tertiary);
     display: flex;
     align-items: flex-start;
   }
