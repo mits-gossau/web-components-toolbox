@@ -24,9 +24,9 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
     // - attribute names extracted from the file
     const data = {
         path: file,
-        css: getCSSproperties(file).css, // Extract CSS properties from the file
         templates: getTemplates(file),
-        attributes: getAttributeNames(file).attributes // Extract attribute names from the file
+        attributes: getAttributeNames(file), // Extract attribute names from the file
+        css: getCSSproperties(file).css // Extract CSS properties from the file
     }
 
     // Convert the data object to a JSON string with indentation for readability

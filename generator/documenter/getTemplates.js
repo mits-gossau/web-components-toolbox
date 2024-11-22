@@ -4,7 +4,7 @@ const { parse } = require('@babel/parser')
 const t = require('@babel/types');
 
 function getTemplates(filePath, options = { sourceType: 'module' }) {
-    const result = []
+    const templates = []
     try {
         const content = fs.readFileSync(filePath, 'utf8')
         const ast = parse(content, {
@@ -23,8 +23,9 @@ function getTemplates(filePath, options = { sourceType: 'module' }) {
                                 if (templateName) {
                                     path.traverse({
                                         ObjectExpression(path) {
-                                            if (path.node.properties[0].value.quasis) {
-                                                result.push({ name: templateName, path: path.node.properties[0].value.quasis[1].value.cooked })
+                                            const quasis = path.node.properties[0]?.value?.quasis;
+                                            if (quasis?.[1]?.value?.cooked) {
+                                                templates.push({ name: templateName, path: quasis[1].value.cooked });
                                             }
                                         }
                                     })
@@ -36,9 +37,10 @@ function getTemplates(filePath, options = { sourceType: 'module' }) {
                 }
             }
         })
-        return result
+        return [...new Set(templates)]
+
     } catch (error) {
-        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
+        console.error(`Error parsing file: ${filePath} - ${error.message}`)
         throw error
     }
 }

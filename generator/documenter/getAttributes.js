@@ -3,7 +3,7 @@ const traverse = require('@babel/traverse').default
 const { parse } = require('@babel/parser')
 
 function getAttributeNames(filePath, options = { sourceType: 'module' }) {
-    const attributes = []
+    const attributes = [] 
     try {
         const content = fs.readFileSync(filePath, 'utf8')
         const ast = parse(content, {
@@ -27,9 +27,9 @@ function getAttributeNames(filePath, options = { sourceType: 'module' }) {
                 }
             }
         })
-        return { attributes }
+        return [...new Set(attributes)]
     } catch (error) {
-        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
+        console.error(`Error parsing file: ${filePath} - ${error.message}`)
         throw error
     }
 }

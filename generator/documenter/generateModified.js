@@ -45,7 +45,7 @@ function generateModified(filePath, options = { sourceType: 'module' }) {
         const { code } = generate(ast)
         return code
     } catch (error) {
-        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
+        console.error(`Error manipulating file: ${filePath} - ${error.message}`)
         throw error
     }
 }

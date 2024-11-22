@@ -31,8 +31,7 @@ function getCSSProperties(filePath, options = { sourceType: 'module' }) {
                     // Filter out any invalid or empty properties
                     const props = properties.map(property => extractProperty(property)).filter(prop => prop)
                     // Create an object containing the selector and its properties, and push it to the 'css' array
-                    const dx = { selector, props }
-                    css.push(dx)
+                    css.push({ selector, props })
                 }
             }
         })
@@ -41,7 +40,7 @@ function getCSSProperties(filePath, options = { sourceType: 'module' }) {
             css
         }
     } catch (error) {
-        console.error(`Error parsing or manipulating file: ${filePath} - ${error.message}`)
+        console.error(`Error parsing file: ${filePath} - ${error.message}`)
         throw error
     }
 }
