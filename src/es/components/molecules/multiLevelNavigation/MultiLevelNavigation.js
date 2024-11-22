@@ -119,29 +119,8 @@ export default class MultiLevelNavigation extends Mutation() {
     this.aMainLinkHoverListener = event => {
       if (event.currentTarget) {
         let template
-        if ((template = event.currentTarget.parentElement.querySelector('li > template')) || event.currentTarget.parentElement.querySelector('li > section')) {
-          if (template) {
-            const templateContent = template.content
-            const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
-            if (notDefined?.length) {
-              if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
-                this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
-                  detail: {
-                    nodes: notDefined
-                  },
-                  bubbles: true,
-                  cancelable: true,
-                  composed: true
-                }))
-              } else {
-                console.error(
-                  'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
-                  notDefined,
-                  this
-                )
-              }
-            }
-          }
+        if ((template = event.currentTarget.parentElement.querySelector('li > template'))) {
+          if (template) this.setLoadCustomElementsAttribute(template)
           this.fetchModules([
             {
               path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
@@ -975,35 +954,20 @@ export default class MultiLevelNavigation extends Mutation() {
         this.hideMobileNavigation()
       }, this.removeElementAfterAnimationDurationMs)
     } else if (this.getAttribute('aria-expanded') === 'true') {
-      let templates = Array.from(navElement.querySelectorAll('ul > li > template'))
-      // @ts-ignore
-      if (templates.length) {
-        templates.forEach(template => {
-          const templateContent = template.content
-          const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
-          if (notDefined?.length) {
-            if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
-              this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
-                detail: {
-                  nodes: notDefined
-                },
-                bubbles: true,
-                cancelable: true,
-                composed: true
-              }))
-            } else {
-              console.error(
-                'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
-                notDefined,
-                this
-              )
-            }
-          }
-          template.replaceWith(...template.content.childNodes)
-        })
-        this.fillMobileNavigation()
-      }
-      this.showMobileNavigation()
+      new Promise(resolve => {
+        let templates = Array.from(navElement.querySelectorAll('ul > li > template'))
+        // @ts-ignore
+        if (templates.length) {
+          templates.forEach(template => {
+            this.setLoadCustomElementsAttribute(template)
+            template.replaceWith(...template.content.childNodes)
+          })
+          this.fillMobileNavigation()
+        }
+        resolve('done');
+      }).then((_) => {
+        this.showMobileNavigation()
+      })
     }
   }
 
@@ -1014,6 +978,8 @@ export default class MultiLevelNavigation extends Mutation() {
       const mainATags = Array.from(currentNav.querySelectorAll('nav > ul > li > a'))
       const mobileSubNavs = Array.from(currentNav.querySelectorAll('nav > div[nav-level]'))
       const mainSections = Array.from(currentNav.querySelectorAll('nav > ul > li > section'))
+      const menuIconElement = currentNav.querySelector('a-menu-icon')
+      if (menuIconElement) menuIconElement.setAttribute('aria-hidden', 'true')
 
       if (mainSections.length > 0) {
         mainSections.forEach(section => {
@@ -1040,6 +1006,8 @@ export default class MultiLevelNavigation extends Mutation() {
       const desktopOWrappers = Array.from(currentNav.querySelectorAll('o-nav-wrapper'))
       const allCurrentHoveredElement = Array.from(currentNav.querySelectorAll('.hover-active'))
       const desktopMainFlyoutBackgrounds = Array.from(currentNav.querySelectorAll('div.main-background'))
+      const menuIconElement = currentNav.querySelector('a-menu-icon')
+      if (menuIconElement) menuIconElement.setAttribute('aria-hidden', 'false')
       if (desktopOWrappers.length > 0) {
         desktopOWrappers.forEach(wrapper => {
           // remove close icon append section
@@ -1427,5 +1395,28 @@ export default class MultiLevelNavigation extends Mutation() {
       }
     }, 500)
 
+  }
+
+  setLoadCustomElementsAttribute(template) {
+    const templateContent = template.content
+    const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
+    if (notDefined?.length) {
+      if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
+        this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
+          detail: {
+            nodes: notDefined
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      } else {
+        console.error(
+          'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+          notDefined,
+          this
+        )
+      }
+    }
   }
 }
