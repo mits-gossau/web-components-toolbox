@@ -25,17 +25,14 @@ export default class LoadTemplateTag extends Intersection() {
   }
 
   connectedCallback () {
-    super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
-    if (!this.intersecting) {
-      this.intersecting = this.shouldRenderHTML()
-        ? this.renderHTML
-        : () =>
-            console.warn(
-              'No required template tag found within this component: ',
-              this
-            )
-    }
+    if (!this.intersecting) this.intersecting = this.shouldRenderHTML()
+      ? this.renderHTML
+      : () => console.warn(
+        'No required template tag found within this component: ',
+        this
+      )
+    super.connectedCallback()
   }
 
   intersectionCallback (entries, observer) {
