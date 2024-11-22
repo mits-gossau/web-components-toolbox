@@ -10,7 +10,7 @@ function generateModified(filePath, options = { sourceType: 'module' }) {
             ...options,
             sourceFilename: filePath,
             plugins: ['jsx', 'typescript']
-        });
+        })
 
         traverse(ast, {
             // example visitor to add a "console.log" statement at the beginning of each file
@@ -34,14 +34,13 @@ function generateModified(filePath, options = { sourceType: 'module' }) {
                             {
                                 type: 'StringLiteral',
                                 value: 'File loaded',
-                            },
-                        ],
-                    },
-                };
+                            }
+                        ]
+                    }
+                }
                 path.unshiftContainer('body', consoleLogStatement)
-            },
-        });
-
+            }
+        })
         const { code } = generate(ast)
         return code
     } catch (error) {

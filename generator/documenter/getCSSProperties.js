@@ -35,10 +35,7 @@ function getCSSProperties(filePath, options = { sourceType: 'module' }) {
                 }
             }
         })
-
-        return {
-            css
-        }
+        return { css }
     } catch (error) {
         console.error(`Error parsing file: ${filePath} - ${error.message}`)
         throw error

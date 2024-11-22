@@ -1,7 +1,7 @@
 const fs = require('fs')
 const traverse = require('@babel/traverse').default
 const { parse } = require('@babel/parser')
-const t = require('@babel/types');
+const t = require('@babel/types')
 
 function getTemplates(filePath, options = { sourceType: 'module' }) {
     const templates = []
@@ -23,9 +23,9 @@ function getTemplates(filePath, options = { sourceType: 'module' }) {
                                 if (templateName) {
                                     path.traverse({
                                         ObjectExpression(path) {
-                                            const quasis = path.node.properties[0]?.value?.quasis;
+                                            const quasis = path.node.properties[0]?.value?.quasis
                                             if (quasis?.[1]?.value?.cooked) {
-                                                templates.push({ name: templateName, path: quasis[1].value.cooked });
+                                                templates.push({ name: templateName, path: quasis[1].value.cooked })
                                             }
                                         }
                                     })
@@ -38,7 +38,6 @@ function getTemplates(filePath, options = { sourceType: 'module' }) {
             }
         })
         return [...new Set(templates)]
-
     } catch (error) {
         console.error(`Error parsing file: ${filePath} - ${error.message}`)
         throw error

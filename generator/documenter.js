@@ -32,12 +32,16 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
     // Convert the data object to a JSON string with indentation for readability
     const jsonData = JSON.stringify(data, null, 2)
 
+
+    const basename = file.split('/').pop() // Get the last part of the path
+    const filenameWithoutExtension = basename.split('.').slice(0, -1).join('.') // Remove the extension
+    
     // Perform both file write operations concurrently:
     // - Overwrite the original file with its modified version
     // - Write the JSON data to a new x.json file in the same directory as the original file
     await Promise.all([
         // fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
-        fs.promises.writeFile(`${path.dirname(file)}/x.json`, jsonData) // Write the JSON data to a file
+        fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.json`, jsonData) // Write the JSON data to a file
     ])
 
     console.log(`manipulated file: ${file}`)
