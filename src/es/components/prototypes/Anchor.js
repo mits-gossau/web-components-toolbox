@@ -45,7 +45,7 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
             cancelable: true,
             composed: true
           }))
-        }, 500) // lazy loading pics make this necessary to reach target
+        }, 1000) // lazy loading pics make this necessary to reach target
       }
     }
 
