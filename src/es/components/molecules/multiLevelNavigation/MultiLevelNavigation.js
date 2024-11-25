@@ -1176,7 +1176,10 @@ export default class MultiLevelNavigation extends Mutation() {
   renderDesktopHTML() {
     Array.from(this.root.querySelectorAll('a')).forEach(a => {
       a.addEventListener('click', this.aLinkClickListener)
-      if (!a.parentElement.hasAttribute(('only-mobile'))) a.addEventListener('mouseover', this.aMainLinkHoverListener)
+      if (!a.parentElement.hasAttribute(('only-mobile'))) {
+        a.addEventListener('mouseover', this.aMainLinkHoverListener, {once: true})
+        a.addEventListener('focus', this.aMainLinkHoverListener, {once: true})
+      }
     })
     Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
       node.style.display = 'none'
