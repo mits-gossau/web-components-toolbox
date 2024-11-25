@@ -105,7 +105,7 @@
 }
 
 :host .wrapper-background {
-  --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-background-color: var(--color-tertiary);
+  --multi-level-navigation-delica-multi-level-navigation-default-desktop-main-wrapper-background-color: var(--color-tertiary, black);
 }
 
 :host>nav>ul {
@@ -166,7 +166,7 @@
   }
 
   :host>nav {
-    background-color: var(--color-tertiary);
+    background-color: var(--color-tertiary, black);
     display: flex;
     align-items: flex-start;
   }
