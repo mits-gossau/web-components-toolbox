@@ -20,7 +20,7 @@
 }
 
 :host>header>a-logo {
-    --logo-default-height: auto;
+    --logo-default-height: 7em;
     --logo-default-width: 10rem;
     --logo-default-justify-content: start;
     grid-area: logo;
