@@ -1191,7 +1191,6 @@ export default class MultiLevelNavigation extends Mutation() {
 
   renderMobileHTML() {
     document.body.addEventListener("touchstart", (event) => {
-      console.log("hey")
       // @ts-ignore
       if (event.composedPath().find(el => el.tagName === 'A-MENU-ICON')) this.openAnimationDelayNeeded = true
       else this.openAnimationDelayNeeded = false
