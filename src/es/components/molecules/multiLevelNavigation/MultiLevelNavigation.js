@@ -82,7 +82,17 @@ export default class MultiLevelNavigation extends Mutation() {
           this.setActiveNavigationItemBasedOnUrl()
         }, 150)
       }
-      if (!this.isDesktop) this.hideAndClearMobileSubNavigation()
+      if (!this.isDesktop) {
+        if (this.openAnimationDelayNeeded) {
+          this.openAnimationDelayNeeded = false
+          setTimeout(() => {
+            this.hideAndClearMobileSubNavigation()
+          }, 125)
+        } else {
+          this.openAnimationDelayNeeded = false
+          this.hideAndClearMobileSubNavigation()
+        }
+      }
     }
 
     this.aLinkClickListener = event => {
@@ -953,22 +963,9 @@ export default class MultiLevelNavigation extends Mutation() {
         })
         this.hideMobileNavigation()
       }, this.removeElementAfterAnimationDurationMs)
-    } else if (this.getAttribute('aria-expanded') === 'true') {
-      new Promise(resolve => {
-        let templates = Array.from(navElement.querySelectorAll('ul > li > template'))
-        // @ts-ignore
-        if (templates.length) {
-          templates.forEach(template => {
-            this.setLoadCustomElementsAttribute(template)
-            template.replaceWith(...template.content.childNodes)
-          })
-          this.fillMobileNavigation()
-        }
-        resolve('done');
-      }).then((_) => {
-        this.showMobileNavigation()
-      })
-    }
+    } else if (this.getAttribute('aria-expanded') === 'true') this.showMobileNavigation()
+
+
   }
 
   htmlReBuilderByLayoutChange() {
@@ -1177,8 +1174,8 @@ export default class MultiLevelNavigation extends Mutation() {
     Array.from(this.root.querySelectorAll('a')).forEach(a => {
       a.addEventListener('click', this.aLinkClickListener)
       if (!a.parentElement.hasAttribute(('only-mobile'))) {
-        a.addEventListener('mouseover', this.aMainLinkHoverListener, {once: true})
-        a.addEventListener('focus', this.aMainLinkHoverListener, {once: true})
+        a.addEventListener('mouseover', this.aMainLinkHoverListener, { once: true })
+        a.addEventListener('focus', this.aMainLinkHoverListener, { once: true })
       }
     })
     Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
@@ -1193,10 +1190,26 @@ export default class MultiLevelNavigation extends Mutation() {
   }
 
   renderMobileHTML() {
-    Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
-    Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
-      node.style.display = 'block'
-    })
+    document.addEventListener("touchstart", (event) => {
+      // @ts-ignore
+      if (event.composedPath().find(el => el.tagName === 'A-MENU-ICON')) this.openAnimationDelayNeeded = true
+      else this.openAnimationDelayNeeded = false
+
+      Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+      Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
+        node.style.display = 'block'
+      })
+      const navElement = this.root.querySelector('nav')
+      let templates = Array.from(navElement.querySelectorAll('ul > li > template'))
+      // @ts-ignore
+      if (templates.length) {
+        templates.forEach(template => {
+          this.setLoadCustomElementsAttribute(template)
+          template.replaceWith(...template.content.childNodes)
+        })
+        this.fillMobileNavigation()
+      }
+    }, { once: true })
     this.html = this.style
   }
 
@@ -1397,7 +1410,6 @@ export default class MultiLevelNavigation extends Mutation() {
         })
       }
     }, 500)
-
   }
 
   setLoadCustomElementsAttribute(template) {
