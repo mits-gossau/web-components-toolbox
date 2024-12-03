@@ -166,7 +166,7 @@
   }
 
   :host>nav {
-    background-color: var(--color-tertiary, black);
+    background-color: var(--multi-level-navigation-delica-nav-background-color-mobile-custom, var(--color-tertiary, black));
     display: flex;
     align-items: flex-start;
   }
