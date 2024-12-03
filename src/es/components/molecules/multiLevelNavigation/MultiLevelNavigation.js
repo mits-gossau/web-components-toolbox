@@ -87,7 +87,7 @@ export default class MultiLevelNavigation extends Mutation() {
           this.openAnimationDelayNeeded = false
           setTimeout(() => {
             this.hideAndClearMobileSubNavigation()
-          }, 125)
+          }, 200)
         } else {
           this.openAnimationDelayNeeded = false
           this.hideAndClearMobileSubNavigation()
@@ -130,7 +130,7 @@ export default class MultiLevelNavigation extends Mutation() {
       if (event.currentTarget) {
         let template
         if ((template = event.currentTarget.parentElement.querySelector('li > template'))) {
-          if (template) this.setLoadCustomElementsAttribute(template)
+          this.setLoadCustomElementsAttribute(template)
           this.fetchModules([
             {
               path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
