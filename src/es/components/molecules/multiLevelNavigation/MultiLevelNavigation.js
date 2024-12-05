@@ -18,7 +18,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * }
  */
 export default class MultiLevelNavigation extends Mutation() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
@@ -82,7 +82,17 @@ export default class MultiLevelNavigation extends Mutation() {
           this.setActiveNavigationItemBasedOnUrl()
         }, 150)
       }
-      if (!this.isDesktop) this.hideAndClearMobileSubNavigation()
+      if (!this.isDesktop) {
+        if (this.openAnimationDelayNeeded) {
+          this.openAnimationDelayNeeded = false
+          setTimeout(() => {
+            this.hideAndClearMobileSubNavigation()
+          }, 200)
+        } else {
+          this.openAnimationDelayNeeded = false
+          this.hideAndClearMobileSubNavigation()
+        }
+      }
     }
 
     this.aLinkClickListener = event => {
@@ -112,6 +122,81 @@ export default class MultiLevelNavigation extends Mutation() {
             if (event.currentTarget.parentNode.hasAttribute('sub-nav')) this.handleOnClickOnMobileSubNavItems(event)
           } else if (event.currentTarget.getAttribute('href').includes('#')) this.handleAnchorClickOnNavItems(event)
           else if (event.currentTarget.getAttribute('href')) this.handleNewTabNavigationOnNavItems(event)
+        }
+      }
+    }
+
+    this.aMainLinkHoverListener = event => {
+      if (event.currentTarget) {
+        let template
+        if ((template = event.currentTarget.parentElement.querySelector('li > template'))) {
+          this.setLoadCustomElementsAttribute(template)
+          this.fetchModules([
+            {
+              path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
+              name: this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'
+            }
+          ]).then(children => {
+            Array.from(template.content.querySelectorAll('section')).forEach((section, i) => {
+              const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint })
+              // eslint-disable - line
+              wrapper.setAttribute('id', `nav-section-${i}`)
+              const sectionChildren = Array.from(section.children)
+              sectionChildren.forEach((node) => {
+                if (!node.getAttribute('slot')) {
+                  if (+node.getAttribute('nav-level') === 1) node.querySelector('ul').setAttribute('id', 'nav-level-1')
+                  wrapper.root.appendChild(node)
+                }
+              })
+              template.replaceWith(wrapper)
+              // add main background color dark if flyout open div
+              const mainBackgroundDiv = document.createElement('div')
+              mainBackgroundDiv.className = 'main-background'
+              wrapper.parentElement.prepend(mainBackgroundDiv)
+
+              // add full width background with div
+              const wrapperBackgroundDiv = document.createElement('div')
+              wrapperBackgroundDiv.className = 'wrapper-background'
+              wrapper.prepend(wrapperBackgroundDiv)
+
+              // add close icon to all flyout
+              const closeIconElement = document.createElement('a')
+              closeIconElement.innerHTML = /* HTML */`
+         <a-icon-mdx namespace='icon-link-list-' icon-name='X' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
+         `
+              closeIconElement.classList.add('close-icon')
+              wrapper.querySelector('section').appendChild(closeIconElement)
+
+              // Add class for title li a element
+              const subTitleLiTags = Array.from(wrapper.querySelectorAll('li')).filter(li => !li.querySelector('m-nav-level-item'))
+              subTitleLiTags.forEach(li => {
+                li.classList.add('list-title')
+                li.childNodes[0].nextElementSibling && li.childNodes[0].nextElementSibling.firstChild
+                  ? li.childNodes[0].nextElementSibling.firstChild.textContent = li.childNodes[0].nextElementSibling.firstChild.textContent.trim()
+                  : null
+              }
+              )
+
+              // add subUl id based on sub-nav-id to have aria-controls connection
+              const subUlElements = Array.from(wrapper.querySelectorAll('ul')).filter(ul => ul.hasAttribute('sub-nav-id'))
+              subUlElements.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
+
+              // Add listener if there is an attribute on this element
+              const subLiElements = Array.from(wrapper.querySelectorAll('li')).filter(li => li.querySelector('m-nav-level-item'))
+              subLiElements.forEach(li => {
+                // set aria attributes where needed
+                if (li.hasAttribute('sub-nav')) {
+                  li.setAttribute('aria-expanded', 'false')
+                  li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`)
+                }
+                // add hover listener when needed
+                if (this.useHoverListener) {
+                  li.addEventListener('mouseenter', this.subLiHoverListener)
+                  li.currentWrapper = wrapper
+                }
+              })
+            })
+          })
         }
       }
     }
@@ -207,7 +292,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
@@ -239,11 +324,14 @@ export default class MultiLevelNavigation extends Mutation() {
     this.setMainNavigationFontSize()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
-    Array.from(this.root.querySelectorAll('a')).forEach(a => a.removeEventListener('click', this.aLinkClickListener))
+    Array.from(this.root.querySelectorAll('a')).forEach(a => {
+      a.removeEventListener('click', this.aLinkClickListener)
+      a.removeEventListener('click', this.aMainLinkHoverListener)
+    })
     this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.removeEventListener('blur', this.noScroll))
     super.disconnectedCallback()
   }
@@ -253,7 +341,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -262,7 +350,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.nav
   }
 
@@ -271,7 +359,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {Promise<void>|void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host {
       color: black;
@@ -711,7 +799,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import('../../prototypes/Shadow.js').fetchCSSParams[]} */
     const styles = [
       {
@@ -754,7 +842,7 @@ export default class MultiLevelNavigation extends Mutation() {
    *
    * @return {Promise<void>|void}
    */
-  renderHTML (clonedNav) {
+  renderHTML(clonedNav) {
     this.nav = clonedNav || this.root.querySelector('nav') || document.createElement('nav')
     this.nav.setAttribute('aria-labelledby', 'hamburger')
     this.nav.setAttribute('aria-expanded', 'false')
@@ -783,12 +871,12 @@ export default class MultiLevelNavigation extends Mutation() {
    * @returns {boolean}
    * @memberof IntersectionScrollEffect
    */
-  checkMedia (media = this.getAttribute('media')) {
+  checkMedia(media = this.getAttribute('media')) {
     const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
     return (isMobile ? 'mobile' : 'desktop') === media
   }
 
-  get style () {
+  get style() {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
@@ -796,7 +884,7 @@ export default class MultiLevelNavigation extends Mutation() {
     })())
   }
 
-  addCustomColors () {
+  addCustomColors() {
     Array.from(this.root.querySelectorAll('li')).forEach(li => {
       if (li.hasAttribute('main-color')) {
         li.style.setProperty('--multi-level-navigation-default-color-active', li.getAttribute('main-color'))
@@ -808,7 +896,7 @@ export default class MultiLevelNavigation extends Mutation() {
     })
   }
 
-  hideAndClearDesktopSubNavigation (event) {
+  hideAndClearDesktopSubNavigation(event) {
     const navWrappers = Array.from(this.root.querySelectorAll('o-nav-wrapper'))
     const allOpenLiTags = Array.from(this.root.querySelectorAll('li.open'))
     const allActiveLiTags = Array.from(this.root.querySelectorAll('li.active'))
@@ -858,7 +946,7 @@ export default class MultiLevelNavigation extends Mutation() {
     allActiveLiTags.forEach(li => li.classList.remove('active'))
   }
 
-  hideAndClearMobileSubNavigation () {
+  hideAndClearMobileSubNavigation() {
     const navElement = this.root.querySelector('nav')
     const navElementChildren = Array.from(navElement.children)
     if (this.getAttribute('aria-expanded') === 'false' && navElementChildren.length) {
@@ -875,17 +963,30 @@ export default class MultiLevelNavigation extends Mutation() {
         })
         this.hideMobileNavigation()
       }, this.removeElementAfterAnimationDurationMs)
-    } else if (this.getAttribute('aria-expanded') === 'true') {
-      this.showMobileNavigation()
-    }
+    } else if (this.getAttribute('aria-expanded') === 'true') this.showMobileNavigation()
+
+
   }
 
-  htmlReBuilderByLayoutChange () {
+  htmlReBuilderByLayoutChange() {
     const currentNav = this.root.querySelector('nav')
     if (this.isDesktop) {
       // set nav element from mobile to desktop compatible
       const mainATags = Array.from(currentNav.querySelectorAll('nav > ul > li > a'))
       const mobileSubNavs = Array.from(currentNav.querySelectorAll('nav > div[nav-level]'))
+      const mainSections = Array.from(currentNav.querySelectorAll('nav > ul > li > section'))
+      const menuIconElement = currentNav.querySelector('a-menu-icon')
+      if (menuIconElement) menuIconElement.setAttribute('aria-hidden', 'true')
+
+      if (mainSections.length > 0) {
+        mainSections.forEach(section => {
+          section.removeAttribute('hidden')
+          let templateWrapper = document.createElement('template')
+          section.parentNode.insertBefore(templateWrapper, section)
+          templateWrapper.content.appendChild(section)
+        })
+      }
+
       if (mainATags.length > 0) {
         mainATags.forEach(a => {
           const aTagChildren = Array.from(a.children)
@@ -893,6 +994,7 @@ export default class MultiLevelNavigation extends Mutation() {
           if (aTagChildren.length && aTagMDXIcon) aTagMDXIcon.parentElement.removeChild(aTagMDXIcon)
         })
       }
+
       if (mobileSubNavs.length > 0) {
         mobileSubNavs.forEach(subNav => subNav.parentElement.removeChild(subNav))
       }
@@ -901,6 +1003,8 @@ export default class MultiLevelNavigation extends Mutation() {
       const desktopOWrappers = Array.from(currentNav.querySelectorAll('o-nav-wrapper'))
       const allCurrentHoveredElement = Array.from(currentNav.querySelectorAll('.hover-active'))
       const desktopMainFlyoutBackgrounds = Array.from(currentNav.querySelectorAll('div.main-background'))
+      const menuIconElement = currentNav.querySelector('a-menu-icon')
+      if (menuIconElement) menuIconElement.setAttribute('aria-hidden', 'false')
       if (desktopOWrappers.length > 0) {
         desktopOWrappers.forEach(wrapper => {
           // remove close icon append section
@@ -928,7 +1032,7 @@ export default class MultiLevelNavigation extends Mutation() {
     this.renderHTML(currentNav)
   }
 
-  setScrollOnBody (isScrollOnBodyEnabled, event) {
+  setScrollOnBody(isScrollOnBodyEnabled, event) {
     if (event.target.nodeName !== 'O-BODY') {
       this.dispatchEvent(new CustomEvent(this.getAttribute('no-scroll') || 'no-scroll', {
         detail: {
@@ -943,13 +1047,12 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  setDesktopMainNavItems (event) {
+  setDesktopMainNavItems(event) {
     const isOpen = event.currentTarget.classList.contains('open')
     let isFlyoutOpen = false
     event.preventDefault()
     event.stopPropagation()
     if (this.hasAttribute('no-scroll')) this.setScrollOnBody(true, event)
-
     // clean state between main li switching
     if (event.currentTarget.parentNode?.parentNode?.parentNode?.tagName === 'NAV') {
       const logoWidth = Math.ceil(this.parentElement.querySelector('a-logo').getBoundingClientRect().width) + 'px'
@@ -970,7 +1073,7 @@ export default class MultiLevelNavigation extends Mutation() {
     if (isFlyoutOpen) event.currentTarget.parentElement.querySelector('o-nav-wrapper').classList.add('no-animation')
   }
 
-  setMobileMainNavItems (event) {
+  setMobileMainNavItems(event) {
     // set the currently clicked/touched aria expanded attribute
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
 
@@ -985,7 +1088,7 @@ export default class MultiLevelNavigation extends Mutation() {
     activeFirstLevelSubNav.classList.add('open-right-slide')
   }
 
-  handleOnClickOnDesktopSubNavItems (event) {
+  handleOnClickOnDesktopSubNavItems(event) {
     const wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
     const wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
     const wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll('ul'))
@@ -1020,7 +1123,7 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  handleAnchorClickOnNavItems (event) {
+  handleAnchorClickOnNavItems(event) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('click-anchor') || 'click-anchor', {
       detail: {
         selector: event.currentTarget.getAttribute('href')
@@ -1031,13 +1134,13 @@ export default class MultiLevelNavigation extends Mutation() {
     }))
   }
 
-  handleNewTabNavigationOnNavItems (event) {
+  handleNewTabNavigationOnNavItems(event) {
     event.preventDefault()
     setTimeout(() => this.removeAttribute('style'), 3000)
     self.open(event.currentTarget.getAttribute('href'), event.currentTarget.getAttribute('target') || '_self')
   }
 
-  handleOnClickOnMobileSubNavItems (event) {
+  handleOnClickOnMobileSubNavItems(event) {
     const wrapperDiv = event.currentTarget.parentElement.parentElement.parentElement
     const wrapperDivNextSiblingDiv = wrapperDiv.nextSibling
     const wrapperDivNextSiblingDivUls = Array.from(wrapperDivNextSiblingDiv.querySelectorAll('ul'))
@@ -1067,93 +1170,138 @@ export default class MultiLevelNavigation extends Mutation() {
     }
   }
 
-  renderDesktopHTML () {
-    return this.fetchModules([
-      {
-        path: `${this.importMetaUrl}'../../../../organisms/wrapper/Wrapper.js`,
-        name: this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'
+  renderDesktopHTML() {
+    Array.from(this.root.querySelectorAll('a')).forEach(a => {
+      a.addEventListener('click', this.aLinkClickListener)
+      if (!a.parentElement.hasAttribute(('only-mobile'))) {
+        a.addEventListener('mouseover', this.aMainLinkHoverListener, { once: true })
+        a.addEventListener('focus', this.aMainLinkHoverListener, { once: true })
       }
-    ]).then(children => {
-      Array.from(this.root.querySelectorAll('a')).forEach(a => {
-        a.addEventListener('click', this.aLinkClickListener)
-      })
-      Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
-        node.style.display = 'none'
-      })
-      const mainNavigationLiTags = this.root.querySelectorAll('nav > ul > li')
-      mainNavigationLiTags.forEach(li => {
-        li.setAttribute('aria-expanded', 'false')
-        li.setAttribute('aria-controls', 'nav-level-1')
-      })
-      Array.from(this.root.querySelectorAll('section')).forEach((section, i) => {
-        const wrapper = new children[0].constructorClass({ mode: 'false', mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
-        wrapper.setAttribute('id', `nav-section-${i}`)
-        const sectionChildren = Array.from(section.children)
-        sectionChildren.forEach((node) => {
-          if (!node.getAttribute('slot')) {
-            if (+node.getAttribute('nav-level') === 1) node.querySelector('ul').setAttribute('id', 'nav-level-1')
-            wrapper.root.appendChild(node)
-          }
-        })
-        section.replaceWith(wrapper)
-
-        // add main background color dark if flyout open div
-        const mainBackgroundDiv = document.createElement('div')
-        mainBackgroundDiv.className = 'main-background'
-        wrapper.parentElement.prepend(mainBackgroundDiv)
-
-        // add full width background with div
-        const wrapperBackgroundDiv = document.createElement('div')
-        wrapperBackgroundDiv.className = 'wrapper-background'
-        wrapper.prepend(wrapperBackgroundDiv)
-
-        // add close icon to all flyout
-        const closeIconElement = document.createElement('a')
-        closeIconElement.innerHTML = /* HTML */`
-        <a-icon-mdx namespace='icon-link-list-' icon-name='X' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
-        `
-        closeIconElement.classList.add('close-icon')
-        wrapper.querySelector('section').appendChild(closeIconElement)
-
-        // Add class for title li a element
-        const subTitleLiTags = Array.from(wrapper.querySelectorAll('li')).filter(li => !li.querySelector('m-nav-level-item'))
-        subTitleLiTags.forEach(li => {
-          li.classList.add('list-title')
-          li.childNodes[0].nextElementSibling && li.childNodes[0].nextElementSibling.firstChild
-            ? li.childNodes[0].nextElementSibling.firstChild.textContent = li.childNodes[0].nextElementSibling.firstChild.textContent.trim()
-            : null
-        }
-        )
-
-        // add subUl id based on sub-nav-id to have aria-controls connection
-        const subUlElements = Array.from(wrapper.querySelectorAll('ul')).filter(ul => ul.hasAttribute('sub-nav-id'))
-        subUlElements.forEach(ul => ul.setAttribute('id', `${ul.getAttribute('sub-nav-id')}`))
-
-        // Add listener if there is an attribute on this element
-        const subLiElements = Array.from(wrapper.querySelectorAll('li')).filter(li => li.querySelector('m-nav-level-item'))
-        subLiElements.forEach(li => {
-          // set aria attributes where needed
-          if (li.hasAttribute('sub-nav')) {
-            li.setAttribute('aria-expanded', 'false')
-            li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`)
-          }
-          // add hover listener when needed
-          if (this.useHoverListener) {
-            li.addEventListener('mouseenter', this.subLiHoverListener)
-            li.currentWrapper = wrapper
-          }
-        })
-      })
-      this.html = this.style
     })
+    Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
+      node.style.display = 'none'
+    })
+    const mainNavigationLiTags = this.root.querySelectorAll('nav > ul > li')
+    mainNavigationLiTags.forEach(li => {
+      li.setAttribute('aria-expanded', 'false')
+      li.setAttribute('aria-controls', 'nav-level-1')
+    })
+    this.html = this.style
   }
 
-  renderMobileHTML () {
-    Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
-    Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
-      node.style.display = 'block'
-    })
+  renderMobileHTML() {
+    document.body.addEventListener("touchstart", (event) => {
+      // @ts-ignore
+      if (event.composedPath().find(el => el.tagName === 'A-MENU-ICON')) this.openAnimationDelayNeeded = true
+      else this.openAnimationDelayNeeded = false
 
+      Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+      Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
+        node.style.display = 'block'
+      })
+      const navElement = this.root.querySelector('nav')
+      let templates = Array.from(navElement.querySelectorAll('ul > li > template'))
+      // @ts-ignore
+      if (templates.length) {
+        templates.forEach(template => {
+          this.setLoadCustomElementsAttribute(template)
+          template.replaceWith(...template.content.childNodes)
+        })
+        this.fillMobileNavigation()
+      }
+    }, { once: true })
+    this.html = this.style
+  }
+
+  addBackgroundDivPosition(event, isFlyoutOpen) {
+    const backgroundTopPosition = event.pageY + 150
+    const mainFlyoutBackgroundDiv = event.currentTarget.parentElement.querySelector('.main-background')
+    if (mainFlyoutBackgroundDiv) {
+      mainFlyoutBackgroundDiv.style.top = `${backgroundTopPosition}px`
+      mainFlyoutBackgroundDiv.style.animation = isFlyoutOpen ? 'FadeInBackground 0s ease-in-out forwards' : 'FadeInBackground 0.3s ease-in-out forwards'
+    }
+  }
+
+  getMedia() {
+    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
+  }
+
+  recalculateNavigationHeight() {
+    setTimeout(() => {
+      this.headerHeight = this.getRootNode().host.offsetHeight
+      this.restOfHeight = window.screen.height * 0.9 - this.headerHeight
+      this.oNavWrappers = this.root.querySelectorAll('o-nav-wrapper')
+      if (this.oNavWrappers.length) {
+        this.oNavWrappers.forEach(wrapper => {
+          const allLiChildren = wrapper.querySelectorAll("div[nav-level='1'] > ul > li")
+          if (allLiChildren.length > 9 && window.innerHeight < this.desktopHeightBreakpoint) {
+            const wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
+            wrapper.setAttribute('style', `--multi-level-navigation-default-mobile-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
+            if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
+          }
+          if (allLiChildren.length > 9 && window.innerHeight > this.desktopHeightBreakpoint) {
+            const wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
+            wrapper.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
+            if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
+          }
+        })
+      }
+    }, 1000)
+  }
+
+  setActiveNavigationItemBasedOnUrl() {
+    const subUrls = []
+    const navigationItemsUrlNames = []
+    const navigationItems = Array.from(this.root.querySelectorAll('nav > ul > li[url-name]'))
+
+    // get first 2 subdomain of current url
+    window.location.pathname.split('/')?.filter((subUrl) => subUrl).slice(0, 2).forEach((urlName) => subUrls.push(urlName.toLowerCase()))
+    // get the url name attributes of the main li navigation items
+    navigationItems.forEach(li => navigationItemsUrlNames.push(li.getAttribute('url-name').toLowerCase()))
+
+    if (subUrls.length > 0 && navigationItemsUrlNames.length > 0) {
+      const activeNavigationName = navigationItemsUrlNames.filter((navUrl) => subUrls.includes(navUrl))[0]
+      const activeNavigationItem = navigationItems?.filter((item) => item.getAttribute('url-name').toLowerCase() === activeNavigationName)[0]
+      activeNavigationItem?.classList.add('active')
+    }
+  }
+
+  setMainNavigationFontSize() {
+    const mainNavigation = this.root.querySelector('nav > ul')
+    const fontSizeBreakPoint = Number(mainNavigation.getAttribute('font-size-breakpoint'))
+    const mainNavigationSpans = Array.from(this.root.querySelectorAll('nav > ul > li:not([only-mobile], [show-only-mobile]) > a > span'))
+    if (fontSizeBreakPoint || fontSizeBreakPoint !== 0) {
+      if (this.isDesktop) {
+        if (window.innerWidth > fontSizeBreakPoint) {
+          mainNavigationSpans.forEach((span) => {
+            span.style.fontSize = 'inherit'
+          })
+        } else {
+          mainNavigationSpans.forEach((span) => {
+            span.style.fontSize = '18px'
+          })
+        }
+      } else {
+        mainNavigationSpans.forEach((span) => {
+          span.style.fontSize = 'inherit'
+        })
+      }
+    }
+  }
+
+  hideMobileNavigation() {
+    if (!this.isDesktop && !this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.contains('hide')) {
+      this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.add('hide')
+    }
+  }
+
+  showMobileNavigation() {
+    if (!this.isDesktop && this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.contains('hide')) {
+      this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.remove('hide')
+    }
+  }
+
+  fillMobileNavigation() {
     // add list-item-element
     Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi, index) => {
       let currentATag
@@ -1262,95 +1410,28 @@ export default class MultiLevelNavigation extends Mutation() {
         })
       }
     }, 500)
-
-    this.html = this.style
   }
 
-  addBackgroundDivPosition (event, isFlyoutOpen) {
-    const backgroundTopPosition = event.pageY + 150
-    const mainFlyoutBackgroundDiv = event.currentTarget.parentElement.querySelector('.main-background')
-    if (mainFlyoutBackgroundDiv) {
-      mainFlyoutBackgroundDiv.style.top = `${backgroundTopPosition}px`
-      mainFlyoutBackgroundDiv.style.animation = isFlyoutOpen ? 'FadeInBackground 0s ease-in-out forwards' : 'FadeInBackground 0.3s ease-in-out forwards'
-    }
-  }
-
-  getMedia () {
-    return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
-  }
-
-  recalculateNavigationHeight () {
-    setTimeout(() => {
-      this.headerHeight = this.getRootNode().host.offsetHeight
-      this.restOfHeight = window.screen.height * 0.9 - this.headerHeight
-      this.oNavWrappers = this.root.querySelectorAll('o-nav-wrapper')
-      if (this.oNavWrappers.length) {
-        this.oNavWrappers.forEach(wrapper => {
-          const allLiChildren = wrapper.querySelectorAll("div[nav-level='1'] > ul > li")
-          if (allLiChildren.length > 9 && window.innerHeight < this.desktopHeightBreakpoint) {
-            const wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
-            wrapper.setAttribute('style', `--multi-level-navigation-default-mobile-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
-            if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(90dvh - ${this.headerHeight}px)`)
-          }
-          if (allLiChildren.length > 9 && window.innerHeight > this.desktopHeightBreakpoint) {
-            const wrapperBackgroundElement = wrapper.querySelector('.wrapper-background')
-            wrapper.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
-            if (wrapperBackgroundElement) wrapperBackgroundElement.setAttribute('style', `--multi-level-navigation-default-desktop-main-wrapper-height: calc(85dvh - ${this.headerHeight}px)`)
-          }
-        })
-      }
-    }, 1000)
-  }
-
-  setActiveNavigationItemBasedOnUrl () {
-    const subUrls = []
-    const navigationItemsUrlNames = []
-    const navigationItems = Array.from(this.root.querySelectorAll('nav > ul > li[url-name]'))
-
-    // get first 2 subdomain of current url
-    window.location.pathname.split('/')?.filter((subUrl) => subUrl).slice(0, 2).forEach((urlName) => subUrls.push(urlName.toLowerCase()))
-    // get the url name attributes of the main li navigation items
-    navigationItems.forEach(li => navigationItemsUrlNames.push(li.getAttribute('url-name').toLowerCase()))
-
-    if (subUrls.length > 0 && navigationItemsUrlNames.length > 0) {
-      const activeNavigationName = navigationItemsUrlNames.filter((navUrl) => subUrls.includes(navUrl))[0]
-      const activeNavigationItem = navigationItems?.filter((item) => item.getAttribute('url-name').toLowerCase() === activeNavigationName)[0]
-      activeNavigationItem?.classList.add('active')
-    }
-  }
-
-  setMainNavigationFontSize () {
-    const mainNavigation = this.root.querySelector('nav > ul')
-    const fontSizeBreakPoint = Number(mainNavigation.getAttribute('font-size-breakpoint'))
-    const mainNavigationSpans = Array.from(this.root.querySelectorAll('nav > ul > li:not([only-mobile], [show-only-mobile]) > a > span'))
-    if (fontSizeBreakPoint || fontSizeBreakPoint !== 0) {
-      if (this.isDesktop) {
-        if (window.innerWidth > fontSizeBreakPoint) {
-          mainNavigationSpans.forEach((span) => {
-            span.style.fontSize = 'inherit'
-          })
-        } else {
-          mainNavigationSpans.forEach((span) => {
-            span.style.fontSize = '18px'
-          })
-        }
+  setLoadCustomElementsAttribute(template) {
+    const templateContent = template.content
+    const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
+    if (notDefined?.length) {
+      if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
+        this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
+          detail: {
+            nodes: notDefined
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
       } else {
-        mainNavigationSpans.forEach((span) => {
-          span.style.fontSize = 'inherit'
-        })
+        console.error(
+          'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+          notDefined,
+          this
+        )
       }
-    }
-  }
-
-  hideMobileNavigation () {
-    if (!this.isDesktop && !this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.contains('hide')) {
-      this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.add('hide')
-    }
-  }
-
-  showMobileNavigation () {
-    if (!this.isDesktop && this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.contains('hide')) {
-      this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.remove('hide')
     }
   }
 }
