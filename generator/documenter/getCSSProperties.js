@@ -29,9 +29,10 @@ function getCSSProperties(filePath, options = { sourceType: 'module' }) {
                     const properties = match[2].trim().split(';').map(property => property.trim())
                     // Map over the properties, extracting key-value pairs using the 'extractProperty' function
                     // Filter out any invalid or empty properties
-                    const props = properties.map(property => extractProperty(property)).filter(prop => prop)
+                    const cssDeclarationBlock = properties.map(property => extractProperty(property)).filter(prop => prop)
+                    console.log(`found selector: ${selector} at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
                     // Create an object containing the selector and its properties, and push it to the 'css' array
-                    css.push({ selector, props })
+                    css.push({ selector, declaration: cssDeclarationBlock })
                 }
             }
         })

@@ -41,9 +41,14 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
     // - Write the JSON data to a new x.json file in the same directory as the original file
     await Promise.all([
         // fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
-        fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.json`, jsonData) // Write the JSON data to a file
+        // fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.json`, jsonData) // Write the JSON data to a file
     ])
 
-    console.log(`manipulated file: ${file}`)
+    console.log('=============================================')
+    console.log(`Name: ${filenameWithoutExtension}`)
+    console.log(`Path: ${file}`)
+    console.log('JSON data:')
     console.log(jsonData)
+    console.log('---------------------------------------------')
+    console.log(' ')
 })

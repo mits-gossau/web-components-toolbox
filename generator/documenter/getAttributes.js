@@ -23,11 +23,11 @@ function getAttributeNames(filePath, options = { sourceType: 'module' }) {
                     // Print out a message so that we can see where in the code we're finding the attributes.
                     console.log(`found this.getAttribute('${attributeName}') at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
                     // Add the attribute name to the list of found attributes.
-                    attributes.push(attributeName)
+                    if(attributeName) attributes.push({attributeName, description:''})
                 }
             }
         })
-        return [...new Set(attributes)]
+        return attributes.filter((value, index, array) => array.findIndex(item => (item.attributeName === value.attributeName)) === index)
     } catch (error) {
         console.error(`Error parsing file: ${filePath} - ${error.message}`)
         throw error
