@@ -1,0 +1,73 @@
+:host {
+  --navigation-default_2-a-arrow-color-active: var(
+    --navigation-default_2-color-active
+  );
+  --navigation-default_2-a-arrow-color: var(--navigation-default_2-color);
+  --navigation-default_2-a-link-color-no-scroll: var(
+    --navigation-default_2-a-link-color
+  );
+  --navigation-default_2-a-link-color: var(--navigation-default_2-color);
+  --navigation-default_2-a-link-content-spacing-no-scroll: var(
+    --navigation-default_2-a-link-content-spacing
+  );
+  --navigation-default_2-a-link-content-spacing: 1.1rem var(--content-spacing);
+  --navigation-default_2-a-link-font-size-no-scroll: var(
+    --navigation-default_2-a-link-font-size
+  );
+  --navigation-default_2-a-link-font-size: var(
+    --header-default-a-font-size,
+    var(--font-size)
+  );
+  --navigation-default_2-a-link-text-transform: var(
+    --navigation-default_2-a-link-text-transform-custom,
+    none
+  );
+  --navigation-default_2-background-color: var(--navigation-default_2-color);
+  --navigation-default_2-color-active: var(--color-active);
+  --navigation-default_2-color-hover: var(--color-hover);
+  --navigation-default_2-color-mobile: var(--navigation-default_2-color);
+  --navigation-default_2-color-open-hover: var(
+    --navigation-default_2-color-hover
+  );
+  --navigation-default_2-color-open-mobile: var(
+    --navigation-default_2-color-open
+  );
+  --navigation-default_2-color-open: var(--color-hover);
+  --navigation-default_2-color: var(
+    --navigation-default_2-color-custom,
+    var(--background-color)
+  );
+  --navigation-default_2-flex-wrap: wrap;
+  --navigation-default_2-font-family: var(
+    --navigation-default_2-font-family-custom,
+    var(--font-family-bold)
+  );
+  --navigation-default_2-li-padding: 0;
+  --navigation-default_2-margin: 0;
+  --navigation-default_2-padding: 0;
+  --navigation-default_2-search-li-padding-mobile: 0;
+  --navigation-default_2-search-li-padding: var(
+    --navigation-default_2-search-li-padding-custom,
+    calc(0.25rem + 2px) 0 0.25rem var(--content-spacing)
+  );
+  --navigation-default_2-transition: all 0.2s ease-out, color 0.3s ease-out;
+  --navigation-default_2-white-space: normal;
+  --navigation-default_2-word-break: break-word;
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --navigation-default_2-a-link-content-spacing: 1.1rem
+      var(--content-spacing-mobile);
+    --navigation-default_2-search-li-padding: var(
+      --navigation-default_2-search-li-padding-custom,
+      calc(0.25rem + 2px) 0 0.25rem var(--content-spacing-mobile)
+    );
+  }
+  :host > nav > ul > li.search > * {
+    margin-left: var(--content-spacing-mobile);
+    margin-right: var(--content-spacing-mobile);
+  }
+  :host > nav > ul > li > o-nav-wrapper > section > *:not(ul) {
+    --margin-mobile: 0 var(--content-spacing-mobile);
+  }
+}
