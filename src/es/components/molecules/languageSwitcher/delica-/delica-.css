@@ -1,7 +1,7 @@
 :host {
     --language-switcher-delica-grid-area: var(--language-switcher-delica-grid-area-custom, "login");
-    --language-switcher-delica-content-spacing: var(--content-spacing);
-    --language-switcher-delica-content-spacing-mobile: var(--content-spacing-mobile);
+    --language-switcher-delica-content-spacing: var(--language-switcher-delica-content-spacing-custom, var(--content-spacing));
+    --language-switcher-delica-content-spacing-mobile: var(--language-switcher-delica-content-spacing-mobile-custom, var(--content-spacing-mobile));
     --language-switcher-delica-ul-list-style: var(--language-switcher-delica-ul-list-style-custom, none);
     --language-switcher-delica-ul-display: var(--language-switcher-delica-ul-display-custom, flex);
     --language-switcher-delica-ul-justify-content: var(--language-switcher-delica-ul-justify-content-custom, flex-end);
