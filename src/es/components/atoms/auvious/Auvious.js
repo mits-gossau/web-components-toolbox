@@ -3,6 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global customElements */
 /* global self */
+/* global location */
 
 /**
  * https://docs.auvious.com/docs/get-started/widget/
@@ -49,7 +50,7 @@ export default class Auvious extends Shadow() {
       }, 50), { once: true })
       self.addEventListener('beforeunload', this.callEndedEventListener, { once: true })
       // see all translation keys: https://docs.auvious.com/assets/files/de-4eebf6730ba65b91064fb20f6f97234b.json
-      if (this.json.translations) this.widget.setTranslations({...(await fetch(`${this.importMetaUrl}./${this.getAttribute('translations-path') || 'de-4eebf6730ba65b91064fb20f6f97234b.json'}`).then(response => response.json())), ...this.json.translations})
+      if (this.json.translations) this.widget.setTranslations({ ...(await fetch(`${this.importMetaUrl}./${this.getAttribute('translations-path') || 'de-4eebf6730ba65b91064fb20f6f97234b.json'}`).then(response => response.json())), ...this.json.translations })
     })
   }
 

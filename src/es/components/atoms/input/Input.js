@@ -561,7 +561,7 @@ export default class Input extends Shadow() {
   getIcon (iconName, iconPath) {
     switch (iconName) {
       case 'Search':
-        return Promise.resolve([/* html */`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none"><path stroke-width="2" d="m21 21-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>`])
+        return Promise.resolve([/* html */'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none"><path stroke-width="2" d="m21 21-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>'])
       default:
         return this.fetchHTML([iconPath], true)
     }

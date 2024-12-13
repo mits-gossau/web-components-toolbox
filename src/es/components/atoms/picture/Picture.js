@@ -39,11 +39,11 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * }
  */
 export default class Picture extends Intersection(Hover()) {
-  static get observedAttributes() {
+  static get observedAttributes () {
     return ['loading', 'pointer-events']
   }
 
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: {},
@@ -64,7 +64,7 @@ export default class Picture extends Intersection(Hover()) {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
@@ -74,12 +74,12 @@ export default class Picture extends Intersection(Hover()) {
     }
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     super.disconnectedCallback()
     if (this.hasAttribute('open-modal')) this.removeEventListener('click', this.clickListener)
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback (name, oldValue, newValue) {
     if (this.img) {
       if (name === 'loading' && this.img) {
         this.img.setAttribute(name, newValue)
@@ -93,7 +93,7 @@ export default class Picture extends Intersection(Hover()) {
     }
   }
 
-  intersectionCallback(entries, observer) {
+  intersectionCallback (entries, observer) {
     if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
       this.intersecting()
       this.openModalIntersecting()
@@ -101,15 +101,15 @@ export default class Picture extends Intersection(Hover()) {
   }
 
   // placeholder
-  intersecting() { }
-  openModalIntersecting() { }
+  intersecting () { }
+  openModalIntersecting () { }
 
   /**
    * evaluates if a render is necessary
    *
    * @return {boolean}
    */
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -118,7 +118,7 @@ export default class Picture extends Intersection(Hover()) {
    *
    * @return {boolean}
    */
-  shouldRenderHTML() {
+  shouldRenderHTML () {
     return !this.picture
   }
 
@@ -127,7 +127,7 @@ export default class Picture extends Intersection(Hover()) {
    *
    * @return {Promise<void>}
    */
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         overflow: var(--host-overflow, initial);
@@ -252,7 +252,7 @@ export default class Picture extends Intersection(Hover()) {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate() {
+  fetchTemplate () {
     switch (this.getAttribute('namespace')) {
       case 'picture-overflow-':
         return this.fetchCSS([{
@@ -299,7 +299,7 @@ export default class Picture extends Intersection(Hover()) {
    *
    * @return {void}
    */
-  renderHTML() {
+  renderHTML () {
     this.html = this.picture = this.root.querySelector('picture') || document.createElement('picture')
     this.sources = []
     // in case someone adds sources/img directly instead of using the attributes
@@ -548,19 +548,19 @@ export default class Picture extends Intersection(Hover()) {
     }
   }
 
-  get alt() {
+  get alt () {
     return this.getAttribute('alt') ? this.getAttribute('alt') : ''
   }
 
-  get defaultSource() {
+  get defaultSource () {
     return this.getAttribute('defaultSource') ? this.getAttribute('defaultSource') : ''
   }
 
-  get sourcesObj() {
+  get sourcesObj () {
     return (this.getAttribute('sources') && Picture.parseAttribute(this.getAttribute('sources'))) || null
   }
 
-  get style() {
+  get style () {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
@@ -568,7 +568,7 @@ export default class Picture extends Intersection(Hover()) {
     })())
   }
 
-  getMedia() {
+  getMedia () {
     return self.matchMedia(`(min-width: calc(${this.mobileBreakpoint} + 1px))`).matches ? 'desktop' : 'mobile'
   }
 
@@ -578,7 +578,7 @@ export default class Picture extends Intersection(Hover()) {
    * @param {string} path
    * @return {URL}
    */
-  static newUrl(path) {
+  static newUrl (path) {
     return new URL(path, path.charAt(0) === '/' ? location.origin : path.charAt(0) === '.' ? this.importMetaUrl : undefined)
   }
 
@@ -588,7 +588,7 @@ export default class Picture extends Intersection(Hover()) {
    * @param {string} path
    * @return {string}
    */
-  static pathResolver(path) {
+  static pathResolver (path) {
     const a = document.createElement('a')
     a.href = path
     return a.href

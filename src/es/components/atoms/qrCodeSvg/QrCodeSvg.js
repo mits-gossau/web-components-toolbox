@@ -1,10 +1,12 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global self */
+
 /**
 * https://github.com/datalog/qrcode-svg
 * max length 1264
-* 
+*
 * @export
 * @class QrCodeSvg
 * @type {CustomElementConstructor}
@@ -81,9 +83,9 @@ export default class QrCodeSvg extends Shadow() {
         return this.html = '<h5>Warning: String too long! The qr code can not be generated...</h5>'
       }
       this.html = QRCode({
-        msg :  this.getAttribute('data'),
-        pad :   0,
-        pal : [`#000`, '#fff']
+        msg: this.getAttribute('data'),
+        pad: 0,
+        pal: ['#000', '#fff']
       })
       this.root.querySelector('[fill="#000"]').setAttribute('fill', `var(--${this.getAttribute('namespace') || ''}color, black)`)
       this.root.querySelector('[fill="#fff"]').setAttribute('fill', `var(--${this.getAttribute('namespace') || ''}background-color, transparent)`)

@@ -10,6 +10,7 @@ import { WebWorker } from '../../prototypes/WebWorker.js'
 
 /* global fetch */
 /* global self */
+/* global sessionStorage */
 
 /**
  * FetchCss is a caching mechanism for src/es/components/prototypes/Shadow.js:fetchCSS L:347 and can just be set as an ancestor which listens to the fetch-css events
@@ -232,7 +233,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
 
   /**
    * Save all fetched and processed files to local storage
-   * 
+   *
    * @name saveToStorage
    * @param {Map<string, Promise<string>>} cacheMap
    * @returns {void}
@@ -245,7 +246,7 @@ export default class FetchCss extends Shadow(WebWorker()) {
 
   /**
    * load all fetched and processed files from local storage
-   * 
+   *
    * @name loadFromStorage
    * @returns {Map<string, Promise<string>> | null}
    */

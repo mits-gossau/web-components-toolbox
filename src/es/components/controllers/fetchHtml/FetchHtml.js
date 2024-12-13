@@ -7,6 +7,7 @@
 
 /* global fetch */
 /* global HTMLElement */
+/* global sessionStorage */
 
 /**
  * FetchHtml is a caching mechanism for src/es/components/prototypes/Shadow.js:fetchHTML L:490 and can just be set as an ancestor which listens to the fetch-html events
@@ -115,10 +116,9 @@ export default class FetchHtml extends HTMLElement {
     return a.href
   }
 
-
   /**
    * Save all fetched and processed files to local storage
-   * 
+   *
    * @name saveToStorage
    * @param {Map<string, Promise<string>>} cacheMap
    * @returns {void}
@@ -131,7 +131,7 @@ export default class FetchHtml extends HTMLElement {
 
   /**
    * load all fetched and processed files from local storage
-   * 
+   *
    * @name loadFromStorage
    * @returns {Map<string, Promise<string>> | null}
    */
