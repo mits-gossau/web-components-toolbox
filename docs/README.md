@@ -1,5 +1,5 @@
 # Documentation for web-components-toolbox
-The web-components-toolbox is a framework designed for creating and managing web components, particularly tailored for use with the Umbraco content management system. This documentation outlines the installation process, component organization, development guidelines, and additional tools to help developers effectively utilize the toolbox.
+The web-components-toolbox is a library designed for creating and managing web components, particularly tailored for use with the Umbraco content management system. This documentation outlines the installation process, component organization, development guidelines, and additional tools to help developers effectively utilize the toolbox.
 
 ## Table of Contents:
 - Installation
