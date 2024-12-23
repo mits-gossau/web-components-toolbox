@@ -58,6 +58,7 @@ export default class CarouselTwo extends Mutation() {
     }
     this.keydownTimeoutId = null
     this.keydownListener = event => {
+      // @ts-ignore
       clearTimeout(this.keydownTimeoutId)
       this.keydownTimeoutId = setTimeout(() => {
         if (event.keyCode === 37) return this.previous()
@@ -147,10 +148,8 @@ export default class CarouselTwo extends Mutation() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    Array.from(this.section.children).concat(Array.from(this.nav.children)).forEach(node => {
-      const picture = node.tagName === 'A-PICTURE'
-        ? node
-        : node.querySelector('a-picture')
+    CarouselTwo.walksDownDomQueryMatchesAll(this.section, 'a-picture').concat(CarouselTwo.walksDownDomQueryMatchesAll(this.nav, 'a-picture')).forEach(picture => {
+      // @ts-ignore
       if (picture && picture.hasAttribute('picture-load') && !picture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => picture.addEventListener('picture-load', event => resolve(), { once: true })))
     })
     // Carousel still pops instead of appear nicely. With slow network connection it works though.
@@ -792,12 +791,14 @@ export default class CarouselTwo extends Mutation() {
 
   setInterval () {
     if (this.hasAttribute('interval') && !this.isFocused) {
+      // @ts-ignore
       clearInterval(this.interval)
       this.interval = setInterval(() => this.next(false), Number(this.getAttribute('interval')))
     }
   }
 
   clearInterval () {
+    // @ts-ignore
     if (this.hasAttribute('interval')) clearInterval(this.interval)
   }
 
