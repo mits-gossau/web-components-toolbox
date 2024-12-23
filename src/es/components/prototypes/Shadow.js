@@ -822,7 +822,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   }
 
   /**
-   * matches html element by selector
+   * matches html element by selector and crosses root (shadowRoot) plus host
    * ends and returns root when stepped up all the way but nothing found
    *
    * @param {HTMLElement | any} el
@@ -836,5 +836,18 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       if (typeof el.matches === 'function' && el.matches(selector)) return el
     }
     return el
+  }
+
+  /**
+   * matches all html elements by selector and crosses root (shadowRoot)
+   * returns an array with all matching elements
+   *
+   * @param {HTMLElement | any} el
+   * @param {string} selector
+   * @return {any[]}
+   */
+  static walksDownDomQueryMatchesAll (el, selector) {
+    const getAllChildren = el => Array.from((el.root || el).querySelectorAll(selector)).concat(Array.from((el.root || el).querySelectorAll('*')).filter(el => el.tagName.includes('-')).reduce((acc, el) => [...acc, ...getAllChildren(el)], []))
+    return el.matches(selector) ? [el, ...getAllChildren(el)] : getAllChildren(el)
   }
 }
