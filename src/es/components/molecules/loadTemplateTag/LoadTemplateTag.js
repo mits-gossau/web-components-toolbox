@@ -39,7 +39,7 @@ export default class LoadTemplateTag extends Intersection() {
 
   intersectionCallback (entries, observer) {
     if (
-      (this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)
+      (this.isIntersecting = this.areEntriesIntersecting(entries))
     ) {
       // @ts-ignore
       this.intersecting()
@@ -74,6 +74,10 @@ export default class LoadTemplateTag extends Intersection() {
    */
   renderCSS () {
     this.css = /* css */ `
+      /* hide component stuff before it is rendered to avoid the blitz (flashing white) */
+      :not(:defined) {
+        display: none;
+      }
       :host {
         display: block !important;
       }

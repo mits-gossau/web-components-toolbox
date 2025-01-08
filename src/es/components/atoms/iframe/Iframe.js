@@ -39,7 +39,7 @@ export default class Iframe extends Intersection() {
 
   intersectionCallback (entries, observer) {
     if (
-      (this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)
+      (this.isIntersecting = this.areEntriesIntersecting(entries))
     ) {
       // @ts-ignore
       this.intersecting()

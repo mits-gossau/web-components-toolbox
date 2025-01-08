@@ -54,7 +54,7 @@ export default class ProductList extends Intersection(Prototype()) {
   }
 
   intersectionCallback (entries, observer) {
-    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
+    if ((this.isIntersecting = this.areEntriesIntersecting(entries))) {
       this.hidden = true
       const showPromises = []
       if (this.shouldRender()) showPromises.push(this.render())

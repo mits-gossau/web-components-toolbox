@@ -361,6 +361,10 @@ export default class MultiLevelNavigation extends Mutation() {
    */
   renderCSS () {
     this.css = /* css */`
+    /* hide component stuff before it is rendered to avoid the blitz (flashing white) */
+    :not(:defined) {
+      display: none;
+    }
     :host {
       color: black;
       overscroll-behavior: contain;

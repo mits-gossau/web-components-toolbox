@@ -94,7 +94,7 @@ export default class Picture extends Intersection(Hover()) {
   }
 
   intersectionCallback (entries, observer) {
-    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
+    if ((this.isIntersecting = this.areEntriesIntersecting(entries))) {
       this.intersecting()
       this.openModalIntersecting()
     }

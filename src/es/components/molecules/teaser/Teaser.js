@@ -67,7 +67,7 @@ export default class Teaser extends Intersection() {
   }
 
   intersectionCallback (entries, observer) {
-    this.classList[entries[0] && entries[0].isIntersecting ? 'add' : 'remove']('intersecting')
+    this.classList[this.areEntriesIntersecting(entries) ? 'add' : 'remove']('intersecting')
   }
 
   /**

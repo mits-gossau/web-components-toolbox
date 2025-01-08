@@ -23,7 +23,7 @@ export default class CountBox extends Intersection() {
   }
 
   intersectionCallback (entries, observer) {
-    if ((this.isIntersecting = entries && entries[0] && entries[0].isIntersecting)) {
+    if ((this.isIntersecting = this.areEntriesIntersecting(entries))) {
       this.startCounter(this.root.getElementById(this.tag))
     } else {
       this.stopCounter()

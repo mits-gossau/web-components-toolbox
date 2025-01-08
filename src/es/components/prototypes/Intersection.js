@@ -27,7 +27,8 @@ import { Shadow } from './Shadow.js'
       isObserving,
       intersectionCallback,
       intersectionObserveStart,
-      intersectionObserveStop
+      intersectionObserveStop,
+      areEntriesIntersecting
     }
  * @return {CustomElementConstructor | *}
  */
@@ -119,4 +120,14 @@ export const Intersection = (ChosenClass = Shadow()) => class Intersection exten
    * @return {void}
    */
   intersectionCallback (entries, observer) {}
+
+  /**
+   * Checks if some entries are intersecting
+   * 
+   * @param {IntersectionObserverEntry[]} entries
+   * @returns {boolean}
+   */
+  areEntriesIntersecting (entries) {
+    return entries && entries.some(entry => entry.isIntersecting)
+  }
 }

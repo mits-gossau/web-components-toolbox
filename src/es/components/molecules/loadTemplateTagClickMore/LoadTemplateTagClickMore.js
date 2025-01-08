@@ -64,6 +64,10 @@ export default class LoadTemplateTagClickMore extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+      /* hide component stuff before it is rendered to avoid the blitz (flashing white) */
+      :not(:defined) {
+        display: none;
+      }
       :host {
         display: none !important;
         position: absolute;

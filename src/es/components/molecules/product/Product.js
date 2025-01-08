@@ -48,7 +48,7 @@ export default class Product extends Intersection() {
   }
 
   intersectionCallback (entries, observer) {
-    if (entries[0] && entries[0].isIntersecting) {
+    if (this.areEntriesIntersecting(entries)) {
       this.dispatchEvent(new CustomEvent('product-viewed',
         {
           detail: {

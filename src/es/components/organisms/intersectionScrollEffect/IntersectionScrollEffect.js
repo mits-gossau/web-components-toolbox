@@ -186,7 +186,7 @@ export default class IntersectionScrollEffect extends Intersection() {
   intersectionCallback (entries, observer) {
     if (entries && entries[0]) {
       this.scrollListener()
-      if (entries[0].isIntersecting) {
+      if (this.areEntriesIntersecting(entries)) {
         this.getElement(this.direction(3)).addEventListener('scroll', this.scrollListener)
       } else {
         this.getElement(this.direction(3)).removeEventListener('scroll', this.scrollListener)
