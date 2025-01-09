@@ -18,7 +18,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Input extends Shadow() {
   static get observedAttributes () {
-    return ['readonly', 'disabled', 'error']
+    return ['readonly', 'disabled', 'error', 'placeholder']
   }
 
   constructor (options = {}, ...args) {
@@ -131,7 +131,11 @@ export default class Input extends Shadow() {
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
 
-  attributeChangedCallback (name) {
+  attributeChangedCallback (name, oldValue, newValue) {
+    if (name === 'placeholder') {
+      if (this.inputField) this.inputField.setAttribute('placeholder', newValue)
+      return
+    }
     this[name] = this.hasAttribute(name)
   }
 
