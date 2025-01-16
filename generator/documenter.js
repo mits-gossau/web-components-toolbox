@@ -1,21 +1,21 @@
-// const fs = require('fs')
-// const path = require('path')
+const fs = require('fs')
+const path = require('path')
 const glob = require('glob')
 const getAttributeNames = require('./documenter/getAttributes')
 const getCSSproperties = require('./documenter/getCSSProperties')
-// const generateModified = require('./documenter/generateModified')
 const getTemplates = require('./documenter/getTemplates')
+// const generateModified = require('./documenter/generateModified')
 
 const ROOT_DIR = '../src/es/components/'
 
 glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
   ignore: [
-        `${ROOT_DIR}/prototypes/**`,
-        `${ROOT_DIR}/pages/**`,
-        `${ROOT_DIR}/msrc/**`,
-        `${ROOT_DIR}/mcs/**`,
-        `${ROOT_DIR}/controllers/**`,
-        `${ROOT_DIR}/contentful/**`
+    `${ROOT_DIR}/prototypes/**`,
+    `${ROOT_DIR}/pages/**`,
+    `${ROOT_DIR}/msrc/**`,
+    `${ROOT_DIR}/mcs/**`,
+    `${ROOT_DIR}/controllers/**`,
+    `${ROOT_DIR}/contentful/**`
   ]
 }).forEach(async file => {
   // For each file found, prepare a data object containing:
@@ -40,7 +40,7 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
   // - Write the JSON data to a new x.json file in the same directory as the original file
   await Promise.all([
     // fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
-    // fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.json`, jsonData) // Write the JSON data to a file
+    fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.json`, jsonData) // Write the JSON data to a file
   ])
 
   console.log('=============================================')
