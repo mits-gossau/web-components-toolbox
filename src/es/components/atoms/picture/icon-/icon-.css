@@ -1,0 +1,11 @@
+:host {
+  --picture-icon-img-margin: 0;
+  position: relative;
+  width: auto;
+  height: 100%;
+}
+
+:host > picture > img  {
+  height: var(--picture-icon-img-height, 2em);
+  width: var(--picture-icon-img-width, auto);
+}
