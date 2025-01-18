@@ -446,6 +446,7 @@ export default class Input extends Shadow() {
       if (this.hasAttribute('autofocus')) {
         this.setAttribute('autofocus-helper', '')
         this.removeAttribute('autofocus')
+        setTimeout(() => this.focus())
       }
       this.inputField.setAttribute('enterkeyhint', this.hasAttribute('enterkeyhint')
         ? this.getAttribute('enterkeyhint')
