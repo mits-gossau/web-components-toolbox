@@ -73,7 +73,7 @@ export default class <%= name %> extends Shadow() {
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles])
+        }, ...styles], false) // using showPromises @connectedCallback makes hide action inside Shadow.fetchCSS obsolete, so second argument hide = false
       default:
         return this.fetchCSS(styles)
     }
