@@ -186,6 +186,8 @@ export default class MultiLevelNavigation extends Mutation() {
               subLiElements.forEach(li => {
                 // set aria attributes where needed
                 if (li.hasAttribute('sub-nav')) {
+                  // avoid closing navigation if user clicks on subLi element which has subNavigation
+                  li.addEventListener('click', (event) =>  event.stopPropagation())
                   li.setAttribute('aria-expanded', 'false')
                   li.setAttribute('aria-controls', `${li.getAttribute('sub-nav')}`)
                 }
