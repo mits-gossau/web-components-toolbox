@@ -2,32 +2,36 @@ const fs = require('fs')
 const traverse = require('@babel/traverse').default
 const { parse } = require('@babel/parser')
 
-function getAttributeNames (filePath, options = { sourceType: 'module' }) {
-  const attributes = []
+/**
+ * Extracts attribute names from a JavaScript file where `this.getAttribute` is used.
+ * @param {string} filePath - The file path of the file to parse.
+ * @param {object} [options] - The options for the parser.
+ * @param {string} [options.sourceType=module] - The type of the source code.
+ * @return {array} An array of objects with each attribute name and its description.
+ */
+function getAttributeNames(filePath, options = { sourceType: 'module' }) {
+  const attributes = new Set()
   try {
     const content = fs.readFileSync(filePath, 'utf8')
     const ast = parse(content, {
       ...options,
       sourceFilename: filePath,
-      plugins: ['jsx', 'typescript']
-    })
+      plugins: ['jsx', 'typescript'],
+    });
     traverse(ast, {
-      CallExpression (path) {
-        const callee = path.node.callee
-        // If the expression is a call to a method on 'this' and that
-        // method is 'getAttribute', then we know that we're dealing
-        // with an attribute on a web component.
-        if (callee.type === 'MemberExpression' && callee.object.type === 'ThisExpression' && callee.property.name === 'getAttribute') {
-          // Get the attribute name that is being accessed.
-          const attributeName = path.node.arguments[0].value
-          // Print out a message so that we can see where in the code we're finding the attributes.
-          console.log(`found this.getAttribute('${attributeName}') at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
-          // Add the attribute name to the list of found attributes.
-          if (attributeName) attributes.push({ attributeName, description: '' })
+      CallExpression(path) {
+        const { callee } = path.node
+        if (
+          callee.type === 'MemberExpression' &&
+          callee.object.type === 'ThisExpression' &&
+          callee.property.name === 'getAttribute'
+        ) {
+          const { value } = path.node.arguments[0]
+          attributes.add(value)
         }
       }
     })
-    return attributes.filter((value, index, array) => array.findIndex(item => (item.attributeName === value.attributeName)) === index)
+    return [...attributes].map((name) => ({ attributeName: name, description: '' }))
   } catch (error) {
     console.error(`Error parsing file: ${filePath} - ${error.message}`)
     throw error
