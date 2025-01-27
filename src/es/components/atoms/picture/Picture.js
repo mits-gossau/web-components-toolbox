@@ -289,6 +289,11 @@ export default class Picture extends Intersection(Hover()) {
           path: `${this.importMetaUrl}./hotspot-/hotspot-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
+      case 'picture-icon-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./icon-/icon-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }])
       default:
         return Promise.resolve()
     }
