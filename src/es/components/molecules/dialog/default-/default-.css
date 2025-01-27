@@ -3,7 +3,7 @@
 :host > dialog[open] {
     opacity: 1;
     transform: scaleY(1);
-    border: var(--dialog-default-border, var(--dialog-border, 0.188em solid black));
+    border: var(--dialog-default-border, var(--dialog-border, 3px solid black));
     border-radius: var(--dialog-default-border-radius, var(--dialog-border-radius, 0px));
 }
 /*   Closed state of the dialog   */
@@ -17,7 +17,7 @@
         display var(--dialog-default-transition-duration, var(--dialog-transition-duration, 0.3s)) ease-out allow-discrete;
     /* Equivalent to
     transition: all var(--dialog-default-transition-duration, var(--dialog-transition-duration, 0.3s)) allow-discrete; */
-    border: var(--dialog-default-border, var(--dialog-border, 0.188em solid black));
+    border: var(--dialog-default-border, var(--dialog-border, 3px solid black));
     border-radius: var(--dialog-default-border-radius, var(--dialog-border-radius, 0px));
 }
 /*   Before-open state  */
