@@ -32,7 +32,7 @@ function getCSSProperties (filePath, options = { sourceType: 'module' }) {
           const cssDeclarationBlock = properties.map(property => extractProperty(property)).filter(prop => prop)
           console.log(`found selector: ${selector} at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
           // Create an object containing the selector and its properties, and push it to the 'css' array
-          css.push({ selector, declaration: cssDeclarationBlock })
+          css.push({ selector, changeable: true, declaration: cssDeclarationBlock })
         }
       }
     })
@@ -57,7 +57,7 @@ function extractProperty (inputText) {
   if (match) {
     const [variable, fallback] = match[1].split(',').map(value => value.trim())
     const cssProp = inputText.split(':')[0].trim()
-    return cssProp ? { property: cssProp, variable, fallback } : null
+    return cssProp ? { changeable: true, property: cssProp, variable, fallback } : null
   }
   console.log('No property found in: ', inputText)
   return null
