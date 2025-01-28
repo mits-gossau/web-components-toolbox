@@ -1,4 +1,4 @@
 :host {
     --nav-level-item-default-background-color: transparent;
-    --nav-level-item-default-color: #262626;
+    --nav-level-item-default-color: var(--nav-level-item-default-color-custom, #262626);
 }
