@@ -405,7 +405,7 @@ export default class CarouselTwo extends Mutation() {
         margin: 0;
         justify-content: space-between;
         z-index: 1;
-        font-size: 5em;
+        font-size: var(--arrow-nav-size, 5em);
       }
       :host(.has-default-arrow-nav) > *.arrow-nav > * {
         align-items: center;
