@@ -14,8 +14,8 @@
   --carousel-two-default-section-nav-separate-margin: var(--content-spacing);
 }
 :host > *.arrow-nav {
-  --carousel-two-default-color: var(--m-white);
+  --carousel-two-default-color: var(--carousel-two-default-color-custom, var(--m-white));
 }
 :host > *.arrow-nav > *:hover {
-  --carousel-two-default-color: var(--color-hover);
+  --carousel-two-default-color: var(--carousel-two-default-color-hover-custom, var(--color-hover));
 }
