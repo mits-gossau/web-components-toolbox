@@ -1205,6 +1205,13 @@ export default class MultiLevelNavigation extends Mutation() {
       }
     })
 
+    Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
+      let currentSubSection
+      if(currentSubSection = node.querySelector('section')){
+        currentSubSection.setAttribute('hidden', 'true')
+      }
+    })
+
     eventListenersForMobileNav.forEach(evt =>
       document.body.addEventListener(evt, (event) => {
         this.openAnimationDelayNeeded = false
