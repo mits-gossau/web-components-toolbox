@@ -1321,13 +1321,11 @@ export default class MultiLevelNavigation extends Mutation() {
   fillMobileNavigation() {
     // add list-item-element
     Array.from(this.root.querySelectorAll('nav > ul > li')).forEach((mainLi, index) => {
-
       if (mainLi.querySelector('section')) {
         mainLi.setAttribute('aria-expanded', 'false')
         mainLi.setAttribute('aria-controls', 'nav-level-1')
         mainLi.setAttribute('sub-nav-control', `${index}`)
       }
-
       // Add class for title li a element
       const subTitleLiTags = Array.from(mainLi.querySelectorAll('li')).filter(li => !li.querySelector('m-nav-level-item'))
       subTitleLiTags.forEach(li => li.classList.add('list-title'))
