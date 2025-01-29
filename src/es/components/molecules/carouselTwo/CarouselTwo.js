@@ -11,7 +11,6 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * TODO: slides-per-view
  *
  * @attribute {
- *  small-arrows: the arrows of the navigation won't be as big and will cover less of the picture
  * }
  * @css {
  * }
@@ -406,9 +405,7 @@ export default class CarouselTwo extends Mutation() {
         margin: 0;
         justify-content: space-between;
         z-index: 1;
-        font-size: ${this.hasAttribute('small-arrows')
-          ? 'var(--arrow-nav-size-small, 1em)'
-          : '5em'};
+        font-size: var(--arrow-nav-size, 5em);
       }
       :host(.has-default-arrow-nav) > *.arrow-nav > * {
         align-items: center;
