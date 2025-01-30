@@ -1230,7 +1230,7 @@ export default class MultiLevelNavigation extends Mutation() {
             })
             this.fillMobileNavigation()
           }
-        }, 500)
+        }, 1000)
       }, { once: true })
     )
 
