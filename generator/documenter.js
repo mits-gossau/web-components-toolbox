@@ -5,7 +5,6 @@ const getAttributeNames = require('./documenter/getAttributes')
 const getCSSproperties = require('./documenter/getCSSProperties')
 const getTemplates = require('./documenter/getTemplates')
 const jsonToMarkdown = require('./documenter/jsonToMarkdown')
-const { json } = require('stream/consumers')
 // const generateModified = require('./documenter/generateModified')
 
 const ROOT_DIR = '../src/es/components/'
@@ -37,8 +36,6 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
   const basename = file.split('/').pop() // Get the last part of the path
   const filenameWithoutExtension = basename.split('.').slice(0, -1).join('.') // Remove the extension
   const md = jsonToMarkdown(data, filenameWithoutExtension)
-  // console.log(md)
-  // fs.writeFileSync(`${filenameWithoutExtension}.md`, md);
 
   // Perform both file write operations concurrently:
   // - Overwrite the original file with its modified version

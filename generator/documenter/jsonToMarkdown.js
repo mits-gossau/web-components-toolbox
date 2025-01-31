@@ -6,8 +6,8 @@ function jsonToMarkdown(json, fileName) {
     markdown += `**Path:** \`${json.path}\`\n\n`
 
     // Templates
-    markdown += `## Templates\n\n`
-    markdown += `| Name | Path |\n|------|------|\n`
+    markdown += `## Templates (Namespace)\n\n`
+    markdown += `| Namespace | Path |\n|------|------|\n`
     json.templates.forEach(template => {
         markdown += `| ${template.name} | \`${template.path}\` |\n`
     })
