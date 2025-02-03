@@ -252,7 +252,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       replaces.forEach(replace => (style = style.replace(new RegExp(replace.pattern, replace.flags), replace.replacement)))
       // TODO: Review the safari fix below, if the bug got fixed within safari itself (NOTE: -webkit prefix did not work for text-decoration-thickness). DONE 2021.11.10 | LAST CHECKED 2021.11.10
       // safari text-decoration un-supported shorthand fix
-      if (Shadow.isMac && style.includes('text-decoration:')) style = Shadow.cssTextDecorationShortHandFix(style, node)
+      if (Shadow.isMac && /(\n|\s|{){1}text-decoration:/g.test(style)) style = Shadow.cssTextDecorationShortHandFix(style, node)
       return (styleNode.textContent += style)
     }
   }
