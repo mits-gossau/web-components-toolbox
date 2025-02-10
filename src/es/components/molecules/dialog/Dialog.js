@@ -169,6 +169,7 @@ export default class Dialog extends Shadow() {
     :host > dialog .sticky {
       position: var(--sticky-position, sticky);
       top: var(--sticky-top, 0);
+      z-index: 100;
     }
     :host > dialog {
       background-color: var(--background-color, canvas);
