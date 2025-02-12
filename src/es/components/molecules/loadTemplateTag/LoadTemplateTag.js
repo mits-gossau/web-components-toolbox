@@ -95,10 +95,11 @@ export default class LoadTemplateTag extends Intersection() {
     const templateContent = this.template.content
     const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
     this.template.remove()
+    let templateContentElement = null
     // keep a placeholder with same style attribute (height) until next scroll event, which gives enough time for the templateContent to render
     if (this.hasAttribute('style') && this.getAttribute('style').includes('height')) {
       this.after(templateContent)
-      if (this.nextElementSibling) {
+      if ((templateContentElement = this.nextElementSibling)) {
         let counter = 0
         const removeThisFunc = () => setTimeout(() => {
           counter++
@@ -114,7 +115,17 @@ export default class LoadTemplateTag extends Intersection() {
         this.remove()
       }
     } else {
+      const previousElementSibling = this.previousElementSibling
+      const parentNode = this.parentNode
       this.replaceWith(templateContent)
+      templateContentElement = previousElementSibling ? previousElementSibling.nextElementSibling : parentNode.children[0]
+    }
+    if (templateContentElement) {
+      if (this.hasAttribute('copy-attributes')) Array.from(this.attributes).forEach(({name, value}) => {
+        if (name === 'copy-attributes' || name === 'copy-class-list') return
+        templateContentElement.setAttribute(name, value)
+      })
+      if (this.hasAttribute('copy-class-list')) Array.from(this.classList).forEach(className => templateContentElement.classList.add(className))
     }
     if (notDefined?.length) {
       if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
