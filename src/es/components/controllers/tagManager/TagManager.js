@@ -107,6 +107,10 @@ export default class TagManager extends Shadow() {
   // TODO: bug fixes are not included 1. ERROR: document.getAttribute(...) 2. sending too much data
   startExtendedGlobalEventCollecting () {
     this.extendedGlobalEventCollectingBodyElements()
+    this.extendedGlobalEventCollectingSocialMediaIcons()
+    this.extendedGlobalEventCollectingClicksScript()
+    this.extendedGlobalEventCollectingHeaderFooter()
+    this.extendedGlobalEventCollectingHeaderCleanUp()
   }
 
   // page 3
@@ -400,7 +404,7 @@ export default class TagManager extends Shadow() {
       })();
   }
 
-  // page 9
+  // page 12
   extendedGlobalEventCollectingHeaderCleanUp () {
     // Function to extract navigation levels from the target URL
     function extractNavigationLevels(target) {
