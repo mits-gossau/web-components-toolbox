@@ -101,4 +101,334 @@ export default class TagManager extends Shadow() {
   get scripts () {
     return this.root.querySelectorAll('script')
   }
+
+  // MIDUCA GTM CUSTOM HTML SCRIPTS - klubschule.ch | ibaw.ch | ksos-business.ch - November 2024
+  // TODO: rewrite es5 to es6
+  // TODO: bug fixes are not included 1. ERROR: document.getAttribute(...) 2. sending too much data
+  startExtendedGlobalEventCollecting () {
+    this.extendedGlobalEventCollectingBodyElements()
+  }
+
+  // page 3
+  extendedGlobalEventCollectingBodyElements () {
+    (function() {
+      // Set to the event you want to track
+      var eventName = 'click';
+      var useCapture = true;
+      var callback = function(event) {
+      if ('composed' in event && typeof event.composedPath === 'function') {
+      var path = event.composedPath();
+      // Iterate through the path to find the element with the tag
+      'ks-m-teaser'
+      for (var i = 0; i < path.length; i++) {
+      var targetElement = path[i];
+      if (targetElement.tagName && targetElement.tagName.toLowerCase() ===
+      'ks-m-teaser') {
+      var dataLayerObject = {
+      event: 'custom_event_click',
+      element: targetElement,
+      id: targetElement.id || ''
+      };
+      // Iterate over attributes using a traditional for loop
+      var attributes = targetElement.attributes;
+      for (var j = 0; j < attributes.length; j++) {
+      var attr = attributes[j];
+      dataLayerObject[attr.name] = attr.value;
+      }
+      // Push to dataLayer
+      window.dataLayer.push(dataLayerObject);
+      break;
+      }
+      }
+      }
+      };
+      document.addEventListener(eventName, callback, useCapture);
+      })();
+  }
+
+  // page 4
+  extendedGlobalEventCollectingSocialMediaIcons () {
+    (function() {
+      // Set to the event you want to track
+      var useCapture = true;
+      var callback = function(event) {
+      if ('composed' in event && typeof event.composedPath === 'function') {
+      var path = event.composedPath();
+      var elementTags = [];
+      for (var i = 0; i < path.length; i++) {
+      var tagName = path[i].tagName;
+      if (tagName) {
+      var className = path[i].className;
+      if (className) elementTags.push(tagName.toLowerCase() + '.' +
+      className);
+      else elementTags.push(tagName.toLowerCase());
+      }
+      else elementTags.push('');
+      };
+      {
+      // Check if the click was on a social media icon (which are <a> tags)
+      var isSocialLink = false;
+      for (var i = 0; i < path.length; i++) {
+      if (path[i].classList && path[i].classList.contains('social-links'))
+      isSocialLink = true;
+      break;
+      }
+      }
+      if (elementTags.includes('a') && isSocialLink) {
+      var targetElement = path[elementTags.indexOf('a')];
+      var dataLayerObject = {
+        event: 'social_icon.click',
+        target: targetElement.getAttribute('href'),
+        text: targetElement.textContent.trim(),
+        className: targetElement.className || '',
+        };
+        window.dataLayer.push(dataLayerObject);
+        }
+        }
+        };
+        document.addEventListener('click', callback, useCapture);
+        })();
+  }
+  // page 5
+  extendedGlobalEventCollectingClicksScript () {
+    var customClickAttached;
+    customClickAttached = customClickAttached || false;
+    if (customClickAttached === false) {
+    (function() {
+    function elementToString(currentElement) {
+    var string = '';
+    var element = '';
+    if (currentElement.tagName !== undefined) {
+    element = currentElement.tagName.toLowerCase();
+    }
+    var id = '';
+    if (currentElement.id !== undefined) {
+    id = currentElement.id;
+    }
+    var classes = [];
+    if (currentElement.classList !== undefined) {
+    for (var i = 0; i < currentElement.classList.length; i++) {
+    classes.push(currentElement.classList[i]);
+    }
+    }
+    string += element;
+    if (id !== '') {
+    string += '#' + id;
+    }
+    if (classes.length > 0) {
+    string += '.' + classes.join('.');
+    }
+    }
+    returnstring;
+    function pathToString(path) {
+    return path.reduce(
+    function (previousValue, currentElement) {
+    var string = '';
+    var currentElementString = elementToString(currentElement);
+    if (currentElementString !== '') {
+    string = currentElementString;
+    }
+    if (currentElementString === '') {
+    string = previousValue;
+    }
+    if (currentElementString !== '' && previousValue !== '') {
+    string = currentElementString + ' > ' + previousValue;
+      }
+    }
+    return},
+    ''
+    );
+    string;
+    function closestInPath(tagName, path) {
+    var tagNameUppercase = tagName.toUpperCase();
+    return path.reduce(function(previous, current) {
+    return (previous !== null && previous.tagName === tagNameUppercase) ?
+    previous : current.tagName === tagNameUppercase ? current : null;
+    }, null);
+    }
+    // Declare the function outside of the block
+    function getAllAttributes(element) {
+    var attrs = [];
+    if (element.attributes) {
+    for (var i = 0; i < element.attributes.length; i++) {
+    var attr = element.attributes[i];
+    attrs.push(attr.name + '="' + attr.value + '"');
+    }
+    }
+    if (element.shadowRoot) {
+    var shadowChildren = element.shadowRoot.children;
+    for (var j = 0; j < shadowChildren.length; j++) {
+    attrs = attrs.concat(getAllAttributes(shadowChildren[j]));
+    }
+    }
+    return attrs.join(' ');
+    }
+    function customClick(event) {
+    if ('composed' in event && typeof event.composedPath === 'function') {
+    var path = event.composedPath();
+    var targetElementPath = pathToString(path);
+    var formElement = closestInPath('FORM', path);
+    if (path[0] !== null) {
+      var attributesString = '';
+      for (var i = 0; i < path[0].attributes.length; i++) {
+      var attr = path[0].attributes[i];
+      attributesString += attr.name + '="' + attr.value + '" ';
+      }
+      var dataset = {};
+      for (var key in path[0].dataset) {
+      if (path[0].dataset.hasOwnProperty(key)) {
+      dataset[key] = path[0].dataset[key];
+      }
+      }
+      var allAttributes = getAllAttributes(path[0]);
+      window.dataLayer.push({
+      event: 'custom.click',
+      element: targetElementPath, // This is the JS path of the clicked
+      element
+      elementId: path[0].id || '',
+      elementClasses: path[0].className || '',
+      elementUrl: path[0].href || path[0].action || '',
+      elementTarget: path[0].target || '',
+      elementContent: path[0].textContent || '',
+      elementTagName: path[0].tagName || '',
+      elementDataset: JSON.stringify(dataset) || '',
+      elementInnerHTML: String(path[0].innerHTML) || '',
+      elementNamespace: path[0].namespaceURI || '',
+      elementAttributes: attributesString || '',
+      clickText: path[0].innerText || '',
+      originalEvent: event,
+      elementValue: path[0].value || '',
+      elementType: path[0].type || '',
+      path: targetElementPath,
+      });
+      }
+      }
+      }
+      document.addEventListener('click', customClick);
+      })();
+    }
+    customClickAttached = true;
+  }
+
+  // page 9
+  extendedGlobalEventCollectingHeaderFooter () {
+    (function() {
+      // Set to the event you want to track
+      var useCapture = true;
+      var callback = function(event) {
+      if ('composed' in event && typeof event.composedPath === 'function') {
+      var path = event.composedPath();
+      var elementTags = [];
+      for (var i = 0; i < path.length; i++) {
+      var tagName = path[i].tagName;
+      if (tagName) {
+      var className = path[i].className;
+      if (className) elementTags.push(tagName.toLowerCase() + '.' +
+      className);
+      else elementTags.push(tagName.toLowerCase());
+      }
+      else elementTags.push('');
+      };
+      console.log('TAGS-list: ', elementTags);
+      console.log('TAGS: ', path);
+      // Top-header: text: a.only-desktop
+      // Header: contains m-multi-level-navigation, text: <span>, link <a>
+      // Body elements: links <ks-m-teaser>, text <figcaption>
+      // Footer: text <a>, header div.footer-links-row contains-details
+      if (elementTags.includes('a.only-desktop')) {
+        var targetElement = path[elementTags.indexOf('a.only-desktop')];
+        var link = targetElement.getAttribute('href');
+        var text = targetElement.textContent.trim();
+        var dataLayerObject = {
+        event: 'custom_event_click_header',
+        target: link,
+        text: text,
+        category: 'top_headers'
+        };
+        window.dataLayer.push(dataLayerObject);
+        }
+        else if (elementTags.includes('m-multi-level-navigation')) {
+        if (elementTags.includes('m-nav-level-item')) {
+        var targetElement = path[elementTags.indexOf('m-nav-level-item')];
+        var link = targetElement.parentElement.getAttribute('href');
+        var text =
+        targetElement.shadowRoot.querySelector('span').textContent.trim();
+        var parent =
+        targetElement.parentElement.parentElement.parentElement.getAttribute('mobile-na
+        vigation-name').trim();
+        } else {
+        var targetElement = path[elementTags.indexOf('a')];
+        var link = targetElement.getAttribute('href');
+        var text = targetElement.querySelector('span').textContent.trim();
+        var parent = '';
+        }
+        var dataLayerObject = {
+        event: 'custom_event_click_header',
+        target: link,
+        text: text,
+        category: parent
+        };
+        window.dataLayer.push(dataLayerObject);
+        } else if (elementTags.includes('ks-m-teaser.intersecting')) {
+        var targetElement =
+        path[elementTags.indexOf('ks-m-teaser.intersecting')];
+        var targetElementText = path[elementTags.indexOf('figcaption')];
+        var dataLayerObject = {
+        event: 'custom_event_click_body',
+        target: targetElement.getAttribute('href'),
+        pretitle: targetElementText.querySelector('strong').textContent,
+      title: targetElementText.querySelector('h3').textContent,
+      text: targetElementText.querySelector('p').textContent
+      };
+      window.dataLayer.push(dataLayerObject);
+      } else if (elementTags.includes('div.footer-links-row
+      contains-details')) {
+      var targetElement = path[elementTags.indexOf('a')];
+      var targetElementHeader =
+      path[elementTags.indexOf('div.footer-links-row contains-details')];
+      var dataLayerObject = {
+      event: 'custom_event_click_footer',
+      target: targetElement.getAttribute('href'),
+      text: targetElement.textContent.trim(),
+      section: targetElementHeader.querySelector('h4').textContent,
+      };
+      window.dataLayer.push(dataLayerObject);
+      }
+      }
+      };
+      document.addEventListener('click', callback, useCapture);
+      })();
+  }
+
+  // page 9
+  extendedGlobalEventCollectingHeaderCleanUp () {
+    // Function to extract navigation levels from the target URL
+    function extractNavigationLevels(target) {
+      // Remove the leading slash and split the path into segments
+      var segments = target.replace(/^\//, '').split('/');
+      // Initialize the variables
+      var header_category = segments[0] || "";
+      var header_subcategory1 = segments[1] || "";
+      var header_subcategory2 = segments[2] || "";
+      var header_subcategory3 = segments[3] || "";
+      if ({{dlv - category}} == 'top_headers') {
+      header_category = 'partner_website';
+      header_subcategory1 = {{dlv - text}};
+      header_subcategory2 = '';
+      header_subcategory3 = '';
+      }
+      // Push the variables into the dataLayer
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+      'event': 'navigation_levels',
+      'header_category': header_category,
+      'header_subcategory1': header_subcategory1,
+      'header_subcategory2': header_subcategory2,
+      'header_subcategory3': header_subcategory3
+      });
+      }
+      // Get the target URL from the dataLayer variable
+      var target = {{dlv - target}};
+      extractNavigationLevels(target);
+  }
 }
