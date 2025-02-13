@@ -106,6 +106,7 @@ export default class TagManager extends Shadow() {
   // TODO: rewrite es5 to es6
   // TODO: bug fixes are not included 1. ERROR: document.getAttribute(...) 2. sending too much data
   startExtendedGlobalEventCollecting () {
+    // awaiting update
     this.extendedGlobalEventCollectingBodyElements()
     this.extendedGlobalEventCollectingSocialMediaIcons()
     this.extendedGlobalEventCollectingClicksScript()
