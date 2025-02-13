@@ -40,15 +40,15 @@ export default class IntersectionScrollEffect extends Intersection() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mode: 'open', intersectionObserverInit: { rootMargin: '0px 0px 0px 0px' } }), ...args)
 
-    /** @type {number} */
+    /** @type {number | any} */
     this.elementHeight = 0
-    /** @type {number} */
+    /** @type {string | any} */
     this.center = 0
     /** @type {number} */
     this.maxDistanceFromCenter = 0
     /** @type {boolean} */
     this.hasRequiredAttributes = this.getAttribute('css-property') && this.getAttribute('effect') && this.getAttribute('max-value')
-    /** @type {boolean | null} for saving the media type */
+    /** @type {boolean | string | null} for saving the media type */
     this.cachedMedia = null
     /** @type {number} for rounding the css value */
     this.digits = this.getAttribute('digits') ? Number(this.getAttribute('digits')) : 4
@@ -67,6 +67,7 @@ export default class IntersectionScrollEffect extends Intersection() {
         : ''
       }
     `
+    // @ts-ignore
     this.html = this._css = this._css.cloneNode() // set the clone as this.css reference and by that safe the original away to never be overwritten by the this.css setter
 
     this.scrollListener = event => {
@@ -88,8 +89,10 @@ export default class IntersectionScrollEffect extends Intersection() {
         // TODO add optional min-value? max(minValue, outputValue * maxValue)
 
         // get distance from center (abs)
+        /** @type {any} */
         const difference = this.round(this.center > boundingRect[this.direction(2)] ? this.center - boundingRect[this.direction(2)] : boundingRect[this.direction(2)] - this.center, 2)
         // get output [0..1]
+        /** @type {any} */
         let outputValue = this.round(difference / this.maxDistanceFromCenter, this.digits)
         // clamp value to avoid inaccuracies from scrolling too fast
         outputValue = this.clamp(outputValue, 0, 1)
@@ -184,7 +187,7 @@ export default class IntersectionScrollEffect extends Intersection() {
       * @return {void}
       */
   intersectionCallback (entries, observer) {
-    if (entries && entries[0]) {
+    if ((this.isIntersecting = this.areEntriesIntersecting(entries))) {
       this.scrollListener()
       if (this.areEntriesIntersecting(entries)) {
         this.getElement(this.direction(3)).addEventListener('scroll', this.scrollListener)
