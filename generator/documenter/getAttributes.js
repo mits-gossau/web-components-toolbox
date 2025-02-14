@@ -17,7 +17,8 @@ function getAttributeNames(filePath, options = { sourceType: 'module' }) {
       ...options,
       sourceFilename: filePath,
       plugins: ['jsx', 'typescript'],
-    });
+    })
+    
     traverse(ast, {
       CallExpression(path) {
         const { callee } = path.node

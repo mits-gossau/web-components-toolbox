@@ -5,6 +5,7 @@ const getAttributeNames = require('./documenter/getAttributes')
 const getCSSproperties = require('./documenter/getCSSProperties')
 const getTemplates = require('./documenter/getTemplates')
 const jsonToMarkdown = require('./documenter/jsonToMarkdown')
+const getMetaData = require('./documenter/getMetaData')
 // const generateModified = require('./documenter/generateModified')
 
 const ROOT_DIR = '../src/es/components/'
@@ -24,6 +25,7 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
   // - CSS properties extracted from the file
   // - attribute names extracted from the file
   const data = {
+    metaData: getMetaData(file),
     path: file,
     templates: getTemplates(file),
     attributes: getAttributeNames(file), // Extract attribute names from the file
@@ -43,7 +45,7 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
   await Promise.all([
     // fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
     // fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.json`, jsonData) // Write the JSON data to a file
-    // fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.md`, md) // Write the markdown file 
+    fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.md`, md) // Write the markdown file 
   ])
 
 

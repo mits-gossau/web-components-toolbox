@@ -5,6 +5,14 @@ function jsonToMarkdown(json, fileName) {
     markdown += `# ${fileName}\n\n`
     markdown += `**Path:** \`${json.path}\`\n\n`
 
+    // Summary
+    markdown += `## Summary\n\n`
+    markdown += `${json.metaData.summary}\n\n`
+
+    // Integration
+    markdown += `## Integration\n\n`
+    markdown += json.metaData.integration === 'n/a' ? 'n/a\n\n' :  '```html\n' + `${json.metaData.integration}\n` + '```\n\n'  
+
     // Templates
     markdown += `## Templates (Namespace)\n\n`
     markdown += `| Namespace | Path |\n|------|------|\n`
