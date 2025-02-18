@@ -1,5 +1,6 @@
 // @ts-check
 import { Mutation } from '../../prototypes/Mutation.js'
+import { Anchor } from '../../prototypes/Anchor.js'
 
 /* global CustomEvent */
 /* global Image */
@@ -52,7 +53,7 @@ import { Mutation } from '../../prototypes/Mutation.js'
  */
 
 // @ts-ignore
-export const Details = (ChosenHTMLElement = Mutation()) => class Details extends ChosenHTMLElement {
+export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
@@ -160,6 +161,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
         // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
+        // @ts-ignore
         if (this.constructor.isMac) {
           Array.from(this.root.querySelectorAll(':host details[open] summary ~ *')).forEach(element => element.animate([
             { // from
@@ -237,6 +239,7 @@ export const Details = (ChosenHTMLElement = Mutation()) => class Details extends
         this.mutationObserveStop()
         this.details.setAttribute('open', '')
         // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
+        // @ts-ignore
         if (this.constructor.isMac) {
           Array.from(this.root.querySelectorAll(':host details[open] summary ~ *')).forEach(element => {
             element.animate([
