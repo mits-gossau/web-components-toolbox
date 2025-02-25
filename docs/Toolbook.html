@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href=../src/css/initial.css rel=stylesheet type="text/css">
+        <link href=../src/css/reset.css rel=stylesheet type="text/css">
+        <link href=../src/css/colors.css rel=stylesheet type="text/css">
+        <link href=../src/css/fonts.css rel=stylesheet type="text/css">
+        <link href=../src/css/variables.css rel=stylesheet type="text/css">
+        <title>Tool Book the better than Story Book. 🙈🙉🙊</title>
+    </head>
+
+    <body>
+        <div>
+            <h1>Tool Book the better than Story Book. 🙈🙉🙊</h1>
+            <view-tool-book></view-tool-book>
+        </div>
+        <script type=module>
+            import {Shadow} from '../src/es/components/prototypes/Shadow.js'
+    
+            customElements.define('view-tool-book', class extends Shadow() {
+                constructor (options = {}, ...args) {
+                    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+
+                    this.changeNamespaceEventListener = event => {
+                    this.sectionPreview.innerHTML = /* html */ `
+                        <a-button namespace="${event.target.value}">My Button</a-button>
+                        `
+                    }
+                }
+      
+                connectedCallback () {
+                    if (this.shouldRenderCSS()) this.renderCSS()
+                    if (this.shouldRenderHTML()) this.renderHTML()
+                    this.inputNamespace.addEventListener('change', this.changeNamespaceEventListener)
+                }
+			
+                disconnectedCallback () {
+                    this.inputNamespace.removeEventListener('change', this.changeNamespaceEventListener)
+                }
+
+                /**
+                 * evaluates if a render is necessary
+                 *
+                 * @return {boolean}
+                 */
+                shouldRenderCSS () {
+                    return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
+                }
+
+                /**
+                 * evaluates if a render is necessary
+                 *
+                 * @return {boolean}
+                 */
+                shouldRenderHTML () {
+                    return !this.sectionPreview
+                }
+
+                /**
+                 * renders the css
+                 *
+                 * @return {Promise<void>}
+                 */
+                renderCSS () {
+                    this.css = /* css */``
+                }
+
+                /**
+                 * renders the html
+                 *
+                 * @return {Promise<void>}
+                 */
+                renderHTML () {
+                    this.html = /* html */`
+                        <section id=controls>
+                            <label for=namespace>Namespace</label>
+                            <input id=namespace type="text" name=namespace>
+                        </section>
+                        <section id=preview>
+                            <p>preview</p>
+                        </section>
+                        `
+                        return this.fetchModules([
+                            {
+                                path: `${this.importMetaUrl}../src/es/components/atoms/button/Button.js`,
+                                name: 'a-button'
+                            }
+                        ])
+                }
+
+                get inputNamespace () {
+                    return this.root.querySelector('input#namespace')
+                }
+
+                get sectionPreview () {
+                    return this.root.querySelector('section#preview')
+                }
+            })
+        </script>
+</body>
+</html>
