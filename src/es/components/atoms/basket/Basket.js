@@ -7,6 +7,12 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @export
  * @class Basket
  * @type {CustomElementConstructor}
+ * @summary This is a Basket Component as you can see in the demo. Just activate your brain and have fun.
+ * @text nothing
+ * @integration 
+ * <ks-a-notification-bar id="54325436432">
+ *  <p>Et blandit sodales tempor magna</a></p>
+ * </ks-a-notification-bar>
  */
 export default class Basket extends Shadow() {
   /**

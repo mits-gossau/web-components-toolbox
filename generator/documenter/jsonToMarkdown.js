@@ -5,6 +5,14 @@ function jsonToMarkdown(json, fileName) {
     markdown += `# ${fileName}\n\n`
     markdown += `**Path:** \`${json.path}\`\n\n`
 
+    // Summary
+    markdown += `## Summary\n\n`
+    markdown += `${json.metaData.summary}\n\n`
+
+    // Integration
+    markdown += `## Integration\n\n`
+    markdown += json.metaData.integration === 'n/a' ? 'n/a\n\n' :  '```html\n' + `${json.metaData.integration}\n` + '```\n\n'  
+
     // Templates
     markdown += `## Templates (Namespace)\n\n`
     markdown += `| Namespace | Path |\n|------|------|\n`
@@ -25,9 +33,8 @@ function jsonToMarkdown(json, fileName) {
     markdown += `## CSS Styles\n\n`
     json.css.forEach(style => {
         markdown += `### Selector: \`${style.selector}\`\n\n`
-        markdown += `Changeable: ${style.changeable ? 'Yes' : 'No'}\n\n`
         if (style.declaration && style.declaration.length > 0) {
-            markdown += `| Property | Variable | Fallback |\n|----------|----------|----------|\n`
+            markdown += `| Property | Variable | Default |\n|----------|----------|----------|\n`
             style.declaration.forEach(decl => {
                 markdown += `| ${decl.property} | ${decl.variable || ''} | ${decl.fallback || ''} |\n`
             })

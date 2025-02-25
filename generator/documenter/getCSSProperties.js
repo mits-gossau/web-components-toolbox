@@ -2,7 +2,7 @@ const fs = require('fs')
 const traverse = require('@babel/traverse').default
 const { parse } = require('@babel/parser')
 
-function getCSSProperties (filePath, options = { sourceType: 'module' }) {
+function getCSSProperties(filePath, options = { sourceType: 'module' }) {
   const css = []
   try {
     const content = fs.readFileSync(filePath, 'utf8')
@@ -13,7 +13,7 @@ function getCSSProperties (filePath, options = { sourceType: 'module' }) {
     })
 
     traverse(ast, {
-      TemplateLiteral (path) {
+      TemplateLiteral(path) {
         // Destructure the 'quasis' array from the 'path.node' object, which represents template literals in the AST
         const { quasis } = path.node
         // Extract the raw content of the first quasi (template element) in the template literal
@@ -32,7 +32,7 @@ function getCSSProperties (filePath, options = { sourceType: 'module' }) {
           const cssDeclarationBlock = properties.map(property => extractProperty(property)).filter(prop => prop)
           console.log(`found selector: ${selector} at line ${path.node.loc.start.line}, column ${path.node.loc.start.column}`)
           // Create an object containing the selector and its properties, and push it to the 'css' array
-          css.push({ selector, changeable: true, declaration: cssDeclarationBlock })
+          css.push({ selector, declaration: cssDeclarationBlock })
         }
       }
     })
@@ -43,7 +43,7 @@ function getCSSProperties (filePath, options = { sourceType: 'module' }) {
   }
 }
 
-function extractProperty (inputText) {
+function extractProperty(inputText) {
   const properties = inputText.split(';').map(line => line.trim()).filter(line => line !== '')[0]
   if (!properties) return null
   // It matches the string "var("
@@ -57,7 +57,7 @@ function extractProperty (inputText) {
   if (match) {
     const [variable, fallback] = match[1].split(',').map(value => value.trim())
     const cssProp = inputText.split(':')[0].trim()
-    return cssProp ? { changeable: true, property: cssProp, variable, fallback } : null
+    return cssProp ? { property: cssProp, variable, fallback } : null
   }
   console.log('No property found in: ', inputText)
   return null
