@@ -33,9 +33,8 @@ function jsonToMarkdown(json, fileName) {
     markdown += `## CSS Styles\n\n`
     json.css.forEach(style => {
         markdown += `### Selector: \`${style.selector}\`\n\n`
-        markdown += `Changeable: ${style.changeable ? 'Yes' : 'No'}\n\n`
         if (style.declaration && style.declaration.length > 0) {
-            markdown += `| Property | Variable | Fallback |\n|----------|----------|----------|\n`
+            markdown += `| Property | Variable | Default |\n|----------|----------|----------|\n`
             style.declaration.forEach(decl => {
                 markdown += `| ${decl.property} | ${decl.variable || ''} | ${decl.fallback || ''} |\n`
             })

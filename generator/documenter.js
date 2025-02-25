@@ -21,7 +21,9 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
   ]
 }).forEach(async file => {
   // For each file found, prepare a data object containing:
+  // - meta data extracted from the file (leading comments)
   // - the file path
+  // - templates extracted from the file
   // - CSS properties extracted from the file
   // - attribute names extracted from the file
   const data = {
@@ -45,7 +47,7 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
   await Promise.all([
     // fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
     // fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.json`, jsonData) // Write the JSON data to a file
-    fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.md`, md) // Write the markdown file 
+    fs.promises.writeFile(`${path.dirname(file)}/readme.md`, md) // Write the markdown file 
   ])
 
 
