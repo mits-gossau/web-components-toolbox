@@ -19,6 +19,7 @@
         </div>
         <script type=module>
             import {Shadow} from '../src/es/components/prototypes/Shadow.js'
+            import jsonData from '../index.json' with {type: "json"}
     
             customElements.define('view-tool-book', class extends Shadow() {
                 constructor (options = {}, ...args) {
@@ -35,8 +36,19 @@
                     if (this.shouldRenderCSS()) this.renderCSS()
                     if (this.shouldRenderHTML()) this.renderHTML()
                     this.inputNamespace.addEventListener('change', this.changeNamespaceEventListener)
+                   
+                    this.fetchData()
+                        .then(data => console.log(data))
+                        .catch(error => console.log(error))
                 }
-			
+
+                async fetchData() {
+                    const responses = await Promise.all(
+                        Array.from(jsonData.fileUrls , (url, i) => fetch(url).then(res => res.json()))
+                    )
+                    return responses
+                }
+            
                 disconnectedCallback () {
                     this.inputNamespace.removeEventListener('change', this.changeNamespaceEventListener)
                 }
@@ -100,5 +112,5 @@
                 }
             })
         </script>
-</body>
+    </body>
 </html>
