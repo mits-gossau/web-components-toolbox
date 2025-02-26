@@ -1,0 +1,127 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/simpleForm/SimpleForm.js",
+  "templates": [
+    {
+      "name": "simple-form-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "simple-form-miduweb-",
+      "path": "./miduweb-/miduweb-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "endpoint",
+      "description": ""
+    },
+    {
+      "attributeName": "dispatch-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "submit-disabled",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "grecaptcha-key",
+      "description": ""
+    },
+    {
+      "attributeName": "schema",
+      "description": ""
+    },
+    {
+      "attributeName": "mode",
+      "description": ""
+    },
+    {
+      "attributeName": "method",
+      "description": ""
+    },
+    {
+      "attributeName": "headers",
+      "description": ""
+    },
+    {
+      "attributeName": "follow",
+      "description": ""
+    },
+    {
+      "attributeName": "response-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "response-text-node-selector",
+      "description": ""
+    },
+    {
+      "attributeName": "onclick-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "success-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "clear-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "redirect-url-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "target-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "features-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "grecaptcha-url",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host *:has(> input[type=file]) > *:not(input)",
+      "declaration": []
+    },
+    {
+      "selector": ":host *:has(> input[type=file]) > *:not(input) > *:first-child",
+      "declaration": []
+    },
+    {
+      "selector": ":host *:has(> input[type=file]) *:not(input) > ul",
+      "declaration": []
+    },
+    {
+      "selector": ":host *:has(> input[type=file]) *.file-preview > ul > li:not(:last-child)",
+      "declaration": []
+    },
+    {
+      "selector": ":host [captcha-message]",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-error",
+          "fallback": "var(--color"
+        }
+      ]
+    },
+    {
+      "selector": ":host [captcha-message].hidden",
+      "declaration": []
+    }
+  ]
+}

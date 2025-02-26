@@ -1,0 +1,34 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/totalPrice/TotalPrice.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "total-text",
+      "description": ""
+    },
+    {
+      "attributeName": "update-hidden-input-class",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host > div",
+      "declaration": [
+        {
+          "property": "gap",
+          "variable": "--gap",
+          "fallback": "1em"
+        }
+      ]
+    }
+  ]
+}

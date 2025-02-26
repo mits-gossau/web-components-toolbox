@@ -1,0 +1,76 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/dialog/Dialog.js",
+  "templates": [
+    {
+      "name": "dialog-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "dialog-top-slide-in-",
+      "path": "./top-slide-in-/top-slide-in-.css"
+    },
+    {
+      "name": "dialog-left-slide-in-",
+      "path": "./left-slide-in-/left-slide-in-.css"
+    },
+    {
+      "name": "dialog-left-slide-in-wide-",
+      "path": "./left-slide-in-wide-/left-slide-in-wide-.css"
+    },
+    {
+      "name": "dialog-left-slide-in-without-background-",
+      "path": "./left-slide-in-without-background-/left-slide-in-without-background-.css"
+    },
+    {
+      "name": "dialog-left-slide-in-checkout-",
+      "path": "./left-slide-in-checkout-/left-slide-in-checkout-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "command-show",
+      "description": ""
+    },
+    {
+      "attributeName": "close-other-flyout",
+      "description": ""
+    },
+    {
+      "attributeName": "closed-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "backdrop-clicked",
+      "description": ""
+    },
+    {
+      "attributeName": "open",
+      "description": ""
+    },
+    {
+      "attributeName": "show-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "close-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "dialog-desktop-height",
+      "description": ""
+    },
+    {
+      "attributeName": "dialog-mobile-height",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": []
+}

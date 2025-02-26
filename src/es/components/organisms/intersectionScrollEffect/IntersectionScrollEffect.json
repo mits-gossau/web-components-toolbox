@@ -1,0 +1,70 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/organisms/intersectionScrollEffect/IntersectionScrollEffect.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "css-property",
+      "description": ""
+    },
+    {
+      "attributeName": "effect",
+      "description": ""
+    },
+    {
+      "attributeName": "max-value",
+      "description": ""
+    },
+    {
+      "attributeName": "digits",
+      "description": ""
+    },
+    {
+      "attributeName": "transition",
+      "description": ""
+    },
+    {
+      "attributeName": "offset-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "offset",
+      "description": ""
+    },
+    {
+      "attributeName": "invert",
+      "description": ""
+    },
+    {
+      "attributeName": "max-value-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "media",
+      "description": ""
+    },
+    {
+      "attributeName": "picture-load",
+      "description": ""
+    },
+    {
+      "attributeName": "scroll-el-query",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "/* fix",
+          "variable": "--overflow",
+          "fallback": "hidden"
+        }
+      ]
+    }
+  ]
+}

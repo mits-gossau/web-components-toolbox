@@ -1,0 +1,15 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/formZadb/FormZadb.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "custom-street-hint-text",
+      "description": ""
+    }
+  ],
+  "css": []
+}

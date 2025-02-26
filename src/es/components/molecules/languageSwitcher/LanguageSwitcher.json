@@ -1,0 +1,94 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/languageSwitcher/LanguageSwitcher.js",
+  "templates": [
+    {
+      "name": "language-switcher-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "language-switcher-delica-",
+      "path": "./delica-/delica-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "grid-area",
+          "variable": "--grid-area",
+          "fallback": "\"login\""
+        },
+        {
+          "property": "margin",
+          "variable": "--margin",
+          "fallback": "calc(var(--content-spacing"
+        },
+        {
+          "property": "/* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */\n      width",
+          "variable": "--width",
+          "fallback": "var(--content-width"
+        }
+      ]
+    },
+    {
+      "selector": ":host > ul",
+      "declaration": [
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "end"
+        },
+        {
+          "property": "gap",
+          "variable": "--content-spacing",
+          "fallback": "1em"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--content-spacing-mobile",
+          "fallback": "var(--content-spacing"
+        },
+        {
+          "property": "/* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */\n          width",
+          "variable": "--content-width-mobile",
+          "fallback": "calc(100% - var(--content-spacing-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host .font-size-tiny",
+      "declaration": [
+        {
+          "property": "font-size",
+          "variable": "--p-font-size-mobile",
+          "fallback": "var(--p-font-size"
+        },
+        {
+          "property": "line-height",
+          "variable": "--line-height-mobile",
+          "fallback": "var(--line-height"
+        }
+      ]
+    },
+    {
+      "selector": ":host > div div[open]",
+      "declaration": []
+    }
+  ]
+}

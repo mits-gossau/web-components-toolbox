@@ -1,0 +1,81 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/input/Input.js",
+  "templates": [
+    {
+      "name": "input-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "search",
+      "description": ""
+    },
+    {
+      "attributeName": "submit-search",
+      "description": ""
+    },
+    {
+      "attributeName": "any-key-listener",
+      "description": ""
+    },
+    {
+      "attributeName": "active-detail-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-size",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "enterkeyhint",
+      "description": ""
+    },
+    {
+      "attributeName": "base-url",
+      "description": ""
+    },
+    {
+      "attributeName": "inputId",
+      "description": ""
+    },
+    {
+      "attributeName": "type",
+      "description": ""
+    },
+    {
+      "attributeName": "placeholder",
+      "description": ""
+    },
+    {
+      "attributeName": "value",
+      "description": ""
+    },
+    {
+      "attributeName": "autocomplete",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-name",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": "*,\n      *::before,\n      *::after",
+      "declaration": []
+    }
+  ]
+}

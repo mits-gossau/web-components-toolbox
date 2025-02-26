@@ -1,0 +1,23 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/email/EMail.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "local-part",
+      "description": ""
+    },
+    {
+      "attributeName": "domain",
+      "description": ""
+    },
+    {
+      "attributeName": "subject",
+      "description": ""
+    }
+  ],
+  "css": []
+}

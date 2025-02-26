@@ -1,0 +1,23 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/loadScript/LoadScript.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "timeout",
+      "description": ""
+    },
+    {
+      "attributeName": "wc-config-load",
+      "description": ""
+    },
+    {
+      "attributeName": "src",
+      "description": ""
+    }
+  ],
+  "css": []
+}

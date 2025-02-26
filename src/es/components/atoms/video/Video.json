@@ -1,0 +1,60 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/video/Video.js",
+  "templates": [
+    {
+      "name": "video-crop-",
+      "path": "./crop-/crop-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "sources",
+      "description": ""
+    },
+    {
+      "attributeName": "height",
+      "description": ""
+    },
+    {
+      "attributeName": "width",
+      "description": ""
+    },
+    {
+      "attributeName": "aspect-ratio",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "video-load",
+      "description": ""
+    },
+    {
+      "attributeName": "loading",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100%"
+        },
+        {
+          "property": "height",
+          "variable": "--height",
+          "fallback": "auto"
+        }
+      ]
+    }
+  ]
+}

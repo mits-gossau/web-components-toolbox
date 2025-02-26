@@ -1,0 +1,188 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/arrow/Arrow.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "direction",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": "@keyframes move",
+      "declaration": []
+    },
+    {
+      "selector": "48%",
+      "declaration": []
+    },
+    {
+      "selector": "49%",
+      "declaration": []
+    },
+    {
+      "selector": "50%",
+      "declaration": []
+    },
+    {
+      "selector": "51%",
+      "declaration": []
+    },
+    {
+      "selector": "100%",
+      "declaration": []
+    },
+    {
+      "selector": "@keyframes move",
+      "declaration": []
+    },
+    {
+      "selector": "48%",
+      "declaration": []
+    },
+    {
+      "selector": "49%",
+      "declaration": []
+    },
+    {
+      "selector": "50%",
+      "declaration": []
+    },
+    {
+      "selector": "51%",
+      "declaration": []
+    },
+    {
+      "selector": "100%",
+      "declaration": []
+    },
+    {
+      "selector": "@keyframes move",
+      "declaration": []
+    },
+    {
+      "selector": "48%",
+      "declaration": []
+    },
+    {
+      "selector": "49%",
+      "declaration": []
+    },
+    {
+      "selector": "50%",
+      "declaration": []
+    },
+    {
+      "selector": "51%",
+      "declaration": []
+    },
+    {
+      "selector": "100%",
+      "declaration": []
+    },
+    {
+      "selector": "@keyframes move",
+      "declaration": []
+    },
+    {
+      "selector": "48%",
+      "declaration": []
+    },
+    {
+      "selector": "49%",
+      "declaration": []
+    },
+    {
+      "selector": "50%",
+      "declaration": []
+    },
+    {
+      "selector": "51%",
+      "declaration": []
+    },
+    {
+      "selector": "100%",
+      "declaration": []
+    },
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--svg-size",
+          "fallback": "1.5em"
+        },
+        {
+          "property": "width",
+          "variable": "--svg-size",
+          "fallback": "1.5em"
+        }
+      ]
+    },
+    {
+      "selector": ":host > svg",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color",
+          "fallback": "#777"
+        },
+        {
+          "property": "height",
+          "variable": "--svg-size",
+          "fallback": "1.5em"
+        },
+        {
+          "property": "width",
+          "variable": "--svg-size",
+          "fallback": "1.5em"
+        }
+      ]
+    },
+    {
+      "selector": ":host > svg path",
+      "declaration": [
+        {
+          "property": "stroke",
+          "variable": "--path-color",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "transition",
+          "variable": "--path-transition",
+          "fallback": "all 0.3s ease-out"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:hover) > svg path, :host(.hover) > svg path",
+      "declaration": [
+        {
+          "property": "stroke",
+          "variable": "--path-color-hover",
+          "fallback": "var(--color"
+        }
+      ]
+    },
+    {
+      "selector": ":host([direction=up]) > svg",
+      "declaration": []
+    },
+    {
+      "selector": ":host([direction=right]) > svg",
+      "declaration": []
+    },
+    {
+      "selector": ":host([direction=down]) > svg",
+      "declaration": []
+    },
+    {
+      "selector": ":host([direction=left]) > svg",
+      "declaration": []
+    }
+  ]
+}

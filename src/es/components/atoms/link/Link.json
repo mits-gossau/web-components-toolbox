@@ -1,0 +1,94 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/link/Link.js",
+  "templates": [
+    {
+      "name": "underline-",
+      "path": "./underline-/underline-.css"
+    },
+    {
+      "name": "download-",
+      "path": "./download-/download-.css"
+    },
+    {
+      "name": "tag-filter-",
+      "path": "./tag-filter-/tag-filter-.css"
+    },
+    {
+      "name": "category-",
+      "path": "./category-/category-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "hit-area",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-path",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host > a",
+      "declaration": []
+    },
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "fit-content"
+        }
+      ]
+    },
+    {
+      "selector": ":host > a",
+      "declaration": [
+        {
+          "property": "gap",
+          "variable": "--gap",
+          "fallback": "1em"
+        }
+      ]
+    },
+    {
+      "selector": ":host > a svg",
+      "declaration": [
+        {
+          "property": "min-width",
+          "variable": "--svg-min-width",
+          "fallback": "1.75em"
+        },
+        {
+          "property": "min-height",
+          "variable": "--svg-min-height",
+          "fallback": "1.75em"
+        },
+        {
+          "property": "width",
+          "variable": "--svg-width",
+          "fallback": "1.75em"
+        },
+        {
+          "property": "height",
+          "variable": "--svg-height",
+          "fallback": "1.75em"
+        }
+      ]
+    }
+  ]
+}

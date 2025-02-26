@@ -1,0 +1,82 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/formOrderItem/FormOrderItem.js",
+  "templates": [
+    {
+      "name": "form-order-item-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "is-fixed-price",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "price",
+      "description": ""
+    },
+    {
+      "attributeName": "name",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host input[type=number]",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--a-input-width",
+          "fallback": "auto"
+        }
+      ]
+    },
+    {
+      "selector": ":host input[type=number]::-webkit-outer-spin-button,\n      :host input[type=number]::-webkit-inner-spin-button",
+      "declaration": []
+    },
+    {
+      "selector": ":host input[type=number]",
+      "declaration": []
+    },
+    {
+      "selector": ":host > div",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "0"
+        },
+        {
+          "property": "border-top",
+          "variable": "--border-top-color",
+          "fallback": "black"
+        }
+      ]
+    },
+    {
+      "selector": ":host a-button",
+      "declaration": []
+    },
+    {
+      "selector": ":host a-button:focus",
+      "declaration": []
+    }
+  ]
+}

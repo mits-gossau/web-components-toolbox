@@ -1,0 +1,32 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/loadTemplateTagClickMore/LoadTemplateTagClickMore.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "load-custom-elements",
+      "description": ""
+    },
+    {
+      "attributeName": "initial-unpack",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": "/* hide component stuff before it is rendered to avoid the blitz (flashing white) */\n      :not(:defined)",
+      "declaration": []
+    },
+    {
+      "selector": ":host",
+      "declaration": []
+    }
+  ]
+}

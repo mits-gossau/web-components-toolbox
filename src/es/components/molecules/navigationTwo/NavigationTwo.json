@@ -1,0 +1,196 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/navigationTwo/NavigationTwo.js",
+  "templates": [
+    {
+      "name": "navigation-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "navigation-alnatura-",
+      "path": "./alnatura-/alnatura-.css"
+    },
+    {
+      "name": "navigation-klubschule-",
+      "path": "./klubschule-/klubschule-.css"
+    },
+    {
+      "name": "navigation-nature-",
+      "path": "./nature-/nature-.css"
+    },
+    {
+      "name": "navigation-yearbooks-",
+      "path": "./yearbooks-/yearbooks-.css"
+    },
+    {
+      "name": "navigation-migrospro-",
+      "path": "./migrospro-/migrospro-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "no-scroll",
+      "description": ""
+    },
+    {
+      "attributeName": "navigation-load",
+      "description": ""
+    },
+    {
+      "attributeName": "hover",
+      "description": ""
+    },
+    {
+      "attributeName": "o-nav-wrapper",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "hit-area",
+      "description": ""
+    },
+    {
+      "attributeName": "set-active",
+      "description": ""
+    },
+    {
+      "attributeName": "click-anchor",
+      "description": ""
+    },
+    {
+      "attributeName": "focus-lost-close",
+      "description": ""
+    },
+    {
+      "attributeName": "media",
+      "description": ""
+    },
+    {
+      "attributeName": "margin-top",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host a-link",
+      "declaration": [
+        {
+          "property": "--padding",
+          "variable": "--a-link-content-spacing",
+          "fallback": "14px 10px"
+        },
+        {
+          "property": "--font-size",
+          "variable": "--a-link-font-size",
+          "fallback": "1rem"
+        },
+        {
+          "property": "--font-weight",
+          "variable": "--a-link-font-weight"
+        },
+        {
+          "property": "--line-height",
+          "variable": "--a-link-line-height"
+        },
+        {
+          "property": "--text-transform",
+          "variable": "--a-link-text-transform"
+        },
+        {
+          "property": "font-family",
+          "variable": "--a-link-font-family",
+          "fallback": "var(--font-family"
+        },
+        {
+          "property": "font-weight",
+          "variable": "--a-font-weight",
+          "fallback": "var(--font-weight"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > .language-switcher",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--margin"
+        },
+        {
+          "property": "border-bottom",
+          "variable": "--border-width",
+          "fallback": "2px"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul:not(.open):not(:hover) > li.active:not(.search), :host > nav > ul > li:hover:not(.search)",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--border-width",
+          "fallback": "2px"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul li:not(:hover).open",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--border-width",
+          "fallback": "2px"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > div.background",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--m-gray-500"
+        },
+        {
+          "property": "width",
+          "variable": "--ul-li-div-background-width",
+          "fallback": "100vw"
+        },
+        {
+          "property": "left",
+          "variable": "--ul-li-div-background-left",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li.open > div.background",
+      "declaration": []
+    }
+  ]
+}

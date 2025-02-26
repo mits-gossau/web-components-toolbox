@@ -1,0 +1,36 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/hotspot/Hotspot.js",
+  "templates": [
+    {
+      "name": "hotspot-helper-",
+      "path": "./helper-/helper-.css"
+    },
+    {
+      "name": null,
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "top",
+      "description": ""
+    },
+    {
+      "attributeName": "left",
+      "description": ""
+    },
+    {
+      "attributeName": "place",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": []
+}

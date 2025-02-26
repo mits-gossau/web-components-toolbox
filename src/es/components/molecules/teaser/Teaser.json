@@ -1,0 +1,484 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/teaser/Teaser.js",
+  "templates": [
+    {
+      "name": "teaser-tile-",
+      "path": "./tile-/tile-.css"
+    },
+    {
+      "name": "teaser-tile-text-center-",
+      "path": "./tile-text-center-/tile-text-center-.css"
+    },
+    {
+      "name": "teaser-tile-rounded-",
+      "path": "./tile-rounded-/tile-rounded-.css"
+    },
+    {
+      "name": "teaser-overlay-",
+      "path": "./overlay-/overlay-.css"
+    },
+    {
+      "name": "teaser-overlay-top-",
+      "path": "./overlay-top-/overlay-top-.css"
+    },
+    {
+      "name": "teaser-download-",
+      "path": "./download-/download-.css"
+    },
+    {
+      "name": "teaser-round-",
+      "path": "./round-/round-.css"
+    },
+    {
+      "name": "teaser-plain-",
+      "path": "./plain-/plain-.css"
+    },
+    {
+      "name": "teaser-plainer-",
+      "path": "./plainer-/plainer-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "href",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host([href])",
+      "declaration": []
+    },
+    {
+      "selector": ":host figure",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "flex"
+        },
+        {
+          "property": "background-color",
+          "variable": "--background-color",
+          "fallback": "transparent"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--border-radius",
+          "fallback": "0"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--flex-direction",
+          "fallback": "column"
+        },
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "flex-start"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "space-between"
+        },
+        {
+          "property": "margin",
+          "variable": "--margin",
+          "fallback": "0"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "0"
+        },
+        {
+          "property": "height",
+          "variable": "--height",
+          "fallback": "100%"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100%"
+        },
+        {
+          "property": "overflow",
+          "variable": "--overflow",
+          "fallback": "visible"
+        },
+        {
+          "property": "position",
+          "variable": "--position",
+          "fallback": "static"
+        },
+        {
+          "property": "overflow",
+          "variable": "--overflow",
+          "fallback": "hidden"
+        },
+        {
+          "property": "overflow-x",
+          "variable": "--overflow-x",
+          "fallback": "hidden"
+        },
+        {
+          "property": "overflow-y",
+          "variable": "--overflow-y",
+          "fallback": "hidden"
+        },
+        {
+          "property": "box-shadow",
+          "variable": "--box-shadow",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host figure a-picture, :host figure m-picture-with-picture",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--a-picture-height",
+          "fallback": "auto"
+        },
+        {
+          "property": "margin",
+          "variable": "--a-picture-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "width",
+          "variable": "--a-picture-width",
+          "fallback": "100%"
+        },
+        {
+          "property": "transition",
+          "variable": "--a-picture-transition",
+          "fallback": "none"
+        },
+        {
+          "property": "transform",
+          "variable": "--a-picture-transform",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:hover) figure a-picture, :host(:hover) figure m-picture-with-picture",
+      "declaration": [
+        {
+          "property": "transform",
+          "variable": "--a-picture-transform-hover",
+          "fallback": "var(--a-picture-transform"
+        }
+      ]
+    },
+    {
+      "selector": ":host figure figcaption",
+      "declaration": [
+        {
+          "property": "border-radius",
+          "variable": "--figcaption-border-radius",
+          "fallback": "var(--border-radius"
+        },
+        {
+          "property": "display",
+          "variable": "--figcaption-display",
+          "fallback": "block"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--figcaption-flex-direction",
+          "fallback": "row"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--figcaption-justify-content",
+          "fallback": "normal"
+        },
+        {
+          "property": "align-items",
+          "variable": "--figcaption-align-items",
+          "fallback": "normal"
+        },
+        {
+          "property": "align-self",
+          "variable": "--figcaption-align-self",
+          "fallback": "auto"
+        },
+        {
+          "property": "background-color",
+          "variable": "--figcaption-background-color",
+          "fallback": "transparent"
+        },
+        {
+          "property": "margin",
+          "variable": "--figcaption-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "padding",
+          "variable": "--figcaption-padding",
+          "fallback": "1em"
+        },
+        {
+          "property": "font-size",
+          "variable": "--figcaption-font-size",
+          "fallback": "1em"
+        },
+        {
+          "property": "flex-grow",
+          "variable": "--figcaption-flex-grow",
+          "fallback": "1"
+        },
+        {
+          "property": "height",
+          "variable": "--figcaption-height",
+          "fallback": "100%"
+        },
+        {
+          "property": "width",
+          "variable": "--figcaption-width",
+          "fallback": "100%"
+        },
+        {
+          "property": "transition",
+          "variable": "--figcaption-transition",
+          "fallback": "none"
+        },
+        {
+          "property": "transform",
+          "variable": "--figcaption-transform",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:hover) figure figcaption",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--figcaption-background-color-hover",
+          "fallback": "var(--figcaption-background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:hover) figure a-picture ~ figcaption, :host(:hover) figure m-picture-with-picture ~ figcaption",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--a-picture-figcaption-background-color-hover",
+          "fallback": "var(--figcaption-background-color-hover"
+        }
+      ]
+    },
+    {
+      "selector": ":host([figcaption-bg-color-equal=true]) figure figcaption",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--figcaption-bg-color-equal-padding",
+          "fallback": "var(--figcaption-padding"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:hover) figure figcaption",
+      "declaration": [
+        {
+          "property": "transform",
+          "variable": "--figcaption-transform-hover",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host figure figcaption *",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--figcaption-color",
+          "fallback": "var(--color"
+        }
+      ]
+    },
+    {
+      "selector": ":host figure figcaption h2, :host figure figcaption h6",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--h2-figcaption-color",
+          "fallback": "var(--h6-figcaption-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:hover) figure figcaption *",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--figcaption-color-hover",
+          "fallback": "var(--figcaption-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:hover) figure figcaption h2, :host(:hover) figure figcaption h6",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--h2-figcaption-color-hover",
+          "fallback": "var(--h6-figcaption-color-hover"
+        }
+      ]
+    },
+    {
+      "selector": ":host figure figcaption > *",
+      "declaration": [
+        {
+          "property": "transition",
+          "variable": "--figcaption-any-transition",
+          "fallback": "none"
+        },
+        {
+          "property": "transform",
+          "variable": "--figcaption-any-transform",
+          "fallback": "none"
+        },
+        {
+          "property": "transform-origin",
+          "variable": "--figcaption-any-transform-origin",
+          "fallback": "unset"
+        },
+        {
+          "property": "opacity",
+          "variable": "--figcaption-any-opacity",
+          "fallback": "1"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.intersecting) figure figcaption > *",
+      "declaration": [
+        {
+          "property": "transition",
+          "variable": "--intersecting-figcaption-any-transition",
+          "fallback": "var(--figcaption-any-transition"
+        },
+        {
+          "property": "transform",
+          "variable": "--intersecting-figcaption-any-transform",
+          "fallback": "var(--figcaption-any-transform"
+        },
+        {
+          "property": "opacity",
+          "variable": "--intersecting-figcaption-any-opacity",
+          "fallback": "var(--figcaption-any-opacity"
+        }
+      ]
+    },
+    {
+      "selector": ":host figure figcaption a-link, :host(.intersecting) figure figcaption a-link",
+      "declaration": [
+        {
+          "property": "position",
+          "variable": "--a-link-position",
+          "fallback": "static"
+        },
+        {
+          "property": "top",
+          "variable": "--a-link-top",
+          "fallback": "auto"
+        },
+        {
+          "property": "bottom",
+          "variable": "--a-link-bottom",
+          "fallback": "auto"
+        },
+        {
+          "property": "transition",
+          "variable": "--a-link-transition",
+          "fallback": "none"
+        },
+        {
+          "property": "transform",
+          "variable": "--a-link-transform",
+          "fallback": "none"
+        },
+        {
+          "property": "opacity",
+          "variable": "--a-link-opacity",
+          "fallback": "1"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:hover) figure figcaption a-link",
+      "declaration": [
+        {
+          "property": "transform",
+          "variable": "--a-link-transform-hover",
+          "fallback": "none"
+        },
+        {
+          "property": "opacity",
+          "variable": "--a-link-opacity-hover",
+          "fallback": "1"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ":host figure figcaption",
+      "declaration": [
+        {
+          "property": "border-radius",
+          "variable": "--figcaption-border-radius-mobile",
+          "fallback": "var(--border-radius-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host figure figcaption",
+      "declaration": [
+        {
+          "property": "transform",
+          "variable": "--figcaption-transform-hover-mobile",
+          "fallback": "var(--figcaption-transform-hover"
+        }
+      ]
+    },
+    {
+      "selector": ":host figure figcaption a-link",
+      "declaration": [
+        {
+          "property": "transform",
+          "variable": "--a-link-transform-hover-mobile",
+          "fallback": "var(--a-link-transform-hover"
+        },
+        {
+          "property": "opacity",
+          "variable": "--a-link-opacity-hover-mobile",
+          "fallback": "var(--a-link-opacity-hover"
+        }
+      ]
+    }
+  ]
+}

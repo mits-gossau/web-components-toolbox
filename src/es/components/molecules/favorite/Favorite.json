@@ -1,0 +1,48 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/favorite/Favorite.js",
+  "templates": [
+    {
+      "name": "favorite-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "favorite-state",
+      "description": ""
+    },
+    {
+      "attributeName": "request-favorite-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "id",
+      "description": ""
+    },
+    {
+      "attributeName": "add-to-favorite-text",
+      "description": ""
+    },
+    {
+      "attributeName": "remove-from-favorite-text",
+      "description": ""
+    },
+    {
+      "attributeName": "is-logged-in",
+      "description": ""
+    }
+  ],
+  "css": []
+}

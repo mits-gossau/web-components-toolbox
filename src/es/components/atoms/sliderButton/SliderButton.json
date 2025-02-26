@@ -1,0 +1,93 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/sliderButton/SliderButton.js",
+  "templates": [],
+  "attributes": [],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--nav-padding-bottom"
+        },
+        {
+          "property": "top",
+          "variable": "--nav-height"
+        }
+      ]
+    },
+    {
+      "selector": ":host .tab-slider",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--slider-width"
+        },
+        {
+          "property": "max-width",
+          "variable": "--slider-max-width"
+        }
+      ]
+    },
+    {
+      "selector": ":host .progress-bar",
+      "declaration": []
+    },
+    {
+      "selector": ":host .progress-slider",
+      "declaration": []
+    },
+    {
+      "selector": ":host .progress-slider::-webkit-slider-thumb",
+      "declaration": []
+    },
+    {
+      "selector": ":host .progress-slider::-moz-range-thumb",
+      "declaration": []
+    },
+    {
+      "selector": ":host .progress-bar:not(.is-dragging) .active-indicator",
+      "declaration": []
+    },
+    {
+      "selector": ":host .milestones",
+      "declaration": []
+    },
+    {
+      "selector": ":host .milestone-wrapper",
+      "declaration": []
+    },
+    {
+      "selector": ":host .milestone-progress-bar",
+      "declaration": []
+    },
+    {
+      "selector": ":host .milestone",
+      "declaration": []
+    },
+    {
+      "selector": ":host .milestone-mobile",
+      "declaration": []
+    },
+    {
+      "selector": ":host .milestone::before",
+      "declaration": []
+    },
+    {
+      "selector": "@media screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ":host .milestone-headline",
+      "declaration": []
+    },
+    {
+      "selector": ":host .milestone-wrapper",
+      "declaration": []
+    }
+  ]
+}

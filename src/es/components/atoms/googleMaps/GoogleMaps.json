@@ -1,0 +1,189 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/googleMaps/GoogleMaps.js",
+  "templates": [
+    {
+      "name": "google-maps-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "google-maps-iframe-",
+      "path": "./iframe-/iframe-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "lat",
+      "description": ""
+    },
+    {
+      "attributeName": "lng",
+      "description": ""
+    },
+    {
+      "attributeName": "api-key",
+      "description": ""
+    },
+    {
+      "attributeName": "marker-icon",
+      "description": ""
+    },
+    {
+      "attributeName": "iframe-url",
+      "description": ""
+    },
+    {
+      "attributeName": "scrollZoom",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "block"
+        },
+        {
+          "property": "position",
+          "variable": "--position",
+          "fallback": "relative"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host > #map",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--map-width",
+          "fallback": "100%"
+        },
+        {
+          "property": "height",
+          "variable": "--map-height",
+          "fallback": "75vh"
+        }
+      ]
+    },
+    {
+      "selector": ":host > hr",
+      "declaration": []
+    },
+    {
+      "selector": ":host .control-events",
+      "declaration": []
+    },
+    {
+      "selector": ":host .control-events > div",
+      "declaration": []
+    },
+    {
+      "selector": ":host .mapOverlay",
+      "declaration": [
+        {
+          "property": "position",
+          "variable": "--map-overlay-position",
+          "fallback": "absolute"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100%"
+        },
+        {
+          "property": "height",
+          "variable": "--height",
+          "fallback": "75vh"
+        },
+        {
+          "property": "margin-top",
+          "variable": "--map-overlay-margin-top",
+          "fallback": "75vh"
+        },
+        {
+          "property": "top",
+          "variable": "--map-overlay-top",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host iframe",
+      "declaration": [
+        {
+          "property": "border",
+          "variable": "--border",
+          "fallback": "none"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100%"
+        },
+        {
+          "property": "height",
+          "variable": "--height",
+          "fallback": "75vh"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ":host > #map",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--map-height-mobile",
+          "fallback": "25vh"
+        },
+        {
+          "property": "width",
+          "variable": "--map-width-mobile",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host > hr",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--hr-width",
+          "fallback": "200px"
+        }
+      ]
+    },
+    {
+      "selector": ":host .control-events",
+      "declaration": []
+    },
+    {
+      "selector": ":host .control-events > div",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--control-events-div-margin-left-mobile",
+          "fallback": "0"
+        }
+      ]
+    }
+  ]
+}

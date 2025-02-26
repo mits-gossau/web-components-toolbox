@@ -1,0 +1,82 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/asciiCaptcha/AsciiCaptcha.js",
+  "templates": [
+    {
+      "name": "ascii-captcha-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "ascii-captcha-invert-",
+      "path": "./invert-/invert-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "real-name",
+      "description": ""
+    },
+    {
+      "attributeName": "submit-disabled",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "flex-direction",
+          "variable": "--flex-direction",
+          "fallback": "column"
+        },
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "start"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "normal"
+        }
+      ]
+    },
+    {
+      "selector": ":host > *[id=reset]",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--reset-height",
+          "fallback": "3em"
+        },
+        {
+          "property": "width",
+          "variable": "--reset-width",
+          "fallback": "fit-content"
+        },
+        {
+          "property": "padding",
+          "variable": "--reset-padding",
+          "fallback": "0 1em"
+        },
+        {
+          "property": "margin",
+          "variable": "--reset-margin",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host > figure",
+      "declaration": []
+    }
+  ]
+}

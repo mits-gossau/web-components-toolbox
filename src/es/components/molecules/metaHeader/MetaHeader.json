@@ -1,0 +1,111 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/metaHeader/MetaHeader.js",
+  "templates": [
+    {
+      "name": "meta-header-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "stretch"
+        },
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--flex-direction",
+          "fallback": "row"
+        },
+        {
+          "property": "gap",
+          "variable": "--gap",
+          "fallback": "normal"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "flex-start"
+        },
+        {
+          "property": "margin",
+          "variable": "--margin",
+          "fallback": "0"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "0"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "auto"
+        },
+        {
+          "property": "z-index",
+          "variable": "--z-index",
+          "fallback": "9999"
+        }
+      ]
+    },
+    {
+      "selector": ":host div",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--div-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--div-flex-direction",
+          "fallback": "row"
+        },
+        {
+          "property": "align-items",
+          "variable": "--div-align-items",
+          "fallback": "center"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--width-mobile",
+          "fallback": "var(--width"
+        }
+      ]
+    },
+    {
+      "selector": ":host div",
+      "declaration": [
+        {
+          "property": "flex",
+          "variable": "--div-flex-mobile",
+          "fallback": "1"
+        }
+      ]
+    }
+  ]
+}

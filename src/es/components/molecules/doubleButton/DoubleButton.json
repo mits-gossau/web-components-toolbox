@@ -1,0 +1,24 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/doubleButton/DoubleButton.js",
+  "templates": [
+    {
+      "name": "double-button-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "width",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": []
+}

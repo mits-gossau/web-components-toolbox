@@ -1,0 +1,181 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/picture/Picture.js",
+  "templates": [
+    {
+      "name": "picture-overflow-",
+      "path": "./overflow-/overflow-.css"
+    },
+    {
+      "name": "picture-overflow-scale-up-",
+      "path": "./overflow-scale-up-/overflow-scale-up-.css"
+    },
+    {
+      "name": "picture-scale-up-",
+      "path": "./scale-up-/scale-up-.css"
+    },
+    {
+      "name": "picture-teaser-",
+      "path": "./teaser-/teaser-.css"
+    },
+    {
+      "name": "picture-store-logo-",
+      "path": "./store-logo-/store-logo-.css"
+    },
+    {
+      "name": "picture-cover-",
+      "path": "./cover-/cover-.css"
+    },
+    {
+      "name": "picture-hotspot-",
+      "path": "./hotspot-/hotspot-.css"
+    },
+    {
+      "name": "picture-icon-",
+      "path": "./icon-/icon-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "open-modal",
+      "description": ""
+    },
+    {
+      "attributeName": "aspect-ratio",
+      "description": ""
+    },
+    {
+      "attributeName": "img-object-position",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "loading",
+      "description": ""
+    },
+    {
+      "attributeName": "query-width",
+      "description": ""
+    },
+    {
+      "attributeName": "query-height",
+      "description": ""
+    },
+    {
+      "attributeName": "sources-delete-query-keys",
+      "description": ""
+    },
+    {
+      "attributeName": "query-format",
+      "description": ""
+    },
+    {
+      "attributeName": "query-quality",
+      "description": ""
+    },
+    {
+      "attributeName": "picture-load",
+      "description": ""
+    },
+    {
+      "attributeName": "alt",
+      "description": ""
+    },
+    {
+      "attributeName": "defaultSource",
+      "description": ""
+    },
+    {
+      "attributeName": "sources",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "overflow",
+          "variable": "--host-overflow",
+          "fallback": "initial"
+        }
+      ]
+    },
+    {
+      "selector": ":host picture",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "inline"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open-modal])",
+      "declaration": []
+    },
+    {
+      "selector": ":host([open-modal]) > .close-btn",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--close-btn-background-color",
+          "fallback": "var(--color-secondary"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open-modal])",
+      "declaration": []
+    },
+    {
+      "selector": ":host([open-modal][open]) > .close-btn.adjusted",
+      "declaration": []
+    },
+    {
+      "selector": ":host([open-modal][loaded]:not([open])) > .close-btn.adjusted",
+      "declaration": [
+        {
+          "property": "animation",
+          "variable": "--close-btn-appear",
+          "fallback": "appear .3s ease-out"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open-modal]) > .close-btn",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--close-btn-background-color",
+          "fallback": "var(--color-secondary"
+        },
+        {
+          "property": "right",
+          "variable": "--close-btn-right",
+          "fallback": "var(--content-spacing"
+        },
+        {
+          "property": "bottom",
+          "variable": "--close-btn-bottom",
+          "fallback": "var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open-modal]) > .close-btn > span",
+      "declaration": []
+    },
+    {
+      "selector": ":host",
+      "declaration": []
+    }
+  ]
+}

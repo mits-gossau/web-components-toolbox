@@ -1,0 +1,24 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/iframe/Iframe.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "background-color",
+      "description": ""
+    },
+    {
+      "attributeName": "timeout",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    }
+  ]
+}

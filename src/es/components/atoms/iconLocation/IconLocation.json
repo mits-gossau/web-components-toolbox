@@ -1,0 +1,71 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/iconLocation/IconLocation.js",
+  "templates": [],
+  "attributes": [],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--svg-size",
+          "fallback": "1.5em"
+        },
+        {
+          "property": "width",
+          "variable": "--svg-size",
+          "fallback": "1.5em"
+        }
+      ]
+    },
+    {
+      "selector": ":host > svg",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color",
+          "fallback": "#777"
+        },
+        {
+          "property": "height",
+          "variable": "--svg-size",
+          "fallback": "1.5em"
+        },
+        {
+          "property": "width",
+          "variable": "--svg-size",
+          "fallback": "1.5em"
+        }
+      ]
+    },
+    {
+      "selector": ":host > svg path",
+      "declaration": [
+        {
+          "property": "stroke",
+          "variable": "--path-color",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "transition",
+          "variable": "--path-transition",
+          "fallback": "all 0.3s ease-out"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:hover) > svg path, :host(.hover) > svg path",
+      "declaration": [
+        {
+          "property": "stroke",
+          "variable": "--path-color-hover",
+          "fallback": "var(--color-hover"
+        }
+      ]
+    }
+  ]
+}

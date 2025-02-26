@@ -1,0 +1,110 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/organisms/header/Header.js",
+  "templates": [
+    {
+      "name": "header-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "header-nav-right-",
+      "path": "./nav-right-/nav-right-.css"
+    },
+    {
+      "name": "header-nav-grid-",
+      "path": "./nav-grid-/nav-grid-.css"
+    },
+    {
+      "name": "header-nav-grid-delica-",
+      "path": "./nav-grid-delica-/nav-grid-delica-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "click-anchor",
+      "description": ""
+    },
+    {
+      "attributeName": "is-checkout",
+      "description": ""
+    },
+    {
+      "attributeName": "is-easy-portal-header",
+      "description": ""
+    },
+    {
+      "attributeName": "m-navigation",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "no-scroll",
+      "description": ""
+    },
+    {
+      "attributeName": "menu-icon",
+      "description": ""
+    },
+    {
+      "attributeName": "a-logo",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "position",
+          "variable": "--position",
+          "fallback": "sticky"
+        },
+        {
+          "property": "z-index",
+          "variable": "--z-index",
+          "fallback": "1000"
+        },
+        {
+          "property": "text-align",
+          "variable": "--text-align",
+          "fallback": "initial"
+        },
+        {
+          "property": "background-color",
+          "variable": "--host-background-color",
+          "fallback": "transparent"
+        }
+      ]
+    },
+    {
+      "selector": ":host > *",
+      "declaration": [
+        {
+          "property": "font-size",
+          "variable": "--font-size",
+          "fallback": "1rem"
+        },
+        {
+          "property": "margin",
+          "variable": "--content-spacing",
+          "fallback": "40px"
+        },
+        {
+          "property": "/* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */\n        width",
+          "variable": "--content-width",
+          "fallback": "55%"
+        }
+      ]
+    },
+    {
+      "selector": ":host([sticky])",
+      "declaration": []
+    }
+  ]
+}

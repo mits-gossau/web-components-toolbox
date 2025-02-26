@@ -1,0 +1,205 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/systemNotification/SystemNotification.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "icon-badge",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-src",
+      "description": ""
+    },
+    {
+      "attributeName": "title",
+      "description": ""
+    },
+    {
+      "attributeName": "type",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host .system-notification",
+      "declaration": [
+        {
+          "property": "flex-direction",
+          "variable": "--system-notification-flex-direction",
+          "fallback": "column"
+        },
+        {
+          "property": "margin",
+          "variable": "--system-notification-margin",
+          "fallback": "0 0 var(--margin-bottom"
+        }
+      ]
+    },
+    {
+      "selector": ":host .icon",
+      "declaration": []
+    },
+    {
+      "selector": ":host .icon img,\n        :host svg",
+      "declaration": [
+        {
+          "property": "max-height",
+          "variable": "--icon-max-height",
+          "fallback": "var(--icon-default-width"
+        },
+        {
+          "property": "max-width",
+          "variable": "--icon-max-width",
+          "fallback": "var(--icon-default-width"
+        },
+        {
+          "property": "height",
+          "variable": "--icon-height",
+          "fallback": "auto"
+        },
+        {
+          "property": "width",
+          "variable": "--icon-default-width"
+        }
+      ]
+    },
+    {
+      "selector": ":host .icon .icon-badge",
+      "declaration": [
+        {
+          "property": "top",
+          "variable": "--icon-badge-top",
+          "fallback": "-7px"
+        },
+        {
+          "property": "right",
+          "variable": "--icon-badge-right",
+          "fallback": "-16px"
+        },
+        {
+          "property": "height",
+          "variable": "--icon-badge-height",
+          "fallback": "1.5rem"
+        },
+        {
+          "property": "width",
+          "variable": "--icon-badge-width",
+          "fallback": "1.5rem"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--icon-badge-border-radius",
+          "fallback": "50%"
+        },
+        {
+          "property": "background-color",
+          "variable": "--icon-badge-background-color",
+          "fallback": "var(--m-red-600"
+        },
+        {
+          "property": "color",
+          "variable": "--icon-badge-color",
+          "fallback": "var(--m-white"
+        },
+        {
+          "property": "font-size",
+          "variable": "--icon-badge-font-size",
+          "fallback": "0.75rem"
+        }
+      ]
+    },
+    {
+      "selector": ":host .title h3",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--margin-bottom",
+          "fallback": "1rem"
+        },
+        {
+          "property": "font-size",
+          "variable": "--font-size-h3",
+          "fallback": "1.25rem"
+        },
+        {
+          "property": "color",
+          "variable": "--color",
+          "fallback": "var(--m-gray-900"
+        }
+      ]
+    },
+    {
+      "selector": ":host .system-notification .description",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--system-default-background-color",
+          "fallback": "var(--m-gray-100"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--border-radius",
+          "fallback": "0.5rem"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "0.5rem 1rem"
+        }
+      ]
+    },
+    {
+      "selector": ":host .system-info .description",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--system-info-background-color",
+          "fallback": "var(--m-blue-100"
+        },
+        {
+          "property": "color",
+          "variable": "--system-info-color",
+          "fallback": "var(--m-blue-800"
+        }
+      ]
+    },
+    {
+      "selector": ":host .system-error .description",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--system-error-background-color",
+          "fallback": "var(--m-orange-100"
+        },
+        {
+          "property": "color",
+          "variable": "--system-error-color",
+          "fallback": "var(--m-red-600"
+        }
+      ]
+    },
+    {
+      "selector": ":host .system-success .description",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--system-success-background-color",
+          "fallback": "var(--m-green-100"
+        },
+        {
+          "property": "color",
+          "variable": "--system-success-color",
+          "fallback": "var(--m-green-800"
+        }
+      ]
+    }
+  ]
+}

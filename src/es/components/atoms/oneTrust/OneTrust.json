@@ -1,0 +1,19 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/oneTrust/OneTrust.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "id",
+      "description": ""
+    },
+    {
+      "attributeName": "link-text",
+      "description": ""
+    }
+  ],
+  "css": []
+}

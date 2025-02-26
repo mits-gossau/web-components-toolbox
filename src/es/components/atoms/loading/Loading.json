@@ -1,0 +1,15 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/loading/Loading.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "z-index",
+      "description": ""
+    }
+  ],
+  "css": []
+}

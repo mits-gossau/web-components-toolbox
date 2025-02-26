@@ -1,0 +1,36 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/countBox/CountBox.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "speed",
+      "description": ""
+    },
+    {
+      "attributeName": "start",
+      "description": ""
+    },
+    {
+      "attributeName": "target",
+      "description": ""
+    },
+    {
+      "attributeName": "tag",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host .card",
+      "declaration": []
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/pictureText/PictureText.js",
+  "templates": [
+    {
+      "name": null,
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host([show-text])",
+      "declaration": []
+    },
+    {
+      "selector": ":host .wrapper",
+      "declaration": []
+    },
+    {
+      "selector": ":host .wrapper > *",
+      "declaration": []
+    },
+    {
+      "selector": ":host .image-button",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--image-button-background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host([place-right]) .image-button",
+      "declaration": []
+    },
+    {
+      "selector": ":host([place-bottom]) .image-button",
+      "declaration": []
+    },
+    {
+      "selector": ":host .image-button:hover",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--image-button-background-color-hover",
+          "fallback": "var(--image-button-background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host .image-button::before",
+      "declaration": [
+        {
+          "property": "border-top",
+          "variable": "--image-button-border-color"
+        },
+        {
+          "property": "border-bottom",
+          "variable": "--image-button-border-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host .image-button::after",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--image-button-border-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host .content-wrapper",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color"
+        },
+        {
+          "property": "background",
+          "variable": "--content-wrapper-background"
+        }
+      ]
+    },
+    {
+      "selector": ":host .content",
+      "declaration": []
+    },
+    {
+      "selector": ":host([show-text]) .content-wrapper",
+      "declaration": []
+    },
+    {
+      "selector": ":host([show-text]) .image-button",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--image-button-background-color-show-text",
+          "fallback": "var(--image-button-background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host([show-text]) .image-button::before",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--image-button-border-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host([show-text]) .image-button::after",
+      "declaration": []
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

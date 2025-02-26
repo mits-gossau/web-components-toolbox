@@ -1,0 +1,124 @@
+{
+  "metaData": {
+    "summary": "This is a Basket Component as you can see in the demo. Just activate your brain and have fun.\n ",
+    "integration": " <ks-a-notification-bar id=\"54325436432\">\n   <p>Et blandit sodales tempor magna</a></p>\n  </ks-a-notification-bar>"
+  },
+  "path": "../src/es/components/atoms/basket/Basket.js",
+  "templates": [
+    {
+      "name": "basket-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "active-order-item-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "href",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-name",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-size",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "block"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "max-content"
+        }
+      ]
+    },
+    {
+      "selector": ":host div",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--div-background-color",
+          "fallback": "black"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--div-border-radius",
+          "fallback": "1.6em"
+        },
+        {
+          "property": "padding",
+          "variable": "--div-padding",
+          "fallback": "0.8em"
+        },
+        {
+          "property": "display",
+          "variable": "--div-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "line-height",
+          "variable": "--div-line-height",
+          "fallback": "inherit"
+        }
+      ]
+    },
+    {
+      "selector": ":host div:hover",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--div-hover-background-color",
+          "fallback": "white"
+        }
+      ]
+    },
+    {
+      "selector": ":host span",
+      "declaration": [
+        {
+          "property": "min-width",
+          "variable": "--span-min-width",
+          "fallback": "1.2em"
+        },
+        {
+          "property": "font-size",
+          "variable": "--span-font-size",
+          "fallback": "0.7em"
+        },
+        {
+          "property": "padding",
+          "variable": "--span-padding",
+          "fallback": "0 0.25em"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

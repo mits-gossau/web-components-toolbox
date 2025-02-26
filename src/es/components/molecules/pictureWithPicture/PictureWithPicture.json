@@ -1,0 +1,37 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/pictureWithPicture/PictureWithPicture.js",
+  "templates": [
+    {
+      "name": null,
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "icon-direction",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-width",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host .wrapper",
+      "declaration": []
+    },
+    {
+      "selector": ":host .wrapper > *",
+      "declaration": []
+    }
+  ]
+}

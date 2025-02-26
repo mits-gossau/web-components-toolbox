@@ -1,0 +1,139 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/form/Form.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "site-key",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": "@supports(selector(:has(> input[type=file])))",
+      "declaration": []
+    },
+    {
+      "selector": "*:has(> input[type=file]) > *",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "calc(0.75em - var(--border-width"
+        }
+      ]
+    },
+    {
+      "selector": "*:has(> input[type=file]) > *:has(+ input[type=file])",
+      "declaration": []
+    },
+    {
+      "selector": "input[type=file]",
+      "declaration": []
+    },
+    {
+      "selector": "*:has(> input[type=file])",
+      "declaration": [
+        {
+          "property": "--color",
+          "variable": "--button-secondary-color"
+        },
+        {
+          "property": "--color-hover",
+          "variable": "--button-secondary-color-hover"
+        }
+      ]
+    },
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host .has-files:after",
+      "declaration": []
+    },
+    {
+      "selector": ".validation-errors",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--m-orange-100"
+        },
+        {
+          "property": "color",
+          "variable": "--color-error"
+        },
+        {
+          "property": "margin-bottom",
+          "variable": "--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ".validation-errors ul",
+      "declaration": []
+    },
+    {
+      "selector": ".form-radio-group",
+      "declaration": [
+        {
+          "property": "gap",
+          "variable": "--radio-group-gap",
+          "fallback": "2rem"
+        }
+      ]
+    },
+    {
+      "selector": ".form-radio-group span",
+      "declaration": [
+        {
+          "property": "gap",
+          "variable": "--radio-group-span-gap",
+          "fallback": "0.5rem"
+        }
+      ]
+    },
+    {
+      "selector": ".form-radio-group label",
+      "declaration": []
+    },
+    {
+      "selector": ".form-radio-group label input",
+      "declaration": []
+    },
+    {
+      "selector": "legend",
+      "declaration": [
+        {
+          "property": "font-family",
+          "variable": "--font-family-bold",
+          "fallback": "var(--font-family"
+        }
+      ]
+    },
+    {
+      "selector": "input, textarea",
+      "declaration": [
+        {
+          "property": "caret-color",
+          "variable": "--color-secondary"
+        }
+      ]
+    },
+    {
+      "selector": "textarea",
+      "declaration": []
+    },
+    {
+      "selector": "input[type]:disabled",
+      "declaration": []
+    }
+  ]
+}

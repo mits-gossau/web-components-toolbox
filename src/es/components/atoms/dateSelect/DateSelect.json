@@ -1,0 +1,318 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/dateSelect/DateSelect.js",
+  "templates": [
+    {
+      "name": "date-select-primary-",
+      "path": "./primary-/primary-.css"
+    },
+    {
+      "name": "date-select-secondary-",
+      "path": "./secondary-/secondary-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "calendarIndicator",
+      "description": ""
+    },
+    {
+      "attributeName": "placeholder",
+      "description": ""
+    },
+    {
+      "attributeName": "locale",
+      "description": ""
+    },
+    {
+      "attributeName": "closeTooltip",
+      "description": ""
+    },
+    {
+      "attributeName": "min",
+      "description": ""
+    },
+    {
+      "attributeName": "max",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host .date-select",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color",
+          "fallback": "transparent"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--border-radius",
+          "fallback": "0.5em"
+        },
+        {
+          "property": "border",
+          "variable": "--border-width",
+          "fallback": "0px"
+        },
+        {
+          "property": "color",
+          "variable": "--color",
+          "fallback": "black"
+        },
+        {
+          "property": "font-family",
+          "variable": "--font-family",
+          "fallback": "unset"
+        },
+        {
+          "property": "font-size",
+          "variable": "--font-size",
+          "fallback": "1em"
+        },
+        {
+          "property": "font-weight",
+          "variable": "--font-weight",
+          "fallback": "400"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "center"
+        },
+        {
+          "property": "letter-spacing",
+          "variable": "--letter-spacing",
+          "fallback": "normal"
+        },
+        {
+          "property": "line-height",
+          "variable": "--line-height",
+          "fallback": "1.5em"
+        },
+        {
+          "property": "margin",
+          "variable": "--margin",
+          "fallback": "auto"
+        },
+        {
+          "property": "opacity",
+          "variable": "--opacity",
+          "fallback": "1"
+        },
+        {
+          "property": "outline",
+          "variable": "--outline",
+          "fallback": "none"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "calc(0.75em - var(--border-width"
+        },
+        {
+          "property": "text-decoration",
+          "variable": "--text-decoration",
+          "fallback": "none"
+        },
+        {
+          "property": "text-transform",
+          "variable": "--text-transform",
+          "fallback": "none"
+        },
+        {
+          "property": "transition",
+          "variable": "--transition",
+          "fallback": "background-color 0.3s ease-out"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select:hover, :host(.hover) .date-select",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color-hover",
+          "fallback": "var(--background-color"
+        },
+        {
+          "property": "border",
+          "variable": "--border-width-hover",
+          "fallback": "var(--border-width"
+        },
+        {
+          "property": "color",
+          "variable": "--color-hover",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "opacity",
+          "variable": "--opacity-hover",
+          "fallback": "var(--opacity"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select:active, :host .date-select.active",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color-active",
+          "fallback": "var(--background-color-hover"
+        },
+        {
+          "property": "color",
+          "variable": "--color-active",
+          "fallback": "var(--color-hover"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select[disabled]",
+      "declaration": [
+        {
+          "property": "border",
+          "variable": "--border-width-disabled",
+          "fallback": "var(--border-width"
+        },
+        {
+          "property": "background-color",
+          "variable": "--background-color-disabled",
+          "fallback": "var(--background-color"
+        },
+        {
+          "property": "color",
+          "variable": "--color-disabled",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "opacity",
+          "variable": "--opacity-disabled",
+          "fallback": "var(--opacity"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select[disabled] #date-placeholder",
+      "declaration": [
+        {
+          "property": "opacity",
+          "variable": "--opacity-disabled",
+          "fallback": "var(--opacity"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select[disabled]:hover, :host(.hover) .date-select[disabled]",
+      "declaration": [
+        {
+          "property": "opacity",
+          "variable": "--opacity-disabled-hover",
+          "fallback": "var(--opacity-disabled"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select::placeholder",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color",
+          "fallback": "black"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select[disabled]::placeholder",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-disabled",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "opacity",
+          "variable": "--opacity-disabled",
+          "fallback": "var(--opacity"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select::-webkit-calendar-picker-indicator",
+      "declaration": []
+    },
+    {
+      "selector": ":host select",
+      "declaration": []
+    },
+    {
+      "selector": ":host #close-icon",
+      "declaration": []
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--margin-mobile",
+          "fallback": "var(--margin"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--border-radius-mobile",
+          "fallback": "var(--border-radius"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select:hover, :host(.hover) .date-select",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color-hover-mobile",
+          "fallback": "var(--background-color-hover"
+        },
+        {
+          "property": "color",
+          "variable": "--color-hover-mobile",
+          "fallback": "var(--color-hover"
+        }
+      ]
+    },
+    {
+      "selector": ":host .date-select:active, :host .date-select.active",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color-active-mobile",
+          "fallback": "var(--background-color-active"
+        },
+        {
+          "property": "color",
+          "variable": "--color-active-mobile",
+          "fallback": "var(--color-active"
+        }
+      ]
+    }
+  ]
+}

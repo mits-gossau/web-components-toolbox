@@ -1,0 +1,135 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/organisms/wrapper/Wrapper.js",
+  "templates": [
+    {
+      "name": "wrapper-teaser-",
+      "path": "./teaser-/teaser-.css"
+    },
+    {
+      "name": "wrapper-teaser-recipe-",
+      "path": "./teaser-recipe-/teaser-recipe-.css"
+    },
+    {
+      "name": "wrapper-text-",
+      "path": "./text-/text-.css"
+    },
+    {
+      "name": "wrapper-text-center-",
+      "path": "./text-center-/text-center-.css"
+    },
+    {
+      "name": "wrapper-no-calc-column-width-",
+      "path": "./no-calc-column-width-/no-calc-column-width-.css"
+    },
+    {
+      "name": "wrapper-no-calc-column-width-left-",
+      "path": "./no-calc-column-width-left-/no-calc-column-width-left-.css"
+    },
+    {
+      "name": "menu-legends-",
+      "path": "./menu-legends-/menu-legends-.css"
+    },
+    {
+      "name": "wrapper-text-picture-cover-",
+      "path": "./text-picture-cover-/text-picture-cover-.css"
+    },
+    {
+      "name": "wrapper-spacer-",
+      "path": "./spacer-/spacer-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "href",
+      "description": ""
+    },
+    {
+      "attributeName": "align-items",
+      "description": ""
+    },
+    {
+      "attributeName": "width-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "simulate-children",
+      "description": ""
+    },
+    {
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host([href])",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > a-picture, :host > section > picture, :host > section > img",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *:not(a-picture):not(picture):not(img)",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *:not([style]):last-child",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--content-spacing-mobile",
+          "fallback": "var(--content-spacing"
+        },
+        {
+          "property": "width",
+          "variable": "--content-spacing-mobile",
+          "fallback": "var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "--gap",
+          "variable": "--gap-custom",
+          "fallback": "var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host > section > *:not(a-picture) ~ *",
+      "declaration": [
+        {
+          "property": "align-self",
+          "variable": "--not-a-picture-align-self",
+          "fallback": "normal"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

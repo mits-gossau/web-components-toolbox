@@ -1,0 +1,145 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/emotionPictures/EmotionPictures.js",
+  "templates": [
+    {
+      "name": "emotion-pictures-with-title-",
+      "path": "./with-title-/with-title-.css"
+    },
+    {
+      "name": "emotion-pictures-with-button-",
+      "path": "./with-button-/with-button-.css"
+    },
+    {
+      "name": "emotion-pictures-with-logo-",
+      "path": "./with-logo-/with-logo-.css"
+    },
+    {
+      "name": "emotion-pictures-with-video-",
+      "path": "./with-video-/with-video-.css"
+    },
+    {
+      "name": "emotion-pictures-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "loading",
+      "description": ""
+    },
+    {
+      "attributeName": "height-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "height",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "interval",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100%"
+        },
+        {
+          "property": "line-height",
+          "variable": "--line-height",
+          "fallback": "normal"
+        }
+      ]
+    },
+    {
+      "selector": ":host > *:not(style), :host > a",
+      "declaration": [
+        {
+          "property": "transition",
+          "variable": "--transition",
+          "fallback": "opacity 2s ease-out"
+        }
+      ]
+    },
+    {
+      "selector": ":host > *.shown",
+      "declaration": []
+    },
+    {
+      "selector": ":host > div, :host > a",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--a-width",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video)",
+      "declaration": [
+        {
+          "property": "top",
+          "variable": "--text-top",
+          "fallback": "4vw"
+        },
+        {
+          "property": "left",
+          "variable": "--text-left",
+          "fallback": "10vw"
+        },
+        {
+          "property": "right",
+          "variable": "--text-right",
+          "fallback": "10vw"
+        },
+        {
+          "property": "transition",
+          "variable": "--text-transition",
+          "fallback": "opacity 0.5s ease-out"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.visible) > div > *:not(a-picture):not(a-video), :host(.visible) > a > *:not(a-picture):not(a-video)",
+      "declaration": []
+    },
+    {
+      "selector": ":host .subline",
+      "declaration": [
+        {
+          "property": "font-size",
+          "variable": "--subline-font-size",
+          "fallback": "1.2em"
+        },
+        {
+          "property": "display",
+          "variable": "--subline-display",
+          "fallback": "initial"
+        },
+        {
+          "property": "--bg-padding",
+          "variable": "--bg-padding-custom",
+          "fallback": "1.2em"
+        }
+      ]
+    }
+  ]
+}

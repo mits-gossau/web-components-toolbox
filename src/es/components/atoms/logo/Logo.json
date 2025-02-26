@@ -1,0 +1,176 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/logo/Logo.js",
+  "templates": [
+    {
+      "name": "logo-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "logo-partner-",
+      "path": "./partner-/partner-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "src",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "alt",
+      "description": ""
+    },
+    {
+      "attributeName": "loading",
+      "description": ""
+    },
+    {
+      "attributeName": "href",
+      "description": ""
+    },
+    {
+      "attributeName": "rel",
+      "description": ""
+    },
+    {
+      "attributeName": "target",
+      "description": ""
+    },
+    {
+      "attributeName": "logo-load",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "center"
+        },
+        {
+          "property": "flex-flow",
+          "variable": "--flex-flow",
+          "fallback": "row"
+        },
+        {
+          "property": "flex-grow",
+          "variable": "--flex-grow",
+          "fallback": "0"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "center"
+        },
+        {
+          "property": "margin",
+          "variable": "--margin",
+          "fallback": "0px"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "0px"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.hide-desktop)",
+      "declaration": []
+    },
+    {
+      "selector": ":host(.hide-mobile)",
+      "declaration": []
+    },
+    {
+      "selector": ":host a",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--a-height",
+          "fallback": "auto"
+        },
+        {
+          "property": "width",
+          "variable": "--a-width",
+          "fallback": "auto"
+        },
+        {
+          "property": "display",
+          "variable": "--a-display",
+          "fallback": "inline"
+        }
+      ]
+    },
+    {
+      "selector": ":host img",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--height",
+          "fallback": "calc(var(--height"
+        },
+        {
+          "property": "max-height",
+          "variable": "--max-height",
+          "fallback": "none"
+        },
+        {
+          "property": "object-fit",
+          "variable": "--object-fit",
+          "fallback": "scale-down"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "auto"
+        },
+        {
+          "property": "max-width",
+          "variable": "--max-width",
+          "fallback": "80vw"
+        },
+        {
+          "property": "margin",
+          "variable": "--img-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "position",
+          "variable": "--img-position",
+          "fallback": "unset"
+        },
+        {
+          "property": "top",
+          "variable": "--img-position-top",
+          "fallback": "unset"
+        },
+        {
+          "property": "bottom",
+          "variable": "--img-position-bottom",
+          "fallback": "unset"
+        },
+        {
+          "property": "right",
+          "variable": "--img-position-right",
+          "fallback": "unset"
+        },
+        {
+          "property": "left",
+          "variable": "--img-position-left",
+          "fallback": "unset"
+        }
+      ]
+    }
+  ]
+}

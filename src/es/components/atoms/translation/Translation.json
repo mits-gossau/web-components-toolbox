@@ -1,0 +1,23 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/translation/Translation.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "params",
+      "description": ""
+    },
+    {
+      "attributeName": "data-trans-key",
+      "description": ""
+    },
+    {
+      "attributeName": "key",
+      "description": ""
+    }
+  ],
+  "css": []
+}

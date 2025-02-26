@@ -1,0 +1,49 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/imageHotspot/ImageHotspot.js",
+  "templates": [],
+  "attributes": [],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100vw"
+        }
+      ]
+    },
+    {
+      "selector": ":host .wrapper",
+      "declaration": []
+    },
+    {
+      "selector": ":host .sr-only",
+      "declaration": []
+    },
+    {
+      "selector": "@media screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ":host .wrapper",
+      "declaration": []
+    },
+    {
+      "selector": ":host .picture,\n        :host .hotspots-container",
+      "declaration": []
+    },
+    {
+      "selector": ":host .hotspots-container",
+      "declaration": []
+    },
+    {
+      "selector": ":host > div::-webkit-scrollbar",
+      "declaration": []
+    }
+  ]
+}

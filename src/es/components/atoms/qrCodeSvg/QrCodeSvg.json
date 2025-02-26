@@ -1,0 +1,34 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/qrCodeSvg/QrCodeSvg.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "data",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host > h5",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-error",
+          "fallback": "red"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

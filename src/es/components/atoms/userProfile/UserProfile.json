@@ -1,0 +1,257 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/userProfile/UserProfile.js",
+  "templates": [
+    {
+      "name": "user-profile-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "href",
+      "description": ""
+    },
+    {
+      "attributeName": "target",
+      "description": ""
+    },
+    {
+      "attributeName": "rel",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-text",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "block"
+        },
+        {
+          "property": "position",
+          "variable": "--position",
+          "fallback": "relative"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "fit-content"
+        }
+      ]
+    },
+    {
+      "selector": ":host a",
+      "declaration": []
+    },
+    {
+      "selector": ":host a.sub",
+      "declaration": []
+    },
+    {
+      "selector": ":host span",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--span-padding",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host .profile",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--profile-background-color",
+          "fallback": "black"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--profile-border-radius",
+          "fallback": "0"
+        },
+        {
+          "property": "display",
+          "variable": "--profile-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "padding",
+          "variable": "--profile-padding",
+          "fallback": "0"
+        },
+        {
+          "property": "color",
+          "variable": "--profile-color",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "line-height",
+          "variable": "--profile-line-height",
+          "fallback": "1em"
+        }
+      ]
+    },
+    {
+      "selector": ":host([icon-text]) .profile",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--profile-height",
+          "fallback": "2.65em"
+        },
+        {
+          "property": "padding",
+          "variable": "--profile-padding-icon-text",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.logged-in) .profile",
+      "declaration": [
+        {
+          "property": "--color",
+          "variable": "--profile-logged-in-color",
+          "fallback": "var(--profile-color"
+        },
+        {
+          "property": "color",
+          "variable": "--profile-logged-in-color",
+          "fallback": "var(--profile-color"
+        },
+        {
+          "property": "background-color",
+          "variable": "--profile-logged-in-background-color",
+          "fallback": "black"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.logged-in) .profile:hover",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--profile-logged-in-background-color-hover",
+          "fallback": "black"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.active) .profile",
+      "declaration": [
+        {
+          "property": "--color",
+          "variable": "--profile-color-active",
+          "fallback": "var(--profile-color"
+        },
+        {
+          "property": "color",
+          "variable": "--profile-color-active",
+          "fallback": "var(--profile-color"
+        },
+        {
+          "property": "background-color",
+          "variable": "--profile-background-color-active",
+          "fallback": "var(--profile-background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.active) .profile:hover",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--profile-background-color-active-hover",
+          "fallback": "white"
+        }
+      ]
+    },
+    {
+      "selector": ":host .profile:hover",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--profile-background-color-hover",
+          "fallback": "white"
+        }
+      ]
+    },
+    {
+      "selector": ":host .profile > .icon-text",
+      "declaration": []
+    },
+    {
+      "selector": ":host .menu",
+      "declaration": [
+        {
+          "property": "background",
+          "variable": "--menu-background",
+          "fallback": "white"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--menu-border-radius",
+          "fallback": "0"
+        },
+        {
+          "property": "border",
+          "variable": "--menu-border-color",
+          "fallback": "black"
+        },
+        {
+          "property": "top",
+          "variable": "--menu-top",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.active) .menu",
+      "declaration": []
+    },
+    {
+      "selector": ":host .menu ul",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--menu-ul-padding",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host .menu ul li",
+      "declaration": [
+        {
+          "property": "border-top",
+          "variable": "--menu-li-border-top",
+          "fallback": "none"
+        },
+        {
+          "property": "padding",
+          "variable": "--menu-li-padding",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

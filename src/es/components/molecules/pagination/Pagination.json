@@ -1,0 +1,212 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/pagination/Pagination.js",
+  "templates": [
+    {
+      "name": "pagination-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "page-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host > div",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color",
+          "fallback": "black"
+        },
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "block"
+        },
+        {
+          "property": "height",
+          "variable": "--height",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host ul",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--ul-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "float",
+          "variable": "--ul-float",
+          "fallback": "right"
+        },
+        {
+          "property": "margin",
+          "variable": "--ul-margin",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host li",
+      "declaration": [
+        {
+          "property": "border-top",
+          "variable": "--li-border-top",
+          "fallback": "1px solid black"
+        },
+        {
+          "property": "display",
+          "variable": "--li-display",
+          "fallback": "inline-block"
+        },
+        {
+          "property": "font-size",
+          "variable": "--li-font-size",
+          "fallback": "1em"
+        },
+        {
+          "property": "height",
+          "variable": "--li-height",
+          "fallback": "5em"
+        },
+        {
+          "property": "width",
+          "variable": "--li-width",
+          "fallback": "5em"
+        }
+      ]
+    },
+    {
+      "selector": ":host li.active",
+      "declaration": [
+        {
+          "property": "background",
+          "variable": "--li-background-active",
+          "fallback": "white"
+        }
+      ]
+    },
+    {
+      "selector": ":host nav ul li:hover",
+      "declaration": [
+        {
+          "property": "border-top",
+          "variable": "--li-border-top-hover",
+          "fallback": "1px solid red"
+        }
+      ]
+    },
+    {
+      "selector": ":host nav ul li > a",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--li-a-align-items",
+          "fallback": "center"
+        },
+        {
+          "property": "border-left",
+          "variable": "--li-a-border-left",
+          "fallback": "1px var(--li-background-active"
+        },
+        {
+          "property": "display",
+          "variable": "--li-a-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "height",
+          "variable": "--li-a-height",
+          "fallback": "100%"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--li-a-justify-content",
+          "fallback": "center"
+        },
+        {
+          "property": "margin",
+          "variable": "--li-a-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "text-decoration",
+          "variable": "--li-a-text-decoration",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host nav ul li > a.active",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--li-a-color-active",
+          "fallback": "black"
+        }
+      ]
+    },
+    {
+      "selector": ":host nav ul li:has(> a.active) + li > a",
+      "declaration": [
+        {
+          "property": "border-left",
+          "variable": "--li-hover-a-active-border-left",
+          "fallback": "1px transparent solid"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--li-height-mobile",
+          "fallback": "var(--li-height"
+        },
+        {
+          "property": "width",
+          "variable": "--li-width-mobile",
+          "fallback": "var(--li-width"
+        }
+      ]
+    },
+    {
+      "selector": ":host nav ul li:has(> a.active) + li > a",
+      "declaration": [
+        {
+          "property": "border-left",
+          "variable": "--li-hover-a-active-border-left-mobile",
+          "fallback": "var(--li-hover-a-active-border-left"
+        }
+      ]
+    }
+  ]
+}

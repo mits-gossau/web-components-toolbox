@@ -1,0 +1,105 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/button/Button.js",
+  "templates": [
+    {
+      "name": "button-primary-",
+      "path": "./primary-/primary-.css"
+    },
+    {
+      "name": "button-secondary-",
+      "path": "./secondary-/secondary-.css"
+    },
+    {
+      "name": "button-tertiary-",
+      "path": "./tertiary-/tertiary-.css"
+    },
+    {
+      "name": "button-transparent-",
+      "path": "./transparent-/transparent-.css"
+    },
+    {
+      "name": "button-quaternary-",
+      "path": "./quaternary-/quaternary-.css"
+    },
+    {
+      "name": "button-download-",
+      "path": "./download-/download-.css"
+    },
+    {
+      "name": "button-category-",
+      "path": "./category-/category-.css"
+    },
+    {
+      "name": "button-category-teaser-",
+      "path": "./category-teaser-/category-teaser-.css"
+    },
+    {
+      "name": "button-square-",
+      "path": "./square-/square-.css"
+    },
+    {
+      "name": "button-action-",
+      "path": "./action-/action-.css"
+    },
+    {
+      "name": "button-search-",
+      "path": "./search-/search-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "active-detail-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "tag-search",
+      "description": ""
+    },
+    {
+      "attributeName": "tag",
+      "description": ""
+    },
+    {
+      "attributeName": "href",
+      "description": ""
+    },
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "wc-config-load",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "target",
+      "description": ""
+    },
+    {
+      "attributeName": "rel",
+      "description": ""
+    },
+    {
+      "attributeName": "type",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    }
+  ]
+}

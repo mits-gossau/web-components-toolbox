@@ -1,0 +1,378 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/checkout/Checkout.js",
+  "templates": [
+    {
+      "name": "checkout-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "is-logged-in",
+      "description": ""
+    },
+    {
+      "attributeName": "tooltip-translation-balance",
+      "description": ""
+    },
+    {
+      "attributeName": "allow-edit-price",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--flex-start"
+        },
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--flex-direction",
+          "fallback": "column"
+        },
+        {
+          "property": "gap",
+          "variable": "--gap",
+          "fallback": "1em"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-item",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--product-item-border-bottom",
+          "fallback": "1px"
+        },
+        {
+          "property": "display",
+          "variable": "--product-item-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "padding",
+          "variable": "--product-item-padding",
+          "fallback": "2em 0"
+        },
+        {
+          "property": "width",
+          "variable": "--product-item-width",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-item:last-of-type",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--product-item-last-border-bottom",
+          "fallback": "none"
+        },
+        {
+          "property": "padding-bottom",
+          "variable": "--product-item-last-padding-bottom",
+          "fallback": "4em"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-data",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--product-data-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--product-data-flex-direction",
+          "fallback": "column"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--product-data-justify-content",
+          "fallback": "flex-start"
+        },
+        {
+          "property": "width",
+          "variable": "--product-data-width",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-data  span",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--product-data-span-display",
+          "fallback": "block"
+        },
+        {
+          "property": "line-height",
+          "variable": "--product-data-span-line-height",
+          "fallback": "1.75em"
+        }
+      ]
+    },
+    {
+      "selector": ":host span.name",
+      "declaration": [
+        {
+          "property": "font-size",
+          "variable": "--span-name-font-size",
+          "fallback": "1.25em"
+        }
+      ]
+    },
+    {
+      "selector": ":host span.additional-info",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--span-additional-info-color",
+          "fallback": "black"
+        },
+        {
+          "property": "font-size",
+          "variable": "--span-additional-info-font-size",
+          "fallback": "0.75em"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-image",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--product-image-align-items",
+          "fallback": "center"
+        },
+        {
+          "property": "display",
+          "variable": "--product-image-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--product-image-flex-direction",
+          "fallback": "column"
+        },
+        {
+          "property": "margin",
+          "variable": "--product-image-margin",
+          "fallback": "0 1em"
+        },
+        {
+          "property": "min-width",
+          "variable": "--product-image-min-width",
+          "fallback": "10em"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-info",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--product-info-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--product-info-justify-content",
+          "fallback": "space-between"
+        },
+        {
+          "property": "padding",
+          "variable": "--product-info-padding",
+          "fallback": "0 0 1em 0"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-footer",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--product-footer-align-items",
+          "fallback": "center"
+        },
+        {
+          "property": "display",
+          "variable": "--product-footer-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--product-footer-justify-content",
+          "fallback": "space-between"
+        }
+      ]
+    },
+    {
+      "selector": ":host table.totalPriceSummary",
+      "declaration": [
+        {
+          "property": "border-top",
+          "variable": "--table-border-bottom-color",
+          "fallback": "#E0E0E0"
+        }
+      ]
+    },
+    {
+      "selector": ":host table.totalPriceSummary tr",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--table-tr-border-bottom-color",
+          "fallback": "#E0E0E0"
+        }
+      ]
+    },
+    {
+      "selector": ":host table.totalPriceSummary tr.important",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--table-tr-important-border-bottom-color",
+          "fallback": "#E0E0E0"
+        }
+      ]
+    },
+    {
+      "selector": ":host table.totalPriceSummary tr.with-background",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--table-tr-with-background-background-color",
+          "fallback": "#F5F5F5"
+        }
+      ]
+    },
+    {
+      "selector": ":host table.totalPriceSummary td",
+      "declaration": [
+        {
+          "property": "text-align",
+          "variable": "--table-td-text-align",
+          "fallback": "right"
+        },
+        {
+          "property": "padding",
+          "variable": "--table-td-padding",
+          "fallback": "0.5em"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ":host .product-item:last-of-type",
+      "declaration": [
+        {
+          "property": "padding-bottom",
+          "variable": "--product-item-last-padding-bottom-mobile",
+          "fallback": "1em"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-image",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--product-image-margin-mobile",
+          "fallback": "0 0.5em"
+        },
+        {
+          "property": "min-width",
+          "variable": "--product-image-min-width-mobile",
+          "fallback": "5em"
+        }
+      ]
+    },
+    {
+      "selector": "<m-system-notification type=\"info\">\n        <style>\n            :host",
+      "declaration": [
+        {
+          "property": "--svg-color",
+          "variable": "--m-blue-800"
+        }
+      ]
+    },
+    {
+      "selector": ":host a",
+      "declaration": []
+    },
+    {
+      "selector": ":host .description > div",
+      "declaration": []
+    },
+    {
+      "selector": ":host .description svg",
+      "declaration": [
+        {
+          "property": "min-width",
+          "variable": "--svg-min-width",
+          "fallback": "24px"
+        },
+        {
+          "property": "width",
+          "variable": "--svg-min-width",
+          "fallback": "24px"
+        }
+      ]
+    },
+    {
+      "selector": "<style>\n            input, *:focus-visible",
+      "declaration": [
+        {
+          "property": "border",
+          "variable": "--m-gray-300",
+          "fallback": "white"
+        }
+      ]
+    },
+    {
+      "selector": "input[type=number]",
+      "declaration": []
+    },
+    {
+      "selector": "/* Chrome, Safari, Edge, Opera */\n            input::-webkit-outer-spin-button,\n            input::-webkit-inner-spin-button",
+      "declaration": []
+    },
+    {
+      "selector": "/* Firefox */\n            input[type=number]",
+      "declaration": []
+    }
+  ]
+}

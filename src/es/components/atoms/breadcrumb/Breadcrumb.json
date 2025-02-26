@@ -1,0 +1,59 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/breadcrumb/Breadcrumb.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "icon",
+      "description": ""
+    },
+    {
+      "attributeName": "iconWidth",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--margin",
+          "fallback": "0"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host ul",
+      "declaration": [
+        {
+          "property": "list-style",
+          "variable": "--list-style",
+          "fallback": "none"
+        },
+        {
+          "property": "margin",
+          "variable": "--ul-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "padding",
+          "variable": "--ul-padding",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host > ul > li",
+      "declaration": []
+    }
+  ]
+}

@@ -1,0 +1,385 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/organisms/footer/Footer.js",
+  "templates": [
+    {
+      "name": "footer-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host > footer",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--footer-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "width",
+          "variable": "--footer-width",
+          "fallback": "auto"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer > *, :host > footer .invert > *",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--footer-any-padding",
+          "fallback": "0"
+        },
+        {
+          "property": "margin",
+          "variable": "--content-spacing",
+          "fallback": "unset"
+        },
+        {
+          "property": "/* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */\n        width",
+          "variable": "--content-width",
+          "fallback": "55%"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer a.logo",
+      "declaration": []
+    },
+    {
+      "selector": ":host > footer .invert",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--invert-color"
+        },
+        {
+          "property": "--a-color-hover",
+          "variable": "--invert-a-color-hover"
+        },
+        {
+          "property": "--a-color",
+          "variable": "--invert-color"
+        },
+        {
+          "property": "--color",
+          "variable": "--invert-color"
+        },
+        {
+          "property": "background-color",
+          "variable": "--invert-background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .invert.orange",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--invert-orange-color",
+          "fallback": "var(--invert-color"
+        },
+        {
+          "property": "--a-color-hover",
+          "variable": "--invert-orange-a-color-hover",
+          "fallback": "var(--invert-a-color-hover"
+        },
+        {
+          "property": "--a-color",
+          "variable": "--invert-orange-a-color",
+          "fallback": "var(--invert-a-color"
+        },
+        {
+          "property": "background-color",
+          "variable": "--invert-orange-background-color",
+          "fallback": "var(--invert-background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer o-wrapper[namespace=footer-default-]",
+      "declaration": [
+        {
+          "property": "--gap",
+          "variable": "--gap-custom",
+          "fallback": "var(--content-spacing"
+        },
+        {
+          "property": "--justify-content",
+          "variable": "--justify-content-custom",
+          "fallback": "left"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .language-switcher > ul, :host > footer .footer-links > ul",
+      "declaration": [
+        {
+          "property": "--color",
+          "variable": "--background-color"
+        },
+        {
+          "property": "--color-hover",
+          "variable": "--m-orange-300"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .footer-links > ul",
+      "declaration": [
+        {
+          "property": "justify-content",
+          "variable": "--justify-content-custom",
+          "fallback": "start"
+        },
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "start"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .footer-links > ul > li:last-child",
+      "declaration": [
+        {
+          "property": "align-self",
+          "variable": "--footer-copyright-align-self-custom",
+          "fallback": "end"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .language-switcher > ul > li, :host > footer .footer-links > ul > li",
+      "declaration": [
+        {
+          "property": "list-style",
+          "variable": "--list-style",
+          "fallback": "none"
+        },
+        {
+          "property": "padding",
+          "variable": "--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .seperator > ul > li:not(:last-child)",
+      "declaration": [
+        {
+          "property": "border-right",
+          "variable": "--a-color",
+          "fallback": "black"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .language-switcher > ul > li:first-child, :host > footer .footer-links > ul:not(.has-copyright) > li:first-child",
+      "declaration": []
+    },
+    {
+      "selector": ":host > footer .language-switcher > ul > li:last-child, :host > footer .footer-links > ul > li:last-child",
+      "declaration": []
+    },
+    {
+      "selector": "/* force copyright to be at first position desktop */\n      :host > footer .footer-links > ul > li.copyright",
+      "declaration": [
+        {
+          "property": "order",
+          "variable": "--order-custom",
+          "fallback": "-1"
+        },
+        {
+          "property": "padding",
+          "variable": "--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": "/* in case copyright and language are supposed to be on the same line on desktop */\n      :host > footer .copyright-and-language",
+      "declaration": [
+        {
+          "property": "gap",
+          "variable": "--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .copyright-and-language .footer-links ~ .language-switcher > ul",
+      "declaration": []
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--footer-width-mobile",
+          "fallback": "var(--footer-width"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer > *, :host > footer .invert > *",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--footer-any-padding-mobile",
+          "fallback": "var(--footer-any-padding"
+        },
+        {
+          "property": "margin",
+          "variable": "--content-spacing-mobile",
+          "fallback": "var(--content-spacing"
+        },
+        {
+          "property": "/* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */\n          width",
+          "variable": "--content-width-mobile",
+          "fallback": "calc(100% - var(--content-spacing-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer *.last-contains-details",
+      "declaration": [
+        {
+          "property": "margin-top",
+          "variable": "--wrapper-last-contains-details-margin-top",
+          "fallback": "var(--content-spacing-mobile"
+        },
+        {
+          "property": "/* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */\n          margin-bottom",
+          "variable": "--wrapper-last-contains-details-margin-bottom",
+          "fallback": "var(--content-spacing-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer o-wrapper[namespace=footer-default-]",
+      "declaration": [
+        {
+          "property": "--gap",
+          "variable": "--gap-mobile-custom",
+          "fallback": "var(--gap-custom"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .language-switcher > ul > li",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--content-spacing-mobile"
+        }
+      ]
+    },
+    {
+      "selector": "/* force copyright to be at first position desktop */\n        :host > footer .footer-links > ul > li.copyright",
+      "declaration": []
+    },
+    {
+      "selector": "/* in case copyright and language are supposed to be on the same line on desktop */\n        :host > footer > .copyright-and-language",
+      "declaration": [
+        {
+          "property": "gap",
+          "variable": "--content-spacing-mobile",
+          "fallback": "var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .footer-links > ul",
+      "declaration": [
+        {
+          "property": "justify-content",
+          "variable": "--justify-content-mobile-custom",
+          "fallback": "start"
+        },
+        {
+          "property": "align-items",
+          "variable": "--align-items-mobile",
+          "fallback": "start"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer > .copyright-and-language .footer-links ~ .language-switcher > ul",
+      "declaration": [
+        {
+          "property": "gap",
+          "variable": "--content-spacing-mobile",
+          "fallback": "var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host > footer .footer-links > ul > li, :host > footer > .footer-links > ul > li.copyright",
+      "declaration": []
+    },
+    {
+      "selector": ":host > footer > .copyright-and-language .footer-links ~ .language-switcher > ul > li",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *.contains-details > *:not(m-details).clone",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *.contains-details > m-details",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *.contains-details > *:not(m-details)",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *.contains-details > m-details",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *.contains-details > *:not(m-details)",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *.contains-details > m-details",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section > *.contains-details > *:not(m-details)",
+      "declaration": []
+    },
+    {
+      "selector": ":host > footer hr.next-contains-details, :host > footer div.next-contains-details",
+      "declaration": []
+    },
+    {
+      "selector": ":host .footer-links-row ul, :host .footer-links-row ul.bull",
+      "declaration": []
+    },
+    {
+      "selector": ":host .social-links",
+      "declaration": []
+    },
+    {
+      "selector": ":host .social-links svg",
+      "declaration": []
+    }
+  ]
+}

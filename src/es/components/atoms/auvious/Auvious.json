@@ -1,0 +1,95 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/auvious/Auvious.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "translations-path",
+      "description": ""
+    },
+    {
+      "attributeName": "button-size",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host > app-auvious-widget::part(DIV-av-floating-av-floating-right-av-floating-bottom-av-floating-offset),\n          :host > app-auvious-widget::part(DIV-av-floating-av-floating-mobile-av-floating-right-av-floating-bottom-av-floating-offset)",
+      "declaration": []
+    },
+    {
+      "selector": ":host > app-auvious-widget::part(APP-LAUNCHER)",
+      "declaration": []
+    },
+    {
+      "selector": "<!-- start - important for loading animation -->\n      <section class=\"loading\">\n      <svg class=\"ring\" viewBox=\"25 25 50 50\" stroke-width=\"5\"> <circle cx=\"50\" cy=\"50\" r=\"20\" /> </svg>\n      <script>\n        if (document.body.hasAttribute('wc-config-load'))",
+      "declaration": []
+    },
+    {
+      "selector": "else",
+      "declaration": []
+    },
+    {
+      "selector": "</script>\n      <style>\n        section.loading",
+      "declaration": []
+    },
+    {
+      "selector": ".ring",
+      "declaration": [
+        {
+          "property": "--uib-color",
+          "variable": "--color-secondary",
+          "fallback": "black"
+        },
+        {
+          "property": "height",
+          "variable": "--uib-size"
+        },
+        {
+          "property": "width",
+          "variable": "--uib-size"
+        },
+        {
+          "property": "animation",
+          "variable": "--uib-speed"
+        }
+      ]
+    },
+    {
+      "selector": ".ring circle",
+      "declaration": [
+        {
+          "property": "stroke",
+          "variable": "--uib-color"
+        },
+        {
+          "property": "animation",
+          "variable": "--uib-speed"
+        }
+      ]
+    },
+    {
+      "selector": "@keyframes rotate",
+      "declaration": []
+    },
+    {
+      "selector": "}\n\n        @keyframes stretch",
+      "declaration": []
+    },
+    {
+      "selector": "50%",
+      "declaration": []
+    },
+    {
+      "selector": "100%",
+      "declaration": []
+    }
+  ]
+}

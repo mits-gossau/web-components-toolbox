@@ -1,0 +1,251 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/organisms/body/Body.js",
+  "templates": [],
+  "attributes": [],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color",
+          "fallback": "transparent"
+        },
+        {
+          "property": "background-repeat",
+          "variable": "--background-repeat",
+          "fallback": "initial"
+        },
+        {
+          "property": "background-position",
+          "variable": "--background-position",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--main-padding",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > *:not(style):not(script)",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--any-display",
+          "fallback": "block"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > m-simple-form-validation",
+      "declaration": []
+    },
+    {
+      "selector": ":host > main > .full-width",
+      "declaration": []
+    },
+    {
+      "selector": ":host > main > .no-margin",
+      "declaration": []
+    },
+    {
+      "selector": ":host > main > *",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--any-content-spacing",
+          "fallback": "var(--content-spacing"
+        },
+        {
+          "property": "/* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */\n        width",
+          "variable": "--any-content-width",
+          "fallback": "var(--content-width"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > a[wrapper]",
+      "declaration": [
+        {
+          "property": "--a-wrapper-margin",
+          "variable": "--any-content-spacing",
+          "fallback": "var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.content-max-width) > main > *:not(.ignore-max-width), :host> main > *.content-max-width",
+      "declaration": [
+        {
+          "property": "max-width",
+          "variable": "--content-max-width",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.content-max-width-two) > main > *:not(.ignore-max-width), :host > main > *.content-max-width-two",
+      "declaration": [
+        {
+          "property": "max-width",
+          "variable": "--content-max-width-two",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host >main > *:first-child",
+      "declaration": [
+        {
+          "property": "/* important",
+          "variable": "--any-margin-top-first-child",
+          "fallback": "unset"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > *.a-emotion-pictures:first-child, :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child",
+      "declaration": [
+        {
+          "property": "margin-top",
+          "variable": "--a-emotion-pictures-margin-top-first-child",
+          "fallback": "calc(-1 * var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > msrc-store-finder:first-child",
+      "declaration": [
+        {
+          "property": "margin-top",
+          "variable": "--msrc-store-finder-margin-top-first-child",
+          "fallback": "calc(-1 * var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > msrc-store-finder:last-child",
+      "declaration": [
+        {
+          "property": "margin-bottom",
+          "variable": "--msrc-store-finder-margin-bottom-last-child",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > a-google-maps:first-child",
+      "declaration": [
+        {
+          "property": "margin-top",
+          "variable": "--a-google-maps-margin-top-first-child",
+          "fallback": "calc(-1 * var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ":host > main > m-simple-form-validation",
+      "declaration": []
+    },
+    {
+      "selector": ":host > main > *",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--any-content-spacing-mobile",
+          "fallback": "var(--content-spacing-mobile"
+        },
+        {
+          "property": "/* Warning! Keep horizontal margin at auto, otherwise the content width + margin may overflow into the scroll bar */\n          width",
+          "variable": "--any-content-width-mobile",
+          "fallback": "var(--content-width-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > a[wrapper]",
+      "declaration": [
+        {
+          "property": "--a-wrapper-margin",
+          "variable": "--any-content-spacing-mobile",
+          "fallback": "var(--content-spacing-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.content-max-width) > main > *:not(.ignore-max-width), :host> main > *.content-max-width",
+      "declaration": [
+        {
+          "property": "max-width",
+          "variable": "--content-max-width-mobile",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host(.content-max-width-two) > main > *:not(.ignore-max-width), :host > main > *.content-max-width-two",
+      "declaration": [
+        {
+          "property": "max-width",
+          "variable": "--content-max-width-two-mobile",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host >main > *:first-child",
+      "declaration": [
+        {
+          "property": "/* important",
+          "variable": "--any-margin-top-first-child-mobile",
+          "fallback": "unset"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > *.a-emotion-pictures:first-child, :host > main > a-emotion-pictures:first-child, :host > main > m-carousel[namespace=carousel-emotion-]:first-child",
+      "declaration": [
+        {
+          "property": "margin-top",
+          "variable": "--a-emotion-pictures-margin-top-first-child-mobile",
+          "fallback": "calc(-1 * var(--content-spacing-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > msrc-store-finder:first-child",
+      "declaration": [
+        {
+          "property": "margin-top",
+          "variable": "--msrc-store-finder-margin-top-first-child-mobile",
+          "fallback": "calc(-1 * var(--content-spacing-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host > main > msrc-store-finder:last-child",
+      "declaration": [
+        {
+          "property": "margin-bottom",
+          "variable": "--msrc-store-finder-margin-bottom-last-child-mobile",
+          "fallback": "0"
+        }
+      ]
+    }
+  ]
+}

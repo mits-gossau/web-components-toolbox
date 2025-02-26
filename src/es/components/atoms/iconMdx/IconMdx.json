@@ -1,0 +1,67 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/iconMdx/IconMdx.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "custom-notification",
+      "description": ""
+    },
+    {
+      "attributeName": "size",
+      "description": ""
+    },
+    {
+      "attributeName": "mobile-size",
+      "description": ""
+    },
+    {
+      "attributeName": "color",
+      "description": ""
+    },
+    {
+      "attributeName": "rotate",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-url",
+      "description": ""
+    },
+    {
+      "attributeName": "base-url",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-size",
+      "description": ""
+    },
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-name",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host(:hover), :host(.hover)",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-hover",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "cursor",
+          "variable": "--cursor-hover",
+          "fallback": "pointer"
+        }
+      ]
+    }
+  ]
+}

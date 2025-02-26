@@ -1,0 +1,310 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/product/Product.js",
+  "templates": [
+    {
+      "name": "product-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "detail-product-link",
+      "description": ""
+    },
+    {
+      "attributeName": "data",
+      "description": ""
+    },
+    {
+      "attributeName": "active-order-item-amount",
+      "description": ""
+    },
+    {
+      "attributeName": "tooltip-text-balance",
+      "description": ""
+    },
+    {
+      "attributeName": "disable",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--height",
+          "fallback": "100%"
+        },
+        {
+          "property": "margin",
+          "variable": "--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host > a",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--a-height",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host > a > div",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--div-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--div-flex-direction",
+          "fallback": "column"
+        },
+        {
+          "property": "height",
+          "variable": "--div-height",
+          "fallback": "100%"
+        },
+        {
+          "property": "padding",
+          "variable": "--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host > a > div > div",
+      "declaration": [
+        {
+          "property": "margin-bottom",
+          "variable": "--content-spacing"
+        },
+        {
+          "property": "padding",
+          "variable": "--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host .basket-utils",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--basket-utils-width",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-image",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--product-image-align-items",
+          "fallback": "baseline"
+        },
+        {
+          "property": "display",
+          "variable": "--product-image-display",
+          "fallback": "inline"
+        },
+        {
+          "property": "flex-grow",
+          "variable": "--product-image-flex-grow",
+          "fallback": "0"
+        },
+        {
+          "property": "height",
+          "variable": "--product-image-height",
+          "fallback": "auto"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--product-image-justify-content",
+          "fallback": "flex-start"
+        },
+        {
+          "property": "margin",
+          "variable": "--product-image-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "max-height",
+          "variable": "--product-image-max-height",
+          "fallback": "none"
+        },
+        {
+          "property": "padding",
+          "variable": "--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-price",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--product-price-display",
+          "fallback": "block"
+        },
+        {
+          "property": "font-size",
+          "variable": "--product-price-font-size",
+          "fallback": "1.25em"
+        },
+        {
+          "property": "font-weight",
+          "variable": "--product-price-font-weight",
+          "fallback": "bold"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-name",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--product-name-display",
+          "fallback": "block"
+        },
+        {
+          "property": "font-size",
+          "variable": "--product-name-font-size",
+          "fallback": "0.85em"
+        },
+        {
+          "property": "font-weight",
+          "variable": "--product-name-font-weight",
+          "fallback": "bold"
+        }
+      ]
+    },
+    {
+      "selector": ":host .product-data",
+      "declaration": [
+        {
+          "property": "flex",
+          "variable": "--product-data-flex",
+          "fallback": "1"
+        },
+        {
+          "property": "margin",
+          "variable": "--product-data-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "min-height",
+          "variable": "--product-data-min-height",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host .footer-label-data",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--footer-label-data-align-item",
+          "fallback": "flex-start"
+        },
+        {
+          "property": "align-self",
+          "variable": "--footer-label-data-align-self",
+          "fallback": "flex-end"
+        },
+        {
+          "property": "display",
+          "variable": "--footer-label-data-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--footer-label-data-flex-direction",
+          "fallback": "column"
+        },
+        {
+          "property": "margin",
+          "variable": "--footer-label-data-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "width",
+          "variable": "--footer-label-data-width",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host .unit-price",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--unit-price-color",
+          "fallback": "black"
+        },
+        {
+          "property": "font-size",
+          "variable": "--unit-price-font-size",
+          "fallback": "0.75em"
+        },
+        {
+          "property": "line-height",
+          "variable": "--unit-price-line-height",
+          "fallback": "1.5em"
+        },
+        {
+          "property": "overflow",
+          "variable": "--unit-price-overflow",
+          "fallback": "hidden"
+        },
+        {
+          "property": "text-overflow",
+          "variable": "--unit-price-text-overflow",
+          "fallback": "ellipsis"
+        }
+      ]
+    },
+    {
+      "selector": ":host .estimated-piece-weight",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--estimated-piece-weight-display",
+          "fallback": "block"
+        },
+        {
+          "property": "color",
+          "variable": "--unit-price-color",
+          "fallback": "black"
+        },
+        {
+          "property": "font-size",
+          "variable": "--estimated-piece-weight-font-size",
+          "fallback": "0.75em"
+        },
+        {
+          "property": "line-height",
+          "variable": "--estimated-piece-weight-line-height",
+          "fallback": "1.5em"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

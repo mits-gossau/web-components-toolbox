@@ -1,0 +1,194 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/flatpickr/Flatpickr.js",
+  "templates": [
+    {
+      "name": "flatpickr-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "label",
+      "description": ""
+    },
+    {
+      "attributeName": "reset-detail-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "set-date-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "reset-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "options",
+      "description": ""
+    },
+    {
+      "attributeName": "get-date-option-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "force-end-date",
+      "description": ""
+    },
+    {
+      "attributeName": "default-date",
+      "description": ""
+    },
+    {
+      "attributeName": "name",
+      "description": ""
+    },
+    {
+      "attributeName": "id",
+      "description": ""
+    },
+    {
+      "attributeName": "required",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host, host *",
+      "declaration": [
+        {
+          "property": "cursor",
+          "variable": "--cursor",
+          "fallback": "pointer"
+        }
+      ]
+    },
+    {
+      "selector": ":host > div",
+      "declaration": [
+        {
+          "property": "border",
+          "variable": "--border",
+          "fallback": "1px solid black"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--border-radius",
+          "fallback": "2.5rem"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "6px 24px"
+        }
+      ]
+    },
+    {
+      "selector": ":host .label",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "center"
+        },
+        {
+          "property": "display",
+          "variable": "--label-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "font-weight",
+          "variable": "--label-font-weight",
+          "fallback": "normal"
+        },
+        {
+          "property": "gap",
+          "variable": "--label-gap",
+          "fallback": "1em"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "flex-start"
+        },
+        {
+          "property": "line-height",
+          "variable": "--label-line-height",
+          "fallback": "normal"
+        }
+      ]
+    },
+    {
+      "selector": ":host .flatpickr-input.active",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color-active",
+          "fallback": "transparent"
+        },
+        {
+          "property": "border-color",
+          "variable": "--border-color-active",
+          "fallback": "1px solid black"
+        }
+      ]
+    },
+    {
+      "selector": ".flatpickr-day.selected,\n      .flatpickr-day.startRange,\n      .flatpickr-day.endRange,\n      .flatpickr-day.selected.inRange,\n      .flatpickr-day.startRange.inRange,\n      .flatpickr-day.endRange.inRange,\n      .flatpickr-day.selected:focus,\n      .flatpickr-day.startRange:focus,\n      .flatpickr-day.endRange:focus,\n      .flatpickr-day.selected:hover,\n      .flatpickr-day.startRange:hover,\n      .flatpickr-day.endRange:hover,\n      .flatpickr-day.selected.prevMonthDay,\n      .flatpickr-day.startRange.prevMonthDay,\n      .flatpickr-day.endRange.prevMonthDay,\n      .flatpickr-day.selected.nextMonthDay,\n      .flatpickr-day.startRange.nextMonthDay,\n      .flatpickr-day.endRange.nextMonthDay",
+      "declaration": [
+        {
+          "property": "background",
+          "variable": "--background",
+          "fallback": "gray"
+        },
+        {
+          "property": "box-shadow",
+          "variable": "--box-shadow",
+          "fallback": "none"
+        },
+        {
+          "property": "color",
+          "variable": "--color",
+          "fallback": "black"
+        },
+        {
+          "property": "border-color",
+          "variable": "--border-color",
+          "fallback": "darkgray"
+        }
+      ]
+    },
+    {
+      "selector": ".flatpickr-day.startRange, .flatpickr-day.startRange:hover, .flatpickr-day.endRange, .flatpickr-day.endRange:hover",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-start-end-range",
+          "fallback": "var(--color"
+        }
+      ]
+    },
+    {
+      "selector": ".flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1))",
+      "declaration": [
+        {
+          "property": "box-shadow",
+          "variable": "--box-shadow-color",
+          "fallback": "gray"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/scrollToTop/ScrollToTop.js",
+  "templates": [
+    {
+      "name": "scroll-to-top-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "z-index",
+          "variable": "--scroll-to-top-host-z-index",
+          "fallback": "1000"
+        }
+      ]
+    }
+  ]
+}

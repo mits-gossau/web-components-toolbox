@@ -1,0 +1,96 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/organisms/grid/Grid.js",
+  "templates": [
+    {
+      "name": "grid-1column-align-center-",
+      "path": "./1column-align-center-/1column-align-center-.css"
+    },
+    {
+      "name": "grid-2columns-content-section-",
+      "path": "./2columns-content-section-/2columns-content-section-.css"
+    },
+    {
+      "name": "grid-2columns-content-stage-",
+      "path": "./2columns-content-stage-/2columns-content-stage-.css"
+    },
+    {
+      "name": "grid-2colums2rows-",
+      "path": "./2colums2rows-/2colums2rows-.css"
+    },
+    {
+      "name": "grid-432-auto-colums-auto-rows-",
+      "path": "./432-auto-colums-auto-rows-/432-auto-colums-auto-rows-.css"
+    },
+    {
+      "name": "grid-4columns-",
+      "path": "./4columns-/4columns-.css"
+    },
+    {
+      "name": "grid-12er-",
+      "path": "./12er-/12er-.css.js"
+    },
+    {
+      "name": "grid-x-",
+      "path": "./x-columns-/x-columns-.css.js"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "width",
+      "description": ""
+    },
+    {
+      "attributeName": "height",
+      "description": ""
+    },
+    {
+      "attributeName": "auto-fit",
+      "description": ""
+    },
+    {
+      "attributeName": "auto-fill",
+      "description": ""
+    },
+    {
+      "attributeName": "gap",
+      "description": ""
+    },
+    {
+      "attributeName": "padding",
+      "description": ""
+    },
+    {
+      "attributeName": "width-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "height-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "auto-fit-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "auto-fill-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "gap-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "padding-mobile",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": []
+}

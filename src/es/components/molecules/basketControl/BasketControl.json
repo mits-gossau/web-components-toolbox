@@ -1,0 +1,183 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/basketControl/BasketControl.js",
+  "templates": [
+    {
+      "name": "basket-control-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "disable-minimum",
+      "description": ""
+    },
+    {
+      "attributeName": "disable-all-elements",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "center"
+        },
+        {
+          "property": "animation",
+          "variable": "--show",
+          "fallback": "show .3s ease-out"
+        },
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "flex"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "flex-start"
+        },
+        {
+          "property": "min-height",
+          "variable": "--min-height",
+          "fallback": "3em"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": "a-button",
+      "declaration": []
+    },
+    {
+      "selector": "@container productList (max-width: 10em)",
+      "declaration": []
+    },
+    {
+      "selector": "a-button",
+      "declaration": []
+    },
+    {
+      "selector": "}\n      \n      @container productList (max-width: 7em)",
+      "declaration": []
+    },
+    {
+      "selector": "a-button#add",
+      "declaration": []
+    },
+    {
+      "selector": ":host .basket-control-input",
+      "declaration": []
+    },
+    {
+      "selector": "}\n      :host(.default)",
+      "declaration": []
+    },
+    {
+      "selector": ":host(.closed) input, :host(.closed) #remove",
+      "declaration": []
+    },
+    {
+      "selector": ":host(.closed.default)",
+      "declaration": []
+    },
+    {
+      "selector": ":host input",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--quantity-background-color",
+          "fallback": "transparent"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--quantity-border-radius",
+          "fallback": "0.5em"
+        },
+        {
+          "property": "border",
+          "variable": "--quantity-border-color",
+          "fallback": "red"
+        },
+        {
+          "property": "font-family",
+          "variable": "--quantity-font-family",
+          "fallback": "inherit"
+        },
+        {
+          "property": "font-size",
+          "variable": "--quantity-font-size",
+          "fallback": "inherit"
+        },
+        {
+          "property": "height",
+          "variable": "--quantity-height",
+          "fallback": "auto"
+        },
+        {
+          "property": "margin",
+          "variable": "--quantity-margin",
+          "fallback": "0 0.5em"
+        },
+        {
+          "property": "padding",
+          "variable": "--quantity-padding",
+          "fallback": "0.25em"
+        },
+        {
+          "property": "text-align",
+          "variable": "--quantity-text-align",
+          "fallback": "center"
+        },
+        {
+          "property": "width",
+          "variable": "--quantity-width",
+          "fallback": "4em"
+        }
+      ]
+    },
+    {
+      "selector": "input[type=number]",
+      "declaration": []
+    },
+    {
+      "selector": "/* Chrome, Safari, Edge, Opera */\n      input::-webkit-outer-spin-button,\n      input::-webkit-inner-spin-button",
+      "declaration": []
+    },
+    {
+      "selector": "/* Firefox */\n      input[type=number]",
+      "declaration": []
+    },
+    {
+      "selector": "@keyframes show",
+      "declaration": []
+    },
+    {
+      "selector": "100%",
+      "declaration": []
+    },
+    {
+      "selector": "}\n      @media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

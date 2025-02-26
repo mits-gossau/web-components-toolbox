@@ -1,0 +1,490 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/multiLevelNavigation/MultiLevelNavigation.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "animation-duration",
+      "description": ""
+    },
+    {
+      "attributeName": "no-scroll",
+      "description": ""
+    },
+    {
+      "attributeName": "o-nav-wrapper",
+      "description": ""
+    },
+    {
+      "attributeName": "navigation-load",
+      "description": ""
+    },
+    {
+      "attributeName": "close-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "media",
+      "description": ""
+    },
+    {
+      "attributeName": "aria-expanded",
+      "description": ""
+    },
+    {
+      "attributeName": "close-other-flyout",
+      "description": ""
+    },
+    {
+      "attributeName": "click-anchor",
+      "description": ""
+    },
+    {
+      "attributeName": "load-custom-elements",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": "/* hide component stuff before it is rendered to avoid the blitz (flashing white) */\n    :not(:defined)",
+      "declaration": []
+    },
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--main-ul-align-items",
+          "fallback": "normal"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--main-ul-justify-content",
+          "fallback": "normal"
+        },
+        {
+          "property": "display",
+          "variable": "--main-ul-display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-wrap",
+          "variable": "--flex-wrap",
+          "fallback": "nowrap"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--flex-direction",
+          "fallback": "row"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "0"
+        },
+        {
+          "property": "margin",
+          "variable": "--margin",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--li-padding",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > div.main-background",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--m-gray-500"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li.open > div.main-background",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > div.main-background.hide",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li.active > a:hover > span",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-hover"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li.active > a:after",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--color-active"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li.active > a > span",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-active"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > a:after",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--a-main-border-width"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > a:hover:after",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--color-active"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > a",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--a-main-display",
+          "fallback": "inline"
+        },
+        {
+          "property": "color",
+          "variable": "--color"
+        },
+        {
+          "property": "padding",
+          "variable": "--a-main-content-spacing",
+          "fallback": "14px 10px"
+        },
+        {
+          "property": "font-size",
+          "variable": "--a-main-font-size",
+          "fallback": "1rem"
+        },
+        {
+          "property": "font-weight",
+          "variable": "--a-main-font-weight",
+          "fallback": "400"
+        },
+        {
+          "property": "line-height",
+          "variable": "--a-main-line-height"
+        },
+        {
+          "property": "text-transform",
+          "variable": "--a-main-text-transform"
+        },
+        {
+          "property": "font-family",
+          "variable": "--a-main-font-family",
+          "fallback": "var(--font-family"
+        },
+        {
+          "property": "font-weight",
+          "variable": "--a-font-weight",
+          "fallback": "var(--font-weight"
+        },
+        {
+          "property": "text-align",
+          "variable": "--a-text-align",
+          "fallback": "left"
+        },
+        {
+          "property": "width",
+          "variable": "--a-width",
+          "fallback": "auto"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > a > span",
+      "declaration": [
+        {
+          "property": "font-weight",
+          "variable": "--a-main-font-weight",
+          "fallback": "400"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > a:hover,\n    :host > nav > ul > li > a:active,\n    :host > nav > ul > li > a:focus",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-hover"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper",
+      "declaration": [
+        {
+          "property": "top",
+          "variable": "--o-nav-wrapper-top",
+          "fallback": "2em"
+        },
+        {
+          "property": "left",
+          "variable": "--logo-default-width",
+          "fallback": "var(--width"
+        },
+        {
+          "property": "width",
+          "variable": "--logo-default-width",
+          "fallback": "var(--width"
+        },
+        {
+          "property": "border-top",
+          "variable": "--desktop-main-wrapper-border-width",
+          "fallback": "1px"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li.open > o-nav-wrapper",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper div.wrapper-background",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--desktop-main-wrapper-background-color",
+          "fallback": "white"
+        },
+        {
+          "property": "width",
+          "variable": "--desktop-main-wrapper-width",
+          "fallback": "100vw"
+        },
+        {
+          "property": "height",
+          "variable": "--desktop-main-wrapper-height",
+          "fallback": "100%"
+        },
+        {
+          "property": "position",
+          "variable": "--desktop-main-wrapper-position",
+          "fallback": "relative"
+        },
+        {
+          "property": "left",
+          "variable": "--desktop-main-wrapper-position-left",
+          "fallback": "50%"
+        },
+        {
+          "property": "right",
+          "variable": "--desktop-main-wrapper-position-right",
+          "fallback": "50%"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper.hide",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li.open > o-nav-wrapper.no-animation",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li.open > o-nav-wrapper div.wrapper-background",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--multi-level-navigation-default-o-nav-wrapper-padding",
+          "fallback": "2em 0 1.5em 0"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div",
+      "declaration": [
+        {
+          "property": "/* this setting is quite fragile here, we need to improve it for reusability */\n      width",
+          "variable": "--gap"
+        },
+        {
+          "property": "background-color",
+          "variable": "--sub-navigation-wrapper-background-color",
+          "fallback": "white"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div:first-of-type",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div:not(:first-of-type)",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div:last-of-type",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div:not(:last-of-type):after",
+      "declaration": [
+        {
+          "property": "background",
+          "variable": "--multi-level-navigation-default-desktop-main-wrapper-border-color",
+          "fallback": "black"
+        },
+        {
+          "property": "width",
+          "variable": "--multi-level-navigation-default-desktop-main-wrapper-border-width",
+          "fallback": "1px"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div > ul",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-background-color",
+          "fallback": "black"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar-thumb",
+      "declaration": [
+        {
+          "property": "background",
+          "variable": "--multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-thumb-background-color",
+          "fallback": "black"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section .close-icon",
+      "declaration": [
+        {
+          "property": "--icon-link-list-color",
+          "variable": "--color"
+        },
+        {
+          "property": "--icon-link-list-color-hover",
+          "variable": "--color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar-thumb",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title",
+      "declaration": [
+        {
+          "property": "--a-color",
+          "variable": "--color-active"
+        },
+        {
+          "property": "--a-color-hover",
+          "variable": "--color-active"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section ul li",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a > span",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a:hover > span",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-active"
+        }
+      ]
+    },
+    {
+      "selector": ":host li.hover-active m-nav-level-item",
+      "declaration": [
+        {
+          "property": "--nav-level-item-default-background-color",
+          "variable": "--nav-level-item-default-hover-background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host li m-nav-level-item",
+      "declaration": [
+        {
+          "property": "--color",
+          "variable": "--a-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > nav > ul > li > o-nav-wrapper",
+      "declaration": []
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": [
+        {
+          "property": "--nav-level-item-default-hover-color",
+          "variable": "--color"
+        }
+      ]
+    }
+  ]
+}

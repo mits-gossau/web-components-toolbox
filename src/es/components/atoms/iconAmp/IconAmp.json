@@ -1,0 +1,15 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/iconAmp/IconAmp.js",
+  "templates": [],
+  "attributes": [],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    }
+  ]
+}

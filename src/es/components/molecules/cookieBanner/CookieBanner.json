@@ -1,0 +1,242 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/cookieBanner/CookieBanner.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "timeout",
+      "description": ""
+    },
+    {
+      "attributeName": "storage",
+      "description": ""
+    },
+    {
+      "attributeName": "storage-name",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "center"
+        },
+        {
+          "property": "background-color",
+          "variable": "--background-color",
+          "fallback": "black"
+        },
+        {
+          "property": "border-bottom",
+          "variable": "--border-bottom",
+          "fallback": "0"
+        },
+        {
+          "property": "border-left",
+          "variable": "--border-left",
+          "fallback": "0"
+        },
+        {
+          "property": "border-right",
+          "variable": "--border-right",
+          "fallback": "0"
+        },
+        {
+          "property": "border-top",
+          "variable": "--border-top",
+          "fallback": "3px solid white"
+        },
+        {
+          "property": "box-shadow",
+          "variable": "--box-shadow",
+          "fallback": "0px -3px 10px white"
+        },
+        {
+          "property": "color",
+          "variable": "--color",
+          "fallback": "white"
+        },
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "flex"
+        },
+        {
+          "property": "font-size",
+          "variable": "--font-size",
+          "fallback": "3em"
+        },
+        {
+          "property": "height",
+          "variable": "--height",
+          "fallback": "auto"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "space-between"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "10px"
+        },
+        {
+          "property": "transition",
+          "variable": "--transition",
+          "fallback": "bottom 2s ease"
+        }
+      ]
+    },
+    {
+      "selector": ":host > section.show",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section a",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--a-color",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "transition",
+          "variable": "--a-transition",
+          "fallback": "all 0.5s ease"
+        }
+      ]
+    },
+    {
+      "selector": ":host > section a:focus",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--a-color-focus",
+          "fallback": "var(--color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > section a:hover",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--a-color-hover",
+          "fallback": "var(--color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > section button",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--button-color",
+          "fallback": "white"
+        },
+        {
+          "property": "background-color",
+          "variable": "--button-background-color",
+          "fallback": "orange"
+        },
+        {
+          "property": "border-bottom",
+          "variable": "--button-border-bottom",
+          "fallback": "solid white"
+        },
+        {
+          "property": "border-left",
+          "variable": "--button-border-left",
+          "fallback": "solid white"
+        },
+        {
+          "property": "border-right",
+          "variable": "--button-border-right",
+          "fallback": "solid white"
+        },
+        {
+          "property": "border-top",
+          "variable": "--button-border-top",
+          "fallback": "0.1em solid white"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--button-border-radius",
+          "fallback": "1em"
+        },
+        {
+          "property": "cursor",
+          "variable": "--button-cursor",
+          "fallback": "pointer"
+        },
+        {
+          "property": "font-size",
+          "variable": "--button-font-size",
+          "fallback": "var(--font-size"
+        },
+        {
+          "property": "padding",
+          "variable": "--button-padding",
+          "fallback": "0.2em"
+        },
+        {
+          "property": "transition",
+          "variable": "--button-transition",
+          "fallback": "all 0.5s ease"
+        }
+      ]
+    },
+    {
+      "selector": ":host > section button:focus",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--button-color-focus",
+          "fallback": "var(--button-color"
+        },
+        {
+          "property": "background-color",
+          "variable": "--button-background-color-focus",
+          "fallback": "var(--background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > section button:hover",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--button-color-hover",
+          "fallback": "var(--button-color"
+        },
+        {
+          "property": "background-color",
+          "variable": "--button-background-color-hover",
+          "fallback": "var(--background-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host > section p",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--p-margin",
+          "fallback": "0"
+        }
+      ]
+    }
+  ]
+}

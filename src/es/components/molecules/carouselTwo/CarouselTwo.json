@@ -1,0 +1,145 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/carouselTwo/CarouselTwo.js",
+  "templates": [
+    {
+      "name": "carousel-two-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "carousel-two-thumbnail-",
+      "path": "./thumbnail-/thumbnail-.css"
+    },
+    {
+      "name": "carousel-two-teaser-",
+      "path": "./teaser-/teaser-.css"
+    },
+    {
+      "name": "carousel-two-seperate-nav-",
+      "path": "./seperate-nav-/seperate-nav-.css"
+    },
+    {
+      "name": "carousel-two-3-column-",
+      "path": "./3-column-/3-column-.css"
+    },
+    {
+      "name": "carousel-two-image-",
+      "path": "./image-/image-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "open-modal",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "carousel-changed",
+      "description": ""
+    },
+    {
+      "attributeName": "active",
+      "description": ""
+    },
+    {
+      "attributeName": "nav-align-self",
+      "description": ""
+    },
+    {
+      "attributeName": "nav-justify-content",
+      "description": ""
+    },
+    {
+      "attributeName": "background-color",
+      "description": ""
+    },
+    {
+      "attributeName": "nav-background-color",
+      "description": ""
+    },
+    {
+      "attributeName": "nav-background-color-active",
+      "description": ""
+    },
+    {
+      "attributeName": "nav-background-color-hover",
+      "description": ""
+    },
+    {
+      "attributeName": "arrow-nav-color",
+      "description": ""
+    },
+    {
+      "attributeName": "arrow-nav-color-hover",
+      "description": ""
+    },
+    {
+      "attributeName": "interval",
+      "description": ""
+    },
+    {
+      "attributeName": "id",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color",
+          "fallback": "transparent"
+        }
+      ]
+    },
+    {
+      "selector": ":host([nav-separate][nav-align-self=\"start\"]:not([no-default-nav])) > section,\n      :host([nav-separate][nav-align-self=\"start\"]:not([no-default-nav])) > .arrow-nav",
+      "declaration": [
+        {
+          "property": "margin-bottom",
+          "variable": "--section-nav-separate-margin"
+        }
+      ]
+    },
+    {
+      "selector": ":host([nav-separate]:not([nav-align-self=\"start\"]):not([no-default-nav])) > section,\n      :host([nav-separate]:not([nav-align-self=\"start\"]):not([no-default-nav])) > .arrow-nav",
+      "declaration": [
+        {
+          "property": "margin-top",
+          "variable": "--section-nav-separate-margin"
+        }
+      ]
+    },
+    {
+      "selector": ":host > section + div > nav",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section, :host > nav, :host > section + div > nav, :host > *.arrow-nav",
+      "declaration": []
+    },
+    {
+      "selector": ":host > section",
+      "declaration": []
+    },
+    {
+      "selector": ":host > *.arrow-nav",
+      "declaration": []
+    },
+    {
+      "selector": ":host > nav,\n              :host > section + div > nav",
+      "declaration": []
+    },
+    {
+      "selector": ":host > *.arrow-nav",
+      "declaration": []
+    }
+  ]
+}

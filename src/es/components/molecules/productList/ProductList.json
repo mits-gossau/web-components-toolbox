@@ -1,0 +1,199 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/productList/ProductList.js",
+  "templates": [
+    {
+      "name": "product-list-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "searchterm",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "no-products-found-translation",
+      "description": ""
+    },
+    {
+      "attributeName": "detail-product-link",
+      "description": ""
+    },
+    {
+      "attributeName": "total-articles-text",
+      "description": ""
+    },
+    {
+      "attributeName": "tooltip-translation-balance",
+      "description": ""
+    },
+    {
+      "attributeName": "is-logged-in",
+      "description": ""
+    },
+    {
+      "attributeName": "show-sort",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--align",
+          "fallback": "stretch"
+        },
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--flex-direction",
+          "fallback": "row"
+        },
+        {
+          "property": "flex-wrap",
+          "variable": "--flex-wrap",
+          "fallback": "wrap"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "start"
+        }
+      ]
+    },
+    {
+      "selector": ":host > m-load-template-tag,\n    :host > m-product",
+      "declaration": [
+        {
+          "property": "flex",
+          "variable": "--m-load-template-tag-flex",
+          "fallback": "0 0 min(calc(16.66% - 0.5em"
+        },
+        {
+          "property": "margin",
+          "variable": "--m-load-template-tag-margin",
+          "fallback": "0 0.5em 0.5em 0"
+        },
+        {
+          "property": "min-height",
+          "variable": "--m-load-template-tag-min-height",
+          "fallback": "25em"
+        }
+      ]
+    },
+    {
+      "selector": ":host .filter",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--filter-align-items",
+          "fallback": "center"
+        },
+        {
+          "property": "align-self",
+          "variable": "--filter-align-self",
+          "fallback": "center"
+        },
+        {
+          "property": "display",
+          "variable": "--filter-display",
+          "fallback": "inherit"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--filter-justify-content",
+          "fallback": "space-between"
+        },
+        {
+          "property": "margin",
+          "variable": "--filter-margin",
+          "fallback": "0 0 1em 0"
+        },
+        {
+          "property": "min-height",
+          "variable": "--filter-min-height",
+          "fallback": "1em"
+        },
+        {
+          "property": "width",
+          "variable": "--filter-width",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": "}\n\n    @container products (max-width: 80em)",
+      "declaration": [
+        {
+          "property": "min-width",
+          "variable": "--m-load-template-tag-min-width-mobile",
+          "fallback": "min(calc(20% - 0.5em"
+        }
+      ]
+    },
+    {
+      "selector": "}\n\n    @container products (max-width: 60em)",
+      "declaration": [
+        {
+          "property": "min-width",
+          "variable": "--m-load-template-tag-min-width-mobile",
+          "fallback": "min(calc(25% - 0.5em"
+        }
+      ]
+    },
+    {
+      "selector": "}\n\n    @container products (max-width: 40em)",
+      "declaration": [
+        {
+          "property": "min-width",
+          "variable": "--m-load-template-tag-min-width-mobile",
+          "fallback": "min(calc(33.33% - 0.5em"
+        }
+      ]
+    },
+    {
+      "selector": "}\n\n    @container products (max-width: 30em)",
+      "declaration": [
+        {
+          "property": "min-width",
+          "variable": "--m-load-template-tag-min-width-mobile",
+          "fallback": "min(calc(50% - 0.5em"
+        }
+      ]
+    },
+    {
+      "selector": "}\n\n    @media only screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ":host::after",
+      "declaration": []
+    },
+    {
+      "selector": ":host > m-product",
+      "declaration": []
+    }
+  ]
+}

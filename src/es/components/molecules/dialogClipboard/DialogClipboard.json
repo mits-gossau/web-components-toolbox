@@ -1,0 +1,56 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/dialogClipboard/DialogClipboard.js",
+  "templates": [
+    {
+      "name": "dialog-clipboard-default-",
+      "path": "../dialogClipboard/default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "duration",
+      "description": ""
+    },
+    {
+      "attributeName": "data",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "copied-text",
+      "description": ""
+    },
+    {
+      "attributeName": "copy-manually-text",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host > dialog",
+      "declaration": [
+        {
+          "property": "scrollbar-color",
+          "variable": "--scrollbar-color",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "scrollbar-width",
+          "variable": "--scrollbar-width",
+          "fallback": "thin"
+        }
+      ]
+    }
+  ]
+}

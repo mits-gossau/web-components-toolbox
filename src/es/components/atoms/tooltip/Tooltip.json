@@ -1,0 +1,44 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/tooltip/Tooltip.js",
+  "templates": [
+    {
+      "name": "tooltip-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "width",
+      "description": ""
+    },
+    {
+      "attributeName": "text-align",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "block"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "auto"
+        }
+      ]
+    }
+  ]
+}

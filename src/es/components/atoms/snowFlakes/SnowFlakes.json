@@ -1,0 +1,23 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/snowFlakes/SnowFlakes.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "spawn-min",
+      "description": ""
+    },
+    {
+      "attributeName": "spawn-max",
+      "description": ""
+    },
+    {
+      "attributeName": "disappear",
+      "description": ""
+    }
+  ],
+  "css": []
+}

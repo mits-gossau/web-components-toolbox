@@ -1,0 +1,133 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/select/Select.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "readonly",
+      "description": ""
+    },
+    {
+      "attributeName": "selected",
+      "description": ""
+    },
+    {
+      "attributeName": "placeholder",
+      "description": ""
+    },
+    {
+      "attributeName": "render-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "request-render-event-name",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "height",
+          "variable": "--select-line-height",
+          "fallback": "1.4"
+        }
+      ]
+    },
+    {
+      "selector": "select",
+      "declaration": [
+        {
+          "property": "border",
+          "variable": "--select-border",
+          "fallback": "var(--border"
+        },
+        {
+          "property": "border-color",
+          "variable": "--select-border-color",
+          "fallback": "var(--border-color"
+        },
+        {
+          "property": "border-radius",
+          "variable": "--select-border-radius",
+          "fallback": "var(--border-radius"
+        },
+        {
+          "property": "color",
+          "variable": "--select-color",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "font-size",
+          "variable": "--select-font-size",
+          "fallback": "var(--font-size"
+        },
+        {
+          "property": "height",
+          "variable": "--select-height",
+          "fallback": "100%"
+        },
+        {
+          "property": "line-height",
+          "variable": "--select-line-height",
+          "fallback": "1.4"
+        },
+        {
+          "property": "padding",
+          "variable": "--select-padding",
+          "fallback": "0.75em var(--content-spacing"
+        },
+        {
+          "property": "text-overflow",
+          "variable": "--select-text-overflow",
+          "fallback": "var(--text-overflow"
+        }
+      ]
+    },
+    {
+      "selector": "select:focus",
+      "declaration": []
+    },
+    {
+      "selector": "select > option",
+      "declaration": []
+    },
+    {
+      "selector": "select[readonly]",
+      "declaration": []
+    },
+    {
+      "selector": "select[readonly] option:not([selected])",
+      "declaration": []
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": [
+        {
+          "property": "select {\n          border-radius",
+          "variable": "--select-border-radius-mobile",
+          "fallback": "var(--select-border-radius"
+        },
+        {
+          "property": "font-size",
+          "variable": "--select-font-size-mobile",
+          "fallback": "var(--select-font-size"
+        },
+        {
+          "property": "padding",
+          "variable": "--select-padding",
+          "fallback": "0.75em var(--content-spacing-mobile"
+        },
+        {
+          "property": "height",
+          "variable": "--select-height-mobile",
+          "fallback": "var(--select-height"
+        }
+      ]
+    }
+  ]
+}

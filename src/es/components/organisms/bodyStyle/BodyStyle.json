@@ -1,0 +1,29 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/organisms/bodyStyle/BodyStyle.js",
+  "templates": [],
+  "attributes": [],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    },
+    {
+      "selector": ":host > *",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--content-width",
+          "fallback": "calc(100% - var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

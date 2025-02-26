@@ -1,0 +1,195 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/organisms/modal/Modal.js",
+  "templates": [
+    {
+      "name": null,
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "listen-at",
+      "description": ""
+    },
+    {
+      "attributeName": "open-modal",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "media",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host > section",
+      "declaration": []
+    },
+    {
+      "selector": ":host([open]) > section",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color",
+          "fallback": "rgba(0"
+        },
+        {
+          "property": "height",
+          "variable": "--height",
+          "fallback": "100%"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "min(var(--content-spacing"
+        },
+        {
+          "property": "position",
+          "variable": "--position",
+          "fallback": "fixed"
+        },
+        {
+          "property": "left",
+          "variable": "--left",
+          "fallback": "0"
+        },
+        {
+          "property": "top",
+          "variable": "--top",
+          "fallback": "0"
+        },
+        {
+          "property": "transition",
+          "variable": "--transition",
+          "fallback": "opacity .3s"
+        },
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100%"
+        },
+        {
+          "property": "z-index",
+          "variable": "--z-index",
+          "fallback": "9999"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open]) > section > div",
+      "declaration": [
+        {
+          "property": "position",
+          "variable": "--div-position",
+          "fallback": "static"
+        },
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "end"
+        },
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--flex-direction",
+          "fallback": "column-reverse"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "center"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open]) > section > div > #close",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--close-display",
+          "fallback": "block"
+        },
+        {
+          "property": "position",
+          "variable": "--close-position",
+          "fallback": "static"
+        },
+        {
+          "property": "top",
+          "variable": "--close-top",
+          "fallback": "auto"
+        },
+        {
+          "property": "right",
+          "variable": "--close-right",
+          "fallback": "auto"
+        },
+        {
+          "property": "bottom",
+          "variable": "--close-bottom",
+          "fallback": "auto"
+        },
+        {
+          "property": "left",
+          "variable": "--close-left",
+          "fallback": "auto"
+        },
+        {
+          "property": "margin",
+          "variable": "--close-margin",
+          "fallback": "0 0 var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open]) > section > div > button#close.close-btn",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--close-btn-background-color",
+          "fallback": "var(--color-secondary"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open]) > section > div > button#close.close-btn span",
+      "declaration": []
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ":host([open]) > section",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--padding-mobile",
+          "fallback": "var(--padding"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open]) > section > div > #close",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--close-margin-mobile",
+          "fallback": "var(--close-margin"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/recipeList/RecipeList.js",
+  "templates": [
+    {
+      "name": "recipe-list-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "no-recipe-found-translation",
+      "description": ""
+    },
+    {
+      "attributeName": "detail-page-link",
+      "description": ""
+    },
+    {
+      "attributeName": "zum-rezept-translation",
+      "description": ""
+    },
+    {
+      "attributeName": "simulate-children",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": []
+    }
+  ]
+}

@@ -1,0 +1,339 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/details/Details.js",
+  "templates": [
+    {
+      "name": "details-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "details-default-icon-right-",
+      "path": "./default-icon-right-/default-icon-right-.css"
+    },
+    {
+      "name": "details-menu-single-",
+      "path": "./menu-single-/menu-single-.css"
+    },
+    {
+      "name": "details-menu-portion-",
+      "path": "./menu-portion-/menu-portion-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "open-duration",
+      "description": ""
+    },
+    {
+      "attributeName": "easing",
+      "description": ""
+    },
+    {
+      "attributeName": "icon-image",
+      "description": ""
+    },
+    {
+      "attributeName": "open-event-name",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": "@keyframes open",
+      "declaration": []
+    },
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--border-bottom",
+          "fallback": "0"
+        },
+        {
+          "property": "border-color",
+          "variable": "--border-color",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "border-top",
+          "variable": "--border-top",
+          "fallback": "0"
+        },
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "block"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:last-of-type)",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--border-bottom-last",
+          "fallback": "var(--border-bottom"
+        },
+        {
+          "property": "border-color",
+          "variable": "--border-color-last",
+          "fallback": "var(--border-color"
+        }
+      ]
+    },
+    {
+      "selector": ":host details",
+      "declaration": [
+        {
+          "property": "text-align",
+          "variable": "--text-align",
+          "fallback": "center"
+        },
+        {
+          "property": "margin",
+          "variable": "--margin",
+          "fallback": "0"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host details summary::marker, :host details summary::-webkit-details-marker",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--marker-display",
+          "fallback": "none"
+        },
+        {
+          "property": "content",
+          "variable": "--marker-content",
+          "fallback": "\"\""
+        }
+      ]
+    },
+    {
+      "selector": ":host details summary, :host details summary:focus",
+      "declaration": []
+    },
+    {
+      "selector": ":host details[open] summary",
+      "declaration": [
+        {
+          "property": "border-bottom",
+          "variable": "--summary-border-bottom-open",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host details summary > div",
+      "declaration": [
+        {
+          "property": "cursor",
+          "variable": "--summary-cursor",
+          "fallback": "pointer"
+        },
+        {
+          "property": "font-family",
+          "variable": "--summary-font-family",
+          "fallback": "var(--font-family"
+        },
+        {
+          "property": "font-size",
+          "variable": "--summary-font-size",
+          "fallback": "inherit"
+        },
+        {
+          "property": "font-weight",
+          "variable": "--summary-font-weight",
+          "fallback": "var(--font-weight"
+        },
+        {
+          "property": "margin",
+          "variable": "--summary-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "outline",
+          "variable": "--summary-outline",
+          "fallback": "none"
+        },
+        {
+          "property": "padding",
+          "variable": "--summary-padding",
+          "fallback": "0"
+        },
+        {
+          "property": "text-decoration",
+          "variable": "--summary-text-decoration",
+          "fallback": "var(--a-text-decoration"
+        },
+        {
+          "property": "text-transform",
+          "variable": "--summary-text-transform",
+          "fallback": "none"
+        },
+        {
+          "property": "text-underline-offset",
+          "variable": "--a-text-underline-offset",
+          "fallback": "unset"
+        },
+        {
+          "property": "transition",
+          "variable": "--summary-transition",
+          "fallback": "transform .3s ease"
+        }
+      ]
+    },
+    {
+      "selector": ":host details summary > div:hover, :host details summary > div:active, :host details summary > div:focus",
+      "declaration": [
+        {
+          "property": "text-decoration",
+          "variable": "--summary-text-decoration-hover",
+          "fallback": "var(--a-text-decoration-hover"
+        },
+        {
+          "property": "transform",
+          "variable": "--summary-transform-hover",
+          "fallback": "translate(0"
+        }
+      ]
+    },
+    {
+      "selector": ":host details[open] summary > div",
+      "declaration": [
+        {
+          "property": "text-decoration",
+          "variable": "--summary-text-decoration-open",
+          "fallback": "none"
+        },
+        {
+          "property": "font-family",
+          "variable": "--summary-font-family",
+          "fallback": "var(--font-family-bold"
+        }
+      ]
+    },
+    {
+      "selector": ":host details summary > div > *",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--summary-child-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "padding",
+          "variable": "--summary-child-padding",
+          "fallback": "0"
+        },
+        {
+          "property": "color",
+          "variable": "--summary-child-color",
+          "fallback": "var(--color"
+        }
+      ]
+    },
+    {
+      "selector": ":host details summary > div > *.dropdown-icon",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--summary-dropdown-icon-margin",
+          "fallback": "var(--summary-child-margin"
+        },
+        {
+          "property": "padding",
+          "variable": "--summary-dropdown-icon-padding",
+          "fallback": "var(--summary-child-padding"
+        }
+      ]
+    },
+    {
+      "selector": ":host details[open] summary > div > *",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--summary-child-margin-open",
+          "fallback": "var(--summary-child-margin"
+        },
+        {
+          "property": "padding",
+          "variable": "--summary-child-padding-open",
+          "fallback": "var(--summary-child-padding"
+        }
+      ]
+    },
+    {
+      "selector": ":host details[open] summary > div > *.dropdown-icon",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--summary-dropdown-icon-margin-open",
+          "fallback": "var(--summary-dropdown-icon-margin"
+        },
+        {
+          "property": "padding",
+          "variable": "--summary-dropdown-icon-padding-open",
+          "fallback": "var(--summary-dropdown-icon-padding"
+        }
+      ]
+    },
+    {
+      "selector": ":host details summary > div:hover > *, :host details summary > div:active > *, :host details summary > div:focus > *",
+      "declaration": [
+        {
+          "property": "--svg-color",
+          "variable": "--summary-child-color-hover",
+          "fallback": "var(--color-hover"
+        },
+        {
+          "property": "color",
+          "variable": "--summary-child-color-hover",
+          "fallback": "var(--color-hover"
+        }
+      ]
+    },
+    {
+      "selector": ":host details summary ~ *",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--child-margin",
+          "fallback": "0"
+        },
+        {
+          "property": "padding",
+          "variable": "--child-padding",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host summary .dropdown-icon",
+      "declaration": []
+    },
+    {
+      "selector": ":host details summary > div",
+      "declaration": []
+    },
+    {
+      "selector": ":host details summary",
+      "declaration": []
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/tagFilter/TagFilter.js",
+  "templates": [
+    {
+      "name": "tag-filter-vertical-",
+      "path": "./vertical-/vertical-.css"
+    },
+    {
+      "name": "tag-filter-horizontal-",
+      "path": "./horizontal-/horizontal-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "tag-detail-property-name",
+      "description": ""
+    },
+    {
+      "attributeName": "answer-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "custom-button-namespace",
+      "description": ""
+    },
+    {
+      "attributeName": "request-event-name",
+      "description": ""
+    },
+    {
+      "attributeName": "active-detail-property-name",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "display",
+          "variable": "--display",
+          "fallback": "flex"
+        },
+        {
+          "property": "flex-wrap",
+          "variable": "--flex-wrap",
+          "fallback": "wrap"
+        },
+        {
+          "property": "gap",
+          "variable": "--gap",
+          "fallback": "0.25em"
+        }
+      ]
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/atoms/menuIcon/MenuIcon.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "openClass",
+      "description": ""
+    },
+    {
+      "attributeName": "barClass",
+      "description": ""
+    },
+    {
+      "attributeName": "click-event-name",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "transition",
+          "variable": "--transition",
+          "fallback": "0.2s"
+        },
+        {
+          "property": "padding",
+          "variable": "--padding",
+          "fallback": "0 calc(var(--width"
+        },
+        {
+          "property": "margin",
+          "variable": "--margin",
+          "fallback": "0"
+        },
+        {
+          "property": "transition",
+          "variable": "--transition",
+          "fallback": "0.2s"
+        },
+        {
+          "property": "outline",
+          "variable": "--outline",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:focus-visible)",
+      "declaration": [
+        {
+          "property": "outline",
+          "variable": "--outline-focus-visible",
+          "fallback": "var(--outline"
+        }
+      ]
+    }
+  ]
+}

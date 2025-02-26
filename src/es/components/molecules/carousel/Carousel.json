@@ -1,0 +1,347 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/carousel/Carousel.js",
+  "templates": [
+    {
+      "name": "carousel-default-",
+      "path": "./default-/default-.css"
+    },
+    {
+      "name": "carousel-emotion-",
+      "path": "./emotion-/emotion-.css"
+    },
+    {
+      "name": "carousel-portrait-",
+      "path": "./portrait-/portrait-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "description": ""
+    },
+    {
+      "attributeName": "macro-carousel-selected-changed",
+      "description": ""
+    },
+    {
+      "attributeName": "sync-id",
+      "description": ""
+    },
+    {
+      "attributeName": "open-modal",
+      "description": ""
+    },
+    {
+      "attributeName": "interval",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "background",
+          "variable": "--background",
+          "fallback": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host > macro-carousel",
+      "declaration": [
+        {
+          "property": "width",
+          "variable": "--width",
+          "fallback": "100%"
+        }
+      ]
+    },
+    {
+      "selector": ":host > macro-carousel > *",
+      "declaration": [
+        {
+          "property": "align-items",
+          "variable": "--align-items",
+          "fallback": "center"
+        },
+        {
+          "property": "flex-direction",
+          "variable": "--flex-direction",
+          "fallback": "row"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--justify-content",
+          "fallback": "center"
+        }
+      ]
+    },
+    {
+      "selector": ":host > macro-carousel > .container",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color",
+          "fallback": "red"
+        }
+      ]
+    },
+    {
+      "selector": ":host> macro-carousel >  macro-carousel-nav-button",
+      "declaration": []
+    },
+    {
+      "selector": ":host > macro-carousel > .container",
+      "declaration": [
+        {
+          "property": "font-size",
+          "variable": "--font-size",
+          "fallback": "1em"
+        }
+      ]
+    },
+    {
+      "selector": ":host > macro-carousel > div > .text",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--text-background-color",
+          "fallback": "red"
+        }
+      ]
+    },
+    {
+      "selector": ":host > macro-carousel > div > .text p",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--text-padding",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host .title",
+      "declaration": [
+        {
+          "property": "position",
+          "variable": "--title-position",
+          "fallback": "absolute"
+        },
+        {
+          "property": "top",
+          "variable": "--title-top",
+          "fallback": "4vw"
+        },
+        {
+          "property": "left",
+          "variable": "--title-left",
+          "fallback": "10vw"
+        },
+        {
+          "property": "right",
+          "variable": "--title-right",
+          "fallback": "10vw"
+        }
+      ]
+    },
+    {
+      "selector": ":host .macro-carousel-previous, .macro-carousel-next",
+      "declaration": []
+    },
+    {
+      "selector": ":host([open-modal])",
+      "declaration": []
+    },
+    {
+      "selector": ":host([open]) > .close-btn",
+      "declaration": []
+    },
+    {
+      "selector": ":host(:not([open])) > .close-btn",
+      "declaration": []
+    },
+    {
+      "selector": ":host([open-modal]) > .close-btn",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--close-btn-background-color",
+          "fallback": "var(--color-secondary"
+        },
+        {
+          "property": "right",
+          "variable": "--close-btn-right",
+          "fallback": "var(--content-spacing"
+        },
+        {
+          "property": "bottom",
+          "variable": "--close-btn-bottom",
+          "fallback": "var(--content-spacing"
+        }
+      ]
+    },
+    {
+      "selector": ":host([open-modal]) > .close-btn > span",
+      "declaration": []
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ":host > macro-carousel > div > .text p",
+      "declaration": [
+        {
+          "property": "padding",
+          "variable": "--text-padding-mobile",
+          "fallback": "0"
+        }
+      ]
+    },
+    {
+      "selector": ":host .macro-carousel-previous, :host .macro-carousel-next",
+      "declaration": []
+    },
+    {
+      "selector": ":host .title > h1.font-size-big",
+      "declaration": [
+        {
+          "property": "font-size",
+          "variable": "--h1-font-size-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host .title",
+      "declaration": [
+        {
+          "property": "margin",
+          "variable": "--div-margin-mobile"
+        }
+      ]
+    },
+    {
+      "selector": ":host(:not([open-modal-mobile]))",
+      "declaration": []
+    },
+    {
+      "selector": ":host(:not([open-modal-mobile])) > .close-btn",
+      "declaration": []
+    },
+    {
+      "selector": ":host([open-modal-mobile]) > .close-btn",
+      "declaration": [
+        {
+          "property": "right",
+          "variable": "--close-btn-right-mobile",
+          "fallback": "var(--close-btn-right"
+        },
+        {
+          "property": "bottom",
+          "variable": "--close-btn-bottom-mobile",
+          "fallback": "var(--close-btn-bottom"
+        }
+      ]
+    },
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "--macro-carousel-transition-duration",
+          "variable": "--transition-duration",
+          "fallback": "0.5s"
+        }
+      ]
+    },
+    {
+      "selector": ":host > #pagination",
+      "declaration": [
+        {
+          "property": "position",
+          "variable": "--pagination-position"
+        },
+        {
+          "property": "top",
+          "variable": "--pagination-top"
+        },
+        {
+          "property": "bottom",
+          "variable": "--pagination-bottom"
+        }
+      ]
+    },
+    {
+      "selector": ":host div ::slotted(macro-carousel-pagination-indicator)",
+      "declaration": [
+        {
+          "property": "--macro-carousel-pagination-color",
+          "variable": "--pagination-background-color",
+          "fallback": "var(--background-color"
+        },
+        {
+          "property": "--macro-carousel-pagination-color-selected",
+          "variable": "--pagination-background-color-selected",
+          "fallback": "var(--background-color-selected"
+        },
+        {
+          "property": "--macro-carousel-pagination-size-dot",
+          "variable": "--pagination-width",
+          "fallback": "12px"
+        },
+        {
+          "property": "--macro-carousel-pagination-border-selected",
+          "variable": "--pagination-border-selected"
+        },
+        {
+          "property": "opacity",
+          "variable": "--pagination-opacity",
+          "fallback": "1"
+        }
+      ]
+    },
+    {
+      "selector": ":host div ::slotted(macro-carousel-nav-button)",
+      "declaration": [
+        {
+          "property": "--macro-carousel-navigation-color",
+          "variable": "--navigation-color",
+          "fallback": "var(--color"
+        },
+        {
+          "property": "--macro-carousel-navigation-color-focus",
+          "variable": "--navigation-color-focus",
+          "fallback": "var(--color-focus"
+        },
+        {
+          "property": "--macro-carousel-navigation-color-background",
+          "variable": "--navigation-background-color",
+          "fallback": "var(--background-color"
+        },
+        {
+          "property": "--macro-carousel-navigation-color-background-focus",
+          "variable": "--navigation-background-color-focus",
+          "fallback": "var(--navigation-background-color"
+        },
+        {
+          "property": "--macro-carousel-navigation-button-size",
+          "variable": "--navigation-button-size",
+          "fallback": "6em"
+        },
+        {
+          "property": "--macro-carousel-navigation-icon-size",
+          "variable": "--navigation-icon-size",
+          "fallback": "5em"
+        }
+      ]
+    }
+  ]
+}

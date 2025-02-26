@@ -1,0 +1,28 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/flockler/Flockler.js",
+  "templates": [],
+  "attributes": [
+    {
+      "attributeName": "site-id",
+      "description": ""
+    },
+    {
+      "attributeName": "embed-id",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host > iframe",
+      "declaration": []
+    },
+    {
+      "selector": ":host(.loaded) > iframe",
+      "declaration": []
+    }
+  ]
+}

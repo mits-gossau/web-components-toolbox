@@ -1,0 +1,167 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/tabs/Tabs.js",
+  "templates": [
+    {
+      "name": "tabs-container-",
+      "path": "./container-/container-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "quote",
+      "description": ""
+    },
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "/*--background-color",
+          "variable": "--m-orange-300"
+        },
+        {
+          "property": "*/ /* removed according laurin */\n            --color-active",
+          "variable": "--m-orange-600",
+          "fallback": "orange"
+        },
+        {
+          "property": "font-family",
+          "variable": "--font-family"
+        }
+      ]
+    },
+    {
+      "selector": ":host .tab-navigation",
+      "declaration": [
+        {
+          "property": "border-top",
+          "variable": "--border-bottom",
+          "fallback": "1px solid var(--m-gray-300"
+        },
+        {
+          "property": "justify-content",
+          "variable": "--tab-justify-content",
+          "fallback": "none"
+        },
+        {
+          "property": "margin-bottom",
+          "variable": "--margin-bottom",
+          "fallback": "3em"
+        }
+      ]
+    },
+    {
+      "selector": ":host .tab-navigation::-webkit-scrollbar",
+      "declaration": []
+    },
+    {
+      "selector": ":host .tab-navigation::-webkit-scrollbar-thumb",
+      "declaration": [
+        {
+          "property": "background",
+          "variable": "--m-gray-400",
+          "fallback": "grey"
+        }
+      ]
+    },
+    {
+      "selector": ":host .tab-navigation li",
+      "declaration": [
+        {
+          "property": "border-top-left-radius",
+          "variable": "--border-radius",
+          "fallback": "0.5em"
+        },
+        {
+          "property": "border-top-right-radius",
+          "variable": "--border-radius",
+          "fallback": "0.5em"
+        },
+        {
+          "property": "color",
+          "variable": "--color",
+          "fallback": "var(--color-secondary"
+        }
+      ]
+    },
+    {
+      "selector": ":host .tab-navigation li::after",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color",
+          "fallback": "var(--color-disabled"
+        },
+        {
+          "property": "border-top-left-radius",
+          "variable": "--border-radius",
+          "fallback": "0.5em"
+        },
+        {
+          "property": "border-top-right-radius",
+          "variable": "--border-radius",
+          "fallback": "0.5em"
+        }
+      ]
+    },
+    {
+      "selector": ":host .tab-navigation li:hover",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color-hover",
+          "fallback": "var(--m-orange-100"
+        }
+      ]
+    },
+    {
+      "selector": ":host .tab-navigation li:hover::after",
+      "declaration": []
+    },
+    {
+      "selector": ":host .tab-navigation li.active",
+      "declaration": [
+        {
+          "property": "color",
+          "variable": "--color-active",
+          "fallback": "var(--color-secondary"
+        },
+        {
+          "property": "font-family",
+          "variable": "--font-family-bold"
+        }
+      ]
+    },
+    {
+      "selector": ":host .tab-navigation li.active::after",
+      "declaration": [
+        {
+          "property": "background-color",
+          "variable": "--background-color-active",
+          "fallback": "var(--color-secondary"
+        }
+      ]
+    },
+    {
+      "selector": ":host .tab-navigation li a",
+      "declaration": []
+    },
+    {
+      "selector": ":host .tab-content",
+      "declaration": []
+    },
+    {
+      "selector": ":host .tab-content.active",
+      "declaration": []
+    }
+  ]
+}
