@@ -55,12 +55,29 @@ function extractProperty(inputText) {
   // that uses the var() function, such as color: var(--my - color, #fff)
   const match = properties.match(/var\((.*?)\)/)
   if (match) {
-    const [variable, fallback] = match[1].split(',').map(value => value.trim())
+    const allCssVars = grabAllVars(properties)
+    const defaultValue = getLatestValue(inputText)
     const cssProp = inputText.split(':')[0].trim()
-    return cssProp ? { property: cssProp, variable, fallback } : null
+    return cssProp ? { property: cssProp, allCssVars, defaultValue } : null
   }
   console.log('No property found in: ', inputText)
   return null
+}
+
+function grabAllVars(str) {
+  let result = []
+  // regex from here: https://github.com/mits-gossau/web-components-toolbox/blob/master/src/es/components/prototypes/Shadow.js#L285
+  const regexResult = /var\(--([^,)]*)([^;]*)/g.exec(str)
+  if (!regexResult) return result
+  if (regexResult[1]) result.push(`--${regexResult[1]}`)
+  if (regexResult[2]) result = [...result, ...grabAllVars(regexResult[2])]
+  return result
+}
+
+function getLatestValue(str){
+  const regex = /.*,([^)]*)/
+  const match = str.match(regex)
+  return match ? match[1].trim() : null
 }
 
 module.exports = getCSSProperties
