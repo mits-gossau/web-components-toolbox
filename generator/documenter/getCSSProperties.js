@@ -64,9 +64,16 @@ function extractProperty(inputText) {
   return null
 }
 
+/**
+ * Extract all CSS variables from a string.
+ * The function uses a regex to find all CSS variables in the string.
+ * The regex is from here: https://github.com/mits-gossau/web-components-toolbox/blob/master/src/es/components/prototypes/Shadow.js#L285
+ * The function returns an array of all variables found.
+ * @param {string} str - The string to check for CSS variables
+ * @return {Array<string>} - An array of all variables found
+ */
 function grabAllVars(str) {
   let result = []
-  // regex from here: https://github.com/mits-gossau/web-components-toolbox/blob/master/src/es/components/prototypes/Shadow.js#L285
   const regexResult = /var\(--([^,)]*)([^;]*)/g.exec(str)
   if (!regexResult) return result
   if (regexResult[1]) result.push(`--${regexResult[1]}`)
@@ -74,6 +81,11 @@ function grabAllVars(str) {
   return result
 }
 
+/**
+ * Returns the latest value of a CSS property declaration.
+ * @param {string} str - The string to check for a CSS property declaration
+ * @return {string} - The value of the CSS property declaration
+ */
 function getLatestValue(str){
   const regex = /.*,([^)]*)/
   const match = str.match(regex)
