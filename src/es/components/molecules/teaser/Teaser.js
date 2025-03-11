@@ -3,6 +3,14 @@ import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global self */
 
+const plain = `<template id="plain" namespace="teaser-plain-">
+  <style>
+    p {color: blue; }
+  </style>
+  <p>Component Content</p>
+</template>`
+
+
 /**
  * As a molecule, this component shall hold Atoms
  *
@@ -11,7 +19,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * @type {CustomElementConstructor}
  */
 export default class Teaser extends Intersection() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: { rootMargin: '0px 0px 0px 0px' },
@@ -30,13 +38,35 @@ export default class Teaser extends Intersection() {
     this.mouseoutListener = event => {
       if (this.aArrow) this.aArrow.setAttribute('hover', '')
     }
+
+    // Access the template
+    // TODO: !
+    this.template = this.createTemplateFromString(plain)
+    debugger
   }
 
-  connectedCallback () {
+  createTemplateFromString(htmlString) {
+    // parse the string into a document
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(htmlString, 'text/html')
+
+    // extract the <template> element from the parsed document
+    const templateFromString = doc.querySelector('template')
+
+    // import the template node into the current document
+    // const importedTemplate = document.importNode(templateFromString, true)
+    const importedTemplate = templateFromString ? document.importNode(templateFromString, true) : null
+    debugger
+
+    return importedTemplate
+  }
+
+  connectedCallback() {
     super.connectedCallback()
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    if (this.shouldRenderHTML()) this.renderHTML()
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     Promise.all(showPromises).then(() => {
       if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
@@ -58,7 +88,7 @@ export default class Teaser extends Intersection() {
     }
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     if (this.getAttribute('namespace') === 'teaser-overlay-') {
       this.removeEventListener('mouseover', this.mouseoverListener)
@@ -66,7 +96,7 @@ export default class Teaser extends Intersection() {
     }
   }
 
-  intersectionCallback (entries, observer) {
+  intersectionCallback(entries, observer) {
     this.classList[this.areEntriesIntersecting(entries) ? 'add' : 'remove']('intersecting')
   }
 
@@ -75,7 +105,7 @@ export default class Teaser extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -84,7 +114,7 @@ export default class Teaser extends Intersection() {
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
+  renderCSS() {
     if (this.getAttribute('namespace') === 'teaser-overlay-' && this.aArrow) this.aArrow.setAttribute('hover-set-by-outside', '')
     this.css = /* css */`
       :host {
@@ -204,12 +234,33 @@ export default class Teaser extends Intersection() {
     return this.fetchTemplate()
   }
 
+  shouldRenderHTML() {
+    debugger
+    //return !this.template
+    //return !this.root.querySelector('template')
+    return !this.gfh
+  }
+
+  getFragmentHTML(fragment) {
+    const container = document.createElement('div')
+    container.appendChild(fragment.cloneNode(true))
+    return container.innerHTML
+  }
+
+  renderHTML() {
+    console.log(this.template)
+    debugger
+    this.gfh = this.getFragmentHTML(this.template?.content)
+    this.html = this.gfh
+
+  }
+
   /**
    * fetches the template
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -289,7 +340,7 @@ export default class Teaser extends Intersection() {
     }
   }
 
-  checkIfLink () {
+  checkIfLink() {
     // accessible and seo conform a tag wrapped around this component
     if (this.hasAttribute('href') && this.parentNode) {
       const a = document.createElement('a')
@@ -302,15 +353,15 @@ export default class Teaser extends Intersection() {
       a.style.textDecoration = 'inherit'
       this.parentNode.replaceChild(a, this)
       a.appendChild(this)
-      this.checkIfLink = () => {}
+      this.checkIfLink = () => { }
     }
   }
 
-  get aPicture () {
+  get aPicture() {
     return this.root.querySelector('a-picture')
   }
 
-  get aArrow () {
+  get aArrow() {
     return this.root.querySelector('a-arrow')
   }
 }
