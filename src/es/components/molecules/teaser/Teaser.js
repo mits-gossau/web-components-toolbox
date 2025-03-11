@@ -3,11 +3,20 @@ import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global self */
 
-const plain = `<template id="plain" namespace="teaser-plain-">
+const plain = `<template id="plain">
   <style>
     p {color: blue; }
   </style>
-  <p>Component Content</p>
+  <figure>
+      <figcaption>
+        <div>
+          <p class="bold">Nachhaltigkeit in der Gemeinschaftsgastronomie</p>
+          <h2 class="line-height-one-em">Weil es nur eine Erde gibt: Unser Engagement für eine nachhaltige
+            Zukunft.</h2>
+          <a-arrow move="" hover-on-parent-shadow-root-host="" direction="right"></a-arrow>
+        </div>
+      </figcaption>
+    </figure>
 </template>`
 
 
