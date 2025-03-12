@@ -3,21 +3,39 @@ import { Intersection } from '../../prototypes/Intersection.js'
 
 /* global self */
 
-const plain = `<template id="plain">
-  <style>
-    p {color: blue; }
-  </style>
-  <figure>
-      <figcaption>
-        <div>
-          <p class="bold">Nachhaltigkeit in der Gemeinschaftsgastronomie</p>
-          <h2 class="line-height-one-em">Weil es nur eine Erde gibt: Unser Engagement für eine nachhaltige
-            Zukunft.</h2>
-          <a-arrow move="" hover-on-parent-shadow-root-host="" direction="right"></a-arrow>
-        </div>
-      </figcaption>
-    </figure>
-</template>`
+const templates = {
+  plain: `<template id="plain">
+      <style>
+        p {color: blue; }
+      </style>
+      <figure>
+        <figcaption>
+          <div>
+            <p class="bold">Nachhaltigkeit in der Gemeinschaftsgastronomie</p>
+            <h2 class="line-height-one-em">Weil es nur eine Erde gibt: Unser Engagement für eine nachhaltige Zukunft.</h2>
+            <a-arrow move="" hover-on-parent-shadow-root-host="" direction="right"></a-arrow>
+          </div>
+        </figcaption>
+      </figure>
+    </template>`,
+  overlay: `<template id="overlay">
+      <style>
+        p {color: blue; }
+      </style>
+      <figure>
+        <a-picture namespace="picture-teaser-" picture-load defaultSource="{{src}}" alt="randomized image"></a-picture>
+        <figcaption>
+          <h2 class=bg-color>{{title}}</h2>
+          <h2 class=bg-color><a-arrow move direction=right></a-arrow></h2>
+        </figcaption>
+      </figure>
+    </template>`
+}
+
+
+
+
+
 
 
 /**
@@ -49,25 +67,7 @@ export default class Teaser extends Intersection() {
     }
 
     // Access the template
-    // TODO: !
-    this.template = this.createTemplateFromString(plain)
-    debugger
-  }
-
-  createTemplateFromString(htmlString) {
-    // parse the string into a document
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(htmlString, 'text/html')
-
-    // extract the <template> element from the parsed document
-    const templateFromString = doc.querySelector('template')
-
-    // import the template node into the current document
-    // const importedTemplate = document.importNode(templateFromString, true)
-    const importedTemplate = templateFromString ? document.importNode(templateFromString, true) : null
-    debugger
-
-    return importedTemplate
+    this.template = this.createTemplateFromString(templates[this.moduleStyleName])
   }
 
   connectedCallback() {
@@ -244,10 +244,18 @@ export default class Teaser extends Intersection() {
   }
 
   shouldRenderHTML() {
-    debugger
-    //return !this.template
-    //return !this.root.querySelector('template')
-    return !this.gfh
+    return !this.root.querySelector('figure')
+  }
+
+  createTemplateFromString(htmlString) {
+    // parse the string into a document
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(htmlString, 'text/html')
+    // extract the <template> element from the parsed document
+    const templateFromString = doc.querySelector('template')
+    // import the template node into the current document
+    const importedTemplate = templateFromString ? document.importNode(templateFromString, true) : null
+    return importedTemplate
   }
 
   getFragmentHTML(fragment) {
@@ -256,12 +264,16 @@ export default class Teaser extends Intersection() {
     return container.innerHTML
   }
 
+  replacePlaceholdersWithAttributeValues(htmlString) {
+    return htmlString
+      .replace('{{src}}', this.getAttribute('src') || 'todo')
+      .replace('{{title}}', this.getAttribute('title') || 'Default Title')
+  }
+
   renderHTML() {
     console.log(this.template)
-    debugger
-    this.gfh = this.getFragmentHTML(this.template?.content)
-    this.html = this.gfh
-
+    const fragmentInnerHTML = this.getFragmentHTML(this.template?.content)
+    this.html = this.replacePlaceholdersWithAttributeValues(fragmentInnerHTML)
   }
 
   /**
@@ -372,5 +384,9 @@ export default class Teaser extends Intersection() {
 
   get aArrow() {
     return this.root.querySelector('a-arrow')
+  }
+
+  get moduleStyleName() {
+    return this.getAttribute('module-style') || 'plain'
   }
 }
