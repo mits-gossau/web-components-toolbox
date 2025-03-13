@@ -22,6 +22,7 @@ export default class Grid extends Shadow() {
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     Promise.all(showPromises).then(() => (this.hidden = false))
+    return showPromises
   }
 
   /**
