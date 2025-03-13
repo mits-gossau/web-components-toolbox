@@ -29,6 +29,16 @@ const templates = {
           <h2 class=bg-color><a-arrow move direction=right></a-arrow></h2>
         </figcaption>
       </figure>
+    </template>`,
+  tile: /*html*/`<template id="tile">
+      <figure>
+        <a-picture namespace="picture-teaser-" picture-load defaultSource="{{src}}" alt="randomized image"></a-picture>
+        <figcaption>
+          <h5>{{title}}</h5>
+          <p>{{text}}</p>
+          <a-link namespace="underline-"><a>{{link-text}}</a></a-link>
+        </figcaption>
+      </figure>
     </template>`
 }
 
@@ -266,8 +276,10 @@ export default class Teaser extends Intersection() {
 
   replacePlaceholdersWithAttributeValues(htmlString) {
     return htmlString
-      .replace('{{src}}', this.getAttribute('src') || 'todo')
+      .replace('{{src}}', this.getAttribute('src') || 'Default Src')
       .replace('{{title}}', this.getAttribute('title') || 'Default Title')
+      .replace('{{text}}', this.getAttribute('text') || 'Default Text')
+      .replace('{{link-text}}', this.getAttribute('link-text') || 'Default Link Text')
   }
 
   renderHTML() {
