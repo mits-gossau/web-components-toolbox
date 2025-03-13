@@ -4,7 +4,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
 /* global self */
 
 const templates = {
-  plain: /*html*/`<template id="plain">
+  plain: /*html*/ `<template id="plain">
       <style>
         p {color: blue; }
       </style>
@@ -12,13 +12,13 @@ const templates = {
         <figcaption>
           <div>
             <p class="bold">Nachhaltigkeit in der Gemeinschaftsgastronomie</p>
-            <h2 class="line-height-one-em">Weil es nur eine Erde gibt: Unser Engagement für eine nachhaltige Zukunft.</h2>
+            <h2 class="line-height-one-em">{{text}}</h2>
             <a-arrow move="" hover-on-parent-shadow-root-host="" direction="right"></a-arrow>
           </div>
         </figcaption>
       </figure>
     </template>`,
-  overlay: /*html*/`<template id="overlay">
+  overlay: /*html*/ `<template id="overlay">
       <figure>
         <a-picture namespace="picture-teaser-" picture-load defaultSource="{{src}}" alt="randomized image"></a-picture>
         <figcaption>
@@ -27,7 +27,7 @@ const templates = {
         </figcaption>
       </figure>
     </template>`,
-  tile: /*html*/`<template id="tile">
+  tile: /*html*/ `<template id="tile">
       <style>
         p { color: blue !important; }
       </style>
