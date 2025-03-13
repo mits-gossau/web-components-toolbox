@@ -4,7 +4,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
 /* global self */
 
 const templates = {
-  plain: `<template id="plain">
+  plain: /*html*/`<template id="plain">
       <style>
         p {color: blue; }
       </style>
@@ -18,7 +18,7 @@ const templates = {
         </figcaption>
       </figure>
     </template>`,
-  overlay: `<template id="overlay">
+  overlay: /*html*/`<template id="overlay">
       <style>
         p {color: blue; }
       </style>
