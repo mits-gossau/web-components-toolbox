@@ -39,14 +39,17 @@ const templates = {
           <a-link namespace="underline-"><a>{{link-text}}</a></a-link>
         </figcaption>
       </figure>
+    </template>`,
+  round: /*html*/ `<template id="round">
+      <figure>
+        <a-picture namespace="picture-teaser-" picture-load defaultSource="{{src}}" alt="randomized image"></a-picture>
+        <figcaption>
+          <h5>{{title}}</h5>
+          <span class="style-tag">style tag test</span>
+        </figcaption>
+      </figure>
     </template>`
 }
-
-
-
-
-
-
 
 /**
  * As a molecule, this component shall hold Atoms
