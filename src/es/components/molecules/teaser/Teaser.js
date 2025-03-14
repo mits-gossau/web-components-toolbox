@@ -28,9 +28,6 @@ const templates = {
       </figure>
     </template>`,
   tile: /*html*/ `<template id="tile">
-      <style>
-        p { color: blue !important; }
-      </style>
       <figure>
         <a-picture namespace="picture-teaser-" picture-load defaultSource="{{src}}" alt="randomized image"></a-picture>
         <figcaption>
