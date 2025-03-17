@@ -61,6 +61,10 @@ export default class QrCodeSvg extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
+      :host > svg {
+        height: var(--height, auto);
+        width: var(--width, 100%);
+      }
       :host > h5 {
         color: var(--color-error, red);
       }
