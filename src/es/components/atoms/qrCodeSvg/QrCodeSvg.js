@@ -63,6 +63,7 @@ export default class QrCodeSvg extends Shadow() {
     this.css = /* css */`
       :host > svg {
         height: var(--height, auto);
+        max-height: var(--max-height, 75dvh);
         width: var(--width, 100%);
       }
       :host > h5 {
@@ -91,6 +92,7 @@ export default class QrCodeSvg extends Shadow() {
         pad: 0,
         pal: ['#000', '#fff']
       })
+      this.svg.setAttribute('part', 'svg')
       this.root.querySelector('[fill="#000"]').setAttribute('fill', `var(--${this.getAttribute('namespace') || ''}color, black)`)
       this.root.querySelector('[fill="#fff"]').setAttribute('fill', `var(--${this.getAttribute('namespace') || ''}background-color, transparent)`)
     })
