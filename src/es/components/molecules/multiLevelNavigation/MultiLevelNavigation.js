@@ -152,7 +152,7 @@ export default class MultiLevelNavigation extends Mutation() {
               // add main background color dark if flyout open div
               const mainBackgroundDiv = document.createElement('div')
               mainBackgroundDiv.className = 'main-background'
-              wrapper.parentElement.prepend(mainBackgroundDiv)
+              wrapper.parentElement?.prepend(mainBackgroundDiv)
 
               // add full width background with div
               const wrapperBackgroundDiv = document.createElement('div')
@@ -165,7 +165,7 @@ export default class MultiLevelNavigation extends Mutation() {
          <a-icon-mdx namespace='icon-link-list-' icon-name='X' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
          `
               closeIconElement.classList.add('close-icon')
-              wrapper.querySelector('section').appendChild(closeIconElement)
+              wrapper.querySelector('section')?.appendChild(closeIconElement)
 
               // Add class for title li a element
               const subTitleLiTags = Array.from(wrapper.querySelectorAll('li')).filter(li => !li.querySelector('m-nav-level-item'))
