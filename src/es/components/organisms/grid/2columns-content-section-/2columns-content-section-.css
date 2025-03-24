@@ -124,4 +124,11 @@
         grid-row: auto;
         grid-column: auto;
     }
+    /* to adjust spacing on mobile between two elements with aside as second */
+    :host > section > ks-o-body-section[has-ks-o-offers-page] {
+        padding-bottom: 0 !important;
+    }
+    :host > section > ks-o-body-section[has-ks-o-offers-page] + aside {
+        padding-top: 0 !important;
+    }
 }
