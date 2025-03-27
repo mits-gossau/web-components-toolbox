@@ -1,3 +1,8 @@
+:host {
+  --picture-hotspot-close-btn-background-color: var(--color-secondary);
+  --picture-hotspot-content-spacing: var(--content-spacing);
+  --picture-hotspot-content-spacing-mobile: var(--content-spacing-mobile);
+}
 :host .img-is-spot-reference-wrapper {
   --picture-hotspot-img-margin: 0;
   position: relative;

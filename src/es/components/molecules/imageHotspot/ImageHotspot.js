@@ -14,14 +14,21 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class ImageHotspot extends Shadow() {
+  static get observedAttributes () {
+    return ['open']
+  }
+
   constructor (...args) {
     super(...args)
     this.hasRendered = false
+
+    this.clickEventListener = event => event.stopPropagation()
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+    this.addEventListener('click', this.clickEventListener)
 
     this.addEventListener('picture-load', event => {
       const spotContainer = document.createElement('div')
@@ -36,12 +43,49 @@ export default class ImageHotspot extends Shadow() {
       if (this.picture) {
         this.picture.html = divContainer
         divContainer.prepend(this.picture.picture)
+        if (this.picture.closeBtn) divContainer.prepend(this.picture.closeBtn)
+        if (this.picture.hasAttribute('open-modal')) {
+          if (this.hasAttribute('only-hotspot-in-modal')) this.picture.css = /* css */`
+            :host(:not([open])) a-hotspot {
+              display: none;
+            }
+            ${this.hasAttribute('only-hotspot-in-modal-mobile')
+              ? ''
+              : /* css */`
+                @media only screen and (max-width: _max-width_) {
+                  :host(:not([open])) a-hotspot {
+                    display: block;
+                  }
+                }
+              `
+            }
+          `
+          if (this.hasAttribute('only-hotspot-in-modal-mobile')) this.picture.css = /* css */`
+            @media only screen and (max-width: _max-width_) {
+              :host(:not([open])) a-hotspot {
+                display: none;
+              }
+            }
+          `
+        }
       }
     })
   }
 
   disconnectedCallback () {
+    this.removeEventListener('click', this.clickEventListener)
+  }
 
+  // modal handling
+  attributeChangedCallback (name, oldValue, newValue) {
+    if (this.picture) {
+      if (this.hasAttribute('open')) {
+        this.picture.setAttribute('open', '')
+      } else {
+        this.picture.removeAttribute('open')
+        this.hotspots.forEach(el => el.classList.remove('active'))
+      }
+    }
   }
 
   /**
@@ -70,7 +114,7 @@ export default class ImageHotspot extends Shadow() {
   renderCSS () {
     this.css = /* css */`
       :host{
-        width: var(--width, 100vw) !important;
+        width: var(--width, 100%) !important;
       }
 
       :host .wrapper {
@@ -90,7 +134,7 @@ export default class ImageHotspot extends Shadow() {
 
       @media screen and (max-width: _max-width_){
         :host{
-          width: var(--width-mobile, var(--width, 100vw)) !important;
+          width: var(--width-mobile, var(--width, 100%)) !important;
         }
 
         :host .wrapper{
@@ -139,11 +183,11 @@ export default class ImageHotspot extends Shadow() {
   }
 
   get hotspots () {
-    return this.root.querySelectorAll('a-hotspot')
+    return this.root.querySelector('a-hotspot') ? this.root.querySelectorAll('a-hotspot') : this.picture.root.querySelectorAll('a-hotspot')
   }
 
   get picture () {
-    return this.root.querySelector('a-picture') || this.root.querySelector('picture')
+    return this.root.querySelector('a-picture') || this.root.querySelector('ks-a-picture') || this.root.querySelector('picture')
   }
 
   get divWrapper () {
