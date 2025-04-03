@@ -277,7 +277,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       }
       if (validationName === 'email') {
         const isEmailValidationValid = !!(currentInput.value.match(
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          // Special characters like periods, underscores, and hyphens are permitted in the local part, but they cannot be the first or last character in the local part, and they cannot appear consecutively (e.g., “..” or “__”).
+          /^(?!.*__)(?!_)[^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         ))
         this.setValidity(inputFieldName, validationName, isEmailValidationValid)
       }
