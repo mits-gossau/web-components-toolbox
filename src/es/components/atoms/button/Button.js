@@ -280,6 +280,9 @@ export default class Button extends Hover() {
       .icon-left, .icon-right {
         flex-shrink: 0;
       }
+      ${this.buttonTagName} > #label {
+        flex-shrink: 10;
+      }
       /* icon aka. a-icon-mdx support */
       ${this.buttonTagName} > * {
         color: var(--color, black);
