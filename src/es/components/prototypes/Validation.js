@@ -280,7 +280,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           // Special characters like periods, underscores, and hyphens are permitted in the local part, but they cannot be the first or last character in the local part, and they cannot appear consecutively (e.g., “..” or “__”).
           /^(?!.*__)(?!_)[^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         ))
-        console.log('isEmailValidationValid', isEmailValidationValid)
         this.setValidity(inputFieldName, validationName, isEmailValidationValid)
       }
       if (validationName === 'max-number-value') {
