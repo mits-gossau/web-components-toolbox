@@ -268,6 +268,9 @@ export default class Modal extends Shadow() {
         flex-direction: var(--flex-direction, column-reverse);
         justify-content: var(--justify-content, center);
       }
+      :host([open]) > section > div:where(:has(> *[scroll-image-in-modal]), :has(> *[scroll-image-in-modal-mobile])) {
+        width: 100%;
+      }
       :host([open]) > section > div > #close {
         display: var(--close-display, block);
         position: var(--close-position, static);
