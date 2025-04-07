@@ -1,4 +1,4 @@
-:host .btn-open {
+:host .content > .btn-open {
     border-radius: 50%;
     box-shadow: 1px 1px 15px -2px rgba(0, 0, 0, .1);
     height: var(--hotspot-default-btn-open-size, 3rem);
@@ -15,7 +15,7 @@
     z-index: 0;
 }
 
-:host .btn-close {
+:host .content > .btn-close {
     display: none;
 }
 
@@ -65,6 +65,25 @@
 
 :host(:nth-child(3n)) .btn-open:before {
     animation: button-pulse 1s .5s ease;
+}
+
+/* button components compatibility */
+:host :not(button):is(.btn-open, .btn-close):not(.no-pulse):before {
+    animation: button-pulse 1s ease;
+    background-color: var(--hotspot-default-btn-open-background-color, rgba(255, 255, 255, .5));
+    display: block;
+    content: '';
+    height: var(--hotspot-default-btn-open-size, 3rem);
+    transition: background-color .2s ease-out;
+    width: var(--hotspot-default-btn-open-size, 3rem);
+    border-radius: 50%;
+    cursor: pointer;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: -1;
 }
 
 @keyframes button-pulse {

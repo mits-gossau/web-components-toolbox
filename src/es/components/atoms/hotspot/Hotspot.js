@@ -33,7 +33,7 @@ export default class Hotspot extends Shadow() {
     }
 
     this.clickListener = e => {
-      if (!e.composedPath().include(this.buttonOpen)) {
+      if (!e.composedPath().includes(this.buttonOpen)) {
         this.classList.remove('active')
         this.parentElement.removeEventListener('click', this.clickListener)
       }
@@ -87,7 +87,11 @@ export default class Hotspot extends Shadow() {
         : 'position: relative;'}
       }
 
-      :host .btn-close{
+      :host .content:empty {
+        display: none;
+      }
+
+      :host .content > .btn-close{
         background-color: transparent;
         background-image: url(_import-meta-url_./icons/close-orange-large.svg);
         background-repeat: no-repeat;
@@ -124,8 +128,28 @@ export default class Hotspot extends Shadow() {
           box-shadow .2s ease-out,
           background-color .2s ease-out;
       }
-      :host :not(button):is(.btn-open, .btn-close):after, :host :not(button):is(.btn-open, .btn-close):before {
-        display:none;
+      /* button components compatibility */
+      :host :not(button):is(.btn-open, .btn-close) {
+        cursor: pointer;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: unset;
+        &:after, &:before {
+          display:none;
+        }
+      }
+      :host(.active) :not(button){
+        &.btn-open {
+          display: none;
+        }
+        &.btn-close {
+          display: block;
+        }
+      }
+      :host :not(button).btn-close {
+        display: none;
       }
 
       :host .sr-only {
@@ -357,6 +381,7 @@ export default class Hotspot extends Shadow() {
           }
         }
       })
+      if (this.buttonClose) this.buttonClose.classList.add('hover')
     } else {
       this.buttonOpen.classList.add('btn-open')
       this.buttonClose.classList.add('btn-close')
