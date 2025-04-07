@@ -33,7 +33,7 @@ export default class Hotspot extends Shadow() {
     }
 
     this.clickListener = e => {
-      if (e.composedPath()[0] !== this.buttonOpen) {
+      if (!e.composedPath().include(this.buttonOpen)) {
         this.classList.remove('active')
         this.parentElement.removeEventListener('click', this.clickListener)
       }
@@ -123,6 +123,9 @@ export default class Hotspot extends Shadow() {
         transition: transform .2s ease-out,
           box-shadow .2s ease-out,
           background-color .2s ease-out;
+      }
+      :host :not(button):is(.btn-open, .btn-close):after, :host :not(button):is(.btn-open, .btn-close):before {
+        display:none;
       }
 
       :host .sr-only {
@@ -323,21 +326,49 @@ export default class Hotspot extends Shadow() {
   renderHTML () {
     this.hasRendered = true
 
-    this.buttonOpen.classList.add('btn-open')
-    this.buttonClose.classList.add('btn-close')
-    Array.from(this.span).forEach(node => {
-      this.buttonOpen.appendChild(node)
-      if (node.classList.contains('sr-close')) this.buttonClose.appendChild(node.cloneNode())
-    })
-
     if (this.content.querySelector('h3') != null) {
       this.divTitle.classList.add('content-title')
       this.divTitle.appendChild(this.content.querySelector('h3'))
       this.content.prepend(this.divTitle)
     }
-    this.content.appendChild(this.buttonClose)
 
-    this.html = this.buttonOpen
+    if (this.templates.length) {
+      this.templates.forEach(template => {
+        const templateContent = template.content
+        const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
+        template.remove()
+        this.html = templateContent
+        if (notDefined?.length) {
+          if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
+            this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
+              detail: {
+                nodes: notDefined
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          } else {
+            console.error(
+              'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+              notDefined,
+              this
+            )
+          }
+        }
+      })
+    } else {
+      this.buttonOpen.classList.add('btn-open')
+      this.buttonClose.classList.add('btn-close')
+      Array.from(this.span).forEach(node => {
+        this.buttonOpen.appendChild(node)
+        if (node.classList.contains('sr-close')) this.buttonClose.appendChild(node.cloneNode())
+      })
+
+      this.content.appendChild(this.buttonClose)
+
+      this.html = this.buttonOpen
+    }
   }
 
   get content () {
@@ -349,14 +380,18 @@ export default class Hotspot extends Shadow() {
   }
 
   get buttonOpen () {
-    return this._buttonOpen || (this._buttonOpen = document.createElement('button'))
+    return this._buttonOpen || (this._buttonOpen = this.root.querySelector('.btn-open') || document.createElement('button'))
   }
 
   get buttonClose () {
-    return this._buttonClose || (this._buttonClose = document.createElement('button'))
+    return this._buttonClose || (this._buttonClose = this.root.querySelector('.btn-close') || document.createElement('button'))
   }
 
   get span () {
     return this.root.querySelectorAll('span.sr-only')
+  }
+
+  get templates () {
+    return Array.from(this.root.querySelectorAll('template'))
   }
 }

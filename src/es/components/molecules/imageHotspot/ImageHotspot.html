@@ -16,6 +16,10 @@
         </div>
       </article>
     </div>
+    <template>
+      <a-button class="btn-close" icon namespace="button-primary-" color="secondary"><a-icon-mdx icon-name="Plus" size="1.5em"></a-icon-mdx></a-button>
+      <a-button class="btn-open" icon namespace="button-primary-" color="secondary"><a-icon-mdx icon-name="Heart" size="1.5em"></a-icon-mdx></a-button>
+    </template>
   </a-hotspot>
   <a-hotspot top="49.333333333333336" left="80.25" place="bottom">
     <div class="content">
@@ -180,6 +184,11 @@
 </m-image-hotspot>
 <hr>
 <h2>Open in Modal</h2>
+<ul>
+  <li>Mobile only: Open in Modal</li>
+  <li>Mobile only: Hide hot spots but show them inside the modal</li>
+  <li>Mobile only: Scroll x-axis</li>
+</ul>
 <m-image-hotspot only-show-hotspot-in-modal-mobile scroll-image-in-modal-mobile>
   <a-picture picture-load namespace="picture-hotspot-" alt="Dergarten" defaultSource="./derGarten.jpg" open-modal no-open-modal-desktop open-modal-mobile open-modal-target-query="m-image-hotspot">
   </a-picture>
