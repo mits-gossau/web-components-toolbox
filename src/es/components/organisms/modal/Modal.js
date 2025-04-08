@@ -88,7 +88,7 @@ export default class Modal extends Shadow() {
             child = parentChild
           }
           let closeBtn
-          if (event.detail.child.root && (closeBtn = event.detail.child.root.querySelector('.close-btn'))) {
+          if (event.detail.child.root && (closeBtn = event.detail.child.root.querySelector('button.close-btn'))) {
             this.style.textContent = ''
             this.setCss(/* CSS */`
               :host([open]) > section > div > button#close.close-btn {
