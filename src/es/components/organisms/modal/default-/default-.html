@@ -1,5 +1,9 @@
 <o-wrapper>
-  <a-picture open-modal namespace="picture-scale-up-" namespace-fallback defaultSource="./img/jcr_content2.jpeg" alt="Migros"></a-picture>
+  <a-picture open-modal namespace="picture-scale-up-" namespace-fallback defaultSource="./img/jcr_content2.jpeg" alt="Migros">
+    <template open-modal>
+      <a-button class="btn-open no-pulse" icon namespace="button-primary-" color="secondary"><a-icon-mdx icon-name="Plus" size="1em"></a-icon-mdx></a-button>
+    </template>
+  </a-picture>
   <a-picture open-modal no-modal-icon defaultSource="./img/jcr_content3.jpeg" alt="Migros"></a-picture>
   <a-picture open-modal defaultSource="./img/jcr_content5_2.jpeg" alt="Migros"></a-picture>
 </o-wrapper>

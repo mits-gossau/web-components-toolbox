@@ -52,10 +52,10 @@ export default class Picture extends Intersection(Hover()) {
 
     this.clickListener = event => {
       if (!this.hasAttribute('open')) event.stopPropagation()
-      this.dispatchEvent(new CustomEvent(this.getAttribute('open-modal') || 'open-modal', {
+        if ((this.getMedia() === 'mobile' && this.hasAttribute('open-modal-mobile')) || (this.getMedia() === 'desktop' && !this.hasAttribute('no-open-modal-desktop'))) this.dispatchEvent(new CustomEvent(this.getAttribute('open-modal') || 'open-modal', {
         detail: {
           origEvent: event,
-          child: this
+          child: this.hasAttribute('open-modal-target-query') ? Picture.walksUpDomQueryMatches(this, this.getAttribute('open-modal-target-query')) : this
         },
         bubbles: true,
         cancelable: true,
@@ -169,10 +169,10 @@ export default class Picture extends Intersection(Hover()) {
       /* modal stuff */
       ${(this.hasAttribute('no-modal-icon'))
         ? /* css */ `
-          :host([open-modal]) {
+          :host([open-modal]:not([open])) {
             cursor: pointer;
           }
-          :host([open-modal]) > .close-btn {
+          :host([open-modal]) .close-btn {
             display: none;
             background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
           }
@@ -180,17 +180,19 @@ export default class Picture extends Intersection(Hover()) {
         : /* css */`
           :host([open-modal]) {
             display: block !important; /* must be display block for adjustBtnPosition calculations of this.getBoundingClientRect */
-            cursor: pointer;
             position: relative;
           }
-          :host([open-modal][open]) > .close-btn.adjusted {
+          :host([open-modal]:not([open])) {
+            cursor: pointer;
+          }
+          :host([open-modal][open]) .close-btn.adjusted {
             display: none;
           }
-          :host([open-modal][loaded]:not([open])) > .close-btn.adjusted {
+          :host([open-modal][loaded]:not([open]):not([no-open-modal-desktop])) .close-btn.adjusted {
             display: flex;
             animation: var(--close-btn-appear, appear .3s ease-out);
           }
-          :host([open-modal]) > .close-btn {
+          :host([open-modal]) button.close-btn {
             background-color: var(--close-btn-background-color, var(--color-secondary, var(--background-color)));
             border-radius: 50%;
             border: 0;
@@ -206,9 +208,21 @@ export default class Picture extends Intersection(Hover()) {
             right: calc(var(--close-btn-right, var(--content-spacing)) / 2);
             bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
           }
-          :host([open-modal]) > .close-btn > span {
+          /* button components compatibility */
+          :host([open-modal]) :not(button).close-btn {
+            position: absolute;
+            right: calc(var(--close-btn-right, var(--content-spacing)) / 2);
+            bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2);
+          }
+          :host([open-modal]) button.close-btn > span {
             height: 22px;
             width: 22px;
+          }
+          :host([no-open-modal-desktop]) {
+            cursor: auto;
+          }
+          :host([no-open-modal-desktop]) .close-btn.adjusted {
+            display: none;
           }
         `
       }
@@ -227,14 +241,20 @@ export default class Picture extends Intersection(Hover()) {
           transform: var(--transform-mobile-hover, var(--transform-hover, var(--transform, none)));
         }
         /* modal stuff */
+        :host([open-modal-mobile]:not([open])) {
+          cursor: pointer;
+        }
+        :host([open-modal-mobile]) .close-btn.adjusted {
+          display: flex;
+        }
         :host(:not([open-modal-mobile])) {
           cursor: auto;
           position: static;
         }
-        :host(:not([open-modal-mobile])) > .close-btn.adjusted {
+        :host(:not([open-modal-mobile])) .close-btn.adjusted {
           display: none !important;
         }
-        :host([open-modal-mobile]) > .close-btn {
+        :host([open-modal-mobile]) .close-btn {
           right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
           bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
         }
@@ -497,23 +517,52 @@ export default class Picture extends Intersection(Hover()) {
     }
     // modal stuff
     if (this.hasAttribute('open-modal')) {
-      this.closeBtn = document.createElement('button')
-      this.closeBtn.innerHTML = `
-        <span>
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
-            <g>
-              <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>
-              <path d="M 12 15 L 10 15 L 10 7 L 12 7 L 12 15 Z" fill="#ffffff"/>
-            </g>
-          </svg>
-        </span>
-      `
+      if (this.openModalTemplate) {
+        const templateContent = this.openModalTemplate.content
+        const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
+        this.openModalTemplate.remove()
+        const div = document.createElement('div')
+        div.appendChild(templateContent)
+        this.closeBtn = div.children[0]
+        if (notDefined?.length) {
+          if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
+            this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
+              detail: {
+                nodes: notDefined
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          } else {
+            console.error(
+              'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+              notDefined,
+              this
+            )
+          }
+        }
+      } else {
+        this.closeBtn = document.createElement('button')
+        this.closeBtn.innerHTML = `
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
+              <g>
+                <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>
+                <path d="M 12 15 L 10 15 L 10 7 L 12 7 L 12 15 Z" fill="#ffffff"/>
+              </g>
+            </svg>
+          </span>
+        `
+      }
       this.closeBtn.classList.add('close-btn')
       // adjust for img being smaller than the picture container
       const adjustBtnPosition = (hasRepeat = true) => {
         this.style.textContent = ''
         // the css only displays the button icon at mobile viewport when having open-modal-mobile
         if (!this.isConnected || (this.getMedia() === 'mobile' && !this.hasAttribute('open-modal-mobile'))) return
+        // picture-hotspot- has then a div inside with attribute relative, which makes this obsolete
+        if (this.getAttribute('namespace') === 'picture-hotspot-') return this.closeBtn?.classList.add('adjusted')
         // until the browser properly rendered the image to align it with the getBoundingClientRect needs some time, thats why we repeat it
         if (hasRepeat) setTimeout(() => self.requestAnimationFrame(timeStamp => adjustBtnPosition(false)), 1000)
         if (typeof this.getBoundingClientRect !== 'function' || !this.getBoundingClientRect().width || !this.getBoundingClientRect().height || !this.img || typeof this.img.getBoundingClientRect !== 'function' || !this.img.getBoundingClientRect().width || !this.img.getBoundingClientRect().height) return
@@ -523,14 +572,14 @@ export default class Picture extends Intersection(Hover()) {
           this.setCss(/* CSS */`
           ${this.getMedia() === 'desktop'
               ? /* CSS */`
-                :host([open-modal]) > .close-btn {
+                :host([open-modal]) .close-btn, :host([open-modal]) button.close-btn, :host([open-modal]) :not(button).close-btn {
                   ${heightDiff > 0 ? `bottom: calc(var(--close-btn-bottom, var(--content-spacing)) / 2 + ${heightDiff}px);` : ''}
                   ${widthDiff > 0 ? `right: calc(var(--close-btn-right, var(--content-spacing)) / 2 + ${widthDiff / 2}px);` : ''}
                 }
               `
               : /* CSS */`
                 @media only screen and (max-width: _max-width_) {
-                  :host([open-modal-mobile]) > .close-btn {
+                  :host([open-modal-mobile]) .close-btn, :host([open-modal-mobile]) button.close-btn, :host([open-modal-mobile]) :not(button).close-btn {
                     ${heightDiff > 0 ? `bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${heightDiff}px);` : ''}
                     ${widthDiff > 0 ? `right: calc(var(--close-btn-right-mobile, var(--close-btn-right, var(--content-spacing-mobile, var(--content-spacing)))) / 2 + ${widthDiff / 2}px);` : ''}
                   }
@@ -571,6 +620,10 @@ export default class Picture extends Intersection(Hover()) {
       style.setAttribute('protected', 'true')
       return style
     })())
+  }
+
+  get openModalTemplate () {
+    return this.root.querySelector('template[open-modal]')
   }
 
   getMedia () {

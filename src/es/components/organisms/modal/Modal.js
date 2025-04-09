@@ -88,7 +88,7 @@ export default class Modal extends Shadow() {
             child = parentChild
           }
           let closeBtn
-          if (event.detail.child.root && (closeBtn = event.detail.child.root.querySelector('.close-btn'))) {
+          if (event.detail.child.root && (closeBtn = event.detail.child.root.querySelector('button.close-btn'))) {
             this.style.textContent = ''
             this.setCss(/* CSS */`
               :host([open]) > section > div > button#close.close-btn {
@@ -267,6 +267,9 @@ export default class Modal extends Shadow() {
         display: var(--display, flex);
         flex-direction: var(--flex-direction, column-reverse);
         justify-content: var(--justify-content, center);
+      }
+      :host([open]) > section > div:where(:has(> *[scroll-image-in-modal]), :has(> *[scroll-image-in-modal-mobile])) {
+        width: 100%;
       }
       :host([open]) > section > div > #close {
         display: var(--close-display, block);

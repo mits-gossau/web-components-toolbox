@@ -25,17 +25,17 @@ export default class Hotspot extends Shadow() {
     this.buttonClickListener = e => {
       if (this.classList.contains('active')) {
         this.classList.remove('active')
-        document.body.removeEventListener('click', this.clickListener)
+        this.parentElement.removeEventListener('click', this.clickListener)
       } else {
         this.classList.add('active')
-        document.body.addEventListener('click', this.clickListener)
+        this.parentElement.addEventListener('click', this.clickListener)
       }
     }
 
     this.clickListener = e => {
-      if (e.composedPath()[0] !== this.buttonOpen) {
+      if (!e.composedPath().includes(this.buttonOpen)) {
         this.classList.remove('active')
-        document.body.removeEventListener('click', this.clickListener)
+        this.parentElement.removeEventListener('click', this.clickListener)
       }
     }
   }
@@ -87,7 +87,11 @@ export default class Hotspot extends Shadow() {
         : 'position: relative;'}
       }
 
-      :host .btn-close{
+      :host .content:empty {
+        display: none;
+      }
+
+      :host .content > .btn-close{
         background-color: transparent;
         background-image: url(_import-meta-url_./icons/close-orange-large.svg);
         background-repeat: no-repeat;
@@ -123,6 +127,29 @@ export default class Hotspot extends Shadow() {
         transition: transform .2s ease-out,
           box-shadow .2s ease-out,
           background-color .2s ease-out;
+      }
+      /* button components compatibility */
+      :host :not(button):is(.btn-open, .btn-close) {
+        cursor: pointer;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: unset;
+        &:after, &:before {
+          display:none;
+        }
+      }
+      :host(.active) :not(button){
+        &.btn-open {
+          display: none;
+        }
+        &.btn-close {
+          display: block;
+        }
+      }
+      :host :not(button).btn-close {
+        display: none;
       }
 
       :host .sr-only {
@@ -323,21 +350,50 @@ export default class Hotspot extends Shadow() {
   renderHTML () {
     this.hasRendered = true
 
-    this.buttonOpen.classList.add('btn-open')
-    this.buttonClose.classList.add('btn-close')
-    Array.from(this.span).forEach(node => {
-      this.buttonOpen.appendChild(node)
-      if (node.classList.contains('sr-close')) this.buttonClose.appendChild(node.cloneNode())
-    })
-
     if (this.content.querySelector('h3') != null) {
       this.divTitle.classList.add('content-title')
       this.divTitle.appendChild(this.content.querySelector('h3'))
       this.content.prepend(this.divTitle)
     }
-    this.content.appendChild(this.buttonClose)
 
-    this.html = this.buttonOpen
+    if (this.templates.length) {
+      this.templates.forEach(template => {
+        const templateContent = template.content
+        const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
+        template.remove()
+        this.html = templateContent
+        if (notDefined?.length) {
+          if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
+            this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
+              detail: {
+                nodes: notDefined
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          } else {
+            console.error(
+              'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+              notDefined,
+              this
+            )
+          }
+        }
+      })
+      if (this.buttonClose) this.buttonClose.classList.add('hover')
+    } else {
+      this.buttonOpen.classList.add('btn-open')
+      this.buttonClose.classList.add('btn-close')
+      Array.from(this.span).forEach(node => {
+        this.buttonOpen.appendChild(node)
+        if (node.classList.contains('sr-close')) this.buttonClose.appendChild(node.cloneNode())
+      })
+
+      this.content.appendChild(this.buttonClose)
+
+      this.html = this.buttonOpen
+    }
   }
 
   get content () {
@@ -349,14 +405,18 @@ export default class Hotspot extends Shadow() {
   }
 
   get buttonOpen () {
-    return this._buttonOpen || (this._buttonOpen = document.createElement('button'))
+    return this._buttonOpen || (this._buttonOpen = this.root.querySelector('.btn-open') || document.createElement('button'))
   }
 
   get buttonClose () {
-    return this._buttonClose || (this._buttonClose = document.createElement('button'))
+    return this._buttonClose || (this._buttonClose = this.root.querySelector('.btn-close') || document.createElement('button'))
   }
 
   get span () {
     return this.root.querySelectorAll('span.sr-only')
+  }
+
+  get templates () {
+    return Array.from(this.root.querySelectorAll('template'))
   }
 }
