@@ -84,8 +84,6 @@ export default class HistoryGallery extends Shadow() {
     this.css = /* css */`
 
           :host {
-          --color: var(--color, white);
-          --svg-size: 2em;
           font-size: var(--font-size, large);
           display: var(--display, flex);
           justify-content: var(--justify-content, center);
@@ -93,10 +91,6 @@ export default class HistoryGallery extends Shadow() {
           flex-direction: var(--flex-direction, column);
           height: var(--height, fit-content);
           margin: var(--margin, 0);
-        }
-
-        :host a-picture {
-          --picture-cover-img-object-fit: contain;
         }
 
         .component-container {
@@ -144,6 +138,7 @@ export default class HistoryGallery extends Shadow() {
         }
 
         .slide-description {
+          --p-text-align: center;
           display: flex;
           text-align: center;
           justify-content: center;
@@ -153,7 +148,7 @@ export default class HistoryGallery extends Shadow() {
           z-index: 2;
           width: 100%;
           color: white;
-          padding: 10px;
+          padding: 30px;
           box-sizing: border-box;
           bottom: 0;
         }
@@ -179,6 +174,7 @@ export default class HistoryGallery extends Shadow() {
         }
 
         .section {
+          --h1-margin: 0;
           height: 100%;
           width: 50%;
           display: flex;
@@ -190,23 +186,19 @@ export default class HistoryGallery extends Shadow() {
           justify-content: flex-end;
         }
 
-        .section:hover {
-          --color: var(--color-hover, var(--color-tertiary, #e0b15c));
-        }
-
         .swipe {
           margin-right: var(--swipe-margin-right, 10%);
           cursor: pointer;
         }
 
         .active-year {
-          color: var(--active-year-color, var(--color-tertiary, #e0b15c));
+          color: var(--active-year-color, var(--color-tertiary, #ffff));
           font-weight: bold;
         }
 
         @media only screen and (max-width: 1200px) {
           :host a-picture {
-            --svg-size: var(--svg-size, 2em);
+            --svg-size: 2em;
           }
 
           .component-container {
@@ -223,10 +215,35 @@ export default class HistoryGallery extends Shadow() {
             border-radius: var(--carousel-container-border-radius-mobile, 0.3em);
           }
         }
-
-
-
-          
         `
+        return this.fetchTemplate()
+  }
+
+  fetchTemplate () {
+    /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
+    const styles = [
+      {
+        path: `${this.importMetaUrl}../../../../css/reset.css`, // no variables for this reason no namespace
+        namespace: false
+      },
+      {
+        path: `${this.importMetaUrl}../../../../css/style.css`, // apply namespace and fallback to allow overwriting on deeper level
+        namespaceFallback: false
+      }
+    ]
+    switch (this.getAttribute('namespace')) {
+      case 'history-gallery-default-':
+        console
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
+      default:
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
+        
+    }
   }
 }

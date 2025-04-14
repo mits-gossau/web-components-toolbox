@@ -1,0 +1,17 @@
+:host {
+    --history-gallery-default-carousel-container-background: var(--history-gallery-default-carousel-container-background-custom, rgb(207 207 207));
+    --history-gallery-default-active-year-color: var(--history-gallery-default-active-year-color-custom, var(--color-tertiary, #ffff));
+    --history-gallery-default-picture-cover-img-object-fit: var(--history-gallery-default-picture-cover-img-object-fit-custom, cover);
+    --svg-size: var(--history-gallery-default-svg-size-custom, 2em);
+}
+
+:host a-picture {
+    --picture-cover-img-object-fit: var(--history-gallery-default-picture-cover-img-object-fit-custom, contain);       
+ }
+
+:host .section:hover {
+    --color: var(--history-gallery-default-section-hover-color, var(--color-tertiary, #ffff));
+}
+:host .section {
+    --color: var(--history-gallery-default-section-hover-color, #ffff);
+}
