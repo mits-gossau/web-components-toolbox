@@ -218,7 +218,7 @@ export default class Picture extends Intersection(Hover()) {
             height: 22px;
             width: 22px;
           }
-          :host([no-open-modal-desktop]) {
+          :host([no-open-modal-desktop]:not([open])) {
             cursor: auto;
           }
           :host([no-open-modal-desktop]) .close-btn.adjusted {
