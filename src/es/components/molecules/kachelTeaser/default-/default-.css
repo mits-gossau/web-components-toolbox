@@ -1,0 +1,6 @@
+:host{
+    --kachel-teaser-default-a-color: var(--kachel-teaser-default-a-color-custom, #fff);
+    --kachel-teaser-default-a-text-decoration: var(--kachel-teaser-default-a-text-decoration-custom, none);
+    --kachel-teaser-default-h2-margin: var(--kachel-teaser-default-h2-margin-custom, none);
+    --kachel-teaser-default-image-color-hover: var(--kachel-teaser-default-image-color-hover-custom, var(--color-tertiary, #000));
+}
