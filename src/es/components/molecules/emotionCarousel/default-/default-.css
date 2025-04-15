@@ -11,7 +11,7 @@
     --emotion-carousel-default-a-text-decoration: var(--emotion-carousel-default-a-text-decoration-custom, none);
 }
 .section:hover {
-    --color: var(--emotion-carousel-default-color-hover-custom, var(--color-dusty-gray, var(--color-tertiary)));
+    --color: var(--emotion-carousel-default-color-hover-custom, var(--color-dusty-gray, var(--color-tertiary, #fff)));
   }
 .section{
     --emotion-carousel-default-h1-margin: var(--emotion-carousel-default-h1-margin-custom, 0);

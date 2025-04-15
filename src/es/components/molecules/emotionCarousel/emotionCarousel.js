@@ -1,17 +1,8 @@
 import { Shadow } from '../../prototypes/Shadow.js';
 
 export default class EmotionCarousel extends Shadow() {
-  slides;
-  nextButton;
-  prevButton;
-
   constructor(options = {}, ...args) {
-    super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args);
-
-    this.slides = this.root.querySelectorAll('.slide');
-    this.nextButton = this.root.querySelector('.section.right');
-    this.prevButton = this.root.querySelector('.section.left');
-  }
+    super({importMetaUrl: import.meta.url, ...options }, ...args);}
 
   connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS();
@@ -39,6 +30,12 @@ export default class EmotionCarousel extends Shadow() {
     let timer = setInterval(changeSlide, 10000);
   }
 
+  disconnectedCallback() {
+    this.nextButton?.removeEventListener('click', () => {});
+    this.prevButton?.removeEventListener('click', () => {});
+    clearInterval(timer);
+  }
+
   shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`);
   }
@@ -51,7 +48,7 @@ export default class EmotionCarousel extends Shadow() {
   }
 
   renderCSS() {
-    this.css = /* css */`
+    this.css = /* css */` 
       :host {
         font-family: var(--h2-font-family, 'Arial');
         text-shadow: 1px 3px 18px black;
@@ -199,8 +196,7 @@ export default class EmotionCarousel extends Shadow() {
         .controls {
           display: none;
         }
-      }
-    `;
+      }`;
     return this.fetchTemplate();
   }
 
@@ -229,5 +225,17 @@ export default class EmotionCarousel extends Shadow() {
       default:
         return this.fetchCSS(styles);
     }
+  }
+
+  get slides() {
+    return this.root.querySelectorAll('.slide');
+  }
+
+  get nextButton() {
+    return this.root.querySelector('.section.right');
+  }
+
+  get prevButton() {
+    return this.root.querySelector('.section.left');
   }
 }
