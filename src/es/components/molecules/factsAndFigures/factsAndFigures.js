@@ -2,10 +2,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class SustainabilityMetrics extends Shadow() {
   constructor(options = {}, ...args) {
-    super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
-    this.backgroundPicture = this.root.querySelector('.background')
-    this.backgroundOverlay = this.root.querySelector('.background-overlay')
-    this.numbersContainer = this.root.querySelectorAll('.numbers > *')
+    super({importMetaUrl: import.meta.url, ...options }, ...args)
 
   }
 
@@ -93,10 +90,8 @@ export default class SustainabilityMetrics extends Shadow() {
         :host{
             height: var(--height-mobile, fit-content);        
         }
-    }
-
-        `
-        return this.fetchTemplate()
+    }`
+    return this.fetchTemplate()
   }
 
   fetchTemplate () {
@@ -120,7 +115,18 @@ export default class SustainabilityMetrics extends Shadow() {
         }, ...styles])
       default:
         return this.fetchCSS(styles)
-        
     }
+  }
+
+  get backgroundPicture() {
+    return this.root.querySelector('.background')
+  }
+
+  get backgroundOverlay() {
+    return this.root.querySelector('.background-overlay')
+  }
+
+  get numbersContainer() {
+    return this.root.querySelectorAll('.numbers > *')
   }
 }
