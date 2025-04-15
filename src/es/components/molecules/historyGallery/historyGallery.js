@@ -203,11 +203,8 @@ export default class HistoryGallery extends Shadow() {
           namespace: false
         }, ...styles])
       default:
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles])
-
+        return this.fetchCSS(styles)
+        
     }
   }
 
