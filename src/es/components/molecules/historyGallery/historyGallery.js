@@ -44,6 +44,15 @@ export default class HistoryGallery extends Shadow() {
     })
   }
 
+  disconnectedCallback() {
+    window.removeEventListener('resize', this.resizeListener);
+    this.nextButton.removeEventListener('click', this.nextButtonClickListener);
+    this.prevButton.removeEventListener('click', this.prevButtonClickListener);
+    this.swipes.forEach((swipe, index) => {
+      swipe.removeEventListener('click', this.swipeClickListeners[index]);
+    });
+  }
+
   shouldRenderCSS() {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
