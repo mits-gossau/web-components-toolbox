@@ -1,22 +1,8 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 export default class HistoryGallery extends Shadow() {
-  yearSwiper
-  yearCarouselComponent
-  yearlist
-  slides
-  swipes
-  nextButton
 
   constructor(options = {}, ...args) {
-    super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
-
-    this.yearSwiper = this.root.querySelector('.year-swiper')
-    this.yearCarouselComponent = this.root.querySelector('.component-container')
-    this.yearlist = Array.from(this.root.querySelectorAll('.swipe'))
-    this.slides = this.root.querySelectorAll('.slide')
-    this.swipes = this.root.querySelectorAll('.swipe')
-    this.nextButton = this.root.querySelector('.section.right')
-    this.prevButton = this.root.querySelector('.section.left')
+    super({importMetaUrl: import.meta.url, ...options }, ...args)
   }
 
   connectedCallback() {
@@ -82,144 +68,123 @@ export default class HistoryGallery extends Shadow() {
 
   renderCSS() {
     this.css = /* css */`
+      :host {
+        font-size: var(--font-size, large);
+        display: var(--display, flex);
+        justify-content: var(--justify-content, center);
+        align-items: var(--align-items, center);
+        flex-direction: var(--flex-direction, column);
+        height: var(--height, fit-content);
+        margin: var(--margin, 0);
+      }
 
-          :host {
-          font-size: var(--font-size, large);
-          display: var(--display, flex);
-          justify-content: var(--justify-content, center);
-          align-items: var(--align-items, center);
-          flex-direction: var(--flex-direction, column);
-          height: var(--height, fit-content);
-          margin: var(--margin, 0);
-        }
+      .component-container {
+        display: var(--component-container-display, flex);
+        justify-content: var(--component-container-justify-content, center);
+        align-items: var(--component-container-align-items, center);
+        flex-direction: var(--component-container-flex-direction, column);
+        width: var(--component-container-width, 100%);
+        height: var(--component-container-height, 70vh);
+        overflow: hidden;
+      }
 
-        .component-container {
-          display: var(--component-container-display, flex);
-          justify-content: var(--component-container-justify-content, center);
-          align-items: var(--component-container-align-items, center);
-          flex-direction: var(--component-container-flex-direction, column);
-          width: var(--component-container-width, 100%);
-          height: var(--component-container-height, 70vh);
-          overflow: hidden;
-        }
+      .carousel-container {
+        height: var(--carousel-container-height, 100%);
+        width: var(--carousel-container-width, 100%);
+        position: relative;
+        overflow: hidden;
+        background: var(--carousel-container-background, rgb(207 207 207));
+        border-radius: var(--carousel-container-border-radius, 0.5em);
+      }
 
-        .carousel-container {
-          height: var(--carousel-container-height, 100%);
-          width: var(--carousel-container-width, 100%);
-          position: relative;
-          overflow: hidden;
-          background: var(--carousel-container-background, rgb(207 207 207));
-          border-radius: var(--carousel-container-border-radius, 0.5em);
-        }
+      .slide {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        transition: all 0.5s;
+        display: flex;
+        flex-direction: column;
+      }
 
-        .slide {
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          transition: all 0.5s;
-          display: flex;
-          flex-direction: column;
-        }
+      .slide a-picture {
+        width: 100%;
+        height: 100%;
+        position: static;
+        z-index: 0;
+      }
 
-        .slide a-picture {
-          width: 100%;
-          height: 100%;
-          position: static;
-          z-index: 0;
-        }
+      .controls {
+        display: var(--controls-display, flex);
+        align-items: var(--controls-align-items, center);
+        position: relative;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+      }
 
-        .controls {
-          display: var(--controls-display, flex);
-          align-items: var(--controls-align-items, center);
-          position: relative;
-          width: 100%;
-          height: 100%;
-          z-index: 2;
-        }
+      .slide-description {
+        --p-text-align: center;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        position: absolute;
+        font-size: small;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 2;
+        width: 100%;
+        color: white;
+        padding: 2em;
+        box-sizing: border-box;
+        bottom: 0;
+      }
 
-        .slide-description {
-          --p-text-align: center;
-          display: flex;
-          text-align: center;
-          justify-content: center;
-          position: absolute;
-          font-size: small;
-          background-color: rgba(0, 0, 0, 0.4);
-          z-index: 2;
-          width: 100%;
-          color: white;
-          padding: 30px;
-          box-sizing: border-box;
-          bottom: 0;
-        }
+      .btn {
+        padding: var(--btn-padding, 2%);
+      }
 
-        .btn {
-          padding: var(--btn-padding, 2%);
-        }
+      .btn-prev:active {
+        transform: scale(var(--btn-active-scale, 1.2));
+      }
 
-        .btn-prev:active {
-          transform: scale(var(--btn-active-scale, 1.2));
-        }
+      .btn-next:active {
+        transform: scale(var(--btn-active-scale, 1.2));
+      }
 
-        .btn-next:active {
-          transform: scale(var(--btn-active-scale, 1.2));
-        }
+      .year-swiper {
+        font-size: var(--year-swiper-font-size, x-large);
+        display: flex;
+        transition: all 0.5s;
+        width: 100%;
+        padding-top: var(--year-swiper-padding-top, 2%);
+      }
 
-        .year-swiper {
-          font-size: var(--year-swiper-font-size, x-large);
-          display: flex;
-          transition: all 0.5s;
-          width: 100%;
-          padding-top: var(--year-swiper-padding-top, 2%);
-        }
+      .section {
+        --h1-margin: 0;
+        height: 100%;
+        width: 50%;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
 
-        .section {
-          --h1-margin: 0;
-          height: 100%;
-          width: 50%;
-          display: flex;
-          align-items: center;
-          cursor: pointer;
-        }
+      .section.right {
+        justify-content: flex-end;
+      }
 
-        .section.right {
-          justify-content: flex-end;
-        }
+      .swipe {
+        margin-right: var(--swipe-margin-right, 10%);
+        cursor: pointer;
+      }
 
-        .swipe {
-          margin-right: var(--swipe-margin-right, 10%);
-          cursor: pointer;
-        }
-
-        .active-year {
-          color: var(--active-year-color, var(--color-tertiary, #ffff));
-          font-weight: bold;
-        }
-
-        @media only screen and (max-width: 1200px) {
-          :host a-picture {
-            --svg-size: 2em;
-          }
-
-          .component-container {
-            height: var(--component-container-height-mobile, 60vh);
-          }
-        }
-
-        @media only screen and (max-width: 767px) {
-          :host {
-            --svg-size: 1.5em;
-          }
-
-          .carousel-container {
-            border-radius: var(--carousel-container-border-radius-mobile, 0.3em);
-          }
-        }
-        `
-        return this.fetchTemplate()
+      .active-year {
+        color: var(--active-year-color, var(--color-tertiary, #ffff));
+        font-weight: bold;
+      }
+      `
+    return this.fetchTemplate()
   }
 
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -233,7 +198,6 @@ export default class HistoryGallery extends Shadow() {
     ]
     switch (this.getAttribute('namespace')) {
       case 'history-gallery-default-':
-        console
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
@@ -243,7 +207,40 @@ export default class HistoryGallery extends Shadow() {
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles])
-        
+
     }
   }
+
+  get yearSwiper() {
+    return this.root.querySelector('.year-swiper')
+  }
+
+  get yearCarouselComponent() {
+    return this.root.querySelector('.component-container')
+  }
+
+  get yearlist() {
+    return Array.from(this.root.querySelectorAll('.swipe'))
+  }
+
+  get slides() {
+    return this.root.querySelectorAll('.slide')
+  }
+
+  get swipes() {
+    return this.root.querySelectorAll('.swipe')
+  }
+
+  get nextButton() {
+    return this.root.querySelector('.section.right')
+  }
+
+  get prevButton() {
+    return this.root.querySelector('.section.left')
+  }
+
+  get activeSlideIndex() {
+    return Array.from(this.yearSwiper.children).indexOf(this.yearSwiper.querySelector('.active-year'))
+  }
 }
+
