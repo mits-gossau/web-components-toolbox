@@ -2,7 +2,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class HistoryGallery extends Shadow() {
 
   constructor(options = {}, ...args) {
-    super({importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
   }
 
   connectedCallback() {
@@ -213,7 +213,7 @@ export default class HistoryGallery extends Shadow() {
         }, ...styles])
       default:
         return this.fetchCSS(styles)
-        
+
     }
   }
 
