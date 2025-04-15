@@ -10,7 +10,6 @@
     --img-height-mobile: var(--emotion-carousel-default-img-height-mobile-custom, 100%);
     --emotion-carousel-default-a-text-decoration: var(--emotion-carousel-default-a-text-decoration-custom, none);
 }
-
 .section:hover {
     --color: var(--emotion-carousel-default-color-hover-custom, var(--color-dusty-gray, var(--color-tertiary)));
   }
