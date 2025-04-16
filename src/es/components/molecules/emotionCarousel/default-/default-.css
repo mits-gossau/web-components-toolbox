@@ -7,8 +7,14 @@
     --svg-size: var(--emotion-carousel-default-svg-size-custom, 2em);
     --color: var(--emotion-carousel-default-color-custom, white);
     --content-spacing-mobile: var(--emotion-carousel-default-content-spacing-mobile-custom, none);
+    --emotion-carousel-default-h1-color: var(--emotion-carousel-default-h1-color-custom, #fff);
     --img-height-mobile: var(--emotion-carousel-default-img-height-mobile-custom, 100%);
     --emotion-carousel-default-a-text-decoration: var(--emotion-carousel-default-a-text-decoration-custom, none);
+    --emotion-carousel-default-a-color: var(--emotion-carousel-default-a-color-custom, var(--emotion-carousel-default-h1-color,  #fff));
+    --emotion-carousel-default-h1-font-size: var(--emotion-carousel-default-h1-font-size-custom, 2em);
+    --emotion-carousel-default-a-color-hover: var(--emotion-carousel-default-a-color-hover-custom, var(--emotion-carousel-default-h1-color,  #fff));
+    --emotion-carousel-default-height-mobile: var(--emotion-carousel-default-height-mobile-custom, 40vh);
+    
 }
 .section:hover {
     --color: var(--emotion-carousel-default-color-hover-custom, var(--color-dusty-gray, var(--color-tertiary, #fff)));
