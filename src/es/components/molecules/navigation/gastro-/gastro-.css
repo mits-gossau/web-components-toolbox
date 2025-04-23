@@ -43,7 +43,32 @@
 
 :host>nav>ul li.open>o-nav-wrapper>section>ul:not([width="100%"])>li,
 :host>nav>ul li.open>o-nav-wrapper>section>ul:not([width="100%"])>li:last-child {
-  border-bottom:1px solid var(--color-x);
+  border-bottom:1px solid var(--color-quarternary);
+}
+
+#nav-section-0>section>*:not([style]):first-child {
+  padding: 0 !important;
+}
+
+:host>nav>ul li.open>o-nav-wrapper>section>ul {
+  border-radius: 0;
+}
+
+:host>nav>ul li.open>o-nav-wrapper>section>ul,
+:host>nav>ul li.open>o-nav-wrapper>section>ul a-link {
+  /* border-bottom: 1px solid var(--color-quarternary); */
+}
+
+#nav-section-0 h2 {
+  --h2-font-size: 2.75em;
+  --h2-font-family: var(--font-family);
+  --h2-line-height: 2em;
+  --h2-margin: 0;
+  border-bottom: 1px solid var(--color-quarternary);
+}
+
+:host>nav>ul li.open>o-nav-wrapper>section>ul{
+  --padding: 0 !important;
 }
 
 @media only screen and (max-width: _max-width_) {
