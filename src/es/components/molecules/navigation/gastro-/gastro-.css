@@ -1,0 +1,88 @@
+:host {
+  --any-padding-bottom-last-child:0.5em;
+  --gap-custom: 0;
+  --menu-background-color: var(--menu-background-color-custom, var(--background-color));
+  --menu-color: var(--menu-color-custom, var(--color-tertiary));
+  --navigation-gastro-border-color: var(--navigation-gastro-color-custom);
+  --navigation-gastro-border-width: 0;
+  --navigation-gastro-color-active: var(--navigation-gastro-color-custom);
+  --navigation-gastro-color-hover: var(--navigation-gastro-color-custom);
+  --navigation-gastro-color-second-level-custom: var(--m-black);
+  --navigation-gastro-color: var(--navigation-gastro-color-custom, var(--menu-color));
+  --navigation-gastro-flex-wrap-custom: nowrap;
+  --navigation-gastro-padding-no-scroll:var(--navigation-gastro-padding-no-scroll-custom, 0 0 1em 0);
+  --navigation-gastro-search-li-padding-custom: 0.25rem 0 0.25rem var(--content-spacing);
+  --navigation-gastro-a-link-font-size: var(--navigation-gastro-a-link-font-size-custom, var(--font-size));
+  --navigation-gastro-text-underline-offset: 0.5em;
+  --navigation-gastro-transition: color 0.3s ease-out;
+  --navigation-gastro-section-background-color:var(--navigation-gastro-section-background-color-custom, var(--menu-color));
+  --navigation-gastro-background-color-open: var(--navigation-gastro-background-color-open-custom, var(--background-color));
+}
+
+:host>nav>ul>li.active,
+:host>nav>ul>li.open {
+  --navigation-gastro-text-decoration: var(--navigation-gastro-text-decoration-hover);
+}
+
+:host>nav>ul>li ul>li {
+  --navigation-gastro-color-active: var(--color-active);
+  --navigation-gastro-text-decoration-hover: none;
+  --navigation-gastro-text-decoration-focus: none;
+}
+
+:host>nav>ul li.open>o-nav-wrapper>section {
+  --navigation-gastro-background-color-hover: transparent;
+}
+
+:host>nav>ul>li.open>a-link {
+  --navigation-gastro-background-color-active: var(--m-white);
+  --navigation-gastro-color: var(--navigation-gastro-color-custom, var(--menu-background-color));
+  --navigation-gastro-background-color-hover: var(--navigation-gastro-background-color-hover-custom, var(--menu-color));
+
+}
+
+:host>nav>ul li.open>o-nav-wrapper>section>ul:not([width="100%"])>li,
+:host>nav>ul li.open>o-nav-wrapper>section>ul:not([width="100%"])>li:last-child {
+  border-bottom:1px solid var(--color-x);
+}
+
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --navigation-gastro-background-color-hover: transparent;
+    --navigation-gastro-background-color-active: transparent;
+    --navigation-gastro-transition: font-size 0.3s ease-out, color 0.3s ease-out, transform 0.3s ease-out;
+  }
+
+  :host>nav>ul>li.open>a-link {
+    --navigation-gastro-color-open-mobile: var(--navigation-gastro-color-custom);
+    --navigation-gastro-color-active: var(--navigation-gastro-color-custom);
+    --navigation-gastro-text-decoration: none;
+    --navigation-gastro-text-decoration-hover: none;
+    --navigation-gastro-text-decoration-focus: none;
+    --navigation-gastro-color-hover: var(--m-orange-800, white) !important;
+  }
+
+  :host>nav>ul>li.open>a-arrow {
+    --navigation-gastro-path-color: var(--navigation-gastro-color-custom);
+  }
+
+  :host>nav>ul li.open>o-nav-wrapper>section {
+    padding-bottom: var(--navigation-gastro-section-padding-bottom-custom, 30vh);
+  }
+
+  :host>nav>ul li.open>o-nav-wrapper>section>ul a-link {
+    --navigation-gastro-font-size: 10rem;
+    --navigation-gastro-color-hover: var(--m-orange-800, white) !important;
+  }
+
+  :host>nav>ul>li:not(.open)>a-link {
+    --navigation-gastro-color-hover: var(--m-orange-800, white);
+  }
+
+  :host>nav>ul.language-switcher li,
+  :host(:not(.no-scroll))>nav>ul.language-switcher li,
+  :host>nav>ul:not(.open).language-switcher li,
+  :host(:not(.no-scroll))>nav>ul:not(.open).language-switcher li {
+    --navigation-gastro-color-mobile: var(--menu-color);
+  }
+}
