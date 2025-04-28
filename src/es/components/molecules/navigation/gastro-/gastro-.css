@@ -152,22 +152,33 @@ o-nav-wrapper h2 {
 
   :host>nav>ul li.open>o-nav-wrapper>section>ul>li:first-child,
   :host>nav>ul li.open>o-nav-wrapper>section>ul>li.bold {
-    --navigation-gastro-a-link-content-spacing-custom: 0 0 0 min(10vw, var(--content-spacing-mobile));
+    --navigation-gastro-a-link-content-spacing-custom: 0 !important;
     --navigation-gastro-a-link-content-spacing-no-scroll-custom: var(--navigation-gastro-a-link-content-spacing-custom);
   }
 
-  /* :host>nav>ul>li>a-link,
-  :host(.no-scroll)>nav>ul>li>a-link {
-    --navigation-gastro-padding: var(--content-spacing-mobile);
-  } */
-
   :host>nav>ul li.open>o-nav-wrapper>section>ul:not([width="100%"])+ul>li:first-child {
-    border-top: none;
+    border-top: 1px solid var(--color-quarternary);
   }
 
   :host>nav>ul li.open>o-nav-wrapper>section>ul,
   :host>nav>ul li.open>o-nav-wrapper>section>ul a-link {
     --navigation-gastro-background-color: var(--menu-background-color);
     --navigation-gastro-font-size: 1.125em;
+  }
+
+
+
+  @supports(selector(:has(+ ul))) {
+
+    :host>nav>ul li.open>o-nav-wrapper>section>ul:not([width="100%"])+ul {
+      --margin-mobile: calc(var(--content-spacing-mobile) * -2) 0 var(--content-spacing-mobile);
+      --margin-last-child-mobile: calc(var(--content-spacing-mobile) * -2) 0 var(--content-spacing-mobile);
+      --padding-mobile: 0;
+      --padding-last-child-mobile: 1em 0;
+    }
+  }
+
+  :host>nav>ul li.open>o-nav-wrapper>section {
+    --navigation-gastro-a-link-content-spacing-no-scroll: 0 !important
   }
 }
