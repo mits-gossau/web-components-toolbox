@@ -36,7 +36,9 @@ function jsonToMarkdown(json, fileName) {
         if (style.declaration && style.declaration.length > 0) {
             markdown += `| Property | Variable | Default |\n|----------|----------|----------|\n`
             style.declaration.forEach(decl => {
-                markdown += `| ${decl.property} | ${decl.variable || ''} | ${decl.fallback || ''} |\n`
+                // TODO: Refactor this when we get a PSP budget
+                // Until then: "Works On My Machine"
+                markdown += `| ${decl.property} | ${decl.allCssVars[0] || ''} | ${decl.defaultValue || ''} |\n`
             })
         }
         markdown += '\n'

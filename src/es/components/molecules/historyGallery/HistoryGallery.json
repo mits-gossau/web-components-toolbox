@@ -1,0 +1,274 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/historyGallery/HistoryGallery.js",
+  "templates": [
+    {
+      "name": "history-gallery-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "font-size",
+          "allCssVars": [
+            "--font-size"
+          ],
+          "defaultValue": "large"
+        },
+        {
+          "property": "display",
+          "allCssVars": [
+            "--display"
+          ],
+          "defaultValue": "flex"
+        },
+        {
+          "property": "justify-content",
+          "allCssVars": [
+            "--justify-content"
+          ],
+          "defaultValue": "center"
+        },
+        {
+          "property": "align-items",
+          "allCssVars": [
+            "--align-items"
+          ],
+          "defaultValue": "center"
+        },
+        {
+          "property": "flex-direction",
+          "allCssVars": [
+            "--flex-direction"
+          ],
+          "defaultValue": "column"
+        },
+        {
+          "property": "height",
+          "allCssVars": [
+            "--height"
+          ],
+          "defaultValue": "fit-content"
+        },
+        {
+          "property": "margin",
+          "allCssVars": [
+            "--margin"
+          ],
+          "defaultValue": "0"
+        }
+      ]
+    },
+    {
+      "selector": ".component-container",
+      "declaration": [
+        {
+          "property": "display",
+          "allCssVars": [
+            "--component-container-display"
+          ],
+          "defaultValue": "flex"
+        },
+        {
+          "property": "justify-content",
+          "allCssVars": [
+            "--component-container-justify-content"
+          ],
+          "defaultValue": "center"
+        },
+        {
+          "property": "align-items",
+          "allCssVars": [
+            "--component-container-align-items"
+          ],
+          "defaultValue": "center"
+        },
+        {
+          "property": "flex-direction",
+          "allCssVars": [
+            "--component-container-flex-direction"
+          ],
+          "defaultValue": "column"
+        },
+        {
+          "property": "width",
+          "allCssVars": [
+            "--component-container-width"
+          ],
+          "defaultValue": "100%"
+        },
+        {
+          "property": "height",
+          "allCssVars": [
+            "--component-container-height"
+          ],
+          "defaultValue": "70vh"
+        }
+      ]
+    },
+    {
+      "selector": ".carousel-container",
+      "declaration": [
+        {
+          "property": "height",
+          "allCssVars": [
+            "--carousel-container-height"
+          ],
+          "defaultValue": "100%"
+        },
+        {
+          "property": "width",
+          "allCssVars": [
+            "--carousel-container-width"
+          ],
+          "defaultValue": "100%"
+        },
+        {
+          "property": "background",
+          "allCssVars": [
+            "--carousel-container-background"
+          ],
+          "defaultValue": "rgb(207 207 207"
+        },
+        {
+          "property": "border-radius",
+          "allCssVars": [
+            "--carousel-container-border-radius"
+          ],
+          "defaultValue": "0.5em"
+        }
+      ]
+    },
+    {
+      "selector": ".slide",
+      "declaration": []
+    },
+    {
+      "selector": ".slide a-picture",
+      "declaration": []
+    },
+    {
+      "selector": ".controls",
+      "declaration": [
+        {
+          "property": "display",
+          "allCssVars": [
+            "--controls-display"
+          ],
+          "defaultValue": "flex"
+        },
+        {
+          "property": "align-items",
+          "allCssVars": [
+            "--controls-align-items"
+          ],
+          "defaultValue": "center"
+        }
+      ]
+    },
+    {
+      "selector": ".slide-description",
+      "declaration": []
+    },
+    {
+      "selector": ".btn",
+      "declaration": [
+        {
+          "property": "padding",
+          "allCssVars": [
+            "--btn-padding"
+          ],
+          "defaultValue": "2%"
+        }
+      ]
+    },
+    {
+      "selector": ".btn-prev:active",
+      "declaration": [
+        {
+          "property": "transform",
+          "allCssVars": [
+            "--btn-active-scale"
+          ],
+          "defaultValue": "1.2"
+        }
+      ]
+    },
+    {
+      "selector": ".btn-next:active",
+      "declaration": [
+        {
+          "property": "transform",
+          "allCssVars": [
+            "--btn-active-scale"
+          ],
+          "defaultValue": "1.2"
+        }
+      ]
+    },
+    {
+      "selector": ".year-swiper",
+      "declaration": [
+        {
+          "property": "font-size",
+          "allCssVars": [
+            "--year-swiper-font-size"
+          ],
+          "defaultValue": "x-large"
+        },
+        {
+          "property": "padding-top",
+          "allCssVars": [
+            "--year-swiper-padding-top"
+          ],
+          "defaultValue": "2%"
+        }
+      ]
+    },
+    {
+      "selector": ".section",
+      "declaration": []
+    },
+    {
+      "selector": ".section.right",
+      "declaration": []
+    },
+    {
+      "selector": ".swipe",
+      "declaration": [
+        {
+          "property": "margin-right",
+          "allCssVars": [
+            "--swipe-margin-right"
+          ],
+          "defaultValue": "10%"
+        }
+      ]
+    },
+    {
+      "selector": ".active-year",
+      "declaration": [
+        {
+          "property": "color",
+          "allCssVars": [
+            "--active-year-color",
+            "--color-tertiary"
+          ],
+          "defaultValue": "#ffff"
+        }
+      ]
+    }
+  ]
+}
