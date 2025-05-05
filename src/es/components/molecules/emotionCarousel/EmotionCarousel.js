@@ -188,8 +188,8 @@ export default class EmotionCarousel extends Shadow() {
           padding: 0;
         }
 
-        .controls {
-          display: none;
+        :host .controls {
+          font-size: 1.3em        
         }
       }`;
     return this.fetchTemplate();
