@@ -27,7 +27,7 @@ export default class EmotionCarousel extends Shadow() {
       this.updateSlideTransform(curSlide);
     };
 
-    let timer = setInterval(changeSlide, 10000);
+    let timer = setInterval(changeSlide, this.interval);
   }
 
   disconnectedCallback() {
@@ -57,7 +57,7 @@ export default class EmotionCarousel extends Shadow() {
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        height: 38vw;
+        height: ${this.height};
         max-height: var(--img-max-height, none);
         margin: 0;
       }
@@ -164,7 +164,7 @@ export default class EmotionCarousel extends Shadow() {
 
       @media only screen and (max-width: _max-width_) {
         :host {
-          height: var(--height-mobile, 40vh);
+          height: var(--height-mobile, ${this.heightMobile});
         }
 
         .slide-description,
@@ -232,5 +232,17 @@ export default class EmotionCarousel extends Shadow() {
 
   get prevButton() {
     return this.root.querySelector('.section.left');
+  }
+
+  get interval() {
+    return this.getAttribute('interval') || 10000;
+  }
+
+  get height() {
+    return this.getAttribute('height') || '38vw';
+  }
+  
+  get heightMobile() {
+    return this.getAttribute('height-Mobile') || '40vh';
   }
 }
