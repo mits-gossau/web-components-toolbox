@@ -13,7 +13,6 @@
     --emotion-carousel-default-a-color: var(--emotion-carousel-default-a-color-custom, var(--emotion-carousel-default-h1-color,  #fff));
     --emotion-carousel-default-h1-font-size: var(--emotion-carousel-default-h1-font-size-custom, 2em);
     --emotion-carousel-default-a-color-hover: var(--emotion-carousel-default-a-color-hover-custom, var(--emotion-carousel-default-h1-color,  #fff));
-    --emotion-carousel-default-height-mobile: var(--emotion-carousel-default-height-mobile-custom, 40vh);
     
 }
 .section:hover {
