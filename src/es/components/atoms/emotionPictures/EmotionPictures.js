@@ -161,6 +161,12 @@ export default class EmotionPictures extends Intersection() {
         right: 0;
         top: 0;
       }
+      :host > * a-picture[with-border] {
+        border: var(--border-width, 18px) solid var(--border-color, white);
+        border-radius: var(--border-radius, 0);
+        box-sizing: border-box;
+        display: block;
+      }
       @media only screen and (max-width: _max-width_) {
         :host {
           width: var(--width-mobile, var(--width, 100%)) !important;
@@ -183,6 +189,9 @@ export default class EmotionPictures extends Intersection() {
         }
         :host .logo {
           padding: var(--padding-mobile);
+        }
+        :host > * a-picture[with-border] {
+          border: var(--border-width-mobile, 9px) solid var(--border-color-mobile, white);
         }
       }
     `
