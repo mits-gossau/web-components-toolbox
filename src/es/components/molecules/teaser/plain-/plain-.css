@@ -23,7 +23,7 @@
   --teaser-plain-h2-margin: var(--teaser-plain-h2-margin-custom);
   --teaser-plain-h5-margin: 0 0 0.5em;
   --teaser-plain-intersecting-figcaption-any-opacity: 1;
-  --teaser-plain-intersecting-figcaption-any-transform: perspective(400px) rotateX(0);
+  --teaser-plain-intersecting-figcaption-any-transform: var(--teaser-plain-intersecting-figcaption-any-transform-custom, perspective(400px) rotateX(0));
   --teaser-plain-p-font-size: 0.875em;
   --teaser-plain-p-line-height: var(--teaser-plain-p-line-height-custom, 1.14em);
   --teaser-plain-p-margin: 0 0 0.625em;
