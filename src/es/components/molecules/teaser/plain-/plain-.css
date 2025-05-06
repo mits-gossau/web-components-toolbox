@@ -9,7 +9,7 @@
   --teaser-plain-color: var(--teaser-plain-color-custom, var(--background-color, var(--m-white)));
   --teaser-plain-figcaption-any-opacity: 0;
   --teaser-plain-figcaption-any-transform-origin: center top;
-  --teaser-plain-figcaption-any-transform: perspective(400px) rotateX(-45deg);
+  --teaser-plain-figcaption-any-transform: var(--teaser-plain-figcaption-any-transform-custom, perspective(400px) rotateX(-45deg));
   --teaser-plain-figcaption-any-transition: transform .45s .6s cubic-bezier(.17,.67,.28,1),opacity .45s .4s cubic-bezier(.17,.67,.28,1), opacity 0.3s .4s ease-out;
   --teaser-plain-figcaption-background-color-hover: var(--teaser-plain-background-color-hover-custom, var(--color-hover, var(--teaser-plain-background-color)));
   --teaser-plain-figcaption-background-color: var(--teaser-plain-figcaption-background-color-custom, var(--teaser-plain-background-color));
