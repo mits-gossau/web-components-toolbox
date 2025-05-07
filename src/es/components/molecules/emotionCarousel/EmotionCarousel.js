@@ -60,6 +60,7 @@ export default class EmotionCarousel extends Shadow() {
         height: ${this.height};
         max-height: var(--img-max-height, none);
         margin: 0;
+        width: var(--width, 100%) !important;
       }
 
       :host h2 {
