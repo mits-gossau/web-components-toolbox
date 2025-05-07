@@ -24,7 +24,7 @@
   --header-default-a-text-decoration: none;
   --header-default-a-text-transform: none;
   --header-default-a-white-space: nowrap;
-  --header-default-align-items: var(--header-default-align-items-custom end);
+  --header-default-align-items: var(--header-default-align-items-custom, end);
   --header-default-background-color: var(--header-default-background-color-custom, var(--color-secondary));
   --header-default-border-bottom: var(--header-default-border-bottom-custom, none);
   --header-default-box-sizing-open-mobile: border-box;
