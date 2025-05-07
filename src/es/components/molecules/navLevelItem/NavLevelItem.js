@@ -8,6 +8,12 @@ export default class NavLevelItem extends Shadow() {
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
+      this.addEventListener('keyup', event => {
+    if (event.code === 'Enter' && this.matches(':focus')) {
+      NavLevelItem.walksUpDomQueryMatches(this, 'm-multi-level-navigation').subLiHoverListener({composedPath: () => [NavLevelItem.walksUpDomQueryMatches(this, 'li')]})
+      console.log(event, this.matches(':focus'), this)
+    }
+  })
   }
 
   disconnectedCallback () {}
