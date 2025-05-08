@@ -51,7 +51,7 @@ export default class EmotionCarousel extends Shadow() {
     this.css = /* css */` 
       :host {
         font-family: var(--font-family, 'Arial');
-        text-shadow: 1px 3px 18px black;
+        text-shadow: var(--text-shadow, 'none');
         font-size: large;
         display: flex;
         justify-content: center;
