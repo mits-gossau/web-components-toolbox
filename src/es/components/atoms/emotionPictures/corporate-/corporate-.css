@@ -1,0 +1,10 @@
+:host {
+    --emotion-pictures-corporate-padding: var(--emotion-pictures-corporate-padding-custom, 0);
+    --emotion-pictures-corporate-padding-mobile: var(--emotion-pictures-corporate-padding-mobile-custom, 0);
+    --emotion-pictures-corporate-text-top:0;
+
+    --emotion-pictures-corporate-content-spacing: var(--content-spacing);
+    --emotion-pictures-corporate-content-spacing-mobile: var(--content-spacing-mobile);
+    --emotion-pictures-corporate-spickel-top-position: var(--content-spacing);
+    --emotion-pictures-corporate-spickel-top-position-mobile: 0;
+}

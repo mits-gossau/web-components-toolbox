@@ -115,6 +115,7 @@ export default class EmotionPictures extends Intersection() {
         display: grid !important;
         width: var(--width, 100%) !important;
         line-height: var(--line-height, normal);
+        position: relative;
       }
       :host > *:not(style), :host > a {
         grid-column: 1;
@@ -161,13 +162,22 @@ export default class EmotionPictures extends Intersection() {
         right: 0;
         top: 0;
       }
-      :host > * a-picture[with-border] {
+      :host([with-border]) a-picture {
         border-width: var(--content-spacing, 18px);
         border-style: solid;
         border-color: var(--border-color, white);
         border-radius: var(--border-radius, 0);
         box-sizing: border-box;
         display: block;
+      }
+      :host([with-triangle]) a-picture:before {
+        position: absolute;
+        content: '';
+        top: var(--triangle-top, 15px);
+        left: calc(35% - 19.5px);
+        border-top: 39px solid #fff;
+        border-right: 17.5px solid transparent;
+        border-left: 17.5px solid transparent;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -192,8 +202,11 @@ export default class EmotionPictures extends Intersection() {
         :host .logo {
           padding: var(--padding-mobile);
         }
-        :host > * a-picture[with-border] {
+        :host([with-border]) a-picture {
           border-width: var(--content-spacing-mobile, var(--content-spacing, 9px));
+        }
+        :host([with-triangle]) a-picture:before {
+          top: var(--triangle-top-mobile, 9px);
         }
       }
     `
@@ -261,6 +274,12 @@ export default class EmotionPictures extends Intersection() {
           path: `${this.importMetaUrl}./with-video-/with-video-.css`,
           namespace: false
         }, ...styles], false)
+      case 'emotion-pictures-corporate-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./corporate-/corporate-.css`,
+          namespace: false
+        }], false)
       case 'emotion-pictures-default-':
         return this.fetchCSS([{
           // @ts-ignore
