@@ -88,7 +88,9 @@ o-nav-wrapper h2 {
   margin: 0 1em 0 0 !important;
 }
 
-
+:host>nav>ul li.open>o-nav-wrapper>section>ul:not([style])[width="100%"]>li {
+  border-bottom: 1px solid var(--color-quarternary);
+}
 
 @media only screen and (max-width: _max-width_) {
   o-nav-wrapper h2 {
@@ -110,6 +112,7 @@ o-nav-wrapper h2 {
     --navigation-gastro-background-color-active: transparent;
     --navigation-gastro-transition: font-size 0.3s ease-out, color 0.3s ease-out, transform 0.3s ease-out;
     --navigation-gastro-header-default-border-bottom: 0;
+    --navigation-gastro-h2-font-size: 1.85em;
   }
 
   :host>nav>ul>li.open>a-link {
