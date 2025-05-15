@@ -360,7 +360,9 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       if (inputType === 'radio' || inputType === 'checkbox') {
         // this element has to be the message wrapper of radio buttons
         const radioBtnErrorMessageWrapper = currentValidatedInput.parentElement.parentElement.querySelector('.message')
-        if (radioBtnErrorMessageWrapper) radioBtnErrorMessageWrapper.classList.contains('has-error') ? '' : radioBtnErrorMessageWrapper.classList.add('has-error')
+        if (radioBtnErrorMessageWrapper) {
+          radioBtnErrorMessageWrapper.classList.toggle('has-error', true)
+        }
       }
     } else {
       currentValidatedInputErrorTextWrapper.classList.remove('error-active')
@@ -369,7 +371,11 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       if (inputType === 'radio' || inputType === 'checkbox') {
         // this element has to be the message wrapper of radio buttons
         const radioBtnErrorMessageWrapper = currentValidatedInput.parentElement.parentElement.querySelector('.message')
-        if (radioBtnErrorMessageWrapper) radioBtnErrorMessageWrapper.classList.contains('has-error') ? radioBtnErrorMessageWrapper.classList.remove('has-error') : ''
+        if (radioBtnErrorMessageWrapper) {
+          if (radioBtnErrorMessageWrapper.classList.contains('has-error')) {
+            radioBtnErrorMessageWrapper.classList.remove('has-error')
+          }
+        }
       }
     }
 

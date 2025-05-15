@@ -121,10 +121,12 @@ export default class LoadTemplateTag extends Intersection() {
       templateContentElement = previousElementSibling ? previousElementSibling.nextElementSibling : parentNode.children[0]
     }
     if (templateContentElement) {
-      if (this.hasAttribute('copy-attributes')) Array.from(this.attributes).forEach(({name, value}) => {
-        if (name === 'copy-attributes' || name === 'copy-class-list') return
-        templateContentElement.setAttribute(name, value)
-      })
+      if (this.hasAttribute('copy-attributes')) {
+        Array.from(this.attributes).forEach(({ name, value }) => {
+          if (name === 'copy-attributes' || name === 'copy-class-list') return
+          templateContentElement.setAttribute(name, value)
+        })
+      }
       if (this.hasAttribute('copy-class-list')) Array.from(this.classList).forEach(className => templateContentElement.classList.add(className))
     }
     if (notDefined?.length) {

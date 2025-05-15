@@ -2,18 +2,18 @@ const fs = require('fs')
 const traverse = require('@babel/traverse').default
 const { parse } = require('@babel/parser')
 
-function getMetaData(filePath, options = { sourceType: 'module' }) {
+function getMetaData (filePath, options = { sourceType: 'module' }) {
   const metaData = []
   try {
     const content = fs.readFileSync(filePath, 'utf8')
     const ast = parse(content, {
       ...options,
       sourceFilename: filePath,
-      plugins: ['jsx', 'typescript'],
+      plugins: ['jsx', 'typescript']
     })
 
     traverse(ast, {
-      ExportDefaultDeclaration(path) {
+      ExportDefaultDeclaration (path) {
         const leadingComments = path.node.leadingComments
         if (leadingComments) {
           leadingComments.forEach(comment => {
@@ -24,7 +24,7 @@ function getMetaData(filePath, options = { sourceType: 'module' }) {
     })
     return {
       summary: extractLeadingCommentByType(metaData, 'summary'),
-      integration: extractLeadingCommentByType(metaData, 'integration'),
+      integration: extractLeadingCommentByType(metaData, 'integration')
     }
   } catch (error) {
     console.error(`Error parsing file: ${filePath} - ${error.message}`)
@@ -38,7 +38,7 @@ function getMetaData(filePath, options = { sourceType: 'module' }) {
  * @param {string} searchKey - the key to search for in the leading comments
  * @returns {string} - the extracted text
  */
-function extractLeadingCommentByType(array, searchKey = 'summary') {
+function extractLeadingCommentByType (array, searchKey = 'summary') {
   const searchTag = `@${searchKey}`
 
   for (const element of array) {
@@ -49,7 +49,7 @@ function extractLeadingCommentByType(array, searchKey = 'summary') {
       let endIndex = textAfterTag.length
 
       // find the index of the next '@' symbol that starts a tag
-      // this is done to prevent text from a subsequent tag 
+      // this is done to prevent text from a subsequent tag
       // from being included in the extracted text
       for (let i = 0; i < textAfterTag.length; i++) {
         // check for '@' preceded by whitespace (or at the very beginning, but i>0 prevents issues in this case)

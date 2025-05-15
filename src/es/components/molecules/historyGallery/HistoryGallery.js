@@ -1,11 +1,10 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 export default class HistoryGallery extends Shadow() {
-
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     let timeout = null
     window.addEventListener('resize', event => {
@@ -44,20 +43,20 @@ export default class HistoryGallery extends Shadow() {
     })
   }
 
-  disconnectedCallback() {
-    window.removeEventListener('resize', this.resizeListener);
-    this.nextButton.removeEventListener('click', this.nextButtonClickListener);
-    this.prevButton.removeEventListener('click', this.prevButtonClickListener);
+  disconnectedCallback () {
+    window.removeEventListener('resize', this.resizeListener)
+    this.nextButton.removeEventListener('click', this.nextButtonClickListener)
+    this.prevButton.removeEventListener('click', this.prevButtonClickListener)
     this.swipes.forEach((swipe, index) => {
-      swipe.removeEventListener('click', this.swipeClickListeners[index]);
-    });
+      swipe.removeEventListener('click', this.swipeClickListeners[index])
+    })
   }
 
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  updateSlideTransform(curSlide) {
+  updateSlideTransform (curSlide) {
     const carouselWidth = this.yearCarouselComponent.offsetWidth
 
     const translateValue = (carouselWidth / 2) - (this.yearSwiper.children[curSlide].offsetWidth / 2) - (this.yearSwiper.children[curSlide].getBoundingClientRect().left - this.yearSwiper.getBoundingClientRect().left)
@@ -75,7 +74,7 @@ export default class HistoryGallery extends Shadow() {
     })
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         font-size: var(--font-size, large);
@@ -193,7 +192,7 @@ export default class HistoryGallery extends Shadow() {
     return this.fetchTemplate()
   }
 
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -213,40 +212,38 @@ export default class HistoryGallery extends Shadow() {
         }, ...styles])
       default:
         return this.fetchCSS(styles)
-
     }
   }
 
-  get yearSwiper() {
+  get yearSwiper () {
     return this.root.querySelector('.year-swiper')
   }
 
-  get yearCarouselComponent() {
+  get yearCarouselComponent () {
     return this.root.querySelector('.component-container')
   }
 
-  get yearlist() {
+  get yearlist () {
     return Array.from(this.root.querySelectorAll('.swipe'))
   }
 
-  get slides() {
+  get slides () {
     return this.root.querySelectorAll('.slide')
   }
 
-  get swipes() {
+  get swipes () {
     return this.root.querySelectorAll('.swipe')
   }
 
-  get nextButton() {
+  get nextButton () {
     return this.root.querySelector('.section.right')
   }
 
-  get prevButton() {
+  get prevButton () {
     return this.root.querySelector('.section.left')
   }
 
-  get activeSlideIndex() {
+  get activeSlideIndex () {
     return Array.from(this.yearSwiper.children).indexOf(this.yearSwiper.querySelector('.active-year'))
   }
 }
-

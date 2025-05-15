@@ -123,7 +123,7 @@ export const Intersection = (ChosenClass = Shadow()) => class Intersection exten
 
   /**
    * Checks if some entries are intersecting
-   * 
+   *
    * @param {IntersectionObserverEntry[]} entries
    * @returns {boolean}
    */

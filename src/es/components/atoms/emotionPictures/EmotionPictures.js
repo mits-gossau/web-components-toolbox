@@ -320,8 +320,6 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-
-
   get shown () {
     return this.root.querySelector('.shown') || (() => {
       if (this.childNodes[0]) this.childNodes[0].classList.add('shown')
@@ -353,7 +351,7 @@ export default class EmotionPictures extends Intersection() {
     return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center'
   }
 
-  get logoPositionY() {
+  get logoPositionY () {
     return this.root.querySelector('.logo')?.hasAttribute('logo-position-y') ? this.root.querySelector('.logo').getAttribute('logo-position-y') : 'flex-end'
   }
 

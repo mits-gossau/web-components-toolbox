@@ -1,53 +1,54 @@
-import { Shadow } from '../../prototypes/Shadow.js';
+import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class EmotionCarousel extends Shadow() {
-  constructor(options = {}, ...args) {
-    super({importMetaUrl: import.meta.url, ...options }, ...args);}
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+  }
 
-  connectedCallback() {
-    if (this.shouldRenderCSS()) this.renderCSS();
+  connectedCallback () {
+    if (this.shouldRenderCSS()) this.renderCSS()
 
-    let curSlide = 0;
-    this.updateSlideTransform(curSlide);
+    let curSlide = 0
+    this.updateSlideTransform(curSlide)
 
     this.nextButton?.addEventListener('click', () => {
-      clearInterval(timer);
-      timer = setInterval(changeSlide, 10000);
-      curSlide = (curSlide + 1) % this.slides.length;
-      this.updateSlideTransform(curSlide);
-    });
+      clearInterval(timer)
+      timer = setInterval(changeSlide, 10000)
+      curSlide = (curSlide + 1) % this.slides.length
+      this.updateSlideTransform(curSlide)
+    })
 
     this.prevButton?.addEventListener('click', () => {
-      curSlide = (curSlide - 1 + this.slides.length) % this.slides.length;
-      this.updateSlideTransform(curSlide);
-    });
+      curSlide = (curSlide - 1 + this.slides.length) % this.slides.length
+      this.updateSlideTransform(curSlide)
+    })
 
     const changeSlide = () => {
-      curSlide = (curSlide + 1) % this.slides.length;
-      this.updateSlideTransform(curSlide);
-    };
+      curSlide = (curSlide + 1) % this.slides.length
+      this.updateSlideTransform(curSlide)
+    }
 
-    let timer = setInterval(changeSlide, this.interval);
+    let timer = setInterval(changeSlide, this.interval)
   }
 
-  disconnectedCallback() {
-    this.nextButton?.removeEventListener('click', () => {});
-    this.prevButton?.removeEventListener('click', () => {});
-    clearInterval(timer);
+  disconnectedCallback () {
+    this.nextButton?.removeEventListener('click', () => {})
+    this.prevButton?.removeEventListener('click', () => {})
+    clearInterval(timer)
   }
 
-  shouldRenderCSS() {
-    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`);
+  shouldRenderCSS () {
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  updateSlideTransform(curSlide) {
+  updateSlideTransform (curSlide) {
     this.slides.forEach((slide, index) => {
-      const offset = index - curSlide;
-      slide.style.transform = `translateX(${offset * 100}%)`;
-    });
+      const offset = index - curSlide
+      slide.style.transform = `translateX(${offset * 100}%)`
+    })
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */` 
       :host {
         font-family: var(--font-family, 'Arial');
@@ -192,11 +193,11 @@ export default class EmotionCarousel extends Shadow() {
         .controls {
           display: none;
         }
-      }`;
-    return this.fetchTemplate();
+      }`
+    return this.fetchTemplate()
   }
 
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -207,7 +208,7 @@ export default class EmotionCarousel extends Shadow() {
         path: `${this.importMetaUrl}../../../../css/style.css`,
         namespaceFallback: false
       }
-    ];
+    ]
 
     switch (this.getAttribute('namespace')) {
       case 'emotion-carousel-default-':
@@ -217,33 +218,33 @@ export default class EmotionCarousel extends Shadow() {
             namespace: false
           },
           ...styles
-        ]);
+        ])
       default:
-        return this.fetchCSS(styles);
+        return this.fetchCSS(styles)
     }
   }
 
-  get slides() {
-    return this.root.querySelectorAll('.slide');
+  get slides () {
+    return this.root.querySelectorAll('.slide')
   }
 
-  get nextButton() {
-    return this.root.querySelector('.section.right');
+  get nextButton () {
+    return this.root.querySelector('.section.right')
   }
 
-  get prevButton() {
-    return this.root.querySelector('.section.left');
+  get prevButton () {
+    return this.root.querySelector('.section.left')
   }
 
-  get interval() {
-    return this.getAttribute('interval') || 10000;
+  get interval () {
+    return this.getAttribute('interval') || 10000
   }
 
-  get height() {
-    return this.getAttribute('height') || '38vw';
+  get height () {
+    return this.getAttribute('height') || '38vw'
   }
-  
-  get heightMobile() {
-    return this.getAttribute('height-Mobile') || '40vh';
+
+  get heightMobile () {
+    return this.getAttribute('height-Mobile') || '40vh'
   }
 }
