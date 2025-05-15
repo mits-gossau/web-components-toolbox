@@ -155,7 +155,7 @@ export default class EmotionPictures extends Intersection() {
         box-sizing: border-box;
         display: flex;
         height: 100%;
-        justify-content: flex-end;
+        justify-content: ${this.logoPositionY};
         left: 0;
         margin: 0;
         padding: var(--padding);
@@ -304,24 +304,23 @@ export default class EmotionPictures extends Intersection() {
           } else if (this.childNodes[0]) {
             this.childNodes[0].classList.add('shown')
           }
-          EmotionPictures.updateLogoPosition(this.shown, '.logo', 'logo-position')
+
+          // get the currently shown element's logo, if it exists
+          const logo = this.shown?.querySelector('.logo')
+
+          // if a logo is found, set its CSS properties based on attributes or defaults
+          if (logo) {
+            // set the alignItems style from 'logo-position' attribute or default to 'center'
+            logo.style.alignItems = logo.getAttribute('logo-position') || 'center'
+            // set the justifyContent style from 'logo-position-y' attribute or default to 'flex-end'
+            logo.style.justifyContent = logo.getAttribute('logo-position-y') || 'flex-end'
+          }
         }
       }, Number(this.getAttribute('interval')) || 8000)
     }
   }
 
-  /**
-   * Update Logo Position for each Element
-   * @param {{ querySelector: (arg0: any) => any; }} divNode
-   * @param {string} selector
-   * @param {string} attribute
-   */
-  static updateLogoPosition (divNode, selector, attribute) {
-    const logoElement = divNode.querySelector(selector)
-    if (logoElement) {
-      logoElement.style.alignItems = logoElement.getAttribute(attribute)
-    }
-  }
+
 
   get shown () {
     return this.root.querySelector('.shown') || (() => {
@@ -352,6 +351,10 @@ export default class EmotionPictures extends Intersection() {
 
   get logoPosition () {
     return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center'
+  }
+
+  get logoPositionY() {
+    return this.root.querySelector('.logo')?.hasAttribute('logo-position-y') ? this.root.querySelector('.logo').getAttribute('logo-position-y') : 'flex-end'
   }
 
   get overlayContent () {
