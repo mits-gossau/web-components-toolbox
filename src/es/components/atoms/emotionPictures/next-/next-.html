@@ -1,0 +1,48 @@
+<a-emotion-pictures namespace="emotion-pictures-next-">
+  
+  <!-- default -->
+  <a href='/baahhh'>
+    <a-picture picture-load defaultSource="./img/demo_1.jpeg" alt="demo_1"></a-picture>
+  </a>
+
+  <!-- with logo -->
+  <a href="/baaahhh">
+    <div>
+      <h2 class="bg-color font-size-big font-family-secondary">
+        With Logo
+      </h2>
+      <h2 class="bg-color font-family-secondary subline">Gewinne ein Goodie-Package von YOGA NINA und HITZBERGER.</h2>
+    </div>
+    <a-picture picture-load defaultSource="./img/demo_2.jpeg" alt="randomized image"></a-picture>
+    <div class="logo" logo-position="center" logo-position-y="center">
+      <a-picture picture-load defaultSource="./img/logo.png" alt="randomized image" namespace="logo-"></a-picture>
+    </div>
+  </a>
+
+  <!-- with title -->
+  <a href="/baaahhh">
+    <div>
+      <h1 class="bg-color font-size-big font-family-secondary">With Title</h1>
+    </div>
+    <a-picture picture-load defaultSource="./img/demo_2.jpeg" alt="randomized image"></a-picture>
+  </a>
+
+  <!-- with button -->
+  <a href="/baaahhh">
+    <div>
+      <h1 class="bg-color font-size-big font-family-secondary">With Button</h1>
+      <div class="spacer-one"></div>
+      <a-button hover-on-parent-shadow-root-host namespace="button-primary-" href="/delivery/" target="_self"
+        tabindex="0" role="link" data-href="/delivery/">
+        Order now
+      </a-button>
+    </div>
+    <a-picture picture-load defaultSource="./img/demo_2.jpeg" alt="randomized image"></a-picture>
+  </a>
+
+</a-emotion-pictures>
+
+<!-- load web components for Demo Purposes Only -->
+<script class=template-script type="text/javascript" src="./next-.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=EmotionPictures.js"></script>

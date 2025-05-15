@@ -1,0 +1,33 @@
+:host {
+   --emotion-pictures-next-a-color-hover: var(--emotion-pictures-next-a-color-hover-custom, var(--background-color, var(--color-hover)));
+   --emotion-pictures-next-a-text-decoration:none;
+   --emotion-pictures-next-bg-background-color: var(--emotion-pictures-next-bg-background-color-custom, var(--color-secondary, var(--m-white)));
+   --emotion-pictures-next-bg-color: var(--emotion-pictures-next-bg-color-custom, var(--background-color, var(--m-black)));
+   --emotion-pictures-next-div-margin-mobile: var(--emotion-pictures-next-div-margin-mobile-custom, var(--content-spacing-mobile));
+   --emotion-pictures-next-h1-font-size-mobile: var(--emotion-pictures-next-h1-font-size-mobile-custom, min(calc(1.75em * 1.75), 7vw));
+   --emotion-pictures-next-h1-font-weight: var(--emotion-pictures-next-h2-font-weight);
+   --emotion-pictures-next-h1-text-transform: var(--emotion-pictures-next-h2-text-transform);
+   --emotion-pictures-next-h2-font-family-secondary: var(--emotion-pictures-next-h2-font-family-secondary-custom, var(--font-family-bold));
+   --emotion-pictures-next-h2-font-size-mobile: var(--emotion-pictures-next-h2-font-size-mobile-custom, min(calc(1.5em * 1.5), 7vw));
+   --emotion-pictures-next-h2-font-weight: normal;
+   --emotion-pictures-next-h2-text-transform: var(--emotion-pictures-next-h2-text-transform-custom, none);
+   --emotion-pictures-next-img-width: 100%;
+   --emotion-pictures-next-subline-display-mobile: var(--emotion-pictures-next-subline-display-mobile-custom, none);
+   --emotion-pictures-next-subline-font-size: var(--emotion-pictures-next-subline-font-size-custom, 1.2em);
+   --emotion-pictures-next-text-left-mobile: var(--emotion-pictures-next-text-left-mobile-custom);
+   --emotion-pictures-next-text-left: var(--emotion-pictures-next-text-left-custom);
+   --emotion-pictures-next-text-right-mobile: var(--emotion-pictures-next-text-right-mobile-custom);
+   --emotion-pictures-next-text-right: var(--emotion-pictures-next-text-right-custom);
+   --emotion-pictures-next-text-top-mobile: var(--emotion-pictures-next-text-top-mobile-custom, min(4vw, 6em));
+   --emotion-pictures-next-text-top: var(--emotion-pictures-next-text-top-custom, 8em);
+   --img-object-fit: cover;
+   --img-width: 100%;
+}
+
+:host([inline]) {
+   --emotion-pictures-next-div-margin-mobile-custom: 0;
+   --emotion-pictures-next-text-left-custom: calc((100% - var(--content-width, 55%)) / 2);
+   --emotion-pictures-next-text-left-mobile-custom: var(--content-spacing-mobile, var(--content-spacing));
+   --emotion-pictures-next-text-right-custom: var(--emotion-pictures-next-text-left-custom);
+   --emotion-pictures-next-text-right-mobile-custom: var(--emotion-pictures-next-text-left-mobile-custom);
+}
