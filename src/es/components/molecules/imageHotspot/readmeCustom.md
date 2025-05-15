@@ -46,7 +46,9 @@
 - the place attribute is optional and tells the hotspot where to place the info text
 - when using links as hotspots, leave the div with the class content empty else fill it as seen in the section (OPTIONAL: CMS Integration div.content within a-hotspot) below
 - optional: set a template tag and insert the desired components as hotspots. Here we got a class btn-close and a class btn-open ks-a-button in the example below.
-- optional: use an element which supports target and href as hotspot when using the hotspot as link
+  - optional: glow attribute to give the custom components as hotspots a glow animation
+    - optional: when glow attribute is set it accepts a square attribute to shape the glow square
+  - optional: use an element which supports target and href as hotspot when using the hotspot as link
 ```
 <a-hotspot top="33.777777777777779" left="73" place="bottom">
   <div class="content"></div>
