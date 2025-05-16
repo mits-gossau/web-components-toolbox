@@ -320,6 +320,15 @@ export default class EmotionPictures extends Intersection() {
               }]
             },
             {
+              path: `${this.importMetaUrl}./corporate-/corporate-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-corporate-',
+                flags: 'g',
+                replacement: '--emotion-pictures-next-'
+              }]
+            },
+            {
               // @ts-ignore
               path: `${this.importMetaUrl}./next-/next-.css`,
               namespace: false
