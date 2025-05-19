@@ -51,9 +51,6 @@ export default class EmotionCarousel extends Shadow() {
   renderCSS () {
     this.css = /* css */` 
       :host {
-        font-family: var(--font-family, 'Arial');
-        text-shadow: var(--text-shadow, none);
-        font-size: large;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -62,10 +59,6 @@ export default class EmotionCarousel extends Shadow() {
         max-height: var(--img-max-height, none);
         margin: 0;
         width: var(--width, 100%) !important;
-      }
-
-      :host h2 {
-        font-size: var(--h2-font-size, 2em);
       }
 
       :host .controls {
@@ -115,23 +108,6 @@ export default class EmotionCarousel extends Shadow() {
         object-position: center;
       }
 
-      .slide-description {
-        display: flex;
-        text-align: left;
-        justify-content: center;
-        flex-direction: column;
-        position: absolute;
-        left: 30%;
-        z-index: 4;
-        max-width: 36%;
-        width: auto;
-        height: 100%;
-        color: white;
-        padding: 1em;
-        box-sizing: border-box;
-        bottom: 0;
-      }
-
       .slide-description-left {
         width: 30%;
       }
@@ -153,43 +129,10 @@ export default class EmotionCarousel extends Shadow() {
         justify-content: flex-end;
       }
 
-      .link-description {
-        position: absolute;
-        padding: 1%;
-        display: flex;
-        color: white;
-        text-decoration: none;
-        border-bottom: 3px solid white;
-        z-index: 5;
-        font-size: small;
-      }
-
       @media only screen and (max-width: _max-width_) {
         :host {
           height: var(--height-mobile, ${this.heightMobile});
         }
-
-        .slide-description,
-        .link-description {
-          font-size: 0.8em;
-        }
-
-        :host h2 {
-          font-size: 2em;
-          margin-block-end: 0.2em;
-          margin-block-start: 0.2em;
-        }
-
-        .title {
-          width: 100%;
-        }
-
-        :host .slide-description {
-          max-width: 80%;
-          left: 10%;
-          padding: 0;
-        }
-
         .controls {
           display: none;
         }
