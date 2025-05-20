@@ -12,7 +12,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * @type {CustomElementConstructor}
  */
 export default class EmotionPictures extends Intersection() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 },
@@ -46,7 +46,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  intersectionCallback (entries, observer) {
+  intersectionCallback(entries, observer) {
     for (const entry of entries) {
       if (!entry.isIntersecting && entry.intersectionRatio === 0) {
         this.classList.add('visible')
@@ -61,7 +61,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     const init = () => {
       this.hidden = false
@@ -89,7 +89,7 @@ export default class EmotionPictures extends Intersection() {
     self.addEventListener('resize', this.resizeListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     this.shuffle(false)
     self.removeEventListener('resize', this.resizeListener)
@@ -100,7 +100,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -109,7 +109,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {Promise<void>|void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         display: grid !important;
@@ -231,7 +231,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     const styles = [
       {
         // @ts-ignore
@@ -280,6 +280,61 @@ export default class EmotionPictures extends Intersection() {
           path: `${this.importMetaUrl}./corporate-/corporate-.css`,
           namespace: false
         }], false)
+      case 'emotion-pictures-general-':
+        return this.fetchCSS(
+          [
+            {
+              path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-default-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              path: `${this.importMetaUrl}./with-title-/with-title-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-with-title-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              path: `${this.importMetaUrl}./with-button-/with-button-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-with-button-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              path: `${this.importMetaUrl}./with-logo-/with-logo-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-with-logo-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              path: `${this.importMetaUrl}./corporate-/corporate-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-corporate-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              // @ts-ignore
+              path: `${this.importMetaUrl}./general-/general-.css`,
+              namespace: false
+            },
+            ...styles
+          ], false)
       case 'emotion-pictures-default-':
         return this.fetchCSS([{
           // @ts-ignore
@@ -291,7 +346,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  shuffle (start = true) {
+  shuffle(start = true) {
     // @ts-ignore
     clearInterval(this.interval || null)
     if (start) {
@@ -320,46 +375,46 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  get shown () {
+  get shown() {
     return this.root.querySelector('.shown') || (() => {
       if (this.childNodes[0]) this.childNodes[0].classList.add('shown')
       return this.childNodes[0]
     })()
   }
 
-  get childNodes () {
+  get childNodes() {
     return Array.from(this.root.childNodes).filter(childNode => childNode.tagName !== 'STYLE')
   }
 
-  get aPicture () {
+  get aPicture() {
     return this.root.querySelector('a-picture')
   }
 
-  get aPictures () {
+  get aPictures() {
     return this.root.querySelectorAll('a-picture')
   }
 
-  get aVideo () {
+  get aVideo() {
     return this.root.querySelector('a-video')
   }
 
-  get aVideos () {
+  get aVideos() {
     return this.root.querySelectorAll('a-video')
   }
 
-  get logoPosition () {
+  get logoPosition() {
     return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center'
   }
 
-  get logoPositionY () {
+  get logoPositionY() {
     return this.root.querySelector('.logo')?.hasAttribute('logo-position-y') ? this.root.querySelector('.logo').getAttribute('logo-position-y') : 'flex-end'
   }
 
-  get overlayContent () {
+  get overlayContent() {
     return this.root.querySelector(':host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video) ')
   }
 
-  get style () {
+  get style() {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')
