@@ -1,66 +1,48 @@
 <m-emotion-carousel namespace="emotion-carousel-default-" interval="10000">
     <div class="component-container">
         <div class="slide">
-            <a-emotion-pictures class="slide-img" namespace="emotion-pictures-default-">
-                <a href='https://www.delica.com/-/media/delicacom/Bilder/Slider/CoffeeBall-in-Machine.ashx'>
-                    <a-picture namespace="picture-cover-" picture-load defaultSource="./img/CoffeeB.jpg" alt="randomized image"></a-picture>
-                </a>
+            <a-emotion-pictures namespace="emotion-pictures-with-logo-">
+                <div>
+                    <div>
+                        <h2 class="bg-color font-size-big font-family-secondary">(1/2) Logo - Top</h2>
+                    </div>
+                    <a-picture picture-load defaultSource="./img/jcr_content.jpeg" alt="randomized image"></a-picture>
+                    <div class="logo" logo-position="flex-start">
+                        <a-picture picture-load defaultSource="./img/logo.png" alt="randomized image"
+                            namespace="logo-"></a-picture>
+                    </div>
+                </div>
             </a-emotion-pictures>
-            <div class="slide-description">
-                <h1 class="title">DAS KAPSEL-SYSTEM OHNE KAPSEL</h1>
-                <p><a href="" class="link-description">COFFEEB</a></p>
-            </div>
         </div>
         <div class="slide">
-            <a-emotion-pictures class="slide-img" namespace="emotion-pictures-default-">
-                <a href='https://www.delica.com/-/media/delicacom/Bilder/Slider/CoffeeBall-in-Machine.ashx'>
-                    <a-picture namespace="picture-cover-" picture-load defaultSource="./img/Glace_Slider_1a.jpg" alt="randomized image"></a-picture>
-                </a>
+            <a-emotion-pictures namespace="emotion-pictures-with-video-">
+                <div>
+                    <div>
+                        <h1 class="font-size-big font-family-secondary">NACHHALTIGKEIT</h1>
+                    </div>
+                    <a-video namespace="video-crop-" muted video-load autoplay loop="true"
+                        aspect-ratio="1" poster="./video/video.JPG">
+                        <source type="video/mp4" src="./video/video.mp4">
+                    </a-video>
+                </div>
             </a-emotion-pictures>
-            <div class="slide-description">
-                <h1 class="title">ERFRISCHENDE GENUSSMOMENTE</h1>
-                <p><a href="" class="link-description">ZU DEN MARKEN</a></p>
-            </div>
         </div>
         <div class="slide">
-            <a-emotion-pictures class="slide-img" namespace="emotion-pictures-default-">
-                <a href='https://www.delica.com/-/media/delicacom/Bilder/Slider/CoffeeBall-in-Machine.ashx'>
-                    <a-picture namespace="picture-cover-" picture-load defaultSource="./img/Kaffee_splash.jpg" alt="randomized image"></a-picture>
+            <a-emotion-pictures namespace="emotion-pictures-with-title-">
+                <a href="/baaahhh">
+                    <div>
+                        <h1 class="bg-color font-size-big font-family-secondary">H1 Title</h1>
+                    </div>
+                    <a-picture picture-load defaultSource="./img/WEB_Header_bester_Arbeitgeber.jpg" alt="randomized image"></a-picture>
                 </a>
             </a-emotion-pictures>
-            <div class="slide-description">
-                <h1 class="title">REINVENTING GOODNESS</h1>
-                <p><a href="" class="link-description">DAFÜR STEHT DELICA</a></p>
-            </div>
-        </div>
-        <div class="slide">
-            <a-emotion-pictures class="slide-img" namespace="emotion-pictures-default-">
-                <a href='https://www.delica.com/-/media/delicacom/Bilder/Slider/CoffeeBall-in-Machine.ashx'>
-                    <a-picture namespace="picture-cover-" picture-load defaultSource="./img/WEB_Header_bester_Arbeitgeber.jpg" alt="randomized image"></a-picture>
-                </a>
-            </a-emotion-pictures>
-            <div class="slide-description">
-                <h1 class="title">BESTE ARBEITGEBER 2023</h1>
-                <p><a href="" class="link-description">ARBEITEN BEI DELICA</a></p>
-            </div>
-        </div>
-        <div class="slide">
-            <a-emotion-pictures class="slide-img" namespace="emotion-pictures-default-">
-                <a href='https://www.delica.com/-/media/delicacom/Bilder/Slider/CoffeeBall-in-Machine.ashx'>
-                    <a-picture namespace="picture-cover-" picture-load defaultSource="./img/Kaffee_4.jpg" alt="randomized image"></a-picture>
-                </a>
-            </a-emotion-pictures>
-            <div class="slide-description">
-                <h1 class="title">USER KAFFEE-GENUSS</h1>
-                <p><a href="" class="link-description">ZUM SORTIMENT</a></p>
-            </div>
         </div>
         <div class="controls">
             <div class="section left">
-                <h1><a-arrow class="btn btn-prev" direction="left"></a-arrow></h1>
+                <h1><a-arrow class="arrow-btn btn-prev" direction="left"></a-arrow></h1>
             </div>
             <div class="section right">
-                <h1><a-arrow class="btn btn-next" direction="right"></a-arrow></h1>
+                <h1><a-arrow class="arrow-btn btn-next" direction="right"></a-arrow></h1>
             </div>
         </div>
     </div>
