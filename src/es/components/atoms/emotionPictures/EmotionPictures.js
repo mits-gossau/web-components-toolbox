@@ -280,7 +280,7 @@ export default class EmotionPictures extends Intersection() {
           path: `${this.importMetaUrl}./corporate-/corporate-.css`,
           namespace: false
         }], false)
-      case 'emotion-pictures-next-':
+      case 'emotion-pictures-general-':
         return this.fetchCSS(
           [
             {
@@ -289,7 +289,7 @@ export default class EmotionPictures extends Intersection() {
               replaces: [{
                 pattern: '--emotion-pictures-default-',
                 flags: 'g',
-                replacement: '--emotion-pictures-next-'
+                replacement: '--emotion-pictures-general-'
               }]
             },
             {
@@ -298,7 +298,7 @@ export default class EmotionPictures extends Intersection() {
               replaces: [{
                 pattern: '--emotion-pictures-with-title-',
                 flags: 'g',
-                replacement: '--emotion-pictures-next-'
+                replacement: '--emotion-pictures-general-'
               }]
             },
             {
@@ -307,7 +307,7 @@ export default class EmotionPictures extends Intersection() {
               replaces: [{
                 pattern: '--emotion-pictures-with-button-',
                 flags: 'g',
-                replacement: '--emotion-pictures-next-'
+                replacement: '--emotion-pictures-general-'
               }]
             },
             {
@@ -316,7 +316,7 @@ export default class EmotionPictures extends Intersection() {
               replaces: [{
                 pattern: '--emotion-pictures-with-logo-',
                 flags: 'g',
-                replacement: '--emotion-pictures-next-'
+                replacement: '--emotion-pictures-general-'
               }]
             },
             {
@@ -325,12 +325,12 @@ export default class EmotionPictures extends Intersection() {
               replaces: [{
                 pattern: '--emotion-pictures-corporate-',
                 flags: 'g',
-                replacement: '--emotion-pictures-next-'
+                replacement: '--emotion-pictures-general-'
               }]
             },
             {
               // @ts-ignore
-              path: `${this.importMetaUrl}./next-/next-.css`,
+              path: `${this.importMetaUrl}./general-/general-.css`,
               namespace: false
             },
             ...styles
