@@ -81,7 +81,7 @@ export default class SustainabilityMetrics extends Shadow() {
         margin: 0 0 1em 0;
     }
 
-    @media only screen and (max-width: 950px) {
+    @media only screen and (max-width: _max-width_) {
         .numbers{
             flex-direction: var(--numbers-flex-direction-mobile, column);
             padding-top: var(--numbers-padding-top-mobile, 1em);
