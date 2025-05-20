@@ -1,0 +1,4 @@
+:host {
+    --facts-and-figures-default-text-color:  var(--facts-and-figures-default-text-color-custom, var(--color-tertiary, #ffff));
+    --facts-and-figures-default-h1-font-family: var(--facts-and-figures-default-h1-font-family-custom, var(--font-family-bold, var(--font-family, 'Arial', sans-serif)));
+}
