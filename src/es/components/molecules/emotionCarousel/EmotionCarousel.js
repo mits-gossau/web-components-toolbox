@@ -66,8 +66,6 @@ export default class EmotionCarousel extends Shadow() {
       }
 
       .component-container {
-        display: flex;
-        flex-direction: column;
         width: 100%;
         height: 100%;
         overflow: hidden;
@@ -104,15 +102,7 @@ export default class EmotionCarousel extends Shadow() {
         pointer-events: none;
       }
 
-      a-picture img {
-        object-position: center;
-      }
-
-      .slide-description-left {
-        width: 30%;
-      }
-
-      .btn {
+      .arrow-btn {
         padding: 2%;
       }
 
