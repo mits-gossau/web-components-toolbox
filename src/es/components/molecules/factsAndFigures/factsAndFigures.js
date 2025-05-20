@@ -26,7 +26,7 @@ export default class SustainabilityMetrics extends Shadow() {
     this.css = /* css */`
     :host {
         overflow: var(--overflow, hidden);
-        border-radius: var(--border-radius, 5px);
+        border-radius: var(--border-radius, 0.5em);
         width: var(--width, 100%);
         height: var(--height, 20em);
         display: var(--display, flex);
