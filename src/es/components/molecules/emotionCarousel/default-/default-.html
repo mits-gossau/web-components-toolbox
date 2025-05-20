@@ -1,0 +1,53 @@
+<m-emotion-carousel namespace="emotion-carousel-default-" interval="10000">
+    <div class="component-container">
+        <div class="slide">
+            <a-emotion-pictures namespace="emotion-pictures-with-logo-">
+                <div>
+                    <div>
+                        <h2 class="bg-color font-size-big font-family-secondary">(1/2) Logo - Top</h2>
+                    </div>
+                    <a-picture picture-load defaultSource="./img/jcr_content.jpeg" alt="randomized image"></a-picture>
+                    <div class="logo" logo-position="flex-start">
+                        <a-picture picture-load defaultSource="./img/logo.png" alt="randomized image"
+                            namespace="logo-"></a-picture>
+                    </div>
+                </div>
+            </a-emotion-pictures>
+        </div>
+        <div class="slide">
+            <a-emotion-pictures namespace="emotion-pictures-with-video-">
+                <div>
+                    <div>
+                        <h1 class="font-size-big font-family-secondary">NACHHALTIGKEIT</h1>
+                    </div>
+                    <a-video namespace="video-crop-" muted video-load autoplay loop="true"
+                        aspect-ratio="1" poster="./video/video.JPG">
+                        <source type="video/mp4" src="./video/video.mp4">
+                    </a-video>
+                </div>
+            </a-emotion-pictures>
+        </div>
+        <div class="slide">
+            <a-emotion-pictures namespace="emotion-pictures-with-title-">
+                <a href="/baaahhh">
+                    <div>
+                        <h1 class="bg-color font-size-big font-family-secondary">H1 Title</h1>
+                    </div>
+                    <a-picture picture-load defaultSource="./img/WEB_Header_bester_Arbeitgeber.jpg" alt="randomized image"></a-picture>
+                </a>
+            </a-emotion-pictures>
+        </div>
+        <div class="controls">
+            <div class="section left">
+                <h1><a-arrow class="arrow-btn btn-prev" direction="left"></a-arrow></h1>
+            </div>
+            <div class="section right">
+                <h1><a-arrow class="arrow-btn btn-next" direction="right"></a-arrow></h1>
+            </div>
+        </div>
+    </div>
+</m-emotion-carousel>
+<!-- load web components for Demo Purposes Only -->
+<script class=template-script type="text/javascript" src="./default-.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=EmotionCarousel.js"></script>

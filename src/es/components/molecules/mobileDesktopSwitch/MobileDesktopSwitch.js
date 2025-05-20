@@ -4,7 +4,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 /**
 * Its children will be visible ether on desktop or mobile
 * Attribute visible can hold desktop or mobile as string
-* 
+*
 * @export
 * @class MobileDesktopSwitch
 * @type {CustomElementConstructor}

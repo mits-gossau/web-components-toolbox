@@ -45,7 +45,8 @@ export default class ImageHotspot extends Shadow() {
         divContainer.prepend(this.picture.picture)
         if (this.picture.closeBtn) divContainer.prepend(this.picture.closeBtn)
         if (this.picture.hasAttribute('open-modal')) {
-          if (this.hasAttribute('only-show-hotspot-in-modal')) this.picture.css = /* css */`
+          if (this.hasAttribute('only-show-hotspot-in-modal')) {
+            this.picture.css = /* css */`
             :host(:not([open])) a-hotspot {
               display: none;
             }
@@ -60,13 +61,16 @@ export default class ImageHotspot extends Shadow() {
               `
             }
           `
-          if (this.hasAttribute('only-show-hotspot-in-modal-mobile')) this.picture.css = /* css */`
+          }
+          if (this.hasAttribute('only-show-hotspot-in-modal-mobile')) {
+            this.picture.css = /* css */`
             @media only screen and (max-width: _max-width_) {
               :host(:not([open])) a-hotspot {
                 display: none;
               }
             }
           `
+          }
           // scroll
           const css = /* css */`
             :host([open]) {
@@ -81,16 +85,20 @@ export default class ImageHotspot extends Shadow() {
               --picture-hotspot-host-overflow: auto;
             }
           `
-          if (this.hasAttribute('scroll-image-in-modal')) this.picture.css = /* css */`
+          if (this.hasAttribute('scroll-image-in-modal')) {
+            this.picture.css = /* css */`
             @media only screen and (min-width: calc(${this.mobileBreakpoint} + 1px)) {
               ${css}
             }
           `
-          if (this.hasAttribute('scroll-image-in-modal-mobile')) this.picture.css = /* css */`
+          }
+          if (this.hasAttribute('scroll-image-in-modal-mobile')) {
+            this.picture.css = /* css */`
             @media only screen and (max-width: _max-width_) {
               ${css}
             }
           `
+          }
         }
       }
     })

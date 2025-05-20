@@ -304,6 +304,10 @@ export default class Button extends Hover() {
       :host ${this.buttonTagName}[disabled] > * {
         color: var(--color-disabled, var(--color, #FFFFFF));
       }
+      :host([round]) ${this.buttonTagName} {
+        border-radius: 50%;
+        padding: 0.75rem;
+      }
       @media only screen and (max-width: _max-width_) {
         ${this.buttonTagName} {
           font-size: var(--font-size-mobile, var(--font-size, 1em));

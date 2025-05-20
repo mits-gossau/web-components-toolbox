@@ -115,6 +115,7 @@ export default class EmotionPictures extends Intersection() {
         display: grid !important;
         width: var(--width, 100%) !important;
         line-height: var(--line-height, normal);
+        position: relative;
       }
       :host > *:not(style), :host > a {
         grid-column: 1;
@@ -154,12 +155,29 @@ export default class EmotionPictures extends Intersection() {
         box-sizing: border-box;
         display: flex;
         height: 100%;
-        justify-content: flex-end;
+        justify-content: ${this.logoPositionY};
         left: 0;
         margin: 0;
         padding: var(--padding);
         right: 0;
         top: 0;
+      }
+      :host([with-border]) a-picture {
+        border-width: var(--content-spacing, 18px);
+        border-style: solid;
+        border-color: var(--border-color, white);
+        border-radius: var(--border-radius, 0);
+        box-sizing: border-box;
+        display: block;
+      }
+      :host([with-triangle]) a-picture:before {
+        position: absolute;
+        content: '';
+        top: var(--triangle-top, 15px);
+        left: calc(35% - 19.5px);
+        border-top: 39px solid #fff;
+        border-right: 17.5px solid transparent;
+        border-left: 17.5px solid transparent;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -183,6 +201,12 @@ export default class EmotionPictures extends Intersection() {
         }
         :host .logo {
           padding: var(--padding-mobile);
+        }
+        :host([with-border]) a-picture {
+          border-width: var(--content-spacing-mobile, var(--content-spacing, 9px));
+        }
+        :host([with-triangle]) a-picture:before {
+          top: var(--triangle-top-mobile, 9px);
         }
       }
     `
@@ -250,6 +274,12 @@ export default class EmotionPictures extends Intersection() {
           path: `${this.importMetaUrl}./with-video-/with-video-.css`,
           namespace: false
         }, ...styles], false)
+      case 'emotion-pictures-corporate-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./corporate-/corporate-.css`,
+          namespace: false
+        }], false)
       case 'emotion-pictures-default-':
         return this.fetchCSS([{
           // @ts-ignore
@@ -274,22 +304,19 @@ export default class EmotionPictures extends Intersection() {
           } else if (this.childNodes[0]) {
             this.childNodes[0].classList.add('shown')
           }
-          EmotionPictures.updateLogoPosition(this.shown, '.logo', 'logo-position')
+
+          // get the currently shown element's logo, if it exists
+          const logo = this.shown?.querySelector('.logo')
+
+          // if a logo is found, set its CSS properties based on attributes or defaults
+          if (logo) {
+            // set the alignItems style from 'logo-position' attribute or default to 'center'
+            logo.style.alignItems = logo.getAttribute('logo-position') || 'center'
+            // set the justifyContent style from 'logo-position-y' attribute or default to 'flex-end'
+            logo.style.justifyContent = logo.getAttribute('logo-position-y') || 'flex-end'
+          }
         }
       }, Number(this.getAttribute('interval')) || 8000)
-    }
-  }
-
-  /**
-   * Update Logo Position for each Element
-   * @param {{ querySelector: (arg0: any) => any; }} divNode
-   * @param {string} selector
-   * @param {string} attribute
-   */
-  static updateLogoPosition (divNode, selector, attribute) {
-    const logoElement = divNode.querySelector(selector)
-    if (logoElement) {
-      logoElement.style.alignItems = logoElement.getAttribute(attribute)
     }
   }
 
@@ -322,6 +349,10 @@ export default class EmotionPictures extends Intersection() {
 
   get logoPosition () {
     return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center'
+  }
+
+  get logoPositionY () {
+    return this.root.querySelector('.logo')?.hasAttribute('logo-position-y') ? this.root.querySelector('.logo').getAttribute('logo-position-y') : 'flex-end'
   }
 
   get overlayContent () {

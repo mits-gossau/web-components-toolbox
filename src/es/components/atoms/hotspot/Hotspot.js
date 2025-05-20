@@ -1,6 +1,9 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global self */
+/* global customElements */
+
 /**
  *
  *
@@ -33,6 +36,22 @@ export default class Hotspot extends Shadow() {
     }
 
     this.clickListener = e => {
+      // check if the click is a link and then remove active 200ms later, because the link hotspot has no active state
+      if (e.composedPath().some(node => node.hasAttribute?.('href'))) {
+        let aPicture = null
+        // if the picture is opened in a modal
+        if ((aPicture = Hotspot.walksUpDomQueryMatches(this, 'a-picture'))?.hasAttribute('open-modal') &&
+          // not opened in modal yet
+          !Hotspot.walksUpDomQueryMatches(this, 'm-image-hotspot')?.hasAttribute('open') &&
+          // and is ether mobile or desktop with the proper attributes
+          ((this.isMobile && aPicture.hasAttribute('open-modal-mobile')) ||
+            (!this.isMobile && !aPicture.hasAttribute('no-open-modal-desktop')))
+        ) e.preventDefault() // then we prevent following the link but open the modal first
+        setTimeout(() => {
+          this.classList.remove('active')
+          this.parentElement.removeEventListener('click', this.clickListener)
+        }, 200)
+      }
       if (!e.composedPath().includes(this.buttonOpen)) {
         this.classList.remove('active')
         this.parentElement.removeEventListener('click', this.clickListener)
@@ -418,5 +437,9 @@ export default class Hotspot extends Shadow() {
 
   get templates () {
     return Array.from(this.root.querySelectorAll('template'))
+  }
+
+  get isMobile () {
+    return self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
   }
 }

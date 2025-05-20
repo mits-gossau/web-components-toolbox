@@ -5,6 +5,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
 /* global CustomEvent */
 /* global location */
 /* global self */
+/* global customElements */
 
 /**
  * Picture
@@ -52,15 +53,17 @@ export default class Picture extends Intersection(Hover()) {
 
     this.clickListener = event => {
       if (!this.hasAttribute('open')) event.stopPropagation()
-        if ((this.getMedia() === 'mobile' && this.hasAttribute('open-modal-mobile')) || (this.getMedia() === 'desktop' && !this.hasAttribute('no-open-modal-desktop'))) this.dispatchEvent(new CustomEvent(this.getAttribute('open-modal') || 'open-modal', {
-        detail: {
-          origEvent: event,
-          child: this.hasAttribute('open-modal-target-query') ? Picture.walksUpDomQueryMatches(this, this.getAttribute('open-modal-target-query')) : this
-        },
-        bubbles: true,
-        cancelable: true,
-        composed: true
-      }))
+      if ((this.getMedia() === 'mobile' && this.hasAttribute('open-modal-mobile')) || (this.getMedia() === 'desktop' && !this.hasAttribute('no-open-modal-desktop'))) {
+        this.dispatchEvent(new CustomEvent(this.getAttribute('open-modal') || 'open-modal', {
+          detail: {
+            origEvent: event,
+            child: this.hasAttribute('open-modal-target-query') ? Picture.walksUpDomQueryMatches(this, this.getAttribute('open-modal-target-query')) : this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      }
     }
   }
 
@@ -218,7 +221,7 @@ export default class Picture extends Intersection(Hover()) {
             height: 22px;
             width: 22px;
           }
-          :host([no-open-modal-desktop]) {
+          :host([no-open-modal-desktop]:not([open])) {
             cursor: auto;
           }
           :host([no-open-modal-desktop]) .close-btn.adjusted {

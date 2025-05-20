@@ -2,7 +2,7 @@ const fs = require('fs')
 const traverse = require('@babel/traverse').default
 const { parse } = require('@babel/parser')
 
-function getCSSProperties(filePath, options = { sourceType: 'module' }) {
+function getCSSProperties (filePath, options = { sourceType: 'module' }) {
   const css = []
   try {
     const content = fs.readFileSync(filePath, 'utf8')
@@ -13,7 +13,7 @@ function getCSSProperties(filePath, options = { sourceType: 'module' }) {
     })
 
     traverse(ast, {
-      TemplateLiteral(path) {
+      TemplateLiteral (path) {
         // Destructure the 'quasis' array from the 'path.node' object, which represents template literals in the AST
         const { quasis } = path.node
         // Extract the raw content of the first quasi (template element) in the template literal
@@ -43,7 +43,7 @@ function getCSSProperties(filePath, options = { sourceType: 'module' }) {
   }
 }
 
-function extractProperty(inputText) {
+function extractProperty (inputText) {
   const properties = inputText.split(';').map(line => line.trim()).filter(line => line !== '')[0]
   if (!properties) return null
   // It matches the string "var("
@@ -71,7 +71,7 @@ function extractProperty(inputText) {
  * @param {string} str - The string to check for CSS variables
  * @return {Array<string>} - An array of all variables found
  */
-function grabAllVars(str) {
+function grabAllVars (str) {
   let result = []
   const regexResult = /var\(--([^,)]*)([^;]*)/g.exec(str)
   if (!regexResult) return result
@@ -85,7 +85,7 @@ function grabAllVars(str) {
  * @param {string} str - The string to check for a CSS property declaration
  * @return {string} - The value of the CSS property declaration
  */
-function getLatestValue(str){
+function getLatestValue (str) {
   const regex = /.*,([^)]*)/
   const match = str.match(regex)
   return match ? match[1].trim() : null

@@ -1,0 +1,124 @@
+{
+  "metaData": {
+    "summary": "n/a",
+    "integration": "n/a"
+  },
+  "path": "../src/es/components/molecules/emotionCarousel/EmotionCarousel.js",
+  "templates": [
+    {
+      "name": "emotion-carousel-default-",
+      "path": "./default-/default-.css"
+    }
+  ],
+  "attributes": [
+    {
+      "attributeName": "namespace",
+      "description": ""
+    }
+  ],
+  "css": [
+    {
+      "selector": ":host",
+      "declaration": [
+        {
+          "property": "font-family",
+          "allCssVars": [
+            "--font-family"
+          ],
+          "defaultValue": "'Arial'"
+        },
+        {
+          "property": "max-height",
+          "allCssVars": [
+            "--img-max-height"
+          ],
+          "defaultValue": "none"
+        }
+      ]
+    },
+    {
+      "selector": ":host h2",
+      "declaration": [
+        {
+          "property": "font-size",
+          "allCssVars": [
+            "--h2-font-size"
+          ],
+          "defaultValue": "2em"
+        }
+      ]
+    },
+    {
+      "selector": ":host .controls",
+      "declaration": []
+    },
+    {
+      "selector": ".component-container",
+      "declaration": []
+    },
+    {
+      "selector": ".slide",
+      "declaration": []
+    },
+    {
+      "selector": "a-emotion-pictures",
+      "declaration": []
+    },
+    {
+      "selector": ".controls",
+      "declaration": []
+    },
+    {
+      "selector": "a-picture img",
+      "declaration": []
+    },
+    {
+      "selector": ".slide-description",
+      "declaration": []
+    },
+    {
+      "selector": ".slide-description-left",
+      "declaration": []
+    },
+    {
+      "selector": ".btn",
+      "declaration": []
+    },
+    {
+      "selector": ".section",
+      "declaration": []
+    },
+    {
+      "selector": ".section.right",
+      "declaration": []
+    },
+    {
+      "selector": ".link-description",
+      "declaration": []
+    },
+    {
+      "selector": "@media only screen and (max-width: _max-width_)",
+      "declaration": []
+    },
+    {
+      "selector": ".slide-description,\n        .link-description",
+      "declaration": []
+    },
+    {
+      "selector": ":host h2",
+      "declaration": []
+    },
+    {
+      "selector": ".title",
+      "declaration": []
+    },
+    {
+      "selector": ":host .slide-description",
+      "declaration": []
+    },
+    {
+      "selector": ".controls",
+      "declaration": []
+    }
+  ]
+}
