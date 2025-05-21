@@ -10,7 +10,7 @@
    --emotion-pictures-general-a-text-decoration: none;
    --emotion-pictures-general-bg-background-color: var(--emotion-pictures-general-bg-background-color-custom, var(--color-secondary, var(--m-white)));
    --emotion-pictures-general-bg-color: var(--emotion-pictures-general-bg-color-custom, var(--background-color, var(--m-black)));
-   --emotion-pictures-general-bg-line-height-secondary: var(--emotion-pictures-general-bg-line-height-secondary-custom, 200%);
+   --emotion-pictures-general-bg-line-height-secondary: var(--emotion-pictures-general-bg-line-height-secondary-custom, 150%);
    --emotion-pictures-general-div-margin-mobile: var(--emotion-pictures-general-div-margin-mobile-custom, var(--content-spacing-mobile));
    --emotion-pictures-general-h2-font-family-secondary: var(--emotion-pictures-general-h2-font-family-secondary-custom, var(--font-family-bold));
    --emotion-pictures-general-h2-font-size-mobile: var(--emotion-pictures-general-h2-font-size-mobile-custom, min(calc(1.5em * 1.5), 7vw));
