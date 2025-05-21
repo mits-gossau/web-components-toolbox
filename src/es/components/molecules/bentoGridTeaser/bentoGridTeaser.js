@@ -1,5 +1,6 @@
+
 import { Shadow } from '../../prototypes/Shadow.js'
-export default class KachelTeaser extends Shadow() {
+export default class BentoGridTeaser extends Shadow() {
 
   constructor(options = {}, ...args) {
       super({ importMetaUrl: import.meta.url, ...options }, ...args)}
@@ -51,19 +52,18 @@ export default class KachelTeaser extends Shadow() {
     .teaser-container {
         color: white;
         height: fit-content;
-        width: 100%;
+        width: var(--teaser-container-width, 100%);
         display: flex;
         flex-direction: column;
-        gap: 1em;
+        gap: var(--teaser-container-gap, 1em);
 
     }
 
-    
     .sub {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 100%;
+        width: var(--sub-width, 100%);
         background-position: center;
         background-size: cover;
         position: relative;
@@ -85,27 +85,27 @@ export default class KachelTeaser extends Shadow() {
         font-size: var(--title-font-size, x-large);
         position: relative;
         z-index: 1;
-        text-shadow: 1px 3px 12px black;
+        text-shadow: var(--title-text-shadow, 1px 3px 12px black);
     }  
     
     .row {
-        width: 100%;
+        width: var(--row-width, 100%);
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        gap: 1em;
-        height: 30vw;
+        gap: var(--row-gap, 1em);
+        height: var(--row-height, 30vw);
     }
     .big-image {
-        height: 100%;
+        height: var(--big-image-height, 100%);
         box-sizing: border-box;
         background: none;
     }
     .column-right {
-        height: 100%;
+        height: var(--column-right-height, 100%);
         display: flex;
         flex-direction: column;
-        gap: 1em;
+        gap: var(--column-right-gap, 1em);
     }
     .small-image {
         height: var(--small-image-height, 50%);
@@ -116,7 +116,6 @@ export default class KachelTeaser extends Shadow() {
         transition: var(--transition-duration, 0.5s);
 
     }
-
     
     .image:hover {
         cursor: pointer;
@@ -139,8 +138,7 @@ export default class KachelTeaser extends Shadow() {
         color: var(--link-color, white);
     }
 
-
-    @media only screen and (max-width: 767px){
+    @media only screen and (max-width: _max-width_){
         .title{
             font-size: var(--mobile-title-font-size, large);
             text-align: center;
@@ -155,24 +153,19 @@ export default class KachelTeaser extends Shadow() {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 0.7em;
+            gap: var(--mobile-teaser-container-gap, 0.7em);
 
         }
         .row {
-            gap: 0.7em;
-            height: 55vw;
+            gap: var(--mobile-row-gap, 0.7em);
+            height: var(--mobile-row-height, 50vw);
         }
 
         .teaser-container {
-            gap: 0.7em;
+            gap: var(--mobile-teaser-container-gap, 0.7em);
         }
         .column-right {
-            gap: 0.7em;
-        }
-    }
-    @media only screen and (max-width: 400px){
-        .teaser-container {
-            height: fit-content;
+            gap: var(--mobile-column-right-gap, 0.7em);
         }
     }`;
 
@@ -192,7 +185,7 @@ export default class KachelTeaser extends Shadow() {
       }
     ]
     switch (this.getAttribute('namespace')) {
-      case 'kachel-teaser-default-':
+      case 'bento-grid-teaser-default-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false

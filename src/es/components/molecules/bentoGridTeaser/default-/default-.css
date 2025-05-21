@@ -1,0 +1,27 @@
+:host{
+    --bento-grid-teaser-default-a-color: var(--bento-grid-teaser-default-a-color-custom, #fff);
+    --bento-grid-teaser-default-a-text-decoration: var(--bento-grid-teaser-default-a-text-decoration-custom, none);
+    --bento-grid-teaser-default-h2-margin: var(--bento-grid-teaser-default-h2-margin-custom, none);
+    --bento-grid-teaser-default-image-color-hover: var(--bento-grid-teaser-default-image-color-hover-custom, var(--color-tertiary, #000));
+    --bento-grid-teaser-default-teaser-container-gap: var(--bento-grid-teaser-default-teaser-container-gap-custom, 1em);
+    --bento-grid-teaser-default-sub-width: var(--bento-grid-teaser-default-sub-width-custom, 100%);
+    --bento-grid-teaser-default-sub-a-picture-width: var(--bento-grid-teaser-default-sub-a-picture-width-custom, 100%);
+    --bento-grid-teaser-default-sub-a-picture-height: var(--bento-grid-teaser-default-sub-a-picture-height-custom, 100%);
+    --bento-grid-teaser-default-img-height: var(--bento-grid-teaser-default-img-height-custom, 100%);
+    --bento-grid-teaser-default-title-text-shadow: var(--bento-grid-teaser-default-title-text-shadow-custom, 1px 3px 12px black);
+    --bento-grid-teaser-default-row-width: var(--bento-grid-teaser-default-row-width-custom, 100%);
+    --bento-grid-teaser-default-row-gap: var(--bento-grid-teaser-default-row-gap-custom, 1em);
+    --bento-grid-teaser-default-row-height: var(--bento-grid-teaser-default-row-height-custom, 30vw);
+    --bento-grid-teaser-default-big-image-height: var(--bento-grid-teaser-default-big-image-height-custom, 100%);
+    --bento-grid-teaser-default-column-right-height: var(--bento-grid-teaser-default-column-right-height-custom, 100%);
+    --bento-grid-teaser-default-column-right-gap: var(--bento-grid-teaser-default-column-right-gap-custom, 1em);
+    --bento-grid-teaser-default-small-image-height: var(--bento-grid-teaser-default-small-image-height-custom, 50%);
+    --bento-grid-teaser-default-transition-duration: var(--bento-grid-teaser-default-transition-duration-custom, 0.5s);
+    --bento-grid-teaser-default-mobile-image-border-radius: var(--bento-grid-teaser-default-mobile-image-border-radius-custom, 0.3em);
+    --bento-grid-teaser-default-mobile-teaser-container-gap: var(--bento-grid-teaser-default-mobile-teaser-container-gap-custom, 0.7em);
+    --bento-grid-teaser-default-mobile-row-gap: var(--bento-grid-teaser-default-mobile-row-gap-custom, 0.7em);
+    --bento-grid-teaser-default-mobile-row-height: var(--bento-grid-teaser-default-mobile-row-height-custom, 50vw);
+    --bento-grid-teaser-default-mobile-teaser-container-gap: var(--bento-grid-teaser-default-mobile-teaser-container-gap-custom, 0.7em);
+    --bento-grid-teaser-default-mobile-column-right-gap: var(--bento-grid-teaser-default-mobile-column-right-gap-custom, 0.7em);
+
+}
