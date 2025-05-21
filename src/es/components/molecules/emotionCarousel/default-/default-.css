@@ -25,7 +25,7 @@
     --emotion-carousel-default-controls-height: var(--emotion-carousel-default-controls-height-custom, 100%);
     --emotion-carousel-default-arrow-btn-padding: var(--emotion-carousel-default-arrow-btn-padding-custom, 0);
     --emotion-carousel-default-section-height: var(--emotion-carousel-default-section-height-custom, 100%);
-    --emotion-carousel-default-section-width: var(--emotion-carousel-default-section-width-custom, 100%);
+    --emotion-carousel-default-section-width: var(--emotion-carousel-default-section-width-custom, 10%);
 }
 .section:hover {
     --color: var(--emotion-carousel-default-color-hover-custom, var(--color-dusty-gray, var(--color-tertiary, #fff)));

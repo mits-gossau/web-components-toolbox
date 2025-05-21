@@ -80,6 +80,7 @@ export default class EmotionCarousel extends Shadow() {
         transition: var(--silde-transition, all 0.5s);
         display: flex;
         flex-direction: column;
+        pointer-events: none;
       }
 
       a-emotion-pictures{
@@ -87,7 +88,7 @@ export default class EmotionCarousel extends Shadow() {
         height: 100%;
         position: static;
         z-index: 0;
-        pointer-events: none;
+        pointer-events: auto;
       }
 
       .controls {
