@@ -62,27 +62,27 @@ export default class EmotionCarousel extends Shadow() {
       }
 
       :host .controls {
-        font-size: 1.2em;
+        font-size: var(--controls-font-size, 1.2rem);
       }
 
       .component-container {
-        width: 100%;
-        height: 100%;
+        width: var(--component-container-width, 100%);
+        height: var(--component-container-height, 100%);
         overflow: hidden;
         position: relative;
         z-index: 2;
       }
 
       .slide {
-        width: 100%;
-        height: 100%;
+        width: var(--slide-width, 100%);
+        height: var(--slide-height, 100%);
         position: absolute;
-        transition: all 0.5s;
+        transition: var(--silde-transition, all 0.5s);
         display: flex;
         flex-direction: column;
       }
 
-      a-emotion-pictures {
+      a-emotion-pictures{
         width: 100%;
         height: 100%;
         position: static;
@@ -93,22 +93,22 @@ export default class EmotionCarousel extends Shadow() {
       .controls {
         display: flex;
         position: absolute;
-        width: 100%;
+        width: var(--controls-width, 100%);
         height: auto;
-        max-height: 100%;
-        height: 100%;
+        max-height: var(--controls-max-height, ${this.height});
+        height: var(--controls-height, 100%);
         z-index: 3;
         justify-content: space-between;
         pointer-events: none;
       }
 
       .arrow-btn {
-        padding: 2%;
+        padding: var(--arrow-btn-padding, 2%);
       }
 
       .section {
-        height: 100%;
-        width: 30%;
+        height: var(--section-height, 100%);
+        width: var(--section-width, 30%);
         display: flex;
         align-items: center;
         cursor: pointer;

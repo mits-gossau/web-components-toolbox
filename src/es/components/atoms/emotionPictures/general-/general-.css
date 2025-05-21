@@ -24,4 +24,5 @@
    --emotion-pictures-general-text-right: var(--emotion-pictures-general-text-right-custom);
    --emotion-pictures-general-text-top-mobile: var(--emotion-pictures-general-text-top-mobile-custom, min(9vw, 6em));
    --emotion-pictures-general-text-top: var(--emotion-pictures-general-text-top-custom, 8em);
+   --emotion-pictures-general-img-max-height: var(--emotion-pictures-general-img-max-height-custom, 100%);
 }
