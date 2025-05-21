@@ -1,0 +1,34 @@
+:host {
+
+   /* with logo */
+   --emotion-pictures-general-logo-img-width-mobile: min(25vw, 100px);
+   --emotion-pictures-general-logo-img-width: min(10vw, 150px);
+   --emotion-pictures-general-img-width: 100%;
+
+   /* with title */
+   --emotion-pictures-general-a-color-hover: var(--emotion-pictures-general-a-color-hover-custom, var(--background-color, var(--color-hover)));
+   --emotion-pictures-general-a-text-decoration: none;
+   --emotion-pictures-general-bg-background-color: var(--emotion-pictures-general-bg-background-color-custom, var(--color-secondary, var(--m-white)));
+   --emotion-pictures-general-bg-color: var(--emotion-pictures-general-bg-color-custom, var(--background-color, var(--m-black)));
+   --emotion-pictures-general-bg-line-height-secondary: var(--emotion-pictures-general-bg-line-height-secondary-custom, 150%);
+   --emotion-pictures-general-div-margin-mobile: var(--emotion-pictures-general-div-margin-mobile-custom, var(--content-spacing-mobile));
+   --emotion-pictures-general-h2-font-family-secondary: var(--emotion-pictures-general-h2-font-family-secondary-custom, var(--font-family-bold));
+   --emotion-pictures-general-h2-font-size-mobile: var(--emotion-pictures-general-h2-font-size-mobile-custom, min(calc(1.5em * 1.5), 7vw));
+   --emotion-pictures-general-h2-font-weight: normal;
+   --emotion-pictures-general-h2-text-transform: var(--emotion-pictures-general-h2-text-transform-custom, none);
+   --emotion-pictures-general-subline-display-mobile: var(--emotion-pictures-general-subline-display-mobile-custom, none);
+   --emotion-pictures-general-subline-font-size: var(--emotion-pictures-general-subline-font-size-custom, 1.2em);
+   --emotion-pictures-general-text-left-mobile: var(--emotion-pictures-general-text-left-mobile-custom);
+   --emotion-pictures-general-text-left: var(--emotion-pictures-general-text-left-custom);
+   --emotion-pictures-general-text-right-mobile: var(--emotion-pictures-general-text-right-mobile-custom);
+   --emotion-pictures-general-text-right: var(--emotion-pictures-general-text-right-custom);
+   --emotion-pictures-general-text-top-mobile: var(--emotion-pictures-general-text-top-mobile-custom, min(9vw, 6em));
+   --emotion-pictures-general-text-top: var(--emotion-pictures-general-text-top-custom, 8em);
+   --emotion-pictures-general-img-max-height: var(--emotion-pictures-general-img-max-height-custom, 100%);
+
+
+}
+
+:host > a{
+  position: static !important;
+}

@@ -47,10 +47,9 @@ glob.sync(`${ROOT_DIR}/**/*(*.{js,ts,jsx,tsx})`, {
   await Promise.all([
     // fs.promises.writeFile(file, generateModified(file)), // Write the modified code back to the file
     // fs.promises.writeFile(`${path.dirname(file)}/${filenameWithoutExtension}.json`, jsonData) // Write the JSON data to a file
-    // fs.promises.writeFile(`${path.dirname(file)}/readme.md`, md) // Write the markdown file 
+    // fs.promises.writeFile(`${path.dirname(file)}/readme.md`, md) // Write the markdown file
     // fs.promises.writeFile('../index.json', `"${data.path}",\n`, { flag: 'a' }) // Write the path into the index.json file
   ])
-
 
   console.log('=============================================')
   console.log(`Name: ${filenameWithoutExtension}`)

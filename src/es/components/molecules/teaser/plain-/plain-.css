@@ -1,7 +1,7 @@
 :host {
   --color: var(--teaser-plain-color);
   --teaser-plain-a-picture-figcaption-background-color-hover: var(--teaser-plain-a-picture-figcaption-background-color-hover-custom,var(--teaser-plain-background-color-hover-custom, var(--teaser-plain-background-color)));
-  --teaser-plain-a-picture-margin: 0.6em;
+  --teaser-plain-a-picture-margin: var(--teaser-plain-a-picture-margin-custom, 0.6em);
   --teaser-plain-a-picture-width: calc(100% - var(--teaser-plain-a-picture-margin) * 2);
   --teaser-plain-background-color: var(--teaser-plain-background-color-custom, var(--color-secondary, var(--background-color, var(--m-white))));
   --teaser-plain-border-radius-mobile: var(--teaser-plain-border-radius-mobile-custom, 0.571em);
@@ -9,7 +9,7 @@
   --teaser-plain-color: var(--teaser-plain-color-custom, var(--background-color, var(--m-white)));
   --teaser-plain-figcaption-any-opacity: 0;
   --teaser-plain-figcaption-any-transform-origin: center top;
-  --teaser-plain-figcaption-any-transform: perspective(400px) rotateX(-45deg);
+  --teaser-plain-figcaption-any-transform: var(--teaser-plain-figcaption-any-transform-custom, perspective(400px) rotateX(-45deg));
   --teaser-plain-figcaption-any-transition: transform .45s .6s cubic-bezier(.17,.67,.28,1),opacity .45s .4s cubic-bezier(.17,.67,.28,1), opacity 0.3s .4s ease-out;
   --teaser-plain-figcaption-background-color-hover: var(--teaser-plain-background-color-hover-custom, var(--color-hover, var(--teaser-plain-background-color)));
   --teaser-plain-figcaption-background-color: var(--teaser-plain-figcaption-background-color-custom, var(--teaser-plain-background-color));
@@ -23,7 +23,7 @@
   --teaser-plain-h2-margin: var(--teaser-plain-h2-margin-custom);
   --teaser-plain-h5-margin: 0 0 0.5em;
   --teaser-plain-intersecting-figcaption-any-opacity: 1;
-  --teaser-plain-intersecting-figcaption-any-transform: perspective(400px) rotateX(0);
+  --teaser-plain-intersecting-figcaption-any-transform: var(--teaser-plain-intersecting-figcaption-any-transform-custom, perspective(400px) rotateX(0));
   --teaser-plain-p-font-size: 0.875em;
   --teaser-plain-p-line-height: var(--teaser-plain-p-line-height-custom, 1.14em);
   --teaser-plain-p-margin: 0 0 0.625em;

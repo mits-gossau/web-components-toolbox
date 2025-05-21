@@ -21,7 +21,10 @@ export const Anchor = (ChosenClass = Shadow()) => class Anchor extends ChosenCla
       isRunning = true
       setTimeout(() => { isRunning = false }, 50)
       let element = null
-      if ((element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash || null))) {
+      try {
+        element = this.root.querySelector((event && event.detail && event.detail.selector.replace(/(.*#)(.*)$/, '#$2')) || location.hash || null)
+      } catch (error) {}
+      if (element) {
         this.dispatchEvent(new CustomEvent(this.getAttribute('scroll-to-anchor') || 'scroll-to-anchor', {
           bubbles: true,
           cancelable: true,

@@ -4,6 +4,7 @@
   --img-object-fit: cover;
   --img-width: 100%;
   --picture-teaser-img-height: var(--img-height);
+  --picture-teaser-img-max-height: var(--picture-teaser-img-max-height-custom, 75vh);
   --picture-teaser-img-object-fit: var(--img-object-fit);
   --picture-teaser-img-width: var(--img-width);
   --teaser-overlay-a-picture-height: 100%;

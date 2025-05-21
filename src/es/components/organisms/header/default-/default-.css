@@ -13,7 +13,7 @@
   --header-default-a-menu-icon-margin: 0;
   --header-default-a-menu-icon-one-transform: rotate(-45deg) translateY(0.87em);
   --header-default-a-menu-icon-padding-open: var(--header-default-a-menu-icon-padding);
-  --header-default-a-menu-icon-padding: 1.7rem var(--content-spacing-mobile, var(--content-spacing)) 1.2rem;
+  --header-default-a-menu-icon-padding: var(--header-default-a-menu-icon-padding-top-custom, 1.7rem) var(--content-spacing-mobile, var(--content-spacing)) 1.2rem;
   --header-default-a-menu-icon-spacing: 6px;
   --header-default-a-menu-icon-two-transform: rotate(45deg) translateY(-0.87em);
   --header-default-a-menu-icon-width-open-mobile: var(--header-default-a-menu-icon-width);
@@ -24,7 +24,7 @@
   --header-default-a-text-decoration: none;
   --header-default-a-text-transform: none;
   --header-default-a-white-space: nowrap;
-  --header-default-align-items: end;
+  --header-default-align-items: var(--header-default-align-items-custom, end);
   --header-default-background-color: var(--header-default-background-color-custom, var(--color-secondary));
   --header-default-border-bottom: var(--header-default-border-bottom-custom, none);
   --header-default-box-sizing-open-mobile: border-box;

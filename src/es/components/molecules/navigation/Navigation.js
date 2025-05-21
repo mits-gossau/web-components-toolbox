@@ -693,6 +693,27 @@ export default class Navigation extends Mutation() {
           path: `${this.importMetaUrl}./migrospro-/migrospro-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
+      case 'navigation-gastro-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--navigation-default-',
+            flags: 'g',
+            replacement: '--navigation-gastro-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./alnatura-/alnatura-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--navigation-alnatura-',
+            flags: 'g',
+            replacement: '--navigation-gastro-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./gastro-/gastro-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
       default:
         return Promise.resolve()
     }

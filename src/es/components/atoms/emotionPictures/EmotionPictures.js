@@ -12,7 +12,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  * @type {CustomElementConstructor}
  */
 export default class EmotionPictures extends Intersection() {
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 },
@@ -46,7 +46,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  intersectionCallback (entries, observer) {
+  intersectionCallback(entries, observer) {
     for (const entry of entries) {
       if (!entry.isIntersecting && entry.intersectionRatio === 0) {
         this.classList.add('visible')
@@ -61,7 +61,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     const init = () => {
       this.hidden = false
@@ -89,7 +89,7 @@ export default class EmotionPictures extends Intersection() {
     self.addEventListener('resize', this.resizeListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     super.disconnectedCallback()
     this.shuffle(false)
     self.removeEventListener('resize', this.resizeListener)
@@ -100,7 +100,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -109,12 +109,13 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {Promise<void>|void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         display: grid !important;
         width: var(--width, 100%) !important;
         line-height: var(--line-height, normal);
+        position: relative;
       }
       :host > *:not(style), :host > a {
         grid-column: 1;
@@ -154,12 +155,29 @@ export default class EmotionPictures extends Intersection() {
         box-sizing: border-box;
         display: flex;
         height: 100%;
-        justify-content: flex-end;
+        justify-content: ${this.logoPositionY};
         left: 0;
         margin: 0;
         padding: var(--padding);
         right: 0;
         top: 0;
+      }
+      :host([with-border]) a-picture {
+        border-width: var(--content-spacing, 18px);
+        border-style: solid;
+        border-color: var(--border-color, white);
+        border-radius: var(--border-radius, 0);
+        box-sizing: border-box;
+        display: block;
+      }
+      :host([with-triangle]) a-picture:before {
+        position: absolute;
+        content: '';
+        top: var(--triangle-top, 15px);
+        left: calc(35% - 19.5px);
+        border-top: 39px solid #fff;
+        border-right: 17.5px solid transparent;
+        border-left: 17.5px solid transparent;
       }
       @media only screen and (max-width: _max-width_) {
         :host {
@@ -184,6 +202,12 @@ export default class EmotionPictures extends Intersection() {
         :host .logo {
           padding: var(--padding-mobile);
         }
+        :host([with-border]) a-picture {
+          border-width: var(--content-spacing-mobile, var(--content-spacing, 9px));
+        }
+        :host([with-triangle]) a-picture:before {
+          top: var(--triangle-top-mobile, 9px);
+        }
       }
     `
     this.setCss(/* css */`
@@ -207,7 +231,7 @@ export default class EmotionPictures extends Intersection() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     const styles = [
       {
         // @ts-ignore
@@ -250,6 +274,67 @@ export default class EmotionPictures extends Intersection() {
           path: `${this.importMetaUrl}./with-video-/with-video-.css`,
           namespace: false
         }, ...styles], false)
+      case 'emotion-pictures-corporate-':
+        return this.fetchCSS([{
+          // @ts-ignore
+          path: `${this.importMetaUrl}./corporate-/corporate-.css`,
+          namespace: false
+        }], false)
+      case 'emotion-pictures-general-':
+        return this.fetchCSS(
+          [
+            {
+              path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-default-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              path: `${this.importMetaUrl}./with-title-/with-title-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-with-title-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              path: `${this.importMetaUrl}./with-button-/with-button-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-with-button-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              path: `${this.importMetaUrl}./with-logo-/with-logo-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-with-logo-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              path: `${this.importMetaUrl}./corporate-/corporate-.css`, // apply namespace since it is specific and no fallback
+              namespace: false,
+              replaces: [{
+                pattern: '--emotion-pictures-corporate-',
+                flags: 'g',
+                replacement: '--emotion-pictures-general-'
+              }]
+            },
+            {
+              // @ts-ignore
+              path: `${this.importMetaUrl}./general-/general-.css`,
+              namespace: false
+            },
+            ...styles
+          ], false)
       case 'emotion-pictures-default-':
         return this.fetchCSS([{
           // @ts-ignore
@@ -261,7 +346,7 @@ export default class EmotionPictures extends Intersection() {
     }
   }
 
-  shuffle (start = true) {
+  shuffle(start = true) {
     // @ts-ignore
     clearInterval(this.interval || null)
     if (start) {
@@ -274,61 +359,62 @@ export default class EmotionPictures extends Intersection() {
           } else if (this.childNodes[0]) {
             this.childNodes[0].classList.add('shown')
           }
-          EmotionPictures.updateLogoPosition(this.shown, '.logo', 'logo-position')
+
+          // get the currently shown element's logo, if it exists
+          const logo = this.shown?.querySelector('.logo')
+
+          // if a logo is found, set its CSS properties based on attributes or defaults
+          if (logo) {
+            // set the alignItems style from 'logo-position' attribute or default to 'center'
+            logo.style.alignItems = logo.getAttribute('logo-position') || 'center'
+            // set the justifyContent style from 'logo-position-y' attribute or default to 'flex-end'
+            logo.style.justifyContent = logo.getAttribute('logo-position-y') || 'flex-end'
+          }
         }
       }, Number(this.getAttribute('interval')) || 8000)
     }
   }
 
-  /**
-   * Update Logo Position for each Element
-   * @param {{ querySelector: (arg0: any) => any; }} divNode
-   * @param {string} selector
-   * @param {string} attribute
-   */
-  static updateLogoPosition (divNode, selector, attribute) {
-    const logoElement = divNode.querySelector(selector)
-    if (logoElement) {
-      logoElement.style.alignItems = logoElement.getAttribute(attribute)
-    }
-  }
-
-  get shown () {
+  get shown() {
     return this.root.querySelector('.shown') || (() => {
       if (this.childNodes[0]) this.childNodes[0].classList.add('shown')
       return this.childNodes[0]
     })()
   }
 
-  get childNodes () {
+  get childNodes() {
     return Array.from(this.root.childNodes).filter(childNode => childNode.tagName !== 'STYLE')
   }
 
-  get aPicture () {
+  get aPicture() {
     return this.root.querySelector('a-picture')
   }
 
-  get aPictures () {
+  get aPictures() {
     return this.root.querySelectorAll('a-picture')
   }
 
-  get aVideo () {
+  get aVideo() {
     return this.root.querySelector('a-video')
   }
 
-  get aVideos () {
+  get aVideos() {
     return this.root.querySelectorAll('a-video')
   }
 
-  get logoPosition () {
+  get logoPosition() {
     return this.root.querySelector('.logo')?.hasAttribute('logo-position') ? this.root.querySelector('.logo').getAttribute('logo-position') : 'center'
   }
 
-  get overlayContent () {
+  get logoPositionY() {
+    return this.root.querySelector('.logo')?.hasAttribute('logo-position-y') ? this.root.querySelector('.logo').getAttribute('logo-position-y') : 'flex-end'
+  }
+
+  get overlayContent() {
     return this.root.querySelector(':host > div > *:not(a-picture):not(a-video), :host > a > *:not(a-picture):not(a-video) ')
   }
 
-  get style () {
+  get style() {
     return this._style || (this._style = (() => {
       const style = document.createElement('style')
       style.setAttribute('protected', 'true')

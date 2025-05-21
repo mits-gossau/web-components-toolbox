@@ -40,7 +40,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
         const mainScript = document.createElement('script')
         mainScript.setAttribute('type', 'text/javascript')
         mainScript.setAttribute('async', '')
-        let version = this.getAttribute('mcs-version') || self.Environment && self.Environment.mcsVersion
+        let version = this.getAttribute('mcs-version') || (self.Environment && self.Environment.mcsVersion)
         if (!version) {
           try {
             version = (await (await fetch(`${baseUrl}/api/version`)).json()).version

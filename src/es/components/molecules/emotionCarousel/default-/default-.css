@@ -1,0 +1,35 @@
+:host{
+
+    --img-height: var(--emotion-carousel-default-img-height-custom, 100%);
+    --picture-cover-img-max-height: var(--emotion-carousel-default-picture-cover-img-max-height-custom, none);
+    --any-margin-top-first-child: var(--emotion-carousel-default-any-margin-top-first-child-custom, var(--content-spacing));
+    --emotion-carousel-default-h2-font-family: var(--emotion-carousel-default-h2-font-family-custom, var(--h2-font-family));
+    --content-width: var(--emotion-carousel-default-content-width-custom, 100%);
+    --svg-size: var(--emotion-carousel-default-svg-size-custom, 2em);
+    --color: var(--emotion-carousel-default-color-custom, white);
+    --content-spacing-mobile: var(--emotion-carousel-default-content-spacing-mobile-custom, none);
+    --emotion-carousel-default-h1-color: var(--emotion-carousel-default-h1-color-custom, #fff);
+    --img-height-mobile: var(--emotion-carousel-default-img-height-mobile-custom, 100%);
+    --emotion-carousel-default-a-text-decoration: var(--emotion-carousel-default-a-text-decoration-custom, none);
+    --emotion-carousel-default-a-color: var(--emotion-carousel-default-a-color-custom, var(--emotion-carousel-default-h1-color,  #fff));
+    --emotion-carousel-default-h1-font-size: var(--emotion-carousel-default-h1-font-size-custom, 2em);
+    --emotion-carousel-default-a-color-hover: var(--emotion-carousel-default-a-color-hover-custom, var(--emotion-carousel-default-h1-color,  #fff));
+    --emotion-carousel-default-width: var(--emotion-carousel-default-width-custom, 100%);
+    --emotion-carousel-default-controls-font-size: var(--emotion-carousel-default-controls-font-size-custom, 1.2em);
+    --emotion-carousel-default-component-container-width: var(--emotion-carousel-default-component-container-width-custom, 100%);
+    --emotion-carousel-default-component-container-height: var(--emotion-carousel-default-component-container-height-custom, 100%);
+    --emotion-carousel-default-slide-width: var(--emotion-carousel-default-slide-width-custom, 100%);
+    --emotion-carousel-default-slide-height: var(--emotion-carousel-default-slide-height-custom, 100%);
+    --emotion-carousel-default-silde-transition: var(--emotion-carousel-default-silde-transition-custom, all 0.5s ease-in-out);
+    --emotion-carousel-default-controls-width: var(--emotion-carousel-default-controls-width-custom, 100%);
+    --emotion-carousel-default-controls-height: var(--emotion-carousel-default-controls-height-custom, 100%);
+    --emotion-carousel-default-arrow-btn-padding: var(--emotion-carousel-default-arrow-btn-padding-custom, 0);
+    --emotion-carousel-default-section-height: var(--emotion-carousel-default-section-height-custom, 100%);
+    --emotion-carousel-default-section-width: var(--emotion-carousel-default-section-width-custom, 10%);
+}
+.section:hover {
+    --color: var(--emotion-carousel-default-color-hover-custom, var(--color-dusty-gray, var(--color-tertiary, #fff)));
+  }
+.section{
+    --emotion-carousel-default-h1-margin: var(--emotion-carousel-default-h1-margin-custom, 0);
+}
