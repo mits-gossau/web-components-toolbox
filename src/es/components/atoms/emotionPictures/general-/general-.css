@@ -25,10 +25,12 @@
    --emotion-pictures-general-text-top-mobile: var(--emotion-pictures-general-text-top-mobile-custom, min(9vw, 6em));
    --emotion-pictures-general-text-top: var(--emotion-pictures-general-text-top-custom, 8em);
    --emotion-pictures-general-img-max-height: var(--emotion-pictures-general-img-max-height-custom, 100%);
-
-
 }
 
-:host > a{
+:host > a {
   position: static !important;
+}
+
+:host .logo > a-picture {
+  border-width: 0 !important;
 }
