@@ -22,6 +22,10 @@
       "path": "./with-video-/with-video-.css"
     },
     {
+      "name": "emotion-pictures-general-",
+      "path": "./general-/general-.css"
+    },
+    {
       "name": "emotion-pictures-default-",
       "path": "./default-/default-.css"
     }
@@ -45,6 +49,14 @@
     },
     {
       "attributeName": "interval",
+      "description": ""
+    },
+    {
+      "attributeName": "with-border",
+      "description": ""
+    },
+    {
+      "attributeName": "with-triangle",
       "description": ""
     }
   ],

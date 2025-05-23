@@ -18,6 +18,7 @@ n/a
 | emotion-pictures-with-button- | `./with-button-/with-button-.css` |
 | emotion-pictures-with-logo- | `./with-logo-/with-logo-.css` |
 | emotion-pictures-with-video- | `./with-video-/with-video-.css` |
+| emotion-pictures-general- | `./general-/general-.css` |
 | emotion-pictures-default- | `./default-/default-.css` |
 
 ## Attributes
@@ -29,6 +30,8 @@ n/a
 | `height` |  |
 | `namespace` |  |
 | `interval` |  |
+| `with-border` |  |
+| `with-triangle` |  |
 
 ## CSS Styles
 
