@@ -50,7 +50,7 @@ export default class BentoGridTeaser extends Shadow() {
     }
     
     .teaser-container {
-        color: white;
+        color: var(--teaser-container-color, white);
         height: fit-content;
         width: var(--teaser-container-width, 100%);
         display: flex;
@@ -148,11 +148,6 @@ export default class BentoGridTeaser extends Shadow() {
         }
 
         .teaser-container {
-            color: white;
-            height: fit-content;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
             gap: var(--mobile-teaser-container-gap, 0.7em);
 
         }
