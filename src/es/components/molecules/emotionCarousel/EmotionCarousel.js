@@ -43,6 +43,8 @@ export default class EmotionCarousel extends Shadow() {
   disconnectedCallback() {
     this.nextButton?.removeEventListener('click', () => { })
     this.prevButton?.removeEventListener('click', () => { })
+    this.removeEventListener('picture-load', () => { })
+    this.removeEventListener('resize', () => { })
     clearInterval(timer)
   }
 
@@ -147,7 +149,9 @@ export default class EmotionCarousel extends Shadow() {
       }
 
       @media only screen and (max-width: _max-width_) {
-        ${this.heightMobile ? ':host { height: var(--height-mobile, ' + this.heightMobile + ') !important; }' : ''}
+        :host {
+          ${this.heightMobile ? 'height: var(--height-mobile, ' + this.heightMobile + ') !important;' : ''}
+        }
         .controls {
           display: none;
         }
