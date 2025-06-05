@@ -849,6 +849,6 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    */
   static walksDownDomQueryMatchesAll (el, selector) {
     const getAllChildren = el => Array.from((el.root || el).querySelectorAll(selector)).concat(Array.from((el.root || el).querySelectorAll('*')).filter(el => el.tagName.includes('-')).reduce((acc, el) => [...acc, ...getAllChildren(el)], []))
-    return el.matches(selector) ? [el, ...getAllChildren(el)] : getAllChildren(el)
+    return Array.from(new Set(el.matches(selector) ? [el, ...getAllChildren(el)] : getAllChildren(el)))
   }
 }
