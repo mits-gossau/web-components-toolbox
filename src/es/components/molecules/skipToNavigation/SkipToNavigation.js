@@ -10,33 +10,55 @@ export default class SkipToNavigation extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
-    this.focusinEventListener = (event) => {
+    this.focusinEventListener = () => {
       this.skipToNav.classList.add('active')
       const firstAnchor = this.skipToNav.querySelector('a')
       if (firstAnchor) firstAnchor.focus()
     }
 
-    this.focusoutEventListener = (event) => {
+    this.focusoutEventListener = () => {
       this.skipToNav.classList.remove('active')
+    }
+
+    this.keyupEventListener = (event) => {
+      const activeElement = document.activeElement
+      if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Enter' || event.key === ' ') {
+        setTimeout(() => {
+          // @ts-ignore
+          activeElement.blur()
+          this.skipToNav.classList.remove('active')
+        }, 50)
+      }
+      if (event.key === 'Enter') this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-nav') || 'open-and-focus-nav', {
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
     }
   }
 
   connectedCallback () {
+    // @ts-ignore
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+      console.log('SkipToNavigation component connected', showPromises)
     Promise.all(showPromises).then(() => {
       this.hidden = false
       this.moveChildrenToSlot()
+      // @ts-ignore
+      if (document.body.firstChild !== this) document.body.insertBefore(this, document.body.firstChild)
     })
-    this.addEventListener('focusin', (event) => this.focusinEventListener(event))
-    this.addEventListener('focusout', (event) => this.focusoutEventListener(event))
+    this.addEventListener('focusin', () => this.focusinEventListener())
+    this.addEventListener('focusout', () => this.focusoutEventListener())
+    this.addEventListener('keyup', (event) => this.keyupEventListener(event))
   }
 
   disconnectedCallback () {
-    this.removeEventListener('focusin', (event) => this.focusinEventListener(event))
-    this.removeEventListener('focusout', (event) => this.focusoutEventListener(event))
+    this.removeEventListener('focusin', () => this.focusinEventListener())
+    this.removeEventListener('focusout', () => this.focusoutEventListener())
+    this.removeEventListener('keyup', (event) => this.keyupEventListener(event))
   }
 
   moveChildrenToSlot () {
@@ -67,15 +89,17 @@ export default class SkipToNavigation extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host > nav {
+      :host {
         position: fixed;
-        z-index: var(--z-index, 15);
+        z-index: var(--z-index, 1001);
+        top: 0;
+        left: 0;
+      }
+      :host > nav {
         transform: translateX(-9999px);
         padding: var(--padding, 1rem);
         box-shadow: var(--box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
         background-color: var(--background-color, #fff);
-        top: 0;
-        left: 0;
       }
       :host:focus-within > nav,
       :host > nav:focus,
