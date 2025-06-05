@@ -119,7 +119,8 @@ export default class Header extends Shadow() {
       
 
 
-      this.mNavigation.root.querySelector('ul').focus()
+      this.mNavigation.root.querySelector('ul > li:first-child a-link').shadowRoot.querySelector('a').focus()
+      console.log(this.mNavigation.root.querySelector('ul > li:first-child a-link').shadowRoot.querySelector('a'))
       if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', 'true')
       console.log('open-and-focus-nav event', event)
     }
