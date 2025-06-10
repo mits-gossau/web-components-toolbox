@@ -4,19 +4,35 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class NavLevelItem extends Shadow() {
   constructor (options = {}, ...args) {
     super({ keepCloneOutsideShadowRoot: true, importMetaUrl: import.meta.url, ...options }, ...args)
+
+    this.enterEventListener = event => {
+      if (event.code === 'Enter' && this.matches(':focus')) NavLevelItem.walksUpDomQueryMatches(this, 'm-multi-level-navigation')[this.hasAttribute('data-href') ? 'aLinkClickListener' : 'subLiHoverListener']({composedPath: () => [NavLevelItem.walksUpDomQueryMatches(this, 'li')], currentTarget: this, preventDefault: () => {}})
+    }
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
-      this.addEventListener('keyup', event => {
-    if (event.code === 'Enter' && this.matches(':focus')) {
-      NavLevelItem.walksUpDomQueryMatches(this, 'm-multi-level-navigation').subLiHoverListener({composedPath: () => [NavLevelItem.walksUpDomQueryMatches(this, 'li')]})
-      console.log(event, this.matches(':focus'), this)
-    }
-  })
+    this.addEventListener('keyup', this.enterEventListener)
+    this.connectedCallbackOnce()
   }
 
-  disconnectedCallback () {}
+  connectedCallbackOnce () {
+    // for purpose of accessibility remove the parent links capability for tabindex and reproduce link behavior in this component with the enterEventListener
+    if (this.parentElement.tagName === 'A') {
+      this.parentElement.setAttribute('tabindex', '-1')
+      this.setAttribute('role', 'link')
+      let href
+      if ((href = this.parentElement.getAttribute('href'))) {
+        this.setAttribute('data-href', href)
+        this.setAttribute('href', href)
+      }
+    }
+    this.connectedCallbackOnce = () => {}
+  }
+
+  disconnectedCallback () {
+    this.removeEventListener('keyup', this.enterEventListener)
+  }
 
   shouldRenderCSS () {
     return !this.root.querySelector(
