@@ -304,6 +304,11 @@ export default class MultiLevelNavigation extends Mutation() {
         this.hideAndClearMobileSubNavigation()
       }
     }
+
+    // accessibility
+    this.enterEventListener = event => {
+      if (event.code === 'Enter' && event.composedPath()[0].matches(':focus')) event.composedPath()[0].click()
+    }
   }
 
   connectedCallback() {
@@ -324,6 +329,7 @@ export default class MultiLevelNavigation extends Mutation() {
     })
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
+    this.addEventListener('keyup', this.enterEventListener)
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     this.addCustomColors()
     super.connectedCallback()
@@ -341,6 +347,7 @@ export default class MultiLevelNavigation extends Mutation() {
   disconnectedCallback() {
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
+    this.removeEventListener('keyup', this.enterEventListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     Array.from(this.root.querySelectorAll('a')).forEach(a => {
       a.removeEventListener('click', this.aLinkClickListener)
@@ -1105,6 +1112,7 @@ export default class MultiLevelNavigation extends Mutation() {
 
     // hide element with left slide animation
     activeFirstLevelSubNav.hidden = false
+    setTimeout(() => activeFirstLevelSubNav.querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus(), this.removeElementAfterAnimationDurationMs)
     event.currentTarget.parentNode.parentNode.classList.add('close-left-slide')
     event.currentTarget.parentNode.parentNode.classList.remove('open-left-slide')
     activeFirstLevelSubNav.classList.add('open-right-slide')
@@ -1383,6 +1391,7 @@ export default class MultiLevelNavigation extends Mutation() {
        <span>${mobileNavigationName}</span>
        `
           newNavBackATag.classList.add('navigation-back')
+          newNavBackATag.setAttribute('tabindex', '0')
           newNavBackATag.addEventListener('click', (event) => {
             // @ts-ignore
             event.currentTarget.parentNode.classList.remove('open-right-slide')
@@ -1394,6 +1403,8 @@ export default class MultiLevelNavigation extends Mutation() {
             event.currentTarget.parentNode.classList.add('close-right-slide')
             // @ts-ignore
             event.currentTarget.parentNode.parentNode.querySelector('ul').classList.add('open-left-slide')
+            // @ts-ignore
+            event.currentTarget.parentNode.parentNode.querySelector('ul').querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus()
             // @ts-ignore
             const expandedElements = Array.from(event.currentTarget.parentNode.parentNode.querySelector('ul').querySelectorAll('[aria-expanded="true"]'))
             if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
@@ -1411,7 +1422,7 @@ export default class MultiLevelNavigation extends Mutation() {
         <span>${mobileNavigationName}</span>
         `
           newNavBackATag.classList.add('navigation-back')
-
+          newNavBackATag.setAttribute('tabindex', '0')
           newNavBackATag.addEventListener('click', (event) => {
             // @ts-ignore
             event.currentTarget.parentNode.className = ''
@@ -1421,6 +1432,8 @@ export default class MultiLevelNavigation extends Mutation() {
             event.currentTarget.parentNode.classList.add('close-right-slide')
             // @ts-ignore
             event.currentTarget.parentNode.previousElementSibling.classList.add('open-left-slide')
+            // @ts-ignore
+            event.currentTarget.parentNode.previousElementSibling.querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus()
             // @ts-ignore
             const expandedElements = Array.from(event.currentTarget.parentNode.previousElementSibling.querySelectorAll('[aria-expanded="true"]'))
             if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
