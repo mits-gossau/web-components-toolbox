@@ -32,6 +32,7 @@ export default class MultiLevelNavigation extends Mutation() {
     this.desktopHeightBreakpoint = 800
     this.isHigherDevice = window.innerHeight > this.desktopHeightBreakpoint
     this.hoverDelay = this.hasAttribute('navigation-hover-delay') || 100
+    this.focusElSelector = 'm-nav-level-item,a:not(:has(> m-nav-level-item)):not(.navigation-back)'
 
     this.hideMobileNavigation()
 
@@ -270,7 +271,7 @@ export default class MultiLevelNavigation extends Mutation() {
                 if (ul.getAttribute('sub-nav-id') === childSubNavName) {
                   ul.parentElement.hidden = false
                   ul.style.display = 'block'
-                  ul.querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus()
+                  ul.querySelector(this.focusElSelector)?.focus()
                 } else {
                   ul.scrollTo(0, 0)
                   ul.style.display = 'none'
@@ -1092,6 +1093,8 @@ export default class MultiLevelNavigation extends Mutation() {
       this.nav.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
       isFlyoutOpen = Array.from(currentUlElement.querySelectorAll(':scope > li')).some(el => el.classList.contains('open'))
+      // TODO: this should focus on the first element in the dropdown on desktop but does not have an effect
+      if (!isFlyoutOpen) event.currentTarget.nextElementSibling.querySelector(this.focusElSelector)?.focus()
       if (this.hasAttribute('close-other-flyout')) this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', { bubbles: true, cancelable: true, composed: true }))
       this.addBackgroundDivPosition(event, isFlyoutOpen)
       this.hideAndClearDesktopSubNavigation(event)
@@ -1112,7 +1115,7 @@ export default class MultiLevelNavigation extends Mutation() {
 
     // hide element with left slide animation
     activeFirstLevelSubNav.hidden = false
-    setTimeout(() => activeFirstLevelSubNav.querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus(), this.removeElementAfterAnimationDurationMs)
+    setTimeout(() => activeFirstLevelSubNav.querySelector(this.focusElSelector)?.focus(), this.removeElementAfterAnimationDurationMs)
     event.currentTarget.parentNode.parentNode.classList.add('close-left-slide')
     event.currentTarget.parentNode.parentNode.classList.remove('open-left-slide')
     activeFirstLevelSubNav.classList.add('open-right-slide')
@@ -1148,7 +1151,7 @@ export default class MultiLevelNavigation extends Mutation() {
       })
       subUl.parentElement.hidden = false
       subUl.style.display = 'block'
-      subUl.querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus()
+      subUl.querySelector(this.focusElSelector)?.focus()
       subUl.scrollTo(0, 0)
       if (wrapperDivSecondNextSiblingDiv) wrapperDivSecondNextSiblingDiv.hidden = true
       if (wrapperDivSecondNextSiblingDivUls) wrapperDivSecondNextSiblingDivUls.forEach(ul => (ul.style.display = 'none'))
@@ -1190,12 +1193,12 @@ export default class MultiLevelNavigation extends Mutation() {
       })
       setTimeout(() => {
         wrapperDiv.scrollTo(0, 0)
+        subUl.querySelector(this.focusElSelector)?.focus()
       }, this.removeElementAfterAnimationDurationMs)
 
       wrapperDivNextSiblingDiv.scrollTo(0, 0)
       wrapperDivNextSiblingDiv.hidden = false
       subUl.style.display = 'block'
-      subUl.querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus()
       wrapperDiv.className = ''
       wrapperDiv.classList.add('close-left-slide')
       wrapperDivNextSiblingDiv.className = ''
@@ -1248,7 +1251,7 @@ export default class MultiLevelNavigation extends Mutation() {
           Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
           Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
             node.style.display = 'block'
-            node.querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus()
+            node.querySelector(this.focusElSelector)?.focus()
           })
           const navElement = this.root.querySelector('nav')
           const templates = Array.from(navElement.querySelectorAll('ul > li > template'))
@@ -1352,6 +1355,7 @@ export default class MultiLevelNavigation extends Mutation() {
   showMobileNavigation() {
     if (!this.isDesktop && this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.contains('hide')) {
       this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation').classList.remove('hide')
+      this.nav.setAttribute('aria-expanded', 'true')
     }
   }
 
@@ -1404,7 +1408,7 @@ export default class MultiLevelNavigation extends Mutation() {
             // @ts-ignore
             event.currentTarget.parentNode.parentNode.querySelector('ul').classList.add('open-left-slide')
             // @ts-ignore
-            event.currentTarget.parentNode.parentNode.querySelector('ul').querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus()
+            event.currentTarget.parentNode.parentNode.querySelector('ul').querySelector(this.focusElSelector)?.focus()
             // @ts-ignore
             const expandedElements = Array.from(event.currentTarget.parentNode.parentNode.querySelector('ul').querySelectorAll('[aria-expanded="true"]'))
             if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
@@ -1433,7 +1437,7 @@ export default class MultiLevelNavigation extends Mutation() {
             // @ts-ignore
             event.currentTarget.parentNode.previousElementSibling.classList.add('open-left-slide')
             // @ts-ignore
-            event.currentTarget.parentNode.previousElementSibling.querySelector('m-nav-level-item,a:not(:has(> m-nav-level-item))')?.focus()
+            event.currentTarget.parentNode.previousElementSibling.querySelector(this.focusElSelector)?.focus()
             // @ts-ignore
             const expandedElements = Array.from(event.currentTarget.parentNode.previousElementSibling.querySelectorAll('[aria-expanded="true"]'))
             if (expandedElements.length > 0) expandedElements.forEach(li => li.setAttribute('aria-expanded', 'false'))
