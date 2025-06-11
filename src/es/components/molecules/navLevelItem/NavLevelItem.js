@@ -27,8 +27,10 @@ export default class NavLevelItem extends Shadow() {
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.multiLevelNavigation = NavLevelItem.walksUpDomQueryMatches(this, 'm-multi-level-navigation')
-    if (this.multiLevelNavigation !== this && this.multiLevelNavigation.isDesktop) this.addEventListener('keyup', this.enterEventListener)
-    this.connectedCallbackOnce()
+    if (this.multiLevelNavigation !== this && this.multiLevelNavigation.isDesktop) {
+      this.addEventListener('keyup', this.enterEventListener)
+      this.connectedCallbackOnce()
+    }
   }
 
   connectedCallbackOnce () {

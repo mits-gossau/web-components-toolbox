@@ -761,6 +761,7 @@ export default class Navigation extends Mutation() {
         }
         const arrow = new children[1].constructorClass({ namespace: this.getAttribute('namespace') || '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
         arrow.setAttribute('direction', arrowDirections[1])
+        arrow.setAttribute('tabindex', '-1')
         const arrowClickListener = event => {
           if (this.hasAttribute('focus-lost-close-mobile')) this.adjustArrowDirections(event, arrowDirections)
           li.classList.toggle('open')
