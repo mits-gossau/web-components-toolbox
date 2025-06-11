@@ -13,6 +13,10 @@ a-picture {
   --picture-teaser-img-max-height: none;
 }
 
+:host([namespace="teaser-text-image-"][text-position="left"])>a-picture {
+  order: 2;
+}
+
 :host([href]:hover) {
   --picture-teaser-transform: scale(1.1);
 }
@@ -26,8 +30,9 @@ a-button {
   --button-primary-background-color-hover: var(--teaser-text-image-button-background-color-hover-custom, var(--button-background-color-primary-hover, var(--color-hover, red)));
 }
 
-/* Not supported now, but might be in the future */
-/* Copy from: https: //github.com/mits-gossau/web-components-toolbox-klubschule/blob/master/src/es/components/molecules/teaser/text-image-/text-image-.css */
+/* SMALL Attribute not supported now, but might be in the future */
+/* Copy from:
+   https://github.com/mits-gossau/web-components-toolbox-klubschule/blob/master/src/es/components/molecules/teaser/text-image-/text-image-.css */
 :host([image-size="small"]) a-picture {
   max-width: 240px;
   --picture-teaser-transition: transform .5s ease-out;
@@ -38,8 +43,9 @@ a-button {
   --picture-teaser-img-width: unset;
 }
 
-/* Not supported now, but might be in the future */
-/* Copy from: https: //github.com/mits-gossau/web-components-toolbox-klubschule/blob/master/src/es/components/molecules/teaser/text-image-/text-image-.css */
+/* SMALL Attribute not supported now, but might be in the future */
+/* Copy from: 
+   https://github.com/mits-gossau/web-components-toolbox-klubschule/blob/master/src/es/components/molecules/teaser/text-image-/text-image-.css */
 :host([image-size="small"][href]:hover) {
   --picture-teaser-transform: scale(1.0);
 }
