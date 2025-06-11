@@ -1,2 +1,56 @@
 :host {
+  display: flex !important;
+  gap: var(--teaser-text-image-gap-custom, 2em);
+  --teaser-text-image-gap: var(--teaser-text-image-gap-custom, var(--content-spacing, 1em));
+  --teaser-text-image-h2-color: var(--teaser-text-image-h2-color-custom, var(--color, yellow));
+  --teaser-text-image-p-font-size: var(--teaser-text-image-p-font-size-custom,  var(--p-font-size, 1em));
+}
+
+a-picture {
+  --picture-teaser-transition: transform .5s ease-out;
+  --picture-teaser-img-object-fit: cover;
+  --picture-teaser-aspect-ratio: 4/3;
+  --picture-teaser-img-max-height: none;
+}
+
+:host([href]:hover) {
+  --picture-teaser-transform: scale(1.1);
+}
+
+:host > * {
+  flex: 1;
+}
+
+a-button {
+  --button-primary-background-color: var(--teaser-text-image-button-background-color-custom, var(--button-background-color-primary, var(--color-secondary, yellow)));
+  --button-primary-background-color-hover: var(--teaser-text-image-button-background-color-hover-custom, var(--button-background-color-primary-hover, var(--color-hover, red)));
+}
+
+/* Not supported now, but might be in the future */
+/* Copy from: https: //github.com/mits-gossau/web-components-toolbox-klubschule/blob/master/src/es/components/molecules/teaser/text-image-/text-image-.css */
+:host([image-size="small"]) a-picture {
+  max-width: 240px;
+  --picture-teaser-transition: transform .5s ease-out;
+  --picture-teaser-img-object-fit: contain;
+  --picture-teaser-aspect-ratio: none;
+  --picture-teaser-img-max-height: none;
+  --picture-teaser-img-max-width: 100%;
+  --picture-teaser-img-width: unset;
+}
+
+/* Not supported now, but might be in the future */
+/* Copy from: https: //github.com/mits-gossau/web-components-toolbox-klubschule/blob/master/src/es/components/molecules/teaser/text-image-/text-image-.css */
+:host([image-size="small"][href]:hover) {
+  --picture-teaser-transform: scale(1.0);
+}
+
+@media only screen and (max-width: _max-width_) {
+  :host {
+    flex-direction: column;
+    gap: var(--teaser-text-image-gap-mobile-custom, var(--content-spacing-mobile, 1em));
+  }
+
+  :host > a-picture {
+    order: var(--picture-teaser-order-mobile-custom, 0);
+  }
 }
