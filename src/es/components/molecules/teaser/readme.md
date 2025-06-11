@@ -14,15 +14,16 @@ n/a
 
 | Namespace | Path |
 |------|------|
-| teaser-tile- | `./tile-/tile-.css` |
-| teaser-tile-text-center- | `./tile-text-center-/tile-text-center-.css` |
-| teaser-tile-rounded- | `./tile-rounded-/tile-rounded-.css` |
+| teaser-download- | `./download-/download-.css` |
 | teaser-overlay- | `./overlay-/overlay-.css` |
 | teaser-overlay-top- | `./overlay-top-/overlay-top-.css` |
-| teaser-download- | `./download-/download-.css` |
-| teaser-round- | `./round-/round-.css` |
 | teaser-plain- | `./plain-/plain-.css` |
 | teaser-plainer- | `./plainer-/plainer-.css` |
+| teaser-round- | `./round-/round-.css` |
+| teaser-text-image- | `./text-image-/text-image-.css` |
+| teaser-tile- | `./tile-/tile-.css` |
+| teaser-tile-rounded- | `./tile-rounded-/tile-rounded-.css` |
+| teaser-tile-text-center- | `./tile-text-center-/tile-text-center-.css` |
 
 ## Attributes
 

@@ -284,6 +284,11 @@ export default class Teaser extends Intersection() {
           path: `${this.importMetaUrl}./plainer-/plainer-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false)
+      case 'teaser-text-image-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./text-image-/text-image-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
       default:
         return this.fetchCSS(styles, false)
     }
