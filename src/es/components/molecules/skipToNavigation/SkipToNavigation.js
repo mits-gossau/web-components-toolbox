@@ -89,13 +89,11 @@ export default class SkipToNavigation extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host {
+      :host > nav {
         position: fixed;
         z-index: var(--z-index, 1001);
         top: 0;
-        left: 0;
-      }
-      :host > nav {
+        left: -9999px;
         transform: translateX(-9999px);
         padding: var(--padding, 1rem);
         box-shadow: var(--box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
@@ -105,6 +103,7 @@ export default class SkipToNavigation extends Shadow() {
       :host > nav:focus,
       :host > nav:focus-within,
       :host > nav.active {
+        left: 0;
         transform: translateX(0);
       }
       :host > nav > h2 {

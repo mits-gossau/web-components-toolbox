@@ -113,16 +113,20 @@ export default class Header extends Shadow() {
       this.header.classList.add('open')
       this.clickAnimationListener(event)
 
-
-
-
-      
-
-
-      this.mNavigation.root.querySelector('ul > li:first-child a-link').shadowRoot.querySelector('a').focus()
-      console.log(this.mNavigation.root.querySelector('ul > li:first-child a-link').shadowRoot.querySelector('a'))
-      if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', 'true')
-      console.log('open-and-focus-nav event', event)
+      if (this.mNavigation) {
+        this.mNavigation.setAttribute('aria-expanded', 'true')
+        this.mNavigation.classList.remove('hide')
+        this.mNavigation.classList.add('no-scroll', 'open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul').classList.add('open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').setAttribute('aria-expanded', 'true')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').classList.add('open')
+        setTimeout(() => {
+          const a = this.mNavigation.root.querySelector('nav > ul > li:first-child a-link')?.shadowRoot.querySelector('a')
+          if (a) a.focus()
+          const b = this.mNavigation.root.querySelector('nav > ul > li:first-child a')
+          if (b) b.focus()
+        }, 0)
+      }
     }
   }
 
