@@ -110,10 +110,6 @@ export default class Header extends Shadow() {
     }
     this.observer = new MutationObserver(this.mutationCallback)
     this.openAndFocusNavListener = event => {
-      console.log('openAndFocusNavListener', event.target)
-      // check if href="#main-navigation" was clicked
-    
-      
       this.header.classList.add('open')
       this.clickAnimationListener(event)
 
