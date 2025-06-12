@@ -110,6 +110,10 @@ export default class Header extends Shadow() {
     }
     this.observer = new MutationObserver(this.mutationCallback)
     this.openAndFocusNavListener = event => {
+      console.log('openAndFocusNavListener', event.target)
+      // check if href="#main-navigation" was clicked
+    
+      
       this.header.classList.add('open')
       this.clickAnimationListener(event)
 
@@ -145,7 +149,7 @@ export default class Header extends Shadow() {
     })
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
-  document.body.addEventListener('open-and-focus-nav', this.openAndFocusNavListener)
+    document.body.addEventListener('open-and-focus-nav', this.openAndFocusNavListener)
     this.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorListener)
     self.addEventListener('resize', this.resizeListener)
     if (this.mNavigation) this.mNavigation.addEventListener('animationend', this.clickAnimationListener)

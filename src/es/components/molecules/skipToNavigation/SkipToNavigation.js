@@ -21,7 +21,7 @@ export default class SkipToNavigation extends Shadow() {
     }
 
     this.keyupEventListener = (event) => {
-      const activeElement = document.activeElement
+      const activeElement = this.shadowRoot.activeElement || document.activeElement
       if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Enter' || event.key === ' ') {
         setTimeout(() => {
           // @ts-ignore
@@ -29,11 +29,13 @@ export default class SkipToNavigation extends Shadow() {
           this.skipToNav.classList.remove('active')
         }, 50)
       }
-      if (event.key === 'Enter') this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-nav') || 'open-and-focus-nav', {
-      bubbles: true,
-      cancelable: true,
-      composed: true
-    }))
+      if (event.key === 'Enter' && activeElement.href.includes('#main-navigation')) { 
+        this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-nav') || 'open-and-focus-nav', {
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      }
     }
   }
 
