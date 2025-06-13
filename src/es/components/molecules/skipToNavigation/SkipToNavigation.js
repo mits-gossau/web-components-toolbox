@@ -29,8 +29,15 @@ export default class SkipToNavigation extends Shadow() {
           this.skipToNav.classList.remove('active')
         }, 50)
       }
-      if (event.key === 'Enter' && activeElement.href.includes('#main-navigation')) { 
+      if (event.key === 'Enter' && activeElement.href.includes('#navigation')) { 
         this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-nav') || 'open-and-focus-nav', {
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      }
+      if (event.key === 'Enter' && activeElement.href.includes('#footer')) { 
+        this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-footer') || 'open-and-focus-footer', {
           bubbles: true,
           cancelable: true,
           composed: true
