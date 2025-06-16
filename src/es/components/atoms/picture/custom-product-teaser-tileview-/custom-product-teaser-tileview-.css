@@ -1,0 +1,13 @@
+:host {
+  --picture-custom-product-teaser-tileview-aspect-ratio: 9/10;
+  --picture-custom-product-teaser-tileview-img-height: 100%;
+  --picture-custom-product-teaser-tileview-img-max-height: 100%;
+  --picture-custom-product-teaser-tileview-img-object-fit: cover;
+  --picture-custom-product-teaser-tileview-img-width: 100%;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 9/10;
+  width: 100%;
+  height: 100%;
+  margin-bottom: var(--content-spacing, 1.143rem);
+}
