@@ -5,22 +5,26 @@ export default class NavLevelItem extends Shadow() {
   constructor (options = {}, ...args) {
     super({ keepCloneOutsideShadowRoot: true, importMetaUrl: import.meta.url, ...options }, ...args)
 
+    const simulateMultinavClick = () => {
+      if (typeof this.multiLevelNavigation[this.hasAttribute('data-href')
+        ? 'aLinkClickListener'
+        : 'subLiHoverListener'
+      ] === 'function') this.multiLevelNavigation[this.hasAttribute('data-href')
+        ? 'aLinkClickListener'
+        : 'subLiHoverListener'
+      ]({
+        composedPath: () => [NavLevelItem.walksUpDomQueryMatches(this, 'li')],
+        currentTarget: this,
+        preventDefault: () => {},
+        stopPropagation: () => {}
+      })
+    }
     // accessibility multi level navigation desktop
     this.enterEventListener = event => {
-      if (event.code === 'Enter' && this.matches(':focus')) {
-        if (typeof this.multiLevelNavigation[this.hasAttribute('data-href')
-          ? 'aLinkClickListener'
-          : 'subLiHoverListener'
-        ] === 'function') this.multiLevelNavigation[this.hasAttribute('data-href')
-          ? 'aLinkClickListener'
-          : 'subLiHoverListener'
-        ]({
-          composedPath: () => [NavLevelItem.walksUpDomQueryMatches(this, 'li')],
-          currentTarget: this,
-          preventDefault: () => {},
-          stopPropagation: () => {}
-        })
-      }
+      if (event.code === 'Enter' && this.matches(':focus')) simulateMultinavClick()
+    }
+    this.clickEventListener = event =>  {
+      if (this.matches(':focus')) simulateMultinavClick()
     }
   }
 
@@ -29,6 +33,7 @@ export default class NavLevelItem extends Shadow() {
     this.multiLevelNavigation = NavLevelItem.walksUpDomQueryMatches(this, 'm-multi-level-navigation')
     if (this.multiLevelNavigation !== this && this.multiLevelNavigation.isDesktop) {
       this.addEventListener('keyup', this.enterEventListener)
+      this.addEventListener('click', this.clickEventListener)
       this.connectedCallbackOnce()
     }
   }
@@ -48,7 +53,10 @@ export default class NavLevelItem extends Shadow() {
   }
 
   disconnectedCallback () {
-    if (this.multiLevelNavigation !== this && this.multiLevelNavigation.isDesktop) this.removeEventListener('keyup', this.enterEventListener)
+    if (this.multiLevelNavigation !== this && this.multiLevelNavigation.isDesktop) {
+      this.removeEventListener('keyup', this.enterEventListener)
+      this.removeEventListener('click', this.clickEventListener)
+    }
   }
 
   shouldRenderCSS () {
