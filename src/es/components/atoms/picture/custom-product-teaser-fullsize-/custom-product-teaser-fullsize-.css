@@ -1,0 +1,12 @@
+:host {
+  --picture-custom-product-teaser-fullsize-aspect-ratio: 21/16;
+  --picture-custom-product-teaser-fullsize-img-height: 100%;
+  --picture-custom-product-teaser-fullsize-img-max-height: 100%;
+  --picture-custom-product-teaser-fullsize-img-object-fit: cover;
+  --picture-custom-product-teaser-fullsize-img-width: 100%;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 21/16;
+  width: 100%;
+  height: 100%;
+}
