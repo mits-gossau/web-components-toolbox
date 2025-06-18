@@ -15,7 +15,7 @@
     --emotion-carousel-default-h1-font-size: var(--emotion-carousel-default-h1-font-size-custom, 2em);
     --emotion-carousel-default-a-color-hover: var(--emotion-carousel-default-a-color-hover-custom, var(--emotion-carousel-default-h1-color,  #fff));
     --emotion-carousel-default-width: var(--emotion-carousel-default-width-custom, 100%);
-    --emotion-carousel-default-controls-font-size: var(--emotion-carousel-default-controls-font-size-custom, 1.2em);
+    --emotion-carousel-default-controls-font-size: var(--emotion-carousel-default-controls-font-size-custom, 2.5em);
     --emotion-carousel-default-component-container-width: var(--emotion-carousel-default-component-container-width-custom, 100%);
     --emotion-carousel-default-component-container-height: var(--emotion-carousel-default-component-container-height-custom, 100%);
     --emotion-carousel-default-slide-width: var(--emotion-carousel-default-slide-width-custom, 100%);
