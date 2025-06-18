@@ -90,7 +90,7 @@ export default class EmotionCarousel extends Shadow() {
       }
 
       :host .controls {
-        font-size: var(--controls-font-size, 1.2rem);
+        font-size: var(--controls-font-size, 2.5em);
       }
 
       .component-container {
