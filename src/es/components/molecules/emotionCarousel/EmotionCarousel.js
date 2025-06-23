@@ -3,19 +3,25 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class EmotionCarousel extends Shadow() {
   constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    this.emotionPictures
   }
 
   connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
 
-    if (!this.height) {
-      this.addEventListener('picture-load', () => {
+
+    this.addEventListener('picture-load', () => {
+      if (!this.height) {
         this.updateHeight()
         window.addEventListener('resize', () => {
           this.updateHeight()
         })
-      })
-    }
+      }
+      else {
+        this.updateShownHeight(this.height)
+      }
+    })
+
 
     let curSlide = 0
     this.updateSlideTransform(curSlide)
@@ -61,19 +67,51 @@ export default class EmotionCarousel extends Shadow() {
 
   updateHeight() {
     const heights = []
-    const emotionPictures = this.root.querySelectorAll('a-emotion-pictures')
-    emotionPictures.forEach(emotionPicture => {
-      const pictures = Array.from(emotionPicture.root.querySelectorAll('a-picture'))
-        .filter(picture => picture.getAttribute('namespace') !== 'emotion-pictures-general-logo-')
-      pictures.forEach(picture => {
-        const img = picture.root.querySelector('img')
-        heights.push(img.offsetHeight)
+    this.emotionPictures = this.root.querySelectorAll('a-emotion-pictures')
+    if (this.emotionPictures) {
+      this.emotionPictures.forEach(emotionPicture => {
+        const pictures = Array.from(emotionPicture.root.querySelectorAll('a-picture'))
+          .filter(picture => picture.getAttribute('namespace') !== 'emotion-pictures-general-logo-')
+        pictures.forEach(picture => {
+          const img = picture.root.querySelector('img')
+          heights.push(img.offsetHeight)
+        })
       })
-    })
+    }
     if (heights.length > 0) {
-      this.style.height = `${Math.min(...heights)}px`
+      let minHeight = Math.min(...heights)
+      this.style.height = `${minHeight}px`
+      this.updateShownHeight(`${minHeight}px`)
     }
   }
+
+  updateShownHeight(height) {
+    if (!this.emotionPictures) {
+      this.emotionPictures = this.root.querySelectorAll('a-emotion-pictures');
+    }
+
+    this.emotionPictures.forEach(emotionPicture => {
+      function setHeightForShownElement() {
+        const shown = emotionPicture.shadowRoot.querySelector('.shown');
+        if (shown) {
+          shown.style.height = height;
+          return true;
+        }
+        return false;
+      };
+
+      if (!setHeightForShownElement()) {
+        const observer = new MutationObserver(() => {
+          if (setHeightForShownElement()) {
+            observer.disconnect();
+          }
+        });
+
+        observer.observe(emotionPicture.shadowRoot, { childList: true, subtree: true });
+      }
+    });
+  }
+
 
 
   renderCSS() {
