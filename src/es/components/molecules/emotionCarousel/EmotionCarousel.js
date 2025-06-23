@@ -91,28 +91,25 @@ export default class EmotionCarousel extends Shadow() {
     }
 
     this.emotionPictures.forEach(emotionPicture => {
-      function setHeightForShownElement() {
-        const shown = emotionPicture.shadowRoot.querySelector('.shown');
-        if (shown) {
-          shown.style.height = height;
-          return true;
-        }
-        return false;
-      };
-
-      if (!setHeightForShownElement()) {
+      if (!this.setHeightForShownElement(emotionPicture, height)) {
         const observer = new MutationObserver(() => {
-          if (setHeightForShownElement()) {
+          if (this.setHeightForShownElement(emotionPicture, height)) {
             observer.disconnect();
           }
         });
-
         observer.observe(emotionPicture.shadowRoot, { childList: true, subtree: true });
       }
     });
   }
 
-
+  setHeightForShownElement(emotionPicture, height) {
+    const shown = emotionPicture.shadowRoot.querySelector('.shown');
+    if (shown) {
+      shown.style.height = height;
+      return true;
+    }
+    return false;
+  };
 
   renderCSS() {
     this.css = /* css */`
