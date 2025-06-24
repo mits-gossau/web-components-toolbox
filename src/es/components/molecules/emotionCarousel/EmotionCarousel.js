@@ -18,8 +18,13 @@ export default class EmotionCarousel extends Shadow() {
         })
       }
       else {
-        this.updateShownHeight(this.height)
+        if (window.innerWidth <= 768) { 
+          this.updateShownHeight(this.heightMobile);
+        } else {
+          this.updateShownHeight(this.height);
+        }
       }
+
     })
 
 
