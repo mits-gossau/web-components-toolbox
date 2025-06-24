@@ -18,7 +18,8 @@ export default class EmotionCarousel extends Shadow() {
         })
       }
       else {
-        if (window.innerWidth <= 768) { 
+        const breakPoint = parseInt(self.Environment.mobileBreakpoint().replace('px', ''), 10);
+        if (window.innerWidth <= breakPoint) { 
           this.updateShownHeight(this.heightMobile);
         } else {
           this.updateShownHeight(this.height);
