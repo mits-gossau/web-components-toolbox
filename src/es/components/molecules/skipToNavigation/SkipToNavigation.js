@@ -44,6 +44,32 @@ export default class SkipToNavigation extends Shadow() {
         }))
       }
     }
+
+    this.shortCutListener = (event) => {
+      let isMac = false
+      // @ts-ignore
+      if (navigator.userAgentData && Array.isArray(navigator.userAgentData.platforms)) {
+        // @ts-ignore
+        isMac = navigator.userAgentData.platforms.some(p => p.toLowerCase().includes('mac'))
+      // @ts-ignore
+      } else if (navigator.userAgentData && navigator.userAgentData.platform) {
+        // @ts-ignore
+        isMac = navigator.userAgentData.platform.toLowerCase().includes('mac')
+      } else {
+        // @ts-ignore
+        isMac = navigator.userAgent && navigator.userAgent.toLowerCase().includes('mac')
+      }
+      if (
+        ((isMac && event.metaKey) || (!isMac && event.ctrlKey)) &&
+        event.shiftKey &&
+        event.key.toLowerCase() === 's'
+      ) {
+        event.preventDefault()
+        this.skipToNav.classList.add('active')
+        const firstAnchor = this.skipToNav.querySelector('a')
+        if (firstAnchor) firstAnchor.focus()
+      }
+    }
   }
 
   connectedCallback () {
@@ -52,7 +78,6 @@ export default class SkipToNavigation extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-      console.log('SkipToNavigation component connected', showPromises)
     Promise.all(showPromises).then(() => {
       this.hidden = false
       this.moveChildrenToSlot()
@@ -62,16 +87,21 @@ export default class SkipToNavigation extends Shadow() {
     this.addEventListener('focusin', () => this.focusinEventListener())
     this.addEventListener('focusout', () => this.focusoutEventListener())
     this.addEventListener('keyup', (event) => this.keyupEventListener(event))
+    window.addEventListener('keydown', this.shortCutListener)
   }
 
   disconnectedCallback () {
     this.removeEventListener('focusin', () => this.focusinEventListener())
     this.removeEventListener('focusout', () => this.focusoutEventListener())
     this.removeEventListener('keyup', (event) => this.keyupEventListener(event))
+    window.removeEventListener('keydown', this.shortCutListener)
   }
 
   moveChildrenToSlot () {
-    Array.from(this.shadowRoot.children).forEach((child) => { if (child.tagName === 'A') this.skipToNav.appendChild(child) })
+    if (!this.skipToNav) return
+    const hint = this.skipToNav.querySelector('.hint')
+    const linkNodes = Array.from(this.shadowRoot.children).filter(child => child.tagName === 'A')
+    linkNodes.forEach(link => hint ? this.skipToNav.insertBefore(link, hint) : this.skipToNav.appendChild(link))
   }
 
   /**
@@ -126,7 +156,8 @@ export default class SkipToNavigation extends Shadow() {
         width: 1px;
         white-space: nowrap;
       }
-      :host > nav > a {
+      :host > nav > a,
+      :host > nav > span.hint {
         display: block !important;
         color: var(--link-color, #007bff);
         text-decoration: none;
@@ -137,6 +168,10 @@ export default class SkipToNavigation extends Shadow() {
         line-height: var(--line-height, 1.5);
         letter-spacing: var(--letter-spacing, 0.02em);
         transition: color 0.3s ease;
+      }
+      :host > nav > span.hint {
+        color: var(--hint-color, #999);
+        font-size: var(--hint-font-size, 0.8rem);
       }
     `
     return this.fetchTemplate()
@@ -176,6 +211,7 @@ export default class SkipToNavigation extends Shadow() {
     this.html = /* html */`
       <nav aria-label="Skip links" id="skip-navigation">
         <h2>${this.hasAttribute('label') ? this.getAttribute('label') : 'Skip to navigation'}</h2>
+        ${(this.hasAttribute('show-shortcut')) ? `<span class="hint">(${navigator.userAgent.includes('Mac') ? '⌘' : 'Ctrl'} + Shift + S)</span>` : ''}
       </nav>
     `
   }
