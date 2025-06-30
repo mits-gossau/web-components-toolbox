@@ -87,14 +87,14 @@ export default class SkipToNavigation extends Shadow() {
     this.addEventListener('focusin', () => this.focusinEventListener())
     this.addEventListener('focusout', () => this.focusoutEventListener())
     this.addEventListener('keyup', (event) => this.keyupEventListener(event))
-    window.addEventListener('keydown', this.shortCutListener)
+    if (this.hasAttribute('show-shortcut')) window.addEventListener('keydown', this.shortCutListener)
   }
 
   disconnectedCallback () {
     this.removeEventListener('focusin', () => this.focusinEventListener())
     this.removeEventListener('focusout', () => this.focusoutEventListener())
     this.removeEventListener('keyup', (event) => this.keyupEventListener(event))
-    window.removeEventListener('keydown', this.shortCutListener)
+    if (this.hasAttribute('show-shortcut')) window.removeEventListener('keydown', this.shortCutListener)
   }
 
   moveChildrenToSlot () {
