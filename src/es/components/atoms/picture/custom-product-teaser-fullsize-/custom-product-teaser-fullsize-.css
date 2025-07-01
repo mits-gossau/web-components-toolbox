@@ -10,3 +10,8 @@
   width: var(--custom-product-teaser-fullsize-image-width, 100%);
   height: var(--custom-product-teaser-fullsize-image-height, 100%);
 }
+@media only screen and (max-width: _max-width_) {
+    :host {
+      --picture-custom-product-teaser-fullsize-aspect-ratio: var(--custom-product-teaser-fullsize-image-aspect-ratio-mobile, var(--custom-product-teaser-fullsize-image-aspect-ratio, 9/10));
+    }
+}
