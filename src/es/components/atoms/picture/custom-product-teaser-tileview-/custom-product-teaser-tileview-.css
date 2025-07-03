@@ -1,0 +1,18 @@
+:host {
+  --picture-custom-product-teaser-tileview-aspect-ratio: var(--custom-product-teaser-tileview-image-aspect-ratio, 9/10);
+  --picture-custom-product-teaser-tileview-img-height: var(--custom-product-teaser-tileview-image-height, 100%);
+  --picture-custom-product-teaser-tileview-img-max-height: var(--custom-product-teaser-tileview-image-max-height, 100%);
+  --picture-custom-product-teaser-tileview-img-object-fit: var(--custom-product-teaser-tileview-image-object-fit, cover);
+  --picture-custom-product-teaser-tileview-img-width: var(--custom-product-teaser-tileview-image-width, 100%);
+  display: var(--custom-product-teaser-tileview-image-display, block);
+  object-fit: var(--custom-product-teaser-tileview-image-object-fit, cover);
+  aspect-ratio: var(--custom-product-teaser-tileview-image-aspect-ratio, 9/10);
+  width: var(--custom-product-teaser-tileview-image-height, 100%);
+  height: var(--custom-product-teaser-tileview-image-width, 100%);
+  margin-bottom: var(--custom-product-teaser-tileview-margin-bottom, var(--custom-product-teaser-tileview-margin, var(--content-spacing, 1.143rem)));
+}
+@media only screen and (max-width: _max-width_) {
+    :host {
+      aspect-ratio: var(--custom-product-teaser-tileview-image-aspect-ratio-mobile, var(--custom-product-teaser-tileview-image-aspect-ratio, auto));
+    }
+}

@@ -1,0 +1,17 @@
+:host {
+  --picture-custom-product-teaser-fullsize-aspect-ratio: var(--custom-product-teaser-fullsize-image-aspect-ratio, auto);
+  --picture-custom-product-teaser-fullsize-img-height: var(--custom-product-teaser-fullsize-image-height, 100%);
+  --picture-custom-product-teaser-fullsize-img-max-height: var(--custom-product-teaser-fullsize-image-max-height, 100%);
+  --picture-custom-product-teaser-fullsize-img-object-fit: var(--custom-product-teaser-fullsize-image-object-fit, cover);
+  --picture-custom-product-teaser-fullsize-img-width: var(--custom-product-teaser-fullsize-image-width, 100%);
+  display: var(--custom-product-teaser-fullsize-image-display, block);
+  object-fit: var(--custom-product-teaser-fullsize-image-object-fit, cover);
+  aspect-ratio: var(--custom-product-teaser-fullsize-image-aspect-ratio, auto);
+  width: var(--custom-product-teaser-fullsize-image-width, 100%);
+  height: var(--custom-product-teaser-fullsize-image-height, 100%);
+}
+@media only screen and (max-width: _max-width_) {
+    :host {
+      --picture-custom-product-teaser-fullsize-aspect-ratio: var(--custom-product-teaser-fullsize-image-aspect-ratio-mobile, var(--custom-product-teaser-fullsize-image-aspect-ratio, 9/10));
+    }
+}

@@ -3,49 +3,60 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class EmotionCarousel extends Shadow() {
   constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    this.emotionPictures
+    this.timer
+    this.breakPoint = parseInt(self.Environment.mobileBreakpoint().replace('px', ''), 10)
+    this.nextButtonListener = () => {
+      clearInterval(this.timer)
+      this.timer = setInterval(this.changeSlide, 10000)
+      this.curSlide = (this.curSlide + 1) % this.slides.length
+      this.updateSlideTransform(this.curSlide)
+    }
+
+    this.prevButtonListener = () => {
+      this.curSlide = (this.curSlide - 1 + this.slides.length) % this.slides.length
+      this.updateSlideTransform(this.curSlide)
+    }
+
+    this.resizeListener = () => {
+      this.updateHeight()
+    }
+
+    this.pictureLoadListener = () => {
+      if ((!this.height && window.innerWidth > this.breakPoint) || (!this.heightMobile && window.innerWidth <= this.breakPoint)) {
+        this.updateHeight()
+        window.addEventListener('resize', this.resizeListener)
+      } else {
+        if (window.innerWidth <= this.breakPoint) {
+          this.updateShownHeight(this.heightMobile);
+        } else {
+          this.updateShownHeight(this.height);
+        }
+      }
+    }
+
+    this.changeSlide = () => {
+      this.curSlide = (this.curSlide + 1) % this.slides.length
+      this.updateSlideTransform(this.curSlide)
+    }
   }
 
   connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
-
-    if (!this.height) {
-      this.addEventListener('picture-load', () => {
-        this.updateHeight()
-        window.addEventListener('resize', () => {
-          this.updateHeight()
-        })
-      })
-    }
-
-    let curSlide = 0
-    this.updateSlideTransform(curSlide)
-
-    this.nextButton?.addEventListener('click', () => {
-      clearInterval(timer)
-      timer = setInterval(changeSlide, 10000)
-      curSlide = (curSlide + 1) % this.slides.length
-      this.updateSlideTransform(curSlide)
-    })
-
-    this.prevButton?.addEventListener('click', () => {
-      curSlide = (curSlide - 1 + this.slides.length) % this.slides.length
-      this.updateSlideTransform(curSlide)
-    })
-
-    const changeSlide = () => {
-      curSlide = (curSlide + 1) % this.slides.length
-      this.updateSlideTransform(curSlide)
-    }
-
-    let timer = setInterval(changeSlide, this.interval)
+    this.addEventListener('picture-load', this.pictureLoadListener)
+    this.curSlide = 0
+    this.updateSlideTransform(this.curSlide)
+    this.nextButton?.addEventListener('click', this.nextButtonListener)
+    this.prevButton?.addEventListener('click', this.prevButtonListener)
+    this.timer = setInterval(this.changeSlide, this.interval)
   }
 
   disconnectedCallback() {
-    this.nextButton?.removeEventListener('click', () => { })
-    this.prevButton?.removeEventListener('click', () => { })
-    this.removeEventListener('picture-load', () => { })
-    this.removeEventListener('resize', () => { })
-    clearInterval(timer)
+    this.nextButton?.removeEventListener('click', this.nextButtonListener)
+    this.prevButton?.removeEventListener('click', this.prevButtonListener)
+    this.removeEventListener('picture-load', this.pictureLoadListener)
+    window.removeEventListener('resize', this.resizeListener)
+    clearInterval(this.timer)
   }
 
   shouldRenderCSS() {
@@ -61,20 +72,49 @@ export default class EmotionCarousel extends Shadow() {
 
   updateHeight() {
     const heights = []
-    const emotionPictures = this.root.querySelectorAll('a-emotion-pictures')
-    emotionPictures.forEach(emotionPicture => {
-      const pictures = Array.from(emotionPicture.root.querySelectorAll('a-picture'))
-        .filter(picture => picture.getAttribute('namespace') !== 'emotion-pictures-general-logo-')
-      pictures.forEach(picture => {
-        const img = picture.root.querySelector('img')
-        heights.push(img.offsetHeight)
+    this.emotionPictures = this.root.querySelectorAll('a-emotion-pictures')
+    if (this.emotionPictures) {
+      this.emotionPictures.forEach(emotionPicture => {
+        const pictures = Array.from(emotionPicture.root.querySelectorAll('a-picture'))
+          .filter(picture => picture.getAttribute('namespace') !== 'emotion-pictures-general-logo-')
+        pictures.forEach(picture => {
+          const img = picture.root.querySelector('img')
+          heights.push(img.offsetHeight)
+        })
       })
-    })
+    }
     if (heights.length > 0) {
-      this.style.height = `${Math.min(...heights)}px`
+      let minHeight = Math.min(...heights)
+      this.style.height = `${minHeight}px`
+      this.updateShownHeight(`${minHeight}px`)
     }
   }
 
+  updateShownHeight(height) {
+    if (!this.emotionPictures) {
+      this.emotionPictures = this.root.querySelectorAll('a-emotion-pictures');
+    }
+
+    this.emotionPictures.forEach(emotionPicture => {
+      if (!this.setHeightForShownElement(emotionPicture, height)) {
+        const observer = new MutationObserver(() => {
+          if (this.setHeightForShownElement(emotionPicture, height)) {
+            observer.disconnect();
+          }
+        });
+        observer.observe(emotionPicture.shadowRoot, { childList: true, subtree: true });
+      }
+    });
+  }
+
+  setHeightForShownElement(emotionPicture, height) {
+    const shown = emotionPicture.shadowRoot.querySelector('.shown');
+    if (shown) {
+      shown.style.height = height;
+      return true;
+    }
+    return false;
+  };
 
   renderCSS() {
     this.css = /* css */`
@@ -90,7 +130,7 @@ export default class EmotionCarousel extends Shadow() {
       }
 
       :host .controls {
-        font-size: var(--controls-font-size, 1.2rem);
+        font-size: var(--controls-font-size, 2.5em);
       }
 
       .component-container {
@@ -210,3 +250,4 @@ export default class EmotionCarousel extends Shadow() {
     return this.getAttribute('height-Mobile')
   }
 }
+
