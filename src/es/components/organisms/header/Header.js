@@ -128,6 +128,18 @@ export default class Header extends Shadow() {
         }, 0)
       }
     }
+    this.closeNavListener = event => {
+      this.header.classList.remove('open')
+
+      if (this.mNavigation) {
+        this.mNavigation.setAttribute('aria-expanded', 'false')
+        this.mNavigation.classList.remove('open')
+        this.mNavigation.classList.remove('no-scroll')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul').classList.remove('open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').setAttribute('aria-expanded', 'false')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').classList.remove('open')
+      }
+    }
   }
 
   connectedCallback () {
@@ -146,6 +158,7 @@ export default class Header extends Shadow() {
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
     document.body.addEventListener('open-and-focus-nav', this.openAndFocusNavListener)
+    document.body.addEventListener('close-other-flyout', this.closeNavListener)
     this.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorListener)
     self.addEventListener('resize', this.resizeListener)
     if (this.mNavigation) this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
@@ -169,6 +182,8 @@ export default class Header extends Shadow() {
     self.removeEventListener('resize', this.mutationCallback)
     document.removeEventListener('keyup', this.keyupListener)
     this.observer.disconnect()
+    document.body.removeEventListener('open-and-focus-nav', this.openAndFocusNavListener)
+    document.body.removeEventListener('close-other-flyout', this.closeNavListener)
   }
 
   /**
