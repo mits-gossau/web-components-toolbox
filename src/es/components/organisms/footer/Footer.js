@@ -32,10 +32,6 @@ export default class Footer extends Shadow() {
 
     this.setAttribute('role', 'navigation')
     this.setAttribute('aria-label', 'Footer')
-
-    this.openAndFocusListener = event => {
-      console.log('openAndFocusListener', this.wrappers)
-    }
   }
 
   connectedCallback () {
@@ -58,11 +54,6 @@ export default class Footer extends Shadow() {
       })
       this.hidden = false
     })
-    document.body.addEventListener('open-and-focus-footer', this.openAndFocusListener)
-  }
-
-  diconnectedCallback () {
-    document.body.removeEventListener('open-and-focus-footer', this.openAndFocusListener)
   }
 
   /**
@@ -445,7 +436,6 @@ export default class Footer extends Shadow() {
    * @static
    */
   static recalcWrappers (wrappers) {
-    console.log(wrappers)
     wrappers.forEach(wrapper => wrapper.calcColumnWidth())
     return wrappers
   }
@@ -474,7 +464,6 @@ export default class Footer extends Shadow() {
    * @returns {HTMLElement[]}
    */
   injectCssIntoWrappers (wrappers) {
-    console.log(wrappers)
     wrappers.forEach(wrapper => wrapper.setCss(/* css */`
       ${this.injectCssIntoWrapperAndDetails()}
       :host .footer-links-row:not(:last-child){
