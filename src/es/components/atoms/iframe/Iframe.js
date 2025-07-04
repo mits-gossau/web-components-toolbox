@@ -4,6 +4,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
 /**
  * Lazy load Iframe
  * Example at: /src/es/components/atoms/iframe/Iframe.html
+ * TODO: Make this work with dynamic height for forms: https://stackoverflow.com/questions/49253341/how-to-make-iframe-100-height-according-to-its-content
  *
  * @export
  * @class Iframe
