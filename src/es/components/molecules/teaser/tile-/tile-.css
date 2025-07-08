@@ -12,7 +12,7 @@
   --teaser-tile-figcaption-transform-hover: translateY(-2.4em);
   --teaser-tile-figcaption-transition: transform .45s cubic-bezier(.17,.67,.28,1) 50ms;
   --teaser-tile-h5-color: var(--color-secondary);
-  --teaser-tile-h5-margin: 0 0 0.5em;
+  --teaser-tile-h5-margin: 0.5em 0 0.5em;
   --teaser-tile-overflow: hidden;
   --teaser-tile-p-font-size: var(--teaser-tile-p-font-size-custom, 0.875em);
   --teaser-tile-p-line-height: var(--teaser-tile-p-line-height-custom, 1.14em);
