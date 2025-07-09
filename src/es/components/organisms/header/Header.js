@@ -530,14 +530,18 @@ export default class Header extends Shadow() {
   setStickyOffsetHeight () {
     this.style.textContent = ''
     self.requestAnimationFrame(timeStamp => {
-      this.setCss(/* CSS */`
+
+
+
+      this.setCss(/* CSS */`  
+       
         :host([sticky].top), :host([sticky]:not(.top)) {
           top: -${this.offsetHeight + 5}px;
           transition: var(--sticky-transition-hide, top .4s ease);
         }
         @media only screen and (max-width: _max-width_) {
           :host {
-            min-height: ${this.offsetHeight}px;
+            min-height: var(--header-min-height, ${this.offsetHeight}px);
           }
         }
       `, undefined, undefined, undefined, this.style)
