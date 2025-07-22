@@ -509,7 +509,7 @@ export default class Button extends Hover() {
       fetchSubTags: this.hasAttribute('fetch-sub-tags'),
       clearSubTags: this.hasAttribute('clear-sub-tags'),
       this: this,
-      textContent: this.label.textContent,
+      textContent: this.label?.textContent,
       pushHistory,
       resolve
     }
