@@ -46,6 +46,7 @@ export default class Header extends Shadow() {
     this.noScroll = () => { window.scroll(0, 0) }
     this.setAttribute('role', 'banner')
     this.setAttribute('aria-label', 'Header')
+    // @ts-ignore
     this.scrollListener = event => {
       const lastScroll = self.scrollY
       setTimeout(() => {
@@ -85,10 +86,12 @@ export default class Header extends Shadow() {
         if (this.MenuIcon.classList.contains('open')) this.MenuIcon.click()
       }
     }
+    // @ts-ignore
     this.clickAnchorListener = event => {
       if (this.getMedia() !== 'desktop' && this.MenuIcon.classList.contains('open')) this.MenuIcon.click()
     }
     let timeout = null
+    // @ts-ignore
     this.resizeListener = event => {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
@@ -96,7 +99,9 @@ export default class Header extends Shadow() {
       }, 200)
     }
     this.mutationCallbackTimeout = null
+    // @ts-ignore
     this.mutationCallback = mutationsList => {
+      // @ts-ignore
       clearTimeout(this.mutationCallbackTimeout)
       this.mutationCallbackTimeout = setTimeout(() => {
         // make sure that the sticky header is shown when the menu is open
@@ -104,6 +109,37 @@ export default class Header extends Shadow() {
       }, 50)
     }
     this.observer = new MutationObserver(this.mutationCallback)
+    this.openAndFocusNavListener = event => {
+      this.header.classList.add('open')
+      this.clickAnimationListener(event)
+
+      if (this.mNavigation) {
+        this.mNavigation.setAttribute('aria-expanded', 'true')
+        this.mNavigation.classList.remove('hide')
+        this.mNavigation.classList.add('no-scroll', 'open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul').classList.add('open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').setAttribute('aria-expanded', 'true')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').classList.add('open')
+        setTimeout(() => {
+          const a = this.mNavigation.root.querySelector('nav > ul > li:first-child a-link')?.shadowRoot.querySelector('a')
+          if (a) a.focus()
+          const b = this.mNavigation.root.querySelector('nav > ul > li:first-child a')
+          if (b) b.focus()
+        }, 0)
+      }
+    }
+    this.closeNavListener = event => {
+      this.header.classList.remove('open')
+
+      if (this.mNavigation) {
+        this.mNavigation.setAttribute('aria-expanded', 'false')
+        this.mNavigation.classList.remove('open')
+        this.mNavigation.classList.remove('no-scroll')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul').classList.remove('open')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').setAttribute('aria-expanded', 'false')
+        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').classList.remove('open')
+      }
+    }
   }
 
   connectedCallback () {
@@ -111,7 +147,9 @@ export default class Header extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    // @ts-ignore
     if (!this.hasAttribute('no-navigation')) showPromises.push(new Promise(resolve => this.addEventListener('navigation-load', event => resolve(), { once: true })))
+    // @ts-ignore
     if (this.aLogo && !this.aLogo.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('logo-load', event => resolve(), { once: true })))
     Promise.all(showPromises).then(() => {
       this.hidden = false
@@ -119,6 +157,8 @@ export default class Header extends Shadow() {
     })
     if (this.hasAttribute('sticky')) self.addEventListener('scroll', this.scrollListener, { once: true })
     this.addEventListener('click', this.clickAnimationListener)
+    document.body.addEventListener('open-and-focus-nav', this.openAndFocusNavListener)
+    document.body.addEventListener('close-other-flyout', this.closeNavListener)
     this.addEventListener(this.getAttribute('click-anchor') || 'click-anchor', this.clickAnchorListener)
     self.addEventListener('resize', this.resizeListener)
     if (this.mNavigation) this.mNavigation.addEventListener('animationend', this.clickAnimationListener)
@@ -142,6 +182,8 @@ export default class Header extends Shadow() {
     self.removeEventListener('resize', this.mutationCallback)
     document.removeEventListener('keyup', this.keyupListener)
     this.observer.disconnect()
+    document.body.removeEventListener('open-and-focus-nav', this.openAndFocusNavListener)
+    document.body.removeEventListener('close-other-flyout', this.closeNavListener)
   }
 
   /**
@@ -529,6 +571,7 @@ export default class Header extends Shadow() {
 
   setStickyOffsetHeight () {
     this.style.textContent = ''
+    // @ts-ignore
     self.requestAnimationFrame(timeStamp => {
 
       this.setCss(/* CSS */`

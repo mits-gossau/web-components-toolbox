@@ -40,7 +40,7 @@ export default class Footer extends Shadow() {
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     Promise.all(showPromises).then(() => {
-      const wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]'))
+      const wrappers = this.wrappers
       Footer.recalcWrappers(wrappers) // make sure that the wrapper has all the variables just set and recalc
       this.injectCssIntoWrappers(wrappers)
       this.fetchModules([
@@ -50,7 +50,7 @@ export default class Footer extends Shadow() {
         }
       ]).then(modules => {
         let moduleDetails
-        if ((moduleDetails = modules.find(element => element.name === 'm-details'))) this.injectCssIntoDetails(this.autoAddDetails(wrappers, moduleDetails).details)
+        if ((moduleDetails = modules.find(element => element.name === 'm-details'))) this.injectCssIntoDetails(this.autoAddDetails(this.wrappers, moduleDetails).details)
       })
       this.hidden = false
     })
@@ -505,5 +505,9 @@ export default class Footer extends Shadow() {
         color: var(--${this.getAttribute('namespace') || ''}invert-svg-color-hover, var(--${this.getAttribute('namespace') || ''}invert-a-color-hover));
       }
     `
+  }
+
+  get wrappers () {
+    return this._wrappers || (this._wrappers = Array.from(this.root.querySelectorAll('o-wrapper[namespace=footer-default-]')))
   }
 }

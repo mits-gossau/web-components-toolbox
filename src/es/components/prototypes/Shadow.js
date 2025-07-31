@@ -809,6 +809,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    */
   getMobileBreakpoint (organism = { constructor: this.constructor.name, tagName: this.tagName, namespace: this.namespace }) {
     return this.hasAttribute('mobile-breakpoint')
+      // @ts-ignore
       ? this.getAttribute('mobile-breakpoint')
       // @ts-ignore ignoring self.Environment error
       : self.Environment && typeof self.Environment.mobileBreakpoint === 'function'
