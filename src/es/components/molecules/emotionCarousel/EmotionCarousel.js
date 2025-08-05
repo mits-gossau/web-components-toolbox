@@ -1,7 +1,10 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
+/* global self */
+/* global CustomEvent */
+
 export default class EmotionCarousel extends Shadow() {
-  constructor(options = {}, ...args) {
+  constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.emotionPictures
     this.timer
@@ -28,9 +31,9 @@ export default class EmotionCarousel extends Shadow() {
         window.addEventListener('resize', this.resizeListener)
       } else {
         if (window.innerWidth <= this.breakPoint) {
-          this.updateShownHeight(this.heightMobile);
+          this.updateShownHeight(this.heightMobile)
         } else {
-          this.updateShownHeight(this.height);
+          this.updateShownHeight(this.height)
         }
       }
     }
@@ -41,7 +44,7 @@ export default class EmotionCarousel extends Shadow() {
     }
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.addEventListener('picture-load', this.pictureLoadListener)
     this.curSlide = 0
@@ -51,7 +54,7 @@ export default class EmotionCarousel extends Shadow() {
     this.timer = setInterval(this.changeSlide, this.interval)
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.nextButton?.removeEventListener('click', this.nextButtonListener)
     this.prevButton?.removeEventListener('click', this.prevButtonListener)
     this.removeEventListener('picture-load', this.pictureLoadListener)
@@ -59,18 +62,18 @@ export default class EmotionCarousel extends Shadow() {
     clearInterval(this.timer)
   }
 
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  updateSlideTransform(curSlide) {
+  updateSlideTransform (curSlide) {
     this.slides.forEach((slide, index) => {
       const offset = index - curSlide
       slide.style.transform = `translateX(${offset * 100}%)`
     })
   }
 
-  updateHeight() {
+  updateHeight () {
     const heights = []
     this.emotionPictures = this.root.querySelectorAll('a-emotion-pictures')
     if (this.emotionPictures) {
@@ -84,39 +87,39 @@ export default class EmotionCarousel extends Shadow() {
       })
     }
     if (heights.length > 0) {
-      let minHeight = Math.min(...heights)
+      const minHeight = Math.min(...heights)
       this.style.height = `${minHeight}px`
       this.updateShownHeight(`${minHeight}px`)
     }
   }
 
-  updateShownHeight(height) {
+  updateShownHeight (height) {
     if (!this.emotionPictures) {
-      this.emotionPictures = this.root.querySelectorAll('a-emotion-pictures');
+      this.emotionPictures = this.root.querySelectorAll('a-emotion-pictures')
     }
 
     this.emotionPictures.forEach(emotionPicture => {
       if (!this.setHeightForShownElement(emotionPicture, height)) {
         const observer = new MutationObserver(() => {
           if (this.setHeightForShownElement(emotionPicture, height)) {
-            observer.disconnect();
+            observer.disconnect()
           }
-        });
-        observer.observe(emotionPicture.shadowRoot, { childList: true, subtree: true });
+        })
+        observer.observe(emotionPicture.shadowRoot, { childList: true, subtree: true })
       }
-    });
+    })
   }
 
-  setHeightForShownElement(emotionPicture, height) {
-    const shown = emotionPicture.shadowRoot.querySelector('.shown');
+  setHeightForShownElement (emotionPicture, height) {
+    const shown = emotionPicture.shadowRoot.querySelector('.shown')
     if (shown) {
-      shown.style.height = height;
-      return true;
+      shown.style.height = height
+      return true
     }
-    return false;
+    return false
   };
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
       :host {
         display: flex;
@@ -199,7 +202,7 @@ export default class EmotionCarousel extends Shadow() {
     return this.fetchTemplate()
   }
 
-  fetchTemplate() {
+  fetchTemplate () {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {
@@ -226,28 +229,27 @@ export default class EmotionCarousel extends Shadow() {
     }
   }
 
-  get slides() {
+  get slides () {
     return this.root.querySelectorAll('.slide')
   }
 
-  get nextButton() {
+  get nextButton () {
     return this.root.querySelector('.section.right')
   }
 
-  get prevButton() {
+  get prevButton () {
     return this.root.querySelector('.section.left')
   }
 
-  get interval() {
+  get interval () {
     return this.getAttribute('interval') || 10000
   }
 
-  get height() {
+  get height () {
     return this.getAttribute('height')
   }
 
-  get heightMobile() {
+  get heightMobile () {
     return this.getAttribute('height-Mobile')
   }
 }
-

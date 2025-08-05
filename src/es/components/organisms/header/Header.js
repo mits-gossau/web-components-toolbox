@@ -573,7 +573,6 @@ export default class Header extends Shadow() {
     this.style.textContent = ''
     // @ts-ignore
     self.requestAnimationFrame(timeStamp => {
-
       this.setCss(/* CSS */`
         :host([sticky].top), :host([sticky]:not(.top)) {
           top: -${this.offsetHeight + 5}px;

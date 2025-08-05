@@ -1,12 +1,11 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class SustainabilityMetrics extends Shadow() {
-  constructor(options = {}, ...args) {
-    super({importMetaUrl: import.meta.url, ...options }, ...args)
-
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
   }
 
-  connectedCallback() {
+  connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.getAttribute('defaultSource')) {
       console.log(this.numbersContainer.length)
@@ -18,11 +17,11 @@ export default class SustainabilityMetrics extends Shadow() {
     }
   }
 
-  shouldRenderCSS() {
+  shouldRenderCSS () {
     return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
   }
 
-  renderCSS() {
+  renderCSS () {
     this.css = /* css */`
     :host {
         overflow: var(--overflow, hidden);
@@ -118,15 +117,15 @@ export default class SustainabilityMetrics extends Shadow() {
     }
   }
 
-  get backgroundPicture() {
+  get backgroundPicture () {
     return this.root.querySelector('.background')
   }
 
-  get backgroundOverlay() {
+  get backgroundOverlay () {
     return this.root.querySelector('.background-overlay')
   }
 
-  get numbersContainer() {
+  get numbersContainer () {
     return this.root.querySelectorAll('.numbers > *')
   }
 }

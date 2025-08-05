@@ -1,21 +1,18 @@
-
 import { Shadow } from '../../prototypes/Shadow.js'
 export default class BentoGridTeaser extends Shadow() {
-
-  constructor(options = {}, ...args) {
-      super({ importMetaUrl: import.meta.url, ...options }, ...args)}
-  
-
-  connectedCallback() {
-      if (this.shouldRenderCSS()) this.renderCSS();
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
   }
 
-
-  shouldRenderCSS() {
-      return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+  connectedCallback () {
+    if (this.shouldRenderCSS()) this.renderCSS()
   }
 
-  renderCSS() {
+  shouldRenderCSS () {
+    return !this.root.querySelector(`:host > style[_css], ${this.tagName} > style[_css]`)
+  }
+
+  renderCSS () {
     this.css = /* css */`
     :host {
         width: var(--width, 100vw);
@@ -162,7 +159,7 @@ export default class BentoGridTeaser extends Shadow() {
         .column-right {
             gap: var(--mobile-column-right-gap, 0.7em);
         }
-    }`;
+    }`
 
     return this.fetchTemplate()
   }
@@ -187,8 +184,6 @@ export default class BentoGridTeaser extends Shadow() {
         }, ...styles])
       default:
         return this.fetchCSS(styles)
-        
     }
   }
-
 }

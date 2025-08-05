@@ -322,7 +322,7 @@ export default class Picture extends Intersection(Hover()) {
           path: `${this.importMetaUrl}./custom-product-teaser-fullsize-/custom-product-teaser-fullsize-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }])
-        case 'picture-custom-product-teaser-tileview-':
+      case 'picture-custom-product-teaser-tileview-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./custom-product-teaser-tileview-/custom-product-teaser-tileview-.css`, // apply namespace since it is specific and no fallback
           namespace: false
