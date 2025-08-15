@@ -40,7 +40,7 @@ export default class Tabs extends Shadow() {
           const urlParams = new URLSearchParams(window.location.search)
           const tabParam = tab.getAttribute('data-tab') ? tab.getAttribute('data-tab').toString() : ''
           urlParams.set(anchorTagName, tabParam)
-          window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`)
+          if (!this.hasAttribute('no-history')) window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`)
 
           tabs.forEach((tab) => {
             tab.classList.remove('active')
