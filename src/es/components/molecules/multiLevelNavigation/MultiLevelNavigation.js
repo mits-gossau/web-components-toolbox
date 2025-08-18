@@ -162,7 +162,7 @@ export default class MultiLevelNavigation extends Mutation() {
               // add close icon to all flyout
               const closeIconElement = document.createElement('a')
               closeIconElement.innerHTML = /* HTML */`
-         <a-icon-mdx namespace='icon-link-list-' icon-name='X' size='1.5em' rotate='0' class='icon-right'></a-icon-mdx>
+         <a-icon-mdx namespace='icon-link-list-' icon-name='X' size='1.5em' rotate='0' class='icon-right' role="${this.getAttribute('close-nav-role') || 'Close navigation'}"></a-icon-mdx>
          `
               closeIconElement.classList.add('close-icon')
               wrapper.querySelector('section')?.appendChild(closeIconElement)
