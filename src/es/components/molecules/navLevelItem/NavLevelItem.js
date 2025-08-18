@@ -4,13 +4,60 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class NavLevelItem extends Shadow() {
   constructor (options = {}, ...args) {
     super({ keepCloneOutsideShadowRoot: true, importMetaUrl: import.meta.url, ...options }, ...args)
+
+    const simulateMultinavClick = () => {
+      if (typeof this.multiLevelNavigation[this.hasAttribute('data-href')
+        ? 'aLinkClickListener'
+        : 'subLiHoverListener'
+      ] === 'function') this.multiLevelNavigation[this.hasAttribute('data-href')
+        ? 'aLinkClickListener'
+        : 'subLiHoverListener'
+      ]({
+        composedPath: () => [NavLevelItem.walksUpDomQueryMatches(this, 'li')],
+        currentTarget: this,
+        preventDefault: () => {},
+        stopPropagation: () => {}
+      })
+    }
+    // accessibility multi level navigation desktop
+    this.enterEventListener = event => {
+      if (event.code === 'Enter' && this.matches(':focus')) simulateMultinavClick()
+    }
+    this.clickEventListener = event =>  {
+      if (this.matches(':focus')) simulateMultinavClick()
+    }
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
+    this.multiLevelNavigation = NavLevelItem.walksUpDomQueryMatches(this, 'm-multi-level-navigation')
+    if (this.multiLevelNavigation !== this && this.multiLevelNavigation.isDesktop) {
+      this.addEventListener('keyup', this.enterEventListener)
+      this.addEventListener('click', this.clickEventListener)
+      this.connectedCallbackOnce()
+    }
   }
 
-  disconnectedCallback () {}
+  connectedCallbackOnce () {
+    // for purpose of accessibility remove the parent links capability for tabindex and reproduce link behavior in this component with the enterEventListener
+    if (this.parentElement.tagName === 'A') {
+      this.parentElement.setAttribute('tabindex', '-1')
+      this.setAttribute('role', 'link')
+      let href
+      if ((href = this.parentElement.getAttribute('href'))) {
+        this.setAttribute('data-href', href)
+        this.setAttribute('href', href)
+      }
+    }
+    this.connectedCallbackOnce = () => {}
+  }
+
+  disconnectedCallback () {
+    if (this.multiLevelNavigation !== this && this.multiLevelNavigation.isDesktop) {
+      this.removeEventListener('keyup', this.enterEventListener)
+      this.removeEventListener('click', this.clickEventListener)
+    }
+  }
 
   shouldRenderCSS () {
     return !this.root.querySelector(
