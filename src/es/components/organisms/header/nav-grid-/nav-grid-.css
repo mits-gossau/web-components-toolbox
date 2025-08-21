@@ -115,6 +115,10 @@
         animation: openRight .3s ease-out forwards;
         left: auto;
     }
+    /* klubschule-pro has mobile-breakpoint="1300px" on o-header and m-multi-level-navigation */
+    :host > header > m-multi-level-navigation[mobile-breakpoint="1300px"].open {
+        left: -0.5em;
+    }
     :host > header > m-multi-level-navigation {
         animation: closeRight .3s ease-in forwards;
     }
