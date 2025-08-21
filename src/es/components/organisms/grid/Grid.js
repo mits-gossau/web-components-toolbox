@@ -89,7 +89,7 @@ export default class Grid extends Shadow() {
     }
     if (this.hasAttribute('padding')) {
       this.css = /* css */`
-      :host > section > * {
+      :host > section {
         padding: ${this.getAttribute('padding') || 'var(--padding, 0)'};
       }
     `
