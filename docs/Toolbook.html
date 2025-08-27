@@ -1,116 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href=../src/css/initial.css rel=stylesheet type="text/css">
-        <link href=../src/css/reset.css rel=stylesheet type="text/css">
-        <link href=../src/css/colors.css rel=stylesheet type="text/css">
-        <link href=../src/css/fonts.css rel=stylesheet type="text/css">
-        <link href=../src/css/variables.css rel=stylesheet type="text/css">
-        <title>Tool Book the better than Story Book. 🙈🙉🙊</title>
-    </head>
-
-    <body>
-        <div>
-            <h1>Tool Book the better than Story Book. 🙈🙉🙊</h1>
-            <view-tool-book></view-tool-book>
-        </div>
-        <script type=module>
-            import {Shadow} from '../src/es/components/prototypes/Shadow.js'
-            import jsonData from '../index.json' with {type: "json"}
-    
-            customElements.define('view-tool-book', class extends Shadow() {
-                constructor (options = {}, ...args) {
-                    super({ importMetaUrl: import.meta.url, ...options }, ...args)
-
-                    this.changeNamespaceEventListener = event => {
-                    this.sectionPreview.innerHTML = /* html */ `
-                        <a-button namespace="${event.target.value}">My Button</a-button>
-                        `
-                    }
-                }
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href=../src/css/initial.css rel=stylesheet type="text/css">
+    <link href=../src/css/reset.css rel=stylesheet type="text/css">
+    <link href=../src/css/colors.css rel=stylesheet type="text/css">
+    <link href=../src/css/fonts.css rel=stylesheet type="text/css">
+    <link href=../src/css/variables.css rel=stylesheet type="text/css">
+    <title>Tool Book... 🙈🙉🙊</title>
+  </head>
+  <body>
+    <div>
+      <h1>Tool Book... 🙈🙉🙊</h1>
+      <view-tool-book></view-tool-book>
+    </div>
+    <script type=module>
+      import {Shadow} from '../src/es/components/prototypes/Shadow.js'
+      import jsonData from '../index.json' with {type: "json"}
       
-                connectedCallback () {
-                    if (this.shouldRenderCSS()) this.renderCSS()
-                    if (this.shouldRenderHTML()) this.renderHTML()
-                    this.inputNamespace.addEventListener('change', this.changeNamespaceEventListener)
-                   
-                    this.fetchData()
-                        .then(data => console.log(data))
-                        .catch(error => console.log(error))
-                }
+      customElements.define('view-tool-book', class extends Shadow() {
+        constructor (options = {}, ...args) {
+          super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
-                async fetchData() {
-                    const responses = await Promise.all(
-                        Array.from(jsonData.fileUrls , (url, i) => fetch(url).then(res => res.json()))
-                    )
-                    return responses
-                }
-            
-                disconnectedCallback () {
-                    this.inputNamespace.removeEventListener('change', this.changeNamespaceEventListener)
-                }
+          this.selectComponentsChangeEventListener = event => console.log(this.data?.find(data => data.origin === event.target.value))
+        }
+        
+        connectedCallback () {
+          this.hidden = true
+          const showPromises = []
+          if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+          if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+          Promise.all(showPromises).then(() => {
+            this.selectComponents.addEventListener('change', this.selectComponentsChangeEventListener)
+            this.hidden = false
+          })
+        }
 
-                /**
-                 * evaluates if a render is necessary
-                 *
-                 * @return {boolean}
-                 */
-                shouldRenderCSS () {
-                    return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
-                }
+        disconnectedCallback () {
+          this.selectComponents.removeEventListener('change', this.selectComponentsChangeEventListener)
+        }
+        
+        /**
+        * evaluates if a render is necessary
+        *
+        * @return {boolean}
+        */
+        shouldRenderCSS () {
+          return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
+        }
+        
+        /**
+        * evaluates if a render is necessary
+        *
+        * @return {boolean}
+        */
+        shouldRenderHTML () {
+          return !this.sectionPreview
+        }
+        
+        /**
+        * renders the css
+        *
+        * @return {Promise<void>}
+        */
+        renderCSS () {
+          this.css = /* css */``
+        }
+          
+        /**
+        * renders the html
+        *
+        * @return {Promise<void>}
+        */
+        async renderHTML () {
+          this.html = /* html */`
+            <section id=controls>
+              <select id=components name=components>
+                <option value="">--Please choose a component--</option>
+                ${(this.data = await this.fetchData()).reduce((acc, data) => {
+                  if (data.isError) return acc
+                  return /* html */`${acc}<option value="${data.origin}">${data.name}</option>`
+                }, '')}
+              </select>
+            </section>
+            <section id=preview>
+            </section>
+          `
+        }
+        
+        async fetchData() {
+          const responses = await Promise.all(Array.from(jsonData.fileUrls , function fetchUrl(url) {
+            return fetch(url).then(async res => {
+              let json = await res[url.includes('.json') ? 'json' : 'text']()
+              if (typeof json === 'string') json = { text: json }
+              json.origin = url
+              json.name = url.replace(/(.*\/)([a-zA-Z]*).*$/, '$2')
+              if (json.path) {
+                json.getExample = async () => await fetchUrl(`${json.path.replace(/(.*\/.*)\..*$/, '$1')}.html`)
+                json.getFile = async () => await fetchUrl(json.path)
+              }
+              if (json.templates) json.templates.forEach(template => {
+                template.getExample = async () => await fetchUrl(`${url.replace(/(.*\/)(.*)$/, '$1')}${template.path.replace(/(.*\/.*)\..*$/, '$1')}.html`)
+                template.getFile = async () => await fetchUrl(`${url.replace(/(.*\/)(.*)$/, '$1')}${template.path}`)
+              })
+              return json
+            }).catch(error => console.log(error) || { isError: true, origin: url, name: url.replace(/(.*\/)([a-zA-Z]*).*$/, '$2'), error })
+          }))
+          return responses
+        }
 
-                /**
-                 * evaluates if a render is necessary
-                 *
-                 * @return {boolean}
-                 */
-                shouldRenderHTML () {
-                    return !this.sectionPreview
-                }
+        get sectionControls () {
+          return this.root.querySelector('section#controls')
+        }
 
-                /**
-                 * renders the css
-                 *
-                 * @return {Promise<void>}
-                 */
-                renderCSS () {
-                    this.css = /* css */``
-                }
-
-                /**
-                 * renders the html
-                 *
-                 * @return {Promise<void>}
-                 */
-                renderHTML () {
-                    this.html = /* html */`
-                        <section id=controls>
-                            <label for=namespace>Namespace</label>
-                            <input id=namespace type="text" name=namespace>
-                        </section>
-                        <section id=preview>
-                            <p>preview</p>
-                        </section>
-                        `
-                        return this.fetchModules([
-                            {
-                                path: `${this.importMetaUrl}../src/es/components/atoms/button/Button.js`,
-                                name: 'a-button'
-                            }
-                        ])
-                }
-
-                get inputNamespace () {
-                    return this.root.querySelector('input#namespace')
-                }
-
-                get sectionPreview () {
-                    return this.root.querySelector('section#preview')
-                }
-            })
-        </script>
-    </body>
+        get selectComponents () {
+          return this.root.querySelector('select#components')
+        }
+        
+        get sectionPreview () {
+          return this.root.querySelector('section#preview')
+        }
+      })
+    </script>
+  </body>
 </html>
