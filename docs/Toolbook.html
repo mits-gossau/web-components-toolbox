@@ -108,18 +108,18 @@
             :host {
               --h1-text-align: center;
             }
-            :host > section#preview {
+            :host > div#preview-holder {
               margin-top: 5em;
             }
             /* below some o-body > main > * behavior */
-            :host > section > * {
+            :host > :where(section, div) > * {
               margin: var(--any-content-spacing, var(--content-spacing, unset)) auto;
               width: var(--any-content-width, var(--content-width, 55%));
             }
-            :host > section > *:first-child {
+            :host > :where(section, div) > *:first-child {
                 margin-top: var(--any-margin-top-first-child, unset);
             }
-            :host > section > *:not(style):not(script) {
+            :host > :where(section, div) > *:not(style):not(script) {
                 display: var(--any-display, block);
             }
             :host label:has(+select:empty), :host select:empty {
@@ -175,8 +175,9 @@
               <select id=namespaces name=namespaces></select>
             </section>
             <hr>
-            <section id=preview>
-            </section>
+            <div id=preview-holder>
+              <section id=preview></section>
+            </div>
           `
         }
 
@@ -203,8 +204,11 @@
         }
 
         async renderExample (example, namespace) {
-          let innerHTML = await this.webWorker(ToolBook.fixHtmlLinks, example.text, example.origin, this.importMetaUrl)
-          if (namespace) innerHTML = await this.webWorker(ToolBook.replaceAttribute, innerHTML, ToolBook.convertCamelToKebabCase(example.parentName), 'namespace', namespace)
+          let innerHTML = example?.text
+          if (example && !example.isError) {
+            innerHTML = await this.webWorker(ToolBook.fixHtmlLinks, example.text, example.origin, this.importMetaUrl)
+            if (namespace) innerHTML = await this.webWorker(ToolBook.replaceAttribute, innerHTML, ToolBook.convertCamelToKebabCase(example.parentName), 'namespace', namespace)
+          }
           this.sectionPreview.innerHTML = innerHTML
           // custom element define
           const notDefined = Array.from(this.sectionPreview.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
@@ -265,7 +269,7 @@
         }
 
         static replaceAttribute (html, tagName, key, value) {
-          return html.replace(new RegExp(`(^<[a-z-]*${tagName}[^>]*${key}=*).*?([\\s>])`, 'mg'), `$1"${value}"$2`)
+          return html.replace(new RegExp(`(<[a-z-]*${tagName}[^>]*${key}=*).*?([\\s>])`, 'mg'), `$1"${value}"$2`)
         }
 
         static removeFileName (str) {
