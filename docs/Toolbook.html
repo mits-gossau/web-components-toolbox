@@ -9,53 +9,46 @@
     <link href=../src/css/fonts.css rel=stylesheet type="text/css">
     <link href=../src/css/variables.css rel=stylesheet type="text/css">
     <script async rel=preload as="script" type="text/javascript" src="../wc-config.js"></script>
-    <title>Tool Book... 🙈🙉🙊</title>
+    <title>Tool Book - Playground</title>
   </head>
   <body>
     <div>
-      <h1>Tool Book... 🙈🙉🙊</h1>
       <view-tool-book></view-tool-book>
     </div>
     <script type=module>
       import {Shadow} from '../src/es/components/prototypes/Shadow.js'
       import jsonData from '../index.json' with {type: "json"}
       
-      customElements.define('view-tool-book', class extends Shadow() {
+      customElements.define('view-tool-book', class ToolBook extends Shadow() {
         constructor (options = {}, ...args) {
           super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
           this.selectComponentsChangeEventListener = async event => {
-            const data = this.data?.find(data => data.origin === event.target.value)
+            const data = this.activeData = this.data?.find(data => data.origin === event.target.value)
             if (!data) return
             let example = await data.getExample()
+            let foundTemplateExample = false
             if (example.isError) {
-              let result
-              example = data.templates?.length
-                ? (await Promise.all(data.templates.map(template => template.getExample()))).some(example => (result = example) && !example.isError) && result
-                : '<h2>No Template Found!</h2>'
+              example = await ToolBook.getTemplateExample(data.templates)
+              foundTemplateExample = !example.isError
             }
-            // TODO: fix path to images etc. same as in Template.html -> loadHTML -> fix relative links (test at image hotspot)
-            this.sectionPreview.innerHTML = example?.text || example
-            // custom element define
-            const notDefined = Array.from(this.sectionPreview.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
-            if (notDefined?.length) {
-              if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
-                this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
-                  detail: {
-                    nodes: notDefined
-                  },
-                  bubbles: true,
-                  cancelable: true,
-                  composed: true
-                }))
-              } else {
-                console.error(
-                  'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
-                  notDefined,
-                  this
-                )
-              }
+            if (example.isError) {
+              this.renderSelectTemplates()
+              this.activeExample = null
+            } else {
+              const args = foundTemplateExample ? [data.templates, example.origin] : [[data, ...data.templates], example.origin]
+              this.renderSelectTemplates(...args)
+              this.activeExample = example
             }
+            this.renderExample(example.text)
+          }
+
+          this.selectTemplatesChangeEventListener = async event => {
+            const data = this.activeTemplateData = this.activeData?.templates.find(data => data.path === event.target.value)
+            if (!data) return
+            let example = await data.getExample()
+            this.activeExample = example.isError ? null : example
+            this.renderExample(example.text)
           }
         }
         
@@ -66,12 +59,14 @@
           if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
           Promise.all(showPromises).then(() => {
             this.selectComponents.addEventListener('change', this.selectComponentsChangeEventListener)
+            this.selectTemplates.addEventListener('change', this.selectTemplatesChangeEventListener)
             this.hidden = false
           })
         }
 
         disconnectedCallback () {
           this.selectComponents.removeEventListener('change', this.selectComponentsChangeEventListener)
+          this.selectTemplates.removeEventListener('change', this.selectTemplatesChangeEventListener)
         }
         
         /**
@@ -99,8 +94,22 @@
         */
         renderCSS () {
           this.css = /* css */`
-            :host > section#preview {
-              margin: 1em;
+            :host {
+              --h1-text-align: center;
+            }
+            /* below some o-body > main > * behavior */
+            :host > section > * {
+              margin: var(--any-content-spacing, var(--content-spacing, unset)) auto;
+              width: var(--any-content-width, var(--content-width, 55%));
+            }
+            :host > section > *:first-child {
+                margin-top: var(--any-margin-top-first-child, unset);
+            }
+            :host > section > *:not(style):not(script) {
+                display: var(--any-display, block);
+            }
+            :host label:has(+select:empty), :host select:empty {
+              display: none;
             }
           `
           return this.fetchTemplate()
@@ -136,22 +145,63 @@
         */
         async renderHTML () {
           this.html = /* html */`
+            <h1>Tool Book - Playground</h1>
             <section id=controls>
+              <label for=components>Component</label>
               <select id=components name=components>
                 <option value="">--Please choose a component--</option>
-                ${(this.data = await this.fetchData()).reduce((acc, data) => {
+                ${(this.data = await ToolBook.fetchData()).reduce((acc, data) => {
                   if (data.isError) return acc
                   return /* html */`${acc}<option value="${data.origin}">${data.name}</option>`
                 }, '')}
               </select>
+              <label for=templates>Templates</label>
+              <select id=templates name=templates></select>
             </section>
+            <hr>
             <section id=preview>
             </section>
           `
         }
+
+        renderSelectTemplates (templates, exampleOrigin) {
+          if (!templates) return this.selectTemplates.innerHTML = ''
+          this.selectTemplates.innerHTML = /* html */`
+            <option value="">--Please choose a template--</option>
+            ${templates.reduce((acc, data) => {
+              if (data.isError) return acc
+              return /* html */`${acc}<option value="${data.origin || data.path}"${exampleOrigin === data.examplePath ? ' selected' : ''}>${data.name}</option>`
+            }, '')}
+          `
+        }
+
+        renderExample (example) {
+          // TODO: fix path to images etc. same as in Template.html -> loadHTML -> fix relative links (test at image hotspot)
+          this.sectionPreview.innerHTML = example?.text || example
+          // custom element define
+          const notDefined = Array.from(this.sectionPreview.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
+          if (notDefined?.length) {
+            if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
+              this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
+                detail: {
+                  nodes: notDefined
+                },
+                bubbles: true,
+                cancelable: true,
+                composed: true
+              }))
+            } else {
+              console.error(
+                'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+                notDefined,
+                this
+              )
+            }
+          }
+        }
         
-        async fetchData() {
-          const responses = await Promise.all(Array.from(jsonData.fileUrls , function fetchUrl(url) {
+        static async fetchData() {
+          return (await Promise.all(Array.from(jsonData.fileUrls , function fetchData(url) {
             return fetch(url).then(async response => {
               if (response.status >= 200 && response.status <= 299) {
                 let json = await response[url.includes('.json') ? 'json' : 'text']()
@@ -159,37 +209,69 @@
                 json.origin = url
                 json.name = url.replace(/(.*\/)([a-zA-Z]*).*$/, '$2')
                 if (json.path) {
-                  json.getExample = async () => await fetchUrl(`${json.path.replace(/(.*\/.*)\..*$/, '$1')}.html`)
-                  json.getFile = async () => await fetchUrl(json.path)
+                  json.examplePath = `${json.path.replace(/(.*\/.*)\..*$/, '$1')}.html`
+                  json.getExample = async () => await fetchData(json.examplePath)
+                  json.filePath = json.path
+                  json.getFile = async () => await fetchData(json.filePath)
                 }
                 if (json.templates) json.templates.forEach(template => {
-                  template.getExample = async () => await fetchUrl(`${url.replace(/(.*\/)(.*)$/, '$1')}${template.path.replace(/(.*\/.*)\..*$/, '$1')}.html`)
-                  template.getFile = async () => await fetchUrl(`${url.replace(/(.*\/)(.*)$/, '$1')}${template.path}`)
+                  template.examplePath = `${url.replace(/(.*\/)(.*)$/, '$1')}${template.path.replace(/(.*\/.*)\..*$/, '$1')}.html`
+                  template.getExample = async () => await fetchData(template.examplePath)
+                  template.filePath = `${url.replace(/(.*\/)(.*)$/, '$1')}${template.path}`
+                  template.getFile = async () => await fetchData(template.filePath)
                 })
                 return json
               }
               throw new Error(response.statusText)
-            }).catch(error => console.log(error = { isError: true, origin: url, name: url.replace(/(.*\/)([a-zA-Z]*).*$/, '$2'), error }) || error)
-          }))
-          return responses
+            }).catch(error => console.info(error = { isError: true, origin: url, name: url.replace(/(.*\/)([a-zA-Z]*).*$/, '$2'), error }) || error)
+          }))).sort((a, b) => {
+              if(a.name < b.name) return -1
+              if(a.name > b.name) return 1
+              return 0
+          })
+        }
+
+        static async getTemplateExample (templates, index) {
+          const text = '<h2>No Template Found!</h2>'
+          let example = { text, isError: true }
+          if (index) {
+            example = await templates[index].getExample()
+          } else {
+            if (templates?.length) {
+              for (let index = 0; index < templates.length; index++) {
+                example = await templates[index].getExample()
+                if (!example.isError) break
+              }
+            }
+          }
+          if (example.isError) example.text = text
+          return example
         }
 
         get sectionControls () {
           return this.root.querySelector('section#controls')
         }
 
+        get sectionPreview () {
+          return this.root.querySelector('section#preview')
+        }
+
         get selectComponents () {
           return this.root.querySelector('select#components')
         }
         
-        get sectionPreview () {
-          return this.root.querySelector('section#preview')
+        get selectTemplates () {
+          return this.root.querySelector('select#templates')
         }
+        
       })
     </script>
     <style>
       body {
-        padding: 1em;
+        background-color: #eee;
+        min-height: 100dvh;
+        padding: 0;
+        margin: 0;
       }
     </style>
   </body>
