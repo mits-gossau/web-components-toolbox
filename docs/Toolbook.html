@@ -8,6 +8,7 @@
     <link href=../src/css/colors.css rel=stylesheet type="text/css">
     <link href=../src/css/fonts.css rel=stylesheet type="text/css">
     <link href=../src/css/variables.css rel=stylesheet type="text/css">
+    <script async rel=preload as="script" type="text/javascript" src="../src/es/helpers/Environment.js?msrcVersion=20230117142619"></script>
     <script async rel=preload as="script" type="text/javascript" src="../wc-config.js"></script>
     <title>Tool Book - Playground</title>
   </head>
@@ -16,10 +17,11 @@
       <view-tool-book></view-tool-book>
     </div>
     <script type=module>
+      import {WebWorker} from '../src/es/components/prototypes/WebWorker.js'
       import {Shadow} from '../src/es/components/prototypes/Shadow.js'
       import jsonData from '../index.json' with {type: "json"}
       
-      customElements.define('view-tool-book', class ToolBook extends Shadow() {
+      customElements.define('view-tool-book', class ToolBook extends WebWorker(Shadow()) {
         constructor (options = {}, ...args) {
           super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
@@ -34,21 +36,28 @@
             }
             if (example.isError) {
               this.renderSelectTemplates()
+              this.renderSelectNamespaces()
               this.activeExample = null
             } else {
               const args = foundTemplateExample ? [data.templates, example.origin] : [[data, ...data.templates], example.origin]
               this.renderSelectTemplates(...args)
+              this.renderSelectNamespaces(data.templates, example.origin)
               this.activeExample = example
             }
-            this.renderExample(example.text)
+            this.renderExample(example)
           }
 
           this.selectTemplatesChangeEventListener = async event => {
-            const data = this.activeTemplateData = this.activeData?.templates.find(data => data.path === event.target.value)
-            if (!data) return
-            let example = await data.getExample()
+            let data = this.activeTemplateData = this.activeData?.templates.find(data => data.path === event.target.value)
+            if (!data) data = this.activeData
+            let example = await ToolBook.getTemplateExample(data)
+            this.renderSelectNamespaces(this.activeData.templates, example.origin)
             this.activeExample = example.isError ? null : example
-            this.renderExample(example.text)
+            this.renderExample(example)
+          }
+
+          this.selectNamespacesChangeEventListener = async event => {
+            this.renderExample(this.activeExample, event.target.value)
           }
         }
         
@@ -60,6 +69,7 @@
           Promise.all(showPromises).then(() => {
             this.selectComponents.addEventListener('change', this.selectComponentsChangeEventListener)
             this.selectTemplates.addEventListener('change', this.selectTemplatesChangeEventListener)
+            this.selectNamespaces.addEventListener('change', this.selectNamespacesChangeEventListener)
             this.hidden = false
           })
         }
@@ -67,6 +77,7 @@
         disconnectedCallback () {
           this.selectComponents.removeEventListener('change', this.selectComponentsChangeEventListener)
           this.selectTemplates.removeEventListener('change', this.selectTemplatesChangeEventListener)
+          this.selectNamespaces.removeEventListener('change', this.selectNamespacesChangeEventListener)
         }
         
         /**
@@ -96,6 +107,9 @@
           this.css = /* css */`
             :host {
               --h1-text-align: center;
+            }
+            :host > section#preview {
+              margin-top: 5em;
             }
             /* below some o-body > main > * behavior */
             :host > section > * {
@@ -157,6 +171,8 @@
               </select>
               <label for=templates>Templates</label>
               <select id=templates name=templates></select>
+              <label for=namespaces>Namespaces</label>
+              <select id=namespaces name=namespaces></select>
             </section>
             <hr>
             <section id=preview>
@@ -175,9 +191,21 @@
           `
         }
 
-        renderExample (example) {
-          // TODO: fix path to images etc. same as in Template.html -> loadHTML -> fix relative links (test at image hotspot)
-          this.sectionPreview.innerHTML = example?.text || example
+        renderSelectNamespaces (templates, exampleOrigin) {
+          if (!templates) return this.selectNamespaces.innerHTML = ''
+          this.selectNamespaces.innerHTML = /* html */`
+            <option value="">--Please choose a namespace--</option>
+            ${templates.reduce((acc, data) => {
+              if (data.isError) return acc
+              return /* html */`${acc}<option value="${data.name}"${exampleOrigin === data.examplePath ? ' selected' : ''}>${data.name}</option>`
+            }, '')}
+          `
+        }
+
+        async renderExample (example, namespace) {
+          let innerHTML = await this.webWorker(ToolBook.fixHtmlLinks, example.text, example.origin, this.importMetaUrl)
+          if (namespace) innerHTML = await this.webWorker(ToolBook.replaceNamespace, innerHTML, namespace, ToolBook.convertCamelToKebabCase(example.parentName))
+          this.sectionPreview.innerHTML = innerHTML
           // custom element define
           const notDefined = Array.from(this.sectionPreview.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
           if (notDefined?.length) {
@@ -201,29 +229,30 @@
         }
         
         static async fetchData() {
-          return (await Promise.all(Array.from(jsonData.fileUrls , function fetchData(url) {
+          return (await Promise.all(Array.from(jsonData.fileUrls , function fetchData(url, parentName) {
             return fetch(url).then(async response => {
               if (response.status >= 200 && response.status <= 299) {
                 let json = await response[url.includes('.json') ? 'json' : 'text']()
                 if (typeof json === 'string') json = { text: json }
                 json.origin = url
-                json.name = url.replace(/(.*\/)([a-zA-Z]*).*$/, '$2')
+                json.parentName = parentName
+                json.name = ToolBook.getFileName(url)
                 if (json.path) {
-                  json.examplePath = `${json.path.replace(/(.*\/.*)\..*$/, '$1')}.html`
-                  json.getExample = async () => await fetchData(json.examplePath)
+                  json.examplePath = ToolBook.replaceFileExtension(json.path, 'html')
+                  json.getExample = async () => await fetchData(json.examplePath, json.name)
                   json.filePath = json.path
-                  json.getFile = async () => await fetchData(json.filePath)
+                  json.getFile = async () => await fetchData(json.filePath, json.name)
                 }
                 if (json.templates) json.templates.forEach(template => {
-                  template.examplePath = `${url.replace(/(.*\/)(.*)$/, '$1')}${template.path.replace(/(.*\/.*)\..*$/, '$1')}.html`
-                  template.getExample = async () => await fetchData(template.examplePath)
-                  template.filePath = `${url.replace(/(.*\/)(.*)$/, '$1')}${template.path}`
-                  template.getFile = async () => await fetchData(template.filePath)
+                  template.examplePath = ToolBook.removeFileName(url) + ToolBook.replaceFileExtension(template.path, 'html')
+                  template.getExample = async () => await fetchData(template.examplePath, json.name)
+                  template.filePath = `${ToolBook.removeFileName(url)}${template.path}`
+                  template.getFile = async () => await fetchData(template.filePath, json.name)
                 })
                 return json
               }
               throw new Error(response.statusText)
-            }).catch(error => console.info(error = { isError: true, origin: url, name: url.replace(/(.*\/)([a-zA-Z]*).*$/, '$2'), error }) || error)
+            }).catch(error => console.info(error = { isError: true, origin: url, name: ToolBook.getFileName(url), error }) || error)
           }))).sort((a, b) => {
               if(a.name < b.name) return -1
               if(a.name > b.name) return 1
@@ -231,18 +260,47 @@
           })
         }
 
-        static async getTemplateExample (templates, index) {
+        static fixHtmlLinks (html, origin, importMetaUrl) {
+          return html.replace(/([^\.])\.\/([^\.])/mg, `$1${importMetaUrl}${/*WebWorker can not use a reference like: ToolBook.removeFileName(origin)*/origin.replace(/(.*\/)(.*)$/, '$1')}$2`)
+        }
+
+        static replaceNamespace (html, namespace, tagName) {
+          return html.replace(new RegExp(`(^<[a-z-]*${tagName}[^>]*namespace=).*?\\s`, 'mg'), `$1${namespace} `)
+        }
+
+        static removeFileName (str) {
+          return str.replace(/(.*\/)(.*)$/, '$1')
+        }
+
+        static getFileName (str) {
+          return str.replace(/.*\/([a-zA-Z]*).*$/, '$1')
+        }
+
+        static replaceFileExtension (str, extensionName) {
+          return `${str.replace(/(.*\/.*)\..*$/, '$1')}.${extensionName}`
+        }
+
+        static convertCamelToKebabCase (str) {
+          let first = true
+          return str.replace(/[A-Z]/g, letter => {
+            const separator = first ? '' : '-'
+            first = false
+            return `${separator}${letter.toLowerCase()}`
+          })
+        }
+
+        static async getTemplateExample (templates) {
           const text = '<h2>No Template Found!</h2>'
           let example = { text, isError: true }
-          if (index) {
-            example = await templates[index].getExample()
-          } else {
+          if (Array.isArray(templates)) {
             if (templates?.length) {
               for (let index = 0; index < templates.length; index++) {
                 example = await templates[index].getExample()
                 if (!example.isError) break
               }
             }
+          } else {
+            example = await templates.getExample()
           }
           if (example.isError) example.text = text
           return example
@@ -264,6 +322,9 @@
           return this.root.querySelector('select#templates')
         }
         
+        get selectNamespaces () {
+          return this.root.querySelector('select#namespaces')
+        }
       })
     </script>
     <style>
