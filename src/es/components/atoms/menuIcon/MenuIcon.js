@@ -47,12 +47,18 @@ export default class MenuIcon extends Shadow() {
         })))
       }
     }
+
+    // accessibility
+    this.enterEventListener = event => {
+      if (event.code === 'Enter' && event.composedPath()[0].matches(':focus')) this.click()
+    }
   }
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
     if (!this.hasAttribute('no-click') || this.getAttribute('click-event-name')) this.addEventListener('click', this.clickListener)
+    this.addEventListener('keyup', this.enterEventListener)
 
     this.isCheckout = this.parentElement?.getAttribute('is-checkout') === 'true'
     if (this.isCheckout) this.style.display = 'none'
@@ -60,6 +66,7 @@ export default class MenuIcon extends Shadow() {
 
   disconnectedCallback () {
     if (!this.hasAttribute('no-click')) this.removeEventListener('click', this.clickListener)
+    this.removeEventListener('keyup', this.enterEventListener)
   }
 
   /**
@@ -95,10 +102,6 @@ export default class MenuIcon extends Shadow() {
         margin: var(--margin, 0);
         transition: var(--transition, 0.2s);
         font-size: 14px;
-        outline: var(--outline, none) !important;
-      }
-      :host(:focus-visible) {
-        outline: var(--outline-focus-visible, var(--outline, none)) !important;
       }
       :host(.${this.openClass}) {
         padding: var(--padding-open, 0 calc(var(--width, 35px) / 4)) !important;

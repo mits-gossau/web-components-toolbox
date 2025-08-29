@@ -42,6 +42,7 @@
     disconnectedCallback,
     Shadow.parseAttribute,
     Shadow.getMode,
+    tabindex,
     keepCloneOutsideShadowRoot,
     mode,
     namespace,
@@ -74,10 +75,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   /**
    * Creates an instance of Shadow. The constructor will be called for every custom element using this class when initially created.
    *
-   * @param {{keepCloneOutsideShadowRoot?: boolean | undefined, mode?: mode | undefined, namespace?: string | undefined, namespaceFallback?: boolean | undefined, mobileBreakpoint?: string, importMetaUrl?: string | undefined}} [options = {keepCloneOutsideShadowRoot:undefined, mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined}]
+   * @param {{tabindex?: string | 'no-tabindex-style' | 'no-tabindex', keepCloneOutsideShadowRoot?: boolean | undefined, mode?: mode | undefined, namespace?: string | undefined, namespaceFallback?: boolean | undefined, mobileBreakpoint?: string, importMetaUrl?: string | undefined}} [options = {keepCloneOutsideShadowRoot:undefined, mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined}]
    * @param {*} args
    */
-  constructor (options = { keepCloneOutsideShadowRoot: undefined, mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined }, ...args) {
+  constructor (options = { tabindex: undefined, keepCloneOutsideShadowRoot: undefined, mode: undefined, namespace: undefined, namespaceFallback: undefined, mobileBreakpoint: undefined, importMetaUrl: undefined }, ...args) {
     // @ts-ignore
     super(...args)
 
@@ -104,7 +105,26 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }
       })
       if (this.keepCloneOutsideShadowRoot) appendedNodes.forEach(node => this.appendChild(node.cloneNode(true)))
-      this.setAttribute('tabindex', '0')
+      if (options.tabindex !== 'no-tabindex-style' && !this.hasAttribute('no-tabindex-style')) {
+        // outline and tabindex
+        const tabindex = options.tabindex || '0'
+        if (options.tabindex !== 'no-tabindex' && !this.hasAttribute('no-tabindex')) this.setAttribute('tabindex', tabindex)
+        /** @type {HTMLStyleElement} */
+        this._cssTabindex = document.createElement('style')
+        this._cssTabindex.setAttribute('_cssTabindex', '')
+        this._cssTabindex.setAttribute('protected', 'true') // this will avoid deletion by html=''
+        this.root.appendChild(this._cssTabindex)
+        // when no-tabindex, the second query still does the outlines for children
+        this.setCss(/* css */`
+          :host([tabindex="${tabindex}"]:focus-visible), :host :where(*[tabindex], a):focus-visible {
+            border-radius: var(--border-radius-focus-visible, var(--border-radius, 0.125em));
+            outline-color: var(--outline-color-focus-visible, var(--outline-color, var(--color-secondary, var(--color, transparent))));
+            outline-style: var(--outline-style-focus-visible, var(--outline-style, solid));
+            outline-width: var(--outline-width-focus-visible, var(--outline-width, 2px));
+            outline-offset: var(--outline-offset-focus-visible, var(--outline-offset, 2px));
+          }
+        `, undefined, undefined, undefined, this._cssTabindex)
+      }
     }
     if (typeof options.namespace === 'string') this.setAttribute('namespace', options.namespace)
     /** @type {string} */

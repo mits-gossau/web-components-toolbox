@@ -1,5 +1,5 @@
 // @ts-check
-import { Mutation } from '../../prototypes/Mutation.js'
+import { Shadow } from '../../prototypes/Shadow.js'
 
 /* global self */
 /* global CustomEvent */
@@ -17,11 +17,14 @@ import { Mutation } from '../../prototypes/Mutation.js'
  *  {boolean} [use-hover-listener=false] use hover listener on navigation // if false it uses click listener
  * }
  */
-export default class MultiLevelNavigation extends Mutation() {
+export default class MultiLevelNavigation extends Shadow() {
+  static get observedAttributes () {
+    return ['aria-expanded']
+  }
+
   constructor (options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
-      mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
       ...options
     }, ...args)
     this.noScroll = () => { window.scroll(0, 0) }
@@ -356,6 +359,10 @@ export default class MultiLevelNavigation extends Mutation() {
     })
     this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.removeEventListener('blur', this.noScroll))
     super.disconnectedCallback()
+  }
+
+  attributeChangedCallback (name, oldValue, newValue) {
+    if (newValue === 'true') this.root.querySelector('nav > ul > li > a')?.focus()
   }
 
   /**
@@ -1248,10 +1255,12 @@ export default class MultiLevelNavigation extends Mutation() {
       document.body.addEventListener(evt, (event) => {
         this.openAnimationDelayNeeded = false
         setTimeout(() => {
-          Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach(a => a.addEventListener('click', this.aLinkClickListener))
+          Array.from(this.root.querySelectorAll('nav > ul > li > a')).forEach((a, i) => {
+            a.addEventListener('click', this.aLinkClickListener)
+            if (i === 0) a.focus()
+          })
           Array.from(this.root.querySelectorAll('[only-mobile]')).forEach(node => {
             node.style.display = 'block'
-            node.querySelector(this.focusElSelector)?.focus()
           })
           const navElement = this.root.querySelector('nav')
           const templates = Array.from(navElement.querySelectorAll('ul > li > template'))
