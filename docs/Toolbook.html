@@ -8,8 +8,6 @@
     <link href=../src/css/colors.css rel=stylesheet type="text/css">
     <link href=../src/css/fonts.css rel=stylesheet type="text/css">
     <link href=../src/css/variables.css rel=stylesheet type="text/css">
-    <script async rel=preload as="script" type="text/javascript" src="../src/es/helpers/Environment.js?msrcVersion=20230117142619"></script>
-    <script async rel=preload as="script" type="text/javascript" src="../wc-config.js"></script>
     <title>Tool Book - Playground</title>
   </head>
   <body>
@@ -176,7 +174,7 @@
             </section>
             <hr>
             <div id=preview-holder>
-              <section id=preview></section>
+              <iframe id=preview></iframe>
             </div>
           `
         }
@@ -209,27 +207,9 @@
             innerHTML = await this.webWorker(ToolBook.fixHtmlLinks, example.text, example.origin, this.importMetaUrl)
             if (namespace) innerHTML = await this.webWorker(ToolBook.replaceAttribute, innerHTML, ToolBook.convertCamelToKebabCase(example.parentName), 'namespace', namespace)
           }
-          this.sectionPreview.innerHTML = innerHTML
-          // custom element define
-          const notDefined = Array.from(this.sectionPreview.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
-          if (notDefined?.length) {
-            if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
-              this.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
-                detail: {
-                  nodes: notDefined
-                },
-                bubbles: true,
-                cancelable: true,
-                composed: true
-              }))
-            } else {
-              console.error(
-                'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
-                notDefined,
-                this
-              )
-            }
-          }
+        this.sectionPreview.outerHTML = '<iframe id=preview src="./ToolbookIframe.html"></iframe>'
+        this.sectionPreview.addEventListener('load', event => this.sectionPreview.contentWindow.postMessage({innerHTML}))
+          console.log('*********', '-------------------------------')
         }
         
         static async fetchData() {
@@ -315,7 +295,7 @@
         }
 
         get sectionPreview () {
-          return this.root.querySelector('section#preview')
+          return this.root.querySelector('*#preview')
         }
 
         get selectComponents () {
