@@ -28,11 +28,11 @@
       self.addEventListener('message', event => {
         let main = document.body.querySelector('main')
         if (!main) main = document.body.querySelector('o-body').main
-        main.innerHTML = event.data.innerHTML
+        main.innerHTML = event.data.example.innerHTML
         // custom element define
         const notDefined = Array.from(document.body.querySelector('main').querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
         // TODO: read all attributes before customElements define:
-        console.log('*********', notDefined.reduce((acc, node) => ({...acc, [node.tagName]: { attributes: Array.from(node.attributes) }}), {}))
+        console.log('*********', event.data, notDefined.reduce((acc, node) => ({...acc, [node.tagName]: { attributes: Array.from(node.attributes) }}), {}))
         if (notDefined?.length) {
           if (document.body.hasAttribute(/*this.getAttribute('load-custom-elements') || */'load-custom-elements')) {
             this.dispatchEvent(new CustomEvent(/*this.getAttribute('load-custom-elements') || */'load-custom-elements', {

@@ -42,7 +42,7 @@
               this.renderSelectNamespaces(data.templates, example.origin)
               this.activeExample = example
             }
-            this.renderExample(example)
+            this.renderExample(data, example)
           }
 
           this.selectTemplatesChangeEventListener = async event => {
@@ -51,11 +51,11 @@
             let example = await ToolBook.getTemplateExample(data)
             this.renderSelectNamespaces(this.activeData.templates, example.origin)
             this.activeExample = example.isError ? null : example
-            this.renderExample(example)
+            this.renderExample(data, example)
           }
 
           this.selectNamespacesChangeEventListener = async event => {
-            this.renderExample(this.activeExample, event.target.value)
+            this.renderExample(this.activeData, this.activeExample, event.target.value)
           }
         }
         
@@ -232,15 +232,16 @@
           `
         }
 
-        async renderExample (example, namespace) {
+        async renderExample (data, example, namespace) {
           let innerHTML = example?.text
           if (example && !example.isError) {
             innerHTML = await this.webWorker(ToolBook.fixHtmlLinks, example.text, example.origin, this.importMetaUrl)
             if (namespace) innerHTML = await this.webWorker(ToolBook.replaceAttribute, innerHTML, ToolBook.convertCamelToKebabCase(example.parentName), 'namespace', namespace)
           }
           this.preview.outerHTML = '<iframe id=preview src="./ToolbookIframe.html" loading></iframe>'
-          this.preview.addEventListener('load', event => {
-            this.preview.contentWindow.postMessage({innerHTML})
+          this.preview.addEventListener('load', async event => {
+            // TODO: get file attributes + css vars and pass it!
+            this.preview.contentWindow.postMessage({ file: await data.getFile(), example: {...example, innerHTML}})
             this.preview.removeAttribute('loading')
           })
         }
