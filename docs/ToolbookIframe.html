@@ -13,12 +13,24 @@
     <title>Tool Book - Iframe</title>
   </head>
   <body>
-    <section></section>
+    <c-fetch-html no-storage>
+      <c-fetch-css no-storage>
+        <c-fetch-modules>
+          <p-general>
+            <o-body>
+              <main></main>
+            </o-body>
+          </p-general>
+        </c-fetch-modules>
+      </c-fetch-css>
+    </c-fetch-html>
     <script>
       self.addEventListener('message', event => {
-        document.body.querySelector('section').innerHTML = event.data.innerHTML
+        let main = document.body.querySelector('main')
+        if (!main) main = document.body.querySelector('o-body').main
+        main.innerHTML = event.data.innerHTML
         // custom element define
-        const notDefined = Array.from(document.body.querySelector('section').querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
+        const notDefined = Array.from(document.body.querySelector('main').querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
         // TODO: read all attributes before customElements define:
         console.log('*********', notDefined.reduce((acc, node) => ({...acc, [node.tagName]: { attributes: Array.from(node.attributes) }}), {}))
         if (notDefined?.length) {
@@ -41,5 +53,11 @@
         }
       })
     </script>
+    <style>
+      body {
+        --background-color: #eee;
+        background-color: var(--background-color);
+      }
+    </style>
   </body>
 </html>
