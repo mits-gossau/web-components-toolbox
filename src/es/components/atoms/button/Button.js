@@ -18,9 +18,8 @@ export default class Button extends Hover() {
 
   constructor (options = {}, ...args) {
     // @ts-ignore
-    super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ hoverInit: undefined, importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
 
-    this.removeAttribute('tabindex')
     // get the original innerHTML of the component, so that when it rerenders as an a-tag it doesn't loose its content
     let button
     // in case there is already a button, grab the buttons innerHTML, since renderHTML is going to create a new button resp. a-tag instead of the button

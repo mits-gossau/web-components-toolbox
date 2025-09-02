@@ -38,6 +38,10 @@ import { Mutation } from '../../prototypes/Mutation.js'
  * }
  */
 export default class Navigation extends Mutation() {
+  static get observedAttributes () {
+    return ['aria-expanded']
+  }
+
   constructor (options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
@@ -144,6 +148,17 @@ export default class Navigation extends Mutation() {
     this.root.querySelectorAll('a-link').forEach(link => link.removeEventListener('click', this.clickListener))
     this.root.querySelectorAll('nav > ul:not(.language-switcher) > li').forEach(link => link.removeEventListener('click', this.liClickListener))
     super.disconnectedCallback()
+  }
+
+  attributeChangedCallback (name, oldValue, newValue) {
+    if (newValue === 'true') {
+      let firstLink = this.root.querySelector('nav > ul > li > a-link')
+      if (firstLink) {
+        firstLink.a.focus()
+      } else {
+        this.root.querySelector('nav > ul > li > a')?.focus()
+      }
+    }
   }
 
   mutationCallback (mutationList, observer) {

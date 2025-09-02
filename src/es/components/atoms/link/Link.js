@@ -34,10 +34,9 @@ import { Hover } from '../../prototypes/Hover.js'
  */
 export default class Link extends Hover() {
   constructor (a, options = {}, ...args) {
-    super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ hoverInit: undefined, importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
     this._a = a
     this.setAttribute('role', 'link')
-    this.removeAttribute('tabindex')
     if (this.a) this.a.setAttribute('tabindex', '0')
   }
 

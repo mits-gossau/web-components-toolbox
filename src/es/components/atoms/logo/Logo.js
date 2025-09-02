@@ -240,6 +240,7 @@ export default class Logo extends Shadow() {
       if (this.hasAttribute('rel')) a.setAttribute('rel', this.getAttribute('rel'))
       if (this.hasAttribute('target')) a.setAttribute('target', this.getAttribute('target'))
       a.appendChild(this.img)
+      this.removeAttribute('tabindex')
     }
     this.html = a || this.img
     // calculated css style

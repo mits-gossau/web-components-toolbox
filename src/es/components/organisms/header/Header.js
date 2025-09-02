@@ -110,22 +110,23 @@ export default class Header extends Shadow() {
     }
     this.observer = new MutationObserver(this.mutationCallback)
     this.openAndFocusNavListener = event => {
-      this.header.classList.add('open')
-      this.clickAnimationListener(event)
-
-      if (this.mNavigation) {
-        this.mNavigation.setAttribute('aria-expanded', 'true')
-        this.mNavigation.classList.remove('hide')
-        this.mNavigation.classList.add('no-scroll', 'open')
-        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul').classList.add('open')
-        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').setAttribute('aria-expanded', 'true')
-        if (this.getMedia() !== 'desktop') this.mNavigation.root.querySelector('nav > ul > li:first-child').classList.add('open')
-        setTimeout(() => {
-          const a = this.mNavigation.root.querySelector('nav > ul > li:first-child a-link')?.shadowRoot.querySelector('a')
-          if (a) a.focus()
-          const b = this.mNavigation.root.querySelector('nav > ul > li:first-child a')
-          if (b) b.focus()
-        }, 0)
+      if (this.getMedia() === 'desktop') {
+        this.header.classList.add('open')
+        this.clickAnimationListener(event)
+  
+        if (this.mNavigation) {
+          this.mNavigation.setAttribute('aria-expanded', 'true')
+          this.mNavigation.classList.remove('hide')
+          this.mNavigation.classList.add('no-scroll', 'open')
+          setTimeout(() => {
+            const a = this.mNavigation.root.querySelector('nav > ul > li:first-child a-link')?.shadowRoot.querySelector('a')
+            if (a) a.focus()
+            const b = this.mNavigation.root.querySelector('nav > ul > li:first-child a')
+            if (b) b.focus()
+          }, 0)
+        }
+      } else if(this.MenuIcon.getAttribute('aria-expanded') === 'false') {
+        this.MenuIcon.click()
       }
     }
     this.closeNavListener = event => {
