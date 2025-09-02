@@ -249,6 +249,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     /** @type {HTMLStyleElement} */
       styleNode = document.createElement('style')
       styleNode.setAttribute('_css', '')
+      styleNode.setAttribute('mobile-breakpoint', maxWidth)
       styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
       this._css = styleNode
     }
