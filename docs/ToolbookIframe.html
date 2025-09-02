@@ -31,8 +31,18 @@
         main.innerHTML = event.data.example.innerHTML
         // custom element define
         const notDefined = Array.from(document.body.querySelector('main').querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
-        // TODO: read all attributes before customElements define:
-        console.log('*********', event.data, notDefined.reduce((acc, node) => ({...acc, [node.tagName]: { attributes: Array.from(node.attributes) }}), {}))
+        // get all preset attributes from our target components
+        let counter = -1
+        event.data.attributes = notDefined.reduce((acc, node) => {
+          if (node.tagName.includes(event.data.example.parentNameKebab.toUpperCase())) {
+            event.data.example.tagName = node.tagName
+            counter++
+            return Array.from(node.attributes).reduce((acc, attribute) => ({...acc, [attribute.name]: { values: Array.from(new Set([...(acc[attribute.name]?.values || []), attribute.value || ''])).filter(attr => attr), has: [...(acc[attribute.name]?.has || []), counter]}}), acc)
+          }
+          return acc
+        }, event.data.attributes)
+        console.log('***event.data******', event.data)
+        // TODO: Render the attribute checkboxes for each event.data.example.parentNameKebab component
         if (notDefined?.length) {
           if (document.body.hasAttribute(/*this.getAttribute('load-custom-elements') || */'load-custom-elements')) {
             this.dispatchEvent(new CustomEvent(/*this.getAttribute('load-custom-elements') || */'load-custom-elements', {

@@ -236,12 +236,14 @@
           let innerHTML = example?.text
           if (example && !example.isError) {
             innerHTML = await this.webWorker(ToolBook.fixHtmlLinks, example.text, example.origin, this.importMetaUrl)
-            if (namespace) innerHTML = await this.webWorker(ToolBook.replaceAttribute, innerHTML, ToolBook.convertCamelToKebabCase(example.parentName), 'namespace', namespace)
+            example.parentNameKebab = ToolBook.convertCamelToKebabCase(example.parentName)
+            if (namespace) innerHTML = await this.webWorker(ToolBook.replaceAttribute, innerHTML, example.parentNameKebab, 'namespace', namespace)
           }
+          const allClassAttributes = await this.webWorker(ToolBook.getAllClassAttributes, (await data.getFile()).text)
+          // TODO: Get all css variables from .js file as well as from template according to namespace
           this.preview.outerHTML = '<iframe id=preview src="./ToolbookIframe.html" loading></iframe>'
-          this.preview.addEventListener('load', async event => {
-            // TODO: get file attributes + css vars and pass it!
-            this.preview.contentWindow.postMessage({ file: await data.getFile(), example: {...example, innerHTML}})
+          this.preview.addEventListener('load', event => {
+            this.preview.contentWindow.postMessage({ example: {...example, innerHTML}, attributes: allClassAttributes})
             this.preview.removeAttribute('loading')
           })
         }
@@ -284,6 +286,23 @@
 
         static replaceAttribute (html, tagName, key, value) {
           return html.replace(new RegExp(`(<[a-z-]*${tagName}[^>]*${key}=*).*?([\\s>])`, 'mg'), `$1"${value}"$2`)
+        }
+
+        static getAllClassAttributes (text) {
+          // TODO: Match all attributes from css selectors inside the template according to namespace
+          // match all attributes from css selectors
+          let attributes = Array.from(text.matchAll(/:(host|not)\(\[([^\]]*)\]/g)).reduce((acc, propAndValue) => {
+            const matches = Array.from(propAndValue[2].matchAll(/(.*)="*([^"]*)/g))
+            const propName = matches[0]?.[1] || propAndValue[2]
+            return {...acc, [propName]: { values: Array.from(new Set([...(acc[propName]?.values || []), matches[0]?.[2] || ''])).filter(attr => attr), has: []}}
+          }, {})
+          // match all get-, set- and has- Attribute(...)
+          return Array.from(text.matchAll(/Attribute\(('[^\)]*')/g))
+            .map(matches => Array.from(matches[1].matchAll(/'(.*?)'/g)))
+            .reduce((acc, propAndValue) => {
+              const propName = typeof propAndValue[1] === 'string' ? propAndValue[1] : propAndValue[0][1]
+              return {...acc, [propName]: { values: Array.from(new Set([...(acc[propName]?.values || []), propAndValue[1]?.[1] || ''])).filter(attr => attr), has: []}}
+            }, attributes)
         }
 
         static removeFileName (str) {
