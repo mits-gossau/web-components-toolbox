@@ -240,6 +240,7 @@
             if (namespace) innerHTML = await this.webWorker(ToolBook.replaceAttribute, innerHTML, example.parentNameKebab, 'namespace', namespace)
           }
           const allClassAttributes = await this.webWorker(ToolBook.getAllClassAttributes, (await data.getFile()).text)
+          // TODO: Get all attributes from template according to namespace
           // TODO: Get all css variables from .js file as well as from template according to namespace
           this.preview.outerHTML = '<iframe id=preview src="./ToolbookIframe.html" loading></iframe>'
           this.preview.addEventListener('load', event => {
