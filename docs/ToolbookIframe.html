@@ -33,16 +33,35 @@
         const notDefined = Array.from(document.body.querySelector('main').querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
         // get all preset attributes from our target components
         let counter = -1
+        const targetComponents = []
+        // get all attributes before defining web component
         event.data.attributes = notDefined.reduce((acc, node) => {
           if (node.tagName.includes(event.data.example.parentNameKebab.toUpperCase())) {
-            event.data.example.tagName = node.tagName
             counter++
-            return Array.from(node.attributes).reduce((acc, attribute) => ({...acc, [attribute.name]: { values: Array.from(new Set([...(acc[attribute.name]?.values || []), attribute.value || ''])).filter(attr => attr), has: [...(acc[attribute.name]?.has || []), counter]}}), acc)
+            targetComponents.push(node)
+            event.data.example.tagName = node.tagName
+            return Array.from(node.attributes).reduce((acc, attribute) => ({...acc, [attribute.name]: { values: Array.from(new Set([...(acc[attribute.name]?.values || []), attribute.value || ''])).filter(attr => attr), has: [...(acc[attribute.name]?.has || []), JSON.stringify([counter, attribute.value || ''])]}}), acc)
           }
           return acc
         }, event.data.attributes)
-        console.log('***event.data******', event.data)
-        // TODO: Render the attribute checkboxes for each event.data.example.parentNameKebab component
+        // set a custom m-toolbook component in front of every shown web component
+        targetComponents.forEach((node, index) => {
+          const div = document.createElement('div')
+          div.innerHTML = /* html */`
+            <m-toolbook index=${index}>
+              <template>${JSON.stringify(event.data)}</template>
+            </m-toolbook>
+          `
+          node.parentNode.insertBefore(Array.from(div.children)[0], node)
+        })
+        // define m-toolbook component
+        if (targetComponents.length) Promise.all([
+          import('./es/Toolbook.js').then(module => ['m-toolbook', module.default]),
+        ]).then(elements => elements.forEach(element => {
+          // don't define already existing customElements
+          if (element && !customElements.get(element[0])) customElements.define(...element)
+        }))
+        /// define all not defined web components
         if (notDefined?.length) {
           if (document.body.hasAttribute(/*this.getAttribute('load-custom-elements') || */'load-custom-elements')) {
             this.dispatchEvent(new CustomEvent(/*this.getAttribute('load-custom-elements') || */'load-custom-elements', {

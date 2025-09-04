@@ -266,8 +266,10 @@
                 if (json.templates) json.templates.forEach(template => {
                   template.examplePath = ToolBook.removeFileName(url) + ToolBook.replaceFileExtension(template.path, 'html')
                   template.getExample = async () => await fetchData(template.examplePath, json.name)
-                  template.filePath = `${ToolBook.removeFileName(url)}${template.path}`
-                  template.getFile = async () => await fetchData(template.filePath, json.name)
+                  template.templatePath = `${ToolBook.removeFileName(url)}${template.path}`
+                  template.getTemplate = async () => await fetchData(template.filePath, json.name)
+                  template.filePath = json.filePath
+                  template.getFile = json.getFile
                 })
                 return json
               }
