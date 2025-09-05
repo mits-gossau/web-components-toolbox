@@ -237,7 +237,7 @@
           if (example && !example.isError) {
             innerHTML = await this.webWorker(ToolBook.fixHtmlLinks, example.text, example.origin, this.importMetaUrl)
             example.parentNameKebab = ToolBook.convertCamelToKebabCase(example.parentName)
-            if (namespace) innerHTML = await this.webWorker(ToolBook.replaceAttribute, innerHTML, example.parentNameKebab, 'namespace', namespace)
+            if (namespace) innerHTML = await this.webWorker(ToolBook.replaceAttributeValue, innerHTML, example.parentNameKebab, 'namespace', namespace)
           }
           const allClassAttributes = await this.webWorker(ToolBook.getAllClassAttributes, (await data.getFile()).text)
           // TODO: Get all attributes from template according to namespace
@@ -287,8 +287,9 @@
           return html.replace(/([^\.])\.\/([^\.])/g, `$1${importMetaUrl}${/*WebWorker can not use a reference like: ToolBook.removeFileName(origin)*/origin.replace(/(.*\/)(.*)$/, '$1')}$2`)
         }
 
-        static replaceAttribute (html, tagName, key, value) {
-          return html.replace(new RegExp(`(<[a-z-]*${tagName}[^>]*${key}=*).*?([\\s>])`, 'mg'), `$1"${value}"$2`)
+        static replaceAttributeValue (html, tagName, key, value) {
+          // TODO: Not working at Logo Namespace: <a-logo target="_blank" rel="noopener" namespace="logo-default-" namespace"logo-partner-"="" src="../src/img/logo_zueriseecenter.png" href="/" lang="en" loaded="true"></a-logo>
+          return html.replace(new RegExp(`(<[a-z-]*${tagName}[^>]*${key}=)[^\\s]*?([\\s>])`, 'mg'), `$1"${value}"$2`)
         }
 
         static getAllClassAttributes (text) {

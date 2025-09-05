@@ -11,6 +11,22 @@ export default class Toolbook extends Shadow() {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     if (this.template) ({ example: this.example, attributes: this.dataAttributes } = JSON.parse(this.template.content.textContent))
+
+    this.checkboxChangeEventListener = event => this.setAttribute('touched', '')
+    this.valueSelectChangeEventListener = event => {
+      event.target.previousElementSibling.value = event.target.value
+      this.valueInputChangeEventListener({...event, target: event.target.previousElementSibling})
+    }
+    this.valueInputChangeEventListener = event => {
+      this.root.querySelector(`#${event.target.getAttribute('data-checkbox-id')}`).checked = !!event.target.value
+      this.setAttribute('touched', '')
+    }
+    this.saveButtonClickEventListener = event => console.log('****dispatch this.valueInputs object and rerender with new attributes before defined, also add new values to this.dataAttributes for this web component******', {
+      [this.getAttribute('index')]: this.valueInputs.reduce((acc, input) => ({...acc, [input.getAttribute('key')]: {
+        has: Toolbook.walksUpDomQueryMatches(input, 'li', this).querySelector('#label-group > input').checked,
+        value: input.value
+      }}), {})
+    })
   }
 
   connectedCallback () {
@@ -19,9 +35,18 @@ export default class Toolbook extends Shadow() {
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     Promise.all(showPromises).then(() => (this.hidden = false))
+    this.checkboxes.forEach(checkbox => checkbox.addEventListener('change', this.checkboxChangeEventListener))
+    this.valueInputs.forEach(valueSelect => valueSelect.addEventListener('change', this.valueInputChangeEventListener))
+    this.valueSelects.forEach(valueSelect => valueSelect.addEventListener('change', this.valueSelectChangeEventListener))
+    this.saveButton.addEventListener('click', this.saveButtonClickEventListener)
   }
 
-  disconnectedCallback () {}
+  disconnectedCallback () {
+    this.checkboxes.forEach(checkbox => checkbox.removeEventListener('change', this.checkboxChangeEventListener))
+    this.valueInputs.forEach(valueSelect => valueSelect.removeEventListener('change', this.valueInputChangeEventListener))
+    this.valueSelects.forEach(valueSelect => valueSelect.removeEventListener('change', this.valueSelectChangeEventListener))
+    this.saveButton.removeEventListener('click', this.saveButtonClickEventListener)
+  }
 
   /**
    * evaluates if a render is necessary
@@ -47,9 +72,38 @@ export default class Toolbook extends Shadow() {
    */
   renderCSS () {
     this.css = /* css */`
-      :host {}
-      @media only screen and (max-width: _max-width_) {
-        :host {}
+      :host {
+        --any-display: flex;
+        flex-direction: column;
+        align-items: end;
+        border: 1px solid black;
+      }
+      :host > button {
+        display: none;
+        cursor: pointer;
+        margin: 0 0.5em 0.5em 0;
+      }
+      :host([touched]) > button {
+        display: block;
+      }
+      :host div#value-group, :host > ul > li {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25em;
+      }
+      :host > ul {
+        --ul-display: grid;
+        --ul-margin: 0;
+        gap: 0.25em;
+        grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill') || 'var(--auto-fill-grid-template-columns, 12.5em)'}, 1fr));
+        grid-template-rows: var(--auto-fill-grid-template-rows, auto);
+        padding: 0.5em;
+        width: 100%;
+      }
+      :host > ul > li {
+        --ul-li-padding-left: 0.5em;
+        border: 1px solid black;
+        padding: var(--ul-li-padding-left);
       }
     `
     return this.fetchTemplate()
@@ -83,14 +137,54 @@ export default class Toolbook extends Shadow() {
   renderHTML () {
     let html = '<ul>'
     for (const key in this.dataAttributes) {
-      html += `<li>${key}: ${this.dataAttributes[key].values}</li>`
+      let activeValue
+      this.dataAttributes[key].has.find(entry => {
+        const entryArr = JSON.parse(entry)
+        return entryArr[0] === Number(this.getAttribute('index') || undefined) && (activeValue = entryArr[1])
+      })
+      html += /* html */`
+        <li>
+          <div id="label-group">
+            <input id="${key}-key" name="${key}-key" type=checkbox ${activeValue ? 'checked' : ''} value="${key}" data-value-id="${key}-value" />
+            <label for="${key}-key">${key}</label>
+          </div>
+          <div id="value-group">
+            <input id="${key}-value" key="${key}" name="${key}-value"${activeValue ? ` value="${activeValue}"` : ''} data-checkbox-id="${key}-key" />
+            ${this.dataAttributes[key].values.length
+              ? /*html */`
+                <select id="${key}-select" name="${key}-select">
+                  <option value="">--Please choose a predefined value--</option>
+                  ${this.dataAttributes[key].values.reduce((acc, data) => /* html */`${acc}<option value="${data}"${data === activeValue ? ' selected' : ''}>${data}</option>`, '')}
+                </select>
+              `
+              : ''
+            }
+            
+          </div>
+        </li>`
     }
-    html += '</ul>'
+    html += '</ul><button id=save>save</button'
     this.html = html
   }
 
   get ul () {
     return this.root.querySelector('ul')
+  }
+
+  get checkboxes () {
+    return Array.from(this.root.querySelectorAll('#label-group > input'))
+  }
+
+  get valueInputs () {
+    return Array.from(this.root.querySelectorAll('#value-group > input'))
+  }
+
+  get valueSelects () {
+    return Array.from(this.root.querySelectorAll('#value-group > select'))
+  }
+
+  get saveButton () {
+    return this.root.querySelector('#save')
   }
 
   get template () {
