@@ -52,7 +52,13 @@
               <template>${JSON.stringify(event.data)}</template>
             </m-toolbook>
           `
-          node.parentNode.insertBefore(Array.from(div.children)[0], node)
+          let toolbookNode
+          node.after(toolbookNode = Array.from(div.children)[0])
+          let hr
+          toolbookNode.after(hr = document.createElement('hr'))
+          hr.setAttribute('style', '--content-width: 100%;')
+          hr.before(document.createElement('br'))
+          hr.after(document.createElement('br'))
         })
         // define m-toolbook component
         if (targetComponents.length) Promise.all([
