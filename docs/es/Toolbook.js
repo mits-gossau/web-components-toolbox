@@ -151,7 +151,7 @@ export default class Toolbook extends Shadow() {
       html += /* html */`
         <li>
           <div id="label-group">
-            <input id="${key}-key" name="${key}-key" type=checkbox ${activeValue ? 'checked' : ''} value="${key}" data-value-id="${key}-value" />
+            <input id="${key}-key" name="${key}-key" type=checkbox ${(!this.savedAttributes?.[this.getAttribute('index')]?.[key] && activeValue) || this.savedAttributes?.[this.getAttribute('index')]?.[key]?.has ? 'checked' : ''} value="${key}" data-value-id="${key}-value" />
             <label for="${key}-key">${key}</label>
           </div>
           <div id="value-group">

@@ -54,6 +54,9 @@
                 targetComponent.removeAttribute(key)
               }
             }
+            console.log('*****targetComponent****', targetComponent)
+            // todo: on wc-config load
+            setTimeout(() => targetComponent.scrollIntoView(), 200)
           }
           const div = document.createElement('div')
           div.innerHTML = /* html */`
