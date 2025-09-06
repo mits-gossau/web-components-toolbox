@@ -54,9 +54,9 @@
             this.renderExample(data, example)
           }
 
-          this.selectNamespacesChangeEventListener = async event => {
-            this.renderExample(this.activeData, this.activeExample, event.target.value)
-          }
+          this.selectNamespacesChangeEventListener = async event => this.renderExample(this.activeData, this.activeExample, event.target.value)
+
+          this.messageEventListener = event => this.renderExample(this.activeData, this.activeExample, undefined, event.data)
         }
         
         connectedCallback () {
@@ -68,6 +68,7 @@
             this.selectComponents.addEventListener('change', this.selectComponentsChangeEventListener)
             this.selectTemplates.addEventListener('change', this.selectTemplatesChangeEventListener)
             this.selectNamespaces.addEventListener('change', this.selectNamespacesChangeEventListener)
+            self.addEventListener('message', this.messageEventListener)
             this.hidden = false
           })
         }
@@ -76,6 +77,7 @@
           this.selectComponents.removeEventListener('change', this.selectComponentsChangeEventListener)
           this.selectTemplates.removeEventListener('change', this.selectTemplatesChangeEventListener)
           this.selectNamespaces.removeEventListener('change', this.selectNamespacesChangeEventListener)
+          self.removeEventListener('message', this.messageEventListener)
         }
         
         /**
@@ -232,7 +234,7 @@
           `
         }
 
-        async renderExample (data, example, namespace) {
+        async renderExample (data, example, namespace, savedAttributes) {
           let innerHTML = example?.text
           if (example && !example.isError) {
             innerHTML = await this.webWorker(ToolBook.fixHtmlLinks, example.text, example.origin, this.importMetaUrl)
@@ -244,7 +246,7 @@
           // TODO: Get all css variables from .js file as well as from template according to namespace
           this.preview.outerHTML = '<iframe id=preview src="./ToolbookIframe.html" loading></iframe>'
           this.preview.addEventListener('load', event => {
-            this.preview.contentWindow.postMessage({ example: {...example, innerHTML}, attributes: allClassAttributes})
+            this.preview.contentWindow.postMessage({ example: {...example, innerHTML}, attributes: allClassAttributes, savedAttributes})
             this.preview.removeAttribute('loading')
           })
         }

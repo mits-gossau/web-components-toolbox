@@ -45,7 +45,16 @@
           return acc
         }, event.data.attributes)
         // set a custom m-toolbook component in front of every shown web component
-        targetComponents.forEach((node, index) => {
+        targetComponents.forEach((targetComponent, index) => {
+          if (event.data.savedAttributes?.[index]) {
+            for (const key in event.data.savedAttributes[index]) {
+              if (event.data.savedAttributes[index][key].has) {
+                targetComponent.setAttribute(key, event.data.savedAttributes[index][key].value || '')
+              } else {
+                targetComponent.removeAttribute(key)
+              }
+            }
+          }
           const div = document.createElement('div')
           div.innerHTML = /* html */`
             <m-toolbook index=${index}>
@@ -53,7 +62,8 @@
             </m-toolbook>
           `
           let toolbookNode
-          node.after(toolbookNode = Array.from(div.children)[0])
+          targetComponent.after(toolbookNode = Array.from(div.children)[0])
+          // TODO: insert targetComponents outerHTML into textarea inside summary/details for copy/paste
           let hr
           toolbookNode.after(hr = document.createElement('hr'))
           hr.setAttribute('style', '--content-width: 100%;')

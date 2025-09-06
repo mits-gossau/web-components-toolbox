@@ -10,7 +10,7 @@ export default class Toolbook extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
-    if (this.template) ({ example: this.example, attributes: this.dataAttributes } = JSON.parse(this.template.content.textContent))
+    if (this.template) ({ example: this.example, attributes: this.dataAttributes, savedAttributes: this.savedAttributes } = JSON.parse(this.template.content.textContent))
 
     this.checkboxChangeEventListener = event => this.setAttribute('touched', '')
     this.valueSelectChangeEventListener = event => {
@@ -21,7 +21,7 @@ export default class Toolbook extends Shadow() {
       this.root.querySelector(`#${event.target.getAttribute('data-checkbox-id')}`).checked = !!event.target.value
       this.setAttribute('touched', '')
     }
-    this.saveButtonClickEventListener = event => console.log('****dispatch this.valueInputs object and rerender with new attributes before defined, also add new values to this.dataAttributes for this web component******', {
+    this.saveButtonClickEventListener = event => self.top?.postMessage({
       [this.getAttribute('index')]: this.valueInputs.reduce((acc, input) => ({...acc, [input.getAttribute('key')]: {
         has: Toolbook.walksUpDomQueryMatches(input, 'li', this).querySelector('#label-group > input').checked,
         value: input.value
@@ -136,12 +136,18 @@ export default class Toolbook extends Shadow() {
    */
   renderHTML () {
     let html = '<ul>'
-    for (const key in this.dataAttributes) {
+    Array.from(new Set(Object.keys(this.dataAttributes || {}).concat(Object.keys(this.savedAttributes?.[this.getAttribute('index')] || {})))).forEach(key => {
       let activeValue
-      this.dataAttributes[key].has.find(entry => {
-        const entryArr = JSON.parse(entry)
-        return entryArr[0] === Number(this.getAttribute('index') || undefined) && (activeValue = entryArr[1])
-      })
+      if (this.dataAttributes[key]) {
+        this.dataAttributes[key].has.find(entry => {
+          const entryArr = JSON.parse(entry)
+          return entryArr[0] === Number(this.getAttribute('index') || undefined) && (activeValue = entryArr[1])
+        })
+      }
+      if(this.savedAttributes?.[this.getAttribute('index')]?.[key]?.has) {
+        activeValue = this.savedAttributes[this.getAttribute('index')][key].value
+      }
+      const optionValues = []
       html += /* html */`
         <li>
           <div id="label-group">
@@ -150,11 +156,18 @@ export default class Toolbook extends Shadow() {
           </div>
           <div id="value-group">
             <input id="${key}-value" key="${key}" name="${key}-value"${activeValue ? ` value="${activeValue}"` : ''} data-checkbox-id="${key}-key" />
-            ${this.dataAttributes[key].values.length
+            ${this.dataAttributes[key]?.values.length || this.savedAttributes?.[this.getAttribute('index')]?.[key]?.value
               ? /*html */`
                 <select id="${key}-select" name="${key}-select">
                   <option value="">--Please choose a predefined value--</option>
-                  ${this.dataAttributes[key].values.reduce((acc, data) => /* html */`${acc}<option value="${data}"${data === activeValue ? ' selected' : ''}>${data}</option>`, '')}
+                  ${this.dataAttributes[key]?.values.reduce((acc, data) => {
+                    optionValues.push(data)
+                    return /* html */`${acc}<option value="${data}"${data === activeValue ? ' selected' : ''}>${data}</option>`
+                  }, '') || ''}
+                  ${this.savedAttributes?.[this.getAttribute('index')]?.[key]?.value && !optionValues.includes(this.savedAttributes[this.getAttribute('index')][key].value)
+                    ? /* html */`<option value="${this.savedAttributes[this.getAttribute('index')][key].value}"${this.savedAttributes[this.getAttribute('index')][key].value === activeValue ? ' selected' : ''}>${this.savedAttributes[this.getAttribute('index')][key].value}</option>`
+                    : ''
+                  }
                 </select>
               `
               : ''
@@ -162,7 +175,7 @@ export default class Toolbook extends Shadow() {
             
           </div>
         </li>`
-    }
+    })
     html += '</ul><button id=save>save</button'
     this.html = html
   }
