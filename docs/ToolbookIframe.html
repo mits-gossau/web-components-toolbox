@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href=../src/css/initial.css rel=stylesheet type="text/css">
+    <link href=../src/css/reset.css rel=stylesheet type="text/css">
+    <link href=../src/css/colors.css rel=stylesheet type="text/css">
+    <link href=../src/css/fonts.css rel=stylesheet type="text/css">
+    <link href=../src/css/variables.css rel=stylesheet type="text/css">
+    <script async rel=preload as="script" type="text/javascript" src="../src/es/helpers/Environment.js?msrcVersion=20230117142619"></script>
+    <script async rel=preload as="script" type="text/javascript" src="../wc-config.js"></script>
+    <title>Tool Book - Iframe</title>
+  </head>
+  <body>
+    <c-fetch-html no-storage>
+      <c-fetch-css no-storage>
+        <c-fetch-modules>
+          <p-general>
+            <o-body>
+              <main></main>
+            </o-body>
+          </p-general>
+        </c-fetch-modules>
+      </c-fetch-css>
+    </c-fetch-html>
+    <script>
+      self.addEventListener('message', event => {
+        let main = document.body.querySelector('main')
+        if (!main) main = document.body.querySelector('o-body').main
+        main.innerHTML = event.data.example.innerHTML
+        // custom element define
+        const notDefined = Array.from(document.body.querySelector('main').querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
+        // get all preset attributes from our target components
+        let counter = -1
+        const targetComponents = []
+        // get all attributes before defining web component
+        event.data.attributes = notDefined.reduce((acc, node) => {
+          if (node.tagName.includes(event.data.example.parentNameKebab.toUpperCase())) {
+            counter++
+            targetComponents.push(node)
+            event.data.example.tagName = node.tagName
+            return Array.from(node.attributes).reduce((acc, attribute) => ({...acc, [attribute.name]: { values: Array.from(new Set([...(acc[attribute.name]?.values || []), attribute.value || ''])).filter(attr => attr), has: [...(acc[attribute.name]?.has || []), JSON.stringify([counter, attribute.value || ''])]}}), acc)
+          }
+          return acc
+        }, event.data.attributes)
+        // set a custom m-toolbook component in front of every shown web component
+        targetComponents.forEach((targetComponent, index) => {
+          if (event.data.savedAttributes?.[index]) {
+            for (const key in event.data.savedAttributes[index]) {
+              if (event.data.savedAttributes[index][key].has) {
+                targetComponent.setAttribute(key, event.data.savedAttributes[index][key].value || '')
+              } else {
+                targetComponent.removeAttribute(key)
+              }
+            }
+            document.body.addEventListener('wc-config-load', () => targetComponent.scrollIntoView())
+          }
+          const div = document.createElement('div')
+          div.innerHTML = /* html */`
+            <m-toolbook index=${index}>
+              <template>${JSON.stringify(event.data)}</template>
+            </m-toolbook>
+          `
+          // toobookNode
+          let toolbookControls
+          targetComponent.after(toolbookControls = Array.from(div.children)[0])
+          // details with targetComponent outerHTML
+          let details
+          toolbookControls.after(details = document.createElement('details'))
+          const summary = document.createElement('summary')
+          summary.textContent = 'Outer raw HTML'
+          details.appendChild(summary)
+          const outerHTML = document.createElement('textarea')
+          outerHTML.setAttribute('style', 'height: 50dvh; width: 100%; color: #a4f644; background-color: black; padding: 0.5em;')
+          outerHTML.textContent = targetComponent.outerHTML
+          details.appendChild(outerHTML)
+          // HR
+          let hr
+          outerHTML.after(hr = document.createElement('hr'))
+          hr.setAttribute('style', '--content-width: 100%;')
+          hr.before(document.createElement('br'))
+          hr.after(document.createElement('br'))
+        })
+        // define m-toolbook component
+        if (targetComponents.length) Promise.all([
+          import('./es/Toolbook.js').then(module => ['m-toolbook', module.default]),
+        ]).then(elements => elements.forEach(element => {
+          // don't define already existing customElements
+          if (element && !customElements.get(element[0])) customElements.define(...element)
+        }))
+        /// define all not defined web components
+        if (notDefined?.length) {
+          if (document.body.hasAttribute(/*this.getAttribute('load-custom-elements') || */'load-custom-elements')) {
+            this.dispatchEvent(new CustomEvent(/*this.getAttribute('load-custom-elements') || */'load-custom-elements', {
+              detail: {
+                nodes: notDefined
+              },
+              bubbles: true,
+              cancelable: true,
+              composed: true
+            }))
+          } else {
+            console.error(
+              'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+              notDefined,
+              this
+            )
+          }
+        }
+      })
+    </script>
+    <style>
+      body {
+        --background-color: #eee;
+        background-color: var(--background-color);
+      }
+    </style>
+  </body>
+</html>
