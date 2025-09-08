@@ -6,6 +6,8 @@
 </head>
 
 <body>
+  <a href="./docs/Toolbook.html" target="_blank"><h1>try 👉 Toolbook (alpha)</h1></a>
+  <div id="overview"></div>
   <hr>
   <h1>web-components-toolbox</h1>
   <h2>Setup</h2>
@@ -649,7 +651,7 @@
     clone.removeAttribute('id')
     ul.appendChild(li)
   })
-  document.body.prepend(ul)
+  document.body.querySelector('#overview').replaceWith(ul)
 </script>
 <style>
   .overview {

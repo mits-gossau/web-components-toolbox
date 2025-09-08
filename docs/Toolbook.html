@@ -10,10 +10,11 @@
     <link href=../src/css/variables.css rel=stylesheet type="text/css">
     <script async rel=preload as="script" type="text/javascript" src="../src/es/helpers/Environment.js?msrcVersion=20230117142619"></script>
     <script async rel=preload as="script" type="text/javascript" src="../wc-config.js"></script>
-    <title>Tool Book - Playground</title>
+    <title>Tool Book (alpha) - Playground</title>
   </head>
   <body>
     <view-tool-book></view-tool-book>
+    <footer><code>This is an alpha version. It does not include attributes from the namespace-templates. Features on roadmap are: Including css variables in the controls.</code></footer>
     <script type=module>
       import {WebWorker} from '../src/es/components/prototypes/WebWorker.js'
       import {Shadow} from '../src/es/components/prototypes/Shadow.js'
@@ -290,7 +291,6 @@
         }
 
         static replaceAttributeValue (html, tagName, key, value) {
-          // TODO: Not working at Logo Namespace: <a-logo target="_blank" rel="noopener" namespace="logo-default-" namespace"logo-partner-"="" src="../src/img/logo_zueriseecenter.png" href="/" lang="en" loaded="true"></a-logo>
           return html.replace(new RegExp(`(<[a-z-]*${tagName}[^>]*${key}=)[^\\s]*?([\\s>])`, 'mg'), `$1"${value}"$2`)
         }
 

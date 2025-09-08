@@ -54,9 +54,7 @@
                 targetComponent.removeAttribute(key)
               }
             }
-            console.log('*****targetComponent****', targetComponent)
-            // todo: on wc-config load
-            setTimeout(() => targetComponent.scrollIntoView(), 200)
+            document.body.addEventListener('wc-config-load', () => targetComponent.scrollIntoView())
           }
           const div = document.createElement('div')
           div.innerHTML = /* html */`
@@ -64,11 +62,22 @@
               <template>${JSON.stringify(event.data)}</template>
             </m-toolbook>
           `
-          let toolbookNode
-          targetComponent.after(toolbookNode = Array.from(div.children)[0])
-          // TODO: insert targetComponents outerHTML into textarea inside summary/details for copy/paste
+          // toobookNode
+          let toolbookControls
+          targetComponent.after(toolbookControls = Array.from(div.children)[0])
+          // details with targetComponent outerHTML
+          let details
+          toolbookControls.after(details = document.createElement('details'))
+          const summary = document.createElement('summary')
+          summary.textContent = 'Outer raw HTML'
+          details.appendChild(summary)
+          const outerHTML = document.createElement('textarea')
+          outerHTML.setAttribute('style', 'height: 50dvh; width: 100%; color: #a4f644; background-color: black; padding: 0.5em;')
+          outerHTML.textContent = targetComponent.outerHTML
+          details.appendChild(outerHTML)
+          // HR
           let hr
-          toolbookNode.after(hr = document.createElement('hr'))
+          outerHTML.after(hr = document.createElement('hr'))
           hr.setAttribute('style', '--content-width: 100%;')
           hr.before(document.createElement('br'))
           hr.after(document.createElement('br'))
