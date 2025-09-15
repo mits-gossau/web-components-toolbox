@@ -6,7 +6,7 @@ import { Shadow } from '../components/prototypes/Shadow.js'
 let templates = []
 const payloads = new Map()
 const responses = new Map()
-self.addEventListener('load', event => {
+self.addEventListener('wc-config-load', event => {
   templates = Shadow().walksDownDomQueryMatchesAll(document.body, 'template[mock]')
   templates.forEach(template => {
     if (template.getAttribute('pathname')) {
