@@ -133,6 +133,25 @@ export default class MenuIcon extends Shadow() {
       :host(.${this.openClass}) .${this.barClass}3 {
         transform: var(--two-transform, rotate(45deg) translateY(calc(var(--height, 5px) * -5.5 / 2)));
       }
+      :host([background])::before {
+        --size-before: 3em;
+        content: "";
+        position: absolute;
+        display: block;
+        height: var(--height-before, var(--size-before));
+        width: var(--width-before, var(--size-before));
+        background: var(--background-before, var(--color-secondary, red));
+        border-radius: var(--border-radius-before, 50%);
+        outline: var(--outline-before, none);
+        right: var(--right-before, unset);
+        left: var(--left-before, calc(0.135 * var(--size-before)));
+        top: var(--top-before, calc(-0.325 * var(--size-before)));
+        bottom: var(--bottom-before, unset);
+        transition: var(--transition-before, background-color 0.3s ease-out)
+      }
+      :host([background]:hover)::before {
+        background: var(--background-before-hover, var(--background-before, var(--color-secondary, red)));
+      }
     `
   }
 
