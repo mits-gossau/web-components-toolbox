@@ -52,6 +52,10 @@ export default class SkipToNavigation extends Shadow() {
       }
     }
 
+    this.clickEventListener = event =>  {
+      if (this.matches(':focus')) this.keyupEventListener({key: 'Enter'})
+    }
+
     this.shortCutListener = (event) => {
       let isMac = false
       // @ts-ignore
@@ -91,16 +95,18 @@ export default class SkipToNavigation extends Shadow() {
       // @ts-ignore
       if (document.body.firstChild !== this) document.body.insertBefore(this, document.body.firstChild)
     })
-    this.addEventListener('focusin', () => this.focusinEventListener())
-    this.addEventListener('focusout', () => this.focusoutEventListener())
-    this.addEventListener('keyup', (event) => this.keyupEventListener(event))
+    this.addEventListener('focusin', this.focusinEventListener)
+    this.addEventListener('focusout', this.focusoutEventListener)
+    this.addEventListener('keyup', this.keyupEventListener)
+    this.addEventListener('click', this.clickEventListener)
     if (this.hasAttribute('show-shortcut')) window.addEventListener('keydown', this.shortCutListener)
   }
 
   disconnectedCallback () {
-    this.removeEventListener('focusin', () => this.focusinEventListener())
-    this.removeEventListener('focusout', () => this.focusoutEventListener())
-    this.removeEventListener('keyup', (event) => this.keyupEventListener(event))
+    this.removeEventListener('focusin', this.focusinEventListener)
+    this.removeEventListener('focusout', this.focusoutEventListener)
+    this.removeEventListener('keyup', this.keyupEventListener)
+    this.removeEventListener('click', this.clickEventListener)
     if (this.hasAttribute('show-shortcut')) window.removeEventListener('keydown', this.shortCutListener)
   }
 
