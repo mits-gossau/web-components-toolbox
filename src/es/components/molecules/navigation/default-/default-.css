@@ -6,7 +6,7 @@
   --navigation-default-a-link-content-spacing-no-scroll: var(--navigation-default-a-link-content-spacing);
   --navigation-default-a-link-content-spacing: 1.1rem var(--content-spacing);
   --navigation-default-a-link-font-size-no-scroll: var(--navigation-default-a-link-font-size);
-  --navigation-default-a-link-font-size: var(--header-default-a-font-size, var(--font-size));
+  --navigation-default-a-link-font-size: var(--header-default-a-font-size-custom, var(--header-default-a-font-size, var(--font-size)));
   --navigation-default-a-link-text-transform: var(--navigation-default-a-link-text-transform-custom, none);
   --navigation-default-background-color: var(--header-default-background-color);
   --navigation-default-color-active: var(--color-active);
