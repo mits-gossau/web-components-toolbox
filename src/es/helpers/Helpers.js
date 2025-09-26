@@ -7,17 +7,17 @@
  * @function
  * @name scrollElIntoView
  * @kind variable
- * @param {()=>HTMLElement} getScrollElFunc
+ * @param {()=>HTMLElement | null | undefined} getScrollElFunc
  * @param {string | null} [notIntersectingSelector=null]
  * @param {Window | HTMLElement} [parentScrollEl=Window]
  * @param {ScrollIntoViewOptions} [options={behavior: 'smooth'}]
- * @param {number} [timeout=200]
+ * @param {number} [timeout=50]
  * @param {number} [counter=0]
  * @param {number} [counterMax=15]
  * @returns {void}
  * @exports
  */
-export const scrollElIntoView = (getScrollElFunc, notIntersectingSelector = null, parentScrollEl = self, options = { behavior: 'smooth' }, timeout = 200, counter = 0, counterMax = 15) => {
+export const scrollElIntoView = (getScrollElFunc, notIntersectingSelector = null, parentScrollEl = self, options = { behavior: 'smooth' }, timeout = 50, counter = 0, counterMax = 15) => {
   counter++
   const scrollEl = getScrollElFunc()
   if (!scrollEl) return
