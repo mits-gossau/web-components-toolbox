@@ -3,6 +3,7 @@
     --img-height: var(--emotion-carousel-default-img-height-custom, 100%);
     --picture-cover-img-max-height: var(--emotion-carousel-default-picture-cover-img-max-height-custom, none);
     --any-margin-top-first-child: var(--emotion-carousel-default-any-margin-top-first-child-custom, var(--content-spacing));
+    --any-margin-top-first-child-mobile: var(--emotion-carousel-default-any-margin-top-first-child-mobile-custom, var(--content-spacing-mobile));
     --emotion-carousel-default-h2-font-family: var(--emotion-carousel-default-h2-font-family-custom, var(--h2-font-family));
     --content-width: var(--emotion-carousel-default-content-width-custom, 100%);
     --svg-size: var(--emotion-carousel-default-svg-size-custom, 2em);
