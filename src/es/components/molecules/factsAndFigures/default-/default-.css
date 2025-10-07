@@ -1,4 +1,7 @@
 :host {
     --facts-and-figures-default-text-color:  var(--facts-and-figures-default-text-color-custom, var(--color-tertiary, #ffff));
     --facts-and-figures-default-h1-font-family: var(--facts-and-figures-default-h1-font-family-custom, var(--font-family-bold, var(--font-family, 'Arial', sans-serif)));
+    --facts-and-figures-default-number-percentage-font-size: var(--facts-and-figures-default-number-percentage-font-size-custom, var(--h1-font-size, 1.75em));
+    --facts-and-figures-default-number-percentage-margin: var(--facts-and-figures-default-number-percentage-margin-custom, var(--h1-margin, 0 auto var(--h-margin-bottom, 1.143em)));
+    --facts-and-figures-default-number-percentage-font-family: var(--facts-and-figures-default-number-percentage-font-family-custom, var(--h1-font-family, 'Arial', sans-serif));
 }
