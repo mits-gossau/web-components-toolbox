@@ -49,13 +49,8 @@ export default class Grid extends Shadow() {
    * @return {Promise<void>}
    */
   renderCSS () {
-    this.css = /* css */`
-      :host {
-        ${this.hasAttribute('width')
-          ? `width: ${this.getAttribute('width') || 'var(--width, auto)'} !important;`
-          : ''
-        }
-      }
+    let css = ''
+    css += /* css */`
       :host > section {
         display:grid;
           ${this.hasAttribute('height')
@@ -64,91 +59,147 @@ export default class Grid extends Shadow() {
           }
       }
     `
+    if (this.hasAttribute('overflow')) {
+      css += /* css */`
+        :host > section {
+          overflow: ${this.getAttribute('overflow') || 'var(--overflow, auto)'};
+        }
+      `
+    }
+    if (this.hasAttribute('width')) {
+      css += /* css */`
+        :host {
+          width: ${this.getAttribute('width') || 'var(--width, auto)'} !important;
+        }
+      `
+    }
     if (this.hasAttribute('auto-fit')) {
-      this.css = /* css */`
-      :host > section {
-        grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit') || 'var(--auto-fit-grid-template-columns, 12.5em)'}, 1fr));
-        grid-template-rows: var(--auto-fit-grid-template-rows, auto);
-      }
-    `
+      css += /* css */`
+        :host > section {
+          grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit') || 'var(--auto-fit-grid-template-columns, 12.5em)'}, 1fr));
+          grid-template-rows: var(--auto-fit-grid-template-rows, auto);
+        }
+      `
     }
     if (this.hasAttribute('auto-fill')) {
-      this.css = /* css */`
-      :host > section {
-        grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill') || 'var(--auto-fill-grid-template-columns, 12.5em)'}, 1fr));
-        grid-template-rows: var(--auto-fill-grid-template-rows, auto);
-      }
-    `
+      css += /* css */`
+        :host > section {
+          grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill') || 'var(--auto-fill-grid-template-columns, 12.5em)'}, 1fr));
+          grid-template-rows: var(--auto-fill-grid-template-rows, auto);
+        }
+      `
     }
     if (this.hasAttribute('gap')) {
-      this.css = /* css */`
-      :host > section {
-        gap: ${this.getAttribute('gap') || 'var(--gap, 0)'};
-      }
-    `
+      css += /* css */`
+        :host > section {
+          gap: ${this.getAttribute('gap') || 'var(--gap, 0)'};
+        }
+      `
+    }
+    if (this.hasAttribute('margin')) {
+      css += /* css */`
+        :host > section {
+          margin: ${this.getAttribute('margin') || 'var(--margin, 0)'};
+        }
+      `
     }
     if (this.hasAttribute('padding')) {
-      this.css = /* css */`
-      :host > section {
-        padding: ${this.getAttribute('padding') || 'var(--padding, 0)'};
-      }
-    `
+      css += /* css */`
+        :host > section {
+          padding: ${this.getAttribute('padding') || 'var(--padding, 0)'};
+        }
+      `
+    }
+    if (this.hasAttribute('background')) {
+      css += /* css */`
+        :host > section {
+          background: ${this.getAttribute('background') || 'var(--background, none)'};
+        }
+      `
+    }
+    if (this.hasAttribute('color')) {
+      css += /* css */`
+        :host > section {
+          color: ${this.getAttribute('color') || 'var(--color, black)'};
+        }
+      `
     }
     // mobile
-    this.css = /* css */`
-      @media only screen and (max-width: _max-width_) {
-        :host {
-          ${this.hasAttribute('width-mobile')
-            ? `width: ${this.getAttribute('width-mobile') || 'var(--width-mobile, var(--width, auto))'} !important;`
-            : ''
-          }
-        }
+    css += '@media only screen and (max-width: _max-width_) {'
+    if (this.hasAttribute('height-mobile')) {
+      css += /* css */`
         :host > section {
-            ${this.hasAttribute('height-mobile')
-            ? `height: ${this.getAttribute('height-mobile') || 'var(--height-mobile, var(--height, 100%))'};`
-            : ''
-          }
+          height: ${this.getAttribute('height-mobile') || 'var(--height-mobile, var(--height, 100%))'};
         }
-      }
-    `
+      `
+    }
+    if (this.hasAttribute('overflow-mobile')) {
+      css += /* css */`
+        :host > section {
+          overflow: ${this.getAttribute('overflow-mobile') || 'var(--overflow-mobile, var(--overflow, auto))'};
+        }
+      `
+    }
+    if (this.hasAttribute('width-mobile')) {
+      css += /* css */`
+        :host {
+          width: ${this.getAttribute('width-mobile') || 'var(--width-mobile, var(--width, auto))'} !important;
+        }
+      `
+    }
     if (this.hasAttribute('auto-fit-mobile')) {
-      this.css = /* css */`
-      @media only screen and (max-width: _max-width_) {
+      css += /* css */`
         :host > section {
           grid-template-columns: repeat(auto-fit, minmax(${this.getAttribute('auto-fit-mobile') || 'var(--auto-fit-grid-template-columns-mobile, var(--auto-fit-grid-template-columns, 12.5em))'}, 1fr));
           grid-template-rows: var(--auto-fit-grid-template-rows-mobile, var(--auto-fit-grid-template-rows, auto));
         }
-      }
-    `
+      `
     }
     if (this.hasAttribute('auto-fill-mobile')) {
-      this.css = /* css */`
-      @media only screen and (max-width: _max-width_) {
+      css += /* css */`
         :host > section {
           grid-template-columns: repeat(auto-fill, minmax(${this.getAttribute('auto-fill-mobile') || 'var(--auto-fill-grid-template-columns-mobile, var(--auto-fill-grid-template-columns, 12.5em))'}, 1fr));
           grid-template-rows: var(--auto-fill-grid-template-rows-mobile, var(--auto-fill-grid-template-rows, auto));
         }
-      }
-    `
+      `
     }
     if (this.hasAttribute('gap-mobile')) {
-      this.css = /* css */`
-      @media only screen and (max-width: _max-width_) {
+      css += /* css */`
         :host > section {
           gap: ${this.getAttribute('gap-mobile') || 'var(--gap-mobile, var(--gap, 0))'};
         }
-      }
-    `
+      `
+    }
+    if (this.hasAttribute('margin-mobile')) {
+      css += /* css */`
+        :host > section {
+          margin: ${this.getAttribute('margin-mobile') || 'var(--margin-mobile, var(--margin, 0))'};
+        }
+      `
     }
     if (this.hasAttribute('padding-mobile')) {
-      this.css = /* css */`
-      @media only screen and (max-width: _max-width_) {
+      css += /* css */`
         :host > section {
           padding: ${this.getAttribute('padding-mobile') || 'var(--padding-mobile, var(--padding, 0))'};
         }
-      }
-    `
+      `
     }
+    if (this.hasAttribute('background-mobile')) {
+      css += /* css */`
+        :host > section {
+          background: ${this.getAttribute('background-mobile') || 'var(--background-mobile, var(--background, none))'};
+        }
+      `
+    }
+    if (this.hasAttribute('color-mobile')) {
+      css += /* css */`
+        :host > section {
+          color: ${this.getAttribute('color-mobile') || 'var(--color-mobile, var(--color, black))'};
+        }
+      `
+    }
+    css += '}'
+    this.css = css
     return this.fetchTemplate()
   }
 
@@ -250,58 +301,98 @@ export default class Grid extends Shadow() {
       if (node.tagName !== 'STYLE' && node.tagName !== 'SECTION') this.section.appendChild(node)
     })
     this.setAttribute('count-section-children', this.section.children.length)
+    let css = ''
+    let cssMobile = '@media only screen and (max-width: _max-width_) {'
     Array.from(this.section.children).forEach(node => {
       if ((node.getAttribute('style') || '').includes('background')) node.setAttribute('has-background', 'true')
       if (node.getAttribute('grid-column')) {
-        this.css = /* css */`
-        :host > section > [grid-column="${node.getAttribute('grid-column')}"]{
-          grid-column: ${node.getAttribute('grid-column')};
-        }
-      `
+        css += /* css */`
+          :host > section > [grid-column="${node.getAttribute('grid-column')}"]{
+            grid-column: ${node.getAttribute('grid-column')};
+          }
+        `
       }
       if (node.getAttribute('grid-row')) {
-        this.css = /* css */`
-        :host > section > [grid-row="${node.getAttribute('grid-row')}"]{
-          grid-row: ${node.getAttribute('grid-row')};
-        }
-      `
+        css += /* css */`
+          :host > section > [grid-row="${node.getAttribute('grid-row')}"]{
+            grid-row: ${node.getAttribute('grid-row')};
+          }
+        `
+      }
+      if (node.getAttribute('margin')) {
+        css += /* css */`
+          :host > section > [margin="${node.getAttribute('margin')}"]{
+            margin: ${node.getAttribute('margin')};
+          }
+        `
       }
       if (node.getAttribute('padding')) {
-        this.css = /* css */`
-        :host > section > [padding="${node.getAttribute('padding')}"]{
-          padding: ${node.getAttribute('padding')};
-        }
-      `
+        css += /* css */`
+          :host > section > [padding="${node.getAttribute('padding')}"]{
+            padding: ${node.getAttribute('padding')};
+          }
+        `
+      }
+      if (node.getAttribute('background')) {
+        css += /* css */`
+          :host > section > [background="${node.getAttribute('background')}"]{
+            background: ${node.getAttribute('background')};
+          }
+        `
+      }
+      if (node.getAttribute('color')) {
+        css += /* css */`
+          :host > section > [color="${node.getAttribute('color')}"]{
+            color: ${node.getAttribute('color')};
+          }
+        `
       }
       // mobile
       if (node.getAttribute('grid-column-mobile')) {
-        this.css = /* css */`
-        @media only screen and (max-width: _max-width_) {
+        cssMobile += /* css */`
           :host > section > [grid-column-mobile="${node.getAttribute('grid-column-mobile')}"]{
             grid-column: ${node.getAttribute('grid-column-mobile')};
           }
-        }
-      `
+        `
       }
       if (node.getAttribute('grid-row-mobile')) {
-        this.css = /* css */`
-        @media only screen and (max-width: _max-width_) {
+        cssMobile += /* css */`
           :host > section > [grid-row-mobile="${node.getAttribute('grid-row-mobile')}"]{
             grid-row: ${node.getAttribute('grid-row-mobile')};
           }
-        }
-      `
+        `
+      }
+      if (node.getAttribute('margin-mobile')) {
+        cssMobile += /* css */`
+          :host > section > [margin-mobile="${node.getAttribute('margin-mobile')}"]{
+            margin: ${node.getAttribute('margin-mobile')};
+          }
+        `
       }
       if (node.getAttribute('padding-mobile')) {
-        this.css = /* css */`
-        @media only screen and (max-width: _max-width_) {
+        cssMobile += /* css */`
           :host > section > [padding-mobile="${node.getAttribute('padding-mobile')}"]{
             padding: ${node.getAttribute('padding-mobile')};
           }
-        }
-      `
+        `
+      }
+      if (node.getAttribute('background-mobile')) {
+        cssMobile += /* css */`
+          :host > section > [background-mobile="${node.getAttribute('background-mobile')}"]{
+            background: ${node.getAttribute('background-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('color-mobile')) {
+        cssMobile += /* css */`
+          :host > section > [color-mobile="${node.getAttribute('color-mobile')}"]{
+            color: ${node.getAttribute('color-mobile')};
+          }
+        `
       }
     })
+    cssMobile += '}'
+    this.css = css + cssMobile
     this.html = [this.section]
     return Promise.resolve()
   }
