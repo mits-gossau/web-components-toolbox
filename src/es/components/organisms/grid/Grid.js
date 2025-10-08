@@ -305,42 +305,42 @@ export default class Grid extends Shadow() {
     let cssMobile = '@media only screen and (max-width: _max-width_) {'
     Array.from(this.section.children).forEach(node => {
       if ((node.getAttribute('style') || '').includes('background')) node.setAttribute('has-background', 'true')
-      if (node.getAttribute('grid-column')) {
+      if (node.getAttribute('grid-column') && !css.includes(`[grid-column="${node.getAttribute('grid-column')}"]`)) {
         css += /* css */`
           :host > section > [grid-column="${node.getAttribute('grid-column')}"]{
             grid-column: ${node.getAttribute('grid-column')};
           }
         `
       }
-      if (node.getAttribute('grid-row')) {
+      if (node.getAttribute('grid-row') && !css.includes(`[grid-row="${node.getAttribute('grid-row')}"]`)) {
         css += /* css */`
           :host > section > [grid-row="${node.getAttribute('grid-row')}"]{
             grid-row: ${node.getAttribute('grid-row')};
           }
         `
       }
-      if (node.getAttribute('margin')) {
+      if (node.getAttribute('margin') && !css.includes(`[margin="${node.getAttribute('margin')}"]`)) {
         css += /* css */`
           :host > section > [margin="${node.getAttribute('margin')}"]{
             margin: ${node.getAttribute('margin')};
           }
         `
       }
-      if (node.getAttribute('padding')) {
+      if (node.getAttribute('padding') && !css.includes(`[padding="${node.getAttribute('padding')}"]`)) {
         css += /* css */`
           :host > section > [padding="${node.getAttribute('padding')}"]{
             padding: ${node.getAttribute('padding')};
           }
         `
       }
-      if (node.getAttribute('background')) {
+      if (node.getAttribute('background') && !css.includes(`[background="${node.getAttribute('background')}"]`)) {
         css += /* css */`
           :host > section > [background="${node.getAttribute('background')}"]{
             background: ${node.getAttribute('background')};
           }
         `
       }
-      if (node.getAttribute('color')) {
+      if (node.getAttribute('color') && !css.includes(`[color="${node.getAttribute('color')}"]`)) {
         css += /* css */`
           :host > section > [color="${node.getAttribute('color')}"]{
             color: ${node.getAttribute('color')};
@@ -348,42 +348,42 @@ export default class Grid extends Shadow() {
         `
       }
       // mobile
-      if (node.getAttribute('grid-column-mobile')) {
+      if (node.getAttribute('grid-column-mobile') && !cssMobile.includes(`[grid-column-mobile="${node.getAttribute('grid-column-mobile')}"]`)) {
         cssMobile += /* css */`
           :host > section > [grid-column-mobile="${node.getAttribute('grid-column-mobile')}"]{
             grid-column: ${node.getAttribute('grid-column-mobile')};
           }
         `
       }
-      if (node.getAttribute('grid-row-mobile')) {
+      if (node.getAttribute('grid-row-mobile') && !cssMobile.includes(`[grid-row-mobile="${node.getAttribute('grid-row-mobile')}"]`)) {
         cssMobile += /* css */`
           :host > section > [grid-row-mobile="${node.getAttribute('grid-row-mobile')}"]{
             grid-row: ${node.getAttribute('grid-row-mobile')};
           }
         `
       }
-      if (node.getAttribute('margin-mobile')) {
+      if (node.getAttribute('margin-mobile') && !cssMobile.includes(`[margin-mobile="${node.getAttribute('margin-mobile')}"]`)) {
         cssMobile += /* css */`
           :host > section > [margin-mobile="${node.getAttribute('margin-mobile')}"]{
             margin: ${node.getAttribute('margin-mobile')};
           }
         `
       }
-      if (node.getAttribute('padding-mobile')) {
+      if (node.getAttribute('padding-mobile') && !cssMobile.includes(`[padding-mobile="${node.getAttribute('padding-mobile')}"]`)) {
         cssMobile += /* css */`
           :host > section > [padding-mobile="${node.getAttribute('padding-mobile')}"]{
             padding: ${node.getAttribute('padding-mobile')};
           }
         `
       }
-      if (node.getAttribute('background-mobile')) {
+      if (node.getAttribute('background-mobile') && !cssMobile.includes(`[background-mobile="${node.getAttribute('background-mobile')}"]`)) {
         cssMobile += /* css */`
           :host > section > [background-mobile="${node.getAttribute('background-mobile')}"]{
             background: ${node.getAttribute('background-mobile')};
           }
         `
       }
-      if (node.getAttribute('color-mobile')) {
+      if (node.getAttribute('color-mobile') && !cssMobile.includes(`[color-mobile="${node.getAttribute('color-mobile')}"]`)) {
         cssMobile += /* css */`
           :host > section > [color-mobile="${node.getAttribute('color-mobile')}"]{
             color: ${node.getAttribute('color-mobile')};
