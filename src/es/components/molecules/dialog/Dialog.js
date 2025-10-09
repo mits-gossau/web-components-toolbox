@@ -20,7 +20,7 @@ export default class Dialog extends Shadow() {
       if (this.hasAttribute('close-other-flyout')) this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', { bubbles: true, cancelable: true, composed: true }))
       // @ts-ignore
       command = command.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
-      this.dispatchEvent(new CustomEvent('no-scroll', { detail: { hasNoScroll: true }, bubbles: true, cancelable: true, composed: true }))
+      if (command === 'showModal') this.dispatchEvent(new CustomEvent('no-scroll', { detail: { hasNoScroll: true, unlockNode: this }, bubbles: true, cancelable: true, composed: true }))
       dialog.classList.remove('closed')
       // @ts-ignore
       dialog[command]()

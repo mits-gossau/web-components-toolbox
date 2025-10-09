@@ -27,7 +27,15 @@ export default class General extends Shadow() {
   constructor (...args) {
     super({ mode: 'false' }, ...args) // disabling shadow-DOM to control root font-size on :root-tag
 
-    this.noScrollEventListener = event => document.documentElement.classList[event.detail && event.detail.hasNoScroll ? 'add' : 'remove'](this.getAttribute('no-scroll') || 'no-scroll')
+    let unlockNode
+    this.noScrollEventListener = event => {
+      if (event.detail && event.detail.hasNoScroll) {
+        unlockNode = event.detail.unlockNode
+        document.documentElement.classList.add(this.getAttribute('no-scroll') || 'no-scroll')
+      } else if(!unlockNode || unlockNode === (event.detail?.unlockNode || event.composedPath()[0])) {
+        document.documentElement.classList.remove(this.getAttribute('no-scroll') || 'no-scroll')
+      }
+    }
     if (this.detectIOS()) document.documentElement.classList.add('ios')
   }
 
