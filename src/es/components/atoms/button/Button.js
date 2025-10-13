@@ -219,6 +219,7 @@ export default class Button extends Hover() {
         outline: var(--outline, none);
         overflow: hidden;
         padding: var(--padding, calc(0.75em - var(--border-width, 0px)) calc(1.5em - var(--border-width, 0px)));
+        text-align: var(--text-align, center);
         text-decoration: var(--text-decoration, none);
         text-transform: var(--text-transform, none);
         touch-action: manipulation;
