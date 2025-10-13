@@ -17,6 +17,8 @@ export default class Dialog extends Shadow() {
      */
     this.show = async (command = this.getAttribute('command-show') || 'show-modal') => {
       const dialog = await this.dialogPromise
+      // avoid errors such as: InvalidStateError: Failed to execute 'showModal' on 'HTMLDialogElement': The dialog is already open as a non-modal dialog, and therefore cannot be opened as a modal dialog.
+      if (dialog.hasAttribute('open')) await this.close()
       if (this.hasAttribute('close-other-flyout')) this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', { bubbles: true, cancelable: true, composed: true }))
       // @ts-ignore
       command = command.replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())
