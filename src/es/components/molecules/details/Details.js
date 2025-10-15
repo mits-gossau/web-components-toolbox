@@ -95,11 +95,35 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
       if (this.details && event.detail && event.detail.child === this) this.details.setAttribute('open', 'true')
     }
 
-    this.animationendListener = event => {
+    // attached once after it has been opened and triggered when closing finished
+    this.detailsCloseAnimationendListener = event => {
       this.details.removeAttribute('open')
       this.details.classList.remove('closing')
       this.mutationObserveStart()
-      clearTimeout(this.timeoutAnimationend)
+      clearTimeout(this.timeoutDetailsCloseAnimationend)
+      this.dispatchEvent(new CustomEvent(this.animationendEventName, {
+        detail: {
+          child: this,
+          isOpen: false
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
+    }
+
+    // always triggers on animation end, open and close
+    this.detailsOpenAnimationendListener = event => {
+      clearTimeout(this.timeoutDetailsOpenAnimationend)
+      this.dispatchEvent(new CustomEvent(this.animationendEventName, {
+        detail: {
+          child: this,
+          isOpen: true
+        },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
     }
 
     let timeout = null
@@ -160,6 +184,13 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
 
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
+        this.details.addEventListener('animationend', this.detailsOpenAnimationendListener, { once: true })
+        // in case of fast double click the animationend event would not reach details, since the content would be hidden
+        clearTimeout(this.timeoutDetailsOpenAnimationend)
+        this.timeoutDetailsOpenAnimationend = setTimeout(() => {
+          this.details.removeEventListener('animationend', this.detailsOpenAnimationendListener)
+          this.detailsOpenAnimationendListener()
+        }, this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) : 300)
         // Iphone until os=iOS&os_version=15.0 has not been able to close the Details Summary sibling with animation
         // @ts-ignore
         if (this.constructor.isMac) {
@@ -229,12 +260,12 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
         }))
         this.setAttribute('aria-expanded', 'true')
       } else {
-        this.details.addEventListener('animationend', this.animationendListener, { once: true })
+        this.details.addEventListener('animationend', this.detailsCloseAnimationendListener, { once: true })
         // in case of fast double click the animationend event would not reach details, since the content would be hidden
-        clearTimeout(this.timeoutAnimationend)
-        this.timeoutAnimationend = setTimeout(() => {
-          this.details.removeEventListener('animationend', this.animationendListener)
-          this.animationendListener()
+        clearTimeout(this.timeoutDetailsCloseAnimationend)
+        this.timeoutDetailsCloseAnimationend = setTimeout(() => {
+          this.details.removeEventListener('animationend', this.detailsCloseAnimationendListener)
+          this.detailsCloseAnimationendListener()
         }, this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) : 300)
         this.mutationObserveStop()
         this.details.setAttribute('open', '')
@@ -262,7 +293,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
             ], {
               duration: this.hasAttribute('open-duration') ? Number(this.getAttribute('open-duration')) : 300,
               easing: this.hasAttribute('easing') ? this.getAttribute('easing') : 'ease-out'
-            }).onfinish = this.animationendListener
+            }).onfinish = this.detailsCloseAnimationendListener
           })
         } else {
           this.style.textContent = ''
@@ -300,6 +331,14 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
           `, undefined, undefined, undefined, this.style)
         }
         this.details.classList.add('closing')
+        this.dispatchEvent(new CustomEvent(this.closeEventName, {
+          detail: {
+            child: this
+          },
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
         this.setAttribute('aria-expanded', 'false')
       }
     })
@@ -607,6 +646,14 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
 
   get openEventName () {
     return this.getAttribute('open-event-name') || 'open'
+  }
+
+  get closeEventName () {
+    return this.getAttribute('close-event-name') || 'close'
+  }
+
+  get animationendEventName () {
+    return this.getAttribute('animationend-event-name') || 'animationend'
   }
 
   get summary () {
