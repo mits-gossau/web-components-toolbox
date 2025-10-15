@@ -27,9 +27,10 @@ export const scrollElIntoView = (getScrollElFunc, notIntersectingSelector = null
     if (!scrollEl) return
     let scrollElBoundingClientRect, parentScrollElBoundingClientRect
     if (counter < counterMax 
-      && ((notIntersectingSelector && scrollEl.matches(notIntersectingSelector))
-      || ((scrollElBoundingClientRect = scrollEl.getBoundingClientRect()) && (parentScrollElBoundingClientRect = parentScrollEl === self ? { y: 0, height: parentScrollEl.innerHeight } : parentScrollEl.getBoundingClientRect())
-        && (Math.round(scrollElBoundingClientRect.y) < Math.round(parentScrollElBoundingClientRect.y) || Math.round(scrollElBoundingClientRect.y + scrollElBoundingClientRect.height) > Math.round(parentScrollElBoundingClientRect.y + parentScrollElBoundingClientRect.height))))
+      && (notIntersectingSelector
+        ? scrollEl.matches(notIntersectingSelector)
+        : ((scrollElBoundingClientRect = scrollEl.getBoundingClientRect()) && (parentScrollElBoundingClientRect = parentScrollEl === self ? { y: 0, height: parentScrollEl.innerHeight } : parentScrollEl.getBoundingClientRect())
+          && (Math.round(scrollElBoundingClientRect.y) < Math.round(parentScrollElBoundingClientRect.y) || Math.round(scrollElBoundingClientRect.y + scrollElBoundingClientRect.height) > Math.round(parentScrollElBoundingClientRect.y + parentScrollElBoundingClientRect.height))))
     ) {
       // when counterMax recursion is not yet reached
       // and it is ether not intersecting by the notIntersectingSelector or the bounding client rect position relative to window (self) or a parentScrollEl
