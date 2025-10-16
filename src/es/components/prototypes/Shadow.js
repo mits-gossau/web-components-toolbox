@@ -116,7 +116,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         this.root.appendChild(this._cssTabindex)
         // when no-tabindex, the second query still does the outlines for children
         this.setCss(/* css */`
-          :host([tabindex="${tabindex}"]:focus-visible), :host :where(*[tabindex], a, button, input):focus-visible {
+          :host([tabindex="${tabindex}"]:focus-visible), :host :where(*[tabindex], a, button):focus-visible {
             border-radius: var(--border-radius-focus-visible, var(--border-radius, 0.125em));
             outline-color: var(--outline-color-focus-visible, var(--outline-color, var(--color-secondary, var(--color, transparent))));
             outline-style: var(--outline-style-focus-visible, var(--outline-style, solid));
