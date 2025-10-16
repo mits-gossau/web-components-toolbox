@@ -10,7 +10,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 */
 export default class Dialog extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
 
     /**
      * @param {'show'|'showModal'} [command='show']
@@ -152,8 +152,6 @@ export default class Dialog extends Shadow() {
   renderCSS () {
     this.css = /* css */`
     :host {
-      --outline-style: none;
-      outline: none !important;
       position: relative;
       ${this.hasAttribute('dialog-desktop-height')
         ? `
