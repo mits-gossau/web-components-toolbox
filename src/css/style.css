@@ -107,7 +107,7 @@
 :host h6 {
   color: var(--h6-color, var(--h1-color, var(--h-color, var(--color, black))));
   display: var(--h6-display, var(--h1-display, var(--h-display, block)));
-  font-size: var(--h6-font-size, var(--h1-font-size, 1.75em));
+  font-size: var(--h6-font-size, var(--h1-font-size, 0.95em));
   line-height: var(--h6-line-height, var(--h1-line-height, var(--h-line-height, 1.286em)));
   font-family: var(--h6-font-family, var(--h1-font-family, var(--h-font-family, var(--font-family-bold, var(--font-family, inherit)))));
   font-weight: var(--h6-font-weight, var(--h1-font-weight, var(--h-font-weight, normal)));
