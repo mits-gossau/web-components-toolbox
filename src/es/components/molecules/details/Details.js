@@ -58,6 +58,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { attributes: true, attributeFilter: ['open'] },
+      tabindex: 'no-tabindex',
       ...options
     }, ...args)
 
