@@ -41,7 +41,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Video extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
     this.sources = (this.getAttribute('sources') && Video.parseAttribute(this.getAttribute('sources'))) || null
   }
 
