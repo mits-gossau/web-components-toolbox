@@ -113,7 +113,7 @@ export default class IconMdx extends Hover() {
         ? ''
         : /* css */`
           :host(:not([no-hover]):hover), :host(.hover) {
-            color: var(--color-hover, var(--color, #FFFFFF));
+            color: var(--color-hover, var(--color, #FFFFFF)) !important;
             cursor: var(--cursor-hover, pointer);
           }
         `
