@@ -373,7 +373,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
    * @return {Promise<void>}
    */
   renderCSS () {
-    this.css = /* css */` 
+    this.css = /* css */`
       :host {
         border-bottom:var(--border-bottom, 0);
         border-color: var(--border-color, var(--color));
@@ -391,6 +391,9 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
         text-align: var(--text-align, center);
         margin: var(--margin, 0);
         padding: var(--padding, 0);
+      }
+      :host([empty-hide]) details:not(:has(> summary ~ *)) {
+        display: none;
       }
       :host details summary::marker, :host details summary::-webkit-details-marker {
         display: var(--marker-display, none);
