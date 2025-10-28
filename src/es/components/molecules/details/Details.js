@@ -1,6 +1,7 @@
 // @ts-check
 import { Mutation } from '../../prototypes/Mutation.js'
 import { Anchor } from '../../prototypes/Anchor.js'
+import { scrollElIntoView } from '../../../helpers/Helpers.js'
 
 /* global CustomEvent */
 /* global Image */
@@ -77,7 +78,11 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
     this.openEventListener = event => {
       if (this.details && event.detail.child) {
         if (event.detail.child === this) {
-          if (this.hasAttribute('scroll-into-view')) this.details.scrollIntoView({ behavior: 'smooth' })
+          if (this.hasAttribute('scroll-into-view')) {
+            this.details.scrollIntoView({ behavior: 'smooth' })
+            // when set a value to scroll-into-view, expl.: scroll-into-view=totally, then enforce the scroll stronger. this is useful when in the same group other details close on this open event.
+            if (this.getAttribute('scroll-into-view')) setTimeout(() => scrollElIntoView(() => this.details, undefined, undefined, { behavior: 'smooth' }), 50)
+          }
         } else if (!this.hasAttribute('no-auto-close')) {
           this.details.removeAttribute('open')
         }
@@ -369,7 +374,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
    * @return {Promise<void>}
    */
   renderCSS () {
-    this.css = /* css */` 
+    this.css = /* css */`
       :host {
         border-bottom:var(--border-bottom, 0);
         border-color: var(--border-color, var(--color));
@@ -387,6 +392,9 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
         text-align: var(--text-align, center);
         margin: var(--margin, 0);
         padding: var(--padding, 0);
+      }
+      :host([empty-hide]) details:not(:has(> summary ~ *)) {
+        display: none;
       }
       :host details summary::marker, :host details summary::-webkit-details-marker {
         display: var(--marker-display, none);

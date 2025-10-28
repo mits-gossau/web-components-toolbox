@@ -47,6 +47,7 @@ export default class EmotionCarousel extends Shadow() {
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.addEventListener('picture-load', this.pictureLoadListener)
+    this.addEventListener('video-load', this.pictureLoadListener)
     this.curSlide = 0
     this.updateSlideTransform(this.curSlide)
     this.nextButton?.addEventListener('click', this.nextButtonListener)
@@ -58,6 +59,7 @@ export default class EmotionCarousel extends Shadow() {
     this.nextButton?.removeEventListener('click', this.nextButtonListener)
     this.prevButton?.removeEventListener('click', this.prevButtonListener)
     this.removeEventListener('picture-load', this.pictureLoadListener)
+    this.removeEventListener('video-load', this.pictureLoadListener)
     window.removeEventListener('resize', this.resizeListener)
     clearInterval(this.timer)
   }
@@ -78,11 +80,11 @@ export default class EmotionCarousel extends Shadow() {
     this.emotionPictures = this.root.querySelectorAll('a-emotion-pictures')
     if (this.emotionPictures) {
       this.emotionPictures.forEach(emotionPicture => {
-        const pictures = Array.from(emotionPicture.root.querySelectorAll('a-picture'))
-          .filter(picture => picture.getAttribute('namespace') !== 'emotion-pictures-general-logo-')
-        pictures.forEach(picture => {
-          const img = picture.root.querySelector('img')
-          heights.push(img.offsetHeight)
+        const elements = Array.from(emotionPicture.root.querySelectorAll('a-picture, a-video'))
+          .filter(element => element.getAttribute('namespace') !== 'emotion-pictures-general-logo-')
+        elements.forEach(element => {
+          const variableElement = element.root.querySelector('img, video')
+          heights.push(variableElement.offsetHeight)
         })
       })
     }

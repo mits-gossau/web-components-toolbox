@@ -31,7 +31,7 @@ import { Hover } from '../../prototypes/Hover.js'
  */
 export default class IconMdx extends Hover() {
   static get observedAttributes () {
-    return ['size', 'rotate', 'icon-name']
+    return ['size', 'rotate', 'scale', 'icon-name']
   }
 
   connectedCallback () {
@@ -148,8 +148,9 @@ export default class IconMdx extends Hover() {
         width: var(--svg-width, var(--svg-size, 1.5em));
         transition: var(--transition, var(--a-transition, all 0.3s ease-out));
       }
-      :host([no-hover][rotate]) > svg, :host([no-hover-transform][rotate]) > svg, :host([disabled][rotate]) > svg, :host([rotate]:hover:not([disabled]):not([no-hover-transform])) > svg, :host([rotate].hover:not([disabled]):not([no-hover-transform])) > svg {
-        transform: rotate(${this.getAttribute('rotate')});
+      :host([no-hover][rotate]) > svg, :host([no-hover-transform][rotate]) > svg, :host([disabled][rotate]) > svg, :host([rotate]:hover:not([disabled]):not([no-hover-transform])) > svg, :host([rotate].hover:not([disabled]):not([no-hover-transform])) > svg,
+      :host([no-hover][scale]) > svg, :host([no-hover-transform][scale]) > svg, :host([disabled][scale]) > svg, :host([scale]:hover:not([disabled]):not([no-hover-transform])) > svg, :host([scale].hover:not([disabled]):not([no-hover-transform])) > svg {
+        transform: ${this.hasAttribute('rotate') ? `rotate(${this.getAttribute('rotate')})` : ''} ${this.hasAttribute('scale') ? `scale(${this.getAttribute('scale')})` : ''};
       }
       /* Mobile layout */
     @media only screen and (max-width: _max-width_) {
