@@ -21,6 +21,7 @@ export default class CarouselTwo extends Mutation() {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { subtree: true, childList: true },
+      tabindex: 'no-tabindex',
       ...options
     }, ...args)
 

@@ -5,7 +5,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class EmotionCarousel extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
     this.emotionPictures
     this.timer
     this.breakPoint = parseInt(self.Environment.mobileBreakpoint().replace('px', ''), 10)

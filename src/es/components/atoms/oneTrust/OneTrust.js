@@ -14,7 +14,7 @@ export default class OneTrust extends Shadow() {
    * @param {any} args
    */
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, mode: 'false', ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, mode: 'false', tabindex: 'no-tabindex', ...options }, ...args)
   }
 
   connectedCallback () {

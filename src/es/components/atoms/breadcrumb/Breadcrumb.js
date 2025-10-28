@@ -11,7 +11,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Breadcrumb extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
   }
 
   connectedCallback () {

@@ -16,6 +16,7 @@ export default class EmotionPictures extends Intersection() {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: { rootMargin: '0px', threshold: 0.75 },
+      tabindex: 'no-tabindex',
       ...options
     }, ...args)
 

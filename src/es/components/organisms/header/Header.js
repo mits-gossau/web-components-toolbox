@@ -41,7 +41,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Header extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex-style', ...options }, ...args)
 
     this.noScroll = () => { window.scroll(0, 0) }
     this.setAttribute('role', 'banner')

@@ -9,6 +9,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class Translation extends Shadow() {
+  constructor (options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex-style', ...options }, ...args)
+  }
   static get observedAttributes () {
     return ['data-trans-key', 'key']
   }
