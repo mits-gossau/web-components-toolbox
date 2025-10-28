@@ -14,7 +14,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Flatpickr extends Shadow() {
   constructor (options = {}, ...args) {
     // @ts-ignore
-    super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options, mode: 'false' }, ...args)
+    super({ hoverInit: undefined, importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options, mode: 'false' }, ...args)
 
     if (this.children.length === 1) {
       this.label = this.root.children[0]

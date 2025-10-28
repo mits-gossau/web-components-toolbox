@@ -10,16 +10,16 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class ProductCard extends Shadow() {
-  constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+  constructor(options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
     this.renderHTML()
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.checkbox.removeEventListener('change', this.checkboxEventListener)
   }
 
@@ -28,7 +28,7 @@ export default class ProductCard extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -37,7 +37,7 @@ export default class ProductCard extends Shadow() {
    *
    * @return {void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host {
       --checkout-default-delete-article-button-padding: var(--product-delete-button-padding, 0.5em);
@@ -123,7 +123,7 @@ export default class ProductCard extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderHTML () {
+  renderHTML() {
     const fetchModules = this.fetchModules([
       {
         path: `${this.importMetaUrl}'../../../../atoms/picture/Picture.js`,
@@ -217,7 +217,7 @@ export default class ProductCard extends Shadow() {
   }
 
   // orders dropdown
-  get checkbox () {
+  get checkbox() {
     return this.root.querySelector('#selectCheckbox')
   }
 }

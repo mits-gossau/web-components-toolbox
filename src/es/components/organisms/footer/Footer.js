@@ -28,7 +28,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Footer extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex-style', ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
 
     this.setAttribute('role', 'navigation')
     this.setAttribute('aria-label', 'Footer')

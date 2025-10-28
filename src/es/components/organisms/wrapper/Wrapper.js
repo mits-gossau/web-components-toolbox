@@ -20,7 +20,7 @@ import Body from '../body/Body.js'
 // extend body for scroll to anchor behavior
 export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex-style', ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
 
     // link behavior made accessible
     if (this.hasAttribute('href')) {

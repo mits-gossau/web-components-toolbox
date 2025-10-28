@@ -17,12 +17,13 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @type {CustomElementConstructor}
  */
 export default class Input extends Shadow() {
-  static get observedAttributes () {
+
+  static get observedAttributes() {
     return ['readonly', 'disabled', 'error', 'placeholder']
   }
 
-  constructor (options = {}, ...args) {
-    super(Object.assign(options, { mode: 'open' }), ...args)
+  constructor(options = {}, ...args) {
+    super(Object.assign(options, { mode: 'open', tabindex: 'no-tabindex'}), ...args)
 
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']
     this.setAttribute('role', this.inputType)
@@ -87,7 +88,7 @@ export default class Input extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     this.hidden = true
     const showPromises = []
     // render template
@@ -119,7 +120,7 @@ export default class Input extends Shadow() {
     })
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     if ((this.hasAttribute('submit-search') || (this.search && this.searchButton)) && !this.readonly && !this.disabled && !this.error) {
       if (this.hasAttribute('delete-listener')) this.removeEventListener('click', this.clickListener)
       if (this.searchButton) this.searchButton.removeEventListener('click', this.clickListener)
@@ -131,7 +132,7 @@ export default class Input extends Shadow() {
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
 
-  attributeChangedCallback (name, oldValue, newValue) {
+  attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placeholder') {
       if (this.inputField) this.inputField.setAttribute('placeholder', newValue)
       return
@@ -144,7 +145,7 @@ export default class Input extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -153,11 +154,11 @@ export default class Input extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.divWrapper
   }
 
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       *,
       *::before,
@@ -411,13 +412,13 @@ export default class Input extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     const replaces = this.buttonTagName === 'a'
       ? [{
-          pattern: '([^-]{1})button',
-          flags: 'g',
-          replacement: '$1a'
-        }]
+        pattern: '([^-]{1})button',
+        flags: 'g',
+        replacement: '$1a'
+      }]
       : []
     switch (this.getAttribute('namespace')) {
       case 'input-default-':
@@ -432,7 +433,7 @@ export default class Input extends Shadow() {
     }
   }
 
-  renderHTML () {
+  renderHTML() {
     this.html = '<div class="mui-form-group"></div>'
     return Promise.all([
       this.renderLabelHTML(),
@@ -457,11 +458,11 @@ export default class Input extends Shadow() {
     })
   }
 
-  renderLabelHTML () {
+  renderLabelHTML() {
     return Promise.resolve(this.labelText ? `<label for="${this.inputId}">${this.labelText}</label>` : '')
   }
 
-  renderSearchHTML () {
+  renderSearchHTML() {
     if (!this.search) return Promise.resolve('')
     if (!this.iconName) {
       return Promise.resolve(/* html */`
@@ -476,75 +477,75 @@ export default class Input extends Shadow() {
     return (this.fetch = this.getIcon(this.iconName, `${this.getAttribute('base-url') || `${this.importMetaUrl}../../../icons/mdx-main-packages-icons-dist-svg/packages/icons/dist/svg/`}${this.iconName}/Size_24x24.svg`).then(htmls => `<button type="button" title="${this.iconName}" ${this.hasAttribute('pointer') ? 'class="pointer"' : ''}>${htmls[0]}</button>`))
   }
 
-  focus () {
+  focus() {
     this.inputField.focus()
   }
 
-  get inputId () {
+  get inputId() {
     return this.getAttribute('inputId')
   }
 
-  get inputType () {
+  get inputType() {
     return (this.hasAttribute('type') && this.allowedTypes.includes(this.getAttribute('type'))) ? this.getAttribute('type') : 'text'
   }
 
-  get labelField () {
+  get labelField() {
     return this.root.querySelector('label')
   }
 
-  get inputField () {
+  get inputField() {
     return this.root.querySelector('input')
   }
 
-  get divWrapper () {
+  get divWrapper() {
     return this.root.querySelector('div.mui-form-group')
   }
 
-  get searchButton () {
+  get searchButton() {
     return this.root.querySelector('button')
   }
 
-  get placeholder () {
+  get placeholder() {
     return this.getAttribute('placeholder')
   }
 
-  get value () {
+  get value() {
     return this.getAttribute('value')
   }
 
-  get autocomplete () {
+  get autocomplete() {
     return this.getAttribute('autocomplete')
   }
 
-  get search () {
+  get search() {
     return this.hasAttribute('search')
   }
 
-  get disabled () {
+  get disabled() {
     return this.hasAttribute('disabled')
   }
 
-  set disabled (isDisabled) {
+  set disabled(isDisabled) {
     if (!this.inputField) return
 
     isDisabled ? this.inputField.setAttribute('disabled', '') : this.inputField.removeAttribute('disabled')
   }
 
-  get readonly () {
+  get readonly() {
     return this.hasAttribute('readonly')
   }
 
-  set readonly (isReadOnly) {
+  set readonly(isReadOnly) {
     if (!this.inputField) return
 
     isReadOnly ? this.inputField.setAttribute('readonly', '') : this.inputField.removeAttribute('readonly')
   }
 
-  get error () {
+  get error() {
     return this.hasAttribute('error')
   }
 
-  set error (isInvalid) {
+  set error(isInvalid) {
     if (this.labelField) {
       isInvalid ? this.labelField.classList.add('error') : this.labelField.classList.remove('error')
     }
@@ -558,12 +559,12 @@ export default class Input extends Shadow() {
     }
   }
 
-  get iconName () {
+  get iconName() {
     return this.getAttribute('icon-name')
   }
 
   // ******************** !IMPORTANT: Fetching the icons through Web API Fetch has bad performance impacts, for that reason we include the most common mdx icons below *****************************************************
-  getIcon (iconName, iconPath) {
+  getIcon(iconName, iconPath) {
     switch (iconName) {
       case 'Search':
         return Promise.resolve([/* html */'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none"><path stroke-width="2" d="m21 21-4.35-4.35M19 11a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>'])

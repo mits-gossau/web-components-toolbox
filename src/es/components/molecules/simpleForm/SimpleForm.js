@@ -21,7 +21,7 @@ export const FINISH_LOADING_EVENT = 'finish-loading'
 export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm extends ChosenHTMLElement {
   constructor (options = {}, ...args) {
     // @ts-ignore
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
 
     this.clickEventListener = event => {
       // scroll the label of the first invalid element into view

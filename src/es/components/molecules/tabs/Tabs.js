@@ -3,7 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Tabs extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
     const tabs = this.root.querySelectorAll('.tab-navigation li')
     const sections = this.root.querySelectorAll('section.tab-content')
     const anchorTagName = this.getAttribute('quote') ? `${this.getAttribute('quote')}_tab` : 'tab'

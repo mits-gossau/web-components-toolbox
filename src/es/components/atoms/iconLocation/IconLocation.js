@@ -11,6 +11,9 @@ import { Hover } from '../../prototypes/Hover.js'
  * @type {CustomElementConstructor}
  */
 export default class IconLocation extends Hover() {
+  constructor(options = {}, ...args) {
+    super({ tabindex: 'no-tabindex', ...options }, ...args)
+  }
   connectedCallback () {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()

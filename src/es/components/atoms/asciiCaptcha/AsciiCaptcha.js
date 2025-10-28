@@ -13,7 +13,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 */
 export default class AsciiCaptcha extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex-style', ...options }, ...args)
 
     if (!this.hasAttribute('draw') && !this.hasAttribute('fill')) this.setAttribute('draw', '')
     let timeout = null

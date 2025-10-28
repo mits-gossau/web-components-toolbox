@@ -12,7 +12,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class SystemNotification extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
     this.isTimedNotification = this.hasAttribute('timed-notification')
 
     this.renderSystemNotification = event => {

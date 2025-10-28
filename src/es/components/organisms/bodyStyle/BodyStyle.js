@@ -22,8 +22,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  */
 export default class BodyStyle extends Intersection(Body) {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { intersectionObserverInit: {} }), ...args)
-
+    super(Object.assign(options, { intersectionObserverInit: {},  tabindex: 'no-tabindex' }), ...args)
     this.setAttribute('aria-label', 'Section')
   }
 

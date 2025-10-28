@@ -25,6 +25,7 @@ export default class MultiLevelNavigation extends Shadow() {
   constructor (options = {}, ...args) {
     super({
       importMetaUrl: import.meta.url,
+      tabindex: 'no-tabindex',
       ...options
     }, ...args)
     this.noScroll = () => { window.scroll(0, 0) }

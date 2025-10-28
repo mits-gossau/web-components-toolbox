@@ -18,7 +18,7 @@ export default class DateSelect extends Shadow() {
   }
 
   constructor (options = {}, ...args) {
-    super({ hoverInit: undefined, importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ hoverInit: undefined, importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
 
     this.changeEventListener = (event) => {
       if (this.hasAttribute('disabled')) {

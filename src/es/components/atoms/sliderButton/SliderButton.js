@@ -17,7 +17,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class SliderButton extends Shadow() {
   constructor (...args) {
-    super(...args)
+    super(tabindex: 'no-tabindex',...args)
     this.hasRendered = false
 
     this.carouselChanged = event => {

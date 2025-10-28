@@ -7,8 +7,8 @@
 import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
-  constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+  constructor(options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, tabindex: 'no-tabindex', ...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
 
     this.answerEventNameListener = event => {
@@ -36,18 +36,18 @@ export default class Pagination extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
     self.addEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
     this.pagination.addEventListener('click', this.clickListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     this.pagination.removeEventListener('click', this.clickListener)
     self.removeEventListener(this.getAttribute('answer-event-name') || 'answer-event-name', this.answerEventNameListener)
   }
 
-  dispatchRequestNewsEvent (page) {
+  dispatchRequestNewsEvent(page) {
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-event-name') || 'request-event-name', {
       detail: {
         skip: page,
@@ -60,7 +60,7 @@ export default class Pagination extends Shadow() {
     }))
   }
 
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -71,7 +71,7 @@ export default class Pagination extends Shadow() {
    * @param {Number} skip
    * @param {Boolean} compactMode
    */
-  renderHTML (pages, limit, skip, compactMode) {
+  renderHTML(pages, limit, skip, compactMode) {
     this.html = ''
     this.hidden = !pages // hide if there are no 'pages' available
     const pageItems = compactMode ? this.renderCompactHTML(skip, limit, pages) : this.renderAllPagesHTML(pages, skip, limit)
@@ -94,7 +94,7 @@ export default class Pagination extends Shadow() {
  * @param {Number} pages
  * @returns {string}
  */
-  renderCompactHTML (skip, limit, pages) {
+  renderCompactHTML(skip, limit, pages) {
     const START_RANGE = 2
     const END_RANGE = pages - 2
     const selectedPage = (skip / limit)
@@ -141,7 +141,7 @@ export default class Pagination extends Shadow() {
    * @param {Number} limit
    * @returns {string}
    */
-  renderAllPagesHTML (pages, skip, limit) {
+  renderAllPagesHTML(pages, skip, limit) {
     let pageItems = ''
     for (let i = 0; i < pages; ++i) {
       const active = (skip / limit)
@@ -155,7 +155,7 @@ export default class Pagination extends Shadow() {
    * @param {string} items
    * @return {string}
    */
-  setRel (items) {
+  setRel(items) {
     const childNodes = new DOMParser().parseFromString(items, 'text/html').body.childNodes
     const nodes = Array.from(childNodes).filter(node => node.nodeType !== 3) // filter out text nodes
     if (nodes.length === 1) {
@@ -210,7 +210,7 @@ export default class Pagination extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */ `
     :host {
       display: inherit;
@@ -271,7 +271,7 @@ export default class Pagination extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
     const styles = [
       {

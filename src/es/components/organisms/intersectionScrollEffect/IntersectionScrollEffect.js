@@ -37,8 +37,8 @@ import { Intersection } from '../../prototypes/Intersection.js'
   * }
   */
 export default class IntersectionScrollEffect extends Intersection() {
-  constructor (options = {}, ...args) {
-    super(Object.assign(options, { mode: 'open', intersectionObserverInit: { rootMargin: '0px 0px 0px 0px' } }), ...args)
+  constructor(options = {}, ...args) {
+    super(Object.assign(options, { mode: 'open', intersectionObserverInit: { rootMargin: '0px 0px 0px 0px' },  tabindex: 'no-tabindex-stle' }), ...args)
 
     /** @type {number | any} */
     this.elementHeight = 0
@@ -131,7 +131,7 @@ export default class IntersectionScrollEffect extends Intersection() {
    * @returns {boolean}
    * @memberof IntersectionScrollEffect
    */
-  checkMedia (media = this.getAttribute('media')) {
+  checkMedia(media = this.getAttribute('media')) {
     if (!media) return true
     if (this.cachedMedia) return this.cachedMedia === media
     const isDesktop = self.matchMedia(`(min-width: ${this.mobileBreakpoint})`).matches
@@ -139,7 +139,7 @@ export default class IntersectionScrollEffect extends Intersection() {
     return this.cachedMedia === media
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.hasRequiredAttributes) {
       if (this.checkMedia()) {
         super.connectedCallback() // this.intersectionObserveStart()
@@ -151,7 +151,7 @@ export default class IntersectionScrollEffect extends Intersection() {
     }
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     if (this.hasRequiredAttributes) {
       if (this.checkMedia()) {
         super.disconnectedCallback() // this.intersectionObserveStop()
@@ -167,7 +167,7 @@ export default class IntersectionScrollEffect extends Intersection() {
       * @param {number} value
       * @param {number} decimalsAmount
       */
-  round (value, decimalsAmount) {
+  round(value, decimalsAmount) {
     return value.toFixed(decimalsAmount < 1 ? 1 : decimalsAmount)
   }
 
@@ -177,7 +177,7 @@ export default class IntersectionScrollEffect extends Intersection() {
       * @param {number} min
       * @param {number} max
       */
-  clamp (value, min, max) {
+  clamp(value, min, max) {
     return Math.min(Math.max(value, min), max)
   }
 
@@ -186,7 +186,7 @@ export default class IntersectionScrollEffect extends Intersection() {
       *
       * @return {void}
       */
-  intersectionCallback (entries, observer) {
+  intersectionCallback(entries, observer) {
     if ((this.isIntersecting = this.areEntriesIntersecting(entries))) {
       this.scrollListener()
       if (this.areEntriesIntersecting(entries)) {
@@ -197,13 +197,13 @@ export default class IntersectionScrollEffect extends Intersection() {
     }
   }
 
-  direction (i) {
+  direction(i) {
     return this.hasAttribute('horizontal')
       ? ['innerWidth', 'width', 'left', 'parentElement'][i]
       : ['innerHeight', 'height', 'top', 'self'][i]
   }
 
-  getElement (type) {
+  getElement(type) {
     if (this.getAttribute('scroll-el-query')) return this._scrollElement || (this._scrollElement = IntersectionScrollEffect.walksUpDomQueryMatches(this, this.getAttribute('scroll-el-query')))
     switch (type) {
       case 'self':

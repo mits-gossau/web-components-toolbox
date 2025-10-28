@@ -10,7 +10,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class UserProfile extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
     this.clickListener = event => {
       const isInside = event.composedPath().includes(this)
       const isActive = this.classList.contains('active')

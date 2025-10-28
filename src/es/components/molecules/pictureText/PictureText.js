@@ -17,7 +17,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Hotspot extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
 
     this.buttonClickListener = e => {
       if (this.hasAttribute('show-text')) {

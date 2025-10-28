@@ -42,6 +42,7 @@ export default class NavigationTwo extends Mutation() {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { attributes: true, attributeFilter: ['aria-expanded'] },
+      tabindex: 'no-tabindex',
       ...options
     }, ...args)
 

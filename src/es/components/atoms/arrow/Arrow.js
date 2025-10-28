@@ -19,17 +19,23 @@ import { Hover } from '../../prototypes/Hover.js'
  * }
  */
 export default class Arrow extends Hover() {
-  static get observedAttributes () {
+
+  constructor(options = {}, ...args) {
+    // @ts-ignore
+    super({ hoverInit: undefined, importMetaUrl: import.meta.url, tabindex: 'no-tabindex-style', ...options }, ...args)
+  }
+
+  static get observedAttributes() {
     return ['hover']
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
   }
 
-  attributeChangedCallback (name, oldValue, newValue) {
+  attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'hover') {
       const duration = 300
       // NOTE: Don't copy below part, usually setting css must go through function setCss but the below is an exception, since it does not contain css variables!
@@ -51,7 +57,7 @@ export default class Arrow extends Hover() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(
       `${this.cssSelector} > style[_css]`
     )
@@ -62,7 +68,7 @@ export default class Arrow extends Hover() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.svg
   }
 
@@ -71,7 +77,7 @@ export default class Arrow extends Hover() {
    *
    * @return {void}
    */
-  renderCSS () {
+  renderCSS() {
     const upKeyframes = /* css */ `
       @keyframes move {
         0% { transform: rotate(270deg) translateY(0); }
@@ -173,7 +179,7 @@ export default class Arrow extends Hover() {
    *
    * @return {void}
    */
-  renderHTML () {
+  renderHTML() {
     // TODO: SVG's should be taken from icons folder but fetch can't use cache and is too slow on loads of requests at once. object, img, etc. does not work for css styling. so most likely it needs a node script copying this stuff on update in the icon folder.
     // TODO: or solve the problem with an icon controller with caching. Send event with Promise.resolve to controller, which then resolves it with the svg
     // src/es/components/web-components-toolbox/src/icons/chevron_right.svg
@@ -185,18 +191,18 @@ export default class Arrow extends Hover() {
     this.html = this.style
   }
 
-  get svg () {
+  get svg() {
     return this.root.querySelector('svg')
   }
 
-  get style () {
+  get style() {
     return (
       this._style ||
-        (this._style = (() => {
-          const style = document.createElement('style')
-          style.setAttribute('protected', 'true')
-          return style
-        })())
+      (this._style = (() => {
+        const style = document.createElement('style')
+        style.setAttribute('protected', 'true')
+        return style
+      })())
     )
   }
 }

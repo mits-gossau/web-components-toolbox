@@ -40,12 +40,12 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class Video extends Shadow() {
-  constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
+  constructor(options = {}, ...args) {
+    super({ importMetaUrl: import.meta.url, ...options }, ...args)
     this.sources = (this.getAttribute('sources') && Video.parseAttribute(this.getAttribute('sources'))) || null
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
   }
@@ -55,7 +55,7 @@ export default class Video extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -64,7 +64,7 @@ export default class Video extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.video
   }
 
@@ -73,7 +73,7 @@ export default class Video extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
     :host {
       width: var(--width, 100%);
@@ -121,7 +121,7 @@ export default class Video extends Shadow() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     switch (this.getAttribute('namespace')) {
       case 'video-crop-':
         return this.fetchCSS([{
@@ -138,7 +138,7 @@ export default class Video extends Shadow() {
    *
    * @return {void}
    */
-  renderHTML () {
+  renderHTML() {
     this.video = this.root.querySelector('div') || document.createElement('div')
     this.video.innerHTML = Array.from(this.attributes).reduce((acc, attribute) => {
       if (attribute.name && attribute.name !== 'sources' && attribute.name !== 'namespace' && !attribute.name.includes('hidden')) return `${acc} ${attribute.name}="${attribute.value || 'true'}"${!this.hasAttribute('playsinline') && attribute.name === 'autoplay' && attribute.value !== 'false' ? ' playsinline' : ''}`
