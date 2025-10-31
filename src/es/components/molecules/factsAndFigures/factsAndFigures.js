@@ -12,8 +12,12 @@ export default class SustainabilityMetrics extends Shadow() {
       this.backgroundPicture.setAttribute('defaultSource', currentDefaultSource)
       this.backgroundPicture.style = `background-image: url(${currentDefaultSource}); background-size: cover; background-position: center;`
       this.backgroundOverlay.style.display = 'block'
-      this.style = '--facts-and-figures-default-text-color-custom: white !important;'
+      this.style = '--facts-and-figures-default-text-color-custom: white;'
     }
+    else {
+      this.style = '--facts-and-figures-default-text-color-custom: black;'
+    }
+
   }
 
   shouldRenderCSS () {
