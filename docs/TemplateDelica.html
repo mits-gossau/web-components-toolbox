@@ -149,10 +149,15 @@
         // fetched html scripts don't execute automatically, create new script tags and append them to head
         Array.from(document.querySelectorAll('.template-script')).forEach(script => {
           const newScript = document.createElement('script')
-          newScript.setAttribute('type', script.getAttribute('type'))
-          newScript.setAttribute('src', script.getAttribute('src'))
-          document.head.appendChild(newScript)
-          script.remove()
+          if (script.textContent) {
+            newScript.textContent = script.textContent
+            script.replaceWith(newScript)
+          } else {
+            newScript.setAttribute('type', script.getAttribute('type'))
+            newScript.setAttribute('src', script.getAttribute('src'))
+            document.head.appendChild(newScript)
+            script.remove()
+          }
         })
       })
     }
