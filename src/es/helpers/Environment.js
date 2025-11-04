@@ -9,7 +9,7 @@ self.Environment = {
   language: currentScriptUrl.searchParams.get('language') || document.documentElement.getAttribute('lang') || 'de',
   contentfulEndpoint: currentScriptUrl.searchParams.get('contentfulEndpoint') || 'https://graphql.contentful.com/content/v1/spaces/',
   msrcBaseUrl: currentScriptUrl.searchParams.get('msrcBaseUrl') || 'https://cdn.migros.ch',
-  msrcVersion: currentScriptUrl.searchParams.get('msrcVersion') || '20221205123932',
+  msrcVersion: currentScriptUrl.searchParams.get('msrcVersion') || '20251104054240',
   mcsBaseUrl: currentScriptUrl.searchParams.get('mcsBaseUrl') || 'https://digital-campaign-factory.migros.ch',
   mcsVersion: currentScriptUrl.searchParams.get('mcsVersion'), /* || 'v1.112.3', // the newest version gets fetched if this parameter is not set */
   /**
