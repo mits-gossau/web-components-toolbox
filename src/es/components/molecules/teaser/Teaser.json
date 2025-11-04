@@ -37,6 +37,10 @@
       "name": "teaser-plain-",
       "path": "./plain-/plain-.css"
     },
+      {
+      "name": "teaser-plain-no-border-",
+      "path": "./plain-no-border-/plain-no-border-.css"
+    },
     {
       "name": "teaser-plainer-",
       "path": "./plainer-/plainer-.css"
