@@ -3,7 +3,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class NavLevelItem extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ keepCloneOutsideShadowRoot: true, importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ keepCloneOutsideShadowRoot: true, importMetaUrl: import.meta.url, tabindex: 'no-tabindex-style', ...options }, ...args)
 
     const simulateMultinavClick = () => {
       if (typeof this.multiLevelNavigation[this.hasAttribute('data-href')
