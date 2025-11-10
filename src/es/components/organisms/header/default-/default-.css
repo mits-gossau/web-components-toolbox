@@ -47,7 +47,7 @@
   --header-default-margin-mobile: var(--header-default-margin-mobile-custom, var(--content-spacing-mobile) auto);
   --header-default-margin: var(--header-default-margin-custom, var(--content-spacing) auto);
   --header-default-order: 0;
-  --header-default-position-open-mobile: fixed;
+  --header-default-position-open-mobile: var(--header-default-position-open-mobile-custom, fixed);
   --header-default-position: static;
   --header-default-sticky-border-bottom: var(--header-default-sticky-border-bottom-custom, 1px solid var(--m-gray-300));
   --header-default-top-open-mobile: auto;
