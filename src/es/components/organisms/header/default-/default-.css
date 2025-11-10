@@ -12,8 +12,8 @@
   --header-default-a-menu-icon-height: 3px;
   --header-default-a-menu-icon-margin: 0;
   --header-default-a-menu-icon-one-transform: rotate(-45deg) translateY(0.87em);
-  --header-default-a-menu-icon-padding-open: var(--header-default-a-menu-icon-padding);
-  --header-default-a-menu-icon-padding: var(--header-default-a-menu-icon-padding-top-custom, 1.7rem) var(--content-spacing-mobile, var(--content-spacing)) 1.2rem;
+  --header-default-a-menu-icon-padding-open: var(--header-default-a-menu-icon-padding-open-custom, var(--header-default-a-menu-icon-padding));
+  --header-default-a-menu-icon-padding: var(--header-default-a-menu-icon-padding-custom, var(--header-default-a-menu-icon-padding-top-custom, 1.7rem) var(--content-spacing-mobile, var(--content-spacing)) 1.2rem);
   --header-default-a-menu-icon-spacing: 6px;
   --header-default-a-menu-icon-two-transform: rotate(45deg) translateY(-0.87em);
   --header-default-a-menu-icon-width-open-mobile: var(--header-default-a-menu-icon-width);
