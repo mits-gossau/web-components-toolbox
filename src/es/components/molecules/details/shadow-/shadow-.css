@@ -1,0 +1,20 @@
+:host {
+  --details-shadow-child-margin-mobile: var(--details-shadow-child-margin-mobile-custom, var(--content-spacing-mobile) auto);
+  --details-shadow-child-margin: var(--details-shadow-child-margin-custom, var(--content-spacing) auto);
+  --details-shadow-content-spacing-mobile: var(--details-shadow-content-spacing-mobile-custom, var(--content-spacing-mobile));
+  --details-shadow-content-spacing: var(--details-shadow-content-spacing-custom, var(--content-spacing));
+  --details-shadow-summary-padding: 1.12em 0;
+  width: 100%;
+}
+:host .dropdown-icon {
+  display: none;
+}
+:host details {
+  box-shadow: inset 0px 0px 20px 20px;
+  padding: 0 var(--content-spacing);
+}
+@media only screen and (max-width: _max-width_) {
+  :host details {
+    padding: 0 var(--content-spacing-mobile);
+  }
+}
