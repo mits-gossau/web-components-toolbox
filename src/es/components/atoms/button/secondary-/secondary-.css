@@ -1,6 +1,6 @@
 :host {
-  --button-secondary-background-color-disabled: transparent;
-  --button-secondary-background-color-hover: transparent;
+  --button-secondary-background-color-disabled: var(--button-secondary-background-color-disabled-custom, transparent);
+  --button-secondary-background-color-hover: var(--button-secondary-background-color-hover-custom, transparent);
   --button-secondary-background-color: var(--button-secondary-background-color-custom, transparent);
   --button-secondary-border-color-disabled: var(--button-secondary-border-color-disabled-custom, var(--color-disabled, var(--m-orange-300)));
   --button-secondary-border-color-hover: var(--button-secondary-border-color-hover-custom, var(--color-hover, var(--m-orange-800)));
