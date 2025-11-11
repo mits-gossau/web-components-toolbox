@@ -4,8 +4,7 @@
 
 - [JIRA](https://jira.migros.net/browse/MIDUWEB-2137)
 - [JIRA](https://jira.migros.net/browse/MIDUWEB-2161)
-- [Example Any Page](./AnyPage.html)
-- [Example Checkout Page](./default-/default-.html)
+- [Example Page](./default-/default-.html)
 - [Demo Page](https://mits-gossau.github.io/web-components-toolbox-klubschule/src/es/components/web-components-toolbox/docs/TemplateMiduweb.html?rootFolder=src&css=./src/css/variablesCustomKlubschule.css&login=./src/es/components/molecules/login/default-/default-.html&logo=./src/es/components/atoms/logo/default-/default-.html&nav=./src/es/components/web-components-toolbox/src/es/components/molecules/multiLevelNavigation/default-/default-.html&footer=./src/es/components/organisms/footer/default-/default-.html&content=./src/es/components/web-components-toolbox/src/es/components/msrc/backendForFrontend/default-/default-.html)
 
 ## CMS Integration
