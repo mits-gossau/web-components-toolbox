@@ -151,6 +151,7 @@ export default class Navigation extends Mutation() {
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
+    if (this.hasAttribute('no-focus')) return
     if (newValue === 'true') {
       let firstLink = this.root.querySelector('nav > ul > li > a-link')
       if (firstLink) {
@@ -498,10 +499,18 @@ export default class Navigation extends Mutation() {
           justify-content: flex-start; /* must be up, otherwise the iphone hides it behind the footer bar */
           min-height: calc(100vh - var(--header-default-m-navigation-top-mobile));
         }
-        :host > nav > .language-switcher {
+        :host > nav > .language-switcher, :host(.no-scroll) > nav > .language-switcher {
           display: flex;
-          flex-direction: row;
-          justify-content: center;
+          flex-direction: var(--language-switcher-flex-direction-mobile, var(--language-switcher-flex-direction, row));;
+          justify-content: var(--language-switcher-justify-content-mobile, var(--language-switcher-justify-content, center));
+          align-items: var(--language-switcher-align-items-mobile, var(--language-switcher-align-items, center));
+          padding: var(--language-switcher-padding-mobile, var(--language-switcher-padding, 0));
+          gap: var(--language-switcher-gap-mobile, var(--language-switcher-gap, 0));
+        }
+        :host > nav > .language-switcher > *:last-child, :host(.no-scroll) > nav > .language-switcher > *:last-child {
+          flex: var(--language-switcher-flex-last-child-mobile, var(--language-switcher-flex-last-child, auto));
+          justify-content: var(--language-switcher-justify-content-last-child-mobile, var(--language-switcher-justify-content-last-child, auto));
+          margin: var(--language-switcher-margin-last-child-mobile, var(--language-switcher-margin-last-child, 0));
         }
         :host > nav > .language-switcher > li, :host > nav > .language-switcher > li:hover:not(.search) {
           border: 0;
@@ -640,6 +649,11 @@ export default class Navigation extends Mutation() {
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }], false)
+      case 'navigation-default-with-styles-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false)
       case 'navigation-alnatura-':
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
@@ -763,7 +777,7 @@ export default class Navigation extends Mutation() {
         name: this.getAttribute('o-nav-wrapper') || 'o-nav-wrapper'
       }
     ]).then(children => {
-      Array.from(this.root.querySelectorAll('a')).forEach(a => {
+      if (!this.hasAttribute('no-a-link')) Array.from(this.root.querySelectorAll('a')).forEach(a => {
         const li = a.parentElement
         if (li.querySelector('section')) li.setAttribute('aria-expanded', 'false')
         if (!li.querySelector('ul')) li.classList.add('no-arrow')

@@ -147,6 +147,7 @@ export default class IconMdx extends Hover() {
         height: var(--svg-height, var(--svg-size, 1.5em));
         width: var(--svg-width, var(--svg-size, 1.5em));
         transition: var(--transition, var(--a-transition, all 0.3s ease-out));
+        transform: var(--${this.getAttribute('icon-name')}-svg-transform, var(--svg-transform, none));
       }
       :host([no-hover][rotate]) > svg, :host([no-hover-transform][rotate]) > svg, :host([disabled][rotate]) > svg, :host([rotate]:hover:not([disabled]):not([no-hover-transform])) > svg, :host([rotate].hover:not([disabled]):not([no-hover-transform])) > svg,
       :host([no-hover][scale]) > svg, :host([no-hover-transform][scale]) > svg, :host([disabled][scale]) > svg, :host([scale]:hover:not([disabled]):not([no-hover-transform])) > svg, :host([scale].hover:not([disabled]):not([no-hover-transform])) > svg {
