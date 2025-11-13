@@ -1,7 +1,7 @@
 :host {
-    --tabs-container-color-active: var(--color-tertiary, orange);
-    --tabs-container-background-color-active: var(--color-tertiary, orange);
-    --tabs-container-background-color-hover: #FFF3EB;
+    --tabs-container-color-active: var(--tabs-container-color-active-custom, var(--color-tertiary, orange));
+    --tabs-container-background-color-active: var(--tabs-container-background-color-active-custom, var(--color-tertiary, orange));
+    --tabs-container-background-color-hover: var(--tabs-container-background-color-hover-custom, #FFF3EB);
 }
 
 :host a-picture {

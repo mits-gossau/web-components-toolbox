@@ -13,7 +13,7 @@
     <link href=../src/css/fonts.css rel=stylesheet type="text/css">
     <link href=../src/css/variables.css rel=stylesheet type="text/css">
     <script async rel=preload as="script" type="text/javascript"
-      src="../../../helpers/Environment.js?msrcVersion=20230117142619"></script>
+      src="../../../helpers/Environment.js?msrcVersion=20251104054240"></script>
     <!-- wc-config.js gets loaded once the template fetched its body path -->
     <!--<script async rel=preload as="script" type="text/javascript" src="../wc-config.js"></script>-->
     <title>Web Components Toolbox 😎</title>
@@ -217,10 +217,15 @@
         // fetched html scripts don't execute automatically, create new script tags and append them to head
         Array.from(document.querySelectorAll('.template-script')).forEach(script => {
           const newScript = document.createElement('script')
-          newScript.setAttribute('type', script.getAttribute('type'))
-          newScript.setAttribute('src', script.getAttribute('src'))
-          document.head.appendChild(newScript)
-          script.remove()
+          if (script.textContent) {
+            newScript.textContent = script.textContent
+            script.replaceWith(newScript)
+          } else {
+            newScript.setAttribute('type', script.getAttribute('type'))
+            newScript.setAttribute('src', script.getAttribute('src'))
+            document.head.appendChild(newScript)
+            script.remove()
+          }
         })
       })
     }

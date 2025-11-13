@@ -20,31 +20,22 @@
   </head>
 
   <body>
-    <!-- <c-tag-manager id="GTM-PNK6BD2V" wc-config-load>
-      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PNK6BD2V" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    </c-tag-manager> -->
     <c-fetch-html no-storage>
       <c-fetch-css no-storage>
         <c-fetch-modules>
-          <c-product>
-            <c-basket>
-              <c-favorite>
                 <p-general>
-                  <o-header menu-icon="true" namespace="header-default-" namespace-fallback role="header">
+                  <migrosmuseum-o-header menu-icon="true" menu-icon-value="Menu" namespace="header-default-" namespace-fallback role="header" mobile-breakpoint="100000000px">
                     <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/atoms/logo/default-/default-.html -->
+                    <h6>Heute geöffnet von <time datetime="2025-11-10 11:00">11</time>-<time datetime="2025-11-10 18:00">18</time> Uhr</h6>
                     <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/molecules/navigation/default-/default-.html -->
-                  </o-header>
+                  </migrosmuseum-o-header>
                   <o-body>
-                    <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/pages/Template.html?path=../src/es/components/web-components-toolbox/srcecules/teaser/tile-/tile-.html -->
+                    <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/pages/Template.html?path=../molecules/teaser/tile-/tile-.html -->
                   </o-body>
                   <!-- template path passed by path query gets loaded into here. eg. ./src/es/components/organisms/footer/default-/default-.html -->
                 </p-general>
-              </c-favorite>
-              <o-modal namespace="modal-default-" no-mobile><button id=close></button><span style="color:white;">If
-                  event.detail has no child property!</span></o-modal>
-              <m-system-notification timed-notification></m-system-notification>
-            </c-basket>
-          </c-product>
+                <o-modal namespace="modal-default-" no-mobile><button id=close></button><span style="color:white;">If
+                    event.detail has no child property!</span></o-modal>
         </c-fetch-modules>
       </c-fetch-css>
     </c-fetch-html>
@@ -188,10 +179,10 @@
       loadCSS(url.searchParams.get('css'), url.searchParams.get('rootFolder')),
       loadHTML(url.searchParams.get('login'), 'p-general', true, url.searchParams.get('rootFolder'), 'prepend'),
       url.searchParams.get('header')
-        ? loadHTML(url.searchParams.get('header'), 'o-header', 'outer', url.searchParams.get('rootFolder'))
+        ? loadHTML(url.searchParams.get('header'), 'migrosmuseum-o-header', 'outer', url.searchParams.get('rootFolder'))
         : null,
-      loadHTML(url.searchParams.get('logo'), 'o-header', true, url.searchParams.get('rootFolder')),
-      loadHTML(url.searchParams.get('nav'), 'o-header', true, url.searchParams.get('rootFolder')),
+      loadHTML(url.searchParams.get('logo'), 'migrosmuseum-o-header', true, url.searchParams.get('rootFolder')),
+      loadHTML(url.searchParams.get('nav'), 'migrosmuseum-o-header', true, url.searchParams.get('rootFolder')),
       loadHTML(url.searchParams.get('content'), 'o-body', undefined, url.searchParams.get('rootFolder')),
       loadHTML(url.searchParams.get('footer'), 'p-general', true, url.searchParams.get('rootFolder'))
     ]).then(() => loadWcConfig())

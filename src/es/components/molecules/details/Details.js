@@ -595,6 +595,11 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
           path: `${this.importMetaUrl}./menu-portion-/menu-portion-.css`,
           namespace: false
         }, ...styles], false)
+      case 'details-shadow-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./shadow-/shadow-.css`,
+          namespace: false
+        }, ...styles], false)
       default:
         return this.fetchCSS(styles, false)
     }

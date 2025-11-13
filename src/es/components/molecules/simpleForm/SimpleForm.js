@@ -55,6 +55,12 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
     // fetch if there is an endpoint attribute, else do the native behavior of form post
     this.abortController = null
     this.submitEventListener = event => {
+      this.dispatchEvent(new CustomEvent(this.getAttribute('submit-event-name') || 'form-submit', {
+        detail: { event },
+        bubbles: true,
+        cancelable: true,
+        composed: true
+      }))
       if (this.getAttribute('endpoint') || this.getAttribute('dispatch-event-name')) {
         event.preventDefault()
         this.fetchOrDispatch()
