@@ -99,7 +99,8 @@ because the nesting selector cannot represent pseudo-elements. */
   flex: 3;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  text-align: center;
+  text-wrap: balance;
 }
 
 :host .dialog-header>#close {
