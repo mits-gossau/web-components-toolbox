@@ -18,7 +18,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Email extends Shadow() {
   constructor (...args) {
-    super({ mode: 'false' }, ...args)
+    super({ mode: 'false', tabindex: 'no-tabindex' },  ...args)
 
     this.clickListener = event => {
       event.preventDefault()

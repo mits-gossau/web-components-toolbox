@@ -11,7 +11,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class Select extends Shadow() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { mode: 'open' }), ...args)
+    super(Object.assign(options, { mode: 'open' }, tabindex: 'no-tabindex'), ...args)
 
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']
     this.setAttribute('role', 'listbox')

@@ -33,14 +33,14 @@ import { Hover } from '../../prototypes/Hover.js'
  *
  */
 export default class Link extends Hover() {
-  constructor (a, options = {}, ...args) {
+  constructor(a, options = {}, ...args) {
     super({ hoverInit: undefined, importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
     this._a = a
     this.setAttribute('role', 'link')
     if (this.a) this.a.setAttribute('tabindex', '0')
   }
 
-  connectedCallback () {
+  connectedCallback() {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
@@ -51,7 +51,7 @@ export default class Link extends Hover() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -60,7 +60,7 @@ export default class Link extends Hover() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     if (!this._hasRendered) return (this._hasRendered = true)
     return false
   }
@@ -70,7 +70,7 @@ export default class Link extends Hover() {
    *
    * @return {Promise<void>}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       ${this.hitArea
         ? /* css */`
@@ -231,7 +231,7 @@ export default class Link extends Hover() {
    *
    * @return {Promise<void>}
    */
-  fetchTemplate () {
+  fetchTemplate() {
     switch (this.getAttribute('namespace')) {
       case 'underline-':
         return this.fetchCSS([{
@@ -263,7 +263,7 @@ export default class Link extends Hover() {
    *
    * @return {void}
    */
-  renderHTML () {
+  renderHTML() {
     // download icon must be added directly as svg that currentColor works
     if (this.getAttribute('namespace') === 'download-') {
       const div = document.createElement('div')
@@ -293,19 +293,19 @@ export default class Link extends Hover() {
     if (this.hasAttribute('set-active') && location.href.includes(this.a.getAttribute('href'))) this.classList.add('active')
   }
 
-  get hitArea () {
+  get hitArea() {
     return this.getAttribute('hit-area') && this.getAttribute('hit-area') !== 'false' ? this._hitArea || (this._hitArea = document.createElement(this.hitAreaTagName)) : null
   }
 
-  get hitAreaTagName () {
+  get hitAreaTagName() {
     return 'div'
   }
 
-  get a () {
+  get a() {
     return this._a || (this._a = this.root.querySelector('a'))
   }
 
-  get iconPath () {
+  get iconPath() {
     return this.getAttribute('icon-path') || `${this.importMetaUrl}../../molecules/teaser/download-/img/download.svg`
   }
 }

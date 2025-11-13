@@ -15,7 +15,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Auvious extends Shadow() {
   #json
 
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, ...options }, ...args)
 
     this.auviousLaunchEventListener = event => this.widget.launch('video')
@@ -30,7 +30,7 @@ export default class Auvious extends Shadow() {
     }
   }
 
-  connectedCallback () {
+  connectedCallback() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
@@ -54,7 +54,7 @@ export default class Auvious extends Shadow() {
     })
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     document.body.removeEventListener('auvious-launch', this.auviousLaunchEventListener)
     this.widget.removeEventListener('callEnded', this.callEndedEventListener)
     this.widget.removeEventListener('notificationOpened', this.notificationOpenedEventListener)
@@ -65,7 +65,7 @@ export default class Auvious extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -74,14 +74,14 @@ export default class Auvious extends Shadow() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.widget
   }
 
   /**
    * renders the css
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         --av-color-primary: var(--color-secondary);
@@ -139,7 +139,7 @@ export default class Auvious extends Shadow() {
    * Render HTML
    * @returns void
    */
-  renderHTML () {
+  renderHTML() {
     this.html = Array.from(this.attributes).reduce((acc, attribute) => {
       if (attribute.name && attribute.name !== 'style' && attribute.name !== 'namespace' && attribute.name !== 'tabindex' && !attribute.name.includes('hidden')) return `${acc} ${attribute.name}="${attribute.value || 'true'}"`
       return acc
@@ -155,7 +155,7 @@ export default class Auvious extends Shadow() {
    *
    * @returns {Promise<any>}
    */
-  loadDependency (globalNamespace, url) {
+  loadDependency(globalNamespace, url) {
     // make it global to self so that other components can know when it has been loaded
     return this[`_loadDependency${globalNamespace}`] || (this[`_loadDependency${globalNamespace}`] = new Promise((resolve, reject) => {
       // @ts-ignore
@@ -173,30 +173,30 @@ export default class Auvious extends Shadow() {
     }))
   }
 
-  static injectAttributePart (node) {
+  static injectAttributePart(node) {
     node.setAttribute('part', Array.from(node.classList).reduce((acc, curr) => `${acc}-${curr}`, node.nodeName))
     if (node.shadowRoot) node = node.shadowRoot
     let children
     if ((children = node.children) && children.length) Array.from(children).forEach(node => Auvious.injectAttributePart(node))
   }
 
-  get widget () {
+  get widget() {
     return this.root.querySelector('app-auvious-widget')
   }
 
-  get template () {
+  get template() {
     return this.root.querySelector('template')
   }
 
-  get json () {
+  get json() {
     return this.#json || (this.#json = JSON.parse(this.template.content.textContent))
   }
 
-  get loadingSpinner () {
+  get loadingSpinner() {
     return this.root.querySelector('section.loading')
   }
 
-  get loadingSpinnerHTML () {
+  get loadingSpinnerHTML() {
     return /* html */`
       <!-- start - important for loading animation -->
       <section class="loading">

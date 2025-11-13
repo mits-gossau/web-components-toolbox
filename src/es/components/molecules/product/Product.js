@@ -15,6 +15,7 @@ export default class Product extends Intersection() {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: { rootMargin: '0px 0px -200px 0px' },
+      tabindex: 'no-tabindex',
       ...options
     }, ...args)
 

@@ -13,7 +13,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class GoogleMaps extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex-style', ...options }, ...args)
     this.MAP_URL = `https://maps.googleapis.com/maps/api/js?v=weekly&key=${this.apiKey}&callback=initMap`
     this.DEFAULT_COORDINATES = { lat: 47.375600, lng: 8.675320 }
     if (!this.iframeUrl) {

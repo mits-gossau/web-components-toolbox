@@ -30,6 +30,11 @@ import { Hover } from '../../prototypes/Hover.js'
  *  }
  */
 export default class IconMdx extends Hover() {
+  
+  constructor(options = {}, ...args) {
+    super({ tabindex: 'no-tabindex', ...options }, ...args)
+  }
+
   static get observedAttributes () {
     return ['size', 'rotate', 'scale', 'icon-name']
   }

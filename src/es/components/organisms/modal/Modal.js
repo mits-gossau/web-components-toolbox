@@ -48,7 +48,7 @@ export default class Modal extends Shadow() {
   }
 
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
 
     // this.setAttribute('aria-label', 'Section')
     this.setAttribute('role', 'dialog') // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role

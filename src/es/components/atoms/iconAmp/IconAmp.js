@@ -11,7 +11,11 @@ import { Hover } from '../../prototypes/Hover.js'
  * @type {CustomElementConstructor}
  */
 export default class IconAmp extends Hover() {
-  connectedCallback () {
+  constructor(options = {}, ...args) {
+    super({ tabindex: 'no-tabindex', ...options }, ...args)
+  }
+
+  connectedCallback() {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
@@ -22,7 +26,7 @@ export default class IconAmp extends Hover() {
    *
    * @return {boolean}
    */
-  shouldRenderCSS () {
+  shouldRenderCSS() {
     return !this.root.querySelector(`${this.cssSelector} > style[_css]`)
   }
 
@@ -31,7 +35,7 @@ export default class IconAmp extends Hover() {
    *
    * @return {boolean}
    */
-  shouldRenderHTML () {
+  shouldRenderHTML() {
     return !this.svg
   }
 
@@ -40,7 +44,7 @@ export default class IconAmp extends Hover() {
    *
    * @return {void}
    */
-  renderCSS () {
+  renderCSS() {
     this.css = /* css */`
       :host {
         vertical-align: middle;
@@ -55,7 +59,7 @@ export default class IconAmp extends Hover() {
    *
    * @return {void}
    */
-  renderHTML () {
+  renderHTML() {
     // TODO: SVG's should be taken from icons folder but fetch can't use cache and is too slow on loads of requests at once. object, img, etc. does not work for css styling. so most likely it needs a node script copying this stuff on update in the icon folder.
     // TODO: or solve the problem with an icon controller with caching. Send event with Promise.resolve to controller, which then resolves it with the svg
     // src/es/components/web-components-toolbox/src/icons/paperclip.svg
@@ -66,7 +70,7 @@ export default class IconAmp extends Hover() {
     `
   }
 
-  get svg () {
+  get svg() {
     return this.root.querySelector('svg')
   }
 }

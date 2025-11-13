@@ -10,7 +10,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class ScrollToTop extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
     this.button = this.root.children[0]
     this.handleScroll = this.handleScroll.bind(this)
   }

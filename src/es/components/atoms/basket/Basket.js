@@ -19,7 +19,7 @@ export default class Basket extends Shadow() {
    * @param {any} args
    */
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex-style', ...options }, ...args)
   }
 
   connectedCallback () {
