@@ -410,11 +410,19 @@ export const SimpleForm = (ChosenHTMLElement = Shadow()) => class SimpleForm ext
     if (this.getAttribute('schema')) {
       const loop = async (obj, inputs = this.inputs, form = this.form) => {
         if (!obj) return null
-        for (const key in obj) {
+        for (let key in obj) {
           let input = null
           if (Object.hasOwnProperty.call(obj, key)) {
             if (Array.isArray(obj[key])) {
-              const parentsOfMultipleInput = Array.from(new Set(Array.from(form.querySelectorAll(`[name="${key}"]`)).concat(Array.from(form.querySelectorAll(`#${key}`)))))
+              // if the key starts with a regex statement, use wildcard querySelector
+              let operator = ''
+              if (['^', '$', '*'].includes((operator = key.substring(0,1)))) {
+                const value = obj[key]
+                delete obj[key]
+                key = key.substring(1)
+                obj[key] = value
+              }
+              const parentsOfMultipleInput = Array.from(new Set(Array.from(form.querySelectorAll(`[name${operator}="${key}"]`)).concat(Array.from(form.querySelectorAll(`#${key}`)))))
               let lastObj
               await Promise.all(parentsOfMultipleInput.map(async (parentOfMultipleInput, i) => {
                 // check if field is visible, which is the case when walksUpDomQueryMatches returns this.root
