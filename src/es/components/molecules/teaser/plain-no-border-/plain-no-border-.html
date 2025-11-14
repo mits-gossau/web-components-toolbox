@@ -1,37 +1,60 @@
-<div style="display: inline-block;">
+<h1>Nur Titel:</h1>
+
+<div text-position="top">
   <a-picture picture-load defaultSource="./img/test-img-1.jpeg"></a-picture>
-  <h3 style="background-color: #97A619; color: white; margin: 0; padding: 12px 15px;">Titel unter dem Bild</h3>
+  <h2 style="background-color: #97A619; color: white; margin: 0; padding: 39px 15px;">Titel über dem Bild</h2>
 </div>
 
-<div style="display: inline-block;">
-  <a-picture picture-load defaultSource="./img/test-img-1.jpeg"></a-picture>
-  <h3 style="background-color: #97A619; color: white; margin: 0; padding: 12px 15px;">Titel unter dem Bild</h3>
+<div text-position="bottom">
+  <a-picture picture-load defaultSource="./img/test-img-2.jpeg"></a-picture>
+  <h2 style="background-color: #8d2b4d; color: white; margin: 0; padding: 39px 15px;">Titel unter dem Bild</h2>
 </div>
 
-<div style="display: inline-block;">
-  <a-picture picture-load defaultSource="./img/test-img-1.jpeg"></a-picture>
-  <h3 style="background-color: #97A619; color: white; margin: 0; padding: 12px 15px;">Titel unter dem Bild</h3>
+<div text-position="bottom">
+  <a-picture picture-load defaultSource="./img/test-img-3.jpeg"></a-picture>
+  <h2 style="background-color: #8d2b4d; color: white; margin: 0; padding: 39px 15px;">Titel unter dem Bild</h2>
 </div>
 
 <br>
-<br>
-<br>
-<br>
 
-<div style="display: inline-block;">
-  <h3 style="background-color: #8d2b4d; color: white; margin: 0; padding: 12px 15px;">Titel über dem Bild</h3>
+<h1>Titel und Text:</h1>
+
+<div text-position="top">
   <a-picture picture-load defaultSource="./img/test-img-1.jpeg"></a-picture>
+  <div>
+    <h2 style="background-color: #97A619; color: white; margin: 0; padding: 15px;">Titel über dem Bild</h2>
+    <p style="background-color: #97A619; color: white; margin: 0; padding: 15px;">Text über dem Bild</p>
+  </div>
 </div>
 
-<div style="display: inline-block;">
-  <h3 style="background-color: #8d2b4d; color: white; margin: 0; padding: 12px 15px;">Titel über dem Bild</h3>
-  <a-picture picture-load defaultSource="./img/test-img-1.jpeg"></a-picture>
+<div text-position="bottom">
+  <a-picture picture-load defaultSource="./img/test-img-2.jpeg"></a-picture>
+  <div>
+    <h2 style="background-color: #8d2b4d; color: white; margin: 0; padding: 15px;">Titel unter dem Bild</h2>
+    <p style="background-color: #8d2b4d; color: white; margin: 0; padding: 15px;">Text unter dem Bild</p>
+  </div>
 </div>
 
-<div style="display: inline-block;">
-  <h3 style="background-color: #8d2b4d; color: white; margin: 0; padding: 12px 15px;">Titel über dem Bild</h3>
-  <a-picture picture-load defaultSource="./img/test-img-1.jpeg"></a-picture>
+<div text-position="bottom">
+  <a-picture picture-load defaultSource="./img/test-img-3.jpeg"></a-picture>
+  <div>
+    <h2 style="background-color: #8d2b4d; color: white; margin: 0; padding: 15px;">Titel unter dem Bild</h2>
+    <p style="background-color: #8d2b4d; color: white; margin: 0; padding: 15px;">Text unter dem Bild</p>
+  </div>
 </div>
+
+<script>
+  document.querySelectorAll('[text-position]').forEach(box => {
+    const textposition = box.getAttribute('text-position');
+
+    box.style.display = "inline-flex";
+    box.style.verticalAlign = "top";
+
+    box.style.flexDirection = (textposition === "top")
+      ? "column-reverse"
+      : "column";
+  });
+</script>
 
 <!-- load web components for Demo Purposes Only -->
 <script class="template-script" type="text/javascript" src="./plain-no-border-.js"></script>
