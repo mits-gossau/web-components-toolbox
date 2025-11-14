@@ -22,7 +22,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  */
 export default class Iframe extends Intersection() {
   constructor (options = {}, ...args) {
-    super(Object.assign(options, { intersectionObserverInit: {} }), tabindex: 'no-tabindex-style', ...args)
+    super(Object.assign(options, { intersectionObserverInit: {}, tabindex: 'no-tabindex-style' }), ...args)
   }
 
   connectedCallback () {
