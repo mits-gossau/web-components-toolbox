@@ -3,7 +3,7 @@
   --details-shadow-child-margin: var(--details-shadow-child-margin-custom, var(--content-spacing) auto);
   --details-shadow-content-spacing-mobile: var(--details-shadow-content-spacing-mobile-custom, var(--content-spacing-mobile));
   --details-shadow-content-spacing: var(--details-shadow-content-spacing-custom, var(--content-spacing));
-  --details-shadow-summary-padding: 1.12em 0;
+  --details-shadow-summary-padding: 1.62em 0 0.5em;
   --h-margin-bottom: 0;
   width: 100%;
 }
@@ -15,15 +15,18 @@
   padding: 0 var(--content-spacing);
 }
 :host details > div h3 {
-  margin-bottom: 0.88rem;
+  margin-bottom: 0.8rem;
 }
-:host details > div *:last-child {
+:host details > div > *:last-child > * {
   margin-bottom: 1.17rem;
 }
 :host details summary > div:hover {
   color: var(--color-hover);
 }
 @media only screen and (max-width: _max-width_) {
+  :host {
+    --details-shadow-summary-padding: 1.12em 0 0.5em;
+  }
   :host details {
     padding: 0 var(--content-spacing-mobile);
   }
