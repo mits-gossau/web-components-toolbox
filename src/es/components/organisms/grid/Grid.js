@@ -21,9 +21,7 @@ export default class Grid extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    if (this.hasAttribute('picture-load')) showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('picture-load', event => {
-      if (!event || !event.detail || !event.detail.error) resolve()
-    }, { once: true }))))
+    if (this.hasAttribute('picture-load')) showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true }))))
     Promise.all(showPromises).then(() => (this.hidden = false))
     return showPromises
   }
