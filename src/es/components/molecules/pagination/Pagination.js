@@ -8,7 +8,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 
 export default class Pagination extends Shadow() {
   constructor(options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, tabindex: 'no-tabindex', ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
     this.pagination = this.root.querySelector('div') || document.createElement('div')
 
     this.answerEventNameListener = event => {

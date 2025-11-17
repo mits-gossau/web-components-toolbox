@@ -21,6 +21,9 @@ export default class Grid extends Shadow() {
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
+    if (this.hasAttribute('picture-load')) showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('picture-load', event => {
+      if (!event || !event.detail || !event.detail.error) resolve()
+    }, { once: true }))))
     Promise.all(showPromises).then(() => (this.hidden = false))
     return showPromises
   }
@@ -49,14 +52,19 @@ export default class Grid extends Shadow() {
    * @return {Promise<void>}
    */
   renderCSS () {
-    let css = ''
-    css += /* css */`
+    let css = /* css */`
       :host > section {
         display:grid;
           ${this.hasAttribute('height')
             ? `height: ${this.getAttribute('height') || 'var(--height, 100%)'};`
             : ''
           }
+      }
+      :host > section > * {
+        background: var(--section-child-background, none);
+        color: var(--section-child-color, var(--color, black));
+        margin: var(--section-child-margin, 0);
+        padding: var(--section-child-padding, 0);
       }
     `
     if (this.hasAttribute('overflow')) {
@@ -126,6 +134,14 @@ export default class Grid extends Shadow() {
     }
     // mobile
     css += '@media only screen and (max-width: _max-width_) {'
+    css += /* css */`
+      :host > section > * {
+        background: var(--section-child-background-mobile, var(--section-child-background, none));
+        color: var(--section-child-color-mobile, var(--section-child-color, var(--color, black)));
+        margin: var(--section-child-margin-mobile, var(--section-child-margin, 0));
+        padding: var(--section-child-padding-mobile, var(--section-child-padding, 0));
+      }
+    `
     if (this.hasAttribute('height-mobile')) {
       css += /* css */`
         :host > section {
@@ -392,7 +408,7 @@ export default class Grid extends Shadow() {
       }
     })
     cssMobile += '}'
-    this.css = css + cssMobile
+    this.setCss(css + cssMobile, undefined, false, undefined, this._css, false)
     this.html = [this.section]
     return Promise.resolve()
   }
