@@ -306,8 +306,9 @@
   display: var(--a-display, block);
   margin: var(--a-margin, 0 auto var(--content-spacing));
   transition: var(--a-transition, color 0.3s ease-out);
-  width: var(--a-width, auto);
-  height: var(--a-height, auto);
+  /*
+  do not set: width nor height here! "O-BODY a" is more specific than "O-BODY > main > *"
+  */
 }
 :host a[wrapper] {
   color: inherit;
@@ -717,8 +718,9 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     font-size: var(--a-font-size-mobile, var(--a-font-size, 1em));
     line-height: var(--line-height-mobile, var(--line-height, normal));
     margin: var(--a-margin-mobile, var(--a-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
-    width: var(--a-width-mobile, var(--a-width, auto));
-    height: var(--a-height-mobile, var(--a-height, auto));
+    /*
+    do not set: width nor height here! "O-BODY a" is more specific than "O-BODY > main > *"
+    */
   }
   :host *:not(main) a {
     display: var(--any-a-display-mobile, var(--any-a-display, var(--a-display-mobile, var(--a-display, inline))));
