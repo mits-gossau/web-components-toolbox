@@ -88,7 +88,7 @@ because the nesting selector cannot represent pseudo-elements. */
   align-items: center;
   display: flex;
   gap: 1.25rem;
-  max-width: _max-width_;
+  max-width: var(--dialog-left-slide-in-container-max-width-custom, _max-width_);
   width: 100%;
   margin: 0 auto;
   padding: calc(24rem/18);
