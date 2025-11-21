@@ -177,6 +177,10 @@ export default class Dialog extends Shadow() {
     :host > dialog {
       cursor: var(--dialog-cursor, auto);
     }
+    :host > dialog:focus-visible {
+        border-radius: var(--dialog-border-radius-focus-visible, 0);
+        outline: var(--dialog-outline-focus-visible, none);
+    }
     :host > dialog::backdrop {
       cursor: var(--dialog-backdrop-cursor, pointer);
     }
