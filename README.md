@@ -53,6 +53,7 @@ CSS Rules:
 
 HTML Rules:
 - Components which move at initialization (connectedCallback, or any live cycle event) nodes. Expl. ```Array.from(this.root.children).forEach(node => this.section.appendChild(node))``` must be avoided! Or the html must be written as ```<o-grid><section>...</section></o-grid>``` and the component must accept already prefilled children. o-header[header], o-footer[footer], o-navigation[nav], o-body[main], o-grid[section], o-wrapper[section]
+- Make sure to give every node an ID when using [mode=false] (no shadowDOM attached)
 
 HTML/CSS Tooling:
 - vscode extensions: es6-string-html & es6-string-css
