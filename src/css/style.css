@@ -592,11 +592,11 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 }
 /* outline */
 *:focus-visible {
-  border-radius: var(--border-radius, 0.125em);
-  outline-color: var(--outline-color, var(--color-secondary, var(--color, transparent)));
-  outline-style: var(--outline-style, solid);
-  outline-width: var(--outline-width, 0.125em);
-  outline-offset: var(--outline-offset, 2px);
+  border-radius: var(--border-radius-focus-visible, var(--border-radius, 0.125em));
+  outline-color: var(--outline-color-focus-visible, var(--outline-color, var(--color-secondary, var(--color, transparent))));
+  outline-style: var(--outline-style-focus-visible, var(--outline-style, solid));
+  outline-width: var(--outline-width-focus-visible, var(--outline-width, 0.125em));
+  outline-offset: var(--outline-offset-focus-visible, var(--outline-offset, 2px));
 }
 /* a11y */
 .sr-only {
