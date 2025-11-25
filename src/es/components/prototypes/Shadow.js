@@ -66,6 +66,7 @@
     fetchHTML,
     Shadow.cssTextDecorationShortHandFix,
     html,
+    Shadow.htmlPurify
     Shadow.isMac,
     Shadow.walksUpDomQueryMatches
   }
@@ -246,7 +247,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    */
   setCss (style, cssSelector = this.cssSelector, namespace = this.namespace, namespaceFallback = this.namespaceFallback, styleNode = this._css, appendStyleNode = true, maxWidth = this.mobileBreakpoint, node = this, replaces = []) {
     if (!styleNode) {
-    /** @type {HTMLStyleElement} */
+      /** @type {HTMLStyleElement} */
       styleNode = document.createElement('style')
       styleNode.setAttribute('_css', '')
       styleNode.setAttribute('mobile-breakpoint', maxWidth)
@@ -755,7 +756,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
          * @type {HTMLElement}
          */
         const div = document.createElement('div')
-        div.innerHTML = innerHTML
+        div.innerHTML = Shadow.htmlPurify(innerHTML)
         innerHTML = div.childNodes
       }
     }
@@ -767,6 +768,23 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         // @ts-ignore
         if (node && !this.root.contains(node)) this.root.appendChild(node)
       })
+  }
+
+  /**
+   * Avoid XSS attacks by sanitizing the html according to: https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/XSS
+   * and the target list: https://github.com/cure53/DOMPurify/blob/27e8496bcd689a16acc7d0bf7c88b933efad569a/demos/hooks-mentaljs-demo.html#L20
+   * plus: https://stackoverflow.com/questions/6976053/xss-which-html-tags-and-attributes-can-trigger-javascript-events
+   * conclusion: stackoverflow citation: "I didn't knew about those new attributes. I checked, and it seems that the only attributes that start with on are all Javascript event triggers. I will probably just remove all that match that pattern."
+   * NOTE: script tags are already automatically escaped by modern browsers, so we only target <image, <img starting tags and "javascript:"
+   *
+   * @static
+   * @param {string} html
+   * @return {string}
+   */
+  static htmlPurify (html) {
+    // first sanitize tags eg.: <img src="xyz" onload=alert('XSS')>, <img src="xyz" onmouseover=alert('XSS')>, <image/src/onerror=alert('XSS')>, etc.
+    // second sanitize tags eg.: <a href="javascript:alert(document.location);">XSS</a>, <form action="javascript:alert(document.location);"><input type="submit" /></form>, etc.
+    return html.replace(/<[a-zA-z]*[\s|\/][^>]*on[a-zA-z]{4,10}=.*>/g, '').replace(/<[a-zA-z]*[\s|\/][^>]*javascript:[^>]*>/g, '')
   }
 
   // display trumps hidden property, which we resolve here as well as we allow an animation on show
