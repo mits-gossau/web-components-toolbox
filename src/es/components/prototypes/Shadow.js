@@ -784,7 +784,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   static htmlPurify (html) {
     // first sanitize tags eg.: <img src="xyz" onload=alert('XSS')>, <img src="xyz" onmouseover=alert('XSS')>, <image/src/onerror=alert('XSS')>, etc.
     // second sanitize tags eg.: <a href="javascript:alert(document.location);">XSS</a>, <form action="javascript:alert(document.location);"><input type="submit" /></form>, etc.
-    return html.replace(/<[a-zA-z]*[\s|\/][^>]*on[a-zA-z]{4,10}=[^>]*>/g, '').replace(/<[a-zA-z]*[\s|\/][^>]*javascript:[^>]*>/g, '')
+    return html.replace(/<[a-z]*[\s|\/][^>]*on[a-z]{4,10}=[^>]*>/gi, '').replace(/<[a-z]*[\s|\/][^>]*javascript:[^>]*>/gi, '')
   }
 
   // display trumps hidden property, which we resolve here as well as we allow an animation on show
