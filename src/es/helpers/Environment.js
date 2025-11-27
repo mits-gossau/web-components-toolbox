@@ -67,7 +67,7 @@ self.Environment = {
 
 /**
  * XSS Content Security Policy
- * NOTE: this function is copied from src/es/components/web-components-toolbox/src/es/helpers/Environment.js and can not be imported, since the createPolicy function must execute synchronous, otherwise the browser throws the policy error 
+ * NOTE: this function is copied into other repos using this as submodule. !adjust those when adjusting this function!
  * 
  * https://content-security-policy.com/examples/meta/
  * is enforced by: <meta http-equiv="Content-Security-Policy" content="require-trusted-types-for 'script'">
