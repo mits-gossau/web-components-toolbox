@@ -67,6 +67,7 @@ self.Environment = {
 
 /**
  * XSS Content Security Policy
+ * NOTE: this function is copied from src/es/components/web-components-toolbox/src/es/helpers/Environment.js and can not be imported, since the createPolicy function must execute synchronous, otherwise the browser throws the policy error 
  * 
  * https://content-security-policy.com/examples/meta/
  * is enforced by: <meta http-equiv="Content-Security-Policy" content="require-trusted-types-for 'script'">
@@ -82,7 +83,7 @@ self.Environment = {
  * @param {string} html
  * @return {string}
  */
-if (typeof self.trustedTypes?.createPolicy === 'function' && document.querySelector('meta[http-equiv=Content-Security-Policy][content*=require-trusted-types-for]')) {
+if (typeof self.trustedTypes?.createPolicy === 'function' && !self.trustedTypes.defaultPolicy && document.querySelector('meta[http-equiv=Content-Security-Policy][content*=require-trusted-types-for]')) {
   self.trustedTypes.createPolicy('default', {
     // first sanitize tags eg.: <img src="xyz" onload=alert('XSS')>, <img src="xyz" onmouseover=alert('XSS')>, <image/src/onerror=alert('XSS')>, etc.
     // second sanitize tags eg.: <a href="javascript:alert(document.location);">XSS</a>, <form action="javascript:alert(document.location);"><input type="submit" /></form>, etc.
