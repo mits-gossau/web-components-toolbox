@@ -361,6 +361,13 @@ export default class Grid extends Shadow() {
           }
         `
       }
+      if (node.getAttribute('order') && !css.includes(`[order="${node.getAttribute('order')}"]`)) {
+        css += /* css */`
+          :host > section > [order="${node.getAttribute('order')}"]{
+            order: ${node.getAttribute('order')};
+          }
+        `
+      }
       // mobile
       if (node.getAttribute('grid-column-mobile') && !cssMobile.includes(`[grid-column-mobile="${node.getAttribute('grid-column-mobile')}"]`)) {
         cssMobile += /* css */`
@@ -401,6 +408,13 @@ export default class Grid extends Shadow() {
         cssMobile += /* css */`
           :host > section > [color-mobile="${node.getAttribute('color-mobile')}"]{
             color: ${node.getAttribute('color-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('order-mobile') && !cssMobile.includes(`[order-mobile="${node.getAttribute('order-mobile')}"]`)) {
+        cssMobile += /* css */`
+          :host > section > [order-mobile="${node.getAttribute('order-mobile')}"]{
+            order: ${node.getAttribute('order-mobile')};
           }
         `
       }
