@@ -641,6 +641,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     word-break: var(--h1-word-break-mobile, var(--h1-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
     text-transform: var(--h1-text-transform-mobile, var(--h1-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h1-margin-mobile, var(--h1-margin, 0 auto var(--h-margin-bottom-mobile, var(--h-margin-bottom, 1.143em))));
+    padding: var(--h1-padding-mobile, var(--h1-padding, var(--h-padding-mobile, var(--h-padding, unset))));
   }
   :host h2 {
     font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5em));
@@ -648,6 +649,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     word-break: var(--h2-word-break-mobile, var(--h2-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
     text-transform: var(--h2-text-transform-mobile, var(--h2-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h2-margin-mobile, var(--h2-margin, 0 auto var(--h-margin-bottom-mobile, var(--h-margin-bottom, 1.143em))));
+    padding: var(--h2-padding-mobile, var(--h2-padding, var(--h-padding-mobile, var(--h-padding, unset))));
   }
   :host h3 {
     font-size: var(--h3-font-size-mobile, var(--h3-font-size, 1.25em));
@@ -655,6 +657,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     word-break: var(--h3-word-break-mobile, var(--h3-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
     text-transform: var(--h3-text-transform-mobile, var(--h3-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h3-margin-mobile, var(--h3-margin, 0 auto var(--h-margin-bottom-mobile, var(--h-margin-bottom, 1.143em))));
+    padding: var(--h3-padding-mobile, var(--h3-padding, var(--h-padding-mobile, var(--h-padding, unset))));
   }
   :host h4 {
     font-size: var(--h4-font-size-mobile, var(--h4-font-size, 1.125em));
@@ -662,6 +665,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     word-break: var(--h4-word-break-mobile, var(--h4-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
     text-transform: var(--h4-text-transform-mobile, var(--h4-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h4-margin-mobile, var(--h4-margin, 0 auto var(--h-margin-bottom-mobile, var(--h-margin-bottom, 1.143em))));
+    padding: var(--h4-padding-mobile, var(--h4-padding, var(--h-padding-mobile, var(--h-padding, unset))));
   }
   :host h5 {
     font-size: var(--h5-font-size-mobile, var(--h5-font-size, 1em));
@@ -669,6 +673,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     word-break: var(--h5-word-break-mobile, var(--h5-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))));
     text-transform: var(--h5-text-transform-mobile, var(--h5-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))));
     margin: var(--h5-margin-mobile, var(--h5-margin, 0 auto var(--h-margin-bottom-mobile, var(--h-margin-bottom, 1.143em))));
+    padding: var(--h5-padding-mobile, var(--h5-padding, var(--h-padding-mobile, var(--h-padding, unset))));
   }
   :host h6 {
     font-size: var(--h6-font-size-mobile, var(--h6-font-size, var(--h1-font-size-mobile, var(--h1-font-size, 1.75em))));
@@ -676,6 +681,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     word-break: var(--h6-word-break-mobile, var(--h6-word-break, var(--h1-word-break-mobile, var(--h1-word-break, var(--h-word-break-mobile, var(--h-word-break, normal))))));
     text-transform: var(--h6-text-transform-mobile, var(--h6-text-transform, var(--h1-text-transform-mobile, var(--h1-text-transform, var(--h-text-transform-mobile, var(--h-text-transform, none))))));
     margin: var(--h6-margin-mobile, var(--h6-margin, var(--h1-margin-mobile, var(--h1-margin, 0 auto var(--h-margin-bottom-mobile, var(--h-margin-bottom, 1.143em))))));
+    padding: var(--h6-padding-mobile, var(--h6-padding, var(--h1-padding-mobile, var(--h1-padding, var(--h-padding-mobile, var(--h-padding, unset))))));
   }
   /* text stylings */
   :host .font-size-big, :host .font-size-big-mobile {
