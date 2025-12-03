@@ -733,6 +733,8 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   }
   /* hr-tag */
   :host hr, :host hr.primary {
+    border-bottom: var(--hr-border-bottom-mobile, var(--hr-border-bottom, 1px dotted var(--color)));
+    border-width: var(--hr-border-width-mobile, var(--hr-border-width, 0 0 1px));
     margin: var(--hr-margin-mobile, var(--hr-margin, var(--content-spacing-mobile) auto));
   }
   :host hr.full-width, :host hr.primary.full-width, :host hr.secondary.full-width {

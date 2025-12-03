@@ -53,16 +53,22 @@ export default class Grid extends Shadow() {
     let css = /* css */`
       :host > section {
         display:grid;
-          ${this.hasAttribute('height')
-            ? `height: ${this.getAttribute('height') || 'var(--height, 100%)'};`
-            : ''
-          }
+        transition: var(--section-transition, none);
+        ${this.hasAttribute('height')
+          ? `height: ${this.getAttribute('height') || 'var(--height, 100%)'};`
+          : ''
+        }
       }
       :host > section > * {
         background: var(--section-child-background, none);
         color: var(--section-child-color, var(--color, black));
         margin: var(--section-child-margin, 0);
         padding: var(--section-child-padding, 0);
+        overflow: var(--section-child-overflow, visible);
+        transition: var(--section-child-transition, var(--section-transition, none));
+      }
+      :host > section > * > * {
+        transition: var(--section-child-child-transition, var(--section-child-transition, var(--section-transition, none)));
       }
     `
     if (this.hasAttribute('overflow')) {
@@ -123,10 +129,26 @@ export default class Grid extends Shadow() {
         }
       `
     }
+    if (this.hasAttribute('background-hover')) {
+      css += /* css */`
+        :host(:hover) > section {
+          cursor: pointer;
+          background: ${this.getAttribute('background-hover') || 'var(--background-hover, var(--background, none))'};
+        }
+      `
+    }
     if (this.hasAttribute('color')) {
       css += /* css */`
         :host > section {
           color: ${this.getAttribute('color') || 'var(--color, black)'};
+        }
+      `
+    }
+    if (this.hasAttribute('color-hover')) {
+      css += /* css */`
+        :host(:hover) > section {
+          cursor: pointer;
+          color: ${this.getAttribute('color-hover') || 'var(--color-hover, var(--color, black))'};
         }
       `
     }
@@ -205,10 +227,26 @@ export default class Grid extends Shadow() {
         }
       `
     }
+    if (this.hasAttribute('background-hover-mobile')) {
+      css += /* css */`
+        :host(:hover) > section {
+          cursor: pointer;
+          background: ${this.getAttribute('background-hover-mobile') || 'var(--background-hover-mobile, var(--background-hover, var(--background-mobile, var(--background, none))))'};
+        }
+      `
+    }
     if (this.hasAttribute('color-mobile')) {
       css += /* css */`
         :host > section {
           color: ${this.getAttribute('color-mobile') || 'var(--color-mobile, var(--color, black))'};
+        }
+      `
+    }
+    if (this.hasAttribute('color-hover-mobile')) {
+      css += /* css */`
+        :host(:hover) > section {
+          cursor: pointer;
+          color: ${this.getAttribute('color-hover-mobile') || 'var(--color-hover-mobile, var(--color-hover, var(--color-mobile, var(--color, black))))'};
         }
       `
     }
@@ -316,111 +354,218 @@ export default class Grid extends Shadow() {
     })
     this.setAttribute('count-section-children', this.section.children.length)
     let css = ''
+    let cssDesktop = `@media only screen and (min-width: calc(${this.mobileBreakpoint} + 1px)) {`
     let cssMobile = '@media only screen and (max-width: _max-width_) {'
     Array.from(this.section.children).forEach(node => {
       if ((node.getAttribute('style') || '').includes('background')) node.setAttribute('has-background', 'true')
       if (node.getAttribute('grid-column') && !css.includes(`[grid-column="${node.getAttribute('grid-column')}"]`)) {
         css += /* css */`
-          :host > section > [grid-column="${node.getAttribute('grid-column')}"]{
+          :host > section > [grid-column="${node.getAttribute('grid-column')}"] {
             grid-column: ${node.getAttribute('grid-column')};
           }
         `
       }
       if (node.getAttribute('grid-row') && !css.includes(`[grid-row="${node.getAttribute('grid-row')}"]`)) {
         css += /* css */`
-          :host > section > [grid-row="${node.getAttribute('grid-row')}"]{
+          :host > section > [grid-row="${node.getAttribute('grid-row')}"] {
             grid-row: ${node.getAttribute('grid-row')};
           }
         `
       }
       if (node.getAttribute('margin') && !css.includes(`[margin="${node.getAttribute('margin')}"]`)) {
         css += /* css */`
-          :host > section > [margin="${node.getAttribute('margin')}"]{
+          :host > section > [margin="${node.getAttribute('margin')}"] {
             margin: ${node.getAttribute('margin')};
           }
         `
       }
       if (node.getAttribute('padding') && !css.includes(`[padding="${node.getAttribute('padding')}"]`)) {
         css += /* css */`
-          :host > section > [padding="${node.getAttribute('padding')}"]{
+          :host > section > [padding="${node.getAttribute('padding')}"] {
             padding: ${node.getAttribute('padding')};
+          }
+        `
+      }
+      if (node.getAttribute('min-height') && !css.includes(`[min-height="${node.getAttribute('min-height')}"]`)) {
+        css += /* css */`
+          :host > section > [min-height="${node.getAttribute('min-height')}"] {
+            min-height: ${node.getAttribute('min-height')};
           }
         `
       }
       if (node.getAttribute('background') && !css.includes(`[background="${node.getAttribute('background')}"]`)) {
         css += /* css */`
-          :host > section > [background="${node.getAttribute('background')}"]{
+          :host > section > [background="${node.getAttribute('background')}"] {
             background: ${node.getAttribute('background')};
+          }
+        `
+      }
+      if (node.getAttribute('background-hover') && !css.includes(`[background-hover="${node.getAttribute('background-hover')}"]:hover`)) {
+        css += /* css */`
+          :host > section > [background-hover="${node.getAttribute('background-hover')}"]:hover {
+            cursor: pointer;
+            background: ${node.getAttribute('background-hover')};
           }
         `
       }
       if (node.getAttribute('color') && !css.includes(`[color="${node.getAttribute('color')}"]`)) {
         css += /* css */`
-          :host > section > [color="${node.getAttribute('color')}"]{
+          :host > section > [color="${node.getAttribute('color')}"] {
             color: ${node.getAttribute('color')};
+          }
+        `
+      }
+      if (node.getAttribute('color-hover') && !css.includes(`[color-hover="${node.getAttribute('color-hover')}"]:hover`)) {
+        css += /* css */`
+          :host > section > [color-hover="${node.getAttribute('color-hover')}"]:hover {
+            cursor: pointer;
+            color: ${node.getAttribute('color-hover')};
           }
         `
       }
       if (node.getAttribute('order') && !css.includes(`[order="${node.getAttribute('order')}"]`)) {
         css += /* css */`
-          :host > section > [order="${node.getAttribute('order')}"]{
+          :host > section > [order="${node.getAttribute('order')}"] {
             order: ${node.getAttribute('order')};
+          }
+        `
+      }
+      // desktop
+      if (node.getAttribute('padding-top') && !css.includes(`[padding-top="${node.getAttribute('padding-top')}"]`)) {
+        // padding-top for mobile shall not inherit from desktop
+        cssDesktop += /* css */`
+          :host > section > [padding-top="${node.getAttribute('padding-top')}"] {
+            padding-top: ${node.getAttribute('padding-top')};
+          }
+        `
+      }
+      if (node.getAttribute('padding-right') && !css.includes(`[padding-right="${node.getAttribute('padding-right')}"]`)) {
+        // padding-right for mobile shall not inherit from desktop
+        cssDesktop += /* css */`
+          :host > section > [padding-right="${node.getAttribute('padding-right')}"] {
+            padding-right: ${node.getAttribute('padding-right')};
+          }
+        `
+      }
+      if (node.getAttribute('padding-bottom') && !css.includes(`[padding-bottom="${node.getAttribute('padding-bottom')}"]`)) {
+        // padding-bottom for mobile shall not inherit from desktop
+        cssDesktop += /* css */`
+          :host > section > [padding-bottom="${node.getAttribute('padding-bottom')}"] {
+            padding-bottom: ${node.getAttribute('padding-bottom')};
+          }
+        `
+      }
+      if (node.getAttribute('padding-left') && !css.includes(`[padding-left="${node.getAttribute('padding-left')}"]`)) {
+        // padding-left for mobile shall not inherit from desktop
+        cssDesktop += /* css */`
+          :host > section > [padding-left="${node.getAttribute('padding-left')}"] {
+            padding-left: ${node.getAttribute('padding-left')};
           }
         `
       }
       // mobile
       if (node.getAttribute('grid-column-mobile') && !cssMobile.includes(`[grid-column-mobile="${node.getAttribute('grid-column-mobile')}"]`)) {
         cssMobile += /* css */`
-          :host > section > [grid-column-mobile="${node.getAttribute('grid-column-mobile')}"]{
+          :host > section > [grid-column-mobile="${node.getAttribute('grid-column-mobile')}"] {
             grid-column: ${node.getAttribute('grid-column-mobile')};
           }
         `
       }
       if (node.getAttribute('grid-row-mobile') && !cssMobile.includes(`[grid-row-mobile="${node.getAttribute('grid-row-mobile')}"]`)) {
         cssMobile += /* css */`
-          :host > section > [grid-row-mobile="${node.getAttribute('grid-row-mobile')}"]{
+          :host > section > [grid-row-mobile="${node.getAttribute('grid-row-mobile')}"] {
             grid-row: ${node.getAttribute('grid-row-mobile')};
           }
         `
       }
       if (node.getAttribute('margin-mobile') && !cssMobile.includes(`[margin-mobile="${node.getAttribute('margin-mobile')}"]`)) {
         cssMobile += /* css */`
-          :host > section > [margin-mobile="${node.getAttribute('margin-mobile')}"]{
+          :host > section > [margin-mobile="${node.getAttribute('margin-mobile')}"] {
             margin: ${node.getAttribute('margin-mobile')};
           }
         `
       }
       if (node.getAttribute('padding-mobile') && !cssMobile.includes(`[padding-mobile="${node.getAttribute('padding-mobile')}"]`)) {
         cssMobile += /* css */`
-          :host > section > [padding-mobile="${node.getAttribute('padding-mobile')}"]{
+          :host > section > [padding-mobile="${node.getAttribute('padding-mobile')}"] {
             padding: ${node.getAttribute('padding-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('padding-top-mobile') && !cssMobile.includes(`[padding-top-mobile="${node.getAttribute('padding-top-mobile')}"]`)) {
+        cssMobile += /* css */`
+          :host > section > [padding-top-mobile="${node.getAttribute('padding-top-mobile')}"] {
+            padding-top: ${node.getAttribute('padding-top-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('padding-right-mobile') && !cssMobile.includes(`[padding-right-mobile="${node.getAttribute('padding-right-mobile')}"]`)) {
+        cssMobile += /* css */`
+          :host > section > [padding-right-mobile="${node.getAttribute('padding-right-mobile')}"] {
+            padding-right: ${node.getAttribute('padding-right-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('padding-bottom-mobile') && !cssMobile.includes(`[padding-bottom-mobile="${node.getAttribute('padding-bottom-mobile')}"]`)) {
+        cssMobile += /* css */`
+          :host > section > [padding-bottom-mobile="${node.getAttribute('padding-bottom-mobile')}"] {
+            padding-bottom: ${node.getAttribute('padding-bottom-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('padding-left-mobile') && !cssMobile.includes(`[padding-left-mobile="${node.getAttribute('padding-left-mobile')}"]`)) {
+        cssMobile += /* css */`
+          :host > section > [padding-left-mobile="${node.getAttribute('padding-left-mobile')}"] {
+            padding-left: ${node.getAttribute('padding-left-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('min-height-mobile') && !cssMobile.includes(`[min-height-mobile="${node.getAttribute('min-height-mobile')}"]`)) {
+        cssMobile += /* css */`
+          :host > section > [min-height-mobile="${node.getAttribute('min-height-mobile')}"] {
+            min-height: ${node.getAttribute('min-height-mobile')};
           }
         `
       }
       if (node.getAttribute('background-mobile') && !cssMobile.includes(`[background-mobile="${node.getAttribute('background-mobile')}"]`)) {
         cssMobile += /* css */`
-          :host > section > [background-mobile="${node.getAttribute('background-mobile')}"]{
+          :host > section > [background-mobile="${node.getAttribute('background-mobile')}"] {
             background: ${node.getAttribute('background-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('background-hover-mobile') && !cssMobile.includes(`[background-hover-mobile="${node.getAttribute('background-hover-mobile')}"]:hover`)) {
+        cssMobile += /* css */`
+          :host > section > [background-hover-mobile="${node.getAttribute('background-hover-mobile')}"]:hover {
+            background: ${node.getAttribute('background-hover-mobile')};
           }
         `
       }
       if (node.getAttribute('color-mobile') && !cssMobile.includes(`[color-mobile="${node.getAttribute('color-mobile')}"]`)) {
         cssMobile += /* css */`
-          :host > section > [color-mobile="${node.getAttribute('color-mobile')}"]{
+          :host > section > [color-mobile="${node.getAttribute('color-mobile')}"] {
             color: ${node.getAttribute('color-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('color-hover-mobile') && !cssMobile.includes(`[color-hover-mobile="${node.getAttribute('color-hover-mobile')}"]:hover`)) {
+        cssMobile += /* css */`
+          :host > section > [color-hover-mobile="${node.getAttribute('color-hover-mobile')}"]:hover {
+            color: ${node.getAttribute('color-hover-mobile')};
           }
         `
       }
       if (node.getAttribute('order-mobile') && !cssMobile.includes(`[order-mobile="${node.getAttribute('order-mobile')}"]`)) {
         cssMobile += /* css */`
-          :host > section > [order-mobile="${node.getAttribute('order-mobile')}"]{
+          :host > section > [order-mobile="${node.getAttribute('order-mobile')}"] {
             order: ${node.getAttribute('order-mobile')};
           }
         `
       }
     })
+    cssDesktop += '}'
     cssMobile += '}'
-    this.setCss(css + cssMobile, undefined, false, undefined, this._css, false)
+    this.setCss(css + cssDesktop + cssMobile, undefined, false, undefined, this._css, false)
     this.html = [this.section]
     return Promise.resolve()
   }
