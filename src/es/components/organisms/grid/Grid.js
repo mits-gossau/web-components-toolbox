@@ -463,6 +463,14 @@ export default class Grid extends Shadow() {
           }
         `
       }
+      if (node.getAttribute('display') && !css.includes(`[display="${node.getAttribute('display')}"]`)) {
+        // display for mobile shall not inherit from desktop
+        cssDesktop += /* css */`
+          :host > section > [display="${node.getAttribute('display')}"] {
+            display: ${node.getAttribute('display')};
+          }
+        `
+      }
       // mobile
       if (node.getAttribute('grid-column-mobile') && !cssMobile.includes(`[grid-column-mobile="${node.getAttribute('grid-column-mobile')}"]`)) {
         cssMobile += /* css */`
@@ -517,6 +525,13 @@ export default class Grid extends Shadow() {
         cssMobile += /* css */`
           :host > section > [padding-left-mobile="${node.getAttribute('padding-left-mobile')}"] {
             padding-left: ${node.getAttribute('padding-left-mobile')};
+          }
+        `
+      }
+      if (node.getAttribute('display-mobile') && !cssMobile.includes(`[display-mobile="${node.getAttribute('display-mobile')}"]`)) {
+        cssMobile += /* css */`
+          :host > section > [display-mobile="${node.getAttribute('display-mobile')}"] {
+            display: ${node.getAttribute('display-mobile')};
           }
         `
       }
