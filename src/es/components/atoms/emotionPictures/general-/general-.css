@@ -1,8 +1,8 @@
 :host {
 
    /* with logo */
-   --emotion-pictures-general-logo-img-width-mobile: min(25vw, 100px);
-   --emotion-pictures-general-logo-img-width: min(10vw, 150px);
+   --emotion-pictures-general-logo-img-width-mobile: var(--emotion-pictures-general-logo-img-width-mobile-custom, min(25vw, 100px));
+   --emotion-pictures-general-logo-img-width: var(--emotion-pictures-general-logo-img-width-custom, min(10vw, 150px));
    --emotion-pictures-general-img-width: 100%;
 
    /* with title */
