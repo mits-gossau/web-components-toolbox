@@ -8,7 +8,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 */
 export default class <%= name %> extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
   }
 
   connectedCallback () {
@@ -75,7 +75,7 @@ export default class <%= name %> extends Shadow() {
           namespace: false
         }, ...styles], false) // using showPromises @connectedCallback makes hide action inside Shadow.fetchCSS obsolete, so second argument hide = false
       default:
-        return this.fetchCSS(styles)
+        return this.fetchCSS(styles, false)
     }
   }
 

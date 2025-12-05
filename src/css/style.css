@@ -571,7 +571,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 :host table td:last-child, :host table th:last-child {
   padding-right: var(--table-padding-right-last-child, 0);
 }
-/* spacer-stylings */
+/* spacer-stylings | keep in harmony with src/es/components/web-components-toolbox/src/es/components/atoms/spacer/Spacer.js */
 .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
   display: block;
   height: 1px;
@@ -765,7 +765,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     word-break: var(--table-word-break-mobile, var(--table-word-break, normal));
     margin: var(--table-margin-mobile, var(--table-margin, 0 auto var(--content-spacing-mobile, var(--content-spacing))));
   }
-  /* spacer-stylings */
+  /* spacer-stylings | keep in harmony with src/es/components/web-components-toolbox/src/es/components/atoms/spacer/Spacer.js */
   .spacer, .spacer-one, .spacer-two, .spacer-three, .spacer-four {
     margin: var(--spacer-margin-mobile, var(--spacer-margin, var(--content-spacing-mobile, var(--content-spacing)) auto)) !important;
   }

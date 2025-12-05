@@ -236,7 +236,7 @@ export default class AsciiCaptcha extends Shadow() {
           namespace: false
         }, ...styles])
       default:
-        return this.fetchCSS(styles)
+        return this.fetchCSS(styles, false)
     }
   }
 

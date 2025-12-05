@@ -259,7 +259,7 @@ export default class Dialog extends Shadow() {
           namespace: false
         }, ...styles], false)
       default:
-        return this.fetchCSS(styles)
+        return this.fetchCSS(styles, false)
     }
   }
 
