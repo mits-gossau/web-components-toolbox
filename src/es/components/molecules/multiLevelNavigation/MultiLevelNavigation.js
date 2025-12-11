@@ -573,6 +573,9 @@ export default class MultiLevelNavigation extends Shadow() {
     :host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar-thumb {
       background: transparent;
     }
+    :host > nav > ul > li > o-nav-wrapper > section > div > ul li {
+      margin: 0 4px; /* space for outlines */
+    }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title {
       padding: 1em;
       --ul-li-padding-left: 0.75em;
