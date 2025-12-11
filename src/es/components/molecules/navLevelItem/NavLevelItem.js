@@ -35,6 +35,8 @@ export default class NavLevelItem extends Shadow() {
       this.addEventListener('keyup', this.enterEventListener)
       this.addEventListener('click', this.clickEventListener)
       this.connectedCallbackOnce()
+    } else {
+      this.connectedCallbackOnce()
     }
   }
 
@@ -49,6 +51,7 @@ export default class NavLevelItem extends Shadow() {
         this.setAttribute('href', href)
       }
     }
+    if (!this.hasAttribute('tabindex') || this.getAttribute('tabindex') === '-1') this.setAttribute('tabindex', '0')
     this.connectedCallbackOnce = () => {}
   }
 
