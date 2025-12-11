@@ -36,7 +36,6 @@ export default class NavLevelItem extends Shadow() {
       this.addEventListener('click', this.clickEventListener)
       this.connectedCallbackOnce()
     } else {
-      // Apply accessibility improvements for navigation items outside multi-level-navigation context
       this.connectedCallbackOnce()
     }
   }
@@ -52,12 +51,7 @@ export default class NavLevelItem extends Shadow() {
         this.setAttribute('href', href)
       }
     }
-    
-    // Make the nav-level-item focusable by setting tabindex="0"
-    if (!this.hasAttribute('tabindex') || this.getAttribute('tabindex') === '-1') {
-      this.setAttribute('tabindex', '0')
-    }
-    
+    if (!this.hasAttribute('tabindex') || this.getAttribute('tabindex') === '-1') this.setAttribute('tabindex', '0')
     this.connectedCallbackOnce = () => {}
   }
 
