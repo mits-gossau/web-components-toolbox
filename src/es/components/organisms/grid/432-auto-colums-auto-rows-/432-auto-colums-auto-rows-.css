@@ -5,7 +5,7 @@
     grid-template-columns: repeat(4, minmax(12.5em, 1fr));
     grid-template-rows: auto;
     grid-gap: var(--grid-432-auto-colums-auto-rows-grid-gap-custom, var(--content-spacing));
-    overflow-x: auto; /* desktop, the scrollbar should never be visible, otherwise the below container queries must be adjusted */
+    overflow: visible; /* outlines should be visible and not be clipped */
 }
 :host([count-section-children="1"]) > section > * {
     grid-column: 3;
