@@ -84,7 +84,12 @@ export default class Dialog extends Shadow() {
     this.keyupListener = event => {
       if (event.key === 'Escape') this.close()
     }
-
+    this.closeKeydownListener = event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        this.close()
+      }
+    }
     /** @type {(any)=>void} */
     this.dialogResolve = map => map
     /** @type {Promise<HTMLDialogElement>} */
@@ -105,6 +110,10 @@ export default class Dialog extends Shadow() {
         this.hidden = false
         this.showNodes.forEach(node => (node.style.display = ''))
         this.closeNodes.forEach(node => (node.style.display = ''))
+        this.closeNodes.forEach(node => {
+          if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '0')
+          node.addEventListener('keydown', this.closeKeydownListener)
+        })
         if (this.hasAttribute('open')) {
           this.show(this.getAttribute('open') || undefined)
           if (!this.hasAttribute('open-on-every-connect')) this.removeAttribute('open')
@@ -125,7 +134,10 @@ export default class Dialog extends Shadow() {
   disconnectedCallback () {
     // From web components the event does not bubble up to this host
     this.showNodes.forEach(node => node.removeEventListener('click', this.showClickEventListener))
-    this.closeNodes.forEach(node => node.removeEventListener('click', this.closeClickEventListener))
+    this.closeNodes.forEach(node => {
+      node.removeEventListener('click', this.closeClickEventListener)
+      node.removeEventListener('keydown', this.closeKeydownListener)
+    })
     this.removeEventListener('click', this.clickEventListener)
     if (this.getAttribute('show-event-name')) document.body.removeEventListener(this.getAttribute('show-event-name'), this.showEventListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
