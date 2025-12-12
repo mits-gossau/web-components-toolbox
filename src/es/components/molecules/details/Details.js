@@ -59,14 +59,13 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { attributes: true, attributeFilter: ['open'] },
-      tabindex: 'no-tabindex', 
+      tabindex: 'no-tabindex',
       ...options
     }, ...args)
 
     this.setAttribute('aria-expanded', 'false')
     this.setAttribute('role', 'button')
-    // Remove generic aria-label and let content define the accessible name
-    this.removeAttribute('aria-label')
+    this.removeAttribute('aria-label') // remove generic aria-label and let content define the accessible name
     this.svgWidth = '1.5em'
     this.svgHeight = '1.5em'
     this.svgColor = `var(--${this.getAttribute('namespace') || ''}svg-color, var(--color))`
@@ -101,22 +100,14 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
 
     this.keydownEventListener = event => {
       if (this.details && (event.key === 'Enter' || event.key === ' ')) {
-        // Check if the focus is on the summary element or its children
         const summary = this.summary
         if (summary && (summary.contains(event.target) || event.target === summary)) {
           event.preventDefault()
-          // Toggle the details element
-          if (this.details.hasAttribute('open')) {
-            this.details.removeAttribute('open')
-          } else {
-            this.details.setAttribute('open', '')
-          }
+          this.details.hasAttribute('open') ? this.details.removeAttribute('open') : this.details.setAttribute('open', '')
         }
       }
-      // Handle Escape key to close details
       if (event.key === 'Escape' && this.details && this.details.hasAttribute('open')) {
         this.details.removeAttribute('open')
-        // Return focus to summary after closing
         this.summary.focus()
       }
     }
@@ -645,12 +636,9 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
       ? this.setIconFromAttribute(this.getAttribute('icon-image'), divSummary, 'icon-image')
       : this.setIconDefault(divSummary, 'icon')
     this.summary.appendChild(divSummary)
-    
-    // Ensure summary is focusable and has correct ARIA attributes
     this.summary.setAttribute('tabindex', '0')
     this.summary.setAttribute('role', 'button')
     this.summary.setAttribute('aria-expanded', this.details.hasAttribute('open') ? 'true' : 'false')
-    
     this.html = this.style
   }
 

@@ -94,7 +94,6 @@ export default class Dialog extends Shadow() {
     this.dialogResolve = map => map
     /** @type {Promise<HTMLDialogElement>} */
     this.dialogPromise = new Promise(resolve => (this.dialogResolve = resolve))
-
     this.updateTabindex = () => this.dialog?.hasAttribute('open') ? this.removeAttribute('tabindex') : this.setAttribute('tabindex', '-1')
   }
 
@@ -286,19 +285,14 @@ export default class Dialog extends Shadow() {
   renderHTML () {
     this.dialogResolve(this.dialog = this.root.querySelector(this.cssSelector + ' > dialog') || document.createElement('dialog'))
     if (this.hasAttribute('autofocus')) this.dialog.setAttribute('autofocus', '')
-
     Array.from(this.root.children).forEach(node => {
       if (node === this.dialog || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
       if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open' || node.getAttribute('id') === 'clear') return false
       if (node.getAttribute('id') === 'close') return this.dialog.prepend(node)
       this.dialog.appendChild(node)
     })
-
     this.html = this.dialog
-    
-    // Initialize tabindex based on dialog state
     this.updateTabindex()
-    
     return Promise.resolve()
   }
 
