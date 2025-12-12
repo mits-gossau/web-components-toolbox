@@ -26,6 +26,7 @@ export default class Dialog extends Shadow() {
       dialog.classList.remove('closed')
       // @ts-ignore
       dialog[command]()
+      this.updateTabindex()
       // @ts-ignore
       Array.from(dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
     }
@@ -34,6 +35,7 @@ export default class Dialog extends Shadow() {
       this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
       dialog.classList.add('closed')
       dialog.close()
+      this.updateTabindex()
       if (this.hasAttribute('closed-event-name')) this.dispatchEvent(new CustomEvent(this.getAttribute('closed-event-name') || 'dialog-closed-event', { bubbles: true, cancelable: true, composed: true }))
 
       // remove focus-visibility if dialog closes
@@ -87,6 +89,8 @@ export default class Dialog extends Shadow() {
     this.dialogResolve = map => map
     /** @type {Promise<HTMLDialogElement>} */
     this.dialogPromise = new Promise(resolve => (this.dialogResolve = resolve))
+
+    this.updateTabindex = () => this.dialog?.hasAttribute('open') ? this.removeAttribute('tabindex') : this.setAttribute('tabindex', '-1')
   }
 
   connectedCallback () {
@@ -279,6 +283,10 @@ export default class Dialog extends Shadow() {
     })
 
     this.html = this.dialog
+    
+    // Initialize tabindex based on dialog state
+    this.updateTabindex()
+    
     return Promise.resolve()
   }
 
