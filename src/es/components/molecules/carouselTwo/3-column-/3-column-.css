@@ -39,11 +39,11 @@
 }
 
 :host > section > *:first-child {
-  padding-left: calc((100% - var(--carousel-two-3-column-width)) / 2);
+  margin-left: calc((100% - var(--carousel-two-3-column-width)) / 2) !important;
   box-sizing: content-box;
 }
 :host > section > *:last-child {
-  padding-right: calc((100% - var(--carousel-two-3-column-width)) / 2);
+  margin-right: calc((100% - var(--carousel-two-3-column-width)) / 2) !important;
   box-sizing: content-box;
 }
 
