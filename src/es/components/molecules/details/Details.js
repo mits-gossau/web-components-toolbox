@@ -64,7 +64,8 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
     }, ...args)
 
     this.setAttribute('aria-expanded', 'false')
-    this.setAttribute('aria-label', 'Details')
+    this.setAttribute('role', 'button')
+    this.removeAttribute('aria-label') // remove generic aria-label and let content define the accessible name
     this.svgWidth = '1.5em'
     this.svgHeight = '1.5em'
     this.svgColor = `var(--${this.getAttribute('namespace') || ''}svg-color, var(--color))`
@@ -94,6 +95,20 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
         event.preventDefault()
         this.details.removeAttribute('open')
         if (this.summary.getBoundingClientRect().top < 0) this.details.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+
+    this.keydownEventListener = event => {
+      if (this.details && (event.key === 'Enter' || event.key === ' ')) {
+        const summary = this.summary
+        if (summary && (summary.contains(event.target) || event.target === summary)) {
+          event.preventDefault()
+          this.details.hasAttribute('open') ? this.details.removeAttribute('open') : this.details.setAttribute('open', '')
+        }
+      }
+      if (event.key === 'Escape' && this.details && this.details.hasAttribute('open')) {
+        this.details.removeAttribute('open')
+        this.summary.focus()
       }
     }
 
@@ -172,6 +187,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
     document.body.addEventListener(this.openEventName, this.openEventListener)
     self.addEventListener('resize', this.resizeListener)
     this.root.addEventListener('click', this.clickEventListener)
+    this.root.addEventListener('keydown', this.keydownEventListener)
     document.body.addEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
     this.checkMedia()
     Promise.all(showPromises).then(() => (this.hidden = false))
@@ -181,6 +197,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
     super.disconnectedCallback()
     document.body.removeEventListener(this.openEventName, this.openEventListener)
     this.root.removeEventListener('click', this.clickEventListener)
+    this.root.removeEventListener('keydown', this.keydownEventListener)
     document.body.removeEventListener('scroll-to-anchor', this.scrollToAnchorEventListener)
     self.removeEventListener('resize', this.resizeListener)
   }
@@ -265,6 +282,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
           composed: true
         }))
         this.setAttribute('aria-expanded', 'true')
+        if (this.summary) this.summary.setAttribute('aria-expanded', 'true')
       } else {
         this.details.addEventListener('animationend', this.detailsCloseAnimationendListener, { once: true })
         // in case of fast double click the animationend event would not reach details, since the content would be hidden
@@ -346,6 +364,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
           composed: true
         }))
         this.setAttribute('aria-expanded', 'false')
+        if (this.summary) this.summary.setAttribute('aria-expanded', 'false')
       }
     })
   }
@@ -402,7 +421,6 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
       }
       :host details summary, :host details summary:focus {
         display: var(--summary-display, block);
-        outline: none;
       }
       :host details[open] summary {
         border-bottom: var(--summary-border-bottom-open, none);
@@ -618,6 +636,9 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
       ? this.setIconFromAttribute(this.getAttribute('icon-image'), divSummary, 'icon-image')
       : this.setIconDefault(divSummary, 'icon')
     this.summary.appendChild(divSummary)
+    this.summary.setAttribute('tabindex', '0')
+    this.summary.setAttribute('role', 'button')
+    this.summary.setAttribute('aria-expanded', this.details.hasAttribute('open') ? 'true' : 'false')
     this.html = this.style
   }
 

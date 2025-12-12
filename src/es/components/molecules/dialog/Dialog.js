@@ -26,6 +26,7 @@ export default class Dialog extends Shadow() {
       dialog.classList.remove('closed')
       // @ts-ignore
       dialog[command]()
+      this.updateTabindex()
       // @ts-ignore
       Array.from(dialog.querySelectorAll('[autofocus]')).forEach(node => node.focus())
     }
@@ -34,6 +35,7 @@ export default class Dialog extends Shadow() {
       this.dispatchEvent(new CustomEvent('no-scroll', { bubbles: true, cancelable: true, composed: true }))
       dialog.classList.add('closed')
       dialog.close()
+      this.updateTabindex()
       if (this.hasAttribute('closed-event-name')) this.dispatchEvent(new CustomEvent(this.getAttribute('closed-event-name') || 'dialog-closed-event', { bubbles: true, cancelable: true, composed: true }))
 
       // remove focus-visibility if dialog closes
@@ -82,11 +84,17 @@ export default class Dialog extends Shadow() {
     this.keyupListener = event => {
       if (event.key === 'Escape') this.close()
     }
-
+    this.closeKeydownListener = event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        this.close()
+      }
+    }
     /** @type {(any)=>void} */
     this.dialogResolve = map => map
     /** @type {Promise<HTMLDialogElement>} */
     this.dialogPromise = new Promise(resolve => (this.dialogResolve = resolve))
+    this.updateTabindex = () => this.dialog?.hasAttribute('open') ? this.removeAttribute('tabindex') : this.setAttribute('tabindex', '-1')
   }
 
   connectedCallback () {
@@ -101,6 +109,10 @@ export default class Dialog extends Shadow() {
         this.hidden = false
         this.showNodes.forEach(node => (node.style.display = ''))
         this.closeNodes.forEach(node => (node.style.display = ''))
+        this.closeNodes.forEach(node => {
+          if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '0')
+          node.addEventListener('keydown', this.closeKeydownListener)
+        })
         if (this.hasAttribute('open')) {
           this.show(this.getAttribute('open') || undefined)
           if (!this.hasAttribute('open-on-every-connect')) this.removeAttribute('open')
@@ -121,7 +133,10 @@ export default class Dialog extends Shadow() {
   disconnectedCallback () {
     // From web components the event does not bubble up to this host
     this.showNodes.forEach(node => node.removeEventListener('click', this.showClickEventListener))
-    this.closeNodes.forEach(node => node.removeEventListener('click', this.closeClickEventListener))
+    this.closeNodes.forEach(node => {
+      node.removeEventListener('click', this.closeClickEventListener)
+      node.removeEventListener('keydown', this.closeKeydownListener)
+    })
     this.removeEventListener('click', this.clickEventListener)
     if (this.getAttribute('show-event-name')) document.body.removeEventListener(this.getAttribute('show-event-name'), this.showEventListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
@@ -270,15 +285,14 @@ export default class Dialog extends Shadow() {
   renderHTML () {
     this.dialogResolve(this.dialog = this.root.querySelector(this.cssSelector + ' > dialog') || document.createElement('dialog'))
     if (this.hasAttribute('autofocus')) this.dialog.setAttribute('autofocus', '')
-
     Array.from(this.root.children).forEach(node => {
       if (node === this.dialog || node.getAttribute('slot') || node.nodeName === 'STYLE') return false
       if (node.getAttribute('id')?.includes('show') || node.getAttribute('id') === 'open' || node.getAttribute('id') === 'clear') return false
       if (node.getAttribute('id') === 'close') return this.dialog.prepend(node)
       this.dialog.appendChild(node)
     })
-
     this.html = this.dialog
+    this.updateTabindex()
     return Promise.resolve()
   }
 
