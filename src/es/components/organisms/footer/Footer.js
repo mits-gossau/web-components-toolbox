@@ -314,7 +314,8 @@ export default class Footer extends Shadow() {
               const clone = node.cloneNode(true)
               clones.push(clone)
               clone.html = ''
-              clone.html = node.html
+              // a-picture generates it's html when defaultSource is set
+              if (clone.tagName !== 'A-PICTURE' || !clone.hasAttribute('defaultSource')) clone.html = node.html
               node.classList.add(`placeholder-node-${clones.length - 1}`)
             })
             // move all children into a dedicated div
