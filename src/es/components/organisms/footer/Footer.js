@@ -317,7 +317,6 @@ export default class Footer extends Shadow() {
               // a-picture generates it's html, when defaultSource
               if (clone.tagName !== 'A-PICTURE' || !clone.hasAttribute('defaultSource')) clone.html = node.html
               node.classList.add(`placeholder-node-${clones.length - 1}`)
-              console.log({node, clone})
             })
             // move all children into a dedicated div
             // create a summary/details for each sectionChild
