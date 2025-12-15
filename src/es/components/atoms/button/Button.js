@@ -49,6 +49,9 @@ export default class Button extends Hover() {
         })))
       }
     }
+    this.keydownListener = event => {
+      if (event.key === 'Enter' || event.key === ' ') this.clickListener(event)
+    }
     this.answerEventListener = async event => {
       let tags = event.detail.tags
       if (this.getAttribute('active-detail-property-name')) {
@@ -111,6 +114,7 @@ export default class Button extends Hover() {
     if (this.shouldRenderCSS()) this.renderCSSPromise = this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTMLPromise = this.renderHTML()
     this.button.addEventListener('click', this.clickListener)
+    this.button.addEventListener('keydown', this.keydownListener)
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
     this.connectedCallbackOnce()
@@ -135,6 +139,7 @@ export default class Button extends Hover() {
 
   disconnectedCallback () {
     this.button.removeEventListener('click', this.clickListener)
+    this.button.removeEventListener('keydown', this.keydownListener)
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
 
