@@ -12,6 +12,8 @@ export default class Dialog extends Shadow() {
   constructor (options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
 
+    if (this.hasAttribute('keep-focusable')) this.setAttribute('tabindex', '0')
+
     /**
      * @param {'show'|'showModal'} [command='show']
      */
@@ -79,22 +81,45 @@ export default class Dialog extends Shadow() {
       event.stopPropagation()
       this.close()
     }
-    this.showEventListener = event => this.show(event.detail.command)
+    this.showEventListener = event => this.show(event.detail?.command)
     this.closeEventListener = () => this.close()
     this.keyupListener = event => {
       if (event.key === 'Escape') this.close()
     }
     this.closeKeydownListener = event => {
       if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault()
+        // event.preventDefault()
         this.close()
+      }
+    }
+    this.dialogKeydownListener = event => {
+      if (this.hasAttribute('keep-focusable') && (event.key === 'Enter' || event.key === ' ')) {
+        event.preventDefault()
+        const showEventName = this.getAttribute('show-event-name')
+        if (showEventName) {
+          this.dispatchEvent(new CustomEvent(showEventName, {
+            detail: { command: 'show-modal' },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+        } else {
+          this.show()
+        }
       }
     }
     /** @type {(any)=>void} */
     this.dialogResolve = map => map
     /** @type {Promise<HTMLDialogElement>} */
     this.dialogPromise = new Promise(resolve => (this.dialogResolve = resolve))
-    this.updateTabindex = () => this.dialog?.hasAttribute('open') ? this.removeAttribute('tabindex') : this.setAttribute('tabindex', '-1')
+    this.updateTabindex = () => {
+      if (this.hasAttribute('keep-focusable')) {
+        // Keep dialog focusable if keep-focusable attribute is set
+        this.setAttribute('tabindex', '0')
+        return
+      }
+      this.dialog?.hasAttribute('open') ? this.removeAttribute('tabindex') : this.setAttribute('tabindex', '-1')
+    }
   }
 
   connectedCallback () {
@@ -113,6 +138,7 @@ export default class Dialog extends Shadow() {
           if (!node.hasAttribute('tabindex')) node.setAttribute('tabindex', '0')
           node.addEventListener('keydown', this.closeKeydownListener)
         })
+        if (this.hasAttribute('keep-focusable')) this.addEventListener('keydown', this.dialogKeydownListener)
         if (this.hasAttribute('open')) {
           this.show(this.getAttribute('open') || undefined)
           if (!this.hasAttribute('open-on-every-connect')) this.removeAttribute('open')
@@ -141,6 +167,7 @@ export default class Dialog extends Shadow() {
     if (this.getAttribute('show-event-name')) document.body.removeEventListener(this.getAttribute('show-event-name'), this.showEventListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     document.removeEventListener('keyup', this.keyupListener)
+    if (this.hasAttribute('keep-focusable')) this.removeEventListener('keydown', this.dialogKeydownListener)
   }
 
   /**
@@ -167,6 +194,8 @@ export default class Dialog extends Shadow() {
   renderCSS () {
     this.css = /* css */`
     :host {
+      display: block;
+      margin: 0 2px; /* 2px space for outlines */
       position: relative;
       ${this.hasAttribute('dialog-desktop-height')
         ? `
