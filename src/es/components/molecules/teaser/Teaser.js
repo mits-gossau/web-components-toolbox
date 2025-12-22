@@ -87,7 +87,17 @@ export default class Teaser extends Intersection() {
    * @return {Promise<void>}
    */
   renderCSS() {
+
     if (this.getAttribute('namespace') === 'teaser-overlay-' && this.aArrow) this.aArrow.setAttribute('hover-set-by-outside', '')
+      if (this.getAttribute('namespace') === 'teaser-plain-no-border-' ) {
+        if (this.textPosition === 'top') {
+
+    this.root.style.display = "inline-flex";
+    this.root.style.verticalAlign = "top";
+
+        }
+       
+      }
     this.css = /* css */`
       :host {
         max-width: 100%;
