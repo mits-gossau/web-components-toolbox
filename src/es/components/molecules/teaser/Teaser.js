@@ -328,7 +328,6 @@ export default class Teaser extends Intersection() {
 
   get textPosition() {
     const tp = this.getAttribute('text-position') || ''
-    console.log(tp)
     return tp
   }
 }
