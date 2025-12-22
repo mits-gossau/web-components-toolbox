@@ -61,13 +61,13 @@ export default class Input extends Shadow() {
     this.changeListener = event => this.clickListener(event, undefined, undefined, 'change')
     this.blurListener = event => this.clickListener(event, undefined, undefined, this.hasAttribute('enter-on-blur') ? 'enter' : 'blur')
     this.focusListener = event => this.clickListener(event, undefined, true, 'focus')
-    this.keydownTimeoutId = null
-    this.keydownListener = event => {
+    this.keyupTimeoutId = null
+    this.keyupListener = event => {
       if (this.root.querySelector(':focus') !== this.inputField) return
       if (!this.hasAttribute('any-key-listener') && event.keyCode !== 13) return
       // @ts-ignore
-      clearTimeout(this.keydownTimeoutId)
-      this.keydownTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : (this.getAttribute('any-key-listener') || 1000)) // no timeout on enter
+      clearTimeout(this.keyupTimeoutId)
+      this.keyupTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : (this.getAttribute('any-key-listener') || 1000)) // no timeout on enter
     }
     this.answerEventListener = async event => {
       let searchTerm = event.detail.searchTerm
@@ -86,6 +86,11 @@ export default class Input extends Shadow() {
         this.inputField.value = ''
       }
     }
+
+    // @ts-ignore
+    ({promise: this.inputFieldPromise, resolve: this.inputFieldResolve} = Promise.withResolvers());
+    // @ts-ignore
+    ({promise: this.searchButtonPromise, resolve: this.searchButtonResolve} = Promise.withResolvers())
   }
 
   connectedCallback() {
@@ -110,7 +115,7 @@ export default class Input extends Shadow() {
         if (this.hasAttribute('change-listener') && this.inputField) this.inputField.addEventListener('change', this.changeListener)
         if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.addEventListener('blur', this.blurListener)
         if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.addEventListener('focus', this.focusListener)
-        document.addEventListener('keydown', this.keydownListener)
+        this.inputField.addEventListener('keyup', this.keyupListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
       }
       if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
@@ -127,7 +132,7 @@ export default class Input extends Shadow() {
       if (this.hasAttribute('change-listener') && this.inputField) this.inputField.removeEventListener('change', this.changeListener)
       if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.removeEventListener('blur', this.blurListener)
       if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.removeEventListener('focus', this.focusListener)
-      document.removeEventListener('keydown', this.keydownListener)
+      this.inputField.removeEventListener('keyup', this.keyupListener)
     }
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
@@ -455,6 +460,8 @@ export default class Input extends Shadow() {
           ? 'search'
           : 'go'
       )
+      this.inputFieldResolve(this.inputField)
+      this.searchButtonResolve(this.searchButton)
     })
   }
 
