@@ -40,7 +40,7 @@ export default class Teaser extends Intersection() {
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     Promise.all(showPromises).then(() => {
       debugger
-      console.log("hallo")
+      console.log(this.textPosition)
       if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
         self.requestAnimationFrame(timeStamp => {
           let figcaption, figcaptionBackgroundColor
