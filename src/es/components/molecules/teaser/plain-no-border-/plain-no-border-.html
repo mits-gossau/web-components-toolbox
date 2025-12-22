@@ -36,18 +36,6 @@
   </m-teaser>
 </o-wrapper>
 
-<script>
-  document.querySelectorAll('[text-position]').forEach(box => {
-    const textposition = box.getAttribute('text-position');
-
-    box.style.display = "inline-flex";
-    box.style.verticalAlign = "top";
-
-    box.style.flexDirection = (textposition === "top")
-      ? "column-reverse" : "column";
-  });
-</script>
-
 <!-- load web components for Demo Purposes Only -->
 <script class="template-script" type="text/javascript" src="./plain-no-border-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
