@@ -1,0 +1,36 @@
+:host {
+  --color: var(--teaser-plain-no-border-color);
+  --teaser-plain-no-border-a-picture-figcaption-background-color-hover: var(--teaser-plain-no-border-a-picture-figcaption-background-color-hover-custom,var(--teaser-plain-no-border-background-color-hover-custom, var(--teaser-plain-no-border-background-color)));
+  --teaser-plain-no-border-a-picture-margin: var(--teaser-plain-no-border-a-picture-margin-custom, 0.6em);
+  --teaser-plain-no-border-a-picture-width: calc(100% - var(--teaser-plain-no-border-a-picture-margin) * 2);
+  --teaser-plain-no-border-background-color: var(--teaser-plain-no-border-background-color-custom, var(--color-secondary, var(--background-color, var(--m-white))));
+  --teaser-plain-no-border-border-radius-mobile: var(--teaser-plain-no-border-border-radius-mobile-custom, 0.571em);
+  --teaser-plain-no-border-border-radius: var(--teaser-plain-no-border-border-radius-custom, 0.5em);
+  --teaser-plain-no-border-color: var(--teaser-plain-no-border-color-custom, var(--background-color, var(--m-white)));
+  --teaser-plain-no-border-figcaption-any-opacity: 0;
+  --teaser-plain-no-border-figcaption-any-transform-origin: center top;
+  --teaser-plain-no-border-figcaption-any-transform: var(--teaser-plain-no-border-figcaption-any-transform-custom, perspective(400px) rotateX(-45deg));
+  --teaser-plain-no-border-figcaption-any-transition: transform .45s .6s cubic-bezier(.17,.67,.28,1),opacity .45s .4s cubic-bezier(.17,.67,.28,1), opacity 0.3s .4s ease-out;
+  --teaser-plain-no-border-figcaption-background-color-hover: var(--teaser-plain-no-border-background-color-hover-custom, var(--color-hover, var(--teaser-plain-no-border-background-color)));
+  --teaser-plain-no-border-figcaption-background-color: var(--teaser-plain-no-border-figcaption-background-color-custom, var(--teaser-plain-no-border-background-color));
+  --teaser-plain-no-border-figcaption-bg-color-equal-padding: var(--teaser-plain-no-border-figcaption-bg-color-equal-padding-custom, 0.625em 0 0);
+  --teaser-plain-no-border-figcaption-display: flex;
+  --teaser-plain-no-border-figcaption-flex-direction: column;
+  --teaser-plain-no-border-figcaption-justify-content: var(--teaser-plain-no-border-figcaption-justify-content-custom, flex-end);
+  --teaser-plain-no-border-figcaption-padding: 0.625em;
+  --teaser-plain-no-border-figcaption-transition: background-color 0.3s ease-out;
+  --teaser-plain-no-border-h-color: var(--teaser-plain-no-border-color);
+  --teaser-plain-no-border-h2-margin: var(--teaser-plain-no-border-h2-margin-custom);
+  --teaser-plain-no-border-h5-margin: 0 0 0.5em;
+  --teaser-plain-no-border-intersecting-figcaption-any-opacity: 1;
+  --teaser-plain-no-border-intersecting-figcaption-any-transform: var(--teaser-plain-no-border-intersecting-figcaption-any-transform-custom, perspective(400px) rotateX(0));
+  --teaser-plain-no-border-p-font-size: 0.875em;
+  --teaser-plain-no-border-p-line-height: var(--teaser-plain-no-border-p-line-height-custom, 1.14em);
+  --teaser-plain-no-border-p-margin: 0 0 0.625em;
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --teaser-plain-no-border-p-font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));
+    --teaser-plain-no-border-p-line-height: var(--p-line-height-mobile, var(--p-line-height, var(--line-height, normal)));
+  }
+}

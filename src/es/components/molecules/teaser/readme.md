@@ -18,6 +18,7 @@ n/a
 | teaser-overlay- | `./overlay-/overlay-.css` |
 | teaser-overlay-top- | `./overlay-top-/overlay-top-.css` |
 | teaser-plain- | `./plain-/plain-.css` |
+| teaser-plain-no-border- | `./plain-no-border/plain-no-border-.css` |
 | teaser-plainer- | `./plainer-/plainer-.css` |
 | teaser-round- | `./round-/round-.css` |
 | teaser-text-image- | `./text-image-/text-image-.css` |
