@@ -39,8 +39,6 @@ export default class Teaser extends Intersection() {
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     Promise.all(showPromises).then(() => {
-      debugger
-      console.log(this.textPosition)
       if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
         self.requestAnimationFrame(timeStamp => {
           let figcaption, figcaptionBackgroundColor
@@ -89,21 +87,18 @@ export default class Teaser extends Intersection() {
   renderCSS() {
 
     if (this.getAttribute('namespace') === 'teaser-overlay-' && this.aArrow) this.aArrow.setAttribute('hover-set-by-outside', '')
-      if (this.getAttribute('namespace') === 'teaser-plain-no-border-' ) {
-        if (this.textPosition === 'top') {
 
-    this.root.style.display = "inline-flex";
-    this.root.style.verticalAlign = "top";
-
-        }
-       
-      }
     this.css = /* css */`
       :host {
         max-width: 100%;
       }
       :host([href]) {
         cursor: pointer;
+      }
+      :host([text-position=top]){
+        display: var(--text-position-top-display, inline-flex);
+        flex-direction: var(--text-position-top-flex-direction, column-reverse);
+        vertical-align: var(--text-position-top-vertical-align, top);
       }
       :host figure {
         display: var(--display, flex);
