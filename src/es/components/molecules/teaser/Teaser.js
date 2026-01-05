@@ -330,9 +330,4 @@ export default class Teaser extends Intersection() {
   get aArrow() {
     return this.root.querySelector('a-arrow')
   }
-
-  get textPosition() {
-    const tp = this.getAttribute('text-position') || ''
-    return tp
-  }
 }
