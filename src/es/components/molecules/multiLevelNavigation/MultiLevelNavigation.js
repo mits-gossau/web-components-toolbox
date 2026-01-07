@@ -1730,12 +1730,8 @@ export default class MultiLevelNavigation extends Shadow() {
       section.hidden = true
     })
     
-    // Update navigation headings after mobile navigation is filled
-    setTimeout(() => {
-      this.addSubNavigationHeadings()
-    }, 100)
+    setTimeout(() => {this.addSubNavigationHeadings()}, 100) // update headings after DOM is ready
 
-    // set aria-attributes for nav tag
     setTimeout(() => {
       let menuIconElement = null
       if ((menuIconElement = this.getRootNode().host?.shadowRoot?.querySelector('header > a-menu-icon'))) {
