@@ -340,6 +340,12 @@ export default class MultiLevelNavigation extends Shadow() {
     this.enterEventListener = event => {
       if (event.code === 'Enter' && event.composedPath()[0].matches(':focus')) event.composedPath()[0].click()
     }
+
+    this.escapeKeyListener = event => {
+      if (event.code === 'Escape') {
+        this.handleEscapeKey(event)
+      }
+    }
   }
 
   connectedCallback () {
@@ -361,6 +367,7 @@ export default class MultiLevelNavigation extends Shadow() {
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
     this.addEventListener('keyup', this.enterEventListener)
+    this.addEventListener('keydown', this.escapeKeyListener)
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     this.addCustomColors()
     this.isCheckout = this.parentElement.getAttribute('is-checkout') === 'true'
@@ -382,10 +389,88 @@ export default class MultiLevelNavigation extends Shadow() {
     super.connectedCallback()
   }
 
+  handleEscapeKey (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    const focusedElement = document.activeElement
+    const isInNavigation = this.contains(focusedElement)
+    if (!isInNavigation) return
+    const openFlyouts = this.root.querySelectorAll('.open, [aria-expanded="true"]')
+    this.isDesktop ? this.handleDesktopEscape(focusedElement, openFlyouts) : this.handleMobileEscape(focusedElement, openFlyouts)
+  }
+
+  handleDesktopEscape (focusedElement, openFlyouts) {
+    this.closeAllFlyouts()
+    const mainNavTrigger = this.root.querySelector('nav > ul > li.open a, nav > ul > li[aria-expanded="true"] a')
+    if (mainNavTrigger) {
+      mainNavTrigger.focus()
+    } else {
+      const firstMainNavItem = this.root.querySelector('nav > ul > li:first-child a')
+      if (firstMainNavItem) firstMainNavItem.focus()
+    }
+  }
+
+  handleMobileEscape (focusedElement, openFlyouts) {
+    const currentLevel = this.getCurrentNavigationLevel(focusedElement)
+    currentLevel > 1 ? this.closeCurrentMobileLevel(focusedElement) : this.closeMobileNavigation()
+  }
+
+  closeAllFlyouts () {
+    const openLis = this.root.querySelectorAll('li.open, li.hover-active, li[aria-expanded="true"]')
+    openLis.forEach(li => {
+      li.classList.remove('open', 'hover-active')
+      li.setAttribute('aria-expanded', 'false')
+      const link = li.querySelector('a[aria-haspopup]')
+      if (link) link.setAttribute('aria-expanded', 'false')
+    })
+    if (this.nav) this.nav.setAttribute('aria-expanded', 'false')
+    const backgrounds = this.root.querySelectorAll('.main-background, .grey-background')
+    backgrounds.forEach(bg => bg.remove())
+  }
+
+  getCurrentNavigationLevel (element) {
+    const navLevelDiv = element.closest('[nav-level]')
+    if (navLevelDiv) return parseInt(navLevelDiv.getAttribute('nav-level')) || 1
+    return 1
+  }
+
+  closeCurrentMobileLevel (focusedElement) {
+    const currentNavLevel = focusedElement.closest('[nav-level]')
+    if (currentNavLevel) {
+      currentNavLevel.classList.add('close-right-slide')
+      currentNavLevel.hidden = true
+      const parentLevel = currentNavLevel.previousElementSibling
+      if (parentLevel) {
+        parentLevel.classList.remove('close-right-slide')
+        parentLevel.classList.add('open-left-slide')
+        parentLevel.hidden = false
+        const backButton = parentLevel.querySelector('.navigation-back')
+        const parentTrigger = parentLevel.querySelector('[aria-expanded="true"] a')
+        if (backButton) {
+          backButton.focus()
+        } else if (parentTrigger) {
+          parentTrigger.focus()
+        }
+      }
+    }
+  }
+
+  closeMobileNavigation () {
+    if (this.nav) this.nav.setAttribute('aria-expanded', 'false')
+    const allLevels = this.root.querySelectorAll('[nav-level]')
+    allLevels.forEach(level => {
+      level.hidden = true
+      level.className = ''
+    })
+    const hamburger = this.getRootNode().host?.shadowRoot?.querySelector('header > a-menu-icon')
+    if (hamburger) hamburger.focus()
+  }
+
   disconnectedCallback () {
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
     this.removeEventListener('keyup', this.enterEventListener)
+    this.removeEventListener('keydown', this.escapeKeyListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     Array.from(this.root.querySelectorAll('a')).forEach(a => {
       a.removeEventListener('click', this.aLinkClickListener)
@@ -423,7 +508,18 @@ export default class MultiLevelNavigation extends Shadow() {
       })
     }
     
-    this.addEventListener('click', (event) => {if (event.target.closest('a[aria-haspopup], [aria-expanded]')) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)})
+    this.addEventListener('click', (event) => {
+      if (event.target.closest('a[aria-haspopup], [aria-expanded]')) {
+        setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)
+      }
+    })
+    
+    // Also update on escape key to maintain consistency
+    this.addEventListener('keydown', (event) => {
+      if (event.code === 'Escape') {
+        setTimeout(() => this.setAriaCurrentForSubNavigation(), 100)
+      }
+    })
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
