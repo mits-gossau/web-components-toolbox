@@ -357,17 +357,22 @@ export default class MultiLevelNavigation extends Shadow() {
     this.addEventListener('keyup', this.enterEventListener)
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     this.addCustomColors()
-    super.connectedCallback()
-
     this.isCheckout = this.parentElement.getAttribute('is-checkout') === 'true'
     if (this.isCheckout) this.root.querySelector('nav').style.display = 'none'
-
     this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.addEventListener('blur', this.noScroll))
-
     this.recalculateNavigationHeight()
     this.setActiveNavigationItemBasedOnUrl()
     this.setMainNavigationFontSize()
     this.initAriaCurrentMonitoring()
+    setTimeout(() => {
+      this.addNavigationHeadings()
+      this.addAriaHiddenToDecorativeElements()
+    }, 100)
+    setTimeout(() => {
+      this.addAriaHiddenToDecorativeElements()
+    }, 300)
+    this.addAriaHiddenToDecorativeElements()
+    super.connectedCallback()
   }
 
   disconnectedCallback () {
@@ -380,9 +385,8 @@ export default class MultiLevelNavigation extends Shadow() {
       a.removeEventListener('click', this.aMainLinkHoverListener)
     })
     this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.removeEventListener('blur', this.noScroll))
-    
     if (this.ariaCurrentObserver) this.ariaCurrentObserver.disconnect()
-    
+    if (this.ariaHiddenObserver) this.ariaHiddenObserver.disconnect()
     super.disconnectedCallback()
   }
 
@@ -1542,11 +1546,6 @@ export default class MultiLevelNavigation extends Shadow() {
     this.addEventListener('click', (event) => {if (event.target.closest('a[aria-haspopup], [aria-expanded]')) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)})
   }
 
-  disconnectedCallback () {
-    if (this.ariaCurrentObserver) this.ariaCurrentObserver.disconnect()
-    super.disconnectedCallback?.()
-  }
-
   setAriaCurrentForSubNavigation () {
     const currentPath = window.location.pathname
     const currentHash = window.location.hash
@@ -1599,6 +1598,163 @@ export default class MultiLevelNavigation extends Shadow() {
     if (!normalizedUrl.startsWith('/')) normalizedUrl = '/' + normalizedUrl
     if (normalizedUrl.length > 1 && normalizedUrl.endsWith('/')) normalizedUrl = normalizedUrl.slice(0, -1)
     return normalizedUrl
+  }
+
+  addAriaHiddenToDecorativeElements () {
+    const decorativeSelectors = [
+      '.main-background',
+      '.grey-background', 
+      '[class*="background"]:not([role])',
+      '[class*="decoration"]:not([role])',
+      '[class*="separator"]:not([role])'
+    ]
+
+    decorativeSelectors.forEach(selector => {
+      const elements = this.root.querySelectorAll(selector)
+      elements.forEach(element => {element.setAttribute('aria-hidden', 'true')})
+    })
+
+    this.markDecorativeIcons()
+    this.markDecorativeText()
+    
+    setTimeout(() => {
+      this.markDecorativeIcons()
+      this.markDecorativeText()
+    }, 100)
+    
+    setTimeout(() => {
+      this.markDecorativeIcons() 
+      this.markDecorativeText()
+    }, 500)
+    
+    this.initAriaHiddenMonitoring()
+  }
+
+  markDecorativeIcons () {
+    const allIcons = this.getAllIconsIncludingShadow()
+    allIcons.forEach(icon => {if (this.isDecorativeIcon(icon)) icon.setAttribute('aria-hidden', 'true')})
+  }
+
+  getAllIconsIncludingShadow () {
+    const icons = []
+    const addIconsFromRoot = (root) => {
+      const foundIcons = root.querySelectorAll('a-icon-mdx')
+      foundIcons.forEach(icon => icons.push(icon))
+      const elementsWithShadow = root.querySelectorAll('*')
+      elementsWithShadow.forEach(element => {if (element.shadowRoot) addIconsFromRoot(element.shadowRoot)})
+      const navLevelItems = root.querySelectorAll('m-nav-level-item')
+      navLevelItems.forEach(item => {
+        if (item.shadowRoot) {
+          addIconsFromRoot(item.shadowRoot)
+        } else if (item.connectedCallback || item.root) {
+          setTimeout(() => {
+            if (item.shadowRoot) {
+              const shadowIcons = item.shadowRoot.querySelectorAll('a-icon-mdx')
+              shadowIcons.forEach(icon => {
+                if (!icons.includes(icon)) {
+                  icons.push(icon)
+                  if (this.isDecorativeIcon(icon)) {
+                    icon.setAttribute('aria-hidden', 'true')
+                  }
+                }
+              })
+            }
+          }, 50)
+        }
+      })
+    }
+    addIconsFromRoot(this.root)
+    const oNavWrapper = this.closest('o-nav-wrapper') || this.querySelector('o-nav-wrapper')
+    if (oNavWrapper) {
+      addIconsFromRoot(oNavWrapper)
+      if (oNavWrapper.shadowRoot) addIconsFromRoot(oNavWrapper.shadowRoot)
+    }
+    if (icons.length === 0) addIconsFromRoot(document)
+    if (this.shadowRoot && this.shadowRoot !== this.root) addIconsFromRoot(this.shadowRoot)
+    return icons
+  }
+
+  isDecorativeIcon (icon) {
+    if (icon.hasAttribute('role')) return false
+    const parentElement = icon.parentElement
+    if (!parentElement) return true
+    const iconName = icon.getAttribute('icon-name')
+    if (iconName === 'X' || iconName === 'Close' || iconName === 'Menu') {
+      if (parentElement.hasAttribute('tabindex') || 
+          parentElement.tagName.toLowerCase() === 'button' ||
+          parentElement.classList.contains('close-icon')) {
+        return false
+      }
+    }
+    if (iconName === 'ChevronRight' || iconName === 'ChevronDown' || iconName === 'Arrow') {
+      const interactiveParent = parentElement.closest('[role="link"], [role="button"], [role="menuitem"], a, button')
+      if (interactiveParent && interactiveParent.hasAttribute('role')) return true
+    }
+    return iconName === 'ChevronRight' || iconName === 'ChevronDown' || iconName === 'Arrow'
+  }
+
+  markDecorativeText () {
+    const allSpans = this.getAllSpansIncludingShadow()
+    allSpans.forEach(span => {
+      const textContent = span.textContent?.trim()
+      if (textContent === 'alle anzeigen' || textContent === 'tous afficher' || textContent === 'mostra tutto') span.setAttribute('aria-hidden', 'true')
+    })
+  }
+
+  getAllSpansIncludingShadow () {
+    const spans = []
+    const addSpansFromRoot = (root) => {
+      const foundSpans = root.querySelectorAll('span')
+      foundSpans.forEach(span => spans.push(span))
+      const elementsWithShadow = root.querySelectorAll('*')
+      elementsWithShadow.forEach(element => {if (element.shadowRoot) addSpansFromRoot(element.shadowRoot)})
+    }
+    addSpansFromRoot(this.root)
+    const oNavWrapper = this.closest('o-nav-wrapper') || this.querySelector('o-nav-wrapper')
+    if (oNavWrapper) {
+      addSpansFromRoot(oNavWrapper)
+      if (oNavWrapper.shadowRoot) addSpansFromRoot(oNavWrapper.shadowRoot)
+    }
+    if (this.shadowRoot && this.shadowRoot !== this.root) addSpansFromRoot(this.shadowRoot)
+    return spans
+  }
+
+  initAriaHiddenMonitoring () {
+    if (!this.ariaHiddenObserver && typeof MutationObserver !== 'undefined') {
+      this.ariaHiddenObserver = new MutationObserver((mutations) => {
+        let needsUpdate = false
+        mutations.forEach(mutation => {
+          if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach(node => {
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node.tagName === 'M-NAV-LEVEL-ITEM' || node.querySelector('m-nav-level-item')) needsUpdate = true
+                if (node.tagName === 'A-ICON-MDX' || node.querySelector('a-icon-mdx')) needsUpdate = true
+              }
+            })
+          }
+          if (mutation.target && mutation.target.shadowRoot) needsUpdate = true
+        })
+        if (needsUpdate) {
+          setTimeout(() => {
+            this.markDecorativeIcons()
+            this.markDecorativeText()
+          }, 50)
+        }
+      })
+      
+      this.ariaHiddenObserver.observe(this, {
+        childList: true,
+        subtree: true,
+        attributes: false
+      })
+      
+      if (document.body) {
+        this.ariaHiddenObserver.observe(document.body, {
+          childList: true,
+          subtree: true
+        })
+      }
+    }
   }
 
   setMainNavigationFontSize () {
