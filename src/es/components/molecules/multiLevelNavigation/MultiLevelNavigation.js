@@ -15,6 +15,11 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @attribute {
  *  {boolean} [hover=false]
  *  {boolean} [use-hover-listener=false] use hover listener on navigation // if false it uses click listener
+ *  {string} [main-nav-title] Main navigation heading text for screen readers (default: "Hauptnavigation")
+ *  {string} [sub-nav-title] Sub-navigation base text (default: "Unternavigation")
+ *  {string} [sub-nav-suffix] Suffix for sub-navigation titles (default: "- Unternavigation") 
+ *  {string} [mobile-nav-title] Mobile navigation base text (default: falls back to sub-nav-title)
+ *  {string} [level-text] Text for level numbering (default: "Level")
  * }
  */
 export default class MultiLevelNavigation extends Shadow() {
@@ -163,6 +168,9 @@ export default class MultiLevelNavigation extends Shadow() {
               const wrapperBackgroundDiv = document.createElement('div')
               wrapperBackgroundDiv.className = 'wrapper-background'
               wrapper.prepend(wrapperBackgroundDiv)
+              
+              // update a11y headings after content is loaded
+              setTimeout(() => { this.addSubNavigationHeadings() }, 50)
 
               // add close icon to all flyout
               const closeIconElement = document.createElement('a')
@@ -396,6 +404,20 @@ export default class MultiLevelNavigation extends Shadow() {
     :not(:defined) {
       display: none;
     }
+    
+    /* for screen readers */
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+    
     :host {
       color: black;
       overscroll-behavior: contain;
@@ -888,6 +910,9 @@ export default class MultiLevelNavigation extends Shadow() {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'NAV') return false
       this.nav.appendChild(node)
     })
+    
+    this.addNavigationHeadings() // headings for screen readers
+    
     this.html = this.nav
     return new Promise(resolve => {
       if (this.isDesktop) {
@@ -912,6 +937,102 @@ export default class MultiLevelNavigation extends Shadow() {
   checkMedia (media = this.getAttribute('media')) {
     const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
     return (isMobile ? 'mobile' : 'desktop') === media
+  }
+
+  /**
+   * creates invisible headings (h1, h2, h3) for screen readers
+   */
+  addNavigationHeadings () {
+    const nav = this.root.querySelector('nav')
+    if (!nav) return
+    const existingHeadings = nav.querySelectorAll('.navigation-heading')
+    existingHeadings.forEach(heading => heading.remove())
+    const mainHeading = document.createElement('h1')
+    mainHeading.className = 'visually-hidden navigation-heading'
+    mainHeading.textContent = this.getAttribute('main-nav-title') || this.getAttribute('aria-label') || 'Hauptnavigation'
+    mainHeading.id = 'main-navigation-heading'
+    const firstChild = nav.firstChild
+    nav.insertBefore(mainHeading, firstChild)
+    setTimeout(() => { this.addSubNavigationHeadings() }, 100)
+  }
+
+  addSubNavigationHeadings () {
+    const navWrappers = this.root.querySelectorAll('o-nav-wrapper')
+    navWrappers.forEach((wrapper, wrapperIndex) => {
+      const sections = wrapper.querySelectorAll('section')
+      sections.forEach((section, sectionIndex) => {
+        const navLevelDivs = section.querySelectorAll('div[nav-level]')
+        navLevelDivs.forEach(div => {
+          const navLevel = parseInt(div.getAttribute('nav-level') || '1')
+          const headingLevel = Math.min(navLevel + 1, 6) // h2, h3, h4, h5, h6 (max h6)
+          if (!div.querySelector('.sub-navigation-heading')) {
+            const subHeading = document.createElement(`h${headingLevel}`)
+            subHeading.className = 'visually-hidden sub-navigation-heading navigation-heading'
+            const parentLi = this.findParentLiForNavLevel(div, navLevel)
+            const headingText = this.getNavigationHeadingText(parentLi, navLevel)
+            subHeading.textContent = headingText
+            subHeading.id = `sub-navigation-heading-${wrapperIndex}-${sectionIndex}-${navLevel}`
+            div.insertBefore(subHeading, div.firstChild)
+          }
+        })
+      })
+    })
+
+    const mobileNavDivs = this.root.querySelectorAll('nav > div[nav-level]')
+    mobileNavDivs.forEach((div, index) => {
+      const navLevel = parseInt(div.getAttribute('nav-level') || '1')
+      const headingLevel = Math.min(navLevel + 1, 6)
+      if (!div.querySelector('.mobile-navigation-heading')) {
+        const mobileHeading = document.createElement(`h${headingLevel}`)
+        mobileHeading.className = 'visually-hidden mobile-navigation-heading navigation-heading'
+        const headingText = this.getMobileNavigationHeadingText(div, navLevel)
+        mobileHeading.textContent = headingText
+        mobileHeading.id = `mobile-navigation-heading-${index}-${navLevel}`
+        div.insertBefore(mobileHeading, div.firstChild)
+      }
+    })
+  }
+
+  findParentLiForNavLevel (navDiv, level) {
+    if (level === 1) {
+      const wrapper = navDiv.closest('o-nav-wrapper')
+      return wrapper ? wrapper.parentElement : null
+    }
+    return null
+  }
+
+  getNavigationHeadingText (parentLi, level) {
+    if (level === 1 && parentLi) {
+      const link = parentLi.querySelector('a')
+      const span = link ? link.querySelector('span') : null
+      const subNavSuffix = this.getAttribute('sub-nav-suffix') || '- Unternavigation'
+      if (span && span.textContent.trim()) return `${span.textContent.trim()} ${subNavSuffix}`
+      if (link && link.textContent.trim()) return `${link.textContent.trim()} ${subNavSuffix}`
+    }
+    const baseText = this.getAttribute('sub-nav-title') || 'Unternavigation'
+    const levelText = this.getAttribute('level-text') || 'Level'
+    const levelNames = {
+      1: baseText,
+      2: `${baseText} ${levelText} 2`, 
+      3: `${baseText} ${levelText} 3`
+    }
+    return levelNames[level] || `${baseText} ${levelText} ${level}`
+  }
+
+  getMobileNavigationHeadingText (navDiv, level) {
+    const backButton = navDiv.querySelector('.navigation-back')
+    if (backButton) {
+      const span = backButton.querySelector('span')
+      if (span && span.textContent.trim()) return span.textContent.trim()
+    }
+    const mobileBaseText = this.getAttribute('mobile-nav-title') || this.getAttribute('sub-nav-title') || 'Mobile Unternavigation'
+    const levelText = this.getAttribute('level-text') || 'Level'
+    const levelNames = {
+      1: mobileBaseText,
+      2: `${mobileBaseText} ${levelText} 2`,
+      3: `${mobileBaseText} ${levelText} 3`
+    }
+    return levelNames[level] || `${mobileBaseText} ${levelText} ${level}`
   }
 
   get style () {
@@ -1465,6 +1586,11 @@ export default class MultiLevelNavigation extends Shadow() {
       })
       section.hidden = true
     })
+    
+    // Update navigation headings after mobile navigation is filled
+    setTimeout(() => {
+      this.addSubNavigationHeadings()
+    }, 100)
 
     // set aria-attributes for nav tag
     setTimeout(() => {

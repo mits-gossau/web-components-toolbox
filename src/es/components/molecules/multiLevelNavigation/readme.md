@@ -4,11 +4,76 @@
 
 ## Summary
 
-n/a
+Multi-level navigation component with full accessibility support. Features hierarchical headings for screen readers, ARIA attributes for enhanced navigation experience, and multilingual support for internationalization. Supports both desktop flyout and mobile navigation patterns with keyboard accessibility.
 
 ## Integration
 
-n/a
+The navigation component automatically generates invisible headings (h1, h2, h3) for screen reader users to establish proper navigation structure. All texts can be customized through attributes to support multiple languages.
+
+### Basic Usage
+
+```html
+<m-multi-level-navigation>
+  <!-- Navigation content -->
+</m-multi-level-navigation>
+```
+
+### Multilingual Examples
+
+#### German (Deutsch)
+
+```html
+<m-multi-level-navigation 
+  main-nav-title="Hauptnavigation"
+  sub-nav-title="Unternavigation"
+  sub-nav-suffix="- Unterbereich"
+  mobile-nav-title="Mobile Navigation"
+  level-text="Ebene">
+  <!-- Results in headings like: "Produkte - Unterbereich", "Unternavigation Ebene 2" -->
+</m-multi-level-navigation>
+```
+
+#### French (Français)
+
+```html
+<m-multi-level-navigation 
+  main-nav-title="Navigation principale"
+  sub-nav-title="Sous-navigation"
+  sub-nav-suffix="- Sous-section"
+  mobile-nav-title="Navigation mobile"
+  level-text="Niveau">
+  <!-- Results in headings like: "Produits - Sous-section", "Sous-navigation Niveau 2" -->
+</m-multi-level-navigation>
+```
+
+#### Italian (Italiano)
+
+```html
+<m-multi-level-navigation 
+  main-nav-title="Navigazione principale"
+  sub-nav-title="Sotto-navigazione"
+  sub-nav-suffix="- Sottosezione"
+  mobile-nav-title="Navigazione mobile"
+  level-text="Livello">
+  <!-- Results in headings like: "Prodotti - Sottosezione", "Sotto-navigazione Livello 2" -->
+</m-multi-level-navigation>
+```
+
+### WCAG 2.2 AA Compliance
+
+- **1.3.1 Info and Relationships**: Hierarchical heading structure for assistive technologies
+- **2.1.1 Keyboard**: Full keyboard navigation support
+- **2.4.6 Headings and Labels**: Clear, descriptive headings and labels
+
+### Accessibility Features
+
+The component automatically generates invisible headings for screen reader users:
+
+- **h1**: Main navigation heading
+- **h2**: First level sub-navigation (e.g., "Produkte - Unternavigation")
+- **h3**: Second level sub-navigation (e.g., "Unternavigation Level 2")
+
+These headings use the `.visually-hidden` class to be accessible to screen readers while remaining invisible to sighted users.
 
 ## Templates (Namespace)
 
@@ -19,17 +84,22 @@ n/a
 
 | Attribute Name | Description |
 |----------------|-------------|
-| `animation-duration` |  |
-| `no-scroll` |  |
-| `o-nav-wrapper` |  |
-| `navigation-load` |  |
-| `close-event-name` |  |
-| `namespace` |  |
-| `media` |  |
-| `aria-expanded` |  |
-| `close-other-flyout` |  |
-| `click-anchor` |  |
-| `load-custom-elements` |  |
+| `animation-duration` | Duration of animations in milliseconds |
+| `no-scroll` | Prevents body scrolling when navigation is open |
+| `o-nav-wrapper` | Custom element name for navigation wrapper |
+| `navigation-load` | Event name dispatched when navigation is loaded |
+| `close-event-name` | Event name to listen for closing navigation |
+| `namespace` | CSS namespace for styling variants |
+| `media` | Media query breakpoint for desktop/mobile |
+| `aria-expanded` | ARIA attribute for expanded state |
+| `close-other-flyout` | Event name for closing other flyouts |
+| `click-anchor` | Event name for anchor link clicks |
+| `load-custom-elements` | Event name for loading custom elements |
+| `main-nav-title` | Main navigation heading text for screen readers (default: "Hauptnavigation") |
+| `sub-nav-title` | Sub-navigation base text (default: "Unternavigation") |
+| `sub-nav-suffix` | Suffix for sub-navigation titles (default: "- Unternavigation") |
+| `mobile-nav-title` | Mobile navigation base text (default: falls back to sub-nav-title) |
+| `level-text` | Text for level numbering (default: "Level") |
 
 ## CSS Styles
 
