@@ -21,6 +21,13 @@ import { Shadow } from '../../prototypes/Shadow.js'
  *  {string} [mobile-nav-title] Mobile navigation base text (default: falls back to sub-nav-title)
  *  {string} [level-text] Text for level numbering (default: "Level")
  * }
+ * 
+ * Features:
+ * - Hierarchical headings (h1-h6) for screen reader navigation
+ * - ARIA attributes including aria-current="page" for current page indication
+ * - Keyboard navigation support
+ * - Multilingual text support through attributes
+ * - WCAG 2.2 AA compliance
  */
 export default class MultiLevelNavigation extends Shadow() {
   static get observedAttributes () {
@@ -107,6 +114,10 @@ export default class MultiLevelNavigation extends Shadow() {
 
     this.aLinkClickListener = event => {
       if (event.currentTarget) {
+        // aria-current
+        const href = event.currentTarget.getAttribute('href')
+        if (href && href !== '#' && !href.includes('javascript:')) this.setAriaCurrent(event.currentTarget)
+        
         // If desktop and use-hover-listener attribute exists
         if (this.isDesktop && this.useHoverListener) {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') this.setDesktopMainNavItems(event)
@@ -356,6 +367,7 @@ export default class MultiLevelNavigation extends Shadow() {
     this.recalculateNavigationHeight()
     this.setActiveNavigationItemBasedOnUrl()
     this.setMainNavigationFontSize()
+    this.initAriaCurrentMonitoring()
   }
 
   disconnectedCallback () {
@@ -368,7 +380,39 @@ export default class MultiLevelNavigation extends Shadow() {
       a.removeEventListener('click', this.aMainLinkHoverListener)
     })
     this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.removeEventListener('blur', this.noScroll))
+    
+    if (this.ariaCurrentObserver) this.ariaCurrentObserver.disconnect()
+    
     super.disconnectedCallback()
+  }
+
+  initAriaCurrentMonitoring () {
+    setTimeout(() => { this.setAriaCurrentForSubNavigation() }, 100)
+    if (typeof MutationObserver !== 'undefined') {
+      this.ariaCurrentObserver = new MutationObserver((mutations) => {
+        let shouldCheck = false
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            for (const node of mutation.addedNodes) {
+              if (node.nodeType === Node.ELEMENT_NODE && (node.querySelector && node.querySelector('a[href]'))) {
+                shouldCheck = true
+                break
+              }
+            }
+          }
+          if (mutation.type === 'attributes' && mutation.attributeName === 'aria-expanded') shouldCheck = true
+        })
+        if (shouldCheck) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 50)
+      })
+      this.ariaCurrentObserver.observe(this, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['aria-expanded']
+      })
+    }
+    
+    this.addEventListener('click', (event) => {if (event.target.closest('a[aria-haspopup], [aria-expanded]')) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)})
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -1454,8 +1498,119 @@ export default class MultiLevelNavigation extends Shadow() {
     if (subUrls.length > 0 && navigationItemsUrlNames.length > 0) {
       const activeNavigationName = navigationItemsUrlNames.filter((navUrl) => subUrls.includes(navUrl))[0]
       const activeNavigationItem = navigationItems?.filter((item) => item.getAttribute('url-name').toLowerCase() === activeNavigationName)[0]
-      activeNavigationItem?.classList.add('active')
+      if (activeNavigationItem) {
+        activeNavigationItem.classList.add('active')
+        // Set aria-current="page" on the active navigation link
+        const activeLink = activeNavigationItem.querySelector('a')
+        if (activeLink) {
+          this.setAriaCurrent(activeLink)
+        }
+      }
     }
+    
+    // Also check for exact URL matches in sub-navigation
+    this.setAriaCurrentForSubNavigation()
+  }
+
+  setAriaCurrent (activeLink) {
+    if (!activeLink) return
+    this.clearAriaCurrent()
+    activeLink.setAttribute('aria-current', 'page')
+  }
+
+  clearAriaCurrent () {
+    const allLinks = this.root.querySelectorAll('a[aria-current]')
+    allLinks.forEach(link => link.removeAttribute('aria-current'))
+  }
+
+  initAriaCurrentMonitoring () {
+    setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)
+    
+    if (typeof MutationObserver !== 'undefined') {
+      this.ariaCurrentObserver = new MutationObserver((mutations) => {
+        let shouldCheck = false
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            for (const node of mutation.addedNodes) {
+              if (node.nodeType === Node.ELEMENT_NODE && (node.querySelector && node.querySelector('a[href]'))) {
+                shouldCheck = true
+                break
+              }
+            }
+          }
+          if (mutation.type === 'attributes' && mutation.attributeName === 'aria-expanded') shouldCheck = true
+        })
+        if (shouldCheck) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 50)
+      })
+      
+      this.ariaCurrentObserver.observe(this, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['aria-expanded']
+      })
+    }
+    
+    this.addEventListener('click', (event) => {if (event.target.closest('a[aria-haspopup], [aria-expanded]')) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)})
+  }
+
+  disconnectedCallback () {
+    if (this.ariaCurrentObserver) this.ariaCurrentObserver.disconnect()
+    super.disconnectedCallback?.()
+  }
+
+  setAriaCurrentForSubNavigation () {
+    const currentPath = window.location.pathname
+    const currentHash = window.location.hash
+    const currentFullUrl = currentPath + currentHash
+    let allNavLinks = this.root.querySelectorAll('a[href]')
+    const componentLinks = this.querySelectorAll('a[href]')
+    const allLinks = new Set([...allNavLinks, ...componentLinks])
+    allNavLinks = Array.from(allLinks)
+    let exactMatch = null
+    let pathMatch = null
+    let bestMatch = null
+    let bestMatchScore = 0
+    let relativeUrlMatch = null
+    allNavLinks.forEach(link => {
+      const href = link.getAttribute('href')
+      if (!href || href === '#') return
+      const normalizedHref = this.normalizeUrl(href)
+      const normalizedCurrentPath = this.normalizeUrl(currentPath)
+      const normalizedCurrentFullUrl = this.normalizeUrl(currentFullUrl)
+      const isExactMatch = normalizedHref === normalizedCurrentFullUrl || normalizedHref === normalizedCurrentPath
+      if (isExactMatch) {
+        if (href.startsWith('/')) {
+          relativeUrlMatch = link
+        } else if (!relativeUrlMatch) {
+          exactMatch = link
+        }
+      }
+      if (normalizedCurrentPath.startsWith(normalizedHref) && normalizedHref !== '/' && normalizedHref.length > 1) {
+        const matchScore = normalizedHref.length
+        if (matchScore > bestMatchScore) {
+          bestMatch = link
+          bestMatchScore = matchScore
+        }
+      }
+    })
+    const targetLink = relativeUrlMatch || exactMatch || pathMatch || bestMatch
+    if (targetLink) this.setAriaCurrent(targetLink)
+  }
+  normalizeUrl (url) {
+    if (!url) return ''
+    let normalizedUrl = url
+    if (normalizedUrl.startsWith('http://') || normalizedUrl.startsWith('https://')) {
+      try {
+        const urlObj = new URL(normalizedUrl)
+        normalizedUrl = urlObj.pathname
+      } catch (e) {
+        return ''
+      }
+    }
+    if (!normalizedUrl.startsWith('/')) normalizedUrl = '/' + normalizedUrl
+    if (normalizedUrl.length > 1 && normalizedUrl.endsWith('/')) normalizedUrl = normalizedUrl.slice(0, -1)
+    return normalizedUrl
   }
 
   setMainNavigationFontSize () {

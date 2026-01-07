@@ -72,8 +72,21 @@ The component automatically generates invisible headings for screen reader users
 - **h1**: Main navigation heading
 - **h2**: First level sub-navigation (e.g., "Produkte - Unternavigation")
 - **h3**: Second level sub-navigation (e.g., "Unternavigation Level 2")
+- **h4**: Third level sub-navigation (e.g., "Unternavigation Level 3")
 
 These headings use the `.visually-hidden` class to be accessible to screen readers while remaining invisible to sighted users.
+
+#### ARIA Current Page Support
+
+The component automatically manages `aria-current="page"` attributes to indicate the current page:
+
+- **Automatic detection**: Compares current URL with navigation links
+- **Exact matching**: Prioritizes exact URL matches (including hash fragments)
+- **Path matching**: Falls back to path-only matches when no exact match exists
+- **Click handling**: Updates `aria-current` when users click navigation links
+- **Unique assignment**: Ensures only one link has `aria-current="page"` at any time
+
+This helps screen reader users understand which page they are currently viewing within the navigation context.
 
 ## Templates (Namespace)
 
