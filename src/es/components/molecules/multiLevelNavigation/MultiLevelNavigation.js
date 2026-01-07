@@ -394,20 +394,27 @@ export default class MultiLevelNavigation extends Shadow() {
     event.stopPropagation()
     const focusedElement = document.activeElement
     const isInNavigation = this.contains(focusedElement)
-    if (!isInNavigation) return
     const openFlyouts = this.root.querySelectorAll('.open, [aria-expanded="true"]')
+    if (!isInNavigation && openFlyouts.length === 0) return
     this.isDesktop ? this.handleDesktopEscape(focusedElement, openFlyouts) : this.handleMobileEscape(focusedElement, openFlyouts)
   }
 
   handleDesktopEscape (focusedElement, openFlyouts) {
+    let mainNavTrigger = this.root.querySelector('nav > ul > li.open')
+    if (!mainNavTrigger) mainNavTrigger = this.root.querySelector('nav > ul > li[aria-expanded="true"]')
     this.closeAllFlyouts()
-    const mainNavTrigger = this.root.querySelector('nav > ul > li.open a, nav > ul > li[aria-expanded="true"] a')
-    if (mainNavTrigger) {
-      mainNavTrigger.focus()
-    } else {
-      const firstMainNavItem = this.root.querySelector('nav > ul > li:first-child a')
-      if (firstMainNavItem) firstMainNavItem.focus()
-    }
+    setTimeout(() => {
+      if (mainNavTrigger) {
+        mainNavTrigger.setAttribute('tabindex', '0')
+        mainNavTrigger.focus()
+      } else {
+        const firstMainNavItem = this.root.querySelector('nav > ul > li:first-child')
+        if (firstMainNavItem) {
+          firstMainNavItem.setAttribute('tabindex', '0')
+          firstMainNavItem.focus()
+        }
+      }
+    }, 50)
   }
 
   handleMobileEscape (focusedElement, openFlyouts) {
@@ -507,19 +514,8 @@ export default class MultiLevelNavigation extends Shadow() {
         attributeFilter: ['aria-expanded']
       })
     }
-    
-    this.addEventListener('click', (event) => {
-      if (event.target.closest('a[aria-haspopup], [aria-expanded]')) {
-        setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)
-      }
-    })
-    
-    // Also update on escape key to maintain consistency
-    this.addEventListener('keydown', (event) => {
-      if (event.code === 'Escape') {
-        setTimeout(() => this.setAriaCurrentForSubNavigation(), 100)
-      }
-    })
+    this.addEventListener('click', (event) => {if (event.target.closest('a[aria-haspopup], [aria-expanded]')) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)})
+    this.addEventListener('keydown', (event) => {if (event.code === 'Escape') setTimeout(() => this.setAriaCurrentForSubNavigation(), 100)})
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
