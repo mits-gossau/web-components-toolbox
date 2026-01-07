@@ -15,9 +15,9 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @attribute {
  *  {boolean} [hover=false]
  *  {boolean} [use-hover-listener=false] use hover listener on navigation // if false it uses click listener
- *  {string} [main-nav-title] Main navigation heading text for screen readers (default: "Hauptnavigation")
- *  {string} [sub-nav-title] Sub-navigation base text (default: "Unternavigation")
- *  {string} [sub-nav-suffix] Suffix for sub-navigation titles (default: "- Unternavigation") 
+ *  {string} [main-nav-title] Main navigation heading text for screen readers (default: "Main Navigation")
+ *  {string} [sub-nav-title] Sub-navigation base text (default: "Sub Navigation")
+ *  {string} [sub-nav-suffix] Suffix for sub-navigation titles (default: "- Sub Navigation") 
  *  {string} [mobile-nav-title] Mobile navigation base text (default: falls back to sub-nav-title)
  *  {string} [level-text] Text for level numbering (default: "Level")
  * }
@@ -247,11 +247,15 @@ export default class MultiLevelNavigation extends Shadow() {
         if (!target.classList.contains('hover-active')) {
           target.classList.add('hover-active')
           target.setAttribute('aria-expanded', 'true')
+          const link = target.querySelector('a[aria-haspopup]')
+          if (link) link.setAttribute('aria-expanded', 'true')
           const currentEventTarget = target
           if (target && !target.hasAttribute('sub-nav') && target.classList.contains('hover-active')) {
             setTimeout(() => {
               currentEventTarget.classList.remove('hover-active')
               currentEventTarget.setAttribute('aria-expanded', 'false')
+              const link = currentEventTarget.querySelector('a[aria-haspopup]')
+              if (link) link.setAttribute('aria-expanded', 'false')
             }, 2000)
           }
         }
@@ -262,6 +266,8 @@ export default class MultiLevelNavigation extends Shadow() {
               Array.from(ul.querySelectorAll('li')).forEach(li => {
                 li.classList.remove('hover-active')
                 li.setAttribute('aria-expanded', 'false')
+                const link = li.querySelector('a[aria-haspopup]')
+                if (link) link.setAttribute('aria-expanded', 'false')
               })
               ul.scrollTo(0, 0)
               ul.style.display = 'none'
@@ -367,6 +373,7 @@ export default class MultiLevelNavigation extends Shadow() {
     setTimeout(() => {
       this.addNavigationHeadings()
       this.addAriaHiddenToDecorativeElements()
+      this.addScreenReaderLabels()
     }, 100)
     setTimeout(() => {
       this.addAriaHiddenToDecorativeElements()
@@ -1273,6 +1280,8 @@ export default class MultiLevelNavigation extends Shadow() {
       currentUlElement.style.setProperty('--multi-level-navigation-default-logo-default-width', `${logoWidth}`)
       this.nav.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+      const link = event.currentTarget.parentNode.querySelector('a[aria-haspopup]')
+      if (link) link.setAttribute('aria-expanded', 'true')
       isFlyoutOpen = Array.from(currentUlElement.querySelectorAll(':scope > li')).some(el => el.classList.contains('open'))
       // TODO: this should focus on the first element in the dropdown on desktop but does not have an effect
       if (!isFlyoutOpen) event.currentTarget.nextElementSibling.querySelector(this.focusElSelector)?.focus()
@@ -1289,6 +1298,8 @@ export default class MultiLevelNavigation extends Shadow() {
   setMobileMainNavItems (event) {
     // set the currently clicked/touched aria expanded attribute
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+    const link = event.currentTarget.parentNode.querySelector('a[aria-haspopup]')
+    if (link) link.setAttribute('aria-expanded', 'true')
 
     const navWrapper = this.root.querySelector('nav')
     const activeMainLiIndex = +event.currentTarget.parentNode.getAttribute('sub-nav-control')
@@ -1315,10 +1326,14 @@ export default class MultiLevelNavigation extends Shadow() {
       if (li.hasAttribute('aria-expanded')) li.setAttribute('aria-expanded', 'false')
       li.classList.remove('hover-active')
       li.setAttribute('aria-expanded', 'false')
+      const link = li.querySelector('a[aria-haspopup]')
+      if (link) link.setAttribute('aria-expanded', 'false')
     })
 
     event.currentTarget.parentNode.classList.add('hover-active')
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+    const link = event.currentTarget.parentNode.querySelector('a[aria-haspopup]')
+    if (link) link.setAttribute('aria-expanded', 'true')
 
     let subUl = null
     if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute('sub-nav-id') === event.currentTarget.parentNode.getAttribute('sub-nav')))) {
@@ -1328,6 +1343,8 @@ export default class MultiLevelNavigation extends Shadow() {
         Array.from(ul.querySelectorAll('li')).forEach(li => {
           li.classList.remove('hover-active')
           li.setAttribute('aria-expanded', 'false')
+          const link = li.querySelector('a[aria-haspopup]')
+          if (link) link.setAttribute('aria-expanded', 'false')
         })
       })
       subUl.parentElement.hidden = false
@@ -1719,6 +1736,87 @@ export default class MultiLevelNavigation extends Shadow() {
     return spans
   }
 
+  addScreenReaderLabels () {
+    this.addNavigationLabels()
+    this.addSubMenuLabels()
+    this.addExpandCollapseLabels()
+    this.addLandmarkLabels()
+  }
+
+  addNavigationLabels () {
+    const nav = this.root.querySelector('nav')
+    if (nav) {
+      if (!nav.hasAttribute('aria-label') && !nav.hasAttribute('aria-labelledby')) {
+        const mainNavTitle = this.getAttribute('main-nav-title') || 'Main Navigation'
+        nav.setAttribute('aria-label', mainNavTitle)
+      }
+      if (!nav.hasAttribute('role')) nav.setAttribute('role', 'navigation')
+    }
+  }
+
+  addSubMenuLabels () {
+    const subMenus = this.root.querySelectorAll('[role="menu"], ul[mobile-navigation-name]')
+    subMenus.forEach(menu => {
+      const menuName = menu.getAttribute('mobile-navigation-name') || menu.getAttribute('aria-label') || this.getMenuNameFromContext(menu)
+      if (menuName && !menu.hasAttribute('aria-label')) {
+        const subNavTitle = this.getAttribute('sub-nav-title') || 'Sub Navigation'
+        menu.setAttribute('aria-label', `${menuName} - ${subNavTitle}`)
+      }
+    })
+  }
+
+  addExpandCollapseLabels () {
+    const expandableItems = this.root.querySelectorAll('[aria-haspopup="true"], [aria-controls]')
+    expandableItems.forEach(item => {
+      if (!item.hasAttribute('aria-label') && !item.hasAttribute('aria-labelledby')) {
+        const linkText = item.textContent?.trim() || item.innerText?.trim() || 'Navigation Item'
+        const isExpanded = item.getAttribute('aria-expanded') === 'true'
+        const expandText = isExpanded ? 'collapse' : 'expand'
+        const expandTextDE = isExpanded ? 'zuklappen' : 'aufklappen'
+        const expandTextFR = isExpanded ? 'réduire' : 'développer'
+        const expandTextIT = isExpanded ? 'comprimi' : 'espandi'
+        
+        const lang = document.documentElement.lang || 'en'
+        let expandLabel = expandText
+        
+        if (lang.startsWith('de')) expandLabel = expandTextDE
+        else if (lang.startsWith('fr')) expandLabel = expandTextFR
+        else if (lang.startsWith('it')) expandLabel = expandTextIT
+        
+        item.setAttribute('aria-label', `${linkText} - ${expandLabel}`)
+      }
+    })
+  }
+
+  addLandmarkLabels () {
+    const oNavWrapper = this.closest('o-nav-wrapper') || this.querySelector('o-nav-wrapper')
+    if (oNavWrapper && !oNavWrapper.hasAttribute('aria-label')) {
+      const wrapperLabel = this.getAttribute('main-nav-title') || 'Navigation Area'
+      oNavWrapper.setAttribute('aria-label', wrapperLabel)
+      oNavWrapper.setAttribute('role', 'banner')
+    }
+    
+    const sections = this.root.querySelectorAll('section')
+    sections.forEach((section, index) => {
+      if (!section.hasAttribute('aria-label')) {
+        const levelText = this.getAttribute('level-text') || 'Level'
+        section.setAttribute('aria-label', `Navigation ${levelText} ${index + 1}`)
+        section.setAttribute('role', 'region')
+      }
+    })
+  }
+
+  getMenuNameFromContext (menu) {
+    const parentLi = menu.closest('li')
+    if (parentLi) {
+      const link = parentLi.querySelector('a')
+      if (link) return link.textContent?.trim() || link.innerText?.trim() || null
+    }
+    const prevElement = menu.previousElementSibling
+    if (prevElement && prevElement.tagName === 'A') return prevElement.textContent?.trim() || prevElement.innerText?.trim() || null
+    return null
+  }
+
   initAriaHiddenMonitoring () {
     if (!this.ariaHiddenObserver && typeof MutationObserver !== 'undefined') {
       this.ariaHiddenObserver = new MutationObserver((mutations) => {
@@ -1738,6 +1836,7 @@ export default class MultiLevelNavigation extends Shadow() {
           setTimeout(() => {
             this.markDecorativeIcons()
             this.markDecorativeText()
+            this.addScreenReaderLabels()
           }, 50)
         }
       })
