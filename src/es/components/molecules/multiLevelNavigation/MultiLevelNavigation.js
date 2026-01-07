@@ -1489,26 +1489,17 @@ export default class MultiLevelNavigation extends Shadow() {
     const subUrls = []
     const navigationItemsUrlNames = []
     const navigationItems = Array.from(this.root.querySelectorAll('nav > ul > li[url-name]'))
-
-    // get first 2 subdomain of current url
     window.location.pathname.split('/')?.filter((subUrl) => subUrl).slice(0, 2).forEach((urlName) => subUrls.push(urlName.toLowerCase()))
-    // get the url name attributes of the main li navigation items
     navigationItems.forEach(li => navigationItemsUrlNames.push(li.getAttribute('url-name').toLowerCase()))
-
     if (subUrls.length > 0 && navigationItemsUrlNames.length > 0) {
       const activeNavigationName = navigationItemsUrlNames.filter((navUrl) => subUrls.includes(navUrl))[0]
       const activeNavigationItem = navigationItems?.filter((item) => item.getAttribute('url-name').toLowerCase() === activeNavigationName)[0]
       if (activeNavigationItem) {
         activeNavigationItem.classList.add('active')
-        // Set aria-current="page" on the active navigation link
         const activeLink = activeNavigationItem.querySelector('a')
-        if (activeLink) {
-          this.setAriaCurrent(activeLink)
-        }
+        if (activeLink) this.setAriaCurrent(activeLink)
       }
     }
-    
-    // Also check for exact URL matches in sub-navigation
     this.setAriaCurrentForSubNavigation()
   }
 
@@ -1525,7 +1516,6 @@ export default class MultiLevelNavigation extends Shadow() {
 
   initAriaCurrentMonitoring () {
     setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)
-    
     if (typeof MutationObserver !== 'undefined') {
       this.ariaCurrentObserver = new MutationObserver((mutations) => {
         let shouldCheck = false
@@ -1542,7 +1532,6 @@ export default class MultiLevelNavigation extends Shadow() {
         })
         if (shouldCheck) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 50)
       })
-      
       this.ariaCurrentObserver.observe(this, {
         childList: true,
         subtree: true,
@@ -1550,7 +1539,6 @@ export default class MultiLevelNavigation extends Shadow() {
         attributeFilter: ['aria-expanded']
       })
     }
-    
     this.addEventListener('click', (event) => {if (event.target.closest('a[aria-haspopup], [aria-expanded]')) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)})
   }
 
