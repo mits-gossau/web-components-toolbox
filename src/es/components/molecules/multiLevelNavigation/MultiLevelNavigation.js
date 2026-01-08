@@ -470,7 +470,6 @@ export default class MultiLevelNavigation extends Shadow() {
   }
 
   handleArrowNavigation (event) {
-    if (!this.isDesktop) return
     const navigation = this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation')
     const navigationItems = navigation.root.querySelectorAll('nav > ul > li:not(.grey-background) > a')
     if (!navigationItems || navigationItems.length === 0) return
@@ -479,18 +478,22 @@ export default class MultiLevelNavigation extends Shadow() {
       this.currentIndex = Array.from(navigationItems).indexOf(focusedElement)
     }
     if (this.currentIndex === -1) return
-    if (event.key === 'ArrowRight') {
-      const nextIndex = (this.currentIndex + 1) % navigationItems.length
-      navigationItems[this.currentIndex].setAttribute('tabindex', '-1')
-      navigationItems[nextIndex].setAttribute('tabindex', '0')
-      navigationItems[nextIndex].focus()
-      this.currentIndex = nextIndex
-    } else if (event.key === 'ArrowLeft') {
-      const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
-      navigationItems[this.currentIndex].setAttribute('tabindex', '-1')
-      navigationItems[prevIndex].setAttribute('tabindex', '0')
-      navigationItems[prevIndex].focus()
-      this.currentIndex = prevIndex
+    const keyMap = this.isDesktop
+        ? { next: 'ArrowRight', prev: 'ArrowLeft' } // desktop: left/right
+        : { next: 'ArrowDown', prev: 'ArrowUp' };  // mobile: up/down
+    if (event.key === keyMap.next) {
+        const nextIndex = (this.currentIndex + 1) % navigationItems.length
+        updateFocus(this.currentIndex, nextIndex, navigationItems)
+        this.currentIndex = nextIndex
+    } else if (event.key === keyMap.prev) {
+        const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
+        updateFocus(this.currentIndex, prevIndex, navigationItems)
+        this.currentIndex = prevIndex
+    }
+    function updateFocus(currentIndex, targetIndex, items) {
+        items[currentIndex].setAttribute('tabindex', '-1')
+        items[targetIndex].setAttribute('tabindex', '0')
+        items[targetIndex].focus()
     }
   }
 
