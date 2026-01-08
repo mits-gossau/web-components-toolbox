@@ -49,6 +49,7 @@ export default class MultiLevelNavigation extends Shadow() {
     this.isHigherDevice = window.innerHeight > this.desktopHeightBreakpoint
     this.hoverDelay = this.hasAttribute('navigation-hover-delay') || 100
     this.focusElSelector = 'm-nav-level-item,a:not(:has(> m-nav-level-item)):not(.navigation-back)'
+    this.currentIndex = -1
 
     this.hideMobileNavigation()
 
@@ -337,15 +338,9 @@ export default class MultiLevelNavigation extends Shadow() {
     }
 
     // accessibility
-    this.enterEventListener = event => {
-      if (event.code === 'Enter' && event.composedPath()[0].matches(':focus')) event.composedPath()[0].click()
-    }
-
-    this.escapeKeyListener = event => {
-      if (event.code === 'Escape') {
-        this.handleEscapeKey(event)
-      }
-    }
+    this.enterEventListener = event => { if (event.code === 'Enter' && event.composedPath()[0].matches(':focus')) event.composedPath()[0].click() }
+    this.escapeKeyListener = event => { if (event.code === 'Escape') this.handleEscapeKey(event) }
+    this.arrowKeyListener = event => { if(event.code === 'ArrowUp' || event.code === 'ArrowDown' || event.code === 'ArrowLeft' || event.code === 'ArrowRight') this.handleArrowNavigation(event) }
   }
 
   connectedCallback () {
@@ -368,6 +363,7 @@ export default class MultiLevelNavigation extends Shadow() {
     self.addEventListener('click', this.selfClickListener)
     this.addEventListener('keyup', this.enterEventListener)
     this.addEventListener('keydown', this.escapeKeyListener)
+    this.addEventListener('keydown', this.arrowKeyListener)
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     this.addCustomColors()
     this.isCheckout = this.parentElement.getAttribute('is-checkout') === 'true'
@@ -471,6 +467,31 @@ export default class MultiLevelNavigation extends Shadow() {
     })
     const hamburger = this.getRootNode().host?.shadowRoot?.querySelector('header > a-menu-icon')
     if (hamburger) hamburger.focus()
+  }
+
+  handleArrowNavigation (event) {
+    if (!this.isDesktop) return
+    const navigation = this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation')
+    const navigationItems = navigation.root.querySelectorAll('nav > ul > li:not(.grey-background) > a')
+    if (!navigationItems || navigationItems.length === 0) return
+    if (this.currentIndex === -1) {
+      const focusedElement = navigation.root.querySelectorAll('nav > ul > li.active > a, nav > ul > li:focus > a')[0]
+      this.currentIndex = Array.from(navigationItems).indexOf(focusedElement)
+    }
+    if (this.currentIndex === -1) return
+    if (event.key === 'ArrowRight') {
+      const nextIndex = (this.currentIndex + 1) % navigationItems.length
+      navigationItems[this.currentIndex].setAttribute('tabindex', '-1')
+      navigationItems[nextIndex].setAttribute('tabindex', '0')
+      navigationItems[nextIndex].focus()
+      this.currentIndex = nextIndex
+    } else if (event.key === 'ArrowLeft') {
+      const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
+      navigationItems[this.currentIndex].setAttribute('tabindex', '-1')
+      navigationItems[prevIndex].setAttribute('tabindex', '0')
+      navigationItems[prevIndex].focus()
+      this.currentIndex = prevIndex
+    }
   }
 
   disconnectedCallback () {
