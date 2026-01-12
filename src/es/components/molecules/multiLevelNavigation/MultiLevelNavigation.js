@@ -469,6 +469,37 @@ export default class MultiLevelNavigation extends Shadow() {
     if (hamburger) hamburger.focus()
   }
 
+  /**
+   * Helper function to set element as focusable and focus it
+   * @param {HTMLElement} element - Element to focus
+   */
+  setElementFocus(element) {
+    if (element) {
+      element.setAttribute('tabindex', '0')
+      element.focus()
+    }
+  }
+
+  /**
+   * Helper function to remove focus from element
+   * @param {HTMLElement} element - Element to unfocus
+   */
+  removeElementFocus(element) {
+    if (element) {
+      element.setAttribute('tabindex', '-1')
+    }
+  }
+
+  /**
+   * Helper function to transfer focus from one element to another
+   * @param {HTMLElement} fromElement - Element to remove focus from
+   * @param {HTMLElement} toElement - Element to focus
+   */
+  transferFocus(fromElement, toElement) {
+    this.removeElementFocus(fromElement)
+    this.setElementFocus(toElement)
+  }
+
   handleArrowNavigation(event) {
     event.preventDefault()
 
@@ -496,9 +527,7 @@ export default class MultiLevelNavigation extends Shadow() {
       if (submenu && parentLi.getAttribute('aria-expanded') === 'true') {
         const activeMainMenuHasFocus = currentElement.tabIndex === 0 || document.activeElement === currentElement
         if (activeMainMenuHasFocus && submenuItems && submenuItems.length > 0) {
-          currentElement.setAttribute('tabindex', '-1')
-          submenuItems[0].setAttribute('tabindex', '0')
-          submenuItems[0].focus()
+          this.transferFocus(currentElement, submenuItems[0])
           return
         }
 
@@ -507,9 +536,7 @@ export default class MultiLevelNavigation extends Shadow() {
 
         if (submenuIndex !== -1 && submenuIndex < submenuItems.length - 1) {
           const nextSubmenuItem = submenuItems[submenuIndex + 1]
-          focusedSubmenuItem.setAttribute('tabindex', '-1')
-          nextSubmenuItem.setAttribute('tabindex', '0')
-          nextSubmenuItem.focus()
+          this.transferFocus(focusedSubmenuItem, nextSubmenuItem)
           return
         } else if (submenuIndex === submenuItems.length - 1) {
           const nextIndex = (this.currentIndex + 1) % navigationItems.length
@@ -537,14 +564,10 @@ export default class MultiLevelNavigation extends Shadow() {
 
         if (submenuIndex > 0) {
           const prevSubmenuItem = submenuItems[submenuIndex - 1]
-          focusedSubmenuItem.setAttribute('tabindex', '-1')
-          prevSubmenuItem.setAttribute('tabindex', '0')
-          prevSubmenuItem.focus()
+          this.transferFocus(focusedSubmenuItem, prevSubmenuItem)
           return
         } else if (submenuIndex === 0) {
-          focusedSubmenuItem.setAttribute('tabindex', '-1')
-          currentElement.setAttribute('tabindex', '0')
-          currentElement.focus()
+          this.transferFocus(focusedSubmenuItem, currentElement)
           return
         }
       }
@@ -564,10 +587,8 @@ export default class MultiLevelNavigation extends Shadow() {
       this.currentIndex = prevIndex
     }
 
-    function updateFocus(currentIndex, targetIndex, items) {
-      items[currentIndex].setAttribute('tabindex', '-1')
-      items[targetIndex].setAttribute('tabindex', '0')
-      items[targetIndex].focus()
+    const updateFocus = (currentIndex, targetIndex, items) => {
+      this.transferFocus(items[currentIndex], items[targetIndex])
     }
   }
 
