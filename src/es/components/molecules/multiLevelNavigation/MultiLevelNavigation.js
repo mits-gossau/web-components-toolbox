@@ -469,31 +469,105 @@ export default class MultiLevelNavigation extends Shadow() {
     if (hamburger) hamburger.focus()
   }
 
-  handleArrowNavigation (event) {
+  handleArrowNavigation(event) {
+    event.preventDefault()
+
     const navigation = this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation')
     const navigationItems = navigation.root.querySelectorAll('nav > ul > li:not(.grey-background) > a')
     if (!navigationItems || navigationItems.length === 0) return
+
     if (this.currentIndex === -1) {
-      const focusedElement = navigation.root.querySelectorAll('nav > ul > li.active > a, nav > ul > li:focus > a')[0]
-      this.currentIndex = Array.from(navigationItems).indexOf(focusedElement)
+      const activeElement = navigation.root.querySelector('nav > ul > li.active > a')
+      this.currentIndex = activeElement ? Array.from(navigationItems).indexOf(activeElement) : 0
     }
+
     if (this.currentIndex === -1) return
+
     const keyMap = this.isDesktop
-        ? { next: 'ArrowRight', prev: 'ArrowLeft' } // desktop: left/right
-        : { next: 'ArrowDown', prev: 'ArrowUp' };  // mobile: up/down
-    if (event.key === keyMap.next) {
-        const nextIndex = (this.currentIndex + 1) % navigationItems.length
-        updateFocus(this.currentIndex, nextIndex, navigationItems)
-        this.currentIndex = nextIndex
+      ? { next: 'ArrowRight', prev: 'ArrowLeft', down: 'ArrowDown', up: 'ArrowUp' }
+      : { next: 'ArrowDown', prev: 'ArrowUp' }
+
+    const currentElement = navigationItems[this.currentIndex]
+    const parentLi = currentElement.closest('li')
+    const submenu = parentLi.querySelector('ul[role="menu"]')
+    const submenuItems = submenu ? submenu.querySelectorAll('li[role="menuitem"]') : null
+
+    if (event.key === keyMap.down) {
+      if (submenu && parentLi.getAttribute('aria-expanded') === 'true') {
+        const activeMainMenuHasFocus = currentElement.tabIndex === 0 || document.activeElement === currentElement
+        if (activeMainMenuHasFocus && submenuItems && submenuItems.length > 0) {
+          currentElement.setAttribute('tabindex', '-1')
+          submenuItems[0].setAttribute('tabindex', '0')
+          submenuItems[0].focus()
+          return
+        }
+
+        const focusedSubmenuItem = submenuItems && Array.from(submenuItems).find(item => item.tabIndex === 0 || document.activeElement === item)
+        const submenuIndex = focusedSubmenuItem ? Array.from(submenuItems).indexOf(focusedSubmenuItem) : -1
+
+        if (submenuIndex !== -1 && submenuIndex < submenuItems.length - 1) {
+          const nextSubmenuItem = submenuItems[submenuIndex + 1]
+          focusedSubmenuItem.setAttribute('tabindex', '-1')
+          nextSubmenuItem.setAttribute('tabindex', '0')
+          nextSubmenuItem.focus()
+          return
+        } else if (submenuIndex === submenuItems.length - 1) {
+          const nextIndex = (this.currentIndex + 1) % navigationItems.length
+          updateFocus(this.currentIndex, nextIndex, navigationItems)
+          this.currentIndex = nextIndex
+          return
+        }
+      }
+
+      if (submenu && parentLi.getAttribute('aria-expanded') === 'false') {
+        currentElement.click()
+        parentLi.setAttribute('aria-expanded', 'true')
+        currentElement.setAttribute('aria-expanded', 'true')
+        return
+      }
+
+      const nextIndex = (this.currentIndex + 1) % navigationItems.length
+      updateFocus(this.currentIndex, nextIndex, navigationItems)
+      this.currentIndex = nextIndex
+
+    } else if (event.key === keyMap.up) {
+      if (submenu && parentLi.getAttribute('aria-expanded') === 'true') {
+        const focusedSubmenuItem = submenuItems && Array.from(submenuItems).find(item => item.tabIndex === 0 || document.activeElement === item)
+        const submenuIndex = focusedSubmenuItem ? Array.from(submenuItems).indexOf(focusedSubmenuItem) : -1
+
+        if (submenuIndex > 0) {
+          const prevSubmenuItem = submenuItems[submenuIndex - 1]
+          focusedSubmenuItem.setAttribute('tabindex', '-1')
+          prevSubmenuItem.setAttribute('tabindex', '0')
+          prevSubmenuItem.focus()
+          return
+        } else if (submenuIndex === 0) {
+          focusedSubmenuItem.setAttribute('tabindex', '-1')
+          currentElement.setAttribute('tabindex', '0')
+          currentElement.focus()
+          return
+        }
+      }
+
+      const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
+      updateFocus(this.currentIndex, prevIndex, navigationItems)
+      this.currentIndex = prevIndex
+
+    } else if (event.key === keyMap.next) {
+      const nextIndex = (this.currentIndex + 1) % navigationItems.length
+      updateFocus(this.currentIndex, nextIndex, navigationItems)
+      this.currentIndex = nextIndex
+
     } else if (event.key === keyMap.prev) {
-        const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
-        updateFocus(this.currentIndex, prevIndex, navigationItems)
-        this.currentIndex = prevIndex
+      const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
+      updateFocus(this.currentIndex, prevIndex, navigationItems)
+      this.currentIndex = prevIndex
     }
+
     function updateFocus(currentIndex, targetIndex, items) {
-        items[currentIndex].setAttribute('tabindex', '-1')
-        items[targetIndex].setAttribute('tabindex', '0')
-        items[targetIndex].focus()
+      items[currentIndex].setAttribute('tabindex', '-1')
+      items[targetIndex].setAttribute('tabindex', '0')
+      items[targetIndex].focus()
     }
   }
 
@@ -771,6 +845,7 @@ export default class MultiLevelNavigation extends Shadow() {
       margin: 0 4px; /* space for outlines */
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title {
+      margin-top: 4px;
       padding: 1em;
       --ul-li-padding-left: 0.75em;
       --a-font-weight: 500;
