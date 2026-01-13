@@ -104,6 +104,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
         if (summary && (summary.contains(event.target) || event.target === summary)) {
           event.preventDefault()
           this.details.hasAttribute('open') ? this.details.removeAttribute('open') : this.details.setAttribute('open', '')
+          this.content.querySelector('a')?.focus()
         }
       }
       if (event.key === 'Escape' && this.details && this.details.hasAttribute('open')) {
@@ -639,6 +640,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
     this.summary.setAttribute('tabindex', '0')
     this.summary.setAttribute('role', 'button')
     this.summary.setAttribute('aria-expanded', this.details.hasAttribute('open') ? 'true' : 'false')
+    if (this.summary.querySelector('a')) this.summary.setAttribute('tabindex', '-1')
     this.html = this.style
   }
 

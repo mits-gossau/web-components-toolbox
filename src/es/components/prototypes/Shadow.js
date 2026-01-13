@@ -123,6 +123,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
             outline-style: var(--outline-style-focus-visible, var(--outline-style, solid));
             outline-width: var(--outline-width-focus-visible, var(--outline-width, 2px));
             outline-offset: var(--outline-offset-focus-visible, var(--outline-offset, 2px));
+            z-index: var(--z-index-focus-visible, var(--z-index, 100));
           }
         `, undefined, undefined, undefined, this._cssTabindex)
       }

@@ -48,6 +48,7 @@ export default class Picture extends Intersection(Hover()) {
     super({
       importMetaUrl: import.meta.url,
       intersectionObserverInit: {},
+      tabindex: 'no-tabindex-style',
       ...options
     }, ...args)
 
