@@ -400,9 +400,9 @@ export default class Grid extends Shadow() {
           }
         `
       }
-      if (node.getAttribute('background-hover') && !css.includes(`[background-hover="${node.getAttribute('background-hover')}"]:hover`)) {
+      if (node.getAttribute('background-hover') && !css.includes(`[background-hover="${node.getAttribute('background-hover')}"]:where(:hover, :focus)`)) {
         css += /* css */`
-          :host > section > [background-hover="${node.getAttribute('background-hover')}"]:hover {
+          :host > section > [background-hover="${node.getAttribute('background-hover')}"]:where(:hover, :focus) {
             cursor: pointer;
             background: ${node.getAttribute('background-hover')};
           }
@@ -415,9 +415,9 @@ export default class Grid extends Shadow() {
           }
         `
       }
-      if (node.getAttribute('color-hover') && !css.includes(`[color-hover="${node.getAttribute('color-hover')}"]:hover`)) {
+      if (node.getAttribute('color-hover') && !css.includes(`[color-hover="${node.getAttribute('color-hover')}"]:where(:hover, :focus)`)) {
         css += /* css */`
-          :host > section > [color-hover="${node.getAttribute('color-hover')}"]:hover {
+          :host > section > [color-hover="${node.getAttribute('color-hover')}"]:where(:hover, :focus) {
             cursor: pointer;
             color: ${node.getAttribute('color-hover')};
           }
@@ -549,9 +549,9 @@ export default class Grid extends Shadow() {
           }
         `
       }
-      if (node.getAttribute('background-hover-mobile') && !cssMobile.includes(`[background-hover-mobile="${node.getAttribute('background-hover-mobile')}"]:hover`)) {
+      if (node.getAttribute('background-hover-mobile') && !cssMobile.includes(`[background-hover-mobile="${node.getAttribute('background-hover-mobile')}"]:where(:hover, :focus)`)) {
         cssMobile += /* css */`
-          :host > section > [background-hover-mobile="${node.getAttribute('background-hover-mobile')}"]:hover {
+          :host > section > [background-hover-mobile="${node.getAttribute('background-hover-mobile')}"]:where(:hover, :focus) {
             background: ${node.getAttribute('background-hover-mobile')};
           }
         `
@@ -563,9 +563,9 @@ export default class Grid extends Shadow() {
           }
         `
       }
-      if (node.getAttribute('color-hover-mobile') && !cssMobile.includes(`[color-hover-mobile="${node.getAttribute('color-hover-mobile')}"]:hover`)) {
+      if (node.getAttribute('color-hover-mobile') && !cssMobile.includes(`[color-hover-mobile="${node.getAttribute('color-hover-mobile')}"]:where(:hover, :focus)`)) {
         cssMobile += /* css */`
-          :host > section > [color-hover-mobile="${node.getAttribute('color-hover-mobile')}"]:hover {
+          :host > section > [color-hover-mobile="${node.getAttribute('color-hover-mobile')}"]:where(:hover, :focus) {
             color: ${node.getAttribute('color-hover-mobile')};
           }
         `
