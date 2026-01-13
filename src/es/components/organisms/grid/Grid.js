@@ -131,7 +131,7 @@ export default class Grid extends Shadow() {
     }
     if (this.hasAttribute('background-hover')) {
       css += /* css */`
-        :host(:hover) > section {
+        :host(:where(:hover, :focus)) > section {
           cursor: pointer;
           background: ${this.getAttribute('background-hover') || 'var(--background-hover, var(--background, none))'};
         }
@@ -146,7 +146,7 @@ export default class Grid extends Shadow() {
     }
     if (this.hasAttribute('color-hover')) {
       css += /* css */`
-        :host(:hover) > section {
+        :host(:where(:hover, :focus)) > section {
           cursor: pointer;
           color: ${this.getAttribute('color-hover') || 'var(--color-hover, var(--color, black))'};
         }
@@ -229,7 +229,7 @@ export default class Grid extends Shadow() {
     }
     if (this.hasAttribute('background-hover-mobile')) {
       css += /* css */`
-        :host(:hover) > section {
+        :host(:where(:hover, :focus)) > section {
           cursor: pointer;
           background: ${this.getAttribute('background-hover-mobile') || 'var(--background-hover-mobile, var(--background-hover, var(--background-mobile, var(--background, none))))'};
         }
@@ -244,7 +244,7 @@ export default class Grid extends Shadow() {
     }
     if (this.hasAttribute('color-hover-mobile')) {
       css += /* css */`
-        :host(:hover) > section {
+        :host(:where(:hover, :focus)) > section {
           cursor: pointer;
           color: ${this.getAttribute('color-hover-mobile') || 'var(--color-hover-mobile, var(--color-hover, var(--color-mobile, var(--color, black))))'};
         }
