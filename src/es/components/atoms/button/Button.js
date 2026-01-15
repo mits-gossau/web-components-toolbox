@@ -113,8 +113,8 @@ export default class Button extends Hover() {
     this.buttonTagName = this.hasAttribute('href') ? 'a' : 'button'
     if (this.shouldRenderCSS()) this.renderCSSPromise = this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTMLPromise = this.renderHTML()
-    this.button.addEventListener('click', this.clickListener)
-    this.button.addEventListener('keydown', this.keydownListener)
+    if (this.button) this.button.addEventListener('click', this.clickListener)
+    if (this.button) this.button.addEventListener('keydown', this.keydownListener)
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
     this.connectedCallbackOnce()
@@ -138,8 +138,8 @@ export default class Button extends Hover() {
   }
 
   disconnectedCallback () {
-    this.button.removeEventListener('click', this.clickListener)
-    this.button.removeEventListener('keydown', this.keydownListener)
+    if (this.button) this.button.removeEventListener('click', this.clickListener)
+    if (this.button) this.button.removeEventListener('keydown', this.keydownListener)
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
 
@@ -486,18 +486,20 @@ export default class Button extends Hover() {
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </${this.buttonTagName}>
     `
-    alreadyIncludedNodes.forEach(node => {
-      if (this.button !== node && !this.button.contains(node) && !node.contains(this.button)) this.button.appendChild(node)
-    })
-    if (this.getAttribute('namespace') === 'button-download-') {
-      this.button.prepend(this.downloadIcon)
-    }
+    if (this.button) {
+      alreadyIncludedNodes.forEach(node => {
+        if (this.button !== node && !this.button.contains(node) && !node.contains(this.button)) this.button.appendChild(node)
+      })
+      if (this.getAttribute('namespace') === 'button-download-') {
+        this.button.prepend(this.downloadIcon)
+      }
 
-    let iconLeft
-    if ((iconLeft = this.root.querySelector('.icon-left'))) this.button.prepend(iconLeft)
-    let iconRight
-    if ((iconRight = this.root.querySelector('.icon-right'))) this.button.append(iconRight)
-    return Promise.resolve()
+      let iconLeft
+      if ((iconLeft = this.root.querySelector('.icon-left'))) this.button.prepend(iconLeft)
+      let iconRight
+      if ((iconRight = this.root.querySelector('.icon-right'))) this.button.append(iconRight)
+      return Promise.resolve()
+    }
   }
 
   /**
@@ -510,7 +512,7 @@ export default class Button extends Hover() {
     return {
       origEvent: event,
       tags: [this.getAttribute('tag')],
-      isActive: this.button.classList.contains('active'),
+      isActive: this.button ? this.button.classList.contains('active') : false,
       fetchSubTags: this.hasAttribute('fetch-sub-tags'),
       clearSubTags: this.hasAttribute('clear-sub-tags'),
       this: this,
