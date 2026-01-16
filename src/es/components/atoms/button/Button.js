@@ -247,19 +247,19 @@ export default class Button extends Hover() {
         box-sizing: border-box;
         width: var(--width, fit-content);
       }
-      ${this.buttonTagName}:active, ${this.buttonTagName}.active {
-        display: var(--display-active, flex); /* allows hiding the button but showing on active or vice versa */
-        background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
-        border: var(--border-width-active, var(--border-width, 0px)) solid var(--border-color-active, var(--border-color, #FFFFFF));
-        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
-        visibility: var(--visibility-active, var(--visibility, inherit));
-      }
       ${this.buttonTagName}:hover, :host(.hover) ${this.buttonTagName} {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
         transform: var(--transform-hover, var(--transform, none));
         opacity: var(--opacity-hover, var(--opacity, 1));
+      }
+      ${this.buttonTagName}:active, ${this.buttonTagName}.active {
+        display: var(--display-active, flex); /* allows hiding the button but showing on active or vice versa */
+        background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
+        border: var(--border-width-active, var(--border-width, 0px)) solid var(--border-color-active, var(--border-color, #FFFFFF));
+        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
+        visibility: var(--visibility-active, var(--visibility, inherit));
       }
       :host ${this.buttonTagName}[disabled] {
         border: var(--border-width-disabled, var(--border-width, 0px)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));
@@ -297,11 +297,11 @@ export default class Button extends Hover() {
         color:  var(--icon-color, var(--color, black));
         cursor: var(--icon-cursor, var(--cursor, inherit));
       }
-      ${this.buttonTagName}:active > *, ${this.buttonTagName}.active > * {
-        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
-      }
       ${this.buttonTagName}:hover > *, :host(.hover) ${this.buttonTagName} > * {
         color: var(--color-hover, var(--color, #FFFFFF));
+      }
+      ${this.buttonTagName}:active > *, ${this.buttonTagName}.active > * {
+        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
       ${this.buttonTagName}:hover > a-icon-mdx, :host(.hover) ${this.buttonTagName} > a-icon-mdx {
         color:  var(--icon-color-hover, var(--color-hover, var(--color, #FFFFFF)));
