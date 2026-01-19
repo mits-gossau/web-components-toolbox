@@ -232,6 +232,7 @@ export default class Picture extends Intersection(Hover()) {
       }
       @media only screen and (max-width: _max-width_) {
         :host picture img {
+          aspect-ratio: ${this.hasAttribute('aspect-ratio-mobile') || this.hasAttribute('aspect-ratio') ? `1/${this.getAttribute('aspect-ratio-mobile') || this.getAttribute('aspect-ratio')}` : 'var(--aspect-ratio-mobile, var(--aspect-ratio, auto))'};
           border-radius: var(--border-radius-mobile, 0);
           filter: var(--filter-mobile, var(--filter, none));
           height: var(--img-height-mobile, var(--img-height, auto));
