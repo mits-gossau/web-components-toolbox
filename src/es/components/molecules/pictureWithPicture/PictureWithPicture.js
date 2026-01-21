@@ -17,7 +17,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  */
 export default class PictureWithPicture extends Shadow() {
   constructor (options = {}, ...args) {
-    super({ importMetaUrl: import.meta.url, ...options }, tabindex: 'no-tabindex', ...args)
+    super({ importMetaUrl: import.meta.url, tabindex: 'no-tabindex', ...options }, ...args)
   }
 
   connectedCallback () {
@@ -118,6 +118,7 @@ export default class PictureWithPicture extends Shadow() {
     this.wrapper = document.createElement('div')
     this.wrapper.classList.add('wrapper')
     Array.from(this.root.children).forEach(node => {
+      // @ts-ignore
       if (!node.getAttribute('slot') && node.tagName !== 'STYLE') this.wrapper.appendChild(node)
     })
     this.html = this.wrapper
