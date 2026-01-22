@@ -115,7 +115,7 @@ export default class Input extends Shadow() {
         if (this.hasAttribute('change-listener') && this.inputField) this.inputField.addEventListener('change', this.changeListener)
         if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.addEventListener('blur', this.blurListener)
         if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.addEventListener('focus', this.focusListener)
-        this.inputField.addEventListener('keyup', this.keyupListener)
+        if (this.inputField) this.inputField.addEventListener('keyup', this.keyupListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
       }
       if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
@@ -132,7 +132,7 @@ export default class Input extends Shadow() {
       if (this.hasAttribute('change-listener') && this.inputField) this.inputField.removeEventListener('change', this.changeListener)
       if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.removeEventListener('blur', this.blurListener)
       if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.removeEventListener('focus', this.focusListener)
-      this.inputField.removeEventListener('keyup', this.keyupListener)
+      if (this.inputField) this.inputField.removeEventListener('keyup', this.keyupListener)
     }
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
