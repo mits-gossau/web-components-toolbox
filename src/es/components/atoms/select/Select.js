@@ -80,6 +80,7 @@ export default class Select extends Shadow() {
         height: calc(var(--select-line-height, 1.4) * 1em + var(--select-padding-top, 0.75em) + var(--select-padding-bottom, 0.75em)); /* workaround IOS */
       }
       select {
+        background-color: var(--select-background-color, var(--background-color, unset));
         border: var(--select-border, var(--border, 1px solid transparent));
         border-color: var(--select-border-color, var(--border-color, var(--m-gray-300)));
         border-radius: var(--select-border-radius, var(--border-radius, 0.5em));
@@ -94,9 +95,12 @@ export default class Select extends Shadow() {
         text-overflow: var(--select-text-overflow, var(--text-overflow, ellipsis));
         width: 100%;
       }
-      select:focus {
+      select:focus-visible {
         outline: none;
         box-shadow: none;
+        border: var(--select-border-focus-visible, var(--select-border, var(--border, 1px solid transparent)));
+        border-color: var(--select-border-color-focus-visible, var(--outline-color, var(--select-border-color, var(--border-color, var(--m-gray-300)))));
+        border-radius: var(--select-border-radius-focus-visible, var(--select-border-radius, var(--border-radius, 0.5em)));
       }
       select > option {
         cursor: pointer;
@@ -109,6 +113,13 @@ export default class Select extends Shadow() {
       } 
       select[readonly] option:not([selected]) {
         display:none; 
+      }
+      :host([chevron-down]) select {
+        appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 1em center;
+        background-size: 1.5em;
       }
       @media only screen and (max-width: _max-width_) {
         select {
