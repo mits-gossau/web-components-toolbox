@@ -28,6 +28,10 @@ export default class Select extends Shadow() {
       }))
     }
 
+    this.answerEventListener = async event => {
+      this.selectField.querySelector(`[value="${event.detail.selectedValue || ''}"]`)?.setAttribute('selected', '')
+    }
+
     this.renderEventNameListener = event => {
       event.detail.fetch.then(data => {
         this.html = ''
@@ -50,6 +54,7 @@ export default class Select extends Shadow() {
   connectedCallback() {
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.selectField) this.selectField.addEventListener('change', this.changeListener)
+      if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     if (this.hasAttribute('render-event-name')) document.body.addEventListener(this.getAttribute('render-event-name') || 'render-event-name', this.renderEventNameListener)
     if (this.hasAttribute('request-render-event-name')) {
       this.dispatchEvent(new CustomEvent(this.getAttribute('request-render-event-name') || 'request-render-event-name', {
@@ -62,6 +67,7 @@ export default class Select extends Shadow() {
 
   disconnectedCallback() {
     this.selectField.removeEventListener('change', this.changeListener)
+    if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     if (this.hasAttribute('render-event-name')) document.body.removeEventListener(this.getAttribute('render-event-name') || 'render-event-name', this.renderEventNameListener)
   }
 
