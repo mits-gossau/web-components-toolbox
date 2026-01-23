@@ -38,11 +38,13 @@ export default class Teaser extends Intersection() {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
+    // @ts-ignore
     if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     Promise.all(showPromises).then(() => {
       if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
         self.requestAnimationFrame(timeStamp => {
           let figcaption, figcaptionBackgroundColor
+          // @ts-ignore
           if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
             this.setAttribute('figcaption-bg-color-equal', true)
           } else {
@@ -319,6 +321,7 @@ export default class Teaser extends Intersection() {
       a.style.color = 'inherit'
       a.style.textDecoration = 'inherit'
       this.parentNode.replaceChild(a, this)
+      // @ts-ignore
       a.appendChild(this)
       this.checkIfLink = () => { }
     }
@@ -330,5 +333,9 @@ export default class Teaser extends Intersection() {
 
   get aArrow() {
     return this.root.querySelector('a-arrow')
+  }
+
+  get figcaption () {
+    return this.root.querySelector('figure figcaption')
   }
 }

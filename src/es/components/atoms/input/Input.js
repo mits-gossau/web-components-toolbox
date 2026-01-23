@@ -1,5 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
+import { escapeHTML } from '../../../helpers/Helpers.js'
 
 /* global CustomEvent */
 /* global location */
@@ -52,7 +53,8 @@ export default class Input extends Shadow() {
           composed: true,
           detail: {
             key: this.inputId,
-            value: this.inputField.value,
+            value: escapeHTML(this.inputField.value),
+            rawValue: this.inputField.value,
             type
           }
         }))
