@@ -129,10 +129,12 @@ export default class Button extends Hover() {
   }
 
   connectedCallbackOnce () {
-    if (document.body.hasAttribute('wc-config-load')) {
-      this.wcConfigLoadListener()
-    } else {
-      document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', this.wcConfigLoadListener, { once: true })
+    if (this.hasAttribute('request-event-name')) {
+      if (document.body.hasAttribute('wc-config-load')) {
+        this.wcConfigLoadListener()
+      } else {
+        document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', this.wcConfigLoadListener, { once: true })
+      }
     }
     this.connectedCallbackOnce = () => {}
   }
@@ -471,7 +473,7 @@ export default class Button extends Hover() {
   /**
    * renders the html
    *
-   * @return {Promise<void>}
+   * @return {Promise<void>|void}
    */
   renderHTML () {
     const alreadyIncludedNodes = Array.from(this.root.querySelectorAll(`${this.cssSelector} > :not(style)`))
