@@ -71,22 +71,6 @@ export default class Input extends Shadow() {
       clearTimeout(this.keyupTimeoutId)
       this.keyupTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : (this.getAttribute('any-key-listener') || 1000)) // no timeout on enter
     }
-    this.searchListener = event => {
-      if (this.inputField.value === '') {
-        this.lastValue = ''
-        this.dispatchEvent(new CustomEvent(this.getAttribute('submit-search') || 'submit-search', {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-          detail: {
-            key: this.inputId,
-            value: '',
-            rawValue: '',
-            type: 'search-clear'
-          }
-        }))
-      }
-    }
     this.answerEventListener = async event => {
       let searchTerm = event.detail.searchTerm
 
@@ -134,7 +118,6 @@ export default class Input extends Shadow() {
         if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.addEventListener('blur', this.blurListener)
         if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.addEventListener('focus', this.focusListener)
         if (this.inputField) this.inputField.addEventListener('keyup', this.keyupListener)
-        if (this.hasAttribute('delete-listener') && this.inputField) this.inputField.addEventListener('search', this.searchListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
       }
       if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
@@ -152,7 +135,6 @@ export default class Input extends Shadow() {
       if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.removeEventListener('blur', this.blurListener)
       if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.removeEventListener('focus', this.focusListener)
       if (this.inputField) this.inputField.removeEventListener('keyup', this.keyupListener)
-      if (this.hasAttribute('delete-listener') && this.inputField) this.inputField.removeEventListener('search', this.searchListener)
     }
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
