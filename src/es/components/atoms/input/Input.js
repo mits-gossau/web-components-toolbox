@@ -1,5 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
+import { escapeHTML } from '../../../helpers/Helpers.js'
 
 /* global CustomEvent */
 /* global location */
@@ -52,7 +53,8 @@ export default class Input extends Shadow() {
           composed: true,
           detail: {
             key: this.inputId,
-            value: this.inputField.value,
+            value: escapeHTML(this.inputField.value),
+            rawValue: this.inputField.value,
             type
           }
         }))
@@ -184,12 +186,12 @@ export default class Input extends Shadow() {
       }
 
       .mui-form-group {
-        font-family: var(--font-family);
-        max-width: var(--max-width, none);
-        height: var(--height, auto);
+        font-family: var(--mui-form-group-font-family, var(--font-family));
+        max-width: var(--mui-form-group-max-width, var(--max-width, none));
+        height: var(--mui-form-group-height, var(--height, auto));
       }
       .mui-form-group + .mui-form-group {
-        margin-top: var(--margin-top, var(--content-spacing));
+        margin-top: var(--mui-form-group-margin-top, var(--margin-top, var(--content-spacing)));
       }
 
       label {
@@ -305,6 +307,7 @@ export default class Input extends Shadow() {
       :host([search]) button {
         position: absolute;
         right: var(--search-icon-right, 1em);
+        top: var(--search-icon-top, auto);
         padding: 0;
         border: 0;
         background: transparent;
@@ -318,12 +321,16 @@ export default class Input extends Shadow() {
         cursor: pointer;
         transition: color ease-out .3s;
         ${this.getAttribute('icon-size')
-        ? `
-            height: ${this.getAttribute('icon-size')};
-            width: ${this.getAttribute('icon-size')};
-          `
-        : ''
+          ? `
+              height: ${this.getAttribute('icon-size')};
+              width: ${this.getAttribute('icon-size')};
+            `
+          : ''
+        }
       }
+
+      :host([search]) button:focus-visible {
+        color: var(--icon-color-focus-visible, var(--outline-color, var(--icon-color, var(--color-secondary, var(--color)))));
       }
 
       :host([search]) button svg {
@@ -388,7 +395,7 @@ export default class Input extends Shadow() {
           right: var(--search-icon-right-mobile, var(--content-spacing-mobile));
         }
         .mui-form-group {
-          max-width: var(--max-width-mobile, var(--max-width, none));
+          max-width: var(--mui-form-group-max-width-mobile, var(--max-width-mobile, var(--mui-form-group-max-width, var(--max-width, none))));
         }
         :host([search]) input::-webkit-search-cancel-button {
           -webkit-appearance: none;
