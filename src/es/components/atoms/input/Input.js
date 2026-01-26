@@ -58,6 +58,17 @@ export default class Input extends Shadow() {
             type
           }
         }))
+        // dispatch search-change event when value is cleared via delete button (Safari/iOS X-icon)
+        if (!this.inputField.value && type === 'delete') {
+          document.body.dispatchEvent(new CustomEvent('search-change', {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            detail: {
+              searchTerm: ''
+            }
+          }))
+        }
       }
     }
     this.changeListener = event => this.clickListener(event, undefined, undefined, 'change')
