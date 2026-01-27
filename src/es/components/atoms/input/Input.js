@@ -100,10 +100,18 @@ export default class Input extends Shadow() {
       }
     }
 
-    // @ts-ignore
-    ({promise: this.inputFieldPromise, resolve: this.inputFieldResolve} = Promise.withResolvers());
-    // @ts-ignore
-    ({promise: this.searchButtonPromise, resolve: this.searchButtonResolve} = Promise.withResolvers())
+    //({promise: this.inputFieldPromise, resolve: this.inputFieldResolve} = Promise.withResolvers());
+    /** @type {(any)=>void} */
+    this.inputFieldResolve = map => map
+    /** @type {Promise<any>} */
+    this.inputFieldPromise = new Promise(resolve => (this.inputFieldResolve = resolve))
+    //({promise: this.searchButtonPromise, resolve: this.searchButtonResolve} = Promise.withResolvers())
+    /** @type {(any)=>void} */
+    this.searchButtonResolve = map => map
+    /** @type {Promise<any>} */
+    this.searchButtonPromise = new Promise(resolve => (this.searchButtonResolve = resolve))
+
+    
   }
 
   connectedCallback() {
