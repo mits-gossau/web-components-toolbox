@@ -20,7 +20,7 @@ import { escapeHTML } from '../../../helpers/Helpers.js'
 export default class Input extends Shadow() {
 
   static get observedAttributes() {
-    return ['readonly', 'disabled', 'error', 'placeholder']
+    return ['readonly', 'disabled', 'error', 'placeholder', 'maxlength', 'minlength', 'pattern']
   }
 
   constructor(options = {}, ...args) {
@@ -127,6 +127,9 @@ export default class Input extends Shadow() {
       this.error = this.hasAttribute('error')
 
       if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
+      if (this.inputField) ['maxlength', 'minlength', 'pattern'].forEach(name => {
+        if (this.hasAttribute(name)) this.inputField.setAttribute(name, this.getAttribute(name))
+      })
       if (this.value && this.inputField) this.inputField.setAttribute('value', this.value)
       if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
 
@@ -161,6 +164,10 @@ export default class Input extends Shadow() {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placeholder') {
       if (this.inputField) this.inputField.setAttribute('placeholder', newValue)
+      return
+    }
+    if (['maxlength', 'minlength', 'pattern'].includes(name)) {
+      if (this.inputField) this.inputField.setAttribute(name, newValue)
       return
     }
     this[name] = this.hasAttribute(name)
