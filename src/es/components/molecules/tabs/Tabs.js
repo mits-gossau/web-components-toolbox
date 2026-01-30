@@ -32,10 +32,11 @@ export default class Tabs extends Shadow() {
 
     // add click event to tabs
     tabs.forEach((tab, index) => {
-      const anchorTag = tab.querySelector('a')
+      const anchorTag = tab.querySelector('a') && !tab.querySelector('a').getAttribute('href').includes(tab.getAttribute('data-tab'))
 
       if (!anchorTag) {
-        tab.addEventListener('click', () => {
+        tab.addEventListener('click', event => {
+          event.preventDefault()
           // add parameter to url for active tab
           const urlParams = new URLSearchParams(window.location.search)
           const tabParam = tab.getAttribute('data-tab') ? tab.getAttribute('data-tab').toString() : ''
