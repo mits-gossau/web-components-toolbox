@@ -258,7 +258,7 @@ export default class Input extends Shadow() {
         box-shadow: none;
       }
 
-      input:focus:not(:read-only):not(:invalid) {
+      input:focus:not(:read-only):not(:invalid), input:focus:not(:disabled):not(:read-only):not(:invalid) {
         background: #fff;
         border: var(--border-focus, var(--border, 1px solid transparent));
         border-color: var(--border-color-focus, var(--border-color, var(--m-gray-500)));
@@ -307,7 +307,7 @@ export default class Input extends Shadow() {
         background-color: var(--search-input-background-color-hover, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color-hover, var(--m-gray-800));
       }
-      :host([search]) input:focus:not(:read-only):not(:invalid) {
+      :host([search]) input:focus:not(:read-only):not(:invalid), :host([search]) input:focus:not(:disabled):not(:read-only):not(:invalid) {
         background-color: var(--search-input-background-color-focus, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color-focus, var(--m-gray-800));
       }
