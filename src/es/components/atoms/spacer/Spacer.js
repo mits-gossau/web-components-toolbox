@@ -54,6 +54,12 @@ export default class Spacer extends Shadow() {
           ? 'display: none;'
           : `height: ${this.getAttribute('height')};`}
       }
+      @media only screen and (min-width: calc(_max-width_ + 1px)) {
+        /*conditional rendering*/
+        :host([show-only-mobile]) {
+          display: none !important;
+        }
+      }
       @media only screen and (max-width: _max-width_) {
         :host {
           margin: var(--spacer-margin-mobile, var(--spacer-margin, var(--content-spacing-mobile, var(--content-spacing)) auto)) !important;
@@ -74,6 +80,10 @@ export default class Spacer extends Shadow() {
           ${!this.getAttribute('height-mobile') || this.getAttribute('height-mobile') === '0'
             ? 'display: none;'
             : `height: ${this.getAttribute('height-mobile')};`}
+        }
+        /*conditional rendering*/
+        :host([show-only-desktop]) {
+          display: none !important;
         }
       }
     `

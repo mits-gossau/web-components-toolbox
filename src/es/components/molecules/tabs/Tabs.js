@@ -102,7 +102,7 @@ export default class Tabs extends Shadow() {
             display: flex;
             justify-content: var(--tab-justify-content, none);
             padding: 0;
-            gap: 1.5em;
+            gap: var(--gap, 1.5em);
             margin-bottom: var(--margin-bottom, 3em);
             overflow-x: auto;
             transform:rotateX(180deg);
@@ -121,7 +121,7 @@ export default class Tabs extends Shadow() {
             border-top-right-radius: var(--border-radius, 0.5em);
             color: var(--color, var(--color-secondary, black));
             cursor: pointer;
-            padding: 10px;
+            padding: var(--padding, 10px);
             position: relative;
             transform:rotateX(180deg);
         }
@@ -187,7 +187,12 @@ export default class Tabs extends Shadow() {
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./container-/container-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false)
+        }, ...styles])
+      case 'tabs-button-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./button-/button-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
       default:
         return Promise.resolve()
     }
