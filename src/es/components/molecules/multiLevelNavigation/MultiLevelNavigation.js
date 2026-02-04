@@ -2034,26 +2034,22 @@ export default class MultiLevelNavigation extends Shadow() {
   }
 
   addMenuRoles () {
-    const subNavUls = this.root.querySelectorAll('ul[sub-nav-id], div[nav-level] > ul')
-    subNavUls.forEach(ul => {
-      if (!ul.hasAttribute('role')) ul.setAttribute('role', 'menu')
-      const listItems = ul.querySelectorAll(':scope > li')
-      listItems.forEach(li => {
-        if (!li.hasAttribute('role')) li.setAttribute('role', 'menuitem')
-      })
-    })
+    const allLinks = this.root.querySelectorAll('a[role="menuitem"]')
+    allLinks.forEach(link => link.removeAttribute('role'))
     const expandableLis = this.root.querySelectorAll('li[sub-nav], li[sub-nav-control]')
     expandableLis.forEach(li => {
       const link = li.querySelector(':scope > a, :scope > m-nav-level-item > a')
-      if (link && !link.hasAttribute('aria-haspopup')) {
-        link.setAttribute('aria-haspopup', 'menu')
+      if (link) {
+        link.removeAttribute('role')
+        if (!link.hasAttribute('aria-haspopup')) link.setAttribute('aria-haspopup', 'true')
       }
     })
     const mainNavLinks = this.root.querySelectorAll('nav > ul > li > a')
     mainNavLinks.forEach(link => {
+      link.removeAttribute('role')
       const parentLi = link.closest('li')
       if (parentLi && (parentLi.querySelector('template, section, o-nav-wrapper'))) {
-        if (!link.hasAttribute('aria-haspopup')) link.setAttribute('aria-haspopup', 'menu')
+        if (!link.hasAttribute('aria-haspopup')) link.setAttribute('aria-haspopup', 'true')
       }
     })
   }
