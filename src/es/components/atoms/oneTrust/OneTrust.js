@@ -10,6 +10,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 * @type {CustomElementConstructor}
 */
 export default class OneTrust extends Shadow() {
+
   /**
    * @param {any} args
    */
@@ -29,7 +30,7 @@ export default class OneTrust extends Shadow() {
     if (this.settingsLink) this.settingsLink.removeEventListener('click', this.settingsLinkListener)
   }
 
-  settingsLinkListener = (e) => {
+  settingsLinkListener = () => {
     // @ts-ignore
     if (typeof window !== 'undefined' && window.OneTrust) {
       try {
@@ -43,39 +44,132 @@ export default class OneTrust extends Shadow() {
 
   /**
    * evaluates if a render is necessary
-   *
-   * @return {boolean}
    */
-  shouldRenderHTML () {
-    return !document.head.querySelector('#one-trust-cookie-law')
+  shouldRenderHTML() {
+    // if snippet exists: deduplicate primarily via data-domain-script (if included in snippet)
+    const domainId = this.domainScriptIdFromSnippet
+    if (domainId) {
+      return !document.head.querySelector(`script[data-domain-script="${this.cssAttrEscape(domainId)}"]`)
+    }
+
+    // fallback: old behaviour
+    return !document.head.querySelector('#one-trust-cookie-law') &&
+      !document.head.querySelector('script[src*="cdn.cookielaw.org/scripttemplates/otSDKStub.js"]')
   }
 
   /**
    * Render HTML
    * OneTrust loads its settings and we check whether we should display the link or not.
    * The link opens the cookie settings in a modal window
-   * @returns void
    */
-  async renderHTML () {
+  async renderHTML() {
     await this.renderScripts()
     const span = document.createElement('span')
     span.classList.add('ot-sdk-show-settings')
     span.setAttribute('style', 'display: none !important;')
     document.body.appendChild(span)
-    if (self.getComputedStyle(span).getPropertyValue('visibility') === 'visible') this.html = `<a class="ot-sdk-show-settings">${this.linkText}</a>`
+
+    // only render link if OneTrust sets it to ‘visible’
+    if (self.getComputedStyle(span).getPropertyValue('visibility') === 'visible') {
+      this.html = `<a class="ot-sdk-show-settings">${this.linkText}</a>`
+    }
+
+    // cleanup
+    span.remove()
   }
 
   async renderScripts () {
+    const snippet = this.snippet
+    if (snippet) {
+      await this.injectSnippetIntoHead(snippet)
+      return
+    }
+
+    // fallback: previous path via id
     await this.loadCookieLawDependency(this.id)
     await this.loadCookieLawScriptTemplates(this.id)
     await this.callOptanonWrapper()
   }
 
   /**
-   * Loads a script for cookie law compliance.
-   * @param {string} id
-   * @returns a promise.
+   * Snippet preferably comes from <template> (inert), 
+   * optionally from attribute "snippet"
    */
+  get snippet() {
+    const attr = this.getAttribute('snippet')
+    if (attr && attr.trim()) return attr
+
+    const tpl = this.querySelector('template')
+    return tpl ? tpl.innerHTML : ''
+  }
+
+  get domainScriptIdFromSnippet() {
+    const snippet = this.snippet
+    if (!snippet) return null
+    const t = document.createElement('template')
+    t.innerHTML = snippet
+    const s = t.content.querySelector('script[data-domain-script]')
+    return s ? s.getAttribute('data-domain-script') : null
+  }
+
+  // @ts-ignore
+  async injectSnippetIntoHead(snippet) {
+    const t = document.createElement('template')
+    t.innerHTML = snippet.trim()
+
+    // only accept <script> (the typical OneTrust snippet)
+    const scripts = Array.from(t.content.querySelectorAll('script'))
+
+    const loadPromises = []
+
+    for (const original of scripts) {
+      const src = original.getAttribute('src')
+      const dataDomain = original.getAttribute('data-domain-script')
+      const inlineText = (original.textContent || '').trim()
+
+      if (src) {
+        // same src (+ optional same data-domain-script) => skip
+        const selector =
+          dataDomain
+            ? `script[src="${this.cssAttrEscape(src)}"][data-domain-script="${this.cssAttrEscape(dataDomain)}"]`
+            : `script[src="${this.cssAttrEscape(src)}"]`
+
+        if (document.head.querySelector(selector)) continue
+      } else if (inlineText) {
+        // same inline definition => skip
+        const already = Array.from(document.head.querySelectorAll('script:not([src])'))
+          .some(s => (s.textContent || '').trim() === inlineText)
+        if (already) continue
+      }
+
+      // create new script element 
+      const s = document.createElement('script')
+      for (const { name, value } of Array.from(original.attributes)) {
+        s.setAttribute(name, value)
+      }
+
+      if (src) {
+        loadPromises.push(new Promise((resolve, reject) => {
+          s.onload = () => resolve(true)
+          s.onerror = reject
+        }))
+      } else {
+        s.textContent = original.textContent || ''
+      }
+
+      document.head.appendChild(s)
+    }
+
+    await Promise.all(loadPromises)
+  }
+
+  // little helper for escaping in attribute selectors
+  cssAttrEscape(value = '') {
+    return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+  }
+
+  // existing fallback code remains unchanged
+  // @ts-ignore
   async loadCookieLawDependency (id) {
     return this.loadCookieLawDependencyPromise || (this.loadCookieLawDependencyPromise = new Promise((resolve, reject) => {
       const cookieLawScript = document.createElement('script')

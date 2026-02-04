@@ -1,5 +1,16 @@
 <p>Please set your Browser IP Location to "Austria" to preview the Cookie Settings</p>
-<a-one-trust id="df63fc84-60c7-46d7-8b20-843409244ab7" link-text="My Cookie Settings"></a-one-trust>
+<a-one-trust link-text="My Cookie Settings">
+    <template>
+        <!-- OneTrust Cookie-Einwilligungshinweis – Anfang für admin.cafe-royal.com -->
+        <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js" data-document-language="true"
+            type="text/javascript" charset="UTF-8" data-domain-script="019c1e31-7a2f-7a5a-80bd-0f08bdc3ae99">
+            </script>
+        <script type="text/javascript">
+            function OptanonWrapper() { }
+        </script>
+        <!-- OneTrust-Cookie-Einwilligungshinweis – Ende für admin.cafe-royal.com -->
+    </template>
+</a-one-trust>
 <!-- load web components for Demo Purposes Only -->
 <script class=template-script type="text/javascript" src="./default-.js"></script>
 <script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
