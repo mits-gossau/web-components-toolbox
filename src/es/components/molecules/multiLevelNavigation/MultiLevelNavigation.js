@@ -181,8 +181,11 @@ export default class MultiLevelNavigation extends Shadow() {
               wrapperBackgroundDiv.className = 'wrapper-background'
               wrapper.prepend(wrapperBackgroundDiv)
               
-              // update a11y headings after content is loaded
-              setTimeout(() => { this.addSubNavigationHeadings() }, 50)
+              // update a11y headings and roles after content is loaded
+              setTimeout(() => {
+                this.addSubNavigationHeadings()
+                this.addMenuRoles()
+              }, 50)
 
               // add close icon to all flyout
               const closeIconElement = document.createElement('a')
@@ -1171,7 +1174,7 @@ export default class MultiLevelNavigation extends Shadow() {
    */
   renderHTML (clonedNav) {
     this.nav = clonedNav || this.root.querySelector('nav') || document.createElement('nav')
-    this.nav.setAttribute('aria-labelledby', 'hamburger')
+    this.nav.setAttribute('aria-labelledby', 'main-navigation-heading')
     this.nav.setAttribute('aria-expanded', 'false')
     Array.from(this.root.children).forEach(node => {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'NAV') return false
@@ -1953,6 +1956,7 @@ export default class MultiLevelNavigation extends Shadow() {
     this.addSubMenuLabels()
     this.addExpandCollapseLabels()
     this.addLandmarkLabels()
+    this.addMenuRoles()
   }
 
   addNavigationLabels () {
@@ -2027,6 +2031,31 @@ export default class MultiLevelNavigation extends Shadow() {
     const prevElement = menu.previousElementSibling
     if (prevElement && prevElement.tagName === 'A') return prevElement.textContent?.trim() || prevElement.innerText?.trim() || null
     return null
+  }
+
+  addMenuRoles () {
+    const subNavUls = this.root.querySelectorAll('ul[sub-nav-id], div[nav-level] > ul')
+    subNavUls.forEach(ul => {
+      if (!ul.hasAttribute('role')) ul.setAttribute('role', 'menu')
+      const listItems = ul.querySelectorAll(':scope > li')
+      listItems.forEach(li => {
+        if (!li.hasAttribute('role')) li.setAttribute('role', 'menuitem')
+      })
+    })
+    const expandableLis = this.root.querySelectorAll('li[sub-nav], li[sub-nav-control]')
+    expandableLis.forEach(li => {
+      const link = li.querySelector(':scope > a, :scope > m-nav-level-item > a')
+      if (link && !link.hasAttribute('aria-haspopup')) {
+        link.setAttribute('aria-haspopup', 'menu')
+      }
+    })
+    const mainNavLinks = this.root.querySelectorAll('nav > ul > li > a')
+    mainNavLinks.forEach(link => {
+      const parentLi = link.closest('li')
+      if (parentLi && (parentLi.querySelector('template, section, o-nav-wrapper'))) {
+        if (!link.hasAttribute('aria-haspopup')) link.setAttribute('aria-haspopup', 'menu')
+      }
+    })
   }
 
   initAriaHiddenMonitoring () {
@@ -2197,7 +2226,10 @@ export default class MultiLevelNavigation extends Shadow() {
       section.hidden = true
     })
     
-    setTimeout(() => {this.addSubNavigationHeadings()}, 100) // update headings after DOM is ready
+    setTimeout(() => {
+      this.addSubNavigationHeadings()
+      this.addMenuRoles()
+    }, 100) // update headings and roles after DOM is ready
 
     setTimeout(() => {
       let menuIconElement = null
