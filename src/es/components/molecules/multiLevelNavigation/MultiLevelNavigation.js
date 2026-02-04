@@ -15,7 +15,19 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @attribute {
  *  {boolean} [hover=false]
  *  {boolean} [use-hover-listener=false] use hover listener on navigation // if false it uses click listener
+ *  {string} [main-nav-title] Main navigation heading text for screen readers (default: "Main Navigation")
+ *  {string} [sub-nav-title] Sub-navigation base text (default: "Sub Navigation")
+ *  {string} [sub-nav-suffix] Suffix for sub-navigation titles (default: "- Sub Navigation") 
+ *  {string} [mobile-nav-title] Mobile navigation base text (default: falls back to sub-nav-title)
+ *  {string} [level-text] Text for level numbering (default: "Level")
  * }
+ * 
+ * Features:
+ * - Hierarchical headings (h1-h6) for screen reader navigation
+ * - ARIA attributes including aria-current="page" for current page indication
+ * - Keyboard navigation support
+ * - Multilingual text support through attributes
+ * - WCAG 2.2 AA compliance
  */
 export default class MultiLevelNavigation extends Shadow() {
   static get observedAttributes () {
@@ -37,6 +49,7 @@ export default class MultiLevelNavigation extends Shadow() {
     this.isHigherDevice = window.innerHeight > this.desktopHeightBreakpoint
     this.hoverDelay = this.hasAttribute('navigation-hover-delay') || 100
     this.focusElSelector = 'm-nav-level-item,a:not(:has(> m-nav-level-item)):not(.navigation-back)'
+    this.currentIndex = -1
 
     this.hideMobileNavigation()
 
@@ -102,6 +115,10 @@ export default class MultiLevelNavigation extends Shadow() {
 
     this.aLinkClickListener = event => {
       if (event.currentTarget) {
+        // aria-current
+        const href = event.currentTarget.getAttribute('href')
+        if (href && href !== '#' && !href.includes('javascript:')) this.setAriaCurrent(event.currentTarget)
+        
         // If desktop and use-hover-listener attribute exists
         if (this.isDesktop && this.useHoverListener) {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') this.setDesktopMainNavItems(event)
@@ -163,6 +180,12 @@ export default class MultiLevelNavigation extends Shadow() {
               const wrapperBackgroundDiv = document.createElement('div')
               wrapperBackgroundDiv.className = 'wrapper-background'
               wrapper.prepend(wrapperBackgroundDiv)
+              
+              // update a11y headings and roles after content is loaded
+              setTimeout(() => {
+                this.addSubNavigationHeadings()
+                this.addMenuRoles()
+              }, 50)
 
               // add close icon to all flyout
               const closeIconElement = document.createElement('a')
@@ -228,11 +251,15 @@ export default class MultiLevelNavigation extends Shadow() {
         if (!target.classList.contains('hover-active')) {
           target.classList.add('hover-active')
           target.setAttribute('aria-expanded', 'true')
+          const link = target.querySelector('a[aria-haspopup]')
+          if (link) link.setAttribute('aria-expanded', 'true')
           const currentEventTarget = target
           if (target && !target.hasAttribute('sub-nav') && target.classList.contains('hover-active')) {
             setTimeout(() => {
               currentEventTarget.classList.remove('hover-active')
               currentEventTarget.setAttribute('aria-expanded', 'false')
+              const link = currentEventTarget.querySelector('a[aria-haspopup]')
+              if (link) link.setAttribute('aria-expanded', 'false')
             }, 2000)
           }
         }
@@ -243,6 +270,8 @@ export default class MultiLevelNavigation extends Shadow() {
               Array.from(ul.querySelectorAll('li')).forEach(li => {
                 li.classList.remove('hover-active')
                 li.setAttribute('aria-expanded', 'false')
+                const link = li.querySelector('a[aria-haspopup]')
+                if (link) link.setAttribute('aria-expanded', 'false')
               })
               ul.scrollTo(0, 0)
               ul.style.display = 'none'
@@ -312,9 +341,9 @@ export default class MultiLevelNavigation extends Shadow() {
     }
 
     // accessibility
-    this.enterEventListener = event => {
-      if (event.code === 'Enter' && event.composedPath()[0].matches(':focus')) event.composedPath()[0].click()
-    }
+    this.enterEventListener = event => { if (event.code === 'Enter' && event.composedPath()[0].matches(':focus')) event.composedPath()[0].click() }
+    this.escapeKeyListener = event => { if (event.code === 'Escape') this.handleEscapeKey(event) }
+    this.arrowKeyListener = event => { if(event.code === 'ArrowUp' || event.code === 'ArrowDown' || event.code === 'ArrowLeft' || event.code === 'ArrowRight') this.handleArrowNavigation(event) }
   }
 
   connectedCallback () {
@@ -336,31 +365,279 @@ export default class MultiLevelNavigation extends Shadow() {
     self.addEventListener('resize', this.resizeListener)
     self.addEventListener('click', this.selfClickListener)
     this.addEventListener('keyup', this.enterEventListener)
+    this.addEventListener('keydown', this.escapeKeyListener)
+    this.addEventListener('keydown', this.arrowKeyListener)
     if (this.getAttribute('close-event-name')) document.body.addEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     this.addCustomColors()
-    super.connectedCallback()
-
     this.isCheckout = this.parentElement.getAttribute('is-checkout') === 'true'
     if (this.isCheckout) this.root.querySelector('nav').style.display = 'none'
-
     this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.addEventListener('blur', this.noScroll))
-
     this.recalculateNavigationHeight()
     this.setActiveNavigationItemBasedOnUrl()
     this.setMainNavigationFontSize()
+    this.initAriaCurrentMonitoring()
+    setTimeout(() => {
+      this.addNavigationHeadings()
+      this.addAriaHiddenToDecorativeElements()
+      this.addScreenReaderLabels()
+    }, 100)
+    setTimeout(() => {
+      this.addAriaHiddenToDecorativeElements()
+    }, 300)
+    this.addAriaHiddenToDecorativeElements()
+    super.connectedCallback()
+  }
+
+  handleEscapeKey (event) {
+    event.preventDefault()
+    event.stopPropagation()
+    const focusedElement = document.activeElement
+    const isInNavigation = this.contains(focusedElement)
+    const openFlyouts = this.root.querySelectorAll('.open, [aria-expanded="true"]')
+    if (!isInNavigation && openFlyouts.length === 0) return
+    this.isDesktop ? this.handleDesktopEscape(focusedElement, openFlyouts) : this.handleMobileEscape(focusedElement, openFlyouts)
+  }
+
+  handleDesktopEscape (focusedElement, openFlyouts) {
+    let mainNavTrigger = this.root.querySelector('nav > ul > li.open')
+    if (!mainNavTrigger) mainNavTrigger = this.root.querySelector('nav > ul > li[aria-expanded="true"]')
+    this.closeAllFlyouts()
+    setTimeout(() => {
+      if (mainNavTrigger) {
+        mainNavTrigger.setAttribute('tabindex', '0')
+        mainNavTrigger.focus()
+      } else {
+        const firstMainNavItem = this.root.querySelector('nav > ul > li:first-child')
+        if (firstMainNavItem) {
+          firstMainNavItem.setAttribute('tabindex', '0')
+          firstMainNavItem.focus()
+        }
+      }
+    }, 50)
+  }
+
+  handleMobileEscape (focusedElement, openFlyouts) {
+    const currentLevel = this.getCurrentNavigationLevel(focusedElement)
+    currentLevel > 1 ? this.closeCurrentMobileLevel(focusedElement) : this.closeMobileNavigation()
+  }
+
+  closeAllFlyouts () {
+    const openLis = this.root.querySelectorAll('li.open, li.hover-active, li[aria-expanded="true"]')
+    openLis.forEach(li => {
+      li.classList.remove('open', 'hover-active')
+      li.setAttribute('aria-expanded', 'false')
+      const link = li.querySelector('a[aria-haspopup]')
+      if (link) link.setAttribute('aria-expanded', 'false')
+    })
+    if (this.nav) this.nav.setAttribute('aria-expanded', 'false')
+    const backgrounds = this.root.querySelectorAll('.main-background, .grey-background')
+    backgrounds.forEach(bg => bg.remove())
+  }
+
+  getCurrentNavigationLevel (element) {
+    const navLevelDiv = element.closest('[nav-level]')
+    if (navLevelDiv) return parseInt(navLevelDiv.getAttribute('nav-level')) || 1
+    return 1
+  }
+
+  closeCurrentMobileLevel (focusedElement) {
+    const currentNavLevel = focusedElement.closest('[nav-level]')
+    if (currentNavLevel) {
+      currentNavLevel.classList.add('close-right-slide')
+      currentNavLevel.hidden = true
+      const parentLevel = currentNavLevel.previousElementSibling
+      if (parentLevel) {
+        parentLevel.classList.remove('close-right-slide')
+        parentLevel.classList.add('open-left-slide')
+        parentLevel.hidden = false
+        const backButton = parentLevel.querySelector('.navigation-back')
+        const parentTrigger = parentLevel.querySelector('[aria-expanded="true"] a')
+        if (backButton) {
+          backButton.focus()
+        } else if (parentTrigger) {
+          parentTrigger.focus()
+        }
+      }
+    }
+  }
+
+  closeMobileNavigation () {
+    if (this.nav) this.nav.setAttribute('aria-expanded', 'false')
+    const allLevels = this.root.querySelectorAll('[nav-level]')
+    allLevels.forEach(level => {
+      level.hidden = true
+      level.className = ''
+    })
+    const hamburger = this.getRootNode().host?.shadowRoot?.querySelector('header > a-menu-icon')
+    if (hamburger) hamburger.focus()
+  }
+
+  /**
+   * Helper function to set element as focusable and focus it
+   * @param {HTMLElement} element - Element to focus
+   */
+  setElementFocus(element) {
+    if (element) {
+      element.setAttribute('tabindex', '0')
+      element.focus()
+    }
+  }
+
+  /**
+   * Helper function to remove focus from element
+   * @param {HTMLElement} element - Element to unfocus
+   */
+  removeElementFocus(element) {
+    if (element) {
+      element.setAttribute('tabindex', '-1')
+    }
+  }
+
+  /**
+   * Helper function to transfer focus from one element to another
+   * @param {HTMLElement} fromElement - Element to remove focus from
+   * @param {HTMLElement} toElement - Element to focus
+   */
+  transferFocus(fromElement, toElement) {
+    this.removeElementFocus(fromElement)
+    this.setElementFocus(toElement)
+  }
+
+  handleArrowNavigation(event) {
+    event.preventDefault()
+
+    const navigation = this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation')
+    const navigationItems = navigation.root.querySelectorAll('nav > ul > li:not(.grey-background) > a')
+    if (!navigationItems || navigationItems.length === 0) return
+
+    if (this.currentIndex === -1) {
+      const activeElement = navigation.root.querySelector('nav > ul > li.active > a')
+      this.currentIndex = activeElement ? Array.from(navigationItems).indexOf(activeElement) : 0
+    }
+
+    if (this.currentIndex === -1) return
+
+    const keyMap = this.isDesktop
+      ? { next: 'ArrowRight', prev: 'ArrowLeft', down: 'ArrowDown', up: 'ArrowUp' }
+      : { next: 'ArrowDown', prev: 'ArrowUp' }
+
+    const currentElement = navigationItems[this.currentIndex]
+    const parentLi = currentElement.closest('li')
+    const submenu = parentLi.querySelector('ul[role="menu"]')
+    const submenuItems = submenu ? submenu.querySelectorAll('li[role="menuitem"]') : null
+
+    if (event.key === keyMap.down) {
+      if (submenu && parentLi.getAttribute('aria-expanded') === 'true') {
+        const activeMainMenuHasFocus = currentElement.tabIndex === 0 || document.activeElement === currentElement
+        if (activeMainMenuHasFocus && submenuItems && submenuItems.length > 0) {
+          this.transferFocus(currentElement, submenuItems[0])
+          return
+        }
+
+        const focusedSubmenuItem = submenuItems && Array.from(submenuItems).find(item => item.tabIndex === 0 || document.activeElement === item)
+        const submenuIndex = focusedSubmenuItem ? Array.from(submenuItems).indexOf(focusedSubmenuItem) : -1
+
+        if (submenuIndex !== -1 && submenuIndex < submenuItems.length - 1) {
+          const nextSubmenuItem = submenuItems[submenuIndex + 1]
+          this.transferFocus(focusedSubmenuItem, nextSubmenuItem)
+          return
+        } else if (submenuIndex === submenuItems.length - 1) {
+          const nextIndex = (this.currentIndex + 1) % navigationItems.length
+          updateFocus(this.currentIndex, nextIndex, navigationItems)
+          this.currentIndex = nextIndex
+          return
+        }
+      }
+
+      if (submenu && parentLi.getAttribute('aria-expanded') === 'false') {
+        currentElement.click()
+        parentLi.setAttribute('aria-expanded', 'true')
+        currentElement.setAttribute('aria-expanded', 'true')
+        return
+      }
+
+      const nextIndex = (this.currentIndex + 1) % navigationItems.length
+      updateFocus(this.currentIndex, nextIndex, navigationItems)
+      this.currentIndex = nextIndex
+
+    } else if (event.key === keyMap.up) {
+      if (submenu && parentLi.getAttribute('aria-expanded') === 'true') {
+        const focusedSubmenuItem = submenuItems && Array.from(submenuItems).find(item => item.tabIndex === 0 || document.activeElement === item)
+        const submenuIndex = focusedSubmenuItem ? Array.from(submenuItems).indexOf(focusedSubmenuItem) : -1
+
+        if (submenuIndex > 0) {
+          const prevSubmenuItem = submenuItems[submenuIndex - 1]
+          this.transferFocus(focusedSubmenuItem, prevSubmenuItem)
+          return
+        } else if (submenuIndex === 0) {
+          this.transferFocus(focusedSubmenuItem, currentElement)
+          return
+        }
+      }
+
+      const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
+      updateFocus(this.currentIndex, prevIndex, navigationItems)
+      this.currentIndex = prevIndex
+
+    } else if (event.key === keyMap.next) {
+      const nextIndex = (this.currentIndex + 1) % navigationItems.length
+      updateFocus(this.currentIndex, nextIndex, navigationItems)
+      this.currentIndex = nextIndex
+
+    } else if (event.key === keyMap.prev) {
+      const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
+      updateFocus(this.currentIndex, prevIndex, navigationItems)
+      this.currentIndex = prevIndex
+    }
+
+    const updateFocus = (currentIndex, targetIndex, items) => {
+      this.transferFocus(items[currentIndex], items[targetIndex])
+    }
   }
 
   disconnectedCallback () {
     self.removeEventListener('resize', this.resizeListener)
     self.removeEventListener('click', this.selfClickListener)
     this.removeEventListener('keyup', this.enterEventListener)
+    this.removeEventListener('keydown', this.escapeKeyListener)
     if (this.getAttribute('close-event-name')) document.body.removeEventListener(this.getAttribute('close-event-name'), this.closeEventListener)
     Array.from(this.root.querySelectorAll('a')).forEach(a => {
       a.removeEventListener('click', this.aLinkClickListener)
       a.removeEventListener('click', this.aMainLinkHoverListener)
     })
     this.root.querySelectorAll("a-input[prevent-default-input-search='true']").forEach(input => input.removeEventListener('blur', this.noScroll))
+    if (this.ariaCurrentObserver) this.ariaCurrentObserver.disconnect()
+    if (this.ariaHiddenObserver) this.ariaHiddenObserver.disconnect()
     super.disconnectedCallback()
+  }
+
+  initAriaCurrentMonitoring () {
+    setTimeout(() => { this.setAriaCurrentForSubNavigation() }, 100)
+    if (typeof MutationObserver !== 'undefined') {
+      this.ariaCurrentObserver = new MutationObserver((mutations) => {
+        let shouldCheck = false
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            for (const node of mutation.addedNodes) {
+              if (node.nodeType === Node.ELEMENT_NODE && (node.querySelector && node.querySelector('a[href]'))) {
+                shouldCheck = true
+                break
+              }
+            }
+          }
+          if (mutation.type === 'attributes' && mutation.attributeName === 'aria-expanded') shouldCheck = true
+        })
+        if (shouldCheck) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 50)
+      })
+      this.ariaCurrentObserver.observe(this, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['aria-expanded']
+      })
+    }
+    this.addEventListener('click', (event) => {if (event.target.closest('a[aria-haspopup], [aria-expanded]')) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)})
+    this.addEventListener('keydown', (event) => {if (event.code === 'Escape') setTimeout(() => this.setAriaCurrentForSubNavigation(), 100)})
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
@@ -396,6 +673,20 @@ export default class MultiLevelNavigation extends Shadow() {
     :not(:defined) {
       display: none;
     }
+    
+    /* for screen readers */
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+    
     :host {
       color: black;
       overscroll-behavior: contain;
@@ -578,6 +869,7 @@ export default class MultiLevelNavigation extends Shadow() {
       margin: 0 4px; /* space for outlines */
     }
     :host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title {
+      margin-top: 4px;
       padding: 1em;
       --ul-li-padding-left: 0.75em;
       --a-font-weight: 500;
@@ -882,12 +1174,15 @@ export default class MultiLevelNavigation extends Shadow() {
    */
   renderHTML (clonedNav) {
     this.nav = clonedNav || this.root.querySelector('nav') || document.createElement('nav')
-    this.nav.setAttribute('aria-labelledby', 'hamburger')
+    this.nav.setAttribute('aria-labelledby', 'main-navigation-heading')
     this.nav.setAttribute('aria-expanded', 'false')
     Array.from(this.root.children).forEach(node => {
       if (node.getAttribute('slot') || node.nodeName === 'STYLE' || node.tagName === 'NAV') return false
       this.nav.appendChild(node)
     })
+    
+    this.addNavigationHeadings() // headings for screen readers
+    
     this.html = this.nav
     return new Promise(resolve => {
       if (this.isDesktop) {
@@ -912,6 +1207,102 @@ export default class MultiLevelNavigation extends Shadow() {
   checkMedia (media = this.getAttribute('media')) {
     const isMobile = self.matchMedia(`(max-width: ${this.mobileBreakpoint})`).matches
     return (isMobile ? 'mobile' : 'desktop') === media
+  }
+
+  /**
+   * creates invisible headings (h1, h2, h3) for screen readers
+   */
+  addNavigationHeadings () {
+    const nav = this.root.querySelector('nav')
+    if (!nav) return
+    const existingHeadings = nav.querySelectorAll('.navigation-heading')
+    existingHeadings.forEach(heading => heading.remove())
+    const mainHeading = document.createElement('h1')
+    mainHeading.className = 'visually-hidden navigation-heading'
+    mainHeading.textContent = this.getAttribute('main-nav-title') || this.getAttribute('aria-label') || 'Hauptnavigation'
+    mainHeading.id = 'main-navigation-heading'
+    const firstChild = nav.firstChild
+    nav.insertBefore(mainHeading, firstChild)
+    setTimeout(() => { this.addSubNavigationHeadings() }, 100)
+  }
+
+  addSubNavigationHeadings () {
+    const navWrappers = this.root.querySelectorAll('o-nav-wrapper')
+    navWrappers.forEach((wrapper, wrapperIndex) => {
+      const sections = wrapper.querySelectorAll('section')
+      sections.forEach((section, sectionIndex) => {
+        const navLevelDivs = section.querySelectorAll('div[nav-level]')
+        navLevelDivs.forEach(div => {
+          const navLevel = parseInt(div.getAttribute('nav-level') || '1')
+          const headingLevel = Math.min(navLevel + 1, 6) // h2, h3, h4, h5, h6 (max h6)
+          if (!div.querySelector('.sub-navigation-heading')) {
+            const subHeading = document.createElement(`h${headingLevel}`)
+            subHeading.className = 'visually-hidden sub-navigation-heading navigation-heading'
+            const parentLi = this.findParentLiForNavLevel(div, navLevel)
+            const headingText = this.getNavigationHeadingText(parentLi, navLevel)
+            subHeading.textContent = headingText
+            subHeading.id = `sub-navigation-heading-${wrapperIndex}-${sectionIndex}-${navLevel}`
+            div.insertBefore(subHeading, div.firstChild)
+          }
+        })
+      })
+    })
+
+    const mobileNavDivs = this.root.querySelectorAll('nav > div[nav-level]')
+    mobileNavDivs.forEach((div, index) => {
+      const navLevel = parseInt(div.getAttribute('nav-level') || '1')
+      const headingLevel = Math.min(navLevel + 1, 6)
+      if (!div.querySelector('.mobile-navigation-heading')) {
+        const mobileHeading = document.createElement(`h${headingLevel}`)
+        mobileHeading.className = 'visually-hidden mobile-navigation-heading navigation-heading'
+        const headingText = this.getMobileNavigationHeadingText(div, navLevel)
+        mobileHeading.textContent = headingText
+        mobileHeading.id = `mobile-navigation-heading-${index}-${navLevel}`
+        div.insertBefore(mobileHeading, div.firstChild)
+      }
+    })
+  }
+
+  findParentLiForNavLevel (navDiv, level) {
+    if (level === 1) {
+      const wrapper = navDiv.closest('o-nav-wrapper')
+      return wrapper ? wrapper.parentElement : null
+    }
+    return null
+  }
+
+  getNavigationHeadingText (parentLi, level) {
+    if (level === 1 && parentLi) {
+      const link = parentLi.querySelector('a')
+      const span = link ? link.querySelector('span') : null
+      const subNavSuffix = this.getAttribute('sub-nav-suffix') || '- Unternavigation'
+      if (span && span.textContent.trim()) return `${span.textContent.trim()} ${subNavSuffix}`
+      if (link && link.textContent.trim()) return `${link.textContent.trim()} ${subNavSuffix}`
+    }
+    const baseText = this.getAttribute('sub-nav-title') || 'Unternavigation'
+    const levelText = this.getAttribute('level-text') || 'Level'
+    const levelNames = {
+      1: baseText,
+      2: `${baseText} ${levelText} 2`, 
+      3: `${baseText} ${levelText} 3`
+    }
+    return levelNames[level] || `${baseText} ${levelText} ${level}`
+  }
+
+  getMobileNavigationHeadingText (navDiv, level) {
+    const backButton = navDiv.querySelector('.navigation-back')
+    if (backButton) {
+      const span = backButton.querySelector('span')
+      if (span && span.textContent.trim()) return span.textContent.trim()
+    }
+    const mobileBaseText = this.getAttribute('mobile-nav-title') || this.getAttribute('sub-nav-title') || 'Mobile Unternavigation'
+    const levelText = this.getAttribute('level-text') || 'Level'
+    const levelNames = {
+      1: mobileBaseText,
+      2: `${mobileBaseText} ${levelText} 2`,
+      3: `${mobileBaseText} ${levelText} 3`
+    }
+    return levelNames[level] || `${mobileBaseText} ${levelText} ${level}`
   }
 
   get style () {
@@ -1104,6 +1495,8 @@ export default class MultiLevelNavigation extends Shadow() {
       currentUlElement.style.setProperty('--multi-level-navigation-default-logo-default-width', `${logoWidth}`)
       this.nav.setAttribute('aria-expanded', 'true')
       event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+      const link = event.currentTarget.parentNode.querySelector('a[aria-haspopup]')
+      if (link) link.setAttribute('aria-expanded', 'true')
       isFlyoutOpen = Array.from(currentUlElement.querySelectorAll(':scope > li')).some(el => el.classList.contains('open'))
       // TODO: this should focus on the first element in the dropdown on desktop but does not have an effect
       if (!isFlyoutOpen) event.currentTarget.nextElementSibling.querySelector(this.focusElSelector)?.focus()
@@ -1120,6 +1513,8 @@ export default class MultiLevelNavigation extends Shadow() {
   setMobileMainNavItems (event) {
     // set the currently clicked/touched aria expanded attribute
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+    const link = event.currentTarget.parentNode.querySelector('a[aria-haspopup]')
+    if (link) link.setAttribute('aria-expanded', 'true')
 
     const navWrapper = this.root.querySelector('nav')
     const activeMainLiIndex = +event.currentTarget.parentNode.getAttribute('sub-nav-control')
@@ -1146,10 +1541,14 @@ export default class MultiLevelNavigation extends Shadow() {
       if (li.hasAttribute('aria-expanded')) li.setAttribute('aria-expanded', 'false')
       li.classList.remove('hover-active')
       li.setAttribute('aria-expanded', 'false')
+      const link = li.querySelector('a[aria-haspopup]')
+      if (link) link.setAttribute('aria-expanded', 'false')
     })
 
     event.currentTarget.parentNode.classList.add('hover-active')
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+    const link = event.currentTarget.parentNode.querySelector('a[aria-haspopup]')
+    if (link) link.setAttribute('aria-expanded', 'true')
 
     let subUl = null
     if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute('sub-nav-id') === event.currentTarget.parentNode.getAttribute('sub-nav')))) {
@@ -1159,6 +1558,8 @@ export default class MultiLevelNavigation extends Shadow() {
         Array.from(ul.querySelectorAll('li')).forEach(li => {
           li.classList.remove('hover-active')
           li.setAttribute('aria-expanded', 'false')
+          const link = li.querySelector('a[aria-haspopup]')
+          if (link) link.setAttribute('aria-expanded', 'false')
         })
       })
       subUl.parentElement.hidden = false
@@ -1324,16 +1725,371 @@ export default class MultiLevelNavigation extends Shadow() {
     const subUrls = []
     const navigationItemsUrlNames = []
     const navigationItems = Array.from(this.root.querySelectorAll('nav > ul > li[url-name]'))
-
-    // get first 2 subdomain of current url
     window.location.pathname.split('/')?.filter((subUrl) => subUrl).slice(0, 2).forEach((urlName) => subUrls.push(urlName.toLowerCase()))
-    // get the url name attributes of the main li navigation items
     navigationItems.forEach(li => navigationItemsUrlNames.push(li.getAttribute('url-name').toLowerCase()))
-
     if (subUrls.length > 0 && navigationItemsUrlNames.length > 0) {
       const activeNavigationName = navigationItemsUrlNames.filter((navUrl) => subUrls.includes(navUrl))[0]
       const activeNavigationItem = navigationItems?.filter((item) => item.getAttribute('url-name').toLowerCase() === activeNavigationName)[0]
-      activeNavigationItem?.classList.add('active')
+      if (activeNavigationItem) {
+        activeNavigationItem.classList.add('active')
+        const activeLink = activeNavigationItem.querySelector('a')
+        if (activeLink) this.setAriaCurrent(activeLink)
+      }
+    }
+    this.setAriaCurrentForSubNavigation()
+  }
+
+  setAriaCurrent (activeLink) {
+    if (!activeLink) return
+    this.clearAriaCurrent()
+    activeLink.setAttribute('aria-current', 'page')
+  }
+
+  clearAriaCurrent () {
+    const allLinks = this.root.querySelectorAll('a[aria-current]')
+    allLinks.forEach(link => link.removeAttribute('aria-current'))
+  }
+
+  initAriaCurrentMonitoring () {
+    setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)
+    if (typeof MutationObserver !== 'undefined') {
+      this.ariaCurrentObserver = new MutationObserver((mutations) => {
+        let shouldCheck = false
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            for (const node of mutation.addedNodes) {
+              if (node.nodeType === Node.ELEMENT_NODE && (node.querySelector && node.querySelector('a[href]'))) {
+                shouldCheck = true
+                break
+              }
+            }
+          }
+          if (mutation.type === 'attributes' && mutation.attributeName === 'aria-expanded') shouldCheck = true
+        })
+        if (shouldCheck) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 50)
+      })
+      this.ariaCurrentObserver.observe(this, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['aria-expanded']
+      })
+    }
+    this.addEventListener('click', (event) => {if (event.target.closest('a[aria-haspopup], [aria-expanded]')) setTimeout(() => {this.setAriaCurrentForSubNavigation()}, 100)})
+  }
+
+  setAriaCurrentForSubNavigation () {
+    const currentPath = window.location.pathname
+    const currentHash = window.location.hash
+    const currentFullUrl = currentPath + currentHash
+    let allNavLinks = this.root.querySelectorAll('a[href]')
+    const componentLinks = this.querySelectorAll('a[href]')
+    const allLinks = new Set([...allNavLinks, ...componentLinks])
+    allNavLinks = Array.from(allLinks)
+    let exactMatch = null
+    let pathMatch = null
+    let bestMatch = null
+    let bestMatchScore = 0
+    let relativeUrlMatch = null
+    allNavLinks.forEach(link => {
+      const href = link.getAttribute('href')
+      if (!href || href === '#') return
+      const normalizedHref = this.normalizeUrl(href)
+      const normalizedCurrentPath = this.normalizeUrl(currentPath)
+      const normalizedCurrentFullUrl = this.normalizeUrl(currentFullUrl)
+      const isExactMatch = normalizedHref === normalizedCurrentFullUrl || normalizedHref === normalizedCurrentPath
+      if (isExactMatch) {
+        if (href.startsWith('/')) {
+          relativeUrlMatch = link
+        } else if (!relativeUrlMatch) {
+          exactMatch = link
+        }
+      }
+      if (normalizedCurrentPath.startsWith(normalizedHref) && normalizedHref !== '/' && normalizedHref.length > 1) {
+        const matchScore = normalizedHref.length
+        if (matchScore > bestMatchScore) {
+          bestMatch = link
+          bestMatchScore = matchScore
+        }
+      }
+    })
+    const targetLink = relativeUrlMatch || exactMatch || pathMatch || bestMatch
+    if (targetLink) this.setAriaCurrent(targetLink)
+  }
+  normalizeUrl (url) {
+    if (!url) return ''
+    let normalizedUrl = url
+    if (normalizedUrl.startsWith('http://') || normalizedUrl.startsWith('https://')) {
+      try {
+        const urlObj = new URL(normalizedUrl)
+        normalizedUrl = urlObj.pathname
+      } catch (e) {
+        return ''
+      }
+    }
+    if (!normalizedUrl.startsWith('/')) normalizedUrl = '/' + normalizedUrl
+    if (normalizedUrl.length > 1 && normalizedUrl.endsWith('/')) normalizedUrl = normalizedUrl.slice(0, -1)
+    return normalizedUrl
+  }
+
+  addAriaHiddenToDecorativeElements () {
+    const decorativeSelectors = [
+      '.main-background',
+      '.grey-background', 
+      '[class*="background"]:not([role])',
+      '[class*="decoration"]:not([role])',
+      '[class*="separator"]:not([role])'
+    ]
+
+    decorativeSelectors.forEach(selector => {
+      const elements = this.root.querySelectorAll(selector)
+      elements.forEach(element => {element.setAttribute('aria-hidden', 'true')})
+    })
+
+    this.markDecorativeIcons()
+    this.markDecorativeText()
+    
+    setTimeout(() => {
+      this.markDecorativeIcons()
+      this.markDecorativeText()
+    }, 100)
+    
+    setTimeout(() => {
+      this.markDecorativeIcons() 
+      this.markDecorativeText()
+    }, 500)
+    
+    this.initAriaHiddenMonitoring()
+  }
+
+  markDecorativeIcons () {
+    const allIcons = this.getAllIconsIncludingShadow()
+    allIcons.forEach(icon => {if (this.isDecorativeIcon(icon)) icon.setAttribute('aria-hidden', 'true')})
+  }
+
+  getAllIconsIncludingShadow () {
+    const icons = []
+    const addIconsFromRoot = (root) => {
+      const foundIcons = root.querySelectorAll('a-icon-mdx')
+      foundIcons.forEach(icon => icons.push(icon))
+      const elementsWithShadow = root.querySelectorAll('*')
+      elementsWithShadow.forEach(element => {if (element.shadowRoot) addIconsFromRoot(element.shadowRoot)})
+      const navLevelItems = root.querySelectorAll('m-nav-level-item')
+      navLevelItems.forEach(item => {
+        if (item.shadowRoot) {
+          addIconsFromRoot(item.shadowRoot)
+        } else if (item.connectedCallback || item.root) {
+          setTimeout(() => {
+            if (item.shadowRoot) {
+              const shadowIcons = item.shadowRoot.querySelectorAll('a-icon-mdx')
+              shadowIcons.forEach(icon => {
+                if (!icons.includes(icon)) {
+                  icons.push(icon)
+                  if (this.isDecorativeIcon(icon)) {
+                    icon.setAttribute('aria-hidden', 'true')
+                  }
+                }
+              })
+            }
+          }, 50)
+        }
+      })
+    }
+    addIconsFromRoot(this.root)
+    const oNavWrapper = this.closest('o-nav-wrapper') || this.querySelector('o-nav-wrapper')
+    if (oNavWrapper) {
+      addIconsFromRoot(oNavWrapper)
+      if (oNavWrapper.shadowRoot) addIconsFromRoot(oNavWrapper.shadowRoot)
+    }
+    if (icons.length === 0) addIconsFromRoot(document)
+    if (this.shadowRoot && this.shadowRoot !== this.root) addIconsFromRoot(this.shadowRoot)
+    return icons
+  }
+
+  isDecorativeIcon (icon) {
+    if (icon.hasAttribute('role')) return false
+    const parentElement = icon.parentElement
+    if (!parentElement) return true
+    const iconName = icon.getAttribute('icon-name')
+    if (iconName === 'X' || iconName === 'Close' || iconName === 'Menu') {
+      if (parentElement.hasAttribute('tabindex') || 
+          parentElement.tagName.toLowerCase() === 'button' ||
+          parentElement.classList.contains('close-icon')) {
+        return false
+      }
+    }
+    if (iconName === 'ChevronRight' || iconName === 'ChevronDown' || iconName === 'Arrow') {
+      const interactiveParent = parentElement.closest('[role="link"], [role="button"], [role="menuitem"], a, button')
+      if (interactiveParent && interactiveParent.hasAttribute('role')) return true
+    }
+    return iconName === 'ChevronRight' || iconName === 'ChevronDown' || iconName === 'Arrow'
+  }
+
+  markDecorativeText () {
+    const allSpans = this.getAllSpansIncludingShadow()
+    allSpans.forEach(span => {
+      const textContent = span.textContent?.trim()
+      if (textContent === 'alle anzeigen' || textContent === 'tous afficher' || textContent === 'mostra tutto') span.setAttribute('aria-hidden', 'true')
+    })
+  }
+
+  getAllSpansIncludingShadow () {
+    const spans = []
+    const addSpansFromRoot = (root) => {
+      const foundSpans = root.querySelectorAll('span')
+      foundSpans.forEach(span => spans.push(span))
+      const elementsWithShadow = root.querySelectorAll('*')
+      elementsWithShadow.forEach(element => {if (element.shadowRoot) addSpansFromRoot(element.shadowRoot)})
+    }
+    addSpansFromRoot(this.root)
+    const oNavWrapper = this.closest('o-nav-wrapper') || this.querySelector('o-nav-wrapper')
+    if (oNavWrapper) {
+      addSpansFromRoot(oNavWrapper)
+      if (oNavWrapper.shadowRoot) addSpansFromRoot(oNavWrapper.shadowRoot)
+    }
+    if (this.shadowRoot && this.shadowRoot !== this.root) addSpansFromRoot(this.shadowRoot)
+    return spans
+  }
+
+  addScreenReaderLabels () {
+    this.addNavigationLabels()
+    this.addSubMenuLabels()
+    this.addExpandCollapseLabels()
+    this.addLandmarkLabels()
+    this.addMenuRoles()
+  }
+
+  addNavigationLabels () {
+    const nav = this.root.querySelector('nav')
+    if (nav) {
+      if (!nav.hasAttribute('aria-label') && !nav.hasAttribute('aria-labelledby')) {
+        const mainNavTitle = this.getAttribute('main-nav-title') || 'Main Navigation'
+        nav.setAttribute('aria-label', mainNavTitle)
+      }
+      if (!nav.hasAttribute('role')) nav.setAttribute('role', 'navigation')
+    }
+  }
+
+  addSubMenuLabels () {
+    const subMenus = this.root.querySelectorAll('[role="menu"], ul[mobile-navigation-name]')
+    subMenus.forEach(menu => {
+      const menuName = menu.getAttribute('mobile-navigation-name') || menu.getAttribute('aria-label') || this.getMenuNameFromContext(menu)
+      if (menuName && !menu.hasAttribute('aria-label')) {
+        const subNavTitle = this.getAttribute('sub-nav-title') || 'Sub Navigation'
+        menu.setAttribute('aria-label', `${menuName} - ${subNavTitle}`)
+      }
+    })
+  }
+
+  addExpandCollapseLabels () {
+    const expandableItems = this.root.querySelectorAll('[aria-haspopup="true"], [aria-controls]')
+    expandableItems.forEach(item => {
+      if (!item.hasAttribute('aria-label') && !item.hasAttribute('aria-labelledby')) {
+        const linkText = item.textContent?.trim() || item.innerText?.trim() || 'Navigation Item'
+        const isExpanded = item.getAttribute('aria-expanded') === 'true'
+        const expandText = isExpanded ? 'collapse' : 'expand'
+        const expandTextDE = isExpanded ? 'zuklappen' : 'aufklappen'
+        const expandTextFR = isExpanded ? 'réduire' : 'développer'
+        const expandTextIT = isExpanded ? 'comprimi' : 'espandi'
+        
+        const lang = document.documentElement.lang || 'en'
+        let expandLabel = expandText
+        
+        if (lang.startsWith('de')) expandLabel = expandTextDE
+        else if (lang.startsWith('fr')) expandLabel = expandTextFR
+        else if (lang.startsWith('it')) expandLabel = expandTextIT
+        
+        item.setAttribute('aria-label', `${linkText} - ${expandLabel}`)
+      }
+    })
+  }
+
+  addLandmarkLabels () {
+    const oNavWrapper = this.closest('o-nav-wrapper') || this.querySelector('o-nav-wrapper')
+    if (oNavWrapper && !oNavWrapper.hasAttribute('aria-label')) {
+      const wrapperLabel = this.getAttribute('main-nav-title') || 'Navigation Area'
+      oNavWrapper.setAttribute('aria-label', wrapperLabel)
+      oNavWrapper.setAttribute('role', 'banner')
+    }
+    
+    const sections = this.root.querySelectorAll('section')
+    sections.forEach((section, index) => {
+      if (!section.hasAttribute('aria-label')) {
+        const levelText = this.getAttribute('level-text') || 'Level'
+        section.setAttribute('aria-label', `Navigation ${levelText} ${index + 1}`)
+        section.setAttribute('role', 'region')
+      }
+    })
+  }
+
+  getMenuNameFromContext (menu) {
+    const parentLi = menu.closest('li')
+    if (parentLi) {
+      const link = parentLi.querySelector('a')
+      if (link) return link.textContent?.trim() || link.innerText?.trim() || null
+    }
+    const prevElement = menu.previousElementSibling
+    if (prevElement && prevElement.tagName === 'A') return prevElement.textContent?.trim() || prevElement.innerText?.trim() || null
+    return null
+  }
+
+  addMenuRoles () {
+    const allLinks = this.root.querySelectorAll('a[role="menuitem"]')
+    allLinks.forEach(link => link.removeAttribute('role'))
+    const expandableLis = this.root.querySelectorAll('li[sub-nav], li[sub-nav-control]')
+    expandableLis.forEach(li => {
+      const link = li.querySelector(':scope > a, :scope > m-nav-level-item > a')
+      if (link) {
+        link.removeAttribute('role')
+        if (!link.hasAttribute('aria-haspopup')) link.setAttribute('aria-haspopup', 'true')
+      }
+    })
+    const mainNavLinks = this.root.querySelectorAll('nav > ul > li > a')
+    mainNavLinks.forEach(link => {
+      link.removeAttribute('role')
+      const parentLi = link.closest('li')
+      if (parentLi && (parentLi.querySelector('template, section, o-nav-wrapper'))) {
+        if (!link.hasAttribute('aria-haspopup')) link.setAttribute('aria-haspopup', 'true')
+      }
+    })
+  }
+
+  initAriaHiddenMonitoring () {
+    if (!this.ariaHiddenObserver && typeof MutationObserver !== 'undefined') {
+      this.ariaHiddenObserver = new MutationObserver((mutations) => {
+        let needsUpdate = false
+        mutations.forEach(mutation => {
+          if (mutation.type === 'childList') {
+            mutation.addedNodes.forEach(node => {
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node.tagName === 'M-NAV-LEVEL-ITEM' || node.querySelector('m-nav-level-item')) needsUpdate = true
+                if (node.tagName === 'A-ICON-MDX' || node.querySelector('a-icon-mdx')) needsUpdate = true
+              }
+            })
+          }
+          if (mutation.target && mutation.target.shadowRoot) needsUpdate = true
+        })
+        if (needsUpdate) {
+          setTimeout(() => {
+            this.markDecorativeIcons()
+            this.markDecorativeText()
+            this.addScreenReaderLabels()
+          }, 50)
+        }
+      })
+      
+      this.ariaHiddenObserver.observe(this, {
+        childList: true,
+        subtree: true,
+        attributes: false
+      })
+      
+      if (document.body) {
+        this.ariaHiddenObserver.observe(document.body, {
+          childList: true,
+          subtree: true
+        })
+      }
     }
   }
 
@@ -1465,8 +2221,12 @@ export default class MultiLevelNavigation extends Shadow() {
       })
       section.hidden = true
     })
+    
+    setTimeout(() => {
+      this.addSubNavigationHeadings()
+      this.addMenuRoles()
+    }, 100) // update headings and roles after DOM is ready
 
-    // set aria-attributes for nav tag
     setTimeout(() => {
       let menuIconElement = null
       if ((menuIconElement = this.getRootNode().host?.shadowRoot?.querySelector('header > a-menu-icon'))) {
