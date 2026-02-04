@@ -32,10 +32,11 @@ export default class Tabs extends Shadow() {
 
     // add click event to tabs
     tabs.forEach((tab, index) => {
-      const anchorTag = tab.querySelector('a')
+      const anchorTag = tab.querySelector('a') && !tab.querySelector('a').getAttribute('href').includes(tab.getAttribute('data-tab'))
 
       if (!anchorTag) {
-        tab.addEventListener('click', () => {
+        tab.addEventListener('click', event => {
+          event.preventDefault()
           // add parameter to url for active tab
           const urlParams = new URLSearchParams(window.location.search)
           const tabParam = tab.getAttribute('data-tab') ? tab.getAttribute('data-tab').toString() : ''
@@ -101,7 +102,7 @@ export default class Tabs extends Shadow() {
             display: flex;
             justify-content: var(--tab-justify-content, none);
             padding: 0;
-            gap: 1.5em;
+            gap: var(--gap, 1.5em);
             margin-bottom: var(--margin-bottom, 3em);
             overflow-x: auto;
             transform:rotateX(180deg);
@@ -120,7 +121,7 @@ export default class Tabs extends Shadow() {
             border-top-right-radius: var(--border-radius, 0.5em);
             color: var(--color, var(--color-secondary, black));
             cursor: pointer;
-            padding: 10px;
+            padding: var(--padding, 10px);
             position: relative;
             transform:rotateX(180deg);
         }
@@ -186,7 +187,12 @@ export default class Tabs extends Shadow() {
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./container-/container-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false)
+        }, ...styles])
+      case 'tabs-button-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./button-/button-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles])
       default:
         return Promise.resolve()
     }

@@ -172,7 +172,7 @@
   color: var(--h-color, var(--color-secondary, var(--color, black)));
 }
 :host .font-size-big {
-  font-size: calc(1.5 * var(--h1-font-size, 1.75em));
+  font-size: var(--font-size-big, calc(1.5 * var(--h1-font-size, 1.75em)));
   line-height: var(--line-height, normal);
 }
 :host .font-size-h1 {
@@ -184,7 +184,7 @@
   line-height: var(--h2-line-height, var(--h-line-height, var(--line-height, normal)));
 }
 :host .font-size-tiny {
-  font-size: calc(0.75 * var(--p-font-size, 1em));
+  font-size: var(--font-size-tiny, calc(0.75 * var(--p-font-size, 1em)));
   line-height: var(--line-height, normal);
 }
 :host .quote {
@@ -617,7 +617,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
 @media only screen and (min-width: calc(_max-width_ + 1px)) {
   /* text stylings */
   :host .font-size-big-desktop {
-    font-size: calc(1.5 * var(--h1-font-size, 1.75em));
+    font-size: var(--font-size-big-desktop, var(--font-size-big, calc(1.5 * var(--h1-font-size, 1.75em))));
     line-height: var(--line-height, normal);
   }
   :host .font-size-h1-desktop {
@@ -629,7 +629,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     line-height: var(--h2-line-height, var(--h-line-height, var(--line-height, normal)));
   }
   :host .font-size-tiny-desktop {
-    font-size: calc(0.75 * var(--p-font-size, 1em));
+    font-size: var(--font-size-tiny-desktop, var(--font-size-tiny, calc(0.75 * var(--p-font-size, 1em))));
     line-height: var(--line-height, normal);
   }
   /*conditional rendering*/
@@ -689,7 +689,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   }
   /* text stylings */
   :host .font-size-big, :host .font-size-big-mobile {
-    font-size: calc(1.5 * var(--h1-font-size-mobile, var(--h1-font-size, 1.75em)));
+    font-size: var(--font-size-big-mobile, var(--font-size-big, calc(1.5 * var(--h1-font-size-mobile, var(--h1-font-size, 1.75em)))));
     line-height: var(--line-height-mobile, var(--line-height, normal));
   }
   :host .font-size-h1, :host .font-size-h1-mobile {
@@ -701,7 +701,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     line-height: var(--h2-line-height-mobile, var(--h-line-height-mobile, var(--line-height-mobile, var(--h2-line-height, var(--h-line-height, var(--line-height, normal))))));
   }
   :host .font-size-tiny, :host .font-size-tiny-mobile {
-    font-size: calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)));
+    font-size: var(--font-size-tiny-mobile, var(--font-size-tiny, calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)))));
     line-height: var(--line-height-mobile, var(--line-height, normal));
   }
   /* p-tag */
@@ -786,7 +786,7 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     height: var(--spacer-four-height-mobile, var(--spacer-four-height, calc(4 * var(--content-spacing-mobile, var(--content-spacing)))));
   }
   /*conditional rendering*/
-  :where([show-only-desktop]) {
+  *:where([show-only-desktop]) {
     display: none !important;
   }
 }

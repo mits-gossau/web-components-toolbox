@@ -1,0 +1,10 @@
+:host {
+  --button-secondary-margin: 0;
+  --tabs-button-ul-flex-direction: row;
+  --tabs-button-padding: 0;
+  --tabs-button-gap: var(--filter-spacing);
+}
+
+@media screen and (max-width: _max-width_) {
+  
+}

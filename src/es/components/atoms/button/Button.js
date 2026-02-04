@@ -113,8 +113,8 @@ export default class Button extends Hover() {
     this.buttonTagName = this.hasAttribute('href') ? 'a' : 'button'
     if (this.shouldRenderCSS()) this.renderCSSPromise = this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTMLPromise = this.renderHTML()
-    this.button.addEventListener('click', this.clickListener)
-    this.button.addEventListener('keydown', this.keydownListener)
+    if (this.button) this.button.addEventListener('click', this.clickListener)
+    if (this.button) this.button.addEventListener('keydown', this.keydownListener)
     if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
     this.attributeChangedCallback('disabled')
     this.connectedCallbackOnce()
@@ -129,17 +129,19 @@ export default class Button extends Hover() {
   }
 
   connectedCallbackOnce () {
-    if (document.body.hasAttribute('wc-config-load')) {
-      this.wcConfigLoadListener()
-    } else {
-      document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', this.wcConfigLoadListener, { once: true })
+    if (this.hasAttribute('request-event-name')) {
+      if (document.body.hasAttribute('wc-config-load')) {
+        this.wcConfigLoadListener()
+      } else {
+        document.body.addEventListener(this.getAttribute('wc-config-load') || 'wc-config-load', this.wcConfigLoadListener, { once: true })
+      }
     }
     this.connectedCallbackOnce = () => {}
   }
 
   disconnectedCallback () {
-    this.button.removeEventListener('click', this.clickListener)
-    this.button.removeEventListener('keydown', this.keydownListener)
+    if (this.button) this.button.removeEventListener('click', this.clickListener)
+    if (this.button) this.button.removeEventListener('keydown', this.keydownListener)
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
 
@@ -247,19 +249,19 @@ export default class Button extends Hover() {
         box-sizing: border-box;
         width: var(--width, fit-content);
       }
-      ${this.buttonTagName}:active, ${this.buttonTagName}.active {
-        display: var(--display-active, flex); /* allows hiding the button but showing on active or vice versa */
-        background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
-        border: var(--border-width-active, var(--border-width, 0px)) solid var(--border-color-active, var(--border-color, #FFFFFF));
-        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
-        visibility: var(--visibility-active, var(--visibility, inherit));
-      }
       ${this.buttonTagName}:hover, :host(.hover) ${this.buttonTagName} {
         background-color: var(--background-color-hover, var(--background-color, #B24800));
         border: var(--border-width-hover, var(--border-width, 0px)) solid var(--border-color-hover, var(--border-color, #FFFFFF));
         color: var(--color-hover, var(--color, #FFFFFF));
         transform: var(--transform-hover, var(--transform, none));
         opacity: var(--opacity-hover, var(--opacity, 1));
+      }
+      ${this.buttonTagName}:active, ${this.buttonTagName}.active {
+        display: var(--display-active, flex); /* allows hiding the button but showing on active or vice versa */
+        background-color: var(--background-color-active, var(--background-color-hover, var(--background-color, #803300)));
+        border: var(--border-width-active, var(--border-width, 0px)) solid var(--border-color-active, var(--border-color, #FFFFFF));
+        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
+        visibility: var(--visibility-active, var(--visibility, inherit));
       }
       :host ${this.buttonTagName}[disabled] {
         border: var(--border-width-disabled, var(--border-width, 0px)) solid var(--border-color-disabled, var(--border-color, #FFFFFF));
@@ -297,11 +299,11 @@ export default class Button extends Hover() {
         color:  var(--icon-color, var(--color, black));
         cursor: var(--icon-cursor, var(--cursor, inherit));
       }
-      ${this.buttonTagName}:active > *, ${this.buttonTagName}.active > * {
-        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
-      }
       ${this.buttonTagName}:hover > *, :host(.hover) ${this.buttonTagName} > * {
         color: var(--color-hover, var(--color, #FFFFFF));
+      }
+      ${this.buttonTagName}:active > *, ${this.buttonTagName}.active > * {
+        color: var(--color-active, var(--color-hover, var(--color, #FFFFFF)));
       }
       ${this.buttonTagName}:hover > a-icon-mdx, :host(.hover) ${this.buttonTagName} > a-icon-mdx {
         color:  var(--icon-color-hover, var(--color-hover, var(--color, #FFFFFF)));
@@ -471,7 +473,7 @@ export default class Button extends Hover() {
   /**
    * renders the html
    *
-   * @return {Promise<void>}
+   * @return {Promise<void>|void}
    */
   renderHTML () {
     const alreadyIncludedNodes = Array.from(this.root.querySelectorAll(`${this.cssSelector} > :not(style)`))
@@ -486,18 +488,20 @@ export default class Button extends Hover() {
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </${this.buttonTagName}>
     `
-    alreadyIncludedNodes.forEach(node => {
-      if (this.button !== node && !this.button.contains(node) && !node.contains(this.button)) this.button.appendChild(node)
-    })
-    if (this.getAttribute('namespace') === 'button-download-') {
-      this.button.prepend(this.downloadIcon)
-    }
+    if (this.button) {
+      alreadyIncludedNodes.forEach(node => {
+        if (this.button !== node && !this.button.contains(node) && !node.contains(this.button)) this.button.appendChild(node)
+      })
+      if (this.getAttribute('namespace') === 'button-download-') {
+        this.button.prepend(this.downloadIcon)
+      }
 
-    let iconLeft
-    if ((iconLeft = this.root.querySelector('.icon-left'))) this.button.prepend(iconLeft)
-    let iconRight
-    if ((iconRight = this.root.querySelector('.icon-right'))) this.button.append(iconRight)
-    return Promise.resolve()
+      let iconLeft
+      if ((iconLeft = this.root.querySelector('.icon-left'))) this.button.prepend(iconLeft)
+      let iconRight
+      if ((iconRight = this.root.querySelector('.icon-right'))) this.button.append(iconRight)
+      return Promise.resolve()
+    }
   }
 
   /**
@@ -510,7 +514,7 @@ export default class Button extends Hover() {
     return {
       origEvent: event,
       tags: [this.getAttribute('tag')],
-      isActive: this.button.classList.contains('active'),
+      isActive: this.button ? this.button.classList.contains('active') : false,
       fetchSubTags: this.hasAttribute('fetch-sub-tags'),
       clearSubTags: this.hasAttribute('clear-sub-tags'),
       this: this,

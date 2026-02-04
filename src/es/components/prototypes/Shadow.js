@@ -117,12 +117,13 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         this.root.appendChild(this._cssTabindex)
         // when no-tabindex, the second query still does the outlines for children
         this.setCss(/* css */`
-          :host([tabindex="${tabindex}"]:focus-visible), :host :where(*[tabindex], a, button):focus-visible {
+          :host([tabindex="${tabindex}"]:focus-visible), :host :where(*[tabindex], a, button, select):focus-visible {
             border-radius: var(--border-radius-focus-visible, var(--border-radius, 0.125em));
             outline-color: var(--outline-color-focus-visible, var(--outline-color, var(--color-secondary, var(--color, transparent))));
             outline-style: var(--outline-style-focus-visible, var(--outline-style, solid));
             outline-width: var(--outline-width-focus-visible, var(--outline-width, 2px));
             outline-offset: var(--outline-offset-focus-visible, var(--outline-offset, 2px));
+            z-index: var(--z-index-focus-visible, var(--z-index, 100));
           }
         `, undefined, undefined, undefined, this._cssTabindex)
       }
@@ -790,7 +791,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     }
     // first sanitize tags eg.: <img src="xyz" onload=alert('XSS')>, <img src="xyz" onmouseover=alert('XSS')>, <image/src/onerror=alert('XSS')>, etc.
     // second sanitize tags eg.: <a href="javascript:alert(document.location);">XSS</a>, <form action="javascript:alert(document.location);"><input type="submit" /></form>, etc.
-    return html.replace(/<[a-z]+[\s|\/][^>]*on[a-z]{4,10}=[^>]*>/gi, '').replace(/<[a-z]+[\s|\/][^>]*javascript:[^>]*>/gi, '')
+    return html.replace(/<[a-z]+[^>]*[\s|\/]on[a-z]{4,10}=[^>]*>/gi, '').replace(/<[a-z]+[\s|\/][^>]*javascript:[^>]*>/gi, '')
   }
 
   // display trumps hidden property, which we resolve here as well as we allow an animation on show

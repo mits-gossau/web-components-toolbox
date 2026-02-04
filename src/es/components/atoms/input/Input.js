@@ -1,5 +1,6 @@
 // @ts-check
 import { Shadow } from '../../prototypes/Shadow.js'
+import { escapeHTML } from '../../../helpers/Helpers.js'
 
 /* global CustomEvent */
 /* global location */
@@ -19,7 +20,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
 export default class Input extends Shadow() {
 
   static get observedAttributes() {
-    return ['readonly', 'disabled', 'error', 'placeholder']
+    return ['readonly', 'disabled', 'error', 'placeholder', 'maxlength', 'minlength', 'pattern']
   }
 
   constructor(options = {}, ...args) {
@@ -52,22 +53,34 @@ export default class Input extends Shadow() {
           composed: true,
           detail: {
             key: this.inputId,
-            value: this.inputField.value,
+            value: escapeHTML(this.inputField.value),
+            rawValue: this.inputField.value,
             type
           }
         }))
+        // dispatch search-change event when value is cleared via delete button (Safari/iOS X-icon)
+        if (!this.inputField.value && type === 'delete') {
+          document.body.dispatchEvent(new CustomEvent('search-change', {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            detail: {
+              searchTerm: ''
+            }
+          }))
+        }
       }
     }
     this.changeListener = event => this.clickListener(event, undefined, undefined, 'change')
     this.blurListener = event => this.clickListener(event, undefined, undefined, this.hasAttribute('enter-on-blur') ? 'enter' : 'blur')
     this.focusListener = event => this.clickListener(event, undefined, true, 'focus')
-    this.keydownTimeoutId = null
-    this.keydownListener = event => {
+    this.keyupTimeoutId = null
+    this.keyupListener = event => {
       if (this.root.querySelector(':focus') !== this.inputField) return
       if (!this.hasAttribute('any-key-listener') && event.keyCode !== 13) return
       // @ts-ignore
-      clearTimeout(this.keydownTimeoutId)
-      this.keydownTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : (this.getAttribute('any-key-listener') || 1000)) // no timeout on enter
+      clearTimeout(this.keyupTimeoutId)
+      this.keyupTimeoutId = setTimeout(() => this.clickListener(event, undefined, event.keyCode === 13, event.keyCode === 13 ? 'enter' : 'key'), event.keyCode === 13 ? 0 : (this.getAttribute('any-key-listener') || 1000)) // no timeout on enter
     }
     this.answerEventListener = async event => {
       let searchTerm = event.detail.searchTerm
@@ -86,6 +99,19 @@ export default class Input extends Shadow() {
         this.inputField.value = ''
       }
     }
+
+    //({promise: this.inputFieldPromise, resolve: this.inputFieldResolve} = Promise.withResolvers());
+    /** @type {(any)=>void} */
+    this.inputFieldResolve = map => map
+    /** @type {Promise<any>} */
+    this.inputFieldPromise = new Promise(resolve => (this.inputFieldResolve = resolve))
+    //({promise: this.searchButtonPromise, resolve: this.searchButtonResolve} = Promise.withResolvers())
+    /** @type {(any)=>void} */
+    this.searchButtonResolve = map => map
+    /** @type {Promise<any>} */
+    this.searchButtonPromise = new Promise(resolve => (this.searchButtonResolve = resolve))
+
+    
   }
 
   connectedCallback() {
@@ -101,6 +127,9 @@ export default class Input extends Shadow() {
       this.error = this.hasAttribute('error')
 
       if (this.placeholder && this.inputField) this.inputField.setAttribute('placeholder', this.placeholder)
+      if (this.inputField) ['maxlength', 'minlength', 'pattern'].forEach(name => {
+        if (this.hasAttribute(name)) this.inputField.setAttribute(name, this.getAttribute(name))
+      })
       if (this.value && this.inputField) this.inputField.setAttribute('value', this.value)
       if (this.autocomplete && this.inputField) this.inputField.setAttribute('autocomplete', this.autocomplete)
 
@@ -110,7 +139,7 @@ export default class Input extends Shadow() {
         if (this.hasAttribute('change-listener') && this.inputField) this.inputField.addEventListener('change', this.changeListener)
         if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.addEventListener('blur', this.blurListener)
         if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.addEventListener('focus', this.focusListener)
-        document.addEventListener('keydown', this.keydownListener)
+        if (this.inputField) this.inputField.addEventListener('keyup', this.keyupListener)
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
       }
       if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
@@ -127,7 +156,7 @@ export default class Input extends Shadow() {
       if (this.hasAttribute('change-listener') && this.inputField) this.inputField.removeEventListener('change', this.changeListener)
       if (this.hasAttribute('blur-listener') && this.inputField) this.inputField.removeEventListener('blur', this.blurListener)
       if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.removeEventListener('focus', this.focusListener)
-      document.removeEventListener('keydown', this.keydownListener)
+      if (this.inputField) this.inputField.removeEventListener('keyup', this.keyupListener)
     }
     if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
   }
@@ -135,6 +164,10 @@ export default class Input extends Shadow() {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placeholder') {
       if (this.inputField) this.inputField.setAttribute('placeholder', newValue)
+      return
+    }
+    if (['maxlength', 'minlength', 'pattern'].includes(name)) {
+      if (this.inputField) this.inputField.setAttribute(name, newValue)
       return
     }
     this[name] = this.hasAttribute(name)
@@ -179,12 +212,12 @@ export default class Input extends Shadow() {
       }
 
       .mui-form-group {
-        font-family: var(--font-family);
-        max-width: var(--max-width, none);
-        height: var(--height, auto);
+        font-family: var(--mui-form-group-font-family, var(--font-family));
+        max-width: var(--mui-form-group-max-width, var(--max-width, none));
+        height: var(--mui-form-group-height, var(--height, auto));
       }
       .mui-form-group + .mui-form-group {
-        margin-top: var(--margin-top, var(--content-spacing));
+        margin-top: var(--mui-form-group-margin-top, var(--margin-top, var(--content-spacing)));
       }
 
       label {
@@ -225,7 +258,7 @@ export default class Input extends Shadow() {
         box-shadow: none;
       }
 
-      input:focus:not(:read-only):not(:invalid) {
+      input:focus:not(:read-only):not(:invalid), input:focus:not(:disabled):not(:read-only):not(:invalid) {
         background: #fff;
         border: var(--border-focus, var(--border, 1px solid transparent));
         border-color: var(--border-color-focus, var(--border-color, var(--m-gray-500)));
@@ -274,7 +307,7 @@ export default class Input extends Shadow() {
         background-color: var(--search-input-background-color-hover, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color-hover, var(--m-gray-800));
       }
-      :host([search]) input:focus:not(:read-only):not(:invalid) {
+      :host([search]) input:focus:not(:read-only):not(:invalid), :host([search]) input:focus:not(:disabled):not(:read-only):not(:invalid) {
         background-color: var(--search-input-background-color-focus, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color-focus, var(--m-gray-800));
       }
@@ -300,6 +333,7 @@ export default class Input extends Shadow() {
       :host([search]) button {
         position: absolute;
         right: var(--search-icon-right, 1em);
+        top: var(--search-icon-top, auto);
         padding: 0;
         border: 0;
         background: transparent;
@@ -313,12 +347,16 @@ export default class Input extends Shadow() {
         cursor: pointer;
         transition: color ease-out .3s;
         ${this.getAttribute('icon-size')
-        ? `
-            height: ${this.getAttribute('icon-size')};
-            width: ${this.getAttribute('icon-size')};
-          `
-        : ''
+          ? `
+              height: ${this.getAttribute('icon-size')};
+              width: ${this.getAttribute('icon-size')};
+            `
+          : ''
+        }
       }
+
+      :host([search]) button:focus-visible {
+        color: var(--icon-color-focus-visible, var(--outline-color, var(--icon-color, var(--color-secondary, var(--color)))));
       }
 
       :host([search]) button svg {
@@ -383,7 +421,7 @@ export default class Input extends Shadow() {
           right: var(--search-icon-right-mobile, var(--content-spacing-mobile));
         }
         .mui-form-group {
-          max-width: var(--max-width-mobile, var(--max-width, none));
+          max-width: var(--mui-form-group-max-width-mobile, var(--max-width-mobile, var(--mui-form-group-max-width, var(--max-width, none))));
         }
         :host([search]) input::-webkit-search-cancel-button {
           -webkit-appearance: none;
@@ -455,6 +493,8 @@ export default class Input extends Shadow() {
           ? 'search'
           : 'go'
       )
+      this.inputFieldResolve(this.inputField)
+      this.searchButtonResolve(this.searchButton)
     })
   }
 

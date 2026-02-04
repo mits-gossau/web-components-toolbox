@@ -73,7 +73,9 @@ export default class Header extends Shadow() {
     this.clickAnimationListener = event => {
       if (this.header.classList.contains('open')) {
         this.noScroll()
+        const navigationContainedOpen = this.mNavigation.classList.contains('open')
         this.mNavigation.classList.add('open')
+        if (!navigationContainedOpen) this.mNavigation.focus()
         if (this.getMedia() !== 'desktop') this.mNavigation.setAttribute('aria-expanded', 'true')
       } else if (event && event.animationName === 'close') {
         this.mNavigation.classList.remove('open')
