@@ -300,16 +300,21 @@ export default class Input extends Shadow() {
         border-radius: var(--search-input-border-radius, var(--border-radius, 0.5em));
         width: var(--search-input-width-big, var(--search-input-width, 100%));
         height: var(--search-input-height, auto);
-        min-width: 9.7em;
+        min-width: var(--search-input-min-width, 9.7em);
       }
       :host([search]) input:hover,
       :host([search]) input:hover:not(:disabled):not(:read-only):not(:invalid) {
         background-color: var(--search-input-background-color-hover, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color-hover, var(--m-gray-800));
+        color: var(--search-input-color-hover, var(--search-input-color));
       }
       :host([search]) input:focus:not(:read-only):not(:invalid), :host([search]) input:focus:not(:disabled):not(:read-only):not(:invalid) {
         background-color: var(--search-input-background-color-focus, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color-focus, var(--m-gray-800));
+        color: var(--search-input-color-focus, var(--search-input-color));
+      }
+      :host([search]) input:focus:not(:read-only):not(:invalid) + button, :host([search]) input:focus:not(:disabled):not(:read-only):not(:invalid) + button {
+        color: var(--search-icon-color-focus, var(--search-icon-color, var(--icon-color, var(--color-secondary, var(--color)))));
       }
       :host([search]) input:visited {
         text-decoration: var(--search-input-text-decoration, none);
@@ -323,11 +328,18 @@ export default class Input extends Shadow() {
         height: 1.5rem;
         width: 1.5rem;
         display: block;
-        background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE4IDZMNiAxOE02IDZMMTggMTgiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==);
+        background-image: var(--search-input-webkit-search-cancel-button-background-image, url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE4IDZMNiAxOE02IDZMMTggMTgiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==));
         background-repeat: no-repeat;
         background-size: 1.5rem;
         cursor: pointer;
-        margin-right: 1rem;
+        margin-right: var(--search-input-webkit-search-cancel-button-margin-right, 1rem);
+      }
+
+      @container style(--search-input-selection-background-color) and style(--search-input-selection-color) {
+        :host([search]) input::selection {
+          background-color: var(--search-input-selection-background-color);
+          color: var(--search-input-selection-color);
+        }
       }
 
       :host([search]) button {
@@ -424,15 +436,10 @@ export default class Input extends Shadow() {
           max-width: var(--mui-form-group-max-width-mobile, var(--max-width-mobile, var(--mui-form-group-max-width, var(--max-width, none))));
         }
         :host([search]) input::-webkit-search-cancel-button {
-          -webkit-appearance: none;
           height: 1.25rem;
           width: 1.25rem;
-          display: block;
-          background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE4IDZMNiAxOE02IDZMMTggMTgiIHN0cm9rZT0iIzMzMzMzMyIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==);
-          background-repeat: no-repeat;
           background-size: 1.25rem;
-          cursor: pointer;
-          margin-right: 2.25em;
+          margin-right: var(--search-input-webkit-search-cancel-button-margin-right-mobile, var(--search-input-webkit-search-cancel-button-margin-right, 2.25em));
         }
         label, :host([search]) button {
           font-size: var(--font-size-mobile, var(--font-size));

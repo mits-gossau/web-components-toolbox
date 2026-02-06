@@ -318,13 +318,13 @@
 :host *:not(main) a {
   display: var(--any-a-display, var(--a-display, inline));
 }
-:host a:hover, :host a:active, :host a:focus {
-  color: var(--a-color-hover, var(--color-hover, var(--a-color, var(--color, green))));
-  text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, underline))));
-}
 :host a:visited {
   color: var(--a-color-visited, var(--color-visited, var(--a-color, var(--color, black))));
   text-decoration: var(--a-text-decoration-visited, var(--text-decoration-visited, var(--a-text-decoration, var(--text-decoration, underline))));
+}
+:host a:hover, :host a:active, :host a:focus {
+  color: var(--a-color-hover, var(--color-hover, var(--a-color, var(--color, green))));
+  text-decoration: var(--a-text-decoration-hover, var(--text-decoration-hover, var(--a-text-decoration, var(--text-decoration, underline))));
 }
 :host a h1, :host a h2, :host a h3, :host a h4, :host a h5, :host a h6 {
   color: var(--a-color, var(--color-secondary, var(--color, pink)));
