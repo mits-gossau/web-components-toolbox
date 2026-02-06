@@ -303,7 +303,8 @@ export default class Input extends Shadow() {
         min-width: var(--search-input-min-width, 9.7em);
       }
       :host([search]) input:hover,
-      :host([search]) input:hover:not(:disabled):not(:read-only):not(:invalid) {
+      :host([search]) input:hover:not(:disabled):not(:read-only):not(:invalid),
+      :host([search]) input:has(+ button:hover) {
         background-color: var(--search-input-background-color-hover, var(--input-bg-color, var(--m-gray-200)));
         border-color: var(--search-input-border-color-hover, var(--m-gray-800));
         color: var(--search-input-color-hover, var(--search-input-color));
