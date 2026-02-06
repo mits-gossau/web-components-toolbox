@@ -245,7 +245,7 @@ export default class Input extends Shadow() {
         border: var(--border, 1px solid transparent);
         border-radius: var(--border-radius, 0.5em);
         text-overflow: var(--text-overflow, ellipsis);
-        transition: background ease-out .3s, border-color ease-out .3s;
+        transition: var(--transition, background ease-out .3s, border-color ease-out .3s);
       }
 
       input::placeholder {

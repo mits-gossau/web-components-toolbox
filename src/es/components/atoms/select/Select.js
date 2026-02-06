@@ -99,6 +99,7 @@ export default class Select extends Shadow() {
         line-height: var(--select-line-height, 1.4);
         padding: var(--select-padding, 0.75em var(--content-spacing));
         text-overflow: var(--select-text-overflow, var(--text-overflow, ellipsis));
+        transition: var(--transition, background ease-out .3s, border-color ease-out .3s, color ease-out .3s);
         width: 100%;
       }
       select:focus-visible {
