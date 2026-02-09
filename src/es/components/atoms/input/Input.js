@@ -28,7 +28,7 @@ export default class Input extends Shadow() {
 
     this.allowedTypes = ['text', 'number', 'email', 'password', 'tel', 'url', 'search']
     this.setAttribute('role', this.inputType)
-    this.setAttribute('aria-label', this.inputType)
+    if (!this.hasAttribute('aria-label')) this.setAttribute('aria-label', this.inputType)
     if (!this.children.length) this.labelText = this.textContent.trim()
 
     this.lastValue = ''
@@ -487,9 +487,10 @@ export default class Input extends Shadow() {
     ]).then(([labelHtml, searchHtml]) => {
       this.divWrapper.insertAdjacentHTML('beforebegin', labelHtml)
       this.divWrapper.innerHTML += /* html */`
-          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} ${this.hasAttribute('disabled') ? 'disabled' : ''} ${this.hasAttribute('pointer') ? 'class="pointer"' : ''} />
+          <input id="${this.inputId}" name="${this.inputId}" type="${this.inputType}" ${this.hasAttribute('autofocus') ? 'autofocus' : ''} ${this.hasAttribute('disabled') ? 'disabled' : ''} ${this.hasAttribute('aria-label') ? `aria-label="${this.getAttribute('aria-label')}"` : ''} ${this.hasAttribute('pointer') ? 'class="pointer"' : ''} />
           ${searchHtml}
       `
+      this.removeAttribute('aria-label')
       if (this.hasAttribute('autofocus')) {
         this.setAttribute('autofocus-helper', '')
         this.removeAttribute('autofocus')
