@@ -5,6 +5,7 @@
   --tabs-button-padding: 0;
   --tabs-button-gap: var(--filter-spacing);
   --tabs-button-outline-offset-focus-visible: 0;
+  --shadow-padding-top: 8em;
 }
 :host .tab-navigation {
   border: 0;
@@ -34,6 +35,9 @@
   margin-right: calc(-1 * var(--content-spacing));
 }
 @media screen and (max-width: _max-width_) {
+  :host {
+    --shadow-padding-top: 6em;
+  }
   :host migrosmuseum-a-heading {
     margin-left: calc(-1 * var(--content-spacing-mobile));
     margin-right: calc(-1 * var(--content-spacing-mobile));
