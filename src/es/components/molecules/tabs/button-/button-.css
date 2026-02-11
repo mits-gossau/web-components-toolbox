@@ -1,10 +1,48 @@
 :host {
   --button-secondary-margin: 0;
+  --button-secondary-width: 100%;
   --tabs-button-ul-flex-direction: row;
   --tabs-button-padding: 0;
   --tabs-button-gap: var(--filter-spacing);
+  --tabs-button-outline-offset-focus-visible: 0;
+  --shadow-padding-top: 8em;
 }
-
+:host .tab-navigation {
+  border: 0;
+  gap: 0;
+  margin: -0.5em;
+  padding: 0.5em;
+}
+:host .tab-navigation li:hover {
+    background-color: transparent;
+}
+:host .tab-navigation li:hover::after, :host .tab-navigation li.active::after {
+    display: none;
+}
+:host .tab-navigation li > * {
+  height: 100%;
+  width: 100%;
+}
+:host .tab-navigation li:not(:last-child) {
+  min-width: 8.3rem;
+}
+:host .tab-navigation li:last-child {
+  margin-left: var(--filter-spacing);
+}
+:host migrosmuseum-a-heading {
+  --width: 100dvw;
+  margin-left: calc(-1 * var(--content-spacing));
+  margin-right: calc(-1 * var(--content-spacing));
+}
 @media screen and (max-width: _max-width_) {
-  
+  :host {
+    --shadow-padding-top: 6em;
+  }
+  :host migrosmuseum-a-heading {
+    margin-left: calc(-1 * var(--content-spacing-mobile));
+    margin-right: calc(-1 * var(--content-spacing-mobile));
+  }
+  :host .tab-navigation li:not(:last-child) {
+    min-width: 5.53rem;
+  }
 }

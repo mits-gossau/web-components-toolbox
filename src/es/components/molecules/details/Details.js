@@ -205,9 +205,9 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
 
   mutationCallback (mutationList, observer) {
     if (this.isMobile && this.hasAttribute('mobile-open')) return null
-
     mutationList.forEach(mutation => {
       if (mutation.target.hasAttribute('open')) {
+        this.loadTemplateTag()
         this.details.addEventListener('animationend', this.detailsOpenAnimationendListener, { once: true })
         // in case of fast double click the animationend event would not reach details, since the content would be hidden
         clearTimeout(this.timeoutDetailsOpenAnimationend)
@@ -639,9 +639,19 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
     this.summary.appendChild(divSummary)
     this.summary.setAttribute('tabindex', '0')
     this.summary.setAttribute('role', 'button')
-    this.summary.setAttribute('aria-expanded', this.details.hasAttribute('open') ? 'true' : 'false')
+    if (this.details.hasAttribute('open')) {
+      this.summary.setAttribute('aria-expanded', 'true')
+      this.loadTemplateTag()
+    } else {
+      this.summary.setAttribute('aria-expanded', 'false')
+    }
     if (this.summary.querySelector('a')) this.summary.setAttribute('tabindex', '-1')
     this.html = this.style
+  }
+
+  loadTemplateTag () {
+    if (this.content.tagName === 'TEMPLATE') this.content.replaceWith(this.content.content)
+    this.loadTemplateTag = () => {}
   }
 
   setIconFromAttribute (iconPath, node, cssClass) {

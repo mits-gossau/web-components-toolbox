@@ -99,6 +99,7 @@ export default class Select extends Shadow() {
         line-height: var(--select-line-height, 1.4);
         padding: var(--select-padding, 0.75em var(--content-spacing));
         text-overflow: var(--select-text-overflow, var(--text-overflow, ellipsis));
+        transition: var(--transition, background ease-out .3s, border-color ease-out .3s, color ease-out .3s);
         width: 100%;
       }
       select:focus-visible {
@@ -107,6 +108,8 @@ export default class Select extends Shadow() {
         border: var(--select-border-focus-visible, var(--select-border, var(--border, 1px solid transparent)));
         border-color: var(--select-border-color-focus-visible, var(--outline-color, var(--select-border-color, var(--border-color, var(--m-gray-300)))));
         border-radius: var(--select-border-radius-focus-visible, var(--select-border-radius, var(--border-radius, 0.5em)));
+        background-color: var(--select-background-color-focus-visible, var(--select-background-color, var(--background-color, transparent)));
+        color: var(--select-color-focus-visible, var(--select-color, var(--color, black)));
       }
       select > option {
         cursor: pointer;
@@ -122,10 +125,13 @@ export default class Select extends Shadow() {
       }
       :host([chevron-down]) select {
         appearance: none;
-        background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+        background-image: var(--chevron-down-background-image, url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'));
         background-repeat: no-repeat;
-        background-position: right 1em center;
-        background-size: 1.5em;
+        background-position: var(--chevron-down-background-position, right 1em center);
+        background-size: var(--chevron-down-background-size, 1.5em);
+      }
+      :host([chevron-down]) select:focus-visible {
+        background-image: var(--chevron-down-background-image-focus-visible, var(--chevron-down-background-image, url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9L12 15L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>')));
       }
       @media only screen and (max-width: _max-width_) {
         select {
