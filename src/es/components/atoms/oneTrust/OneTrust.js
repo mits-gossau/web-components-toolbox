@@ -14,11 +14,11 @@ export default class OneTrust extends Shadow() {
   /**
    * @param {any} args
    */
-  constructor (options = {}, ...args) {
+  constructor(options = {}, ...args) {
     super({ importMetaUrl: import.meta.url, mode: 'false', tabindex: 'no-tabindex', ...options }, ...args)
   }
 
-  connectedCallback () {
+  connectedCallback() {
     if (this.shouldRenderHTML()) {
       this.renderHTML().then(() => {
         if (this.settingsLink) this.settingsLink.addEventListener('click', this.settingsLinkListener)
@@ -26,7 +26,7 @@ export default class OneTrust extends Shadow() {
     } else if (this.settingsLink) this.settingsLink.addEventListener('click', this.settingsLinkListener)
   }
 
-  disconnectedCallback () {
+  disconnectedCallback() {
     if (this.settingsLink) this.settingsLink.removeEventListener('click', this.settingsLinkListener)
   }
 
@@ -78,7 +78,7 @@ export default class OneTrust extends Shadow() {
     span.remove()
   }
 
-  async renderScripts () {
+  async renderScripts() {
     const snippet = this.snippet
     if (snippet) {
       await this.injectSnippetIntoHead(snippet)
@@ -170,7 +170,7 @@ export default class OneTrust extends Shadow() {
 
   // existing fallback code remains unchanged
   // @ts-ignore
-  async loadCookieLawDependency (id) {
+  async loadCookieLawDependency(id) {
     return this.loadCookieLawDependencyPromise || (this.loadCookieLawDependencyPromise = new Promise((resolve, reject) => {
       const cookieLawScript = document.createElement('script')
       cookieLawScript.setAttribute('async', '')
@@ -192,7 +192,7 @@ export default class OneTrust extends Shadow() {
    * @param {string} id
    * @returns a promise.
    */
-  async loadCookieLawScriptTemplates (id) {
+  async loadCookieLawScriptTemplates(id) {
     return this.loadCookieLawScriptTemplatesPromise || (this.loadCookieLawScriptTemplatesPromise = new Promise((resolve, reject) => {
       const cookieLawScriptTemplatesScript = document.createElement('script')
       cookieLawScriptTemplatesScript.setAttribute('async', '')
@@ -215,7 +215,7 @@ export default class OneTrust extends Shadow() {
    * Loads a script dependency called "optanon wrapper"
    * @returns a promise.
    */
-  async callOptanonWrapper () {
+  async callOptanonWrapper() {
     return this.loadScriptDependencyPromise || (this.loadScriptDependencyPromise = new Promise((resolve, reject) => {
       const optanonWrapperScript = document.createElement('script')
       optanonWrapperScript.setAttribute('id', 'one-trust-optanon-wrapper')
@@ -231,15 +231,15 @@ export default class OneTrust extends Shadow() {
     }))
   }
 
-  get id () {
+  get id() {
     return this.getAttribute('id')
   }
 
-  get settingsLink () {
+  get settingsLink() {
     return this.root.querySelector('a')
   }
 
-  get linkText () {
+  get linkText() {
     return this.getAttribute('link-text') || 'Cookie Settings'
   }
 }
