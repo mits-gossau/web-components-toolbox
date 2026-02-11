@@ -121,8 +121,10 @@ export default class MultiLevelNavigation extends Shadow() {
         
         // If desktop and use-hover-listener attribute exists
         if (this.isDesktop && this.useHoverListener) {
-          if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') this.setDesktopMainNavItems(event)
-          else if (event.currentTarget.getAttribute('href').includes('#')) this.handleAnchorClickOnNavItems(event)
+          if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
+            this.setDesktopMainNavItems(event)
+            if (event.currentTarget.parentNode.hasAttribute('sub-nav')) this.handleOnClickOnDesktopSubNavItems(event)
+          } else if (event.currentTarget.getAttribute('href').includes('#')) this.handleAnchorClickOnNavItems(event)
           else if (event.currentTarget.getAttribute('href')) this.handleNewTabNavigationOnNavItems(event)
         } else if (this.isDesktop && !this.useHoverListener) {
           // If desktop and use-hover-listener attribute NOT exists
@@ -504,94 +506,180 @@ export default class MultiLevelNavigation extends Shadow() {
   }
 
   handleArrowNavigation(event) {
-    event.preventDefault()
+    const focused = event.composedPath()[0]
+    if (!focused) return
 
-    const navigation = this.getRootNode().host.shadowRoot.querySelector('header > m-multi-level-navigation')
-    const navigationItems = navigation.root.querySelectorAll('nav > ul > li:not(.grey-background) > a')
-    if (!navigationItems || navigationItems.length === 0) return
-
-    if (this.currentIndex === -1) {
-      const activeElement = navigation.root.querySelector('nav > ul > li.active > a')
-      this.currentIndex = activeElement ? Array.from(navigationItems).indexOf(activeElement) : 0
+    if (this.isDesktop) {
+      this.handleDesktopArrowNavigation(event, focused)
+    } else {
+      this.handleMobileArrowNavigation(event, focused)
     }
+  }
 
-    if (this.currentIndex === -1) return
-
-    const keyMap = this.isDesktop
-      ? { next: 'ArrowRight', prev: 'ArrowLeft', down: 'ArrowDown', up: 'ArrowUp' }
-      : { next: 'ArrowDown', prev: 'ArrowUp' }
-
-    const currentElement = navigationItems[this.currentIndex]
-    const parentLi = currentElement.closest('li')
-    const submenu = parentLi.querySelector('ul[role="menu"]')
-    const submenuItems = submenu ? submenu.querySelectorAll('li[role="menuitem"]') : null
-
-    if (event.key === keyMap.down) {
-      if (submenu && parentLi.getAttribute('aria-expanded') === 'true') {
-        const activeMainMenuHasFocus = currentElement.tabIndex === 0 || document.activeElement === currentElement
-        if (activeMainMenuHasFocus && submenuItems && submenuItems.length > 0) {
-          this.transferFocus(currentElement, submenuItems[0])
-          return
-        }
-
-        const focusedSubmenuItem = submenuItems && Array.from(submenuItems).find(item => item.tabIndex === 0 || document.activeElement === item)
-        const submenuIndex = focusedSubmenuItem ? Array.from(submenuItems).indexOf(focusedSubmenuItem) : -1
-
-        if (submenuIndex !== -1 && submenuIndex < submenuItems.length - 1) {
-          const nextSubmenuItem = submenuItems[submenuIndex + 1]
-          this.transferFocus(focusedSubmenuItem, nextSubmenuItem)
-          return
-        } else if (submenuIndex === submenuItems.length - 1) {
-          const nextIndex = (this.currentIndex + 1) % navigationItems.length
-          updateFocus(this.currentIndex, nextIndex, navigationItems)
-          this.currentIndex = nextIndex
-          return
-        }
+  getFocusableItemsInList(ul) {
+    const items = []
+    ul.querySelectorAll(':scope > li').forEach(li => {
+      if (li.classList.contains('grey-background')) return
+      const navLevelItem = li.querySelector(':scope > a > m-nav-level-item')
+      if (navLevelItem) {
+        items.push(navLevelItem)
+      } else {
+        const directLink = li.querySelector(':scope > a:not(.navigation-back)')
+        if (directLink) items.push(directLink)
       }
+    })
+    return items
+  }
 
-      if (submenu && parentLi.getAttribute('aria-expanded') === 'false') {
-        currentElement.click()
-        parentLi.setAttribute('aria-expanded', 'true')
-        currentElement.setAttribute('aria-expanded', 'true')
-        return
+  handleDesktopArrowNavigation(event, focused) {
+    const mainNavItems = Array.from(this.root.querySelectorAll('nav > ul > li:not(.grey-background) > a'))
+    const mainNavIndex = mainNavItems.indexOf(focused)
+    const isInMainNav = mainNavIndex !== -1
+
+    const closestLi = focused.closest('li')
+    const isInFlyout = focused.closest('o-nav-wrapper') || focused.closest('div[nav-level]')
+
+    if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      if (isInMainNav) {
+        const nextIndex = (mainNavIndex + 1) % mainNavItems.length
+        this.transferFocus(focused, mainNavItems[nextIndex])
+      } else if (isInFlyout && closestLi && closestLi.hasAttribute('sub-nav')) {
+        focused.click()
       }
-
-      const nextIndex = (this.currentIndex + 1) % navigationItems.length
-      updateFocus(this.currentIndex, nextIndex, navigationItems)
-      this.currentIndex = nextIndex
-
-    } else if (event.key === keyMap.up) {
-      if (submenu && parentLi.getAttribute('aria-expanded') === 'true') {
-        const focusedSubmenuItem = submenuItems && Array.from(submenuItems).find(item => item.tabIndex === 0 || document.activeElement === item)
-        const submenuIndex = focusedSubmenuItem ? Array.from(submenuItems).indexOf(focusedSubmenuItem) : -1
-
-        if (submenuIndex > 0) {
-          const prevSubmenuItem = submenuItems[submenuIndex - 1]
-          this.transferFocus(focusedSubmenuItem, prevSubmenuItem)
-          return
-        } else if (submenuIndex === 0) {
-          this.transferFocus(focusedSubmenuItem, currentElement)
-          return
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      if (isInMainNav) {
+        const prevIndex = (mainNavIndex - 1 + mainNavItems.length) % mainNavItems.length
+        this.transferFocus(focused, mainNavItems[prevIndex])
+      } else if (isInFlyout) {
+        const currentNavLevelDiv = focused.closest('div[nav-level]')
+        if (currentNavLevelDiv) {
+          const currentLevel = +currentNavLevelDiv.getAttribute('nav-level')
+          if (currentLevel > 1) {
+            const prevLevelDiv = currentNavLevelDiv.previousElementSibling
+            if (prevLevelDiv) {
+              const activeLi = prevLevelDiv.querySelector('li.hover-active') || prevLevelDiv.querySelector('li[aria-expanded="true"]')
+              const target = activeLi ? activeLi.querySelector(this.focusElSelector) : prevLevelDiv.querySelector(this.focusElSelector)
+              if (target) this.setElementFocus(target)
+            }
+          } else {
+            const openMainLi = this.root.querySelector('nav > ul > li.open')
+            if (openMainLi) {
+              const mainLink = openMainLi.querySelector(':scope > a')
+              if (mainLink) this.setElementFocus(mainLink)
+            }
+          }
         }
       }
-
-      const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
-      updateFocus(this.currentIndex, prevIndex, navigationItems)
-      this.currentIndex = prevIndex
-
-    } else if (event.key === keyMap.next) {
-      const nextIndex = (this.currentIndex + 1) % navigationItems.length
-      updateFocus(this.currentIndex, nextIndex, navigationItems)
-      this.currentIndex = nextIndex
-
-    } else if (event.key === keyMap.prev) {
-      const prevIndex = (this.currentIndex - 1 + navigationItems.length) % navigationItems.length
-      updateFocus(this.currentIndex, prevIndex, navigationItems)
-      this.currentIndex = prevIndex
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      if (isInMainNav) {
+        const parentLi = focused.closest('li')
+        if (parentLi && parentLi.classList.contains('open')) {
+          const wrapper = parentLi.querySelector('o-nav-wrapper')
+          if (wrapper) {
+            const visibleUl = wrapper.querySelector('div[nav-level="1"] ul:not([style*="display: none"])')
+            if (visibleUl) {
+              const items = this.getFocusableItemsInList(visibleUl)
+              if (items.length) {
+                this.setElementFocus(items[0])
+                return
+              }
+            }
+          }
+        }
+        focused.click()
+        const parentLiAfterClick = focused.closest('li')
+        if (parentLiAfterClick) {
+          setTimeout(() => {
+            const wrapper = parentLiAfterClick.querySelector('o-nav-wrapper')
+            if (wrapper) {
+              const visibleUl = wrapper.querySelector('div[nav-level="1"] ul:not([style*="display: none"])')
+              if (visibleUl) {
+                const items = this.getFocusableItemsInList(visibleUl)
+                if (items.length) this.setElementFocus(items[0])
+              }
+            }
+          }, 100)
+        }
+      } else if (isInFlyout) {
+        if (focused.classList.contains('close-icon')) {
+          const wrapper = focused.closest('o-nav-wrapper')
+          if (wrapper) {
+            const visibleUl = wrapper.querySelector('div[nav-level="1"] ul:not([style*="display: none"])')
+            if (visibleUl) {
+              const items = this.getFocusableItemsInList(visibleUl)
+              if (items.length) this.transferFocus(focused, items[0])
+            }
+          }
+          return
+        }
+        const currentUl = focused.closest('ul')
+        if (currentUl) {
+          const items = this.getFocusableItemsInList(currentUl)
+          const idx = items.indexOf(focused)
+          if (idx !== -1 && idx < items.length - 1) {
+            this.transferFocus(focused, items[idx + 1])
+          } else if (idx === items.length - 1) {
+            const wrapper = focused.closest('o-nav-wrapper')
+            const closeIcon = wrapper?.querySelector('a.close-icon[tabindex="0"]')
+            if (closeIcon) this.transferFocus(focused, closeIcon)
+          }
+        }
+      }
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      if (isInMainNav) return
+      if (isInFlyout) {
+        if (focused.classList.contains('close-icon')) {
+          const wrapper = focused.closest('o-nav-wrapper')
+          if (wrapper) {
+            const visibleUl = wrapper.querySelector('div[nav-level="1"] ul:not([style*="display: none"])')
+            if (visibleUl) {
+              const items = this.getFocusableItemsInList(visibleUl)
+              if (items.length) this.transferFocus(focused, items[items.length - 1])
+            }
+          }
+          return
+        }
+        const currentUl = focused.closest('ul')
+        if (currentUl) {
+          const items = this.getFocusableItemsInList(currentUl)
+          const idx = items.indexOf(focused)
+          if (idx > 0) {
+            this.transferFocus(focused, items[idx - 1])
+          } else if (idx === 0) {
+            const openMainLi = this.root.querySelector('nav > ul > li.open > a')
+            if (openMainLi) this.transferFocus(focused, openMainLi)
+          }
+        }
+      }
     }
+  }
 
-    const updateFocus = (currentIndex, targetIndex, items) => {
-      this.transferFocus(items[currentIndex], items[targetIndex])
+  handleMobileArrowNavigation(event, focused) {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault()
+      const currentUl = focused.closest('ul')
+      if (!currentUl) return
+      const items = this.getFocusableItemsInList(currentUl)
+      const idx = items.indexOf(focused)
+      if (idx === -1) return
+      const nextIdx = event.key === 'ArrowDown' ? idx + 1 : idx - 1
+      if (nextIdx >= 0 && nextIdx < items.length) {
+        this.transferFocus(focused, items[nextIdx])
+      }
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      const closestLi = focused.closest('li')
+      if (closestLi && (closestLi.hasAttribute('sub-nav') || closestLi.hasAttribute('sub-nav-control'))) {
+        focused.click()
+      }
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      const backButton = focused.closest('div[nav-level]')?.querySelector('.navigation-back')
+      if (backButton) backButton.click()
     }
   }
 
