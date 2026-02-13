@@ -16,12 +16,18 @@ export default class Tabs extends Shadow() {
       tabs.forEach((tab, index) => {
         tab.classList.remove('active')
         const button = tab.querySelector('a-button')
-        if (button) button.button.classList.remove('active')
+        if (button) {
+          button.classList.remove('active')
+          button.button?.classList.remove('active')
+        }
         const dataTab = tab.getAttribute('data-tab') ? tab.getAttribute('data-tab').toString() : ''
 
         if (tabParam === dataTab) {
           tab.classList.add('active')
-          if (button) button.button.classList.add('active')
+          if (button) {
+            button.classList.add('active')
+            button.button?.classList.add('active')
+          }
           sections[index].classList.add('active')
         }
       })
@@ -31,7 +37,10 @@ export default class Tabs extends Shadow() {
     if (!tabParam) {
       tabs[0].classList.add('active')
       const button = tabs[0].querySelector('a-button')
-      if (button) button.button.classList.add('active')
+      if (button) {
+        button.classList.add('active')
+        button.button?.classList.add('active')
+      }
       sections[0].classList.add('active')
     }
 
@@ -51,7 +60,10 @@ export default class Tabs extends Shadow() {
           tabs.forEach((tab) => {
             tab.classList.remove('active')
             const button = tab.querySelector('a-button')
-            if (button) button.button.classList.remove('active')
+            if (button) {
+              button.classList.remove('active')
+              button.button?.classList.remove('active')
+            }
           })
 
           sections.forEach((section) => {
@@ -60,7 +72,10 @@ export default class Tabs extends Shadow() {
 
           tab.classList.add('active')
           const button = tab.querySelector('a-button')
-          if (button) button.button.classList.add('active')
+          if (button) {
+            button.classList.add('active')
+            button.button?.classList.add('active')
+          }
           sections[index].classList.add('active')
         })
       }

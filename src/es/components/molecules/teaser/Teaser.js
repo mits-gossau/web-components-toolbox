@@ -144,6 +144,7 @@ export default class Teaser extends Intersection() {
         font-size: var(--figcaption-font-size, 1em);
         flex-grow: var(--figcaption-flex-grow, 1);
         height: var(--figcaption-height, 100%);
+        min-height: var(--figcaption-min-height, auto);
         width: var(--figcaption-width, 100%);
         transition: var(--figcaption-transition, none);
         transform: var(--figcaption-transform, none);
