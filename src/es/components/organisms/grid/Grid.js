@@ -20,9 +20,21 @@ export default class Grid extends Shadow() {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
-    if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
-    if (this.hasAttribute('picture-load')) showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true }))))
-    Promise.all(showPromises).then(() => (this.hidden = false))
+    if (this.shouldRenderHTML()) {
+      if (this.hasAttribute('picture-load') && this.hasPictureLoading) showPromises.push(/** @type {Promise<void>} */(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true }))))
+      showPromises.push(this.renderHTML())
+    }
+    Promise.all(showPromises).then(() => {
+      this.hidden = false
+      if (this.hasAttribute('grid-load')) {
+        this.setAttribute('loaded', 'true')
+        this.dispatchEvent(new CustomEvent(this.getAttribute('grid-load') || 'grid-load', {
+          bubbles: true,
+          cancelable: true,
+          composed: true
+        }))
+      }
+    })
     return showPromises
   }
 
@@ -583,5 +595,9 @@ export default class Grid extends Shadow() {
     this.setCss(css + cssDesktop + cssMobile, undefined, false, undefined, this._css, false)
     this.html = [this.section]
     return Promise.resolve()
+  }
+
+  get hasPictureLoading () {
+    return Grid.walksDownDomQueryMatchesAll(this, 'a-picture[picture-load]:not([loaded])').length > 0
   }
 }

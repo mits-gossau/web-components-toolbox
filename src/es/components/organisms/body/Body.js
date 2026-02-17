@@ -62,6 +62,7 @@ export default class Body extends Anchor() {
       }
       :host > main {
         padding: var(--main-padding, 0);
+        min-height: var(--main-min-height, auto);
       }
       :host > main > *:not(style):not(script) {
         display: var(--any-display, block);

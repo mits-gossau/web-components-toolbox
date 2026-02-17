@@ -183,6 +183,22 @@
   font-size: var(--h2-font-size, 1.5em);
   line-height: var(--h2-line-height, var(--h-line-height, var(--line-height, normal)));
 }
+:host .font-size-h3 {
+  font-size: var(--h3-font-size, 1.25em);
+  line-height: var(--h3-line-height, var(--h-line-height, var(--line-height, normal)));
+}
+:host .font-size-h4 {
+  font-size: var(--h4-font-size, 1.125em);
+  line-height: var(--h4-line-height, var(--h-line-height, var(--line-height, normal)));
+}
+:host .font-size-h5 {
+  font-size: var(--h5-font-size, 1em);
+  line-height: var(--h5-line-height, var(--h-line-height, var(--line-height, normal)));
+}
+:host .font-size-h6 {
+  font-size: var(--h6-font-size, 1.75em);
+  line-height: var(--h6-line-height, var(--h-line-height, var(--line-height, normal)));
+}
 :host .font-size-tiny {
   font-size: var(--font-size-tiny, calc(0.75 * var(--p-font-size, 1em)));
   line-height: var(--line-height, normal);
@@ -629,6 +645,22 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     font-size: var(--h2-font-size, 1.5em);
     line-height: var(--h2-line-height, var(--h-line-height, var(--line-height, normal)));
   }
+  :host .font-size-h3-desktop {
+    font-size: var(--h3-font-size, 1.25em);
+    line-height: var(--h3-line-height, var(--h-line-height, var(--line-height, normal)));
+  }
+  :host .font-size-h4-desktop {
+    font-size: var(--h4-font-size, 1.125em);
+    line-height: var(--h4-line-height, var(--h-line-height, var(--line-height, normal)));
+  }
+  :host .font-size-h5-desktop {
+    font-size: var(--h5-font-size, 1em);
+    line-height: var(--h5-line-height, var(--h-line-height, var(--line-height, normal)));
+  }
+  :host .font-size-h6-desktop {
+    font-size: var(--h6-font-size, 1.75em);
+    line-height: var(--h6-line-height, var(--h-line-height, var(--line-height, normal)));
+  }
   :host .font-size-tiny-desktop {
     font-size: var(--font-size-tiny-desktop, var(--font-size-tiny, calc(0.75 * var(--p-font-size, 1em))));
     line-height: var(--line-height, normal);
@@ -700,6 +732,22 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   :host .font-size-h2, :host .font-size-h2-mobile {
     font-size: var(--h2-font-size-mobile, var(--h2-font-size, 1.5em));
     line-height: var(--h2-line-height-mobile, var(--h-line-height-mobile, var(--line-height-mobile, var(--h2-line-height, var(--h-line-height, var(--line-height, normal))))));
+  }
+  :host .font-size-h3, :host .font-size-h3-mobile {
+    font-size: var(--h3-font-size-mobile, var(--h3-font-size, 1.25em));
+    line-height: var(--h3-line-height-mobile, var(--h-line-height-mobile, var(--line-height-mobile, var(--h3-line-height, var(--h-line-height, var(--line-height, normal))))));
+  }
+  :host .font-size-h4, :host .font-size-h4-mobile {
+    font-size: var(--h4-font-size-mobile, var(--h4-font-size, 1.125em));
+    line-height: var(--h4-line-height-mobile, var(--h-line-height-mobile, var(--line-height-mobile, var(--h4-line-height, var(--h-line-height, var(--line-height, normal))))));
+  }
+  :host .font-size-h5, :host .font-size-h5-mobile {
+    font-size: var(--h5-font-size-mobile, var(--h5-font-size, 1em));
+    line-height: var(--h5-line-height-mobile, var(--h-line-height-mobile, var(--line-height-mobile, var(--h5-line-height, var(--h-line-height, var(--line-height, normal))))));
+  }
+  :host .font-size-h6, :host .font-size-h6-mobile {
+    font-size: var(--h6-font-size-mobile, var(--h6-font-size, 1.75em));
+    line-height: var(--h6-line-height-mobile, var(--h-line-height-mobile, var(--line-height-mobile, var(--h6-line-height, var(--h-line-height, var(--line-height, normal))))));
   }
   :host .font-size-tiny, :host .font-size-tiny-mobile {
     font-size: var(--font-size-tiny-mobile, var(--font-size-tiny, calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)))));
