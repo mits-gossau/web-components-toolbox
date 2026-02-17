@@ -143,6 +143,7 @@ export default class Input extends Shadow() {
         if (this.getAttribute('search') && location.href.includes(this.getAttribute('search')) && this.inputField) this.inputField.value = decodeURIComponent(location.href.split(this.getAttribute('search'))[1])
       }
       if (this.getAttribute('answer-event-name')) document.body.addEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
+      this.getAttribute('answer-event-name').split(',').forEach(eventName => document.body.addEventListener(eventName, this.answerEventListener))
       // set cursor at the end
       if (this.inputField) this.inputField.setSelectionRange(this.inputField.value.length, this.inputField.value.length)
       this.hidden = false
@@ -158,7 +159,7 @@ export default class Input extends Shadow() {
       if (this.hasAttribute('focus-listener') && this.inputField) this.inputField.removeEventListener('focus', this.focusListener)
       if (this.inputField) this.inputField.removeEventListener('keyup', this.keyupListener)
     }
-    if (this.getAttribute('answer-event-name')) document.body.removeEventListener(this.getAttribute('answer-event-name'), this.answerEventListener)
+    this.getAttribute('answer-event-name').split(',').forEach(eventName => document.body.removeEventListener(eventName, this.answerEventListener))
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
