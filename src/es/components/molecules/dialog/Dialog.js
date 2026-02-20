@@ -79,7 +79,7 @@ export default class Dialog extends Shadow() {
       event.stopPropagation()
       this.close()
     }
-    this.showEventListener = event => this.show(event.detail.command)
+    this.showEventListener = event => this.show(event.detail?.command)
     this.closeEventListener = () => this.close()
     this.keyupListener = event => {
       if (event.key === 'Escape') this.close()
