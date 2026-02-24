@@ -187,6 +187,7 @@ export default class Dialog extends Shadow() {
       z-index: 100;
     }
     :host > dialog {
+      color: var(--color, canvastext);
       background-color: var(--background-color, canvas);
     }
     :host > dialog {
