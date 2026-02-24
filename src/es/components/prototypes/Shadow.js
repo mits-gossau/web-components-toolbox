@@ -400,7 +400,8 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    * @return {boolean}
    */
   static get isMac () {
-    return navigator.userAgent.includes('Mac')
+    // @ts-ignore
+    return self._userAgentIncludesMac ?? (self._userAgentIncludesMac = navigator.userAgent.includes('Mac'))
   }
 
   /**
