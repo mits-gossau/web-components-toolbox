@@ -816,7 +816,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
       ? /* css */`
         ${generalFix}
         :host {
-          display: ${this._initialDisplay || (this._initialDisplay = self.getComputedStyle(this).getPropertyValue('display'))};
+          display: block;
           visibility: hidden !important;
         }
       `
