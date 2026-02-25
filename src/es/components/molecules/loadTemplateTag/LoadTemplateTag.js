@@ -22,6 +22,11 @@ import { Intersection } from '../../prototypes/Intersection.js'
 export default class LoadTemplateTag extends Intersection() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mode: 'false', intersectionObserverInit: {} }), ...args)
+
+    this.loadPromise = new Promise((resolve, reject) => {
+      this.resolve = resolve
+      this.reject = reject
+    })
   }
 
   connectedCallback () {
@@ -128,6 +133,9 @@ export default class LoadTemplateTag extends Intersection() {
         })
       }
       if (this.hasAttribute('copy-class-list')) Array.from(this.classList).forEach(className => templateContentElement.classList.add(className))
+      this.resolve(templateContentElement)
+    } else {
+      this.reject(templateContentElement)
     }
     if (notDefined?.length) {
       if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
