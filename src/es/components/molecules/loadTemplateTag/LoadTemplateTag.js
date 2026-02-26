@@ -100,61 +100,63 @@ export default class LoadTemplateTag extends Intersection() {
     const templateContent = this.template.content
     const notDefined = Array.from(templateContent.querySelectorAll(':not(:defined)')).filter(node => !customElements.get(node.tagName.toLowerCase()))
     this.template.remove()
-    let templateContentElement = null
-    // keep a placeholder with same style attribute (height) until next scroll event, which gives enough time for the templateContent to render
-    if (this.hasAttribute('style') && this.getAttribute('style').includes('height')) {
-      this.after(templateContent)
-      if ((templateContentElement = this.nextElementSibling)) {
-        let counter = 0
-        const removeThisFunc = () => setTimeout(() => {
-          counter++
-          if (counter > 9 || this.nextElementSibling.offsetHeight) {
-            this.remove()
-            if (counter > 9) console.warn('The loaded template tag has no offsetHeight, check the usage of this tag!')
-          } else {
-            removeThisFunc()
-          }
-        }, 20)
-        removeThisFunc()
+    self.requestAnimationFrame(timeStamp => {
+      let templateContentElement = null
+      // keep a placeholder with same style attribute (height) until next scroll event, which gives enough time for the templateContent to render
+      if (this.hasAttribute('style') && this.getAttribute('style').includes('height')) {
+        this.after(templateContent)
+        if ((templateContentElement = this.nextElementSibling)) {
+          let counter = 0
+          const removeThisFunc = () => setTimeout(() => {
+            counter++
+            if (counter > 9 || this.nextElementSibling.offsetHeight) {
+              this.remove()
+              if (counter > 9) console.warn('The loaded template tag has no offsetHeight, check the usage of this tag!')
+            } else {
+              removeThisFunc()
+            }
+          }, 20)
+          removeThisFunc()
+        } else {
+          this.remove()
+        }
       } else {
-        this.remove()
+        const previousElementSibling = this.previousElementSibling
+        const parentNode = this.parentNode
+        this.replaceWith(templateContent)
+        templateContentElement = previousElementSibling ? previousElementSibling.nextElementSibling : parentNode.children[0]
       }
-    } else {
-      const previousElementSibling = this.previousElementSibling
-      const parentNode = this.parentNode
-      this.replaceWith(templateContent)
-      templateContentElement = previousElementSibling ? previousElementSibling.nextElementSibling : parentNode.children[0]
-    }
-    if (templateContentElement) {
-      if (this.hasAttribute('copy-attributes')) {
-        Array.from(this.attributes).forEach(({ name, value }) => {
-          if (name === 'copy-attributes' || name === 'copy-class-list') return
-          templateContentElement.setAttribute(name, value)
-        })
-      }
-      if (this.hasAttribute('copy-class-list')) Array.from(this.classList).forEach(className => templateContentElement.classList.add(className))
-      this.resolve(templateContentElement)
-    } else {
-      this.reject(templateContentElement)
-    }
-    if (notDefined?.length) {
-      if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
-        parentNode.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
-          detail: {
-            nodes: notDefined
-          },
-          bubbles: true,
-          cancelable: true,
-          composed: true
-        }))
+      if (templateContentElement) {
+        if (this.hasAttribute('copy-attributes')) {
+          Array.from(this.attributes).forEach(({ name, value }) => {
+            if (name === 'copy-attributes' || name === 'copy-class-list') return
+            templateContentElement.setAttribute(name, value)
+          })
+        }
+        if (this.hasAttribute('copy-class-list')) Array.from(this.classList).forEach(className => templateContentElement.classList.add(className))
+        this.resolve(templateContentElement)
       } else {
-        console.error(
-          'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
-          notDefined,
-          this
-        )
+        this.reject(templateContentElement)
       }
-    }
+      if (notDefined?.length) {
+        if (document.body.hasAttribute(this.getAttribute('load-custom-elements') || 'load-custom-elements')) {
+          parentNode.dispatchEvent(new CustomEvent(this.getAttribute('load-custom-elements') || 'load-custom-elements', {
+            detail: {
+              nodes: notDefined
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+        } else {
+          console.error(
+            'There are :not(:defined) web components in the template. You must load through wc-config or manually:',
+            notDefined,
+            this
+          )
+        }
+      }
+    })
   }
 
   get template () {

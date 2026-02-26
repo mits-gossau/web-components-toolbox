@@ -84,7 +84,6 @@ export default class Tabs extends Shadow() {
 
   connectedCallback () {
     if (this.shouldRenderCSS()) this.renderCSS()
-    const tabs = this.root.querySelectorAll('.tab-navigation li')
     const activeNavigationTab = this.root.querySelector('.tab-navigation li.active')
     const subContainers = this.root.querySelectorAll('.container-distributors')
 
@@ -98,15 +97,21 @@ export default class Tabs extends Shadow() {
       })
     }
 
+    if (this.hasAttribute('scroll-to-view')) {
+      activeNavigationTab.scrollIntoView({ behavior: 'smooth', inline: 'center' })
+    }
+    if (this.isConnected) this.connectedCallbackOnce()
+  }
+
+  connectedCallbackOnce () {
+    const tabs = this.root.querySelectorAll('.tab-navigation li')
     tabs.forEach(tab => {
       if (tab.classList.contains('active')) {
         tab.click() // set initial tab
       }
     })
-
-    if (this.hasAttribute('scroll-to-view')) {
-      activeNavigationTab.scrollIntoView({ behavior: 'smooth', inline: 'center' })
-    }
+    // @ts-ignore
+    this.connectedCallbackOnce = () => {}
   }
 
   shouldRenderCSS () {
