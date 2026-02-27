@@ -52,7 +52,7 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
         mainScript.onload = () => {
           if (isMcsLoaded()) resolve(self.mcs) // eslint-disable-line
         }
-        this.html = [mainScript]
+        document.head.appendChild(mainScript)
       }
     }))
   }
