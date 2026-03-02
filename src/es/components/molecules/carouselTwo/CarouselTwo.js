@@ -240,6 +240,7 @@ export default class CarouselTwo extends Mutation() {
       }
       :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > section,
       :host([nav-separate]:not([nav-align-self="start"]):not([no-default-nav])) > .arrow-nav {
+        --outline-color-focus-visible: transparent;
         margin-top: var(--section-nav-separate-margin);
       }
       :host > section + div > nav {
