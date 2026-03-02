@@ -55,7 +55,7 @@
     --carousel-two-museum-section-gap: 0;
     --teaser-tile-figcaption-justify-content: flex-start;
     --teaser-tile-img-height: 100%;
-    --teaser-tile-img-max-width: 75dvw;
+    --teaser-tile-img-max-width: ${this.getAttribute('img-max-width') || '75dvw'};
   }
   :host([peek]) > section > m-teaser::part(a-picture) {
     align-items: flex-start;

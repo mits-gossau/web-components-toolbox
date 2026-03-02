@@ -89,7 +89,7 @@ export default class CarouselTwo extends Mutation() {
           : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) !== undefined && (activeChild =
             Array.from(this.section.children).find((node, index, arr) => {
               const nodeLeft = Math.round(node.getBoundingClientRect().left)
-              const isActiveChild = arr.length === index + 1 || hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
+              const isActiveChild = arr.length === index + 1 || (this.lastActiveChild !== node && hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft)
               if (isActiveChild) this.currentIndex = index + 1
               return isActiveChild
             }))) {
@@ -121,6 +121,7 @@ export default class CarouselTwo extends Mutation() {
               self.history.pushState({ ...history.state, picture: activeChild.getAttribute('id'), url }, document.title, url)
             }
           }
+          this.lastActiveChild = activeChild
         }
       }, 50)
     }
