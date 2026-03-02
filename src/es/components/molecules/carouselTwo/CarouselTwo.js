@@ -21,7 +21,7 @@ export default class CarouselTwo extends Mutation() {
     super({
       importMetaUrl: import.meta.url,
       mutationObserverInit: { subtree: true, childList: true },
-      tabindex: 'no-tabindex',
+      tabindex: 'no-tabindex-style',
       ...options
     }, ...args)
 
@@ -87,9 +87,9 @@ export default class CarouselTwo extends Mutation() {
               return hostLeft + scrollTolerance > nodeLeft && hostLeft - (scrollTolerance + width) < nodeLeft
             }))
           : (hostLeft = Math.round(this.section.getBoundingClientRect().left)) !== undefined && (activeChild =
-            Array.from(this.section.children).find((node, index) => {
+            Array.from(this.section.children).find((node, index, arr) => {
               const nodeLeft = Math.round(node.getBoundingClientRect().left)
-              const isActiveChild = hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
+              const isActiveChild = arr.length === index + 1 || hostLeft + scrollTolerance > nodeLeft && hostLeft - scrollTolerance < nodeLeft
               if (isActiveChild) this.currentIndex = index + 1
               return isActiveChild
             }))) {
