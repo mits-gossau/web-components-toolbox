@@ -1,0 +1,72 @@
+:host {
+  --carousel-two-museum-arrow-nav-opacity: 0;
+  --carousel-two-museum-arrow-nav-transition: none;
+  --carousel-two-museum-color-custom: transparent;
+  --carousel-two-museum-color-hover-custom: transparent;
+  --carousel-two-museum-nav-gap: 0.2em;
+  --carousel-two-museum-nav-justify-content: flex-start;
+  --carousel-two-museum-nav-margin: 0 var(--content-spacing) 1.75em;
+  --carousel-two-museum-nav-transform-active: none;
+  --carousel-two-museum-nav-transform-hover: none;
+  --carousel-two-museum-section-nav-separate-margin: 0;
+  --carousel-two-museum-show: none;
+  --teaser-tile-background-color-custom: var(--teaser-tile-figcaption-background-color-custom);
+  --teaser-tile-figcaption-background-color-custom: transparent;
+  --teaser-tile-figcaption-color: ${this.getAttribute('nav-color') || 'var(--color)'};
+  --teaser-tile-figcaption-display: flex;
+  --teaser-tile-figcaption-flex-direction: column;
+  --teaser-tile-figcaption-justify-content: flex-end;
+  --teaser-tile-img-max-height: ${this.getAttribute('img-max-height') || '55dvh'};
+  width: 100% !important;
+}
+:host(.has-default-arrow-nav) > *.arrow-nav > *:first-of-type, :host(.has-default-arrow-nav) > *.arrow-nav > *:first-of-type a-arrow {
+  cursor: url("data:image/svg+xml,<svg style='transform: scaleX(-1);' width='60' height='46' viewBox='0 0 60 46' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M0 22.7676L55.4372 22.7676' stroke='black' stroke-width='5'/><path d='M34.6484 1.76758L55.6484 22.7676L34.6484 43.7676' stroke='black' stroke-width='5'/></svg>") 32 32, pointer;
+}
+:host(.has-default-arrow-nav) > *.arrow-nav > *:last-of-type, :host(.has-default-arrow-nav) > *.arrow-nav > *:last-of-type a-arrow {
+  cursor: url("data:image/svg+xml,<svg width='60' height='46' viewBox='0 0 60 46' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M0 22.7676L55.4372 22.7676' stroke='black' stroke-width='5'/><path d='M34.6484 1.76758L55.6484 22.7676L34.6484 43.7676' stroke='black' stroke-width='5'/></svg>") 32 32, pointer;
+}
+:host(.has-default-nav) > nav > * {
+  --carousel-two-museum-nav-background-color: 'transparent';
+  --carousel-two-museum-nav-background-color-active-custom: var(--carousel-two-museum-nav-background-color);
+  background-color: var(--carousel-two-museum-nav-background-color);
+  border: 2px solid ${this.getAttribute('nav-color') || 'var(--color)'};
+}
+:host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover,
+:host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active, :host > section:not(.scrolling) ~ nav > *.active {
+  --carousel-two-museum-nav-background-color-active: ${this.getAttribute('nav-color') || 'var(--color)'};
+  --carousel-two-museum-nav-background-color-hover: var(--carousel-two-museum-nav-background-color-active);
+  background-color: var(--carousel-two-museum-nav-background-color-active);
+  border: 2px solid transparent;
+}
+:host > section > m-teaser::part(a-picture) {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+:host > section > m-teaser::part(figcaption) {
+  flex-shrink: 100;
+}
+@media only screen and (min-width: calc(_max-width_ + 1px)) {
+  :host([peek]) {
+    --carousel-two-museum-section-child-max-width: 75dvw;
+    --carousel-two-museum-section-child-min-width: auto;
+    --carousel-two-museum-section-child-opacity-not-active: 1;
+    --carousel-two-museum-section-gap: 0;
+    --teaser-tile-figcaption-justify-content: flex-start;
+    --teaser-tile-img-height: 100%;
+    --teaser-tile-img-max-width: 75dvw;
+  }
+  :host([peek]) > section > m-teaser::part(a-picture) {
+    align-items: flex-start;
+  }
+  :host([peek]) > section > m-teaser::part(figcaption) {
+    flex-shrink: 0;
+  }
+}
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile);
+    --teaser-tile-img-max-height: ${this.getAttribute('img-max-height-mobile') || this.getAttribute('img-max-height') || '55dvh'};
+  }
+}

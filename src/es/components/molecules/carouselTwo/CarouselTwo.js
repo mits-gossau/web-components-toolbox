@@ -334,7 +334,7 @@ export default class CarouselTwo extends Mutation() {
           gap: var(--nav-gap);
           height: fit-content;
           margin: var(--nav-margin);
-          justify-content: center;
+          justify-content: var(--nav-justify-content, center);
           ${this.hasAttribute('nav-flex-wrap')
         ? 'flex-wrap: wrap;'
         : 'max-height: 20%;'}
@@ -416,7 +416,7 @@ export default class CarouselTwo extends Mutation() {
         height: 100%;
         width: 50%;
         opacity: var(--arrow-nav-opacity, 0.5);
-        transition: all .3s ease-out;
+        transition: var(--arrow-nav-transition, all .3s ease-out);
       }
       :host(.has-default-arrow-nav) > *.arrow-nav > *:hover {
         opacity: var(--arrow-nav-opacity-hover, 1);
@@ -623,12 +623,29 @@ export default class CarouselTwo extends Mutation() {
           replaces: [{
             pattern: '--carousel-two-default-',
             flags: 'g',
-            replacement: '--carousel-two-3-column-'
+            replacement: '--carousel-two-image-'
           }]
         }, {
           path: `${this.importMetaUrl}./image-/image-.css`, // apply namespace since it is specific and no fallback
           namespace: false
         }, ...styles], false).then(() => setAttributeStyles())
+      case 'carousel-two-museum-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-two-default-',
+            flags: 'g',
+            replacement: '--carousel-two-museum-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./museum-/museum-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          // make template ${code} accessible aka. set the variables in the literal string
+          fetchCSSParams[1].styleNode.textContent = eval('`' + fetchCSSParams[1].style + '`')// eslint-disable-line no-eval
+          setAttributeStyles()
+        })
       default:
         return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }

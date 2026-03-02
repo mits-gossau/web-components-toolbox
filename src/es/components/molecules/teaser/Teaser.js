@@ -38,17 +38,24 @@ export default class Teaser extends Intersection() {
     this.hidden = true
     const showPromises = []
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
-    // @ts-ignore
-    if (this.aPicture && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+    if (this.aPicture) {
+      this.aPicture.setAttribute('part', 'a-picture')
+      // @ts-ignore
+      if (this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+    }
     Promise.all(showPromises).then(() => {
       if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
         self.requestAnimationFrame(timeStamp => {
-          let figcaption, figcaptionBackgroundColor
-          // @ts-ignore
-          if ((figcaption = this.root.querySelector('figcaption')) && ((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
-            this.setAttribute('figcaption-bg-color-equal', true)
-          } else {
-            this.removeAttribute('figcaption-bg-color-equal')
+          let figcaption = this.root.querySelector('figcaption')
+          if (figcaption) {
+            figcaption.setAttribute('part', 'figcaption')
+            let figcaptionBackgroundColor
+            // @ts-ignore
+            if (((figcaptionBackgroundColor = self.getComputedStyle(figcaption).getPropertyValue(`--${this.namespace || ''}figcaption-background-color`).trim()) === self.getComputedStyle(this).getPropertyValue('--background-color').trim() || figcaptionBackgroundColor === 'transparent')) {
+              this.setAttribute('figcaption-bg-color-equal', true)
+            } else {
+              this.removeAttribute('figcaption-bg-color-equal')
+            }
           }
         })
       }
