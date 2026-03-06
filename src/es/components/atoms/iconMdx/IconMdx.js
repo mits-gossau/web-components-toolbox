@@ -150,6 +150,7 @@ export default class IconMdx extends Hover() {
         display: var(--icon-mdx-svg-display);
         position: relative;
         height: var(--svg-height, var(--svg-size, 1.5em));
+        filter: var(--svg-filter, none);
         width: var(--svg-width, var(--svg-size, 1.5em));
         transition: var(--transition, var(--a-transition, all 0.3s ease-out));
         transform: var(--${this.getAttribute('icon-name')}-svg-transform, var(--svg-transform, none));
