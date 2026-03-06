@@ -128,7 +128,7 @@ export default class Iframe extends Intersection() {
    * @return {()=>void} final render function with a default of 200ms timeout
    */
   renderHTML () {
-    // prefetch or pre connect o the iframes src
+    // prefetch or pre connect to the iframes src
     if (
       this.hasAttribute('preload') &&
       !document.head.querySelector(
@@ -141,11 +141,12 @@ export default class Iframe extends Intersection() {
       link.setAttribute('href', this.iframe.getAttribute('src'))
       document.head.appendChild(link)
     }
-    const templateContent = this.template.content
-    this.template.remove()
     return () =>
       setTimeout(
         () => {
+          if (this.hasAttribute('src')) this.iframe.setAttribute('src', this.getAttribute('src'))
+          const templateContent = this.template.content
+          this.template.remove()
           this.html = templateContent
         },
         this.getAttribute('timeout') && this.getAttribute('timeout') !== null
