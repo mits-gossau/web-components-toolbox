@@ -256,11 +256,11 @@ export default class Picture extends Intersection(Hover()) {
         :host([open-modal-mobile]) .close-btn.adjusted {
           display: flex;
         }
-        :host(:not([open-modal-mobile])) {
+        :host([open-modal]:not([open-modal-mobile])) {
           cursor: auto;
           position: static;
         }
-        :host(:not([open-modal-mobile])) .close-btn.adjusted {
+        :host([open-modal]:not([open-modal-mobile])) .close-btn.adjusted {
           display: none !important;
         }
         :host([open-modal-mobile]) .close-btn {
