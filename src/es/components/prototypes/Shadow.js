@@ -781,18 +781,18 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
    *
    * @static
    * @param {string} html
+   * @param {boolean} [force=false]
    * @return {string}
    */
-  static htmlPurify (html) {
+  static htmlPurify (html, force = false) {
     // Do not purify the html, if there is already a TrustedTypePolicy, typically found in th environment: https://developer.mozilla.org/en-US/docs/Web/API/TrustedTypePolicyFactory
     // @ts-ignore
-    if (self.trustedTypes?.defaultPolicy) {
-      Shadow.htmlPurify = string => string
+    if (!force && self.trustedTypes?.defaultPolicy) {
       return html
     }
     // first sanitize tags eg.: <img src="xyz" onload=alert('XSS')>, <img src="xyz" onmouseover=alert('XSS')>, <image/src/onerror=alert('XSS')>, etc.
     // second sanitize tags eg.: <a href="javascript:alert(document.location);">XSS</a>, <form action="javascript:alert(document.location);"><input type="submit" /></form>, etc.
-    return html.replace(/<[a-z]+[^>]*[\s|\/]on[a-z]{4,10}=[^>]*>/gi, '').replace(/<[a-z]+[\s|\/][^>]*javascript:[^>]*>/gi, '')
+    return html.replace(/<[a-z]+[\s|\/][^>]*on[a-z]{4,10}=[^>]*>/gi, '').replace(/<[a-z]+[\s|\/][^>]*javascript:[^>]*>/gi, '')
   }
 
   // display trumps hidden property, which we resolve here as well as we allow an animation on show
