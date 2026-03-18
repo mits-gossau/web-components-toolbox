@@ -12,73 +12,76 @@ export default class SkipToNavigation extends Shadow() {
 
     this.focusinEventListener = () => {
       this.skipToNav.classList.add('active')
-      const firstAnchor = this.skipToNav.querySelector('a')
-      if (firstAnchor) firstAnchor.focus()
     }
 
     this.focusoutEventListener = () => {
-      this.skipToNav.classList.remove('active')
+      setTimeout(() => {
+        if (!this.skipToNav.contains(this.shadowRoot.activeElement)) {
+          this.skipToNav.classList.remove('active')
+        }
+      }, 0)
     }
 
     this.keyupEventListener = (event) => {
       const activeElement = this.shadowRoot.activeElement || document.activeElement
-      if (event.key === 'Escape' || event.key === 'Esc' || event.key === 'Enter' || event.key === ' ') {
-        setTimeout(() => {
-          // @ts-ignore
-          activeElement.blur()
-          this.skipToNav.classList.remove('active')
-        }, 50)
+      if (event.key === 'Escape' || event.key === 'Esc') {
+        // @ts-ignore
+        activeElement.blur()
+        this.skipToNav.classList.remove('active')
       }
-      if (event.key === 'Enter' && activeElement.href.includes('#navigation')) {
-        this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-nav') || 'open-and-focus-nav', {
-          bubbles: true,
-          cancelable: true,
-          composed: true
-        }))
-      }
-      if (event.key === 'Enter' && !activeElement.href.includes('#navigation')) {
-        this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', {
-          bubbles: true,
-          cancelable: true,
-          composed: true
-        }))
-      }
-      if (event.key === 'Enter' && activeElement.href.includes('#footer')) {
-        this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-footer') || 'open-and-focus-footer', {
-          bubbles: true,
-          cancelable: true,
-          composed: true
-        }))
+      if (event.key === 'Enter' && activeElement.href) {
+        if (activeElement.href.includes('#navigation')) {
+          this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-nav') || 'open-and-focus-nav', {
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+        } else {
+          this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', {
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+        }
+        if (activeElement.href.includes('#footer')) {
+          this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-footer') || 'open-and-focus-footer', {
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+        }
+        this.focusTarget(activeElement.getAttribute('href'))
+        this.skipToNav.classList.remove('active')
       }
     }
 
-    this.clickEventListener = event =>  {
-      if (this.matches(':focus')) this.keyupEventListener({key: 'Enter'})
-    }
-
-    this.shortCutListener = (event) => {
-      let isMac = false
-      // @ts-ignore
-      if (navigator.userAgentData && Array.isArray(navigator.userAgentData.platforms)) {
-        // @ts-ignore
-        isMac = navigator.userAgentData.platforms.some(p => p.toLowerCase().includes('mac'))
-      // @ts-ignore
-      } else if (navigator.userAgentData && navigator.userAgentData.platform) {
-        // @ts-ignore
-        isMac = navigator.userAgentData.platform.toLowerCase().includes('mac')
-      } else {
-        // @ts-ignore
-        isMac = navigator.userAgent && navigator.userAgent.toLowerCase().includes('mac')
-      }
-      if (
-        ((isMac && event.metaKey) || (!isMac && event.ctrlKey)) &&
-        event.shiftKey &&
-        event.key.toLowerCase() === 's'
-      ) {
+    this.clickEventListener = (event) => {
+      const anchor = event.target.closest('a')
+      if (anchor) {
         event.preventDefault()
-        this.skipToNav.classList.add('active')
-        const firstAnchor = this.skipToNav.querySelector('a')
-        if (firstAnchor) firstAnchor.focus()
+        const href = anchor.getAttribute('href')
+        if (href.includes('#navigation')) {
+          this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-nav') || 'open-and-focus-nav', {
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+        } else {
+          this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', {
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+        }
+        if (href.includes('#footer')) {
+          this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-footer') || 'open-and-focus-footer', {
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
+        }
+        this.focusTarget(href)
+        this.skipToNav.classList.remove('active')
       }
     }
   }
@@ -99,7 +102,6 @@ export default class SkipToNavigation extends Shadow() {
     this.addEventListener('focusout', this.focusoutEventListener)
     this.addEventListener('keyup', this.keyupEventListener)
     this.addEventListener('click', this.clickEventListener)
-    if (this.hasAttribute('show-shortcut')) window.addEventListener('keydown', this.shortCutListener)
   }
 
   disconnectedCallback () {
@@ -107,14 +109,33 @@ export default class SkipToNavigation extends Shadow() {
     this.removeEventListener('focusout', this.focusoutEventListener)
     this.removeEventListener('keyup', this.keyupEventListener)
     this.removeEventListener('click', this.clickEventListener)
-    if (this.hasAttribute('show-shortcut')) window.removeEventListener('keydown', this.shortCutListener)
   }
 
   moveChildrenToSlot () {
     if (!this.skipToNav) return
-    const hint = this.skipToNav.querySelector('.hint')
     const linkNodes = Array.from(this.shadowRoot.children).filter(child => child.tagName === 'A')
-    linkNodes.forEach(link => hint ? this.skipToNav.insertBefore(link, hint) : this.skipToNav.appendChild(link))
+    const accesskeys = { '#content': '1', '#navigation': '2', '#footer': '3' }
+    linkNodes.forEach(link => {
+      link.setAttribute('tabindex', '0')
+      const href = link.getAttribute('href')
+      if (href && accesskeys[href]) link.setAttribute('accesskey', accesskeys[href])
+      this.skipToNav.appendChild(link)
+    })
+  }
+
+  focusTarget (href) {
+    if (!href) return
+    const id = href.replace('#', '')
+    const target = document.getElementById(id)
+    if (!target) return
+    const focusable = target.querySelector('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"]), h1, h2, h3, h4, h5, h6')
+    if (focusable) {
+      if (!focusable.hasAttribute('tabindex')) focusable.setAttribute('tabindex', '-1')
+      focusable.focus()
+    } else {
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+      target.focus()
+    }
   }
 
   /**
@@ -169,8 +190,7 @@ export default class SkipToNavigation extends Shadow() {
         width: 1px;
         white-space: nowrap;
       }
-      :host > nav > a,
-      :host > nav > span.hint {
+      :host > nav > a {
         display: block !important;
         color: var(--link-color, #007bff);
         text-decoration: none;
@@ -181,10 +201,6 @@ export default class SkipToNavigation extends Shadow() {
         line-height: var(--line-height, 1.5);
         letter-spacing: var(--letter-spacing, 0.02em);
         transition: color 0.3s ease;
-      }
-      :host > nav > span.hint {
-        color: var(--hint-color, #999);
-        font-size: var(--hint-font-size, 0.8rem);
       }
     `
     return this.fetchTemplate()
@@ -223,8 +239,7 @@ export default class SkipToNavigation extends Shadow() {
   renderHTML () {
     this.html = /* html */`
       <nav aria-label="Skip links" id="skip-navigation">
-        <h2>${this.hasAttribute('label') ? this.getAttribute('label') : 'Skip to navigation'}</h2>
-        ${(this.hasAttribute('show-shortcut')) ? `<span class="hint">(${navigator.userAgent.includes('Mac') ? '⌘' : 'Ctrl'} + Shift + S)</span>` : ''}
+        <h2>Skip links</h2>
       </nav>
     `
   }
