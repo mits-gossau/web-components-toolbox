@@ -4,11 +4,11 @@
 
 ## Summary
 
-Multi-level navigation component with full accessibility support. Features hierarchical headings for screen readers, ARIA attributes for enhanced navigation experience, and multilingual support for internationalization. Supports both desktop flyout and mobile navigation patterns with keyboard accessibility.
+Multi-level navigation component with WCAG 2.2 AA compliance. Supports desktop flyout and mobile slide-in navigation patterns with full keyboard accessibility and automatic internationalization (de-CH, fr-CH, it-CH).
 
 ## Integration
 
-The navigation component automatically generates invisible headings (h1, h2, h3) for screen reader users to establish proper navigation structure. All texts can be customized through attributes to support multiple languages.
+The component automatically generates invisible headings (h2, h3, h4…) for screen reader navigation and localizes all ARIA labels based on `document.documentElement.lang`.
 
 ### Basic Usage
 
@@ -18,331 +18,183 @@ The navigation component automatically generates invisible headings (h1, h2, h3)
 </m-multi-level-navigation>
 ```
 
-### Multilingual Examples
+### Multilingual Support
 
-#### German (Deutsch)
+Labels werden automatisch anhand von `<html lang="...">` gesetzt. Unterstützt werden `de-CH`, `fr-CH` und `it-CH` (Deutsch ist Default-Fallback).
+
+Die Attribute überschreiben die automatischen Texte bei Bedarf:
 
 ```html
+<!-- Automatisch: alle Labels werden aus document.documentElement.lang abgeleitet -->
+<m-multi-level-navigation>
+  <!-- bei lang="de-CH" → "Hauptnavigation", "Unternavigation", etc. -->
+  <!-- bei lang="fr-CH" → "Navigation principale", "Sous-navigation", etc. -->
+  <!-- bei lang="it-CH" → "Navigazione principale", "Sottonavigazione", etc. -->
+</m-multi-level-navigation>
+
+<!-- Manuell: Attribute überschreiben die automatischen Texte -->
 <m-multi-level-navigation 
   main-nav-title="Hauptnavigation"
   sub-nav-title="Unternavigation"
   sub-nav-suffix="- Unterbereich"
   mobile-nav-title="Mobile Navigation"
   level-text="Ebene">
-  <!-- Results in headings like: "Produkte - Unterbereich", "Unternavigation Ebene 2" -->
 </m-multi-level-navigation>
 ```
 
-#### French (Français)
+#### Automatische Übersetzungen
 
-```html
-<m-multi-level-navigation 
-  main-nav-title="Navigation principale"
-  sub-nav-title="Sous-navigation"
-  sub-nav-suffix="- Sous-section"
-  mobile-nav-title="Navigation mobile"
-  level-text="Niveau">
-  <!-- Results in headings like: "Produits - Sous-section", "Sous-navigation Niveau 2" -->
-</m-multi-level-navigation>
-```
+| Key | de-CH | fr-CH | it-CH |
+|-----|-------|-------|-------|
+| Hauptnavigation | Hauptnavigation | Navigation principale | Navigazione principale |
+| Navigation schliessen | Navigation schliessen | Fermer la navigation | Chiudere la navigazione |
+| aufklappen | aufklappen | développer | espandi |
+| zuklappen | zuklappen | réduire | comprimi |
+| Unternavigation | Unternavigation | Sous-navigation | Sottonavigazione |
+| Level | Level | Niveau | Livello |
+| Navigationsbereich | Navigationsbereich | Zone de navigation | Area di navigazione |
 
-#### Italian (Italiano)
+## Accessibility (WCAG 2.2 AA)
 
-```html
-<m-multi-level-navigation 
-  main-nav-title="Navigazione principale"
-  sub-nav-title="Sotto-navigazione"
-  sub-nav-suffix="- Sottosezione"
-  mobile-nav-title="Navigazione mobile"
-  level-text="Livello">
-  <!-- Results in headings like: "Prodotti - Sottosezione", "Sotto-navigazione Livello 2" -->
-</m-multi-level-navigation>
-```
+### Heading-Hierarchie
 
-### WCAG 2.2 AA Compliance
+Die Komponente generiert unsichtbare Headings (`.visually-hidden`) für Screenreader:
 
-- **1.3.1 Info and Relationships**: Hierarchical heading structure for assistive technologies
-- **2.1.1 Keyboard**: Full keyboard navigation support
-- **2.4.6 Headings and Labels**: Clear, descriptive headings and labels
+- **h2**: Hauptnavigation
+- **h3**: Unternavigation Level 1 (z. B. „Produkte - Unternavigation")
+- **h4**: Unternavigation Level 2
+- **h5**: Unternavigation Level 3
 
-### Accessibility Features
+> `h1` ist dem Seiteninhalt vorbehalten und wird bewusst nicht verwendet.
 
-The component automatically generates invisible headings for screen reader users:
+### Keyboard-Navigation
 
-- **h1**: Main navigation heading
-- **h2**: First level sub-navigation (e.g., "Produkte - Unternavigation")
-- **h3**: Second level sub-navigation (e.g., "Unternavigation Level 2")
-- **h4**: Third level sub-navigation (e.g., "Unternavigation Level 3")
+| Taste | Verhalten |
+|-------|-----------|
+| **Tab** | Springt zum nächsten fokussierbaren Element |
+| **Shift+Tab** | Springt zum vorherigen fokussierbaren Element |
+| **Enter / Space** | Öffnet/schliesst Untermenü bei expandierbaren Items (ohne das erste Item zu aktivieren) |
+| **Arrow Down** | Nächstes Item in der Liste; vom Hauptmenü ins geöffnete Flyout |
+| **Arrow Up** | Vorheriges Item in der Liste; vom ersten Item zurück zum Hauptmenü-Link |
+| **Arrow Right** | Nächster Hauptmenü-Punkt (Desktop); öffnet Untermenü (Mobile) |
+| **Arrow Left** | Vorheriger Hauptmenü-Punkt (Desktop); Zurück-Navigation (Mobile) |
+| **Escape** | Schliesst das aktuelle Flyout/Untermenü und setzt Fokus zurück auf den auslösenden Menüpunkt |
 
-These headings use the `.visually-hidden` class to be accessible to screen readers while remaining invisible to sighted users.
+### ARIA-Attribute
 
-#### ARIA Current Page Support
+- **`aria-expanded`**: Wird dynamisch bei jedem Öffnen/Schliessen aktualisiert
+- **`aria-haspopup="true"`**: Auf allen expandierbaren Links gesetzt
+- **`aria-controls`**: Verknüpft expandierbare Items mit ihren Untermenüs
+- **`aria-current="page"`**: Automatische Erkennung der aktuellen Seite anhand der URL
+- **`aria-label`**: Dynamisch aktualisiert bei Zustandswechsel (z. B. „Produkte - aufklappen" → „Produkte - zuklappen")
+- **`aria-labelledby`**: `<nav>` referenziert das Hauptnavigation-Heading statt redundantem `aria-label`
 
-The component automatically manages `aria-current="page"` attributes to indicate the current page:
+### Close-Button
 
-- **Automatic detection**: Compares current URL with navigation links
-- **Exact matching**: Prioritizes exact URL matches (including hash fragments)
-- **Path matching**: Falls back to path-only matches when no exact match exists
-- **Click handling**: Updates `aria-current` when users click navigation links
-- **Unique assignment**: Ensures only one link has `aria-current="page"` at any time
+Der Flyout-Schliessen-Button ist als `<button type="button">` implementiert (nicht `<a>`):
+- Natives Enter/Space-Handling durch `<button>`
+- `aria-label` lokalisiert (z. B. „Navigation schliessen")
+- Icon mit `aria-hidden="true"` (dekorativ)
+- Fokus wird nach dem Schliessen auf den auslösenden Hauptmenü-Link zurückgesetzt
 
-This helps screen reader users understand which page they are currently viewing within the navigation context.
+### Bilder
+
+- Dekorative Bilder: `alt=""` + `aria-hidden="true"`
+- Informative Bilder: `alt`-Text wird automatisch aus dem übergeordneten Link-Text abgeleitet
+- Dekorative Icons (Chevrons, Arrows): `aria-hidden="true"`
+
+### Erfüllte WCAG-Kriterien
+
+| Kriterium | Beschreibung |
+|-----------|-------------|
+| **1.1.1** Non-text Content | Alt-Texte für Bilder, aria-hidden für dekorative Elemente |
+| **1.3.1** Info and Relationships | Hierarchische Heading-Struktur (h2–h5) |
+| **2.1.1** Keyboard | Vollständige Tastaturbedienung inkl. Enter/Space-Guard |
+| **2.4.3** Focus Order | Fokus-Management bei Öffnen/Schliessen von Flyouts |
+| **2.4.6** Headings and Labels | Beschreibende Headings und lokalisierte Labels |
+| **4.1.2** Name, Role, Value | Korrekte ARIA-Rollen, kein `role="banner"` auf Wrapper |
+
+## Attributes
+
+| Attribute | Description | Default |
+|-----------|-------------|---------|
+| `hover` | Hover-Modus aktivieren | `false` |
+| `use-hover-listener` | Hover-Listener statt Click-Listener verwenden | `false` |
+| `animation-duration` | Animationsdauer in Millisekunden | `300` |
+| `no-scroll` | Verhindert Body-Scroll bei geöffneter Navigation | – |
+| `o-nav-wrapper` | Custom-Element-Name für Navigation-Wrapper | `o-nav-wrapper` |
+| `navigation-load` | Event-Name bei Navigation-Load | `navigation-load` |
+| `close-event-name` | Event-Name zum Schliessen der Navigation | – |
+| `close-other-flyout` | Event-Name zum Schliessen anderer Flyouts | – |
+| `click-anchor` | Event-Name für Anchor-Link-Klicks | `click-anchor` |
+| `load-custom-elements` | Event-Name für Custom-Element-Loading | `load-custom-elements` |
+| `namespace` | CSS-Namespace für Styling-Varianten | – |
+| `media` | Media-Query-Breakpoint (desktop/mobile) | – |
+| `navigation-hover-delay` | Hover-Delay in Millisekunden | `100` |
+| `main-nav-title` | Hauptnavigation-Heading (Screenreader) | automatisch lokalisiert |
+| `sub-nav-title` | Unternavigation-Basistext | automatisch lokalisiert |
+| `sub-nav-suffix` | Suffix für Unternavigation-Titel | automatisch lokalisiert |
+| `mobile-nav-title` | Mobile-Navigation-Basistext | Fallback auf `sub-nav-title` |
+| `level-text` | Text für Level-Nummerierung | automatisch lokalisiert |
+
+## CSS Custom Properties
+
+### Main Navigation
+
+| Selector | Property | Variable | Default |
+|----------|----------|----------|---------|
+| `:host > nav > ul` | align-items | `--main-ul-align-items` | `normal` |
+| | justify-content | `--main-ul-justify-content` | `normal` |
+| | display | `--main-ul-display` | `flex` |
+| | flex-wrap | `--flex-wrap` | `nowrap` |
+| | flex-direction | `--flex-direction` | `row` |
+| | padding | `--padding` | `0` |
+| | margin | `--margin` | `0` |
+| `:host > nav > ul > li` | padding | `--li-padding` | `0` |
+| `:host > nav > ul > li > a` | display | `--a-main-display` | `inline` |
+| | color | `--color` | – |
+| | padding | `--a-main-content-spacing` | `14px 10px` |
+| | font-size | `--a-main-font-size` | `1rem` |
+| | font-weight | `--a-main-font-weight` | `400` |
+| | line-height | `--a-main-line-height` | – |
+| | text-transform | `--a-main-text-transform` | – |
+| | font-family | `--a-main-font-family` | `var(--font-family)` |
+| | text-align | `--a-text-align` | `left` |
+| | width | `--a-width` | `auto` |
+
+### Flyout / Desktop Sub-Navigation
+
+| Selector | Property | Variable | Default |
+|----------|----------|----------|---------|
+| `o-nav-wrapper` | top | `--o-nav-wrapper-top` | `2em` |
+| | border-top | `--desktop-main-wrapper-border-width` | `1px` |
+| `wrapper-background` | background-color | `--desktop-main-wrapper-background-color` | `white` |
+| | width | `--desktop-main-wrapper-width` | `100vw` |
+| | height | `--desktop-main-wrapper-height` | `100%` / `50vh` / `60vh` |
+| `section` | padding | `--multi-level-navigation-default-o-nav-wrapper-padding` | `2em 0 1.5em 0` |
+| Sub-Navigation div | background-color | `--sub-navigation-wrapper-background-color` | `white` |
+
+### State Colors
+
+| Property | Variable | Description |
+|----------|----------|-------------|
+| color | `--color` | Default text color |
+| color | `--color-hover` | Hover text color |
+| color | `--color-active` | Active/current text color |
+
+### Mobile
+
+| Selector | Property | Variable | Default |
+|----------|----------|----------|---------|
+| `:host > nav > ul > li > a` | font-size | `--a-main-mobile-font-size` | `1rem` |
+| | padding | `--a-main-mobile-padding` | – |
+| | line-height | `--a-main-mobile-line-height` | – |
+| Border | border-top | `--mobile-wrapper-border-width` | `1px` |
+| Background | background-color | `--grey-background-color` | `#EDEDED` |
 
 ## Templates (Namespace)
 
 | Namespace | Path |
-|------|------|
-
-## Attributes
-
-| Attribute Name | Description |
-|----------------|-------------|
-| `animation-duration` | Duration of animations in milliseconds |
-| `no-scroll` | Prevents body scrolling when navigation is open |
-| `o-nav-wrapper` | Custom element name for navigation wrapper |
-| `navigation-load` | Event name dispatched when navigation is loaded |
-| `close-event-name` | Event name to listen for closing navigation |
-| `namespace` | CSS namespace for styling variants |
-| `media` | Media query breakpoint for desktop/mobile |
-| `aria-expanded` | ARIA attribute for expanded state |
-| `close-other-flyout` | Event name for closing other flyouts |
-| `click-anchor` | Event name for anchor link clicks |
-| `load-custom-elements` | Event name for loading custom elements |
-| `main-nav-title` | Main navigation heading text for screen readers (default: "Hauptnavigation") |
-| `sub-nav-title` | Sub-navigation base text (default: "Unternavigation") |
-| `sub-nav-suffix` | Suffix for sub-navigation titles (default: "- Unternavigation") |
-| `mobile-nav-title` | Mobile navigation base text (default: falls back to sub-nav-title) |
-| `level-text` | Text for level numbering (default: "Level") |
-
-## CSS Styles
-
-### Selector: `/* hide component stuff before it is rendered to avoid the blitz (flashing white) */
-    :not(:defined)`
-
-
-### Selector: `:host`
-
-
-### Selector: `:host > nav > ul`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| align-items | --main-ul-align-items | normal |
-| justify-content | --main-ul-justify-content | normal |
-| display | --main-ul-display | flex |
-| flex-wrap | --flex-wrap | nowrap |
-| flex-direction | --flex-direction | row |
-| padding | --padding | 0 |
-| margin | --margin | 0 |
-
-### Selector: `:host > nav > ul > li`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| padding | --li-padding | 0 |
-
-### Selector: `:host > nav > ul > li > div.main-background`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| background-color | --m-gray-500 |  |
-
-### Selector: `:host > nav > ul > li.open > div.main-background`
-
-
-### Selector: `:host > nav > ul > li > div.main-background.hide`
-
-
-### Selector: `:host > nav > ul > li.active > a:hover > span`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| color | --color-hover |  |
-
-### Selector: `:host > nav > ul > li.active > a:after`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| background-color | --color-active |  |
-
-### Selector: `:host > nav > ul > li.active > a > span`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| color | --color-active |  |
-
-### Selector: `:host > nav > ul > li > a:after`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| height | --a-main-border-width |  |
-
-### Selector: `:host > nav > ul > li > a:hover:after`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| background-color | --color-active |  |
-
-### Selector: `:host > nav > ul > li > a`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| display | --a-main-display | inline |
-| color | --color |  |
-| padding | --a-main-content-spacing | 14px 10px |
-| font-size | --a-main-font-size | 1rem |
-| font-weight | --a-main-font-weight | 400 |
-| line-height | --a-main-line-height |  |
-| text-transform | --a-main-text-transform |  |
-| font-family | --a-main-font-family | var(--font-family |
-| font-weight | --a-font-weight | var(--font-weight |
-| text-align | --a-text-align | left |
-| width | --a-width | auto |
-
-### Selector: `:host > nav > ul > li > a > span`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| font-weight | --a-main-font-weight | 400 |
-
-### Selector: `:host > nav > ul > li > a:hover,
-    :host > nav > ul > li > a:active,
-    :host > nav > ul > li > a:focus`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| color | --color-hover |  |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| top | --o-nav-wrapper-top | 2em |
-| left | --logo-default-width | var(--width |
-| width | --logo-default-width | var(--width |
-| border-top | --desktop-main-wrapper-border-width | 1px |
-
-### Selector: `:host > nav > ul > li.open > o-nav-wrapper`
-
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper div.wrapper-background`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| background-color | --desktop-main-wrapper-background-color | white |
-| width | --desktop-main-wrapper-width | 100vw |
-| height | --desktop-main-wrapper-height | 100% |
-| position | --desktop-main-wrapper-position | relative |
-| left | --desktop-main-wrapper-position-left | 50% |
-| right | --desktop-main-wrapper-position-right | 50% |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper.hide`
-
-
-### Selector: `:host > nav > ul > li.open > o-nav-wrapper.no-animation`
-
-
-### Selector: `:host > nav > ul > li.open > o-nav-wrapper div.wrapper-background`
-
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| padding | --multi-level-navigation-default-o-nav-wrapper-padding | 2em 0 1.5em 0 |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| /* this setting is quite fragile here, we need to improve it for reusability */
-      width | --gap |  |
-| background-color | --sub-navigation-wrapper-background-color | white |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div:first-of-type`
-
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div:not(:first-of-type)`
-
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div:last-of-type`
-
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div:not(:last-of-type):after`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| background | --multi-level-navigation-default-desktop-main-wrapper-border-color | black |
-| width | --multi-level-navigation-default-desktop-main-wrapper-border-width | 1px |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div > ul`
-
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| background-color | --multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-background-color | black |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div:hover > ul::-webkit-scrollbar-thumb`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| background | --multi-level-navigation-default-desktop-sub-navigation-wrapper-scrollbar-thumb-background-color | black |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section .close-icon`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| --icon-link-list-color | --color |  |
-| --icon-link-list-color-hover | --color |  |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar`
-
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div > ul::-webkit-scrollbar-thumb`
-
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| --a-color | --color-active |  |
-| --a-color-hover | --color-active |  |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section ul li`
-
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a > span`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| color | --color |  |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper > section > div > ul > li.list-title > a:hover > span`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| color | --color-active |  |
-
-### Selector: `:host li.hover-active m-nav-level-item`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| --nav-level-item-default-background-color | --nav-level-item-default-hover-background-color |  |
-
-### Selector: `:host li m-nav-level-item`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| --color | --a-color |  |
-
-### Selector: `:host > nav > ul > li > o-nav-wrapper`
-
-
-### Selector: `@media only screen and (max-width: _max-width_)`
-
-| Property | Variable | Default |
-|----------|----------|----------|
-| --nav-level-item-default-hover-color | --color |  |
-
+|-----------|------|
+| `multi-level-navigation-default-` | `./default-/default-.css` |
+| `multi-level-navigation-delica-` | `./delica-/delica-.css` |
