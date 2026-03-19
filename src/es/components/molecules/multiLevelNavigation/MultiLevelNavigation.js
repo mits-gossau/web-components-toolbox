@@ -91,6 +91,7 @@ export default class MultiLevelNavigation extends Shadow() {
     }
 
     this.selfClickListener = (event) => {
+      if (event.target?.closest?.('.close-icon')) return
       const currentAriaExpandedAttribute = this.nav.getAttribute('aria-expanded') === 'true'
       if (this.isDesktop) this.nav.setAttribute('aria-expanded', 'false')
       if (this.isDesktop && this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
@@ -200,16 +201,16 @@ export default class MultiLevelNavigation extends Shadow() {
               closeIconElement.addEventListener('click', (event) => {
                 event.preventDefault()
                 event.stopPropagation()
+                event.stopImmediatePropagation()
                 const openMainLi = this.root.querySelector('nav > ul > li.open')
+                const mainLink = openMainLi?.querySelector(':scope > a')
                 this.hideAndClearDesktopSubNavigation(event)
                 this.nav.setAttribute('aria-expanded', 'false')
                 if (this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
-                setTimeout(() => {
-                  if (openMainLi) {
-                    const mainLink = openMainLi.querySelector(':scope > a')
-                    if (mainLink) mainLink.focus()
-                  }
-                }, 50)
+                if (mainLink) {
+                  mainLink.setAttribute('tabindex', '0')
+                  mainLink.focus()
+                }
               })
               wrapper.querySelector('section')?.appendChild(closeIconElement)
 
