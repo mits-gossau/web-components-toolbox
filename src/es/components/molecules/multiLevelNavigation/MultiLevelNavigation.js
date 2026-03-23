@@ -15,7 +15,7 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * @attribute {
  *  {boolean} [hover=false]
  *  {boolean} [use-hover-listener=false] use hover listener on navigation // if false it uses click listener
- *  {string} [main-nav-title] Main navigation heading text for screen readers (default: "Main Navigation")
+ *  {string} [main-nav-title] Main navigation heading text for screen readers (default: localized, e.g. "Hauptnavigation")
  *  {string} [sub-nav-title] Sub-navigation base text (default: "Sub Navigation")
  *  {string} [sub-nav-suffix] Suffix for sub-navigation titles (default: "- Sub Navigation") 
  *  {string} [mobile-nav-title] Mobile navigation base text (default: falls back to sub-nav-title)
@@ -91,6 +91,7 @@ export default class MultiLevelNavigation extends Shadow() {
     }
 
     this.selfClickListener = (event) => {
+      if (event.target?.closest?.('.close-icon')) return
       const currentAriaExpandedAttribute = this.nav.getAttribute('aria-expanded') === 'true'
       if (this.isDesktop) this.nav.setAttribute('aria-expanded', 'false')
       if (this.isDesktop && this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
@@ -190,12 +191,27 @@ export default class MultiLevelNavigation extends Shadow() {
               }, 50)
 
               // add close icon to all flyout
-              const closeIconElement = document.createElement('a')
+              const closeIconElement = document.createElement('button')
               closeIconElement.innerHTML = /* HTML */`
-         <a-icon-mdx namespace='icon-link-list-' icon-name='X' size='1.5em' rotate='0' class='icon-right' role="${this.getAttribute('close-nav-role') || 'Close navigation'}"></a-icon-mdx>
+         <a-icon-mdx namespace='icon-link-list-' icon-name='X' size='1.5em' rotate='0' class='icon-right' aria-hidden='true'></a-icon-mdx>
          `
               closeIconElement.classList.add('close-icon')
-              closeIconElement.setAttribute('tabindex', '0')
+              closeIconElement.setAttribute('type', 'button')
+              closeIconElement.setAttribute('aria-label', this.getLocalizedText('closeNav'))
+              closeIconElement.addEventListener('click', (event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                event.stopImmediatePropagation()
+                const openMainLi = this.root.querySelector('nav > ul > li.open')
+                const mainLink = openMainLi?.querySelector(':scope > a')
+                this.hideAndClearDesktopSubNavigation(event)
+                this.nav.setAttribute('aria-expanded', 'false')
+                if (this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
+                if (mainLink) {
+                  mainLink.setAttribute('tabindex', '0')
+                  mainLink.focus()
+                }
+              })
               wrapper.querySelector('section')?.appendChild(closeIconElement)
 
               // Add class for title li a element
@@ -343,7 +359,21 @@ export default class MultiLevelNavigation extends Shadow() {
     }
 
     // accessibility
-    this.enterEventListener = event => { if (event.code === 'Enter' && event.composedPath()[0].matches(':focus')) event.composedPath()[0].click() }
+    this._preventNextEnterClick = false
+    this.enterEventListener = event => {
+      if (event.code !== 'Enter' && event.code !== 'Space') return
+      const target = event.composedPath()[0]
+      if (!target || !target.matches(':focus')) return
+      // skip native interactive elements – they handle Enter/Space themselves
+      if (target.tagName === 'A' || target.tagName === 'BUTTON') return
+      // guard: do not click newly focused items after submenu open
+      if (this._preventNextEnterClick) {
+        this._preventNextEnterClick = false
+        return
+      }
+      event.preventDefault()
+      target.click()
+    }
     this.escapeKeyListener = event => { if (event.code === 'Escape') this.handleEscapeKey(event) }
     this.arrowKeyListener = event => { if(event.code === 'ArrowUp' || event.code === 'ArrowDown' || event.code === 'ArrowLeft' || event.code === 'ArrowRight') this.handleArrowNavigation(event) }
   }
@@ -518,6 +548,14 @@ export default class MultiLevelNavigation extends Shadow() {
 
   getFocusableItemsInList(ul) {
     const items = []
+    const parentDiv = ul.closest('div[nav-level]')
+    if (parentDiv) {
+      const heading = parentDiv.querySelector(':scope > .sub-navigation-heading, :scope > .mobile-navigation-heading')
+      if (heading) {
+        heading.setAttribute('tabindex', '-1')
+        items.push(heading)
+      }
+    }
     ul.querySelectorAll(':scope > li').forEach(li => {
       if (li.classList.contains('grey-background')) return
       const navLevelItem = li.querySelector(':scope > a > m-nav-level-item')
@@ -623,7 +661,7 @@ export default class MultiLevelNavigation extends Shadow() {
             this.transferFocus(focused, items[idx + 1])
           } else if (idx === items.length - 1) {
             const wrapper = focused.closest('o-nav-wrapper')
-            const closeIcon = wrapper?.querySelector('a.close-icon[tabindex="0"]')
+            const closeIcon = wrapper?.querySelector('button.close-icon')
             if (closeIcon) this.transferFocus(focused, closeIcon)
           }
         }
@@ -729,7 +767,10 @@ export default class MultiLevelNavigation extends Shadow() {
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
-    if (newValue === 'true') this.root.querySelector('nav > ul > li > a')?.focus()
+    if (newValue === 'true') {
+      const firstItem = this.root.querySelector('nav > ul > li:first-child > a') || this.root.querySelector('nav > ul > li:first-child')
+      if (firstItem) firstItem.focus()
+    }
   }
 
   /**
@@ -942,6 +983,10 @@ export default class MultiLevelNavigation extends Shadow() {
       right: 0;
       top: 0.25em;
       width: auto !important;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
       --icon-link-list-color: var(--color);
       --icon-link-list-color-hover: var(--color);
       --icon-link-list-show: none;
@@ -1305,9 +1350,9 @@ export default class MultiLevelNavigation extends Shadow() {
     if (!nav) return
     const existingHeadings = nav.querySelectorAll('.navigation-heading')
     existingHeadings.forEach(heading => heading.remove())
-    const mainHeading = document.createElement('h1')
+    const mainHeading = document.createElement('h2')
     mainHeading.className = 'visually-hidden navigation-heading'
-    mainHeading.textContent = this.getAttribute('main-nav-title') || this.getAttribute('aria-label') || 'Hauptnavigation'
+    mainHeading.textContent = this.getAttribute('main-nav-title') || this.getLocalizedText('mainNavTitle')
     mainHeading.id = 'main-navigation-heading'
     const firstChild = nav.firstChild
     nav.insertBefore(mainHeading, firstChild)
@@ -1322,7 +1367,7 @@ export default class MultiLevelNavigation extends Shadow() {
         const navLevelDivs = section.querySelectorAll('div[nav-level]')
         navLevelDivs.forEach(div => {
           const navLevel = parseInt(div.getAttribute('nav-level') || '1')
-          const headingLevel = Math.min(navLevel + 1, 6) // h2, h3, h4, h5, h6 (max h6)
+          const headingLevel = Math.min(navLevel + 2, 6) // h3, h4, h5, h6 (max h6)
           if (!div.querySelector('.sub-navigation-heading')) {
             const subHeading = document.createElement(`h${headingLevel}`)
             subHeading.className = 'visually-hidden sub-navigation-heading navigation-heading'
@@ -1339,7 +1384,7 @@ export default class MultiLevelNavigation extends Shadow() {
     const mobileNavDivs = this.root.querySelectorAll('nav > div[nav-level]')
     mobileNavDivs.forEach((div, index) => {
       const navLevel = parseInt(div.getAttribute('nav-level') || '1')
-      const headingLevel = Math.min(navLevel + 1, 6)
+      const headingLevel = Math.min(navLevel + 2, 6)
       if (!div.querySelector('.mobile-navigation-heading')) {
         const mobileHeading = document.createElement(`h${headingLevel}`)
         mobileHeading.className = 'visually-hidden mobile-navigation-heading navigation-heading'
@@ -1363,12 +1408,12 @@ export default class MultiLevelNavigation extends Shadow() {
     if (level === 1 && parentLi) {
       const link = parentLi.querySelector('a')
       const span = link ? link.querySelector('span') : null
-      const subNavSuffix = this.getAttribute('sub-nav-suffix') || '- Unternavigation'
+      const subNavSuffix = this.getAttribute('sub-nav-suffix') || `- ${this.getLocalizedText('subNav')}`
       if (span && span.textContent.trim()) return `${span.textContent.trim()} ${subNavSuffix}`
       if (link && link.textContent.trim()) return `${link.textContent.trim()} ${subNavSuffix}`
     }
-    const baseText = this.getAttribute('sub-nav-title') || 'Unternavigation'
-    const levelText = this.getAttribute('level-text') || 'Level'
+    const baseText = this.getAttribute('sub-nav-title') || this.getLocalizedText('subNav')
+    const levelText = this.getAttribute('level-text') || this.getLocalizedText('level')
     const levelNames = {
       1: baseText,
       2: `${baseText} ${levelText} 2`, 
@@ -1383,8 +1428,8 @@ export default class MultiLevelNavigation extends Shadow() {
       const span = backButton.querySelector('span')
       if (span && span.textContent.trim()) return span.textContent.trim()
     }
-    const mobileBaseText = this.getAttribute('mobile-nav-title') || this.getAttribute('sub-nav-title') || 'Mobile Unternavigation'
-    const levelText = this.getAttribute('level-text') || 'Level'
+    const mobileBaseText = this.getAttribute('mobile-nav-title') || this.getAttribute('sub-nav-title') || this.getLocalizedText('mobileSubNav')
+    const levelText = this.getAttribute('level-text') || this.getLocalizedText('level')
     const levelNames = {
       1: mobileBaseText,
       2: `${mobileBaseText} ${levelText} 2`,
@@ -1530,7 +1575,7 @@ export default class MultiLevelNavigation extends Shadow() {
           let wrapperSection
           wrapper.parentElement.classList.remove('open')
           wrapper.parentElement.classList.remove('active')
-          if ((closeIcon = wrapper.querySelector('section a.close-icon'))) closeIcon.parentElement.removeChild(closeIcon)
+          if ((closeIcon = wrapper.querySelector('section button.close-icon'))) closeIcon.parentElement.removeChild(closeIcon)
           if ((wrapperSection = wrapper.querySelector('section'))) {
             const subNavigationDivs = Array.from(wrapperSection.querySelectorAll('div[nav-level]'))
             if (subNavigationDivs.length > 0) subNavigationDivs.forEach(div => (div.hidden = false))
@@ -1569,33 +1614,59 @@ export default class MultiLevelNavigation extends Shadow() {
   }
 
   setDesktopMainNavItems (event) {
-    const isOpen = event.currentTarget.classList.contains('open')
+    const parentLi = event.currentTarget.parentNode
+    const isOpen = parentLi.classList.contains('open')
     let isFlyoutOpen = false
     event.preventDefault()
     event.stopPropagation()
+
+    // toggle: close already expanded item
+    if (isOpen) {
+      this.hideAndClearDesktopSubNavigation(event)
+      parentLi.classList.remove('open', 'active')
+      parentLi.setAttribute('aria-expanded', 'false')
+      const link = parentLi.querySelector('a[aria-haspopup]')
+      if (link) link.setAttribute('aria-expanded', 'false')
+      this.nav.setAttribute('aria-expanded', 'false')
+      if (this.hasAttribute('no-scroll')) this.setScrollOnBody(false, event)
+      this.updateExpandCollapseLabel(parentLi)
+      return
+    }
+
     if (this.hasAttribute('no-scroll')) this.setScrollOnBody(true, event)
     // clean state between main li switching
-    if (event.currentTarget.parentNode?.parentNode?.parentNode?.tagName === 'NAV') {
+    if (parentLi.parentNode?.parentNode?.tagName === 'NAV') {
       const logoWidth = Math.ceil(this.parentElement.querySelector('a-logo').getBoundingClientRect().width) + 'px'
       const currentUlElement = this.root.querySelector('nav > ul')
       const ulPositionObj = currentUlElement.getBoundingClientRect()
       currentUlElement.style.setProperty('--multi-level-navigation-default-o-nav-wrapper-top', `calc(1.25rem + ${ulPositionObj.height + 1}px)`)
       currentUlElement.style.setProperty('--multi-level-navigation-default-logo-default-width', `${logoWidth}`)
       this.nav.setAttribute('aria-expanded', 'true')
-      event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
-      const link = event.currentTarget.parentNode.querySelector('a[aria-haspopup]')
+      parentLi.setAttribute('aria-expanded', 'true')
+      const link = parentLi.querySelector('a[aria-haspopup]')
       if (link) link.setAttribute('aria-expanded', 'true')
       isFlyoutOpen = Array.from(currentUlElement.querySelectorAll(':scope > li')).some(el => el.classList.contains('open'))
-      // TODO: this should focus on the first element in the dropdown on desktop but does not have an effect
-      if (!isFlyoutOpen) event.currentTarget.nextElementSibling.querySelector(this.focusElSelector)?.focus()
       if (this.hasAttribute('close-other-flyout')) this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', { bubbles: true, cancelable: true, composed: true }))
       this.addBackgroundDivPosition(event, isFlyoutOpen)
       this.hideAndClearDesktopSubNavigation(event)
     }
-    event.currentTarget.parentNode.classList[isOpen ? 'remove' : 'add']('open')
-    event.currentTarget.parentNode.classList.add('active')
+    parentLi.classList.add('open', 'active')
     // remove animation if flyout is open
-    if (isFlyoutOpen) event.currentTarget.parentElement.querySelector('o-nav-wrapper').classList.add('no-animation')
+    if (isFlyoutOpen) parentLi.querySelector('o-nav-wrapper')?.classList.add('no-animation')
+    // focus on first item in flyout, guard prevents enter-click on that item
+    this._preventNextEnterClick = true
+    setTimeout(() => {
+      const wrapper = parentLi.querySelector('o-nav-wrapper')
+      if (wrapper) {
+        const visibleUl = wrapper.querySelector('div[nav-level="1"] ul:not([style*="display: none"])')
+        if (visibleUl) {
+          const firstItem = visibleUl.querySelector(this.focusElSelector)
+          if (firstItem) firstItem.focus()
+        }
+      }
+      setTimeout(() => { this._preventNextEnterClick = false }, 200)
+    }, 100)
+    this.updateExpandCollapseLabel(parentLi)
   }
 
   setMobileMainNavItems (event) {
@@ -1631,12 +1702,14 @@ export default class MultiLevelNavigation extends Shadow() {
       li.setAttribute('aria-expanded', 'false')
       const link = li.querySelector('a[aria-haspopup]')
       if (link) link.setAttribute('aria-expanded', 'false')
+      this.updateExpandCollapseLabel(li)
     })
 
     event.currentTarget.parentNode.classList.add('hover-active')
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
     const link = event.currentTarget.parentNode.querySelector('a[aria-haspopup]')
     if (link) link.setAttribute('aria-expanded', 'true')
+    this.updateExpandCollapseLabel(event.currentTarget.parentNode)
 
     let subUl = null
     if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute('sub-nav-id') === event.currentTarget.parentNode.getAttribute('sub-nav')))) {
@@ -1936,15 +2009,18 @@ export default class MultiLevelNavigation extends Shadow() {
 
     this.markDecorativeIcons()
     this.markDecorativeText()
+    this.markNavigationImages()
     
     setTimeout(() => {
       this.markDecorativeIcons()
       this.markDecorativeText()
+      this.markNavigationImages()
     }, 100)
     
     setTimeout(() => {
       this.markDecorativeIcons() 
       this.markDecorativeText()
+      this.markNavigationImages()
     }, 500)
     
     this.initAriaHiddenMonitoring()
@@ -2000,9 +2076,9 @@ export default class MultiLevelNavigation extends Shadow() {
     if (!parentElement) return true
     const iconName = icon.getAttribute('icon-name')
     if (iconName === 'X' || iconName === 'Close' || iconName === 'Menu') {
-      if (parentElement.hasAttribute('tabindex') || 
-          parentElement.tagName.toLowerCase() === 'button' ||
-          parentElement.classList.contains('close-icon')) {
+      if (parentElement.tagName.toLowerCase() === 'button' ||
+          parentElement.classList.contains('close-icon') ||
+          parentElement.hasAttribute('tabindex')) {
         return false
       }
     }
@@ -2011,6 +2087,24 @@ export default class MultiLevelNavigation extends Shadow() {
       if (interactiveParent && interactiveParent.hasAttribute('role')) return true
     }
     return iconName === 'ChevronRight' || iconName === 'ChevronDown' || iconName === 'Arrow'
+  }
+
+  markNavigationImages () {
+    const images = this.root.querySelectorAll('img')
+    images.forEach(img => {
+      if (img.hasAttribute('alt')) return
+      const isDecorative = img.closest('.main-background, .wrapper-background, [aria-hidden="true"]') ||
+        img.classList.contains('decoration') ||
+        (img.getAttribute('src') || '').match(/icon|arrow|chevron|separator|divider/i)
+      if (isDecorative) {
+        img.setAttribute('alt', '')
+        img.setAttribute('aria-hidden', 'true')
+      } else {
+        const linkParent = img.closest('a')
+        const linkText = linkParent?.textContent?.trim()
+        img.setAttribute('alt', linkText || '')
+      }
+    })
   }
 
   markDecorativeText () {
@@ -2050,9 +2144,9 @@ export default class MultiLevelNavigation extends Shadow() {
   addNavigationLabels () {
     const nav = this.root.querySelector('nav')
     if (nav) {
-      if (!nav.hasAttribute('aria-label') && !nav.hasAttribute('aria-labelledby')) {
-        const mainNavTitle = this.getAttribute('main-nav-title') || 'Main Navigation'
-        nav.setAttribute('aria-label', mainNavTitle)
+      if (nav.hasAttribute('aria-label')) nav.removeAttribute('aria-label')
+      if (!nav.hasAttribute('aria-labelledby')) {
+        nav.setAttribute('aria-labelledby', 'main-navigation-heading')
       }
       if (!nav.hasAttribute('role')) nav.setAttribute('role', 'navigation')
     }
@@ -2063,7 +2157,7 @@ export default class MultiLevelNavigation extends Shadow() {
     subMenus.forEach(menu => {
       const menuName = menu.getAttribute('mobile-navigation-name') || menu.getAttribute('aria-label') || this.getMenuNameFromContext(menu)
       if (menuName && !menu.hasAttribute('aria-label')) {
-        const subNavTitle = this.getAttribute('sub-nav-title') || 'Sub Navigation'
+        const subNavTitle = this.getAttribute('sub-nav-title') || this.getLocalizedText('subNav')
         menu.setAttribute('aria-label', `${menuName} - ${subNavTitle}`)
       }
     })
@@ -2072,38 +2166,36 @@ export default class MultiLevelNavigation extends Shadow() {
   addExpandCollapseLabels () {
     const expandableItems = this.root.querySelectorAll('[aria-haspopup="true"], [aria-controls]')
     expandableItems.forEach(item => {
-      if (!item.hasAttribute('aria-label') && !item.hasAttribute('aria-labelledby')) {
-        const linkText = item.textContent?.trim() || item.innerText?.trim() || 'Navigation Item'
-        const isExpanded = item.getAttribute('aria-expanded') === 'true'
-        const expandText = isExpanded ? 'collapse' : 'expand'
-        const expandTextDE = isExpanded ? 'zuklappen' : 'aufklappen'
-        const expandTextFR = isExpanded ? 'réduire' : 'développer'
-        const expandTextIT = isExpanded ? 'comprimi' : 'espandi'
-        
-        const lang = document.documentElement.lang || 'en'
-        let expandLabel = expandText
-        
-        if (lang.startsWith('de')) expandLabel = expandTextDE
-        else if (lang.startsWith('fr')) expandLabel = expandTextFR
-        else if (lang.startsWith('it')) expandLabel = expandTextIT
-        
-        item.setAttribute('aria-label', `${linkText} - ${expandLabel}`)
+      this.updateExpandCollapseLabel(item)
+      if (!item._expandCollapseBound) {
+        item._expandCollapseBound = true
+        item.addEventListener('click', () => {
+          setTimeout(() => this.updateExpandCollapseLabel(item), 50)
+        })
       }
     })
   }
 
+  updateExpandCollapseLabel (item) {
+    const linkText = item.querySelector('span')?.textContent?.trim() || item.textContent?.trim() || 'Navigation'
+    const isExpanded = item.getAttribute('aria-expanded') === 'true'
+    const expandLabel = isExpanded ? this.getLocalizedText('collapse') : this.getLocalizedText('expand')
+    item.setAttribute('aria-label', `${linkText} - ${expandLabel}`)
+  }
+
   addLandmarkLabels () {
-    const oNavWrapper = this.closest('o-nav-wrapper') || this.querySelector('o-nav-wrapper')
-    if (oNavWrapper && !oNavWrapper.hasAttribute('aria-label')) {
-      const wrapperLabel = this.getAttribute('main-nav-title') || 'Navigation Area'
-      oNavWrapper.setAttribute('aria-label', wrapperLabel)
-      oNavWrapper.setAttribute('role', 'banner')
-    }
+    const oNavWrappers = this.root.querySelectorAll('o-nav-wrapper')
+    oNavWrappers.forEach(oNavWrapper => {
+      if (oNavWrapper.hasAttribute('role')) oNavWrapper.removeAttribute('role')
+      if (!oNavWrapper.hasAttribute('aria-label')) {
+        oNavWrapper.setAttribute('aria-label', this.getAttribute('main-nav-title') || this.getLocalizedText('navigationArea'))
+      }
+    })
     
     const sections = this.root.querySelectorAll('section')
     sections.forEach((section, index) => {
       if (!section.hasAttribute('aria-label')) {
-        const levelText = this.getAttribute('level-text') || 'Level'
+        const levelText = this.getAttribute('level-text') || this.getLocalizedText('level')
         section.setAttribute('aria-label', `Navigation ${levelText} ${index + 1}`)
         section.setAttribute('role', 'region')
       }
@@ -2130,6 +2222,7 @@ export default class MultiLevelNavigation extends Shadow() {
       if (link) {
         link.removeAttribute('role')
         if (!link.hasAttribute('aria-haspopup')) link.setAttribute('aria-haspopup', 'true')
+        this.bindExpandableKeyHandler(link)
       }
     })
     const mainNavLinks = this.root.querySelectorAll('nav > ul > li > a')
@@ -2138,6 +2231,20 @@ export default class MultiLevelNavigation extends Shadow() {
       const parentLi = link.closest('li')
       if (parentLi && (parentLi.querySelector('template, section, o-nav-wrapper'))) {
         if (!link.hasAttribute('aria-haspopup')) link.setAttribute('aria-haspopup', 'true')
+        this.bindExpandableKeyHandler(link)
+      }
+    })
+  }
+
+  bindExpandableKeyHandler (link) {
+    if (link._expandableKeyBound) return
+    link._expandableKeyBound = true
+    link.addEventListener('keydown', (event) => {
+      if (event.code === 'Enter' || event.code === 'Space') {
+        event.preventDefault()
+        this._preventNextEnterClick = true
+        link.click()
+        setTimeout(() => { this._preventNextEnterClick = false }, 300)
       }
     })
   }
@@ -2161,6 +2268,7 @@ export default class MultiLevelNavigation extends Shadow() {
           setTimeout(() => {
             this.markDecorativeIcons()
             this.markDecorativeText()
+            this.markNavigationImages()
             this.addScreenReaderLabels()
           }, 50)
         }
@@ -2328,6 +2436,25 @@ export default class MultiLevelNavigation extends Shadow() {
         })
       }
     }, 500)
+  }
+
+  getLocalizedText (key) {
+    const lang = (document.documentElement.lang || 'de').toLowerCase()
+    const texts = {
+      mainNavTitle: { de: 'Hauptnavigation', fr: 'Navigation principale', it: 'Navigazione principale' },
+      closeNav: { de: 'Navigation schliessen', fr: 'Fermer la navigation', it: 'Chiudere la navigazione' },
+      expand: { de: 'aufklappen', fr: 'développer', it: 'espandi' },
+      collapse: { de: 'zuklappen', fr: 'réduire', it: 'comprimi' },
+      subNav: { de: 'Unternavigation', fr: 'Sous-navigation', it: 'Sottonavigazione' },
+      mobileSubNav: { de: 'Mobile Unternavigation', fr: 'Sous-navigation mobile', it: 'Sottonavigazione mobile' },
+      level: { de: 'Level', fr: 'Niveau', it: 'Livello' },
+      navigationArea: { de: 'Navigationsbereich', fr: 'Zone de navigation', it: 'Area di navigazione' }
+    }
+    const entry = texts[key]
+    if (!entry) return key
+    if (lang.startsWith('fr')) return entry.fr
+    if (lang.startsWith('it')) return entry.it
+    return entry.de
   }
 
   setLoadCustomElementsAttribute (template) {
