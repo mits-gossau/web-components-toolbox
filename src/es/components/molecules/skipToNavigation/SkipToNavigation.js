@@ -55,6 +55,17 @@ export default class SkipToNavigation extends Shadow() {
       }
     }
 
+    this.keyboardShortcutListener = (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === 's') {
+        event.preventDefault()
+        this.skipToNav.classList.toggle('active')
+        if (this.skipToNav.classList.contains('active')) {
+          const firstLink = this.skipToNav.querySelector('a')
+          if (firstLink) firstLink.focus()
+        }
+      }
+    }
+
     this.clickEventListener = (event) => {
       const anchor = event.target.closest('a')
       if (anchor) {
@@ -102,6 +113,7 @@ export default class SkipToNavigation extends Shadow() {
     this.addEventListener('focusout', this.focusoutEventListener)
     this.addEventListener('keyup', this.keyupEventListener)
     this.addEventListener('click', this.clickEventListener)
+    document.addEventListener('keydown', this.keyboardShortcutListener)
   }
 
   disconnectedCallback () {
@@ -109,6 +121,7 @@ export default class SkipToNavigation extends Shadow() {
     this.removeEventListener('focusout', this.focusoutEventListener)
     this.removeEventListener('keyup', this.keyupEventListener)
     this.removeEventListener('click', this.clickEventListener)
+    document.removeEventListener('keydown', this.keyboardShortcutListener)
   }
 
   moveChildrenToSlot () {
