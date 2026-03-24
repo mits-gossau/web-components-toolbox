@@ -11,7 +11,7 @@ export default class SkipToNavigation extends Shadow() {
     super({ importMetaUrl: import.meta.url,  ...options }, ...args)
 
     this.focusinEventListener = () => {
-      this.skipToNav.classList.add('active')
+      if (!this._shortcutClosing) this.skipToNav.classList.add('active')
     }
 
     this.focusoutEventListener = () => {
@@ -58,8 +58,15 @@ export default class SkipToNavigation extends Shadow() {
     this.keyboardShortcutListener = (event) => {
       if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === 's') {
         event.preventDefault()
-        this.skipToNav.classList.toggle('active')
-        if (this.skipToNav.classList.contains('active')) {
+        const isActive = this.skipToNav.classList.contains('active')
+        if (isActive) {
+          this._shortcutClosing = true
+          this.skipToNav.classList.remove('active')
+          const activeElement = this.shadowRoot.activeElement
+          if (activeElement) activeElement.blur()
+          this._shortcutClosing = false
+        } else {
+          this.skipToNav.classList.add('active')
           const firstLink = this.skipToNav.querySelector('a')
           if (firstLink) firstLink.focus()
         }
@@ -214,6 +221,10 @@ export default class SkipToNavigation extends Shadow() {
         line-height: var(--line-height, 1.5);
         letter-spacing: var(--letter-spacing, 0.02em);
         transition: color 0.3s ease;
+      }
+      :host > nav > a:focus {
+        outline: var(--a-focus-outline, 2px solid currentColor);
+        outline-offset: var(--a-focus-outline-offset, 2px);
       }
     `
     return this.fetchTemplate()
