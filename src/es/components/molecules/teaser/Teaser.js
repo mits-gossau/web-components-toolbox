@@ -19,11 +19,11 @@ export default class Teaser extends Intersection() {
       ...options
     }, ...args)
 
-    this.setAttribute('role', 'figure')
     // link behavior made accessible
     if (this.hasAttribute('href')) {
       this.setAttribute('data-href', this.getAttribute('href'))
-      this.setAttribute('role', 'link')
+    } else {
+      this.setAttribute('role', 'figure')
     }
     this.mouseoverListener = event => {
       if (this.aArrow) this.aArrow.setAttribute('hover', 'true')
@@ -104,6 +104,11 @@ export default class Teaser extends Intersection() {
       }
       :host([href]) {
         cursor: pointer;
+      }
+      :host([href]:focus-visible) {
+        outline: var(--focus-outline, 2px solid var(--color-focus, Highlight));
+        outline-offset: var(--focus-outline-offset, 2px);
+        border-radius: var(--border-radius, 0);
       }
       :host([text-position=top]){
         display: var(--text-position-top-display, inline-flex);
@@ -328,9 +333,17 @@ export default class Teaser extends Intersection() {
       a.setAttribute('wrapper', '')
       a.style.color = 'inherit'
       a.style.textDecoration = 'inherit'
+      // accessible name: prefer title attribute, fallback to first heading text
+      const accessibleName = this.getAttribute('title') || this.querySelector('h1, h2, h3, h4, h5, h6')?.textContent?.trim()
+      if (accessibleName) a.setAttribute('aria-label', accessibleName)
       this.parentNode.replaceChild(a, this)
       // @ts-ignore
       a.appendChild(this)
+      // hide nested interactive elements to avoid redundant tab stops and screenreader announcements (WCAG 4.1.2, 2.4.3)
+      this.querySelectorAll('a, button, [role="button"], [role="link"], a-link, ks-a-button, a-button').forEach(el => {
+        el.setAttribute('tabindex', '-1')
+        el.setAttribute('aria-hidden', 'true')
+      })
       this.checkIfLink = () => { }
     }
   }
