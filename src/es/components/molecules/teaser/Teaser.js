@@ -327,7 +327,12 @@ export default class Teaser extends Intersection() {
     if (this.hasAttribute('href') && this.parentNode) {
       const a = document.createElement('a')
       Array.from(this.attributes).forEach(attribute => {
-        if (!attribute.name.includes('hidden')) a.setAttribute(attribute.name, attribute.value)
+        if (attribute.name === 'href') {
+          const href = attribute.value
+          a.setAttribute('href', href.includes('#') ? href : href + '#content')
+        } else if (!attribute.name.includes('hidden')) {
+          a.setAttribute(attribute.name, attribute.value)
+        }
       })
       if (a.hasAttribute('id')) this.removeAttribute('id')
       a.setAttribute('wrapper', '')

@@ -32,6 +32,17 @@ export default class Footer extends Shadow() {
 
     this.setAttribute('role', 'navigation')
     this.setAttribute('aria-label', 'Footer')
+
+    this.openAndFocusFooterListener = () => {
+      const focusable = (this.footer || this).querySelector('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])')
+      if (focusable) {
+        focusable.focus()
+      } else {
+        const target = this.footer || this
+        if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+        target.focus()
+      }
+    }
   }
 
   connectedCallback () {
@@ -54,6 +65,11 @@ export default class Footer extends Shadow() {
       })
       this.hidden = false
     })
+    document.body.addEventListener('open-and-focus-footer', this.openAndFocusFooterListener)
+  }
+
+  disconnectedCallback () {
+    document.body.removeEventListener('open-and-focus-footer', this.openAndFocusFooterListener)
   }
 
   /**

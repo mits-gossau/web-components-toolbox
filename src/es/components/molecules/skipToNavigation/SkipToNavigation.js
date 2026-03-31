@@ -128,7 +128,8 @@ export default class SkipToNavigation extends Shadow() {
     const id = href.replace('#', '')
     const target = document.getElementById(id)
     if (!target) return
-    const focusable = target.querySelector('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"]), h1, h2, h3, h4, h5, h6')
+    const selector = 'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"]), h1, h2, h3, h4, h5, h6'
+    const focusable = target.querySelector(selector) || SkipToNavigation.walksDownDomQueryMatchesAll(target, selector)[0]
     if (focusable) {
       if (!focusable.hasAttribute('tabindex')) focusable.setAttribute('tabindex', '-1')
       focusable.focus()
