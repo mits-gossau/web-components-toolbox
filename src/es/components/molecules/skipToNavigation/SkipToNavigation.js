@@ -129,7 +129,7 @@ export default class SkipToNavigation extends Shadow() {
     const target = document.getElementById(id)
     if (!target) return
     const selector = 'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"]), h1, h2, h3, h4, h5, h6'
-    const focusable = target.querySelector(selector) || this.queryDeepSelector(target, selector)
+    const focusable = target.querySelector(selector) || SkipToNavigation.walksDownDomQueryMatchesAll(target, selector)[0]
     if (focusable) {
       if (!focusable.hasAttribute('tabindex')) focusable.setAttribute('tabindex', '-1')
       focusable.focus()
@@ -137,16 +137,6 @@ export default class SkipToNavigation extends Shadow() {
       if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
       target.focus()
     }
-  }
-
-  queryDeepSelector (root, selector) {
-    for (const child of root.querySelectorAll('*')) {
-      if (child.shadowRoot) {
-        const found = child.shadowRoot.querySelector(selector) || this.queryDeepSelector(child.shadowRoot, selector)
-        if (found) return found
-      }
-    }
-    return null
   }
 
   /**
