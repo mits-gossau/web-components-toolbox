@@ -26,6 +26,15 @@ export default class Body extends Anchor() {
     super.connectedCallback()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (this.shouldRenderHTML()) this.renderHTML()
+    if (window.location.hash === '#content') this.focusMainContent()
+  }
+
+  focusMainContent () {
+    requestAnimationFrame(() => {
+      const target = (this.main || this).querySelector('h1') || this.main || this
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+      target.focus({ preventScroll: true })
+    })
   }
 
   /**
