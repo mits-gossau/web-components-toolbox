@@ -710,7 +710,8 @@ export default class CarouselTwo extends Mutation() {
         node.setAttribute('tabindex', '0')
         if (this.hasAttribute('no-default-nav-linking')) return
         node.setAttribute('aria-label', `slide ${i + 1}`)
-        node.setAttribute('aria-hidden', 'true')
+        const activeIndex = this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0
+        node.setAttribute('aria-hidden', i === activeIndex ? 'false' : 'true')
         // make sure the ids match between section and navigation nodes
         const id = `${this.id}-${i}`
         node.setAttribute('id', id)
@@ -738,9 +739,10 @@ export default class CarouselTwo extends Mutation() {
       // modal stuff
       if (this.hasAttribute('open-modal')) {
         this.closeBtn = document.createElement('button')
+        this.closeBtn.setAttribute('aria-label', this.getAttribute('close-label') || 'Open enlarged view')
         this.closeBtn.innerHTML = `
           <span>
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px" aria-hidden="true" focusable="false">
               <g>
                 <path id="Ellipse" d="M 1 11 C 1 5.4771 5.4771 1 11 1 C 16.5229 1 21 5.4771 21 11 C 21 16.5229 16.5229 21 11 21 C 5.4771 21 1 16.5229 1 11 Z" fill="#FF6600"/>
                 <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>

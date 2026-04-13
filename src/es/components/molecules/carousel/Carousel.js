@@ -316,6 +316,12 @@ export default class MacroCarousel extends Shadow() {
           bottom: calc(var(--close-btn-bottom-mobile, var(--close-btn-bottom, var(--content-spacing-mobile, var(--content-spacing)))) / 2);
         }
       }
+      @media (prefers-reduced-motion: reduce) {
+        :host > macro-carousel > * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
     `
     // inject style which can't be controlled through css vars
     // style which must be inside macro-carousel shadowDom
@@ -427,9 +433,10 @@ export default class MacroCarousel extends Shadow() {
       // modal stuff
       if (this.hasAttribute('open-modal')) {
         this.closeBtn = document.createElement('button')
+        this.closeBtn.setAttribute('aria-label', this.getAttribute('close-label') || 'Open enlarged view')
         this.closeBtn.innerHTML = `
           <span>
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px" aria-hidden="true" focusable="false">
               <g>
                 <path id="Ellipse" d="M 1 11 C 1 5.4771 5.4771 1 11 1 C 16.5229 1 21 5.4771 21 11 C 21 16.5229 16.5229 21 11 21 C 5.4771 21 1 16.5229 1 11 Z" fill="#FF6600"/>
                 <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>
@@ -471,14 +478,15 @@ export default class MacroCarousel extends Shadow() {
   macroCarouselReady () {
     // style which has to be injected to take effect
     this.macroCarousel.shadowRoot.appendChild(this.injectStyle)
-    // autoplay
-    if (this.getAttribute('interval')) {
+    // autoplay – respect prefers-reduced-motion (WCAG 2.2.2, 2.3.3)
+    if (this.getAttribute('interval') && !self.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.setInterval()
       this.macroCarousel.addEventListener('macro-carousel-selected-changed', event => this.setInterval())
     }
   }
 
   setInterval () {
+    if (self.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     clearInterval(this.interval)
     this.interval = setInterval(() => this.macroCarousel.next(), Number(this.getAttribute('interval')))
   }

@@ -563,9 +563,10 @@ export default class Picture extends Intersection(Hover()) {
         }
       } else {
         this.closeBtn = document.createElement('button')
+        this.closeBtn.setAttribute('aria-label', this.getAttribute('close-label') || 'Open enlarged view')
         this.closeBtn.innerHTML = `
           <span>
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px" aria-hidden="true" focusable="false">
               <g>
                 <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>
                 <path d="M 12 15 L 10 15 L 10 7 L 12 7 L 12 15 Z" fill="#ffffff"/>
