@@ -96,9 +96,11 @@ export default class CarouselTwo extends Mutation() {
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
             node.classList.remove('active')
             node.setAttribute('aria-hidden', 'true')
+            node.setAttribute('tabindex', '-1')
           })
           activeChild.classList.add('active')
           activeChild.setAttribute('aria-hidden', 'false')
+          activeChild.setAttribute('tabindex', '0')
           this.dispatchEvent(new CustomEvent(this.getAttribute('carousel-changed') || 'carousel-changed', {
             detail: { node: activeChild },
             bubbles: true,
@@ -706,12 +708,13 @@ export default class CarouselTwo extends Mutation() {
         }
       }
       Array.from(this.section.children).forEach((node, i) => {
-        // add attribute tabindex to each slide
-        node.setAttribute('tabindex', '0')
+        const activeIndex = this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0
+        const isActive = i === activeIndex
+        // only the active slide should be focusable – inactive slides must not be tabbable while aria-hidden (WCAG 2.4.3, 4.1.2)
+        node.setAttribute('tabindex', isActive ? '0' : '-1')
         if (this.hasAttribute('no-default-nav-linking')) return
         node.setAttribute('aria-label', `slide ${i + 1}`)
-        const activeIndex = this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0
-        node.setAttribute('aria-hidden', i === activeIndex ? 'false' : 'true')
+        node.setAttribute('aria-hidden', isActive ? 'false' : 'true')
         // make sure the ids match between section and navigation nodes
         const id = `${this.id}-${i}`
         node.setAttribute('id', id)
@@ -812,6 +815,8 @@ export default class CarouselTwo extends Mutation() {
   }
 
   setInterval () {
+    // respect prefers-reduced-motion (WCAG 2.2.2, 2.3.3)
+    if (self.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     if (this.hasAttribute('interval') && !this.isFocused) {
       // @ts-ignore
       clearInterval(this.interval)
