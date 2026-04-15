@@ -141,6 +141,10 @@ export default class Iframe extends Intersection() {
       link.setAttribute('href', this.iframe.getAttribute('src'))
       document.head.appendChild(link)
     }
+    // ensure iframe has a title for accessibility (WCAG 4.1.2)
+    if (this.iframe && !this.iframe.getAttribute('title')) {
+      this.iframe.setAttribute('title', this.getAttribute('iframe-title') || this.getAttribute('title') || 'Embedded content')
+    }
     return () =>
       setTimeout(
         () => {

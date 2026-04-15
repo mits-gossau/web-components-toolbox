@@ -63,8 +63,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
       ...options
     }, ...args)
 
-    this.setAttribute('aria-expanded', 'false')
-    this.setAttribute('role', 'button')
+    this.removeAttribute('role') // do not set role="button" on host – the native <summary> provides the button role
     this.removeAttribute('aria-label') // remove generic aria-label and let content define the accessible name
     this.svgWidth = '1.5em'
     this.svgHeight = '1.5em'
@@ -104,7 +103,6 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
         if (summary && (summary.contains(event.target) || event.target === summary)) {
           event.preventDefault()
           this.details.hasAttribute('open') ? this.details.removeAttribute('open') : this.details.setAttribute('open', '')
-          this.content.querySelector('a')?.focus()
         }
       }
       if (event.key === 'Escape' && this.details && this.details.hasAttribute('open')) {
@@ -282,7 +280,6 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
           cancelable: true,
           composed: true
         }))
-        this.setAttribute('aria-expanded', 'true')
         if (this.summary) this.summary.setAttribute('aria-expanded', 'true')
       } else {
         this.details.addEventListener('animationend', this.detailsCloseAnimationendListener, { once: true })
@@ -364,7 +361,6 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
           cancelable: true,
           composed: true
         }))
-        this.setAttribute('aria-expanded', 'false')
         if (this.summary) this.summary.setAttribute('aria-expanded', 'false')
       }
     })
@@ -638,7 +634,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
       : this.setIconDefault(divSummary, 'icon')
     this.summary.appendChild(divSummary)
     this.summary.setAttribute('tabindex', '0')
-    this.summary.setAttribute('role', 'button')
+
     if (this.details.hasAttribute('open')) {
       this.summary.setAttribute('aria-expanded', 'true')
       this.loadTemplateTag()
@@ -657,7 +653,8 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
   setIconFromAttribute (iconPath, node, cssClass) {
     const iconImg = new Image()
     iconImg.src = iconPath
-    iconImg.alt = 'close detail'
+    iconImg.alt = ''
+    iconImg.setAttribute('aria-hidden', 'true')
     node.append(iconImg)
     node.classList.add(cssClass)
     return node
@@ -674,8 +671,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
       default:
         iconSvg.innerHTML = `
           <?xml version="1.0" encoding="UTF-8"?>
-          <svg width="${this.svgWidth || '35px'}" height="${this.svgHeight || '20px'}" viewBox="0 0 35 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-              <title>Mobile Pfeil</title>
+          <svg width="${this.svgWidth || '35px'}" height="${this.svgHeight || '20px'}" viewBox="0 0 35 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false">
               <g id="Mobile-Pfeil" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <polyline id="Path-2" stroke="${this.svgColor || `var(--color, --${this.namespace}color)`}" stroke-width="3" points="2 3 17 18 32 3"></polyline>
               </g>

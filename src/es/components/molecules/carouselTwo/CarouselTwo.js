@@ -96,9 +96,11 @@ export default class CarouselTwo extends Mutation() {
           Array.from(this.root.querySelectorAll('.active')).forEach(node => {
             node.classList.remove('active')
             node.setAttribute('aria-hidden', 'true')
+            node.setAttribute('tabindex', '-1')
           })
           activeChild.classList.add('active')
           activeChild.setAttribute('aria-hidden', 'false')
+          activeChild.setAttribute('tabindex', '0')
           this.dispatchEvent(new CustomEvent(this.getAttribute('carousel-changed') || 'carousel-changed', {
             detail: { node: activeChild },
             bubbles: true,
@@ -706,11 +708,13 @@ export default class CarouselTwo extends Mutation() {
         }
       }
       Array.from(this.section.children).forEach((node, i) => {
-        // add attribute tabindex to each slide
-        node.setAttribute('tabindex', '0')
+        const activeIndex = this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0
+        const isActive = i === activeIndex
+        // only the active slide should be focusable – inactive slides must not be tabbable while aria-hidden (WCAG 2.4.3, 4.1.2)
+        node.setAttribute('tabindex', isActive ? '0' : '-1')
         if (this.hasAttribute('no-default-nav-linking')) return
         node.setAttribute('aria-label', `slide ${i + 1}`)
-        node.setAttribute('aria-hidden', 'true')
+        node.setAttribute('aria-hidden', isActive ? 'false' : 'true')
         // make sure the ids match between section and navigation nodes
         const id = `${this.id}-${i}`
         node.setAttribute('id', id)
@@ -738,9 +742,10 @@ export default class CarouselTwo extends Mutation() {
       // modal stuff
       if (this.hasAttribute('open-modal')) {
         this.closeBtn = document.createElement('button')
+        this.closeBtn.setAttribute('aria-label', this.getAttribute('close-label') || 'Open enlarged view')
         this.closeBtn.innerHTML = `
           <span>
-            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="Untitled-Seite%201" viewBox="0 0 22 22" style="background-color:#ffffff00" version="1.1" xml:space="preserve" x="0px" y="0px" width="22px" height="22px" aria-hidden="true" focusable="false">
               <g>
                 <path id="Ellipse" d="M 1 11 C 1 5.4771 5.4771 1 11 1 C 16.5229 1 21 5.4771 21 11 C 21 16.5229 16.5229 21 11 21 C 5.4771 21 1 16.5229 1 11 Z" fill="#FF6600"/>
                 <path d="M 15 10 L 15 12 L 7 12 L 7 10 L 15 10 Z" fill="#ffffff"/>
@@ -810,6 +815,8 @@ export default class CarouselTwo extends Mutation() {
   }
 
   setInterval () {
+    // respect prefers-reduced-motion (WCAG 2.2.2, 2.3.3)
+    if (self.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     if (this.hasAttribute('interval') && !this.isFocused) {
       // @ts-ignore
       clearInterval(this.interval)

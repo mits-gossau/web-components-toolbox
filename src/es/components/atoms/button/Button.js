@@ -482,9 +482,9 @@ export default class Button extends Hover() {
         part="button"
         ${this.classList.contains('active') ? 'class="active"' : ''}
         ${this.buttonTagName === 'a'
-          ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''}`
+          ? `href="${this.getAttribute('href')}" target="${this.getAttribute('target') || '_self'}" ${this.hasAttribute('rel') ? `rel="${this.getAttribute('rel')}"` : ''} role="button"`
           : ''}
-        type="${this.hasAttribute('type') ? this.getAttribute('type') : 'button'}">
+        ${this.buttonTagName === 'button' ? `type="${this.hasAttribute('type') ? this.getAttribute('type') : 'button'}"` : ''}>
         <span id="label"${!this.labelText ? ' class="hide"' : ''}>${this.labelText || ''}</span>
       </${this.buttonTagName}>
     `
