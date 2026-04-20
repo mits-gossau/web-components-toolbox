@@ -634,6 +634,7 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
       : this.setIconDefault(divSummary, 'icon')
     this.summary.appendChild(divSummary)
     this.summary.setAttribute('tabindex', '0')
+    this.summary.setAttribute('part', 'summary')
 
     if (this.details.hasAttribute('open')) {
       this.summary.setAttribute('aria-expanded', 'true')
