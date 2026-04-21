@@ -635,8 +635,10 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
     this.summary.appendChild(divSummary)
     this.summary.setAttribute('tabindex', '0')
     this.summary.setAttribute('part', 'summary')
-    this.content.setAttribute('part', 'content')
-    Array.from(this.content.children).forEach(child => child.setAttribute('part', 'content-child'))
+    if (this.content) {
+      this.content.setAttribute('part', 'content')
+      Array.from(this.content.children).forEach(child => child.setAttribute('part', 'content-child'))
+    }
 
     if (this.details.hasAttribute('open')) {
       this.summary.setAttribute('aria-expanded', 'true')
