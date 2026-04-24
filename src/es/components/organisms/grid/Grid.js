@@ -82,6 +82,11 @@ export default class Grid extends Shadow() {
       :host > section > * > * {
         transition: var(--section-child-child-transition, var(--section-child-transition, var(--section-transition, none)));
       }
+      /* Special case: wrappers that directly contain m-teaser should not have inner padding
+         Allow editors to override via padding/padding-mobile attributes from Umbraco */
+      :host > section > *:not([padding]):not([padding-mobile]):has(> m-teaser) {
+        padding: 0 !important;
+      }
     `
     if (this.hasAttribute('overflow')) {
       css += /* css */`
@@ -172,6 +177,11 @@ export default class Grid extends Shadow() {
         color: var(--section-child-color-mobile, var(--section-child-color, var(--color, black)));
         margin: var(--section-child-margin-mobile, var(--section-child-margin, 0));
         padding: var(--section-child-padding-mobile, var(--section-child-padding, 0));
+      }
+      /* Special case (mobile): wrappers that directly contain m-teaser should not have inner padding
+         Allow editors to override via padding/padding-mobile attributes from Umbraco */
+      :host > section > *:not([padding]):not([padding-mobile]):has(> m-teaser) {
+        padding: 0 !important;
       }
     `
     if (this.hasAttribute('height-mobile')) {
