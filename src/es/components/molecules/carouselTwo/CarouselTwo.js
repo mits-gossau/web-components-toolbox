@@ -771,10 +771,11 @@ export default class CarouselTwo extends Mutation() {
             const srcIframe = aIframe.iframe
             if (!srcIframe) return
             const src = srcIframe.getAttribute('src') || ''
-            // add enablejsapi for YouTube so we receive postMessage state changes
             let autoplaySrc = src.includes('autoplay=1') ? src : src + (src.includes('?') ? '&' : '?') + 'autoplay=1'
-            if (autoplaySrc.includes('youtube') && !autoplaySrc.includes('enablejsapi=1')) {
-              autoplaySrc += '&enablejsapi=1'
+            // YouTube: enablejsapi + origin required for postMessage state events
+            if (autoplaySrc.includes('youtube')) {
+              if (!autoplaySrc.includes('enablejsapi=1')) autoplaySrc += '&enablejsapi=1'
+              if (!autoplaySrc.includes('origin=')) autoplaySrc += '&origin=' + encodeURIComponent(self.location.origin)
             }
             // create a fresh iframe with autoplay – browser allows autoplay from user gesture
             const newIframe = document.createElement('iframe')
@@ -794,25 +795,25 @@ export default class CarouselTwo extends Mutation() {
             overlay.classList.add('loaded')
             // disable arrow hit areas while video is playing so player controls stay accessible
             this.classList.add('video-playing')
-            // register as event listener with YouTube/Vimeo – retry because player JS needs time to initialize
-            const registerPlayerEvents = (iframe, src) => {
+            // register for YouTube/Vimeo state events via postMessage
+            newIframe.addEventListener('load', () => {
               const register = () => {
                 try {
-                  if (src.includes('youtube')) {
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*')
-                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onStateChange'] }), '*')
-                  } else if (src.includes('vimeo')) {
-                    iframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'pause' }), '*')
-                    iframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'ended' }), '*')
+                  if (autoplaySrc.includes('youtube')) {
+                    newIframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*')
+                    newIframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onStateChange'] }), '*')
+                  } else if (autoplaySrc.includes('vimeo')) {
+                    newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'pause' }), '*')
+                    newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'play' }), '*')
+                    newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'ended' }), '*')
                   }
-                } catch (e) { /* cross-origin safety */ }
+                } catch (e) { /* cross-origin */ }
               }
-              // retry at 1s, 2s, 3s – player JS may not be ready on first try
+              register()
               setTimeout(register, 1000)
               setTimeout(register, 2000)
-              setTimeout(register, 3000)
-            }
-            newIframe.addEventListener('load', () => registerPlayerEvents(newIframe, autoplaySrc))
+              setTimeout(register, 4000)
+            })
           })
           overlay.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -836,21 +837,20 @@ export default class CarouselTwo extends Mutation() {
           const ol = slide.querySelector('.video-play-overlay')
           if (ol) ol.addEventListener('click', () => { videoPlayingSlide = slide })
         })
-        // listen for YouTube/Vimeo play/pause postMessages to toggle arrows
+        // postMessage listener for YouTube/Vimeo play/pause state
         self.addEventListener('message', (event) => {
           try {
             const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
-            // YouTube: react to pause (2) and ended (0) to re-enable arrows
-            // == instead of === because YouTube may send strings
+            // YouTube: onStateChange or infoDelivery
             const ytState = data.event === 'onStateChange' ? data.info : (data.event === 'infoDelivery' && data.info ? data.info.playerState : undefined)
-            if (ytState == 2 || ytState == 0) {
-              this.classList.remove('video-playing')
+            if (ytState != null) {
+              if (ytState == 1 || ytState == 3) this.classList.add('video-playing')
+              else if (ytState == 2 || ytState == 0) this.classList.remove('video-playing')
             }
-            // Vimeo: event names
-            if (data.event === 'pause' || data.event === 'ended') {
-              this.classList.remove('video-playing')
-            }
-          } catch (e) { /* ignore non-JSON messages */ }
+            // Vimeo
+            if (data.event === 'play') this.classList.add('video-playing')
+            else if (data.event === 'pause' || data.event === 'ended') this.classList.remove('video-playing')
+          } catch (e) { /* ignore non-JSON */ }
         })
       }
 
