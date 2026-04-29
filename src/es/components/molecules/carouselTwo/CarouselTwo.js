@@ -759,62 +759,76 @@ export default class CarouselTwo extends Mutation() {
       if (this.getAttribute('namespace') === 'carousel-two-video-museum-') {
         Array.from(this.section.children).forEach(slide => {
           const aIframe = slide.querySelector('a-iframe')
-          if (!aIframe) return
+          const aVideo = slide.querySelector('a-video')
+          if (!aIframe && !aVideo) return
           const overlay = document.createElement('div')
           overlay.classList.add('video-play-overlay')
           overlay.setAttribute('aria-label', 'Play video')
           overlay.setAttribute('role', 'button')
           overlay.setAttribute('tabindex', '0')
-          overlay.addEventListener('click', (event) => {
-            event.stopPropagation()
-            // use a-iframe's own getter which handles shadow DOM
-            const srcIframe = aIframe.iframe
-            if (!srcIframe) return
-            const src = srcIframe.getAttribute('src') || ''
-            let autoplaySrc = src.includes('autoplay=1') ? src : src + (src.includes('?') ? '&' : '?') + 'autoplay=1'
-            // YouTube: enablejsapi + origin required for postMessage state events
-            if (autoplaySrc.includes('youtube')) {
-              if (!autoplaySrc.includes('enablejsapi=1')) autoplaySrc += '&enablejsapi=1'
-              if (!autoplaySrc.includes('origin=')) autoplaySrc += '&origin=' + encodeURIComponent(self.location.origin)
-            }
-            // create a fresh iframe with autoplay – browser allows autoplay from user gesture
-            const newIframe = document.createElement('iframe')
-            newIframe.setAttribute('src', autoplaySrc)
-            newIframe.setAttribute('width', srcIframe.getAttribute('width') || '640')
-            newIframe.setAttribute('height', srcIframe.getAttribute('height') || '360')
-            newIframe.setAttribute('allow', srcIframe.getAttribute('allow') || 'autoplay; fullscreen; picture-in-picture')
-            newIframe.setAttribute('title', srcIframe.getAttribute('title') || '')
-            newIframe.setAttribute('frameborder', '0')
-            // replace inside a-iframe's root (shadow DOM)
-            const root = aIframe.root || aIframe.shadowRoot || aIframe
-            const oldIframe = root.querySelector('iframe')
-            if (oldIframe) oldIframe.remove()
-            const tpl = aIframe.template
-            if (tpl) tpl.remove()
-            root.appendChild(newIframe)
-            overlay.classList.add('loaded')
-            // disable arrow hit areas while video is playing so player controls stay accessible
-            this.classList.add('video-playing')
-            // register for YouTube/Vimeo state events via postMessage
-            newIframe.addEventListener('load', () => {
-              const register = () => {
-                try {
-                  if (autoplaySrc.includes('youtube')) {
-                    newIframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*')
-                    newIframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onStateChange'] }), '*')
-                  } else if (autoplaySrc.includes('vimeo')) {
-                    newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'pause' }), '*')
-                    newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'play' }), '*')
-                    newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'ended' }), '*')
-                  }
-                } catch (e) { /* cross-origin */ }
+          if (aIframe) {
+            // iframe-based video (YouTube/Vimeo)
+            overlay.addEventListener('click', (event) => {
+              event.stopPropagation()
+              const srcIframe = aIframe.iframe
+              if (!srcIframe) return
+              const src = srcIframe.getAttribute('src') || ''
+              let autoplaySrc = src.includes('autoplay=1') ? src : src + (src.includes('?') ? '&' : '?') + 'autoplay=1'
+              if (autoplaySrc.includes('youtube')) {
+                if (!autoplaySrc.includes('enablejsapi=1')) autoplaySrc += '&enablejsapi=1'
+                if (!autoplaySrc.includes('origin=')) autoplaySrc += '&origin=' + encodeURIComponent(self.location.origin)
               }
-              register()
-              setTimeout(register, 1000)
-              setTimeout(register, 2000)
-              setTimeout(register, 4000)
+              const newIframe = document.createElement('iframe')
+              newIframe.setAttribute('src', autoplaySrc)
+              newIframe.setAttribute('width', srcIframe.getAttribute('width') || '640')
+              newIframe.setAttribute('height', srcIframe.getAttribute('height') || '360')
+              newIframe.setAttribute('allow', srcIframe.getAttribute('allow') || 'autoplay; fullscreen; picture-in-picture')
+              newIframe.setAttribute('title', srcIframe.getAttribute('title') || '')
+              newIframe.setAttribute('frameborder', '0')
+              const root = aIframe.root || aIframe.shadowRoot || aIframe
+              const oldIframe = root.querySelector('iframe')
+              if (oldIframe) oldIframe.remove()
+              const tpl = aIframe.template
+              if (tpl) tpl.remove()
+              root.appendChild(newIframe)
+              overlay.classList.add('loaded')
+              this.classList.add('video-playing')
+              // register for YouTube/Vimeo state events via postMessage
+              newIframe.addEventListener('load', () => {
+                const register = () => {
+                  try {
+                    if (autoplaySrc.includes('youtube')) {
+                      newIframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*')
+                      newIframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onStateChange'] }), '*')
+                    } else if (autoplaySrc.includes('vimeo')) {
+                      newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'pause' }), '*')
+                      newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'play' }), '*')
+                      newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'ended' }), '*')
+                    }
+                  } catch (e) { /* cross-origin */ }
+                }
+                register()
+                setTimeout(register, 1000)
+                setTimeout(register, 2000)
+                setTimeout(register, 4000)
+              })
             })
-          })
+          } else if (aVideo) {
+            // local video (a-video component)
+            overlay.addEventListener('click', (event) => {
+              event.stopPropagation()
+              const root = aVideo.root || aVideo.shadowRoot || aVideo
+              const video = root.querySelector('video') || aVideo.querySelector('video')
+              if (video) {
+                video.play()
+                video.addEventListener('play', () => this.classList.add('video-playing'))
+                video.addEventListener('pause', () => this.classList.remove('video-playing'))
+                video.addEventListener('ended', () => this.classList.remove('video-playing'))
+              }
+              overlay.classList.add('loaded')
+              this.classList.add('video-playing')
+            })
+          }
           overlay.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault()

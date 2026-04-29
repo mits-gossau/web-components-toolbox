@@ -58,8 +58,9 @@
   position: relative;
   width: 100%;
 }
-/* a-iframe: aspect-ratio container for equal video height */
-:host > section > * > a-iframe {
+/* a-iframe / a-video: aspect-ratio container for equal video height */
+:host > section > * > a-iframe,
+:host > section > * > a-video {
   position: relative;
   display: block;
   width: 100%;
