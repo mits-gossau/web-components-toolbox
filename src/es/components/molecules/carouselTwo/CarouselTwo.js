@@ -662,7 +662,10 @@ export default class CarouselTwo extends Mutation() {
         }, {
           path: `${this.importMetaUrl}./video-/video-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(() => setAttributeStyles())
+        }, ...styles], false).then(fetchCSSParams => {
+          fetchCSSParams[1].styleNode.textContent = eval('`' + fetchCSSParams[1].style + '`')// eslint-disable-line no-eval
+          setAttributeStyles()
+        })
       default:
         return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }
@@ -768,7 +771,11 @@ export default class CarouselTwo extends Mutation() {
             const srcIframe = aIframe.iframe
             if (!srcIframe) return
             const src = srcIframe.getAttribute('src') || ''
-            const autoplaySrc = src.includes('autoplay=1') ? src : src + (src.includes('?') ? '&' : '?') + 'autoplay=1'
+            // add enablejsapi for YouTube so we receive postMessage state changes
+            let autoplaySrc = src.includes('autoplay=1') ? src : src + (src.includes('?') ? '&' : '?') + 'autoplay=1'
+            if (autoplaySrc.includes('youtube') && !autoplaySrc.includes('enablejsapi=1')) {
+              autoplaySrc += '&enablejsapi=1'
+            }
             // create a fresh iframe with autoplay – browser allows autoplay from user gesture
             const newIframe = document.createElement('iframe')
             newIframe.setAttribute('src', autoplaySrc)
@@ -785,6 +792,27 @@ export default class CarouselTwo extends Mutation() {
             if (tpl) tpl.remove()
             root.appendChild(newIframe)
             overlay.classList.add('loaded')
+            // disable arrow hit areas while video is playing so player controls stay accessible
+            this.classList.add('video-playing')
+            // register as event listener with YouTube/Vimeo – retry because player JS needs time to initialize
+            const registerPlayerEvents = (iframe, src) => {
+              const register = () => {
+                try {
+                  if (src.includes('youtube')) {
+                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*')
+                    iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onStateChange'] }), '*')
+                  } else if (src.includes('vimeo')) {
+                    iframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'pause' }), '*')
+                    iframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'ended' }), '*')
+                  }
+                } catch (e) { /* cross-origin safety */ }
+              }
+              // retry at 1s, 2s, 3s – player JS may not be ready on first try
+              setTimeout(register, 1000)
+              setTimeout(register, 2000)
+              setTimeout(register, 3000)
+            }
+            newIframe.addEventListener('load', () => registerPlayerEvents(newIframe, autoplaySrc))
           })
           overlay.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
@@ -793,6 +821,36 @@ export default class CarouselTwo extends Mutation() {
             }
           })
           slide.appendChild(overlay)
+        })
+        // re-enable arrows only on actual slide change (not on scroll jitter from iframe load)
+        let videoPlayingSlide = null
+        this.addEventListener(this.getAttribute('carousel-changed') || 'carousel-changed', (e) => {
+          const newSlide = e.detail && e.detail.node
+          if (newSlide && newSlide !== videoPlayingSlide) {
+            this.classList.remove('video-playing')
+            videoPlayingSlide = null
+          }
+        })
+        // track which slide started a video
+        Array.from(this.section.children).forEach(slide => {
+          const ol = slide.querySelector('.video-play-overlay')
+          if (ol) ol.addEventListener('click', () => { videoPlayingSlide = slide })
+        })
+        // listen for YouTube/Vimeo play/pause postMessages to toggle arrows
+        self.addEventListener('message', (event) => {
+          try {
+            const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
+            // YouTube: react to pause (2) and ended (0) to re-enable arrows
+            // == instead of === because YouTube may send strings
+            const ytState = data.event === 'onStateChange' ? data.info : (data.event === 'infoDelivery' && data.info ? data.info.playerState : undefined)
+            if (ytState == 2 || ytState == 0) {
+              this.classList.remove('video-playing')
+            }
+            // Vimeo: event names
+            if (data.event === 'pause' || data.event === 'ended') {
+              this.classList.remove('video-playing')
+            }
+          } catch (e) { /* ignore non-JSON messages */ }
         })
       }
 
