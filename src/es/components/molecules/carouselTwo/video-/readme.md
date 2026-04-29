@@ -2,54 +2,70 @@
 
 Namespace: `carousel-two-video-museum-`
 
-Zweck: Video-Karussell für mehrere Videos (YouTube + Vimeo). Einheitliche Höhe unabhängig von Video-Ratio.
+Zweck: Video-Karussell für mehrere Videos (YouTube, Vimeo und lokale Videos). Einheitliche Höhe unabhängig von Video-Ratio. Interface identisch zum Bild-Carousel (`carousel-two-museum-`).
 
 ## Features
-- Einheitliche Höhe via `aspect-ratio`-Container auf den Section-Children, Default `--video-aspect: 16/9`
-- Pfeile nur an schmalen Randzonen (15% links/rechts) – Mitte bleibt frei für Videointeraktion
-- Pfeile erscheinen nur bei Hover über das Carousel (reveal on hover)
-- Dots im Museum-Stil mit Abstand nach oben zu den Videos
-- Mobile: Pfeile ausgeblendet, Swipen per Touch, Snap-to-Slide via native `scroll-snap`
-- Lazy-Load kompatibel mit `<a-iframe>`; normale `<iframe>` funktionieren ebenfalls
+- Unterstützt `<a-iframe>` (YouTube/Vimeo) und `<a-video>` (lokale Videos) gemischt
+- Einheitliche Höhe via `aspect-ratio`-Container, Default `--video-aspect: 16/9`
+- Play-Overlay: Weisses Dreieck auf halbtransparentem Hintergrund, startet Video bei Klick
+- Pfeile: Unsichtbar mit Custom-SVG-Cursor (identisch zu `carousel-two-museum-`), nur 15% Randzonen klickbar
+- Pfeile werden bei Video-Play automatisch deaktiviert, bei Pause/Ende wieder aktiviert
+- Video-Unterschriften via `<p class="video-caption">` unterhalb des Videos
+- Dots im Museum-Stil (`nav-color`-Attribut), linksbündig
+- Mobile: Swipen per Touch, Snap-to-Slide
 
 ## Verwendung
 
+### YouTube + Vimeo (a-iframe)
 ```html
-<m-carousel-two namespace="carousel-two-video-museum-" nav-separate nav-align-self="end">
+<m-carousel-two namespace="carousel-two-video-museum-" nav-separate nav-align-self="end" nav-color="yellow" background-color="green">
   <section>
     <div>
       <a-iframe>
         <template>
-          <iframe src="https://player.vimeo.com/video/1094963536?app_id=122963&&title=0&byline=0&portrait=0&dnt=1&color=000000"
+          <iframe src="https://player.vimeo.com/video/76979871?dnt=1&title=0&byline=0&portrait=0&color=000000"
                   width="640" height="360"
                   allow="autoplay; fullscreen; picture-in-picture"
-                  title="Vimeo Beispielvideo"></iframe>
+                  title="Vimeo Video"></iframe>
         </template>
       </a-iframe>
+      <p class="video-caption">Beschreibung des Videos</p>
     </div>
     <div>
       <a-iframe>
         <template>
-          <iframe src="https://www.youtube.com/embed/UY9zhdyV9kk"
+          <iframe src="https://www.youtube.com/embed/aqz-KE-bpKQ"
                   width="640" height="360"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-                  title="YouTube Beispielvideo"></iframe>
+                  title="YouTube Video"></iframe>
         </template>
       </a-iframe>
+      <p class="video-caption">Beschreibung des Videos</p>
     </div>
   </section>
 </m-carousel-two>
 ```
 
-## Konfiguration
-- CSS-Variablen pro Instanz:
-  - `--video-aspect`: Standard `16/9`, z. B. `4/3` oder `1/1`
-  - `--video-max-height`: Standard `70dvh` (Mobile `55dvh` via Media Query)
-  - `--carousel-two-video-museum-nav-gap`: Abstand zwischen Dots
-  - `--carousel-two-video-museum-nav-margin`: Margin der Dot-Navigation
-  - `--carousel-two-video-museum-nav-color`: Farbe der Dots
-  - `--carousel-two-video-museum-nav-size`: Grösse der Dots (Default 10px)
+### Lokale Videos (a-video)
+```html
+<div>
+  <a-video controls>
+    <source type="video/mp4" src="/path/to/video.mp4">
+  </a-video>
+  <p class="video-caption">Beschreibung des Videos</p>
+</div>
+```
 
-## Hinweise
-- Videos unterschiedlicher Ratios werden per `aspect-ratio`-Container gleichhoch dargestellt (letterboxed/pillarboxed)
-- Pfeile blockieren kein Video-Playback – nur schmale Ränder sind klickbar
+## Konfiguration
+- Attribute auf `<m-carousel-two>`:
+  - `nav-color`: Farbe der Dots und Video-Unterschriften (z.B. `"yellow"`)
+  - `background-color`: Hintergrundfarbe für Unterschriften-Bereich
+  - `nav-separate nav-align-self="end"`: Dots unterhalb der Videos
+- CSS-Variablen:
+  - `--video-aspect`: Standard `16/9`
+  - `--video-max-height`: Standard `70dvh` (Mobile `55dvh`)
+
+## Pfeil-Verhalten bei Video-Playback
+- **a-iframe (YouTube/Vimeo)**: Pfeile deaktiviert bei Play, reaktiviert bei Pause/Ende (via postMessage API)
+- **a-video (lokal)**: Pfeile deaktiviert bei Play, reaktiviert bei Pause/Ende (via native Video-Events)
+- **Slide-Wechsel**: Pfeile werden immer reaktiviert
