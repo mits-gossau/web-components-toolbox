@@ -650,6 +650,19 @@ export default class CarouselTwo extends Mutation() {
           fetchCSSParams[1].styleNode.textContent = eval('`' + fetchCSSParams[1].style + '`')// eslint-disable-line no-eval
           setAttributeStyles()
         })
+      case 'carousel-two-video-museum-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-two-default-',
+            flags: 'g',
+            replacement: '--carousel-two-video-museum-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./video-/video-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(() => setAttributeStyles())
       default:
         return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }
@@ -738,6 +751,50 @@ export default class CarouselTwo extends Mutation() {
         }
       })
       this.html = [this.section, this.nav, this.arrowNav]
+
+      // video play overlay for video-museum namespace
+      if (this.getAttribute('namespace') === 'carousel-two-video-museum-') {
+        Array.from(this.section.children).forEach(slide => {
+          const aIframe = slide.querySelector('a-iframe')
+          if (!aIframe) return
+          const overlay = document.createElement('div')
+          overlay.classList.add('video-play-overlay')
+          overlay.setAttribute('aria-label', 'Play video')
+          overlay.setAttribute('role', 'button')
+          overlay.setAttribute('tabindex', '0')
+          overlay.addEventListener('click', (event) => {
+            event.stopPropagation()
+            // use a-iframe's own getter which handles shadow DOM
+            const srcIframe = aIframe.iframe
+            if (!srcIframe) return
+            const src = srcIframe.getAttribute('src') || ''
+            const autoplaySrc = src.includes('autoplay=1') ? src : src + (src.includes('?') ? '&' : '?') + 'autoplay=1'
+            // create a fresh iframe with autoplay – browser allows autoplay from user gesture
+            const newIframe = document.createElement('iframe')
+            newIframe.setAttribute('src', autoplaySrc)
+            newIframe.setAttribute('width', srcIframe.getAttribute('width') || '640')
+            newIframe.setAttribute('height', srcIframe.getAttribute('height') || '360')
+            newIframe.setAttribute('allow', srcIframe.getAttribute('allow') || 'autoplay; fullscreen; picture-in-picture')
+            newIframe.setAttribute('title', srcIframe.getAttribute('title') || '')
+            newIframe.setAttribute('frameborder', '0')
+            // replace inside a-iframe's root (shadow DOM)
+            const root = aIframe.root || aIframe.shadowRoot || aIframe
+            const oldIframe = root.querySelector('iframe')
+            if (oldIframe) oldIframe.remove()
+            const tpl = aIframe.template
+            if (tpl) tpl.remove()
+            root.appendChild(newIframe)
+            overlay.classList.add('loaded')
+          })
+          overlay.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              overlay.click()
+            }
+          })
+          slide.appendChild(overlay)
+        })
+      }
 
       // modal stuff
       if (this.hasAttribute('open-modal')) {

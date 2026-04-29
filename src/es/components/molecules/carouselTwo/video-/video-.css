@@ -1,0 +1,134 @@
+:host {
+  /* Video carousel: one video per view, fixed height */
+  --section-gap: 0;
+  --section-child-min-width: 100%;
+  --section-child-max-width: 100%;
+  --section-child-align-items: stretch;
+  --section-child-justify-content: center;
+  --scroll-snap-type: x mandatory;
+  --background-color: transparent;
+  --video-aspect: 16/9;
+  --video-max-height: 70dvh;
+  width: 100% !important;
+}
+
+/* Ratio container ensures equal height regardless of iframe intrinsic ratio */
+:host > section > * {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--video-aspect);
+  max-height: var(--video-max-height);
+  background: #000;
+  overflow: hidden;
+}
+:host > section > * > iframe,
+:host > section > * > a-iframe > iframe,
+:host > section > * > a-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+}
+
+/* Full-bleed on host width, no outer margins */
+:host {
+  display: block;
+}
+:host > section {
+  margin: 0;
+}
+:host > section > * {
+  padding: 0;
+}
+
+/* ========================================
+   Play-Overlay: white triangle, centered
+   Visible while a-iframe still has <template> (not yet loaded).
+   Hidden once the iframe is injected.
+   ======================================== */
+:host > section > * > .video-play-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.45);
+}
+:host > section > * > .video-play-overlay:hover {
+  background: rgba(0, 0, 0, 0.55);
+}
+/* White right-pointing triangle */
+:host > section > * > .video-play-overlay::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 3em 0 3em 5.2em;
+  border-color: transparent transparent transparent #fff;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+/* Hide overlay once iframe is loaded (no more template = iframe present) */
+:host > section > * > .video-play-overlay.loaded {
+  display: none;
+}
+
+/* Arrow hit areas only at left/right edges; center stays free for player controls */
+:host(.has-default-arrow-nav) > *.arrow-nav {
+  pointer-events: none;
+}
+:host(.has-default-arrow-nav) > *.arrow-nav > * {
+  pointer-events: auto;
+  width: 15%;
+  background: transparent;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+}
+:host(.has-default-arrow-nav):hover > *.arrow-nav > * {
+  opacity: 0.7;
+}
+:host(.has-default-arrow-nav) > *.arrow-nav > *:hover {
+  opacity: 1;
+}
+:host(.has-default-arrow-nav) > *.arrow-nav > *:first-of-type {
+  justify-content: flex-start;
+  padding-left: 0.5em;
+}
+:host(.has-default-arrow-nav) > *.arrow-nav > *:last-of-type {
+  justify-content: flex-end;
+  padding-right: 0.5em;
+}
+
+/* Dots (nav) – museum style with spacing above */
+:host(.has-default-nav) > nav {
+  display: flex !important;
+  gap: var(--carousel-two-video-museum-nav-gap, 0.2em);
+  margin: var(--carousel-two-video-museum-nav-margin, 1em var(--content-spacing) 1.75em);
+  justify-content: var(--carousel-two-video-museum-nav-justify-content, flex-start);
+}
+:host(.has-default-nav) > nav > * {
+  --nav-color: var(--carousel-two-video-museum-nav-color, var(--color));
+  width: var(--carousel-two-video-museum-nav-size, 10px);
+  height: var(--carousel-two-video-museum-nav-size, 10px);
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid var(--nav-color);
+}
+:host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active,
+:host(.has-default-nav) > section.scrolling ~ nav > *:hover {
+  background-color: var(--nav-color);
+  border-color: transparent;
+}
+
+/* Mobile tweaks */
+@media only screen and (max-width: _max-width_) {
+  :host {
+    --video-max-height: var(--video-max-height-mobile, 55dvh);
+  }
+  :host(.has-default-nav) > nav {
+    margin: var(--carousel-two-video-museum-nav-margin-mobile, 0.75em var(--content-spacing-mobile) 1.25em);
+  }
+}
