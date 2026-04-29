@@ -28,6 +28,10 @@
     {
       "name": "carousel-two-image-",
       "path": "./image-/image-.css"
+    },
+    {
+      "name": "carousel-two-video-museum-",
+      "path": "./video-/video-.css"
     }
   ],
   "attributes": [

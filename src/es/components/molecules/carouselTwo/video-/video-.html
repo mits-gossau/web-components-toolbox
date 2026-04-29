@@ -1,0 +1,32 @@
+<h2>Video-Only Carousel (Museum) – YouTube + Vimeo</h2>
+<m-carousel-two namespace="carousel-two-video-museum-" nav-separate nav-align-self="end">
+  <section>
+    <!-- Vimeo -->
+    <div>
+      <a-iframe>
+        <template>
+          <iframe src="https://player.vimeo.com/video/76979871?dnt=1&title=0&byline=0&portrait=0&color=000000"
+                  width="640" height="360"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  title="Vimeo Beispiel (öffentlich)"></iframe>
+        </template>
+      </a-iframe>
+    </div>
+
+    <!-- YouTube 16:9 -->
+    <div>
+      <a-iframe>
+        <template>
+          <iframe src="https://www.youtube.com/embed/aqz-KE-bpKQ"
+                  width="640" height="360"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  title="YouTube 16:9 Beispiel"></iframe>
+        </template>
+      </a-iframe>
+    </div>
+  </section>
+</m-carousel-two>
+
+<!-- Demo-Loader (nur für die Doku-Seite) -->
+<script type="text/javascript" src="../../../../../../docs/es/loader.js"></script>
+<script type="text/javascript" src="../../../../../../docs/es/documenter.js?component=CarouselTwo.js"></script>

@@ -650,6 +650,22 @@ export default class CarouselTwo extends Mutation() {
           fetchCSSParams[1].styleNode.textContent = eval('`' + fetchCSSParams[1].style + '`')// eslint-disable-line no-eval
           setAttributeStyles()
         })
+      case 'carousel-two-video-museum-':
+        return this.fetchCSS([{
+          path: `${this.importMetaUrl}./default-/default-.css`, // apply namespace since it is specific and no fallback
+          namespace: false,
+          replaces: [{
+            pattern: '--carousel-two-default-',
+            flags: 'g',
+            replacement: '--carousel-two-video-museum-'
+          }]
+        }, {
+          path: `${this.importMetaUrl}./video-/video-.css`, // apply namespace since it is specific and no fallback
+          namespace: false
+        }, ...styles], false).then(fetchCSSParams => {
+          fetchCSSParams[1].styleNode.textContent = eval('`' + fetchCSSParams[1].style + '`')// eslint-disable-line no-eval
+          setAttributeStyles()
+        })
       default:
         return this.fetchCSS(styles, false).then(() => setAttributeStyles())
     }
@@ -738,6 +754,119 @@ export default class CarouselTwo extends Mutation() {
         }
       })
       this.html = [this.section, this.nav, this.arrowNav]
+
+      // video play overlay for video-museum namespace
+      if (this.getAttribute('namespace') === 'carousel-two-video-museum-') {
+        Array.from(this.section.children).forEach(slide => {
+          const aIframe = slide.querySelector('a-iframe')
+          const aVideo = slide.querySelector('a-video')
+          if (!aIframe && !aVideo) return
+          const overlay = document.createElement('div')
+          overlay.classList.add('video-play-overlay')
+          overlay.setAttribute('aria-label', 'Play video')
+          overlay.setAttribute('role', 'button')
+          overlay.setAttribute('tabindex', '0')
+          if (aIframe) {
+            // iframe-based video (YouTube/Vimeo)
+            overlay.addEventListener('click', (event) => {
+              event.stopPropagation()
+              const srcIframe = aIframe.iframe
+              if (!srcIframe) return
+              const src = srcIframe.getAttribute('src') || ''
+              let autoplaySrc = src.includes('autoplay=1') ? src : src + (src.includes('?') ? '&' : '?') + 'autoplay=1'
+              if (autoplaySrc.includes('youtube')) {
+                if (!autoplaySrc.includes('enablejsapi=1')) autoplaySrc += '&enablejsapi=1'
+                if (!autoplaySrc.includes('origin=')) autoplaySrc += '&origin=' + encodeURIComponent(self.location.origin)
+              }
+              const newIframe = document.createElement('iframe')
+              newIframe.setAttribute('src', autoplaySrc)
+              newIframe.setAttribute('width', srcIframe.getAttribute('width') || '640')
+              newIframe.setAttribute('height', srcIframe.getAttribute('height') || '360')
+              newIframe.setAttribute('allow', srcIframe.getAttribute('allow') || 'autoplay; fullscreen; picture-in-picture')
+              newIframe.setAttribute('title', srcIframe.getAttribute('title') || '')
+              newIframe.setAttribute('frameborder', '0')
+              const root = aIframe.root || aIframe.shadowRoot || aIframe
+              const oldIframe = root.querySelector('iframe')
+              if (oldIframe) oldIframe.remove()
+              const tpl = aIframe.template
+              if (tpl) tpl.remove()
+              root.appendChild(newIframe)
+              overlay.classList.add('loaded')
+              this.classList.add('video-playing')
+              // register for YouTube/Vimeo state events via postMessage
+              newIframe.addEventListener('load', () => {
+                const register = () => {
+                  try {
+                    if (autoplaySrc.includes('youtube')) {
+                      newIframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*')
+                      newIframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'addEventListener', args: ['onStateChange'] }), '*')
+                    } else if (autoplaySrc.includes('vimeo')) {
+                      newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'pause' }), '*')
+                      newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'play' }), '*')
+                      newIframe.contentWindow.postMessage(JSON.stringify({ method: 'addEventListener', value: 'ended' }), '*')
+                    }
+                  } catch (e) { /* cross-origin */ }
+                }
+                register()
+                setTimeout(register, 1000)
+                setTimeout(register, 2000)
+                setTimeout(register, 4000)
+              })
+            })
+          } else if (aVideo) {
+            // local video (a-video component)
+            overlay.addEventListener('click', (event) => {
+              event.stopPropagation()
+              const root = aVideo.root || aVideo.shadowRoot || aVideo
+              const video = root.querySelector('video') || aVideo.querySelector('video')
+              if (video) {
+                video.play()
+                video.addEventListener('play', () => this.classList.add('video-playing'))
+                video.addEventListener('pause', () => this.classList.remove('video-playing'))
+                video.addEventListener('ended', () => this.classList.remove('video-playing'))
+              }
+              overlay.classList.add('loaded')
+              this.classList.add('video-playing')
+            })
+          }
+          overlay.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              overlay.click()
+            }
+          })
+          slide.appendChild(overlay)
+        })
+        // re-enable arrows only on actual slide change (not on scroll jitter from iframe load)
+        let videoPlayingSlide = null
+        this.addEventListener(this.getAttribute('carousel-changed') || 'carousel-changed', (e) => {
+          const newSlide = e.detail && e.detail.node
+          if (newSlide && newSlide !== videoPlayingSlide) {
+            this.classList.remove('video-playing')
+            videoPlayingSlide = null
+          }
+        })
+        // track which slide started a video
+        Array.from(this.section.children).forEach(slide => {
+          const ol = slide.querySelector('.video-play-overlay')
+          if (ol) ol.addEventListener('click', () => { videoPlayingSlide = slide })
+        })
+        // postMessage listener for YouTube/Vimeo play/pause state
+        self.addEventListener('message', (event) => {
+          try {
+            const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
+            // YouTube: onStateChange or infoDelivery
+            const ytState = data.event === 'onStateChange' ? data.info : (data.event === 'infoDelivery' && data.info ? data.info.playerState : undefined)
+            if (ytState != null) {
+              if (ytState == 1 || ytState == 3) this.classList.add('video-playing')
+              else if (ytState == 2 || ytState == 0) this.classList.remove('video-playing')
+            }
+            // Vimeo
+            if (data.event === 'play') this.classList.add('video-playing')
+            else if (data.event === 'pause' || data.event === 'ended') this.classList.remove('video-playing')
+          } catch (e) { /* ignore non-JSON */ }
+        })
+      }
 
       // modal stuff
       if (this.hasAttribute('open-modal')) {
