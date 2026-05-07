@@ -115,17 +115,29 @@ export default class Header extends Shadow() {
       if (this.getMedia() === 'desktop') {
         this.header.classList.add('open')
         this.clickAnimationListener(event)
-  
+
         if (this.mNavigation) {
           this.mNavigation.setAttribute('aria-expanded', 'true')
           this.mNavigation.classList.remove('hide')
           this.mNavigation.classList.add('no-scroll', 'open')
           setTimeout(() => {
-            const a = this.mNavigation.root.querySelector('nav > ul > li:first-child a-link')?.shadowRoot.querySelector('a')
-            if (a) a.focus()
-            const b = this.mNavigation.root.querySelector('nav > ul > li:first-child a')
-            if (b) b.focus()
-          }, 0)
+            const firstLi = (this.mNavigation.root && this.mNavigation.root.querySelector('nav > ul > li:first-child')) ||
+                            this.mNavigation.querySelector('nav > ul > li:first-child')
+            if (!firstLi) return
+            const lightFocusable = firstLi.querySelector('a, button')
+            if (lightFocusable) {
+              lightFocusable.focus()
+              return
+            }
+            const aLink = firstLi.querySelector('a-link')
+            const shadowFocusable = aLink && aLink.shadowRoot && aLink.shadowRoot.querySelector('a, button')
+            if (shadowFocusable) {
+              shadowFocusable.focus()
+              return
+            }
+            if (!firstLi.hasAttribute('tabindex')) firstLi.setAttribute('tabindex', '-1')
+            firstLi.focus()
+          }, 50)
         }
       } else if(this.MenuIcon.getAttribute('aria-expanded') === 'false') {
         this.MenuIcon.click()
