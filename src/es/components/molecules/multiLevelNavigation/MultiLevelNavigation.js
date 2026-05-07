@@ -119,7 +119,10 @@ export default class MultiLevelNavigation extends Shadow() {
         // aria-current
         const href = event.currentTarget.getAttribute('href')
         if (href && href !== '#' && !href.includes('javascript:')) this.setAriaCurrent(event.currentTarget)
-        
+
+        // Prevent scroll-to-top for placeholder hash links used as sub-nav toggles
+        if (href === '#') event.preventDefault()
+
         // If desktop and use-hover-listener attribute exists
         if (this.isDesktop && this.useHoverListener) {
           if (!event.currentTarget.getAttribute('href') || event.currentTarget.getAttribute('href') === '#') {
@@ -1759,6 +1762,8 @@ export default class MultiLevelNavigation extends Shadow() {
     if (wrapperDivSecondNextSiblingDiv && Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul')).length) wrapperDivSecondNextSiblingDivUls = Array.from(wrapperDivSecondNextSiblingDiv.querySelectorAll('ul')) // eslint-disable-line
 
     event.currentTarget.parentNode.setAttribute('aria-expanded', 'true')
+    const expandedLink = event.currentTarget.parentNode.querySelector('a[aria-haspopup]')
+    if (expandedLink) expandedLink.setAttribute('aria-expanded', 'true')
 
     let subUl = null
     if (wrapperDivNextSiblingDiv && wrapperDivNextSiblingDivUls.length && (subUl = wrapperDivNextSiblingDivUls.find(ul => ul.getAttribute('sub-nav-id') === event.currentTarget.parentNode.getAttribute('sub-nav')))) {
