@@ -24,14 +24,21 @@ import { Shadow } from '../../prototypes/Shadow.js'
  * }
  */
 export default class MenuIcon extends Shadow() {
-  constructor (...args) {
-    super(...args)
+  constructor (options = {}, ...args) {
+    super(options, ...args)
 
     if (!this.hasAttribute('id')) this.setAttribute('id', 'hamburger')
     if (!this.hasAttribute('no-aria')) {
-      this.setAttribute('aria-label', 'show navigation menu')
+      this.ariaLabelShow = options.ariaLabelShow || this.getAttribute('aria-label-show') || 'show navigation menu'
+      this.ariaLabelHide = options.ariaLabelHide || this.getAttribute('aria-label-hide') || 'close navigation menu'
+      this.setAttribute('aria-label', this.ariaLabelShow)
       this.setAttribute('aria-expanded', 'false')
-      if (this.getMedia() === 'desktop') this.setAttribute('aria-hidden', 'true')
+      if (this.getMedia() === 'desktop') {
+        this.setAttribute('aria-hidden', 'true')
+      } else if (!this.hasAttribute('tabindex')) {
+        this.setAttribute('tabindex', '0')
+        this.setAttribute('role', 'button')
+      }
     }
     this.openClass = this.getAttribute('openClass') ? this.getAttribute('openClass') : 'open'
     this.barClass = this.getAttribute('barClass') ? this.getAttribute('barClass') : 'bar'
@@ -170,7 +177,11 @@ export default class MenuIcon extends Shadow() {
 
   toggleAnimationClass (command = 'toggle') {
     this.classList[command](this.openClass)
-    this.setAttribute('aria-expanded', this.classList.contains(this.openClass) ? 'true' : 'false')
+    const isOpen = this.classList.contains(this.openClass)
+    this.setAttribute('aria-expanded', isOpen ? 'true' : 'false')
+    if (!this.hasAttribute('no-aria') && this.ariaLabelShow && this.ariaLabelHide) {
+      this.setAttribute('aria-label', isOpen ? this.ariaLabelHide : this.ariaLabelShow)
+    }
   }
 
   getMedia () {

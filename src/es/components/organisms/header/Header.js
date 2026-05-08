@@ -550,7 +550,13 @@ export default class Header extends Shadow() {
           name: 'a-menu-icon'
         }
       ]).then(children => {
-        this.MenuIcon = new children[0].constructorClass({ namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '', namespaceFallback: this.hasAttribute('namespace-fallback'), mobileBreakpoint: this.mobileBreakpoint }) // eslint-disable-line
+        this.MenuIcon = new children[0].constructorClass({
+          namespace: this.getAttribute('namespace') ? `${this.getAttribute('namespace')}a-menu-icon-` : '',
+          namespaceFallback: this.hasAttribute('namespace-fallback'),
+          mobileBreakpoint: this.mobileBreakpoint,
+          ariaLabelShow: this.getAttribute('menu-icon-aria-label-show') || undefined,
+          ariaLabelHide: this.getAttribute('menu-icon-aria-label-hide') || undefined
+        }) // eslint-disable-line
         this.MenuIcon.addEventListener('click', event => {
           this.header.classList.toggle('open')
           const prop = this.header.classList.contains('open') ? 'add' : 'remove'
