@@ -33,11 +33,12 @@ export default class MenuIcon extends Shadow() {
       this.ariaLabelHide = options.ariaLabelHide || this.getAttribute('aria-label-hide') || 'close navigation menu'
       this.setAttribute('aria-label', this.ariaLabelShow)
       this.setAttribute('aria-expanded', 'false')
+      this.setAttribute('role', 'button')
       if (this.getMedia() === 'desktop') {
         this.setAttribute('aria-hidden', 'true')
+        this.setAttribute('tabindex', '-1')
       } else if (!this.hasAttribute('tabindex')) {
         this.setAttribute('tabindex', '0')
-        this.setAttribute('role', 'button')
       }
     }
     this.openClass = this.getAttribute('openClass') ? this.getAttribute('openClass') : 'open'
