@@ -57,8 +57,8 @@ export default class SkipToNavigation extends Shadow() {
       dispatch('open-and-focus-footer')
     } else {
       dispatch('close-other-flyout')
-      this.focusTarget(href)
     }
+    this.focusTarget(href)
     this.skipToNav.classList.remove('active')
   }
 
