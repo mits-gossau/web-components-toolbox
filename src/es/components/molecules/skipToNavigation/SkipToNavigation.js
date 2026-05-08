@@ -30,28 +30,7 @@ export default class SkipToNavigation extends Shadow() {
         this.skipToNav.classList.remove('active')
       }
       if (event.key === 'Enter' && activeElement.href) {
-        if (activeElement.href.includes('#navigation')) {
-          this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-nav') || 'open-and-focus-nav', {
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        } else {
-          this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', {
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        }
-        if (activeElement.href.includes('#footer')) {
-          this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-footer') || 'open-and-focus-footer', {
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        }
-        this.focusTarget(activeElement.getAttribute('href'))
-        this.skipToNav.classList.remove('active')
+        this.handleSkipLink(activeElement.getAttribute('href'))
       }
     }
 
@@ -59,31 +38,28 @@ export default class SkipToNavigation extends Shadow() {
       const anchor = event.target.closest('a')
       if (anchor) {
         event.preventDefault()
-        const href = anchor.getAttribute('href')
-        if (href.includes('#navigation')) {
-          this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-nav') || 'open-and-focus-nav', {
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        } else {
-          this.dispatchEvent(new CustomEvent(this.getAttribute('close-other-flyout') || 'close-other-flyout', {
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        }
-        if (href.includes('#footer')) {
-          this.dispatchEvent(new CustomEvent(this.getAttribute('open-and-focus-footer') || 'open-and-focus-footer', {
-            bubbles: true,
-            cancelable: true,
-            composed: true
-          }))
-        }
-        this.focusTarget(href)
-        this.skipToNav.classList.remove('active')
+        this.handleSkipLink(anchor.getAttribute('href'))
       }
     }
+  }
+
+  handleSkipLink (href) {
+    if (!href) return
+    const dispatch = (name) => this.dispatchEvent(new CustomEvent(this.getAttribute(name) || name, {
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
+    if (href.includes('#navigation')) {
+      dispatch('open-and-focus-nav')
+    } else if (href.includes('#footer')) {
+      dispatch('close-other-flyout')
+      dispatch('open-and-focus-footer')
+    } else {
+      dispatch('close-other-flyout')
+    }
+    this.focusTarget(href)
+    this.skipToNav.classList.remove('active')
   }
 
   connectedCallback () {
@@ -128,15 +104,8 @@ export default class SkipToNavigation extends Shadow() {
     const id = href.replace('#', '')
     const target = document.getElementById(id)
     if (!target) return
-    const selector = 'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"]), h1, h2, h3, h4, h5, h6'
-    const focusable = target.querySelector(selector) || SkipToNavigation.walksDownDomQueryMatchesAll(target, selector)[0]
-    if (focusable) {
-      if (!focusable.hasAttribute('tabindex')) focusable.setAttribute('tabindex', '-1')
-      focusable.focus()
-    } else {
-      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
-      target.focus()
-    }
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1')
+    target.focus()
   }
 
   /**
