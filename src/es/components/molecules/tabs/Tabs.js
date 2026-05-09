@@ -50,6 +50,7 @@ export default class Tabs extends Shadow() {
 
       if (!anchorTag) {
         tab.addEventListener('click', event => {
+          event.stopPropagation()
           event.preventDefault()
           // add parameter to url for active tab
           const urlParams = new URLSearchParams(window.location.search)
