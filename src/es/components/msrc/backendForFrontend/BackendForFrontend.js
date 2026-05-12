@@ -40,9 +40,7 @@ export default class BackendForFrontend extends Prototype() {
     if (this.hasAttribute('mcs-api-url')) self.MCS_API_URL = this.getAttribute('mcs-api-url')
     return this.loadDependency().then(async msrc => {
       await msrc.utilities.login.backendForFrontendSetup({
-        getUser: async () => fetch(`${this.getAttribute('endpoint-get-user') || 'https://int.klubschule.ch/umbraco/api/DigitalCampaignFactory/GetUser'}`, {
-          method: 'GET'
-        }),
+        getUser: async () => this.getUser(),
         isLoggedIn: async () => fetch(`${this.getAttribute('endpoint-is-logged-in') || 'https://int.klubschule.ch/umbraco/api/DigitalCampaignFactory/IsLoggedIn'}`, {
           method: 'GET'
         }),
@@ -67,6 +65,64 @@ export default class BackendForFrontend extends Prototype() {
           } // triggered at the start. make sure to load the users login status before this callback promise resolves.
         }
       })
+    })
+  }
+
+  /**
+   * fetches the user data and dispatches it for other components
+   *
+   * @return {Promise<Response>}
+   */
+  async getUser () {
+    const response = await fetch(`${this.getAttribute('endpoint-get-user') || 'https://int.klubschule.ch/umbraco/api/DigitalCampaignFactory/GetUser'}`, {
+      method: 'GET'
+    })
+
+    this.dispatchUser(response)
+
+    return response
+  }
+
+  /**
+   * dispatches the user data without consuming the original fetch response
+   *
+   * @param {Response} response
+   * @return {void}
+   */
+  dispatchUser (response) {
+    if (!response.ok) {
+      this.dispatchEvent(new CustomEvent('msrc-bff-user-error', {
+        detail: {
+          response,
+          status: response.status,
+          statusText: response.statusText
+        },
+        bubbles: true,
+        composed: true
+      }))
+      return
+    }
+
+    response.clone().json().then(user => {
+      this.user = user
+      this.dispatchEvent(new CustomEvent('msrc-bff-user-loaded', {
+        detail: {
+          user
+        },
+        bubbles: true,
+        composed: true
+      }))
+    }).catch(error => {
+      this.dispatchEvent(new CustomEvent('msrc-bff-user-error', {
+        detail: {
+          error,
+          response,
+          status: response.status,
+          statusText: response.statusText
+        },
+        bubbles: true,
+        composed: true
+      }))
     })
   }
 }
