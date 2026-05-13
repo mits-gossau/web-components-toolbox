@@ -26,6 +26,7 @@ export default class CarouselTwo extends Mutation() {
     }, ...args)
 
     if (this.hasAttribute('open-modal')) this.setAttribute('aria-haspopup', 'true')
+    this.prepareMuseumPictures()
     // on click anchor scroll to the image with the matching id or previous/next
     this.clickListener = event => {
       let target
@@ -150,6 +151,7 @@ export default class CarouselTwo extends Mutation() {
     super.connectedCallback()
     this.hidden = true
     const showPromises = []
+    this.prepareMuseumPictures()
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.shouldRenderHTML()) showPromises.push(this.renderHTML())
     CarouselTwo.walksDownDomQueryMatchesAll(this.section, 'a-picture').concat(CarouselTwo.walksDownDomQueryMatchesAll(this.nav, 'a-picture')).forEach(picture => {
@@ -158,6 +160,8 @@ export default class CarouselTwo extends Mutation() {
     })
     // Carousel still pops instead of appear nicely. With slow network connection it works though.
     Promise.all(showPromises).then(() => {
+      this.prepareMuseumPictures()
+      this.setSameImageDimensionsAttribute()
       this.hidden = false
       if (!this.section.classList.contains('scrolling')) {
         const activeChild = this.section.children[this.hasAttribute('active') ? Number(this.getAttribute('active')) : 0]
@@ -193,6 +197,8 @@ export default class CarouselTwo extends Mutation() {
   mutationCallback (mutationList, observer) {
     if (mutationList[0] && mutationList[0].type === 'childList') {
       this.setAttribute('count-section-children', this.section.children.length)
+      this.prepareMuseumPictures()
+      this.setSameImageDimensionsAttribute()
       mutationList[0].addedNodes.forEach(node => {
         if (Array.from(this.section.children).includes(node)) {
           // grab the id if there was a mutation on the child being wrapped or so
@@ -548,6 +554,39 @@ export default class CarouselTwo extends Mutation() {
         }
       `)
       }
+      if (this.getAttribute('namespace') === 'carousel-two-museum-') {
+        this.setCss(/* css */`
+        :host([same-image-dimensions]) {
+          --carousel-two-museum-section-gap: 0;
+          --teaser-tile-a-picture-height: auto;
+          --teaser-tile-display: block;
+          --teaser-tile-img-display: block;
+          --teaser-tile-img-height: auto;
+          --teaser-tile-img-margin: 0;
+          --teaser-tile-img-max-height: none;
+          --teaser-tile-img-max-width: 100%;
+          --teaser-tile-img-min-width: 100%;
+          --teaser-tile-img-width: 100%;
+        }
+        :host([same-image-dimensions]) > section {
+          gap: 0;
+        }
+        :host([same-image-dimensions]) > section > m-teaser::part(a-picture) {
+          height: auto;
+          width: 100%;
+        }
+        @media only screen and (max-width: _max-width_) {
+          :host([same-image-dimensions]) {
+            --teaser-tile-img-display-mobile: block;
+            --teaser-tile-img-height-mobile: auto;
+            --teaser-tile-img-max-height-mobile: none;
+            --teaser-tile-img-max-width-mobile: 100%;
+            --teaser-tile-img-min-width-mobile: 100%;
+            --teaser-tile-img-width-mobile: 100%;
+          }
+        }
+      `, undefined, false)
+      }
     }
 
     /** @type {import("../../prototypes/Shadow.js").fetchCSSParams[]} */
@@ -678,6 +717,8 @@ export default class CarouselTwo extends Mutation() {
    */
   renderHTML () {
     this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
+    this.prepareMuseumPictures()
+    this.setSameImageDimensionsAttribute()
     this.indicator = this.root.querySelector('#index')
     this.setSlideIndicator()
     this.nav = this.root.querySelector(this.cssSelector + ' > nav') || this.root.querySelector(this.cssSelector + ' section + div > nav') || document.createElement('nav')
@@ -975,6 +1016,134 @@ export default class CarouselTwo extends Mutation() {
     if (this.indicator) {
       this.indicator.innerHTML = `${this.currentIndex} / ${this.section.children.length}`
     }
+  }
+
+  /**
+   * prepare museum pictures to keep cropped image dimensions while generating responsive sources
+   *
+   * @return {void}
+   */
+  prepareMuseumPictures () {
+    if (this.getAttribute('namespace') !== 'carousel-two-museum-' || !this.section) return
+    CarouselTwo.walksDownDomQueryMatchesAll(this.section, 'a-picture').forEach(picture => {
+      const dimensions = this.getPictureQueryDimensions(picture)
+      if (!dimensions) return
+      picture.setAttribute('sources-keep-query-aspect-ratio', '')
+      this.updatePictureSourcesAspectRatio(picture, dimensions)
+    })
+  }
+
+  /**
+   * marks museum carousels whose pictures all provide the same width and height URL parameters
+   *
+   * @return {void}
+   */
+  setSameImageDimensionsAttribute () {
+    if (this.getAttribute('namespace') !== 'carousel-two-museum-' || !this.section) return this.removeAttribute('same-image-dimensions')
+    const dimensions = CarouselTwo.walksDownDomQueryMatchesAll(this.section, 'a-picture').map(picture => {
+      const dimension = this.getPictureQueryDimensions(picture)
+      return dimension ? `${dimension.width}x${dimension.height}` : null
+    })
+    if (dimensions.length && dimensions.every(dimension => dimension && dimension === dimensions[0])) {
+      this.setAttribute('same-image-dimensions', '')
+      this.setMuseumPicturesFullWidth(true)
+    } else {
+      this.removeAttribute('same-image-dimensions')
+      this.setMuseumPicturesFullWidth(false)
+    }
+  }
+
+  /**
+   * injects full-width styles into a-picture shadow roots where the inner picture tag lives
+   *
+   * @param {boolean} active
+   * @return {void}
+   */
+  setMuseumPicturesFullWidth (active) {
+    CarouselTwo.walksDownDomQueryMatchesAll(this.section, 'a-picture').forEach(picture => {
+      if (active) picture.setAttribute('same-image-dimensions', '')
+      else picture.removeAttribute('same-image-dimensions')
+      const root = picture.root || picture.shadowRoot
+      if (!root) return
+      let style = root.querySelector('style[carousel-two-museum-full-width]')
+      if (!style) {
+        style = document.createElement('style')
+        style.setAttribute('carousel-two-museum-full-width', '')
+        style.setAttribute('protected', 'true')
+        root.appendChild(style)
+      }
+      style.textContent = /* css */`
+        :host([same-image-dimensions]) {
+          display: block;
+          width: 100%;
+        }
+        :host([same-image-dimensions]) picture {
+          display: block;
+          max-width: 100%;
+          min-width: 100%;
+          width: 100%;
+        }
+        :host([same-image-dimensions]) picture img {
+          display: block;
+          height: auto;
+          margin: 0;
+          max-height: none;
+          max-width: 100%;
+          min-width: 100%;
+          width: 100%;
+        }
+      `
+    })
+  }
+
+  /**
+   * extracts width and height query params from an a-picture defaultSource
+   *
+   * @param {HTMLElement & {defaultSource?: string}} picture
+   * @return {{width: number, height: number, widthParam: string, heightParam: string} | null}
+   */
+  getPictureQueryDimensions (picture) {
+    const src = picture.getAttribute('defaultSource') || picture.getAttribute('defaultsource') || picture.defaultSource
+    if (!src) return null
+    try {
+      const url = new URL(src, location.href)
+      const widthParam = picture.getAttribute('query-width') || 'width'
+      const heightParam = picture.getAttribute('query-height') || 'height'
+      const width = Number(url.searchParams.get(widthParam))
+      const height = Number(url.searchParams.get(heightParam))
+      return width && height ? { width, height, widthParam, heightParam } : null
+    } catch (error) {
+      return null
+    }
+  }
+
+  /**
+   * keeps already generated responsive sources in the same crop aspect ratio as defaultSource
+   *
+   * @param {HTMLElement & {root?: ShadowRoot}} picture
+   * @param {{width: number, height: number, widthParam: string, heightParam: string}} dimensions
+   * @return {void}
+   */
+  updatePictureSourcesAspectRatio (picture, dimensions) {
+    const root = picture.root || picture.shadowRoot || picture
+    const ratio = dimensions.height / dimensions.width
+    Array.from(root.querySelectorAll('source')).forEach(source => {
+      ;['srcset', 'data-srcset'].forEach(attribute => {
+        const srcset = source.getAttribute(attribute)
+        if (!srcset) return
+        source.setAttribute(attribute, srcset.split(',').map(srcCandidate => {
+          const parts = srcCandidate.trim().split(/\s+/)
+          try {
+            const url = new URL(parts[0], location.href)
+            const width = Number(url.searchParams.get(dimensions.widthParam)) || dimensions.width
+            url.searchParams.set(dimensions.widthParam, String(width))
+            url.searchParams.set(dimensions.heightParam, String(Math.round(width * ratio)))
+            parts[0] = url.href
+          } catch (error) { /* ignore invalid urls */ }
+          return parts.join(' ')
+        }).join(', '))
+      })
+    })
   }
 
   get activeSlide () {
