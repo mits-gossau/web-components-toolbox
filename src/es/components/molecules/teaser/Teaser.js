@@ -328,8 +328,7 @@ export default class Teaser extends Intersection() {
       const a = document.createElement('a')
       Array.from(this.attributes).forEach(attribute => {
         if (attribute.name === 'href') {
-          const href = attribute.value
-          a.setAttribute('href', href.includes('#') ? href : href + '#content')
+          a.setAttribute('href', attribute.value)
         } else if (!attribute.name.includes('hidden')) {
           a.setAttribute(attribute.name, attribute.value)
         }
