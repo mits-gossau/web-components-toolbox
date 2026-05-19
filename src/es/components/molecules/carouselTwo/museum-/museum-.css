@@ -12,8 +12,8 @@
   --carousel-two-museum-show: none;
   --teaser-tile-background-color-custom: var(--teaser-tile-figcaption-background-color-custom);
   --teaser-tile-figcaption-background-color-custom: transparent;
-  --teaser-tile-figcaption-color: ${this.getAttribute('nav-color') || 'var(--color)'};
-  --teaser-tile-figcaption-display: flex;
+  --teaser-tile-figcaption-color: ${this.getAttribute('caption-color') || this.getAttribute('nav-color') || 'var(--color)'};
+  --teaser-tile-figcaption-display: block;
   --teaser-tile-figcaption-flex-direction: column;
   --teaser-tile-figcaption-justify-content: flex-end;
   --teaser-tile-img-max-height: ${this.getAttribute('img-max-height') || '55dvh'};
@@ -45,7 +45,7 @@
   align-items: center;
 }
 :host > section > m-teaser::part(figcaption) {
-  flex-shrink: 100;
+  flex-shrink: 0;
 }
 @media only screen and (min-width: calc(_max-width_ + 1px)) {
   :host([peek]) {
