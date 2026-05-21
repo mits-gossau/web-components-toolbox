@@ -351,14 +351,16 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (!isCurrentValidatedInputErrorTextWrapperFilled) {
           if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
             if (currentValidatedInput.hasAttribute('no-error-text-p')) {
-              currentValidatedInputErrorTextWrapper.setAttribute('error-text-id', validationName)
-              currentValidatedInputErrorTextWrapper.id = this.getErrorMessageId(currentValidatedInput, validationName)
+              if (!currentValidatedInputErrorTextWrapper.hasAttribute('error-text-id')) {
+                currentValidatedInputErrorTextWrapper.setAttribute('error-text-id', key)
+                currentValidatedInputErrorTextWrapper.id = this.getErrorMessageId(currentValidatedInput, key)
+              }
               currentValidatedInputErrorTextWrapper.hidden = true
               currentValidatedInputErrorTextWrapper.textContent = this.validationValues[inputFieldName][key]['error-message']
             } else {
               const errorText = document.createElement('p')
-              errorText.setAttribute('error-text-id', validationName)
-              errorText.id = this.getErrorMessageId(currentValidatedInput, validationName)
+              errorText.setAttribute('error-text-id', key)
+              errorText.id = this.getErrorMessageId(currentValidatedInput, key)
               errorText.hidden = true
               errorText.textContent = this.validationValues[inputFieldName][key]['error-message']
               currentValidatedInputErrorTextWrapper.appendChild(errorText)
