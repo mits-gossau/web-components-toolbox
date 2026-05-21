@@ -3,6 +3,8 @@ import { Shadow } from './Shadow.js'
 
 /* global customElements */
 
+let errorSummaryIdCounter = 0
+
 export const Validation = (ChosenClass = Shadow()) => class Validation extends ChosenClass {
   /**
    * Creates an instance of Shadow. The constructor will be called for every custom element using this class when initially created.
@@ -548,18 +550,19 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   getOrCreateErrorSummary () {
-    let summary = this.form.querySelector('#form-error-summary')
+    const summaryId = this.getErrorSummaryId()
+    let summary = this.form.ownerDocument.getElementById(summaryId)
     if (summary) return summary
 
     summary = document.createElement('div')
-    summary.id = 'form-error-summary'
+    summary.id = summaryId
     summary.classList.add('form-error-summary')
     summary.setAttribute('role', 'alert')
-    summary.setAttribute('aria-labelledby', 'form-error-summary-title')
+    summary.setAttribute('aria-labelledby', this.getErrorSummaryTitleId())
     summary.setAttribute('tabindex', '-1')
 
     const title = document.createElement('h2')
-    title.id = 'form-error-summary-title'
+    title.id = this.getErrorSummaryTitleId()
     title.setAttribute('data-error-summary-title', '')
     summary.appendChild(title)
 
@@ -571,12 +574,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   removeErrorSummary () {
-    this.form?.querySelector('#form-error-summary')?.remove()
+    this.form?.ownerDocument.getElementById(this.getErrorSummaryId())?.remove()
   }
 
   focusErrorSummary () {
     requestAnimationFrame(() => {
-      const summary = this.form.querySelector('#form-error-summary')
+      const summary = this.form.ownerDocument.getElementById(this.getErrorSummaryId())
       if (summary) {
         summary.scrollIntoView({ behavior: 'smooth', block: 'start' })
         summary.focus({ preventScroll: true })
@@ -601,6 +604,15 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       })
     })
     return errors
+  }
+
+  getErrorSummaryId () {
+    if (!this.errorSummaryId) this.errorSummaryId = `form-error-summary-${++errorSummaryIdCounter}`
+    return this.errorSummaryId
+  }
+
+  getErrorSummaryTitleId () {
+    return `${this.getErrorSummaryId()}-title`
   }
 
   getActiveErrorMessage (node) {
