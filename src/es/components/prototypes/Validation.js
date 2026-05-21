@@ -607,7 +607,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   getErrorSummaryId () {
-    if (!this.errorSummaryId) this.errorSummaryId = `form-error-summary-${++errorSummaryIdCounter}`
+    if (!this.errorSummaryId) this.errorSummaryId = `form-error-summary-${errorSummaryIdCounter++}`
     return this.errorSummaryId
   }
 
@@ -655,7 +655,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           } catch {
             this.validationTranslations = { ...fallbacks }
           }
-          if (this.form?.querySelector('#form-error-summary')) this.updateErrorSummary()
+          if (this.form?.ownerDocument.getElementById(this.getErrorSummaryId())) this.updateErrorSummary()
         }
       },
       bubbles: true,
