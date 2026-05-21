@@ -469,10 +469,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const baseId = `${this.getErrorSummaryId()}-${(node.getAttribute('name') || 'field').replace(/[^a-zA-Z0-9_-]/g, '_')}`
     let safeId = baseId
     let index = 1
-    let existingNode = document.getElementById(safeId)
+    let existingNode = this.form.querySelector(`#${CSS.escape(safeId)}`) || document.getElementById(safeId)
     while (existingNode && existingNode !== node) {
       safeId = `${baseId}-${index++}`
-      existingNode = document.getElementById(safeId)
+      existingNode = this.form.querySelector(`#${CSS.escape(safeId)}`) || document.getElementById(safeId)
     }
     node.id = safeId
     return safeId
