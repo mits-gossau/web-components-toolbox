@@ -1,6 +1,7 @@
 // @ts-check
 import { Shadow } from './Shadow.js'
 
+/* global CustomEvent */
 /* global customElements */
 
 let errorSummaryIdCounter = 0
@@ -551,7 +552,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
   getOrCreateErrorSummary () {
     const summaryId = this.getErrorSummaryId()
-    let summary = this.form.ownerDocument.getElementById(summaryId)
+    let summary = this.getErrorSummary()
     if (summary) return summary
 
     summary = document.createElement('div')
@@ -574,12 +575,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
   }
 
   removeErrorSummary () {
-    this.form?.ownerDocument.getElementById(this.getErrorSummaryId())?.remove()
+    this.getErrorSummary()?.remove()
   }
 
   focusErrorSummary () {
     requestAnimationFrame(() => {
-      const summary = this.form.ownerDocument.getElementById(this.getErrorSummaryId())
+      const summary = this.getErrorSummary()
       if (summary) {
         summary.scrollIntoView({ behavior: 'smooth', block: 'start' })
         summary.focus({ preventScroll: true })
@@ -604,6 +605,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       })
     })
     return errors
+  }
+
+  getErrorSummary () {
+    return this.form?.querySelector(`#${CSS.escape(this.getErrorSummaryId())}`)
   }
 
   getErrorSummaryId () {
@@ -655,7 +660,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           } catch {
             this.validationTranslations = { ...fallbacks }
           }
-          if (this.form?.ownerDocument.getElementById(this.getErrorSummaryId())) this.updateErrorSummary()
+          if (this.getErrorSummary()) this.updateErrorSummary()
         }
       },
       bubbles: true,
