@@ -15,6 +15,11 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     super(options, ...args)
 
     this.validationValues = {}
+    this.validationTranslations = {
+      summarySingle: 'Es gibt {0} Fehler im Formular.',
+      summaryMultiple: 'Es gibt {0} Fehler im Formular.',
+      fieldFallback: 'Feld'
+    }
 
     this.validationChangeEventListener = (event) => {
       const inputField = event.currentTarget
@@ -107,9 +112,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         if (inputFieldName) this.validator(this.validationValues[inputFieldName], node, inputFieldName)
       })
       if (this.root.querySelector('form').querySelector('.has-error')) {
-        this.scrollToFirstError()
+        this.updateErrorSummary()
+        this.focusErrorSummary()
         event.preventDefault()
         event.stopPropagation()
+      } else {
+        this.removeErrorSummary()
       }
     }
 
@@ -139,6 +147,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
     this.allValidationNodes = Array.from(this.form.querySelectorAll('[data-m-v-rules]'))
     if (!this.hasAttribute('no-validation-error-css')) this.renderValidationCSS()
+    this.renderValidationA11yCSS()
+    this.loadValidationTranslations()
 
     if (this.allValidationNodes.length > 0) {
       this.allValidationNodes.forEach(node => {
@@ -146,6 +156,8 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         const errorTextWrapper = node.hasAttribute('error-text-tag-name') ? document.createElement(node.getAttribute('error-text-tag-name')) : document.createElement('div')
         const nodeHasLiveValidation = node.getAttribute('live-input-validation') === 'true'
         errorTextWrapper.classList.add('custom-error-text')
+        errorTextWrapper.id = this.getErrorWrapperId(node)
+        errorTextWrapper.setAttribute('aria-live', 'polite')
         let errorMessageContainer = node.getAttribute('type') === 'radio' ? node.parentElement : node
         if (currentNodeHasNewErrorReferencePoint) {
           let errorMessageContainerSelect = node.parentElement.querySelector('[new-error-message-reference-point="true"]')
@@ -340,11 +352,13 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
           if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
             if (currentValidatedInput.hasAttribute('no-error-text-p')) {
               currentValidatedInputErrorTextWrapper.setAttribute('error-text-id', validationName)
+              currentValidatedInputErrorTextWrapper.id = this.getErrorMessageId(currentValidatedInput, validationName)
               currentValidatedInputErrorTextWrapper.hidden = true
               currentValidatedInputErrorTextWrapper.textContent = this.validationValues[inputFieldName][key]['error-message']
             } else {
               const errorText = document.createElement('p')
               errorText.setAttribute('error-text-id', validationName)
+              errorText.id = this.getErrorMessageId(currentValidatedInput, validationName)
               errorText.hidden = true
               errorText.textContent = this.validationValues[inputFieldName][key]['error-message']
               currentValidatedInputErrorTextWrapper.appendChild(errorText)
@@ -357,6 +371,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       currentValidatedInputErrorTextWrapper.classList.add('error-active')
       currentValidatedInputErrorTextWrapper.previousSibling.classList.add('has-error')
       currentValidatedInput.classList.add('has-error')
+      this.setAriaInvalid(currentValidatedInput, true)
       if (inputType === 'radio' || inputType === 'checkbox') {
         // this element has to be the message wrapper of radio buttons
         const radioBtnErrorMessageWrapper = currentValidatedInput.parentElement.parentElement.querySelector('.message')
@@ -368,6 +383,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       currentValidatedInputErrorTextWrapper.classList.remove('error-active')
       currentValidatedInputErrorTextWrapper.previousSibling.classList.remove('has-error')
       currentValidatedInput.classList.remove('has-error')
+      this.setAriaInvalid(currentValidatedInput, false)
       if (inputType === 'radio' || inputType === 'checkbox') {
         // this element has to be the message wrapper of radio buttons
         const radioBtnErrorMessageWrapper = currentValidatedInput.parentElement.parentElement.querySelector('.message')
@@ -389,7 +405,10 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
         p.hidden = true
       })
       if (+currentErrorMessageIndex === -1) return
-      if (errorMessages[currentErrorMessageIndex]) errorMessages[currentErrorMessageIndex].hidden = false
+      if (errorMessages[currentErrorMessageIndex]) {
+        errorMessages[currentErrorMessageIndex].hidden = false
+        this.setActiveErrorDescription(currentValidatedInput, errorMessages[currentErrorMessageIndex])
+      }
     }
   }
 
@@ -421,6 +440,204 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     return !isValuesValid.includes(false)
   }
 
+  getErrorWrapperId (node) {
+    return `${this.getSafeInputId(node)}-error`
+  }
+
+  getErrorMessageId (node, validationName) {
+    return `${this.getSafeInputId(node)}-error-${validationName}`
+  }
+
+  getSafeInputId (node) {
+    if (node.id) return node.id
+    const baseId = (node.getAttribute('name') || 'field').replace(/[^a-zA-Z0-9_-]/g, '_')
+    let safeId = baseId
+    let index = 1
+    while (this.form.querySelector(`#${CSS.escape(safeId)}`)) {
+      safeId = `${baseId}-${index++}`
+    }
+    node.id = safeId
+    return safeId
+  }
+
+  setAriaInvalid (node, isInvalid) {
+    const relatedNodes = this.getRelatedValidationNodes(node)
+    relatedNodes.forEach(relatedNode => {
+      if (isInvalid) {
+        relatedNode.setAttribute('aria-invalid', 'true')
+      } else {
+        relatedNode.removeAttribute('aria-invalid')
+        this.removeDescribedById(relatedNode, relatedNode.getAttribute('data-active-error-id'))
+        relatedNode.removeAttribute('data-active-error-id')
+      }
+    })
+  }
+
+  setActiveErrorDescription (node, errorMessage) {
+    const relatedNodes = this.getRelatedValidationNodes(node)
+    relatedNodes.forEach(relatedNode => {
+      this.removeDescribedById(relatedNode, relatedNode.getAttribute('data-active-error-id'))
+      if (errorMessage?.id) {
+        this.addDescribedById(relatedNode, errorMessage.id)
+        relatedNode.setAttribute('data-active-error-id', errorMessage.id)
+      }
+    })
+  }
+
+  getRelatedValidationNodes (node) {
+    if (node.getAttribute('type') !== 'radio') return [node]
+    const radioName = node.getAttribute('name')
+    return Array.from(this.form.querySelectorAll(`input[type="radio"][name="${radioName}"]`))
+  }
+
+  addDescribedById (node, id) {
+    if (!id) return
+    const describedBy = (node.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean)
+    if (!describedBy.includes(id)) describedBy.push(id)
+    node.setAttribute('aria-describedby', describedBy.join(' '))
+  }
+
+  removeDescribedById (node, id) {
+    if (!id) return
+    const describedBy = (node.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean).filter(item => item !== id)
+    if (describedBy.length) {
+      node.setAttribute('aria-describedby', describedBy.join(' '))
+    } else {
+      node.removeAttribute('aria-describedby')
+    }
+  }
+
+  updateErrorSummary () {
+    const errors = this.getCurrentValidationErrors()
+    if (!errors.length) return this.removeErrorSummary()
+
+    const summary = this.getOrCreateErrorSummary()
+    const title = summary.querySelector('[data-error-summary-title]')
+    const list = summary.querySelector('ul')
+    const translations = this.getValidationTranslations()
+    title.textContent = (errors.length === 1 ? translations.summarySingle : translations.summaryMultiple).replace('{0}', String(errors.length))
+    list.textContent = ''
+
+    errors.forEach(error => {
+      const item = document.createElement('li')
+      const link = document.createElement('a')
+      this.getSafeInputId(error.input)
+      link.href = `#${error.input.id}`
+      link.textContent = `${error.label}: ${error.message}`
+      link.addEventListener('click', event => {
+        event.preventDefault()
+        error.input.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        error.input.focus({ preventScroll: true })
+      })
+      item.appendChild(link)
+      list.appendChild(item)
+    })
+  }
+
+  getOrCreateErrorSummary () {
+    let summary = this.form.querySelector('#form-error-summary')
+    if (summary) return summary
+
+    summary = document.createElement('div')
+    summary.id = 'form-error-summary'
+    summary.classList.add('form-error-summary')
+    summary.setAttribute('role', 'alert')
+    summary.setAttribute('aria-labelledby', 'form-error-summary-title')
+    summary.setAttribute('tabindex', '-1')
+
+    const title = document.createElement('h2')
+    title.id = 'form-error-summary-title'
+    title.setAttribute('data-error-summary-title', '')
+    summary.appendChild(title)
+
+    const list = document.createElement('ul')
+    summary.appendChild(list)
+
+    this.form.insertBefore(summary, this.form.firstElementChild)
+    return summary
+  }
+
+  removeErrorSummary () {
+    this.form?.querySelector('#form-error-summary')?.remove()
+  }
+
+  focusErrorSummary () {
+    requestAnimationFrame(() => {
+      const summary = this.form.querySelector('#form-error-summary')
+      if (summary) {
+        summary.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        summary.focus({ preventScroll: true })
+      }
+    })
+  }
+
+  getCurrentValidationErrors () {
+    const errors = []
+    const seenNames = new Set()
+    this.allValidationNodes?.forEach(node => {
+      if (!node.classList.contains('has-error')) return
+      const inputName = node.getAttribute('name') || node.id
+      if (seenNames.has(inputName)) return
+      seenNames.add(inputName)
+      const message = this.getActiveErrorMessage(node)
+      if (!message) return
+      errors.push({
+        input: node,
+        label: this.getInputLabel(node),
+        message
+      })
+    })
+    return errors
+  }
+
+  getActiveErrorMessage (node) {
+    const activeErrorId = node.getAttribute('data-active-error-id')
+    if (activeErrorId) return this.form.querySelector(`#${CSS.escape(activeErrorId)}`)?.textContent?.trim()
+    return node.errorTextWrapper?.querySelector(':not([hidden])')?.textContent?.trim() || node.errorTextWrapper?.textContent?.trim()
+  }
+
+  getInputLabel (node) {
+    if (node.id) {
+      const label = this.form.querySelector(`label[for="${CSS.escape(node.id)}"]`)
+      if (label?.textContent?.trim()) return label.textContent.trim()
+    }
+    const wrappingLabel = node.closest('label')
+    if (wrappingLabel?.textContent?.trim()) return wrappingLabel.textContent.trim()
+    if (node.getAttribute('type') === 'radio') {
+      const groupLabel = node.parentElement?.parentElement?.previousElementSibling
+      if (groupLabel?.tagName === 'LABEL' && groupLabel.textContent?.trim()) return groupLabel.textContent.trim()
+    }
+    return node.getAttribute('name') || node.id || this.getValidationTranslations().fieldFallback
+  }
+
+  loadValidationTranslations () {
+    const fallbacks = this.validationTranslations
+    const keys = {
+      summarySingle: 'Accessibility.Form.ErrorSummary.Single',
+      summaryMultiple: 'Accessibility.Form.ErrorSummary.Multiple',
+      fieldFallback: 'Accessibility.Form.FieldFallback'
+    }
+
+    this.dispatchEvent(new CustomEvent(this.getAttribute('request-translations') || 'request-translations', {
+      detail: {
+        resolve: ({ getTranslationSync }) => {
+          this.validationTranslations = Object.entries(keys).reduce((acc, [name, key]) => {
+            const translation = getTranslationSync(key)
+            acc[name] = translation === key ? fallbacks[name] : translation
+            return acc
+          }, {})
+        }
+      },
+      bubbles: true,
+      cancelable: true,
+      composed: true
+    }))
+  }
+
+  getValidationTranslations () {
+    return this.validationTranslations
+  }
+
   scrollToFirstError () {
     // @ts-ignore
     const firstNodeWithError = this.allValidationNodes.find(node => node.classList.contains('has-error'))
@@ -437,6 +654,30 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       })
     })
     if (this.submitButton) this.submitButton.disabled = allIsValidValue.includes(false)
+  }
+
+  renderValidationA11yCSS () {
+    if (this.root.querySelector('style[validation-a11y-style]')) return
+    const style = document.createElement('style')
+    style.setAttribute('protected', 'true')
+    style.setAttribute('validation-a11y-style', '')
+    style.textContent = /* css */`
+      :host .form-error-summary {
+        border: 2px solid var(--color-error, #b00020);
+        padding: 1rem;
+        margin: 0 0 1.5rem 0;
+        background: var(--background-color-error, #fff5f5);
+        color: var(--color, inherit);
+      }
+      :host .form-error-summary:focus {
+        outline: 2px solid var(--outline-color-focus-visible, var(--color-secondary, #111));
+        outline-offset: 2px;
+      }
+      :host .form-error-summary h2 {
+        margin-top: 0;
+      }
+    `
+    this.root.appendChild(style)
   }
 
   /**
