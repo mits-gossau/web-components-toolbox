@@ -633,12 +633,17 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
     this.dispatchEvent(new CustomEvent(this.getAttribute('request-translations') || 'request-translations', {
       detail: {
-        resolve: ({ getTranslationSync }) => {
-          this.validationTranslations = Object.entries(keys).reduce((acc, [name, key]) => {
-            const translation = getTranslationSync(key)
-            acc[name] = translation === key ? fallbacks[name] : translation
-            return acc
-          }, {})
+        resolve: async ({ fetch, getTranslation }) => {
+          try {
+            await fetch
+            this.validationTranslations = Object.fromEntries(await Promise.all(Object.entries(keys).map(async ([name, key]) => {
+              const translation = await getTranslation(key)
+              return [name, translation === key ? fallbacks[name] : translation]
+            })))
+          } catch {
+            this.validationTranslations = { ...fallbacks }
+          }
+          if (this.form?.querySelector('#form-error-summary')) this.updateErrorSummary()
         }
       },
       bubbles: true,
