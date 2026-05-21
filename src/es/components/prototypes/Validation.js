@@ -344,27 +344,23 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     const currentValidatedInputHasNewErrorReferencePoint = currentValidatedInput.getAttribute('error-message-reference-point-changed') === 'true'
     const currentValidatedInputErrorTextWrapper = currentValidatedInput.errorTextWrapper ? currentValidatedInput.errorTextWrapper : currentValidatedInputHasNewErrorReferencePoint ? currentValidatedInput.closest('[new-error-message-reference-point="true"]').parentElement.querySelector('div.custom-error-text') : currentValidatedInput.parentElement.querySelector('div.custom-error-text')
     const isCurrentValidatedInputErrorTextWrapperFilled = currentValidatedInputErrorTextWrapper.querySelector('p')
+    const isNoErrorTextParagraph = currentValidatedInput.hasAttribute('no-error-text-p')
+    const validationKeys = []
     const isValidValues = []
     if (!currentValidatedInput.hasAttribute('disabled')) {
       Object.keys(this.validationValues[inputFieldName]).forEach(key => {
-        if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) isValidValues.push(this.validationValues[inputFieldName][key].isValid)
-        if (!isCurrentValidatedInputErrorTextWrapperFilled) {
+        if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'isValid')) {
+          validationKeys.push(key)
+          isValidValues.push(this.validationValues[inputFieldName][key].isValid)
+        }
+        if (!isNoErrorTextParagraph && !isCurrentValidatedInputErrorTextWrapperFilled) {
           if (Object.prototype.hasOwnProperty.call(this.validationValues[inputFieldName][key], 'error-message')) {
-            if (currentValidatedInput.hasAttribute('no-error-text-p')) {
-              if (!currentValidatedInputErrorTextWrapper.hasAttribute('error-text-id')) {
-                currentValidatedInputErrorTextWrapper.setAttribute('error-text-id', key)
-                currentValidatedInputErrorTextWrapper.id = this.getErrorMessageId(currentValidatedInput, key)
-              }
-              currentValidatedInputErrorTextWrapper.hidden = true
-              currentValidatedInputErrorTextWrapper.textContent = this.validationValues[inputFieldName][key]['error-message']
-            } else {
-              const errorText = document.createElement('p')
-              errorText.setAttribute('error-text-id', key)
-              errorText.id = this.getErrorMessageId(currentValidatedInput, key)
-              errorText.hidden = true
-              errorText.textContent = this.validationValues[inputFieldName][key]['error-message']
-              currentValidatedInputErrorTextWrapper.appendChild(errorText)
-            }
+            const errorText = document.createElement('p')
+            errorText.setAttribute('error-text-id', key)
+            errorText.id = this.getErrorMessageId(currentValidatedInput, key)
+            errorText.hidden = true
+            errorText.textContent = this.validationValues[inputFieldName][key]['error-message']
+            currentValidatedInputErrorTextWrapper.appendChild(errorText)
           }
         }
       })
@@ -397,10 +393,25 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       }
     }
 
+    const currentErrorMessageIndex = isValidValues.findIndex(elem => elem === false)
+
+    if (isNoErrorTextParagraph) {
+      currentValidatedInputErrorTextWrapper.hidden = true
+      if (+currentErrorMessageIndex === -1) return
+      const currentErrorMessageKey = validationKeys[currentErrorMessageIndex]
+      const currentErrorMessage = this.validationValues[inputFieldName][currentErrorMessageKey]?.['error-message']
+      if (currentErrorMessage) {
+        currentValidatedInputErrorTextWrapper.setAttribute('error-text-id', currentErrorMessageKey)
+        currentValidatedInputErrorTextWrapper.id = this.getErrorMessageId(currentValidatedInput, currentErrorMessageKey)
+        currentValidatedInputErrorTextWrapper.textContent = currentErrorMessage
+        currentValidatedInputErrorTextWrapper.hidden = false
+        this.setActiveErrorDescription(currentValidatedInput, currentValidatedInputErrorTextWrapper)
+      }
+      return
+    }
+
     const errorMessages = Array.from(currentValidatedInputErrorTextWrapper.querySelectorAll('[error-text-id]'))
     if (currentValidatedInputErrorTextWrapper.matches('[error-text-id]')) errorMessages.push(currentValidatedInputErrorTextWrapper)
-
-    const currentErrorMessageIndex = isValidValues.findIndex(elem => elem === false)
 
     if (errorMessages) {
       errorMessages.forEach(p => {
