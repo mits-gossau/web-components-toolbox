@@ -78,6 +78,14 @@ export default class Tabs extends Shadow() {
             button.button?.classList.add('active')
           }
           sections[index].classList.add('active')
+          this.dispatchEvent(new CustomEvent(this.getAttribute('tab-active') || 'tab-active', {
+            detail: {
+              tab
+            },
+            bubbles: true,
+            cancelable: true,
+            composed: true
+          }))
         })
       }
     })
