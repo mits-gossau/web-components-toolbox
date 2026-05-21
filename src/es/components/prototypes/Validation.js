@@ -544,6 +544,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       link.textContent = `${error.label}: ${error.message}`
       link.addEventListener('click', event => {
         event.preventDefault()
+        event.stopPropagation()
         error.input.scrollIntoView({ behavior: 'smooth', block: 'center' })
         error.input.focus({ preventScroll: true })
       })
