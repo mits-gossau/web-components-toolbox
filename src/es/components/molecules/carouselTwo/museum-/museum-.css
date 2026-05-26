@@ -67,7 +67,7 @@
 }
 @media only screen and (max-width: _max-width_) {
   :host {
-    --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile);
+    --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile) var(--content-spacing-mobile) var(--content-spacing-mobile);
     --teaser-tile-img-max-height: ${this.getAttribute('img-max-height-mobile') || this.getAttribute('img-max-height') || '55dvh'};
   }
 }
