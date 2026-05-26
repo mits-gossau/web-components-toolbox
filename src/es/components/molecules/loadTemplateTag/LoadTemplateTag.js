@@ -23,6 +23,7 @@ export default class LoadTemplateTag extends Intersection() {
   constructor (options = {}, ...args) {
     super(Object.assign(options, { mode: 'false', intersectionObserverInit: {} }), ...args)
 
+    this.connectedTimestamp = 0
     this.loadPromise = new Promise((resolve, reject) => {
       this.resolve = resolve
       this.reject = reject
@@ -30,6 +31,7 @@ export default class LoadTemplateTag extends Intersection() {
   }
 
   connectedCallback () {
+    this.connectedTimestamp = Date.now()
     if (this.shouldRenderCSS()) this.renderCSS()
     if (!this.intersecting) {
       this.intersecting = this.shouldRenderHTML()
@@ -127,6 +129,7 @@ export default class LoadTemplateTag extends Intersection() {
         templateContentElement = previousElementSibling ? previousElementSibling.nextElementSibling : parentNode.children[0]
       }
       if (templateContentElement) {
+        templateContentElement.setAttribute('from-load-template-tag', (this.connectedTimestamp + 1000) < Date.now() ? 'lazy' : 'eager')
         if (this.hasAttribute('copy-attributes')) {
           Array.from(this.attributes).forEach(({ name, value }) => {
             if (name === 'copy-attributes' || name === 'copy-class-list') return
