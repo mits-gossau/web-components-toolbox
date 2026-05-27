@@ -297,6 +297,14 @@
   text-transform: var(--p-text-transform, none);
   margin: var(--p-margin, 0 auto var(--content-spacing));
 }
+:host p strong,
+:host p b {
+  font-weight: var(--p-font-weight-strong, var(--font-weight-strong, bold));
+}
+:host p em,
+:host p i {
+  font-style: var(--p-font-style-italic, italic);
+}
 :host .columns-one {
   columns: var(--columns-one, 1);
 }
