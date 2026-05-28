@@ -116,7 +116,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
       })
       if (this.root.querySelector('form').querySelector('.has-error')) {
         this.updateErrorSummary()
-        this.focusErrorSummary()
+        this.focusFirstErrorField()
         event.preventDefault()
         event.stopPropagation()
       } else {
@@ -538,17 +538,7 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
 
     errors.forEach(error => {
       const item = document.createElement('li')
-      const link = document.createElement('a')
-      this.getSafeInputId(error.input)
-      link.href = `#${error.input.id}`
-      link.textContent = `${error.label}: ${error.message}`
-      link.addEventListener('click', event => {
-        event.preventDefault()
-        event.stopPropagation()
-        error.input.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        error.input.focus({ preventScroll: true })
-      })
-      item.appendChild(link)
+      item.textContent = `${error.label}: ${error.message}`
       list.appendChild(item)
     })
   }
@@ -563,7 +553,6 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     summary.classList.add('form-error-summary')
     summary.setAttribute('role', 'alert')
     summary.setAttribute('aria-labelledby', this.getErrorSummaryTitleId())
-    summary.setAttribute('tabindex', '-1')
 
     const title = document.createElement('h2')
     title.id = this.getErrorSummaryTitleId()
@@ -581,13 +570,12 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     this.getErrorSummary()?.remove()
   }
 
-  focusErrorSummary () {
+  focusFirstErrorField () {
     requestAnimationFrame(() => {
-      const summary = this.getErrorSummary()
-      if (summary) {
-        summary.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        summary.focus({ preventScroll: true })
-      }
+      const firstNodeWithError = this.allValidationNodes?.find(node => node.classList.contains('has-error') || node.getAttribute('aria-invalid') === 'true')
+      if (!firstNodeWithError) return
+      firstNodeWithError.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      firstNodeWithError.focus({ preventScroll: true })
     })
   }
 
@@ -701,18 +689,15 @@ export const Validation = (ChosenClass = Shadow()) => class Validation extends C
     style.setAttribute('validation-a11y-style', '')
     style.textContent = /* css */`
       :host .form-error-summary {
-        border: 2px solid var(--color-error, #b00020);
-        padding: 1rem;
-        margin: 0 0 1.5rem 0;
-        background: var(--background-color-error, #fff5f5);
-        color: var(--color, inherit);
-      }
-      :host .form-error-summary:focus {
-        outline: 2px solid var(--outline-color-focus-visible, var(--color-secondary, #111));
-        outline-offset: 2px;
-      }
-      :host .form-error-summary h2 {
-        margin-top: 0;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
       }
     `
     this.root.appendChild(style)
