@@ -478,6 +478,9 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
   line-height: var(--ul-li-line-height, var(--line-height, normal));
   font-weight: var(--ul-li-font-weight, var(--font-weight, normal));
 }
+:host ul > li > p {
+  margin: var(--ul-li-p-margin, 0);
+}
 /* overwrite abuse of o-wrapper with simulate-children="1" src/es/components/pages/Home.html */
 :host([simulate-children="1"]) > section > * > ul:not([style]):last-child {
   padding-left: 1.5em !important;
