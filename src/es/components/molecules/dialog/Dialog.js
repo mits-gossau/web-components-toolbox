@@ -94,7 +94,9 @@ export default class Dialog extends Shadow() {
     this.dialogResolve = map => map
     /** @type {Promise<HTMLDialogElement>} */
     this.dialogPromise = new Promise(resolve => (this.dialogResolve = resolve))
-    this.updateTabindex = () => this.dialog?.hasAttribute('open') ? this.removeAttribute('tabindex') : this.setAttribute('tabindex', '-1')
+    // A closed dialog host with tabindex=-1 drops its whole shadow subtree from sequential tab order in Chromium.
+    // Only set -1 when there is no in-shadow show-trigger; otherwise that trigger (e.g. the search icon) becomes unreachable by Tab.
+    this.updateTabindex = () => (this.dialog?.hasAttribute('open') || this.showNodes.length) ? this.removeAttribute('tabindex') : this.setAttribute('tabindex', '-1')
   }
 
   connectedCallback () {
