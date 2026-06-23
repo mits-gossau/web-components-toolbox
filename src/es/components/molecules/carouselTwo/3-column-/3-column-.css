@@ -67,7 +67,7 @@
   }
 
   :host > section > *:first-child {
-    padding-left: var(--content-spacing-mobile);
+    padding-left: var(--carousel-two-3-column-section-child-padding-left-mobile-custom, var(--content-spacing-mobile));
     box-sizing: content-box;
   }
   :host > section > *:last-child {
