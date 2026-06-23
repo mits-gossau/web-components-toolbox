@@ -14,10 +14,10 @@ n/a
 
 | Namespace | Path |
 |------|------|
-| grid-1column-align-center- | `./1column-align-center-/1column-align-center-.css` |
-| grid-2columns-content-section- | `./2columns-content-section-/2columns-content-section-.css` |
-| grid-2columns-content-stage- | `./2columns-content-stage-/2columns-content-stage-.css` |
-| grid-2colums2rows- | `./2colums2rows-/2colums2rows-.css` |
+| grid-1column-align-center- | `./1column-align-center-/1column-align-center-.css.js` |
+| grid-2columns-content-section- | `./2columns-content-section-/2columns-content-section-.css.js` |
+| grid-2columns-content-stage- | `./2columns-content-stage-/2columns-content-stage-.css.js` |
+| grid-2colums2rows- | `./2colums2rows-/2colums2rows-.css.js` |
 | grid-432-auto-colums-auto-rows- | `./432-auto-colums-auto-rows-/432-auto-colums-auto-rows-.css` |
 | grid-4columns- | `./4columns-/4columns-.css` |
 | grid-12er- | `./12er-/12er-.css.js` |
