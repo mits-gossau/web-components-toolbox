@@ -300,46 +300,46 @@ export default class Grid extends Shadow() {
         return Promise.all([
           this.fetchModuleCSS(`${this.importMetaUrl}./1column-align-center-/1column-align-center-.css.js`),
           this.fetchCSS(styles, false)
-        ])
+        ]).then(() => undefined)
       case 'grid-2columns-content-section-':
         return Promise.all([
           this.fetchModuleCSS(`${this.importMetaUrl}./2columns-content-section-/2columns-content-section-.css.js`),
           this.fetchCSS(styles, false)
-        ])
+        ]).then(() => undefined)
       case 'grid-2columns-content-stage-':
         return Promise.all([
           this.fetchModuleCSS(`${this.importMetaUrl}./2columns-content-stage-/2columns-content-stage-.css.js`),
           this.fetchCSS(styles, false)
-        ])
+        ]).then(() => undefined)
       case 'grid-2colums2rows-':
         return Promise.all([
           this.fetchModuleCSS(`${this.importMetaUrl}./2colums2rows-/2colums2rows-.css.js`),
           this.fetchCSS(styles, false)
-        ])
+        ]).then(() => undefined)
       case 'grid-432-auto-colums-auto-rows-':
         // no ${...} variables in this css, plain fetch is enough (the previous eval was a no-op)
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./432-auto-colums-auto-rows-/432-auto-colums-auto-rows-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false)
+        }, ...styles], false).then(() => undefined)
       case 'grid-4columns-':
         // no ${...} variables in this css, plain fetch is enough (the previous eval was a no-op)
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./4columns-/4columns-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false)
+        }, ...styles], false).then(() => undefined)
       case 'grid-12er-':
         return Promise.all([
           this.fetchModuleCSS(`${this.importMetaUrl}./12er-/12er-.css.js`),
           this.fetchCSS(styles, false)
-        ])
+        ]).then(() => undefined)
       case 'grid-x-':
         return Promise.all([
           this.fetchModuleCSS(`${this.importMetaUrl}./x-columns-/x-columns-.css.js`),
           this.fetchCSS(styles, false)
-        ])
+        ]).then(() => undefined)
       default:
-        return this.fetchCSS(styles, false)
+        return this.fetchCSS(styles, false).then(() => undefined)
     }
   }
 
@@ -363,6 +363,7 @@ export default class Grid extends Shadow() {
       // setCss resolves _max-width_, _import-meta-url_, the namespace, etc. and writes the result into the already appended styleNode
       module => this.setCss(module.default(this), undefined, false, undefined, styleNode, false)
     ).catch(error => {
+      styleNode.remove() // the node was appended synchronously to preserve order, remove it again on failure to not leave a dead empty style node
       error = `${path} ${error}!!!`
       // @ts-ignore
       return (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`)
