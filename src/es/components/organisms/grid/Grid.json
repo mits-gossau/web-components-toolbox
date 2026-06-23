@@ -7,19 +7,19 @@
   "templates": [
     {
       "name": "grid-1column-align-center-",
-      "path": "./1column-align-center-/1column-align-center-.css"
+      "path": "./1column-align-center-/1column-align-center-.css.js"
     },
     {
       "name": "grid-2columns-content-section-",
-      "path": "./2columns-content-section-/2columns-content-section-.css"
+      "path": "./2columns-content-section-/2columns-content-section-.css.js"
     },
     {
       "name": "grid-2columns-content-stage-",
-      "path": "./2columns-content-stage-/2columns-content-stage-.css"
+      "path": "./2columns-content-stage-/2columns-content-stage-.css.js"
     },
     {
       "name": "grid-2colums2rows-",
-      "path": "./2colums2rows-/2colums2rows-.css"
+      "path": "./2colums2rows-/2colums2rows-.css.js"
     },
     {
       "name": "grid-432-auto-colums-auto-rows-",
