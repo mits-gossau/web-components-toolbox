@@ -40,8 +40,12 @@ export default class Teaser extends Intersection() {
     if (this.shouldRenderCSS()) showPromises.push(this.renderCSS())
     if (this.aPicture) {
       this.aPicture.setAttribute('part', 'a-picture')
+      // only wait for the picture-load event when the picture actually has a source to load.
+      // a sourceless a-picture (e.g. a work without image) never emits picture-load, which would
+      // otherwise leave the teaser hidden forever
+      const aPictureHasSource = this.aPicture.getAttribute('defaultSource') || this.aPicture.querySelector('img, source')
       // @ts-ignore
-      if (this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
+      if (aPictureHasSource && this.aPicture.hasAttribute('picture-load') && !this.aPicture.hasAttribute('loaded')) showPromises.push(new Promise(resolve => this.addEventListener('picture-load', event => resolve(), { once: true })))
     }
     Promise.all(showPromises).then(() => {
       if (!this.hasAttribute('no-figcaption-bg-color-equal')) {
