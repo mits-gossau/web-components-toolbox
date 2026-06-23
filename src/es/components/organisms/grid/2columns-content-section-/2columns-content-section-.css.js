@@ -1,9 +1,17 @@
+// @ts-check
+
+/**
+ * grid namespace css template, returns the css string with resolved variables (CSP-safe, no eval)
+ * @param {import('../Grid.js').default} self
+ * @returns {string}
+ */
+export default self => /* css */`
 :host {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
 }
 :host > section {
-    grid-template-columns: ${this.getAttribute('first-column-with') || 'auto'} auto;
+    grid-template-columns: ${self.getAttribute('first-column-with') || 'auto'} auto;
     grid-template-rows: auto 1fr;
 }
 :host > section > * {
@@ -131,4 +139,4 @@
     :host > section > ks-o-body-section[has-ks-o-offers-page] + aside {
         padding-top: 0 !important;
     }
-}
+}`

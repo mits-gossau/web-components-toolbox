@@ -295,73 +295,78 @@ export default class Grid extends Shadow() {
       }
     ]
     switch (this.getAttribute('namespace')) {
+      // the namespace css templates contain ${...} variables, they are loaded as es modules and resolved within fetchModuleCSS (CSP-safe, no eval)
       case 'grid-1column-align-center-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./1column-align-center-/1column-align-center-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // make template ${code} accessible aka. set the variables in the literal string
-          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
-        })
+        return Promise.all([
+          this.fetchModuleCSS(`${this.importMetaUrl}./1column-align-center-/1column-align-center-.css.js`),
+          this.fetchCSS(styles, false)
+        ])
       case 'grid-2columns-content-section-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./2columns-content-section-/2columns-content-section-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // make template ${code} accessible aka. set the variables in the literal string
-          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
-        })
+        return Promise.all([
+          this.fetchModuleCSS(`${this.importMetaUrl}./2columns-content-section-/2columns-content-section-.css.js`),
+          this.fetchCSS(styles, false)
+        ])
       case 'grid-2columns-content-stage-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./2columns-content-stage-/2columns-content-stage-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // make template ${code} accessible aka. set the variables in the literal string
-          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
-        })
+        return Promise.all([
+          this.fetchModuleCSS(`${this.importMetaUrl}./2columns-content-stage-/2columns-content-stage-.css.js`),
+          this.fetchCSS(styles, false)
+        ])
       case 'grid-2colums2rows-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./2colums2rows-/2colums2rows-.css`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // make template ${code} accessible aka. set the variables in the literal string
-          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
-        })
+        return Promise.all([
+          this.fetchModuleCSS(`${this.importMetaUrl}./2colums2rows-/2colums2rows-.css.js`),
+          this.fetchCSS(styles, false)
+        ])
       case 'grid-432-auto-colums-auto-rows-':
+        // no ${...} variables in this css, plain fetch is enough (the previous eval was a no-op)
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./432-auto-colums-auto-rows-/432-auto-colums-auto-rows-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // make template ${code} accessible aka. set the variables in the literal string
-          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
-        })
+        }, ...styles], false)
       case 'grid-4columns-':
+        // no ${...} variables in this css, plain fetch is enough (the previous eval was a no-op)
         return this.fetchCSS([{
           path: `${this.importMetaUrl}./4columns-/4columns-.css`, // apply namespace since it is specific and no fallback
           namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // make template ${code} accessible aka. set the variables in the literal string
-          fetchCSSParams[0].styleNode.textContent = eval('`' + fetchCSSParams[0].style + '`')// eslint-disable-line no-eval
-        })
+        }, ...styles], false)
       case 'grid-12er-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./12er-/12er-.css.js`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // make template ${code} accessible aka. set the variables in the literal string
-          fetchCSSParams[0].styleNode.textContent = eval(fetchCSSParams[0].style)// eslint-disable-line no-eval
-        })
+        return Promise.all([
+          this.fetchModuleCSS(`${this.importMetaUrl}./12er-/12er-.css.js`),
+          this.fetchCSS(styles, false)
+        ])
       case 'grid-x-':
-        return this.fetchCSS([{
-          path: `${this.importMetaUrl}./x-columns-/x-columns-.css.js`, // apply namespace since it is specific and no fallback
-          namespace: false
-        }, ...styles], false).then(fetchCSSParams => {
-          // make template ${code} accessible aka. set the variables in the literal string
-          fetchCSSParams[0].styleNode.textContent = eval(fetchCSSParams[0].style)// eslint-disable-line no-eval
-        })
+        return Promise.all([
+          this.fetchModuleCSS(`${this.importMetaUrl}./x-columns-/x-columns-.css.js`),
+          this.fetchCSS(styles, false)
+        ])
       default:
         return this.fetchCSS(styles, false)
     }
+  }
+
+  /**
+   * imports a namespace css template module (default export: (self) => cssString) and injects its returned css into a new style node.
+   * CSP-safe replacement for the previous eval based template literal interpolation (no 'unsafe-eval' required).
+   * the style node is appended synchronously to keep the previous style order (namespace css before reset.css/style.css).
+   *
+   * @param {string} path - url to the *.css.js module
+   * @return {Promise<string | void>}
+   */
+  fetchModuleCSS (path) {
+    /** @type {HTMLStyleElement} */
+    const styleNode = document.createElement('style')
+    styleNode.setAttribute('_css', path)
+    styleNode.setAttribute('mobile-breakpoint', this.mobileBreakpoint)
+    styleNode.setAttribute('protected', 'true') // this will avoid deletion by html=''
+    if (this.root.querySelector(this.cssSelector + ` > [_css="${path}"]`)) console.warn(`${path} got imported more than once!!!`, this)
+    this.root.appendChild(styleNode)
+    return import(path).then(
+      // setCss resolves _max-width_, _import-meta-url_, the namespace, etc. and writes the result into the already appended styleNode
+      module => this.setCss(module.default(this), undefined, false, undefined, styleNode, false)
+    ).catch(error => {
+      error = `${path} ${error}!!!`
+      // @ts-ignore
+      return (this.html = console.error(error, this) || `<code style="color: red;">${error}</code>`)
+    })
   }
 
   /**
