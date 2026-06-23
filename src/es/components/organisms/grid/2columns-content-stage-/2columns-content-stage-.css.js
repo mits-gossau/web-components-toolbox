@@ -1,3 +1,11 @@
+// @ts-check
+
+/**
+ * grid namespace css template, returns the css string with resolved variables (CSP-safe, no eval)
+ * @param {import('../Grid.js').default} self
+ * @returns {string}
+ */
+export default self => /* css */`
 :host([center]) > section > .stage-content {
     display: flex;
     align-items: center;
@@ -7,10 +15,10 @@
     min-height: var(--grid-2columns-content-stage-min-height, 300px);
 }
 :host([background-color]) {
-    background-color: ${this.getAttribute('background-color')};
+    background-color: ${self.getAttribute('background-color')};
 }
 :host > section {
-    grid-template-columns: ${this.getAttribute('first-column-with') || 'auto'} auto;
+    grid-template-columns: ${self.getAttribute('first-column-with') || 'auto'} auto;
     grid-template-rows: auto 1fr;
     min-height: var(--grid-2columns-content-stage-min-height, 300px);
 }
@@ -118,15 +126,15 @@
     grid-row: 1 / span 2;
     grid-column: 1 / 1;
     height: auto;
-    line-height: var(--grid-2columns-content-stage-first-column-line-height-custom, 1.5); 
+    line-height: var(--grid-2columns-content-stage-first-column-line-height-custom, 1.5);
     margin: var(--grid-2columns-content-stage-first-column-margin-custom,3rem 1rem 2rem calc(4rem/3));
     padding: var(--grid-2columns-content-stage-first-column-padding-custom, var(--grid-2columns-content-stage-padding-custom));
 }
 :host([first-container-vertical]) > section > *:nth-child(1) h1 {
     color: var(--grid-2columns-content-stage-first-column-color-custom, white);
     line-height: var(--grid-2columns-content-stage-first-column-line-height-custom, 1);
-    margin-top: 1rem; 
-    margin-bottom: 32px; 
+    margin-top: 1rem;
+    margin-bottom: 32px;
     font-size: var(--grid-2columns-content-stage-first-column-h-font-size-custom, calc(8em/3));
 }
 :host([first-container-vertical]) > section > *:nth-child(1) p {
@@ -145,9 +153,9 @@
     padding: var(--grid-2columns-content-stage-second-column-padding-custom, var(--grid-2columns-content-stage-padding-custom));
 }
 :host([first-container-vertical]) > section > *:nth-child(2) div {
-    background-image: ${this.getAttribute('image-src') ? `url("${this.getAttribute('image-src')}")` : 'none'};
-    background-position: center center; 
-    background-size: cover; 
+    background-image: ${self.getAttribute('image-src') ? `url("${self.getAttribute('image-src')}")` : 'none'};
+    background-position: center center;
+    background-size: cover;
     height: 100%;
     min-height: var(--grid-2columns-content-stage-image-min-height, 280px);
 }
@@ -245,8 +253,8 @@
 @media only screen and (min-width: 1024px) {
     :host([brand=ibaw]) aside {
         /* the shape should be aligned to the bottom to match the border on the split section on content pages
-        this path defines a polygon that is aligned to the bottom and creates a shape with height of 1477px, 
+        this path defines a polygon that is aligned to the bottom and creates a shape with height of 1477px,
         theoretically the shape would get cropped if higher */
         clip-path: polygon(0% 100%, 100% 100%, 100% calc(100% - 1477px), 480px calc(100% - 1477px));
     }
-}
+}`
