@@ -764,6 +764,9 @@ img[style="float: right;"], img[style="float:right;"], img[style="float: right"]
     font-size: var(--font-size-tiny-mobile, var(--font-size-tiny, calc(0.75 * var(--p-font-size-mobile, var(--p-font-size, 1em)))));
     line-height: var(--line-height-mobile, var(--line-height, normal));
   }
+  :host .font-size-h1-extra-large {
+    font-size: var(--font-size-h1-extra-large, 50px);
+  }
   /* p-tag */
   :host p {
     font-size: var(--p-font-size-mobile, var(--p-font-size, 1em));
