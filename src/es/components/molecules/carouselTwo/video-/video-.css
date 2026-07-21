@@ -10,6 +10,10 @@
   --carousel-two-video-museum-nav-transform-hover: none;
   --carousel-two-video-museum-section-nav-separate-margin: 0;
   --carousel-two-video-museum-show: none;
+  --carousel-two-video-museum-video-caption-font-size: 17px;
+  --carousel-two-video-museum-video-caption-font-size-mobile: 10px;
+  --carousel-two-video-museum-video-caption-padding: var(--teaser-tile-figcaption-bg-color-equal-padding-custom, var(--teaser-tile-figcaption-padding-custom, 1em 0));
+  --carousel-two-video-museum-video-caption-padding-mobile: var(--teaser-tile-figcaption-bg-color-equal-padding-mobile-custom, var(--teaser-tile-figcaption-padding-mobile-custom, var(--carousel-two-video-museum-video-caption-padding)));
   --video-aspect: 16/9;
   --video-max-height: 70dvh;
   width: 100% !important;
@@ -79,9 +83,9 @@
 /* Video caption – same style as teaser figcaption in museum- */
 :host > section > * > .video-caption {
   margin: 0;
-  padding: 0.75em var(--content-spacing, 1em);
+  padding: var(--carousel-two-video-museum-video-caption-padding);
   color: ${this.getAttribute('nav-color') || 'var(--color)'};
-  font-size: 1em;
+  font-size: var(--carousel-two-video-museum-video-caption-font-size);
   line-height: 1.4;
   text-align: left;
   width: 100%;
@@ -121,5 +125,9 @@
   :host {
     --carousel-two-video-museum-nav-margin-mobile: 0 var(--content-spacing-mobile);
     --video-max-height: var(--video-max-height-mobile, 55dvh);
+  }
+  :host > section > * > .video-caption {
+    padding: var(--carousel-two-video-museum-video-caption-padding-mobile);
+    font-size: var(--carousel-two-video-museum-video-caption-font-size-mobile);
   }
 }
