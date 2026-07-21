@@ -9,6 +9,7 @@
   --carousel-two-museum-nav-transform-active: none;
   --carousel-two-museum-nav-transform-hover: none;
   --carousel-two-museum-section-nav-separate-margin: 0;
+  --carousel-two-museum-section-nav-separate-margin-mobile: 0;
   --carousel-two-museum-show: none;
   --teaser-tile-background-color-custom: var(--teaser-tile-figcaption-background-color-custom);
   --teaser-tile-figcaption-background-color-custom: transparent;
