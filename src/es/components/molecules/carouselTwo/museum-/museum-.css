@@ -32,6 +32,9 @@
   background-color: var(--carousel-two-museum-nav-background-color);
   border: 2px solid ${this.getAttribute('nav-color') || 'var(--color)'};
 }
+:host(.has-default-nav) > nav {
+  flex-wrap: nowrap;
+}
 :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover,
 :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active, :host > section:not(.scrolling) ~ nav > *.active {
   --carousel-two-museum-nav-background-color-active: ${this.getAttribute('nav-color') || 'var(--color)'};
