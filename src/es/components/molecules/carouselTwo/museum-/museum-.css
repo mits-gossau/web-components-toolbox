@@ -74,20 +74,20 @@
 }
 @media only screen and (max-width: _max-width_) {
   :host {
-    --carousel-two-museum-nav-gap-mobile: 8px;
-    --carousel-two-museum-nav-height: 24px;
-    --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile) 1.4rem var(--content-spacing-mobile);
-    --carousel-two-museum-nav-width: 24px;
+    --carousel-two-museum-nav-gap-mobile: 0;
+    --carousel-two-museum-nav-height: 22px;
+    --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile) 1.4rem calc(var(--content-spacing-mobile) - 4px);
+    --carousel-two-museum-nav-width: 22px;
     --teaser-tile-img-max-height: ${this.getAttribute('img-max-height-mobile') || this.getAttribute('img-max-height') || '55dvh'};
   }
   :host(.has-default-nav) > nav > * {
     align-items: center;
-    background-color: transparent;
-    border: 0;
+    background-color: transparent !important;
+    border: 0 !important;
     display: flex;
-    height: 24px;
+    height: 22px;
     justify-content: center;
-    width: 24px;
+    width: 22px;
   }
   :host(.has-default-nav) > nav > *::before {
     background-color: transparent;
@@ -102,8 +102,8 @@
   :host(.has-default-nav) > section.scrolling ~ nav > *:hover,
   :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover,
   :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active {
-    background-color: transparent;
-    border: 0;
+    background-color: transparent !important;
+    border: 0 !important;
   }
   :host(.has-default-nav) > section.scrolling ~ nav > *:hover::before,
   :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover::before,
