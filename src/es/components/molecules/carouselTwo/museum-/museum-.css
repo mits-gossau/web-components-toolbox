@@ -74,7 +74,41 @@
 }
 @media only screen and (max-width: _max-width_) {
   :host {
+    --carousel-two-museum-nav-gap-mobile: 8px;
+    --carousel-two-museum-nav-height: 24px;
     --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile) 1.4rem var(--content-spacing-mobile);
+    --carousel-two-museum-nav-width: 24px;
     --teaser-tile-img-max-height: ${this.getAttribute('img-max-height-mobile') || this.getAttribute('img-max-height') || '55dvh'};
+  }
+  :host(.has-default-nav) > nav > * {
+    align-items: center;
+    background-color: transparent;
+    border: 0;
+    display: flex;
+    height: 24px;
+    justify-content: center;
+    width: 24px;
+  }
+  :host(.has-default-nav) > nav > *::before {
+    background-color: transparent;
+    border: 2px solid ${this.getAttribute('nav-color') || 'var(--color)'};
+    border-radius: 50%;
+    box-sizing: border-box;
+    content: '';
+    display: block;
+    height: 14px;
+    width: 14px;
+  }
+  :host(.has-default-nav) > section.scrolling ~ nav > *:hover,
+  :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover,
+  :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active {
+    background-color: transparent;
+    border: 0;
+  }
+  :host(.has-default-nav) > section.scrolling ~ nav > *:hover::before,
+  :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover::before,
+  :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active::before {
+    background-color: ${this.getAttribute('nav-color') || 'var(--color)'};
+    border-color: transparent;
   }
 }
