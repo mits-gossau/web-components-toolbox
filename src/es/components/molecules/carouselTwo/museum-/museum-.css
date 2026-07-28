@@ -3,11 +3,14 @@
   --carousel-two-museum-arrow-nav-transition: none;
   --carousel-two-museum-color-custom: transparent;
   --carousel-two-museum-color-hover-custom: transparent;
-  --carousel-two-museum-nav-gap: 0.2em;
+  --carousel-two-museum-nav-gap: 8px;
+  --carousel-two-museum-nav-height: 20px;
   --carousel-two-museum-nav-justify-content: flex-start;
   --carousel-two-museum-nav-margin: 0 var(--content-spacing) 1.75em;
+  --carousel-two-museum-nav-opacity: 1;
   --carousel-two-museum-nav-transform-active: none;
   --carousel-two-museum-nav-transform-hover: none;
+  --carousel-two-museum-nav-width: 20px;
   --carousel-two-museum-section-nav-separate-margin: 0;
   --carousel-two-museum-section-nav-separate-margin-mobile: 0;
   --carousel-two-museum-show: none;
