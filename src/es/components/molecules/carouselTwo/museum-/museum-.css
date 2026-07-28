@@ -1,13 +1,15 @@
 :host {
   --carousel-two-museum-arrow-nav-opacity: 0;
   --carousel-two-museum-arrow-nav-transition: none;
+  --carousel-two-museum-caption-spacing: 23px;
   --carousel-two-museum-color-custom: transparent;
   --carousel-two-museum-color-hover-custom: transparent;
   --carousel-two-museum-nav-gap: 8px;
   --carousel-two-museum-nav-height: 20px;
   --carousel-two-museum-nav-justify-content: flex-start;
-  --carousel-two-museum-nav-margin: 0 var(--content-spacing) 1.75em;
+  --carousel-two-museum-nav-margin: 0 var(--content-spacing);
   --carousel-two-museum-nav-opacity: 1;
+  --carousel-two-museum-nav-padding: var(--carousel-two-museum-caption-spacing) 0;
   --carousel-two-museum-nav-transform-active: none;
   --carousel-two-museum-nav-transform-hover: none;
   --carousel-two-museum-nav-width: 20px;
@@ -54,6 +56,12 @@
 :host > section > m-teaser::part(figcaption) {
   flex-shrink: 0;
   height: auto;
+  padding-bottom: 0;
+  padding-top: var(--carousel-two-museum-caption-spacing);
+}
+:host > nav,
+:host > section + div > nav {
+  padding: var(--carousel-two-museum-nav-padding);
 }
 @media only screen and (min-width: calc(_max-width_ + 1px)) {
   :host([peek]) {
@@ -74,9 +82,11 @@
 }
 @media only screen and (max-width: _max-width_) {
   :host {
+    --carousel-two-museum-caption-spacing: 13px;
     --carousel-two-museum-nav-gap-mobile: 0;
     --carousel-two-museum-nav-height: 22px;
-    --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile) 1.4rem calc(var(--content-spacing-mobile) - 4px);
+    --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile) 0 calc(var(--content-spacing-mobile) - 4px);
+    --carousel-two-museum-nav-padding: 9px 0;
     --carousel-two-museum-nav-width: 22px;
     --teaser-tile-img-max-height: ${this.getAttribute('img-max-height-mobile') || this.getAttribute('img-max-height') || '55dvh'};
   }
