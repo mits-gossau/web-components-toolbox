@@ -422,6 +422,9 @@ export default class CarouselTwo extends Mutation() {
         z-index: 1;
         font-size: var(--arrow-nav-size, 5em);
       }
+      :host([count-section-children="1"]) > *.arrow-nav {
+        display: none;
+      }
       :host(.has-default-arrow-nav) > *.arrow-nav > * {
         align-items: center;
         display: flex;
