@@ -36,6 +36,9 @@
 }
 @media screen and (max-width: _max-width_) {
   :host {
+    --button-secondary-font-size-mobile: 16px;
+    --search-icon-top: 8px;
+    --search-input-font-size-mobile: 16px;
     --shadow-padding-top: 6em;
   }
   :host migrosmuseum-a-heading {
