@@ -356,6 +356,10 @@ export default class CarouselTwo extends Mutation() {
         ? this.getAttribute('nav-justify-content')
         : 'var(--nav-justify-content, center)'};
       }
+      :host([count-section-children="1"]) > nav,
+      :host([count-section-children="1"]) > section + div > nav {
+        display: none;
+      }
       :host > nav > * ,
       :host > section + div > nav > * {
         --a-margin: 0;
@@ -717,6 +721,7 @@ export default class CarouselTwo extends Mutation() {
    */
   renderHTML () {
     this.section = this.root.querySelector(this.cssSelector + ' > section') || document.createElement('section')
+    this.setAttribute('count-section-children', this.section.children.length)
     this.prepareMuseumPictures()
     this.setSameImageDimensionsAttribute()
     this.indicator = this.root.querySelector('#index')
