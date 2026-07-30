@@ -43,9 +43,10 @@ export const Prototype = (ChosenHTMLElement = HTMLElement) => class Prototype ex
         let version = this.getAttribute('mcs-version') || (self.Environment && self.Environment.mcsVersion)
         if (!version) {
           try {
-            version = (await (await fetch(`${baseUrl}/api/version`)).json()).version
+            const apiUrl = this.getAttribute('mcs-api-url') || self.MCS_API_URL || `${baseUrl}/api`
+            version = (await (await fetch(`${apiUrl.replace(/\/$/, '')}/version`)).json()).version
           } catch (error) {
-            console.warn(`error at ${baseUrl}/api/version fetch, falling back to old version: `, version)
+            console.warn('error at MCS API version fetch, falling back to old version: ', version)
           }
         }
         mainScript.setAttribute('src', `${baseUrl}/static-widgets/${version || 'v1.112.3'}/main.js`)
