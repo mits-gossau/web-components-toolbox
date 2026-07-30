@@ -39,13 +39,15 @@ export default class BackendForFrontend extends Prototype() {
     // @ts-ignore
     if (this.hasAttribute('mcs-api-url')) self.MCS_API_URL = this.getAttribute('mcs-api-url')
     return this.loadDependency().then(async msrc => {
+      const fetchJson = async endpoint => {
+        const response = await fetch(endpoint, { method: 'GET' })
+        if (!response.ok) throw new Error(`BFF request failed with status ${response.status}`)
+        return response.json()
+      }
+
       await msrc.utilities.login.backendForFrontendSetup({
-        getUser: async () => fetch(`${this.getAttribute('endpoint-get-user') || 'https://int.klubschule.ch/umbraco/api/DigitalCampaignFactory/GetUser'}`, {
-          method: 'GET'
-        }),
-        isLoggedIn: async () => fetch(`${this.getAttribute('endpoint-is-logged-in') || 'https://int.klubschule.ch/umbraco/api/DigitalCampaignFactory/IsLoggedIn'}`, {
-          method: 'GET'
-        }),
+        getUser: async () => fetchJson(this.getAttribute('endpoint-get-user') || 'https://int.klubschule.ch/umbraco/api/DigitalCampaignFactory/GetUser'),
+        isLoggedIn: async () => fetchJson(this.getAttribute('endpoint-is-logged-in') || 'https://int.klubschule.ch/umbraco/api/DigitalCampaignFactory/IsLoggedIn'),
         events: {
           loginEvent: async () => {
             if (this.hasAttribute('login-event')) {
