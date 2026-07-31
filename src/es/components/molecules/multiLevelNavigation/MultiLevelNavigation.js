@@ -1888,14 +1888,10 @@ export default class MultiLevelNavigation extends Shadow() {
   }
 
   setActiveNavigationItemBasedOnUrl () {
-    const subUrls = []
-    const navigationItemsUrlNames = []
     const navigationItems = Array.from(this.root.querySelectorAll('nav > ul > li[url-name]'))
-    window.location.pathname.split('/')?.filter((subUrl) => subUrl).slice(0, 2).forEach((urlName) => subUrls.push(urlName.toLowerCase()))
-    navigationItems.forEach(li => navigationItemsUrlNames.push(li.getAttribute('url-name').toLowerCase()))
-    if (subUrls.length > 0 && navigationItemsUrlNames.length > 0) {
-      const activeNavigationName = navigationItemsUrlNames.filter((navUrl) => subUrls.includes(navUrl))[0]
-      const activeNavigationItem = navigationItems?.filter((item) => item.getAttribute('url-name').toLowerCase() === activeNavigationName)[0]
+    const activeNavigationName = window.location.pathname.split('/').find(subUrl => subUrl)?.toLowerCase()
+    if (activeNavigationName && navigationItems.length > 0) {
+      const activeNavigationItem = navigationItems.find(item => item.getAttribute('url-name')?.toLowerCase() === activeNavigationName)
       if (activeNavigationItem) {
         activeNavigationItem.classList.add('active')
         const activeLink = activeNavigationItem.querySelector('a')
