@@ -290,7 +290,7 @@ export const Wrapper = (ChosenHTMLElement = Body) => class Wrapper extends Chose
         if (this.hasAttribute(`any-${i + 1}-width`) || (childNodes[i] && childNodes[i].hasAttribute('width'))) {
           this.setCss(/* CSS */`
             :host {
-              --any-${i + 1}-width: ${childNodes[i].getAttribute('width') || this.getAttribute(`any-${i + 1}-width`)};
+              --any-${i + 1}-width: ${childNodes[i].getAttribute('width') || this.getAttribute(`any-${i + 1}-width`) || 'unset'};
             }
           `, undefined, undefined, undefined, this.style)
         }
