@@ -418,13 +418,14 @@ export default class Picture extends Intersection(Hover()) {
         if (this.hasAttribute('sources-delete-query-keys')) this.getAttribute('sources-delete-query-keys').split(',').forEach(keys => src.searchParams.delete(keys))
         if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) src.searchParams.set(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format', 'webp') // force webp as format
         if (src.searchParams.get(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality')) src.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '80') // force quality as 80
-        if (this.hasAttribute('sources-widths')) {
+        const naturalWidthNumber = Number(naturalWidth)
+        if (this.hasAttribute('sources-widths') && Number.isFinite(naturalWidthNumber) && naturalWidthNumber > 0) {
           const sourceWidths = [...new Set(this.getAttribute('sources-widths').split(/[\s,]+/)
             .map(width => Number.parseInt(width))
             .filter(width => width > 0))]
             .sort((a, b) => a - b)
-          const naturalWidthNumber = Number(naturalWidth)
           const widths = sourceWidths.filter(width => width <= naturalWidthNumber)
+          // Configured widths intentionally cap generated derivatives. Only add the natural width when the source is smaller than that cap.
           if (!widths.length || (naturalWidthNumber < sourceWidths[sourceWidths.length - 1] && widths[widths.length - 1] !== naturalWidthNumber)) widths.push(naturalWidthNumber)
           const widthQuery = this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width'
           const heightQuery = this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height'
