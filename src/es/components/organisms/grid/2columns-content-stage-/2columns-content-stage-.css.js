@@ -60,7 +60,7 @@ export default self => /* css */`
 :host aside {
     position: relative;
 }
-:host aside > img {
+:host aside > :is(img, a-picture) {
     position: absolute; /* needs to be undone on mobile!!! */
     inset: 0;
     width: 100%;
@@ -243,7 +243,7 @@ export default self => /* css */`
         grid-row: auto;
         grid-column: auto;
     }
-    :host aside > img {
+    :host aside > :is(img, a-picture) {
         position: relative;
         aspect-ratio: 4/3;
     }
