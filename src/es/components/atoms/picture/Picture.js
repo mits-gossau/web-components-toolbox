@@ -476,19 +476,13 @@ export default class Picture extends Intersection(Hover()) {
         this.sources.forEach(source => {
           const newSource = source.cloneNode()
           const srcset = source.getAttribute('data-srcset')
+          newSource.setAttribute('srcset', srcset.split(',').map(candidate => {
+            const [url, ...descriptors] = candidate.trim().split(/\s+/)
+            const candidateUrl = Picture.newUrl(url)
+            candidateUrl.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '0')
+            return [candidateUrl.href, ...descriptors].join(' ')
+          }).join(', '))
           this.picture.appendChild(newSource)
-          if (this.hasAttribute('sources-widths')) {
-            newSource.setAttribute('srcset', srcset.split(',').map(candidate => {
-              const [url, descriptor] = candidate.trim().split(/\s+/)
-              const candidateUrl = Picture.newUrl(url)
-              candidateUrl.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '0')
-              return `${candidateUrl.href} ${descriptor}`
-            }).join(', '))
-          } else {
-            const src = Picture.newUrl(srcset)
-            src.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '0')
-            newSource.setAttribute('srcset', src.href)
-          }
         })
         img.setAttribute('decoding', 'sync') // otherwise it is flashing
         img = this.img.cloneNode()
