@@ -27,6 +27,8 @@ import { Intersection } from '../../prototypes/Intersection.js'
  *  {string} [defaultSource] the default source for the img-tag
  *  {string} [alt] alt-text for the image
  *  {string} [loading=lazy] image loading
+ *  {string} [sizes] responsive image slot sizes used with sources-widths
+ *  {string} [sources-widths] comma or whitespace separated image widths; enables width descriptor srcset generation
  *  {string} [open-modal=""] does emit event with name set by open-modal which can be reacted on by eg. organisms/Modal.js
  *  {string} [no-modal-icon=""] hide the open-modal button for a cleaner look
  *  {string} [picture-load=""] does emit event with name set by picture-load which can be reacted on by eg. molecules/Flyer.js
@@ -416,31 +418,54 @@ export default class Picture extends Intersection(Hover()) {
         if (this.hasAttribute('sources-delete-query-keys')) this.getAttribute('sources-delete-query-keys').split(',').forEach(keys => src.searchParams.delete(keys))
         if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) src.searchParams.set(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format', 'webp') // force webp as format
         if (src.searchParams.get(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality')) src.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '80') // force quality as 80
-        const src2 = Picture.newUrl(src.href)
-        const step = 50
-        let width = step
-        let prevWidth = 0
-        let nextWidth = 0
-        while (width < naturalWidth) {
-          nextWidth = width + step < naturalWidth ? width + step : 0
-          if (nextWidth || naturalAspectRatio) {
-            src.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width))
-            src2.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width * 2))
-          } else {
-            src.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
-            src2.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
-          }
-          if (naturalAspectRatio) {
-            src.searchParams.set(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height', String(width * naturalAspectRatio))
-            src2.searchParams.set(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height', String(width * 2 * naturalAspectRatio))
-          }
+        const naturalWidthNumber = Number(naturalWidth)
+        if (this.hasAttribute('sources-widths') && Number.isFinite(naturalWidthNumber) && naturalWidthNumber > 0) {
+          const sourceWidths = [...new Set(this.getAttribute('sources-widths').split(/[\s,]+/)
+            .map(width => Number.parseInt(width))
+            .filter(width => width > 0))]
+            .sort((a, b) => a - b)
+          const widths = sourceWidths.filter(width => width <= naturalWidthNumber)
+          // Configured widths intentionally cap generated derivatives. Only add the natural width when the source is smaller than that cap.
+          if (!widths.length || (naturalWidthNumber < sourceWidths[sourceWidths.length - 1] && widths[widths.length - 1] !== naturalWidthNumber)) widths.push(naturalWidthNumber)
+          const widthQuery = this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width'
+          const heightQuery = this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height'
           const source = document.createElement('source')
-          source.setAttribute('data-srcset', `${src.href}, ${src2.href} 2x`)
+          source.setAttribute('data-srcset', widths.map(width => {
+            const candidate = Picture.newUrl(src.href)
+            candidate.searchParams.set(widthQuery, String(width))
+            if (naturalAspectRatio) candidate.searchParams.set(heightQuery, String(Math.round(width * naturalAspectRatio)))
+            return `${candidate.href} ${width}w`
+          }).join(', '))
           if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) source.setAttribute('type', 'image/webp') // force webp as format
-          source.setAttribute('media', `${prevWidth ? `(min-width: ${prevWidth + 1}px)` : ''}${prevWidth && (nextWidth || naturalAspectRatio) ? ' and ' : ''}${nextWidth || naturalAspectRatio ? `(max-width: ${width}px)` : ''}`)
+          if (this.hasAttribute('sizes')) source.setAttribute('sizes', this.getAttribute('sizes'))
           this.sources.push(source)
-          prevWidth = width
-          width += step
+        } else {
+          const src2 = Picture.newUrl(src.href)
+          const step = 50
+          let width = step
+          let prevWidth = 0
+          let nextWidth = 0
+          while (width < naturalWidth) {
+            nextWidth = width + step < naturalWidth ? width + step : 0
+            if (nextWidth || naturalAspectRatio) {
+              src.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width))
+              src2.searchParams.set(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width', String(width * 2))
+            } else {
+              src.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
+              src2.searchParams.delete(this.hasAttribute('query-width') ? this.getAttribute('query-width') : 'width')
+            }
+            if (naturalAspectRatio) {
+              src.searchParams.set(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height', String(width * naturalAspectRatio))
+              src2.searchParams.set(this.hasAttribute('query-height') ? this.getAttribute('query-height') : 'height', String(width * 2 * naturalAspectRatio))
+            }
+            const source = document.createElement('source')
+            source.setAttribute('data-srcset', `${src.href}, ${src2.href} 2x`)
+            if (src.searchParams.get(this.hasAttribute('query-format') ? this.getAttribute('query-format') : 'format')) source.setAttribute('type', 'image/webp') // force webp as format
+            source.setAttribute('media', `${prevWidth ? `(min-width: ${prevWidth + 1}px)` : ''}${prevWidth && (nextWidth || naturalAspectRatio) ? ' and ' : ''}${nextWidth || naturalAspectRatio ? `(max-width: ${width}px)` : ''}`)
+            this.sources.push(source)
+            prevWidth = width
+            width += step
+          }
         }
       }
     }
@@ -451,10 +476,14 @@ export default class Picture extends Intersection(Hover()) {
       if (src.searchParams.get(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality')) {
         this.sources.forEach(source => {
           const newSource = source.cloneNode()
-          const src = Picture.newUrl(source.getAttribute('data-srcset'))
-          src.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '0')
+          const srcset = source.getAttribute('data-srcset')
+          newSource.setAttribute('srcset', srcset.split(',').map(candidate => {
+            const [url, ...descriptors] = candidate.trim().split(/\s+/)
+            const candidateUrl = Picture.newUrl(url)
+            candidateUrl.searchParams.set(this.hasAttribute('query-quality') ? this.getAttribute('query-quality') : 'quality', '0')
+            return [candidateUrl.href, ...descriptors].join(' ')
+          }).join(', '))
           this.picture.appendChild(newSource)
-          newSource.setAttribute('srcset', src.href)
         })
         img.setAttribute('decoding', 'sync') // otherwise it is flashing
         img = this.img.cloneNode()
