@@ -12,7 +12,7 @@
   --carousel-two-video-museum-section-nav-separate-margin-mobile: 0;
   --carousel-two-video-museum-show: none;
   --carousel-two-video-museum-video-caption-font-size: 17px;
-  --carousel-two-video-museum-video-caption-font-size-mobile: 10px;
+  --carousel-two-video-museum-video-caption-font-size-mobile: 13px;
   --carousel-two-video-museum-video-caption-padding: var(--teaser-tile-figcaption-bg-color-equal-padding-custom, var(--teaser-tile-figcaption-padding-custom, 1em 0));
   --carousel-two-video-museum-video-caption-padding-mobile: var(--teaser-tile-figcaption-bg-color-equal-padding-mobile-custom, var(--teaser-tile-figcaption-padding-mobile-custom, var(--carousel-two-video-museum-video-caption-padding)));
   --video-aspect: 16/9;

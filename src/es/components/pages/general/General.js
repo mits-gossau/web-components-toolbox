@@ -78,7 +78,7 @@ export default class General extends Shadow() {
       /* global css set by page */
       :root {
         background-color: var(--root-background-color, var(--background-color, transparent));
-        font-size: var(--font-size, 10px);
+        font-size: var(--font-size, 13px);
         line-height: var(--line-height, normal);
         letter-spacing: var(--letter-spacing, normal);
         word-break: var(--word-break, normal);
@@ -123,7 +123,7 @@ export default class General extends Shadow() {
         }
         /* global css set by page */
         :root {
-          font-size: var(--font-size-mobile, var(--font-size, 10px));
+          font-size: var(--font-size-mobile, var(--font-size, 13px));
           font-weight: var(--font-weight-mobile, var(--font-weight, normal));
           line-height: var(--line-height-mobile, var(--line-height, normal));
           word-break: var(--word-break-mobile, var(--word-break, normal));
