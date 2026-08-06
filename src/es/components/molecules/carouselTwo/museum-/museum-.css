@@ -5,14 +5,14 @@
   --carousel-two-museum-color-custom: transparent;
   --carousel-two-museum-color-hover-custom: transparent;
   --carousel-two-museum-nav-gap: 8px;
-  --carousel-two-museum-nav-height: 20px;
+  --carousel-two-museum-nav-height: 16px;
   --carousel-two-museum-nav-justify-content: flex-start;
   --carousel-two-museum-nav-margin: 0 var(--content-spacing);
   --carousel-two-museum-nav-opacity: 1;
-  --carousel-two-museum-nav-padding: var(--carousel-two-museum-caption-spacing) 0;
+  --carousel-two-museum-nav-padding: calc(var(--carousel-two-museum-caption-spacing) - 2px) 0;
   --carousel-two-museum-nav-transform-active: none;
   --carousel-two-museum-nav-transform-hover: none;
-  --carousel-two-museum-nav-width: 20px;
+  --carousel-two-museum-nav-width: 16px;
   --carousel-two-museum-section-nav-separate-margin: 0;
   --carousel-two-museum-section-nav-separate-margin-mobile: 0;
   --carousel-two-museum-show: none;
@@ -34,8 +34,21 @@
 :host(.has-default-nav) > nav > * {
   --carousel-two-museum-nav-background-color: 'transparent';
   --carousel-two-museum-nav-background-color-active-custom: var(--carousel-two-museum-nav-background-color);
-  background-color: var(--carousel-two-museum-nav-background-color);
-  border: 2px solid ${this.getAttribute('nav-color') || 'var(--color)'};
+  align-items: center;
+  background-color: transparent !important;
+  border: 0 !important;
+  display: flex;
+  justify-content: center;
+}
+:host(.has-default-nav) > nav > *::before {
+  background-color: transparent;
+  border: 1px solid ${this.getAttribute('nav-color') || 'var(--color)'};
+  border-radius: 50%;
+  box-sizing: border-box;
+  content: '';
+  display: block;
+  height: 12px;
+  width: 12px;
 }
 :host(.has-default-nav) > nav {
   flex-wrap: nowrap;
@@ -44,8 +57,13 @@
 :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active, :host > section:not(.scrolling) ~ nav > *.active {
   --carousel-two-museum-nav-background-color-active: ${this.getAttribute('nav-color') || 'var(--color)'};
   --carousel-two-museum-nav-background-color-hover: var(--carousel-two-museum-nav-background-color-active);
-  background-color: var(--carousel-two-museum-nav-background-color-active);
-  border: 2px solid transparent;
+  background-color: transparent !important;
+  border: 0 !important;
+}
+:host(.has-default-nav) > section.scrolling ~ nav > *:hover::before, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover::before, :host > section.scrolling ~ nav > *:hover::before, :host > section:not(.scrolling) ~ nav > *:hover::before,
+:host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active::before, :host > section:not(.scrolling) ~ nav > *.active::before {
+  background-color: ${this.getAttribute('nav-color') || 'var(--color)'};
+  border-color: transparent;
 }
 :host > section > m-teaser::part(a-picture) {
   height: 100%;
@@ -84,41 +102,10 @@
   :host {
     --carousel-two-museum-caption-spacing: 13px;
     --carousel-two-museum-nav-gap-mobile: 0;
-    --carousel-two-museum-nav-height: 22px;
-    --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile) 0 calc(var(--content-spacing-mobile) - 4px);
-    --carousel-two-museum-nav-padding: 9px 0;
-    --carousel-two-museum-nav-width: 22px;
+    --carousel-two-museum-nav-height: 16px;
+    --carousel-two-museum-nav-margin-mobile: 0 var(--content-spacing-mobile) 0 calc(var(--content-spacing-mobile) - 2px);
+    --carousel-two-museum-nav-padding: 11px 0;
+    --carousel-two-museum-nav-width: 16px;
     --teaser-tile-img-max-height: ${this.getAttribute('img-max-height-mobile') || this.getAttribute('img-max-height') || '55dvh'};
-  }
-  :host(.has-default-nav) > nav > * {
-    align-items: center;
-    background-color: transparent !important;
-    border: 0 !important;
-    display: flex;
-    height: 22px;
-    justify-content: center;
-    width: 22px;
-  }
-  :host(.has-default-nav) > nav > *::before {
-    background-color: transparent;
-    border: 2px solid ${this.getAttribute('nav-color') || 'var(--color)'};
-    border-radius: 50%;
-    box-sizing: border-box;
-    content: '';
-    display: block;
-    height: 14px;
-    width: 14px;
-  }
-  :host(.has-default-nav) > section.scrolling ~ nav > *:hover,
-  :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover,
-  :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active {
-    background-color: transparent !important;
-    border: 0 !important;
-  }
-  :host(.has-default-nav) > section.scrolling ~ nav > *:hover::before,
-  :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover::before,
-  :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active::before {
-    background-color: ${this.getAttribute('nav-color') || 'var(--color)'};
-    border-color: transparent;
   }
 }
