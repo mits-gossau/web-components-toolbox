@@ -3,7 +3,7 @@
   --details-shadow-child-margin: var(--details-shadow-child-margin-custom, var(--content-spacing) auto);
   --details-shadow-content-spacing-mobile: var(--details-shadow-content-spacing-mobile-custom, var(--content-spacing-mobile));
   --details-shadow-content-spacing: var(--details-shadow-content-spacing-custom, var(--content-spacing));
-  --details-shadow-summary-padding: 1.62em 0 0.5em;
+  --details-shadow-summary-padding: 1.02em 0 0.5em;
   --h-margin-bottom: 0;
   width: 100%;
 }
