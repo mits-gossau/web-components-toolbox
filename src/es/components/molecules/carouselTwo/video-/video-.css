@@ -3,11 +3,14 @@
   --carousel-two-video-museum-arrow-nav-transition: none;
   --carousel-two-video-museum-color-custom: transparent;
   --carousel-two-video-museum-color-hover-custom: transparent;
-  --carousel-two-video-museum-nav-gap: 0.2em;
+  --carousel-two-video-museum-nav-gap: 8px;
+  --carousel-two-video-museum-nav-height: 16px;
   --carousel-two-video-museum-nav-justify-content: flex-start;
   --carousel-two-video-museum-nav-margin: 0 var(--content-spacing) 1.75em;
+  --carousel-two-video-museum-nav-opacity: 1;
   --carousel-two-video-museum-nav-transform-active: none;
   --carousel-two-video-museum-nav-transform-hover: none;
+  --carousel-two-video-museum-nav-width: 16px;
   --carousel-two-video-museum-section-nav-separate-margin: 0;
   --carousel-two-video-museum-section-nav-separate-margin-mobile: 0;
   --carousel-two-video-museum-show: none;
@@ -30,15 +33,33 @@
 :host(.has-default-nav) > nav > * {
   --carousel-two-video-museum-nav-background-color: 'transparent';
   --carousel-two-video-museum-nav-background-color-active-custom: var(--carousel-two-video-museum-nav-background-color);
-  background-color: var(--carousel-two-video-museum-nav-background-color);
-  border: 2px solid ${this.getAttribute('nav-color') || 'var(--color)'};
+  align-items: center;
+  background-color: transparent !important;
+  border: 0 !important;
+  display: flex;
+  justify-content: center;
+}
+:host(.has-default-nav) > nav > *::before {
+  background-color: transparent;
+  border: 1px solid ${this.getAttribute('nav-color') || 'var(--color)'};
+  border-radius: 50%;
+  box-sizing: border-box;
+  content: '';
+  display: block;
+  height: 12px;
+  width: 12px;
 }
 :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover,
 :host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active, :host > section:not(.scrolling) ~ nav > *.active {
   --carousel-two-video-museum-nav-background-color-active: ${this.getAttribute('nav-color') || 'var(--color)'};
   --carousel-two-video-museum-nav-background-color-hover: var(--carousel-two-video-museum-nav-background-color-active);
-  background-color: var(--carousel-two-video-museum-nav-background-color-active);
-  border: 2px solid transparent;
+  background-color: transparent !important;
+  border: 0 !important;
+}
+:host(.has-default-nav) > section.scrolling ~ nav > *:hover::before, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover::before, :host > section.scrolling ~ nav > *:hover::before, :host > section:not(.scrolling) ~ nav > *:hover::before,
+:host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active::before, :host > section:not(.scrolling) ~ nav > *.active::before {
+  background-color: ${this.getAttribute('nav-color') || 'var(--color)'};
+  border-color: transparent;
 }
 
 /* Narrow arrow hit areas so center stays free for video player interaction */
@@ -124,7 +145,10 @@
 
 @media only screen and (max-width: _max-width_) {
   :host {
+    --carousel-two-video-museum-nav-gap-mobile: 0;
+    --carousel-two-video-museum-nav-height: 16px;
     --carousel-two-video-museum-nav-margin-mobile: 0 var(--content-spacing-mobile);
+    --carousel-two-video-museum-nav-width: 16px;
     --video-max-height: var(--video-max-height-mobile, 55dvh);
   }
   :host > section > * > .video-caption {
