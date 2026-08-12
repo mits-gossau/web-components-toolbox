@@ -65,6 +65,7 @@
     fetchCSS,
     fetchHTML,
     Shadow.cssTextDecorationShortHandFix,
+    Shadow.needsTextDecorationShortHandFix,
     html,
     Shadow.htmlPurify
     Shadow.isMac,
@@ -273,9 +274,8 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }
       }
       replaces.forEach(replace => (style = style.replace(new RegExp(replace.pattern, replace.flags), replace.replacement)))
-      // TODO: Review the safari fix below, if the bug got fixed within safari itself (NOTE: -webkit prefix did not work for text-decoration-thickness). DONE 2021.11.10 | LAST CHECKED 2021.11.10
-      // safari text-decoration un-supported shorthand fix
-      if (Shadow.isMac && /(\n|\s|{){1}text-decoration:/g.test(style)) style = Shadow.cssTextDecorationShortHandFix(style, node)
+      // Apply the fallback only when the full text-decoration shorthand is unsupported
+      if (Shadow.needsTextDecorationShortHandFix && /(\n|\s|{){1}text-decoration:/g.test(style)) style = Shadow.cssTextDecorationShortHandFix(style, node)
       return (styleNode.textContent += style)
     }
   }
@@ -390,6 +390,18 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }
       }, `${match}/* Safari fix of text-decoration shorthand bug which only supports the first two arguments. */`)}/* end of fix. More Infos at: src/es/components/web-components-cms-template/src/es/components/prototypes/Shadow.js */`
     }) // find text-decoration: and spread the arguments to line, style, color and thickness
+  }
+
+  /**
+   * check if the browser supports all four text-decoration shorthand properties
+   *
+   * @static
+   * @readonly
+   * @return {boolean}
+   */
+  static get needsTextDecorationShortHandFix () {
+    // @ts-ignore
+    return self._needsTextDecorationShortHandFix ?? (self._needsTextDecorationShortHandFix = !self.CSS || typeof self.CSS.supports !== 'function' || !self.CSS.supports('text-decoration', 'underline solid red 2px'))
   }
 
   /**
