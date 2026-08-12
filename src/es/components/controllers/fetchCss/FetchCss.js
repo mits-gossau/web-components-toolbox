@@ -166,10 +166,9 @@ export default class FetchCss extends Shadow(WebWorker()) {
       }
     }
     if (fetchCSSParam.replaces) style = await fetchCSSParam.replaces.reduce(async (style, replace) => this.webWorker(FetchCss.replace, await style, replace.pattern, replace.flags, replace.replacement), Promise.resolve(style))
-    // TODO: Review the safari fix below, if the bug got fixed within safari itself (NOTE: -webkit prefix did not work for text-decoration-thickness). DONE 2021.11.10 | LAST CHECKED 2021.11.10
-    // safari text-decoration un-supported shorthand fix
-    // can not be run in web worker since it uses self
-    if (navigator.userAgent.includes('Mac') && /(\n|\s|{){1}text-decoration:/g.test(style)) style = FetchCss.cssTextDecorationShortHandFix(style, fetchCSSParam.node)
+    // Apply the fallback only when the full text-decoration shorthand is unsupported
+    // Cannot run in the web worker because cssTextDecorationShortHandFix uses getComputedStyle
+    if (FetchCss.needsTextDecorationShortHandFix && /(\n|\s|{){1}text-decoration:/g.test(style)) style = FetchCss.cssTextDecorationShortHandFix(style, fetchCSSParam.node)
     return style
   }
 
