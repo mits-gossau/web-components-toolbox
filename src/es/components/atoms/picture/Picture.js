@@ -26,6 +26,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  *
  *  {string} [defaultSource] the default source for the img-tag
  *  {string} [alt] alt-text for the image
+ *  {string} [fetchpriority] image fetch priority
  *  {string} [loading=lazy] image loading
  *  {string} [sizes] responsive image slot sizes used with sources-widths
  *  {string} [sources-widths] comma or whitespace separated image widths; enables width descriptor srcset generation
@@ -43,7 +44,7 @@ import { Intersection } from '../../prototypes/Intersection.js'
  */
 export default class Picture extends Intersection(Hover()) {
   static get observedAttributes () {
-    return ['loading', 'pointer-events']
+    return ['fetchpriority', 'loading', 'pointer-events']
   }
 
   constructor (options = {}, ...args) {
@@ -87,8 +88,18 @@ export default class Picture extends Intersection(Hover()) {
 
   attributeChangedCallback (name, oldValue, newValue) {
     if (this.img) {
-      if (name === 'loading' && this.img) {
-        this.img.setAttribute(name, newValue)
+      if (name === 'fetchpriority') {
+        if (newValue === null) {
+          this.img.removeAttribute(name)
+        } else {
+          this.img.setAttribute(name, newValue)
+        }
+      } else if (name === 'loading') {
+        if (newValue === null) {
+          this.img.removeAttribute(name)
+        } else {
+          this.img.setAttribute(name, newValue)
+        }
       } else if (name === 'pointer-events') {
         this.css = /* css */`
           :host picture img {
@@ -370,6 +381,7 @@ export default class Picture extends Intersection(Hover()) {
     if (!this.img) return console.warn('At Picture... no <img> nor a defaultSource was supplied: ', this)
     // https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/decoding
     this.img.setAttribute('decoding', 'async')
+    if (this.hasAttribute('fetchpriority')) this.img.setAttribute('fetchpriority', this.getAttribute('fetchpriority'))
     // set the loading attribute to the image
     this.setAttribute('loading', this.hasAttribute('picture-load') ? 'eager' : this.getAttribute('loading') || 'lazy') // 'picture-load' must load eager, not that the loading event doesn't trigger emit picture-load
     // deprecated but here for backwards compatibility... load sources through Attribute source
