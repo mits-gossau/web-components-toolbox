@@ -95,7 +95,11 @@ export default class Picture extends Intersection(Hover()) {
           this.img.setAttribute(name, newValue)
         }
       } else if (name === 'loading') {
-        this.img.setAttribute(name, newValue)
+        if (newValue === null) {
+          this.img.removeAttribute(name)
+        } else {
+          this.img.setAttribute(name, newValue)
+        }
       } else if (name === 'pointer-events') {
         this.css = /* css */`
           :host picture img {
