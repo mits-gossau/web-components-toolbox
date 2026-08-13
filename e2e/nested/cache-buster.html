@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Cache buster</title>
+  </head>
+  <body>
+    <c-fetch-css>
+      <x-cache-buster url="./e2e/cache-buster/CacheBuster.js?variant=test&amp;hash=old"></x-cache-buster>
+      <x-cache-buster url="./e2e/cache-buster/CacheBuster.js?variant=test&amp;hash=old"></x-cache-buster>
+    </c-fetch-css>
+    <script type="module" src="/e2e/cache-buster/Setup.js"></script>
+    <script src="/wc-config.js?triggerImmediately=true&hash=20260813120000&useDefaultDirectories=false"></script>
+  </body>
+</html>

@@ -24,7 +24,7 @@
 //  9) {boolean}[resolveImmediately=false] if true, customElements.define all elements immediately after import promise resolved. This can lead to the blitz/flashing when web components already connect while others are not. shadow doms then possibly prevent css rules like ":not(:defined) {display: none;}" to be effective
 //  10) {boolean}[triggerImmediately=false] if true, does not wait for window load event but trigger immediately
 //  11) {string}[loadCustomElementsEventName='load-custom-elements'] the event name which gets added to self (window)
-//  12) {string}[hash=''] to be append on the file extension, eg.: hello.js?{hash}
+//  12) {string}[hash=''] to be appended on the file extension, eg.: hello.js?hash={hash}
 (function (self, document, baseUrl, directories) {
   /**
    * Directory sets selector and url by which a reference between tagName/selector and url/file can be done (customElements.define(name aka. tagName, constructor))
@@ -118,9 +118,12 @@
         // @ts-ignore
         const fileName = /.[m]{0,1}js/.test(url) ? '' : `${(tagName.replace(directory.selector, '') || tagName).charAt(0).toUpperCase()}${(tagName.replace(directory.selector, '') || tagName).slice(1).replace(/-([a-z]{1})/g, (match, p1) => p1.toUpperCase())}.${fileEnding}`
         if (directory.separateFolder) url += `${`${fileName.slice(0, 1).toLowerCase()}${fileName.slice(1)}`.replace(`.${fileEnding}`, '')}${directory.separateFolderPlural ? 's' : ''}/`
-        const importPath = `${/[./]{1}/.test(url.charAt(0)) ? '' : baseUrl}${url}${fileName}${query}${hash ? query ? `&${hash}` : `?${hash}` : ''}`
+        const importPathWithoutHash = `${/[./]{1}/.test(url.charAt(0)) ? '' : baseUrl}${url}${fileName}${query}`
+        const importUrl = new URL(importPathWithoutHash, src)
+        if (hash) importUrl.searchParams.set('hash', hash)
+        const importPath = `${importPathWithoutHash.split('?')[0]}${importUrl.search}`
         /** @type {ImportEl} */
-        const importEl = import(importPath).then(module => /** @returns {[string, CustomElementConstructor]} */ [tagName, module.default || module, undefined, importPath])
+        const importEl = import(importUrl.href).then(module => /** @returns {[string, CustomElementConstructor]} */ [tagName, module.default || module, undefined, importPath])
         if (src.searchParams.get('resolveImmediately') === 'true') resolve([importEl])
         return importEl
       }

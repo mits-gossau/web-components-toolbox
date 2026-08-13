@@ -49,6 +49,7 @@
     namespaceFallback,
     mobileBreakpoint,
     importMetaUrl,
+    importMetaUrlHash,
     hasShadowRoot,
     root,
     cssSelector,
@@ -136,8 +137,14 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     /** @type {boolean} */
     this.namespaceFallback = this.hasAttribute('namespace-fallback')
     if (typeof options.mobileBreakpoint === 'string') this.setAttribute('mobile-breakpoint', options.mobileBreakpoint)
+    const importMetaUrl = new URL(options.importMetaUrl || import.meta.url)
     /** @type {string} */
-    this.importMetaUrl = (options.importMetaUrl || import.meta.url).replace(/(.*\/)(.*)$/, '$1')
+    this.importMetaUrlHash = importMetaUrl.searchParams.get('hash') || ''
+    importMetaUrl.pathname = importMetaUrl.pathname.replace(/(.*\/)(.*)$/, '$1')
+    importMetaUrl.search = ''
+    importMetaUrl.hash = ''
+    /** @type {string} */
+    this.importMetaUrl = importMetaUrl.href
   }
 
   /**
@@ -427,6 +434,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   fetchCSS (fetchCSSParams, hide = true, useController = true) {
     if (hide) this.hidden = true
     if (!Array.isArray(fetchCSSParams)) fetchCSSParams = [fetchCSSParams]
+    fetchCSSParams = fetchCSSParams.map(fetchCSSParam => ({
+      ...fetchCSSParam,
+      path: Shadow.appendHash(fetchCSSParam.path, this.importMetaUrlHash)
+    }))
     if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-css') || 'fetch-css')) {
       // use: /src/es/components/controllers/fetchCss/FetchCss.js instead of fetching here, to use the cache from within the controller
       return new Promise(
@@ -535,6 +546,20 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
         }
       ).catch(error => error)
     }
+  }
+
+  /**
+   * Appends the named cache-busting hash while preserving existing query parameters.
+   *
+   * @param {string} path
+   * @param {string} hash
+   * @return {string}
+   */
+  static appendHash (path, hash) {
+    if (!hash) return path
+    const url = new URL(path, document.baseURI)
+    url.searchParams.set('hash', hash)
+    return url.href
   }
 
   /**
