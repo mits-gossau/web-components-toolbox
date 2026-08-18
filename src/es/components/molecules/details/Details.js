@@ -416,6 +416,9 @@ export const Details = (ChosenHTMLElement = Mutation(Anchor())) => class Details
         display: var(--marker-display, none);
         content: var(--marker-content, "");
       }
+      :host details summary {
+		    display: var(--summary-display, block);
+	    }
       :host details summary, :host details summary:focus {
         display: var(--summary-display, block);
       }
