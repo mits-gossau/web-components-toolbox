@@ -152,7 +152,7 @@ export default class Navigation extends Mutation() {
   }
 
   attributeChangedCallback (name, oldValue, newValue) {
-    if (this.hasAttribute('no-focus')) return
+    if (oldValue === newValue || this.hasAttribute('no-focus')) return
     if (newValue === 'true') {
       let firstLink = this.root.querySelector('nav > ul > li > a-link')
       if (firstLink) {
