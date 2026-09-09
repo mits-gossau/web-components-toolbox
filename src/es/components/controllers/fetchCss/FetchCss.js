@@ -11,6 +11,8 @@ import { WebWorker } from '../../prototypes/WebWorker.js'
 /* global fetch */
 /* global self */
 /* global sessionStorage */
+/* global CSSStyleSheet */
+/* global ShadowRoot */
 
 /**
  * FetchCss is a caching mechanism for src/es/components/prototypes/Shadow.js:fetchCSS L:347 and can just be set as an ancestor which listens to the fetch-css events
@@ -38,6 +40,14 @@ export default class FetchCss extends Shadow(WebWorker()) {
      * @type {Map<string, Promise<string>>}
      */
     this.processedStyleCache = new Map(this.loadFromStorage())
+    /**
+     * Share parsed base styles between shadow roots. The processed CSS itself
+     * is the key so identical results from different component paths are also
+     * deduplicated.
+     *
+     * @type {Map<string, Promise<CSSStyleSheet|null>>}
+     */
+    this.styleSheetCache = new Map()
     /**
      * Listens to the event 'fetch-css' and resolve it with the fetchCSSParams returned by fetchCSS
      *
@@ -84,14 +94,27 @@ export default class FetchCss extends Shadow(WebWorker()) {
       )).then(fetchCSSParams => {
         // wait for styles to load and set them fetchCSSParam.style = style in order
         // @ts-ignore
-        Promise.all(fetchCSSParams.map(fetchCSSParam => this.processedStyleCache.get(FetchCss.cacheKeyGenerator(fetchCSSParam)).then(style => {
+        Promise.all(fetchCSSParams.map((fetchCSSParam, index) => this.processedStyleCache.get(FetchCss.cacheKeyGenerator(fetchCSSParam)).then(async style => {
           fetchCSSParam.style = style
+          // Adopted stylesheets cascade after regular style nodes. Restrict the
+          // optimization to the last fetched style to preserve the prior order.
+          if (index === fetchCSSParams.length - 1 && FetchCss.canAdoptStyleSheet(fetchCSSParam)) {
+            if (!this.styleSheetCache.has(style)) this.styleSheetCache.set(style, FetchCss.createStyleSheet(style))
+            const styleSheet = await this.styleSheetCache.get(style)
+            if (styleSheet) fetchCSSParam.styleSheet = styleSheet
+          }
           return fetchCSSParam
         }))).then(fetchCSSParams => {
           fetchCSSParams.forEach(fetchCSSParam => {
-            // append styles in order, since this is important for overwrite
-            FetchCss.appendStyle(fetchCSSParam)
-            fetchCSSParam.styleNode.textContent += fetchCSSParam.style
+            if (fetchCSSParam.styleSheet) {
+              if (!fetchCSSParam.node.root.adoptedStyleSheets.includes(fetchCSSParam.styleSheet)) {
+                fetchCSSParam.node.root.adoptedStyleSheets = [...fetchCSSParam.node.root.adoptedStyleSheets, fetchCSSParam.styleSheet]
+              }
+            } else {
+              // append styles in order, since this is important for overwrite
+              FetchCss.appendStyle(fetchCSSParam)
+              fetchCSSParam.styleNode.textContent += fetchCSSParam.style
+            }
           })
           event.detail.resolve(fetchCSSParams)
         }).catch(error => error)
@@ -193,6 +216,34 @@ export default class FetchCss extends Shadow(WebWorker()) {
     }
     if (fetchCSSParam.appendStyleNode) fetchCSSParam.node.root.appendChild(fetchCSSParam.styleNode) // append the style tag in order to which promise.all resolves
     return fetchCSSParam
+  }
+
+  /**
+   * The shared base stylesheet is immutable after loading and is frequently
+   * used by many shadow roots. Other fetched styles keep their style nodes
+   * because some components modify those nodes after loading.
+   *
+   * @param {import("../../prototypes/Shadow.js").fetchCSSParams} fetchCSSParam
+   * @return {boolean}
+   */
+  static canAdoptStyleSheet (fetchCSSParam) {
+    return !fetchCSSParam.styleNode &&
+      fetchCSSParam.appendStyleNode !== false &&
+      typeof ShadowRoot !== 'undefined' &&
+      fetchCSSParam.node.root instanceof ShadowRoot &&
+      'adoptedStyleSheets' in fetchCSSParam.node.root &&
+      typeof CSSStyleSheet !== 'undefined' &&
+      'replace' in CSSStyleSheet.prototype &&
+      new URL(fetchCSSParam.path).pathname.endsWith('/src/css/style.css')
+  }
+
+  /**
+   * @param {string} style
+   * @return {Promise<CSSStyleSheet|null>}
+   */
+  static createStyleSheet (style) {
+    const styleSheet = new CSSStyleSheet()
+    return styleSheet.replace(style).then(() => styleSheet).catch(() => null)
   }
 
   /**
