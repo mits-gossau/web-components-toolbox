@@ -6,6 +6,7 @@
   namespace?: string|false,
   namespaceFallback?: boolean,
   styleNode?: HTMLStyleElement,
+  styleSheet?: CSSStyleSheet,
   style?: string,
   appendStyleNode?: boolean,
   error?: string,
