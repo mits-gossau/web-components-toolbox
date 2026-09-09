@@ -106,11 +106,13 @@ export default class FetchCss extends Shadow(WebWorker()) {
           return fetchCSSParam
         }))).then(fetchCSSParams => {
           fetchCSSParams.forEach(fetchCSSParam => {
-            // append styles in order, since this is important for overwrite
-            FetchCss.appendStyle(fetchCSSParam)
             if (fetchCSSParam.styleSheet) {
-              fetchCSSParam.node.root.adoptedStyleSheets = [...fetchCSSParam.node.root.adoptedStyleSheets, fetchCSSParam.styleSheet]
+              if (!fetchCSSParam.node.root.adoptedStyleSheets.includes(fetchCSSParam.styleSheet)) {
+                fetchCSSParam.node.root.adoptedStyleSheets = [...fetchCSSParam.node.root.adoptedStyleSheets, fetchCSSParam.styleSheet]
+              }
             } else {
+              // append styles in order, since this is important for overwrite
+              FetchCss.appendStyle(fetchCSSParam)
               fetchCSSParam.styleNode.textContent += fetchCSSParam.style
             }
           })
