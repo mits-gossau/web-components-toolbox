@@ -575,6 +575,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   fetchHTML (paths, hide = false, useController = true) {
     if (hide) this.hidden = true
     if (!Array.isArray(paths)) paths = [paths]
+    paths = paths.map(path => Shadow.appendHash(path, this.importMetaUrlHash))
     if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-html') || 'fetch-html')) {
       // use: /src/es/components/controllers/fetchHtml/FetchHtml.js instead of fetching here, to use the cache from within the controller
       return new Promise(
@@ -678,6 +679,10 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
   fetchModules (fetchModulesParams, hide = false, useController = true, defineImmediately = false) {
     if (hide) this.hidden = true
     if (!Array.isArray(fetchModulesParams)) fetchModulesParams = [fetchModulesParams]
+    fetchModulesParams = fetchModulesParams.map(fetchModulesParam => ({
+      ...fetchModulesParam,
+      path: Shadow.appendHash(fetchModulesParam.path, this.importMetaUrlHash)
+    }))
     if (this.isConnected && useController && document.body.hasAttribute(this.getAttribute('fetch-modules') || 'fetch-modules')) {
       // use: /src/es/components/controllers/fetchHtml/FetchHtml.js instead of fetching here, to use the cache from within the controller
       return new Promise(

@@ -5,11 +5,22 @@
     <title>Cache buster</title>
   </head>
   <body>
-    <c-fetch-css>
-      <x-cache-buster url="./e2e/cache-buster/CacheBuster.js?variant=test&amp;hash=old"></x-cache-buster>
-      <x-cache-buster url="./e2e/cache-buster/CacheBuster.js?variant=test&amp;hash=old"></x-cache-buster>
-    </c-fetch-css>
+    <c-fetch-modules>
+      <c-fetch-html>
+        <c-fetch-css>
+          <x-cache-buster url="./e2e/cache-buster/CacheBuster.js?variant=test&amp;hash=old"></x-cache-buster>
+          <x-cache-buster url="./e2e/cache-buster/CacheBuster.js?variant=test&amp;hash=old"></x-cache-buster>
+        </c-fetch-css>
+      </c-fetch-html>
+    </c-fetch-modules>
+    <script>
+      document.body.addEventListener('wc-config-load', event => {
+        Promise.all(event.detail.imports).then(imports => {
+          const cacheBusterImport = imports.find(Array.isArray)
+          if (cacheBusterImport) globalThis.cacheBusterImportPath = cacheBusterImport[3]
+        })
+      })
+    </script>
     <script type="module" src="/e2e/cache-buster/Setup.js"></script>
-    <script src="/wc-config.js?triggerImmediately=true&hash=20260813120000&useDefaultDirectories=false"></script>
   </body>
 </html>
