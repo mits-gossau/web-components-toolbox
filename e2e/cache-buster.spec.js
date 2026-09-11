@@ -6,7 +6,7 @@ test('named hash is propagated to component JavaScript, CSS, fetched HTML and fe
   const assetRequests = []
 
   page.on('request', request => {
-    if (/CacheBuster(?:Dependency)?\.(js|css|html)/.test(request.url())) assetRequests.push(request.url())
+    if (/CacheBuster(?:Child|Dependency)?\.(js|css|html)/.test(request.url())) assetRequests.push(request.url())
   })
 
   await page.goto('e2e/nested/cache-buster.html')
@@ -27,6 +27,9 @@ test('named hash is propagated to component JavaScript, CSS, fetched HTML and fe
   const moduleRequests = assetRequests
     .map(url => new URL(url))
     .filter(url => url.pathname === '/e2e/cache-buster/CacheBusterDependency.js')
+  const childRequests = assetRequests
+    .map(url => new URL(url))
+    .filter(url => url.pathname === '/e2e/cache-buster/CacheBusterChild.js')
 
   expect(javaScriptRequest).toBeDefined()
   expect(javaScriptRequest.searchParams.get('variant')).toBe('test')
@@ -37,6 +40,8 @@ test('named hash is propagated to component JavaScript, CSS, fetched HTML and fe
   expect(htmlRequests).toHaveLength(1)
   expect(htmlRequests[0].searchParams.get('variant')).toBe('test')
   expect(htmlRequests[0].searchParams.getAll('hash')).toEqual([hash])
+  expect(childRequests).toHaveLength(1)
+  expect(childRequests[0].searchParams.getAll('hash')).toEqual([])
   expect(moduleRequests).toHaveLength(1)
   expect(moduleRequests[0].searchParams.get('variant')).toBe('test')
   expect(moduleRequests[0].searchParams.getAll('hash')).toEqual([hash])
