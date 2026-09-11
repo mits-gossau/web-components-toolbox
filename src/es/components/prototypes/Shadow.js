@@ -140,7 +140,7 @@ export const Shadow = (ChosenHTMLElement = HTMLElement) => class Shadow extends 
     if (typeof options.mobileBreakpoint === 'string') this.setAttribute('mobile-breakpoint', options.mobileBreakpoint)
     const importMetaUrl = new URL(options.importMetaUrl || import.meta.url)
     /** @type {string} */
-    this.importMetaUrlHash = importMetaUrl.searchParams.get('hash') || ''
+    this.importMetaUrlHash = importMetaUrl.searchParams.get('hash') ?? document.documentElement.dataset.wcConfigHash ?? ''
     importMetaUrl.pathname = importMetaUrl.pathname.replace(/(.*\/)(.*)$/, '$1')
     importMetaUrl.search = ''
     importMetaUrl.hash = ''
