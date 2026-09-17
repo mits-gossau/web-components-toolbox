@@ -13,6 +13,7 @@
   --carousel-two-museum-nav-transform-active: none;
   --carousel-two-museum-nav-transform-hover: none;
   --carousel-two-museum-nav-width: 16px;
+  --carousel-two-museum-section-child-opacity-not-active: 1;
   --carousel-two-museum-section-nav-separate-margin: 0;
   --carousel-two-museum-section-nav-separate-margin-mobile: 0;
   --carousel-two-museum-show: none;
@@ -85,7 +86,6 @@
   :host([peek]) {
     --carousel-two-museum-section-child-max-width: 75dvw;
     --carousel-two-museum-section-child-min-width: auto;
-    --carousel-two-museum-section-child-opacity-not-active: 1;
     --carousel-two-museum-section-gap: 0;
     --teaser-tile-figcaption-justify-content: flex-start;
     --teaser-tile-img-height: 100%;
