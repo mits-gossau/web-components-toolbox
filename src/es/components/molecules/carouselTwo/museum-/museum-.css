@@ -55,14 +55,14 @@
   flex-wrap: nowrap;
 }
 :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover,
-:host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active, :host > section:not(.scrolling) ~ nav > *.active {
+:host(.has-default-nav) > section ~ nav > *.active, :host > section ~ nav > *.active {
   --carousel-two-museum-nav-background-color-active: ${this.getAttribute('nav-color') || 'var(--color)'};
   --carousel-two-museum-nav-background-color-hover: var(--carousel-two-museum-nav-background-color-active);
   background-color: transparent !important;
   border: 0 !important;
 }
 :host(.has-default-nav) > section.scrolling ~ nav > *:hover::before, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover::before, :host > section.scrolling ~ nav > *:hover::before, :host > section:not(.scrolling) ~ nav > *:hover::before,
-:host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active::before, :host > section:not(.scrolling) ~ nav > *.active::before {
+:host(.has-default-nav) > section ~ nav > *.active::before, :host > section ~ nav > *.active::before {
   background-color: ${this.getAttribute('nav-color') || 'var(--color)'};
   border-color: transparent;
 }
