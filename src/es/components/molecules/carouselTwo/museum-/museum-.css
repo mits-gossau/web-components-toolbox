@@ -13,6 +13,7 @@
   --carousel-two-museum-nav-transform-active: none;
   --carousel-two-museum-nav-transform-hover: none;
   --carousel-two-museum-nav-width: 16px;
+  --carousel-two-museum-section-child-opacity-not-active: 1;
   --carousel-two-museum-section-nav-separate-margin: 0;
   --carousel-two-museum-section-nav-separate-margin-mobile: 0;
   --carousel-two-museum-show: none;
@@ -54,14 +55,14 @@
   flex-wrap: nowrap;
 }
 :host(.has-default-nav) > section.scrolling ~ nav > *:hover, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover, :host > section.scrolling ~ nav > *:hover, :host > section:not(.scrolling) ~ nav > *:hover,
-:host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active, :host > section:not(.scrolling) ~ nav > *.active {
+:host(.has-default-nav) > section ~ nav > *.active, :host > section ~ nav > *.active {
   --carousel-two-museum-nav-background-color-active: ${this.getAttribute('nav-color') || 'var(--color)'};
   --carousel-two-museum-nav-background-color-hover: var(--carousel-two-museum-nav-background-color-active);
   background-color: transparent !important;
   border: 0 !important;
 }
 :host(.has-default-nav) > section.scrolling ~ nav > *:hover::before, :host(.has-default-nav) > section:not(.scrolling) ~ nav > *:hover::before, :host > section.scrolling ~ nav > *:hover::before, :host > section:not(.scrolling) ~ nav > *:hover::before,
-:host(.has-default-nav) > section:not(.scrolling) ~ nav > *.active::before, :host > section:not(.scrolling) ~ nav > *.active::before {
+:host(.has-default-nav) > section ~ nav > *.active::before, :host > section ~ nav > *.active::before {
   background-color: ${this.getAttribute('nav-color') || 'var(--color)'};
   border-color: transparent;
 }
@@ -85,7 +86,6 @@
   :host([peek]) {
     --carousel-two-museum-section-child-max-width: 75dvw;
     --carousel-two-museum-section-child-min-width: auto;
-    --carousel-two-museum-section-child-opacity-not-active: 1;
     --carousel-two-museum-section-gap: 0;
     --teaser-tile-figcaption-justify-content: flex-start;
     --teaser-tile-img-height: 100%;
