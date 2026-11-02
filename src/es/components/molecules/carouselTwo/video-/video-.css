@@ -95,6 +95,10 @@
   background: #000;
   overflow: hidden;
 }
+:host > section > * > a-iframe {
+  /* Share the height limit with the iframe inside its shadow root. */
+  --max-height: var(--video-max-height);
+}
 :host > section > * > a-iframe > iframe {
   position: absolute;
   inset: 0;
