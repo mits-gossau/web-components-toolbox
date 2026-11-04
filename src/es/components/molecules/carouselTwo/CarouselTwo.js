@@ -816,6 +816,16 @@ export default class CarouselTwo extends Mutation() {
           const aIframe = slide.querySelector('a-iframe')
           const aVideo = slide.querySelector('a-video')
           if (!aIframe && !aVideo) return
+          // Match each container and play overlay to its video's format, including portrait embeds.
+          const iframeRoot = aIframe && (aIframe.root || aIframe.shadowRoot || aIframe)
+          const media = aIframe
+            ? aIframe.iframe || iframeRoot.querySelector('iframe') || iframeRoot.querySelector('template')?.content.querySelector('iframe')
+            : aVideo
+          const width = Number(media?.getAttribute('width'))
+          const height = Number(media?.getAttribute('height'))
+          if (Number.isFinite(width) && width > 0 && Number.isFinite(height) && height > 0) {
+            slide.style.setProperty('--video-aspect', `${width} / ${height}`)
+          }
           const overlay = document.createElement('div')
           overlay.classList.add('video-play-overlay')
           overlay.setAttribute('aria-label', 'Play video')
